@@ -1,8 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ClipboardCheck, Stethoscope, Send } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  ClipboardCheck,
+  Send,
+  Stethoscope,
+} from "lucide-react";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { TreatmentLineup } from "@/components/site/TreatmentLineup";
-import { Section, SectionHeading, SurfaceCard } from "@/components/site/primitives";
+import { Eyebrow, Section, SectionHeading, SurfaceCard } from "@/components/site/primitives";
 import { Button } from "@/components/ui/button";
 import heroImg from "@/assets/hero.jpg";
 
@@ -44,28 +50,37 @@ function HomePage() {
       <section className="bg-grad-hero">
         <div className="veya-container grid items-center gap-12 py-16 md:py-24 lg:grid-cols-2">
           <div>
-            <h1 className="text-balance text-4xl font-bold leading-tight text-foreground md:text-5xl">
-              Colorado medical weight-loss care, reviewed by a licensed provider.
+            <Eyebrow>Telehealth weight care</Eyebrow>
+            <h1 className="mt-5 text-balance text-4xl font-bold leading-[1.05] text-foreground md:text-6xl">
+              Weight-loss care that's{" "}
+              <span className="text-grad-brand">clear, human,</span> and built around
+              follow-through.
             </h1>
             <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-              Aretide helps eligible Colorado patients complete a secure medical intake
-              for provider-reviewed weight-loss treatment options, including Zepbound,
-              Wegovy, and affordable alternatives when appropriate.
+              Real clinicians, pricing you can actually understand, and refill help that
+              follows through. No hype, no fake urgency. Just calm, trustworthy care.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="xl">
                 <Link to="/qualify">
-                  Start Eligibility Check <ArrowRight />
+                  See if you qualify <ArrowRight />
                 </Link>
               </Button>
               <Button asChild size="xl" variant="outline">
                 <a href="#how-it-works">Learn How It Works</a>
               </Button>
             </div>
-            <p className="mt-6 max-w-xl text-sm text-muted-foreground">
-              Completing an intake does not guarantee a prescription. Treatment decisions
-              are made only by a licensed medical provider.
-            </p>
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
+              {[
+                "Real clinicians for you",
+                "No surprise charges",
+                "Reliable refills",
+              ].map((t) => (
+                <span key={t} className="inline-flex items-center gap-2">
+                  <CheckCircle2 className="size-4 text-primary" /> {t}
+                </span>
+              ))}
+            </div>
           </div>
 
           <div className="relative">

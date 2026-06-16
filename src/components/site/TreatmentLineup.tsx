@@ -16,11 +16,11 @@ type Treatment = {
   name: string;
   form: string;
   generic: string;
+  priceFrom: string;
   badge?: string;
   fdaApproved: boolean;
   image: string;
   imageAlt: string;
-  imageClassName?: string;
 };
 
 const TREATMENTS: Treatment[] = [
@@ -29,42 +29,42 @@ const TREATMENTS: Treatment[] = [
     name: "Zepbound®",
     form: "Weekly injection",
     generic: "Tirzepatide",
+    priceFrom: "$199",
     fdaApproved: true,
     image: zepboundPenImg,
     imageAlt: "Zepbound tirzepatide KwikPen auto-injector",
-    imageClassName: "h-56",
   },
   {
     id: "wegovy-pill",
     name: "Wegovy®",
     form: "Daily pill, if prescribed",
     generic: "Semaglutide",
+    priceFrom: "$149",
     badge: "Pill option",
     fdaApproved: true,
     image: wegovyPillImg,
     imageAlt: "Wegovy semaglutide oral tablet",
-    imageClassName: "h-32",
   },
   {
     id: "wegovy-pen",
     name: "Wegovy®",
     form: "Weekly injection",
     generic: "Semaglutide",
+    priceFrom: "$199",
     fdaApproved: true,
     image: wegovyPenImg,
     imageAlt: "Wegovy semaglutide injection pen",
-    imageClassName: "h-56",
   },
   {
     id: "compounded",
-    name: "Compounded semaglutide",
+    name: "Semaglutide",
     form: "Weekly injection",
-    generic: "Semaglutide",
+    generic: "Compounded, if prescribed",
+    priceFrom: "$199",
     badge: "Cash-pay option",
     fdaApproved: false,
     image: compoundedPenImg,
     imageAlt: "Compounded semaglutide injection pen",
-    imageClassName: "h-56",
   },
 ];
 
@@ -94,11 +94,13 @@ export function TreatmentLineup() {
         </div>
 
         <p className="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">
-          Treatment availability depends on your intake, clinical eligibility, and a
-          licensed provider&apos;s independent decision. Brand-name medications are
-          FDA-approved for chronic weight management where indicated. Compounded
-          semaglutide is not FDA-approved and is only considered when legally available
-          and clinically appropriate. Completing intake does not guarantee a prescription.
+          <span className="font-medium">†</span>From pricing includes medication only, if prescribed.
+          Final cost depends on your plan, pharmacy, and provider decision. Treatment
+          availability depends on your intake, clinical eligibility, and a licensed
+          provider&apos;s independent decision. Brand-name medications are FDA-approved
+          for chronic weight management where indicated. Compounded semaglutide is not
+          FDA-approved and is only considered when legally available and clinically
+          appropriate. Completing intake does not guarantee a prescription.
         </p>
       </div>
     </section>
@@ -110,7 +112,7 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
     <article
       className={cn(
         "relative flex h-[420px] flex-col overflow-hidden rounded-3xl",
-        "border border-border bg-card shadow-lift",
+        "bg-primary-soft shadow-lift",
       )}
     >
       {treatment.badge && (
@@ -121,7 +123,7 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
 
       {treatment.fdaApproved && (
         <span
-          className="absolute right-4 top-4 z-10 grid size-11 place-items-center rounded-full border border-primary/25 bg-primary-soft text-center text-[6px] font-bold uppercase leading-tight text-primary"
+          className="absolute right-4 top-4 z-10 grid size-12 place-items-center rounded-full border border-primary/20 bg-background/90 text-center text-[6px] font-bold uppercase leading-tight text-primary shadow-sm"
           aria-label="FDA approved for weight loss"
         >
           FDA
@@ -130,21 +132,22 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
         </span>
       )}
 
-      <div className="flex flex-1 items-center justify-center bg-gradient-to-b from-primary-soft/20 to-card px-6 pt-14">
+      <div className="relative min-h-0 flex-1 overflow-hidden">
         <img
           src={treatment.image}
           alt={treatment.imageAlt}
-          className={cn(
-            "w-auto max-w-[85%] object-contain drop-shadow-lg",
-            treatment.imageClassName ?? "h-48",
-          )}
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
       </div>
 
-      <div className="space-y-1 border-t border-border bg-card px-6 py-6">
+      <div className="space-y-0.5 px-6 pb-8 pt-2">
         <h3 className="text-2xl font-bold text-foreground">{treatment.name}</h3>
+        <p className="text-sm font-semibold text-foreground/90">
+          From {treatment.priceFrom}/mo
+          <span className="font-normal text-foreground/70">†</span>
+        </p>
         <p className="text-sm font-medium text-foreground/80">{treatment.form}</p>
-        <p className="text-sm text-muted-foreground">{treatment.generic}</p>
+        <p className="text-sm text-foreground/65">{treatment.generic}</p>
       </div>
     </article>
   );

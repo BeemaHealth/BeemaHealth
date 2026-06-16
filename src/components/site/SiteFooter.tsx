@@ -3,7 +3,7 @@ import { Logo } from "@/components/brand/Logo";
 
 const COLUMNS = [
   {
-    title: "MVP",
+    title: "Helpful links",
     links: [
       { label: "How it works", to: "/how-it-works" },
       { label: "Eligibility check", to: "/qualify" },
