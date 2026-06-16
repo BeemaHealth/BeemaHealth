@@ -1,8 +1,13 @@
 /**
  * Django DRF API client.
  *
- * Set VITE_API_URL in .env (e.g. http://localhost:8000/api).
- * When set, PHI is stored on the server — not in localStorage (except auth token).
+ * TARGET (to implement): VITE_API_URL required; all PHI on the server. Browser
+ * holds only an HttpOnly funnel cookie (pre-account) and auth token after login.
+ *
+ * CURRENT (temporary): when VITE_API_URL is set, PHI goes to the API. When unset,
+ * client.ts falls back to localStorage via lib/storage.ts — that path must be
+ * removed; PHI must NEVER be stored in localStorage. See mvp.ts and
+ * backend/DATABASE.md#anonymous-funnel-session-pre-account.
  */
 
 import type {

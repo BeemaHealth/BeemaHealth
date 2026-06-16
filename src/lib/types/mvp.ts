@@ -1,9 +1,12 @@
 /**
  * MVP data models — structured for Django DRF backend integration.
  *
- * ARCHITECTURE NOTE: This prototype stores data in localStorage.
- * Real patient PHI must only be collected after HIPAA-compliant hosting,
- * access controls, audit logs, encryption, and BAAs are in place.
+ * ARCHITECTURE NOTE: PHI must NEVER be stored in localStorage or sessionStorage.
+ * HIPAA requires patient health data to live on the server (encrypted, audited,
+ * BAA-covered infrastructure). The browser may only hold non-PHI identifiers:
+ * an HttpOnly funnel cookie before account creation, and the auth token after
+ * login. Pre-account flow: anonymous funnel session → register claims draft →
+ * authenticated /me/ endpoints. See backend/DATABASE.md#anonymous-funnel-session-pre-account.
  */
 
 export type IntakeStatus =

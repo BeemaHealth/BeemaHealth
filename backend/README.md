@@ -39,7 +39,9 @@ python manage.py runserver 8000
 
 | Method | Path | Auth |
 |--------|------|------|
-| POST | `/api/auth/register/` | Public |
+| POST | `/api/funnel/session/` | Public — **planned** (anonymous funnel; see [DATABASE.md — Anonymous funnel session](DATABASE.md#anonymous-funnel-session-pre-account)) |
+| GET/PATCH | `/api/funnel/eligibility/` | Funnel cookie — **planned** |
+| POST | `/api/auth/register/` | Public (will claim funnel cookie on register) |
 | POST | `/api/auth/login/` | Public |
 | POST | `/api/auth/logout/` | Token |
 | GET/PATCH | `/api/eligibility/me/` | Patient |

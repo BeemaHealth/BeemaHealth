@@ -1,6 +1,10 @@
 /**
- * Prototype persistence — mirrors Django DRF table shapes in localStorage.
- * Replace with API calls when the DRF backend is ready.
+ * TEMPORARY prototype fallback — mirrors Django DRF table shapes in localStorage.
+ *
+ * PHI must NEVER be stored in localStorage or sessionStorage (HIPAA). This
+ * module will be removed; the browser may only hold non-PHI identifiers (auth
+ * token, HttpOnly funnel cookie). See src/lib/types/mvp.ts and
+ * backend/DATABASE.md#anonymous-funnel-session-pre-account.
  */
 
 import type {

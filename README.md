@@ -179,7 +179,9 @@ API docs: http://localhost:8000/api/docs/
 3. Generate `FERNET_KEY` for the backend (see `.env.example` comments).
 4. Restart both servers after changing env vars.
 
-When `VITE_API_URL` is set, the frontend sends PHI (Protected Health Information) to the API instead of `localStorage`.
+PHI must **never** be stored in `localStorage` or `sessionStorage`. When `VITE_API_URL` is set, the frontend sends PHI to the API. A temporary `localStorage` fallback in the prototype will be removed.
+
+**Pre-account eligibility:** Visitors answer several quiz steps before registering. Progress is persisted **server-side** and tied to the browser via an `HttpOnly` funnel cookie — not `localStorage`, not IP address. Registration claims that draft and attaches it to the new user. Full requirements: [backend/DATABASE.md — Anonymous funnel session](backend/DATABASE.md#anonymous-funnel-session-pre-account).
 
 ---
 
@@ -207,6 +209,7 @@ When answering questions about this codebase:
 | Topic | Read first |
 |-------|------------|
 | Database schema / tables / why JSON | `backend/DATABASE.md` |
+| Pre-account funnel session (cookie + server draft) | `backend/DATABASE.md#anonymous-funnel-session-pre-account` |
 | Run backend, API routes, auth | `backend/README.md` |
 | Production hosting, HIPAA infra | `backend/HOSTING.md` |
 | AWS deploy | `backend/deploy/aws.md` |

@@ -10,7 +10,7 @@ This document explains every Django database table, how they relate, and why the
 
 The tables were driven by three inputs:
 
-1. **MVP product spec** — Patient flow: eligibility → account → full intake → consent → provider review.
+1. **MVP product spec** — Patient flow: anonymous eligibility quiz → account creation (link draft) → full intake → consent → provider review. See [Anonymous funnel session (pre-account)](#anonymous-funnel-session-pre-account).
 2. **Frontend types** — [`src/lib/types/mvp.ts`](../src/lib/types/mvp.ts) defines the API contract between React and Django.
 3. **HIPAA / telehealth constraints** — Separate sensitive data, audit PHI (Protected Health Information) access, encrypt high-risk fields, keep the MVP small (no billing, pharmacy APIs, messaging, etc.).
 
@@ -34,6 +34,108 @@ erDiagram
 ```
 
 Almost everything hangs off **`users`** — one person, one patient record.
+
+Pre-account progress is stored **server-side** and linked to the browser via an anonymous funnel session (see below) — not via `localStorage` and not keyed by IP address.
+
+---
+
+## Anonymous funnel session (pre-account)
+
+This section defines **required behavior** to implement next. The current frontend still has a **temporary** `localStorage` fallback in [`src/lib/storage.ts`](../src/lib/storage.ts) when `VITE_API_URL` is unset — **remove this**; PHI must never be stored in the browser.
+
+### Product flow
+
+A new visitor should be able to:
+
+1. Land on `/qualify` with **no account**.
+2. Answer the **pre-account eligibility steps** (roughly six screens: basic metrics, location, treatment interest, safety screen, review — exact step order may change in UI).
+3. **Close the tab, refresh, or open a new tab** in the same browser and resume where they left off.
+4. Hit an **account-creation gate** — registration is required before continuing to `/intake`.
+5. On successful registration, the server **claims** the anonymous draft and attaches it to the new `users` row (and `eligibility_responses`).
+6. Continue the journey as an authenticated patient (`Authorization: Token …` on `/me/` endpoints).
+
+“No account” does **not** mean “no persistence.” It means the patient is identified by a **server-side anonymous session**, not by email/password yet.
+
+### What must NOT be used for PHI
+
+| Mechanism | Allowed for pre-account PHI? | Why |
+|-----------|------------------------------|-----|
+| `localStorage` / `sessionStorage` for quiz answers | **No** | Not HIPAA-compliant; visible to any script on the page |
+| IP address as the primary session key | **No** | Unstable (mobile, VPN, NAT); not a reliable per-person identifier |
+| Client-only state with no server save | **No** | Lost on refresh; cannot be linked at registration |
+
+### What the browser may store
+
+| Item | Storage | Contents |
+|------|---------|----------|
+| Funnel session cookie | `HttpOnly`, `Secure`, `SameSite=Lax` (or `Strict`) cookie | **Opaque session ID only** — never eligibility answers |
+| Auth token (after register/login) | `localStorage` or memory (existing [`client.ts`](../src/lib/api/client.ts) pattern) | API token string — not clinical content |
+
+The cookie is how Hims-style funnels remember progress across refresh and new tabs: the browser resends the cookie; the **server** returns saved answers.
+
+### Server-side requirements
+
+1. **Create session on funnel start** — First visit to `/qualify` (or first save) creates a `funnel_sessions` row (or equivalent) with a cryptographically random ID.
+2. **Set cookie** — Response includes `Set-Cookie` with the opaque ID. Use a reasonable TTL (e.g. 7–30 days) and `expires_at` on the server row for cleanup.
+3. **Save incrementally** — Each step `PATCH`es draft eligibility fields to the server, keyed by funnel session ID from the cookie. Do not wait until “Finish” to persist.
+4. **Restore on load** — `GET` current funnel draft when `/qualify` loads; pre-fill the form from the API response.
+5. **Claim on register** — `POST /api/auth/register/` must accept the funnel cookie (or explicit session header). In one transaction:
+   - Create `users` (+ `authtoken_token`).
+   - Move or copy draft data into `eligibility_responses` with `user_id` set.
+   - Mark funnel session `claimed_at` / bind `claimed_by_user_id`.
+   - Return auth token; optionally clear or rotate the funnel cookie.
+6. **Login path** — If the user already has an account, `POST /api/auth/login/` should not orphan an anonymous draft; either merge draft into existing eligibility (if empty) or discard with audit metadata (product decision).
+7. **Expiry** — Cron or management command deletes unclaimed funnel sessions past `expires_at`.
+8. **Audit** — When PHI in a funnel draft is read or updated, write `audit_events` (same as post-account PHI).
+
+IP address may be logged for fraud/rate-limiting, but must **not** be the primary key for “remember my answers.”
+
+### Proposed schema addition
+
+Not implemented yet. Recommended shape:
+
+**`funnel_sessions`**
+
+| Field | Purpose |
+|-------|---------|
+| `id` (UUID) | Primary key |
+| `token` | Opaque value sent in cookie (store hashed if paranoia warrants) |
+| `expires_at` | Server-side TTL |
+| `claimed_at`, `claimed_by_user_id` (nullable FK → `users`) | Set when registration links the draft |
+| `created_at`, `updated_at` | Housekeeping |
+
+Draft eligibility data can either:
+
+- Live in **`eligibility_responses`** with `user_id` **nullable** and `funnel_session_id` set until claim, or
+- Live as JSON on `funnel_sessions` until claim, then normalize into `eligibility_responses`.
+
+Prefer **nullable `user_id` on `eligibility_responses`** plus `funnel_session_id` so the same table and API shape apply before and after account creation.
+
+### Proposed API endpoints (pre-account)
+
+| Method | Path | Auth | Purpose |
+|--------|------|------|---------|
+| POST | `/api/funnel/session/` | Public (sets cookie) | Create anonymous session |
+| GET | `/api/funnel/eligibility/` | Funnel cookie | Load draft for current browser |
+| PATCH | `/api/funnel/eligibility/` | Funnel cookie | Save current step |
+| POST | `/api/auth/register/` | Public + funnel cookie | Create account **and** claim draft |
+
+After claim, use existing authenticated routes (`GET/PATCH /api/eligibility/me/`, etc.).
+
+### Frontend implementation notes
+
+- [`src/routes/qualify.tsx`](../src/routes/qualify.tsx) should call funnel `PATCH` on each “Continue” (when `VITE_API_URL` is set), not only on final submit.
+- Account step moves **after** pre-account questions (current prototype collects account at step 2 — production order should match the product flow above).
+- [`src/lib/api/client.ts`](../src/lib/api/client.ts): add funnel helpers; keep PHI off `localStorage` except the auth token.
+- [`src/lib/types/mvp.ts`](../src/lib/types/mvp.ts): types may gain optional `funnel_session_id` or nullable `user_id` on drafts.
+
+### Verification checklist (when building)
+
+- [ ] Fill step 1, refresh — answers restored from API, not `localStorage`.
+- [ ] Fill step 1, close tab, open new tab to `/qualify` — same draft (cookie sent).
+- [ ] Clear site cookies — draft gone (proves server + cookie, not IP).
+- [ ] Complete pre-account steps, register — `eligibility_responses.user_id` populated; `/intake` sees data.
+- [ ] Incognito vs normal window — separate drafts (separate cookies).
 
 ---
 
@@ -86,13 +188,15 @@ Django also creates related auth tables (`auth_permission`, `django_session`, et
 
 **Purpose:** The **short eligibility quiz** before/during account creation (height, weight, Colorado, treatment interest, safety screen).
 
+**Pre-account:** Rows may exist with `user_id` null while tied to a `funnel_sessions` record; registration claims the row. See [Anonymous funnel session](#anonymous-funnel-session-pre-account).
+
 | Field | Why |
 |-------|-----|
 | Structured columns (`height_ft`, `weight`, `bmi`, etc.) | Used in provider admin list — easy to query without parsing JSON |
 | `safety_screen` (JSON) | Flexible yes/no map for safety questions — avoids many similar columns |
 | `safety_concern_flag` | Denormalized boolean for quick “needs review” without re-scanning JSON (JavaScript Object Notation) |
 | `bmi` | Computed server-side (same logic as frontend) so the value is trustworthy |
-| One-to-one with `users` | One eligibility snapshot per patient for MVP |
+| One-to-one with `users` | One eligibility snapshot per patient for MVP (after claim; pre-account draft may have null `user_id`) |
 
 **Decision:** Eligibility is **its own table**, not part of `medical_intakes`, because:
 
@@ -287,8 +391,11 @@ Those would be new tables in a later phase.
 ## Data flow through the tables
 
 ```
-Register                    → users
-Eligibility quiz            → eligibility_responses
+Funnel start                → funnel_sessions (+ Set-Cookie)
+Each qualify step           → eligibility draft (server, keyed by funnel session)
+Register (with funnel cookie)→ users
+                            → eligibility_responses (draft claimed, user_id set)
+                            → funnel_sessions.claimed_at
 Medical questionnaire       → medical_intakes (status=draft, JSON filling up)
 Consent signed              → consent_records
                             → medical_intakes.status=submitted
@@ -304,8 +411,9 @@ Patient uploads ID/labs     → uploaded_documents + S3 file
 
 | Table | Primary API endpoints |
 |-------|----------------------|
-| `users` | `POST /api/auth/register/`, `login/`, `logout/` |
-| `eligibility_responses` | `GET/PATCH /api/eligibility/me/`, `POST /api/eligibility/` |
+| `funnel_sessions` (proposed) | `POST /api/funnel/session/`, `GET/PATCH /api/funnel/eligibility/` |
+| `users` | `POST /api/auth/register/` (claims funnel), `login/`, `logout/` |
+| `eligibility_responses` | Pre-account: funnel `GET/PATCH`; after account: `GET/PATCH /api/eligibility/me/`, `POST /api/eligibility/` |
 | `medical_intakes` | `GET/PATCH /api/medical-intakes/me/` |
 | `consent_records` | `GET/POST /api/consent-records/me/` |
 | `uploaded_documents` | `GET/POST /api/documents/` |
