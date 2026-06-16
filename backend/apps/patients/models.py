@@ -1,0 +1,26 @@
+import uuid
+
+from django.conf import settings
+from django.db import models
+from fernet_fields import EncryptedCharField
+
+from apps.accounts.models import User
+
+
+class PatientProfile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    address = EncryptedCharField(max_length=255, blank=True)
+    city = models.CharField(max_length=128, blank=True)
+    state = models.CharField(max_length=64, default="Colorado")
+    zip_code = models.CharField(max_length=16, blank=True)
+    emergency_contact_name = EncryptedCharField(max_length=255, blank=True)
+    emergency_contact_phone = EncryptedCharField(max_length=32, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "patient_profiles"
+
+    def __str__(self):
+        return f"Profile for {self.user.email}"

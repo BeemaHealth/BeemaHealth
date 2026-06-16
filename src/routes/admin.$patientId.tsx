@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { SurfaceCard } from "@/components/site/primitives";
 import { Button } from "@/components/ui/button";
-import { syncIntake, syncReview } from "@/lib/api/client";
+import { fetchAdminPatient, isApiEnabled, patchAdminPatient } from "@/lib/api/client";
 import { computeSafetyFlags } from "@/lib/safety-flags";
 import { listPatientRecords, saveSafetyFlags } from "@/lib/storage";
-import type { IntakeStatus, ProviderDecision } from "@/lib/types/mvp";
+import type { IntakeStatus, ProviderDecision, SafetyFlag, User } from "@/lib/types/mvp";
 
 export const Route = createFileRoute("/admin/$patientId")({
   component: AdminDetailPage,
@@ -14,13 +14,50 @@ export const Route = createFileRoute("/admin/$patientId")({
 
 function AdminDetailPage() {
   const { patientId } = Route.useParams();
-  const record = listPatientRecords().find((r) => r.user.id === patientId);
-  const [decision, setDecision] = useState<ProviderDecision | "">(record?.review?.decision ?? "");
-  const [internalNote, setInternalNote] = useState(record?.review?.internal_note ?? "");
-  const [patientNote, setPatientNote] = useState(record?.review?.patient_note ?? "");
-  const [status, setStatus] = useState<IntakeStatus>(record?.review?.status ?? record?.intake?.status ?? "submitted");
+  const localRecord = listPatientRecords().find((r) => r.user.id === patientId);
+  const [loading, setLoading] = useState(isApiEnabled());
+  const [user, setUser] = useState<User | null>(localRecord?.user ?? null);
+  const [eligibility, setEligibility] = useState(localRecord?.eligibility ?? null);
+  const [intake, setIntake] = useState(localRecord?.intake ?? null);
+  const [consent, setConsent] = useState(localRecord?.consent ?? null);
+  const [flags, setFlags] = useState<SafetyFlag[]>(localRecord?.flags ?? []);
+  const [decision, setDecision] = useState<ProviderDecision | "">(localRecord?.review?.decision ?? "");
+  const [internalNote, setInternalNote] = useState(localRecord?.review?.internal_note ?? "");
+  const [patientNote, setPatientNote] = useState(localRecord?.review?.patient_note ?? "");
+  const [status, setStatus] = useState<IntakeStatus>(
+    localRecord?.review?.status ?? localRecord?.intake?.status ?? "submitted",
+  );
 
-  if (!record) {
+  useEffect(() => {
+    if (!isApiEnabled()) return;
+    fetchAdminPatient(patientId)
+      .then((data) => {
+        if (!data) return;
+        setUser(data.user as User);
+        setEligibility((data.eligibility as typeof eligibility) ?? null);
+        setIntake((data.intake as typeof intake) ?? null);
+        setConsent((data.consent as typeof consent) ?? null);
+        setFlags((data.flags as SafetyFlag[]) ?? []);
+        const review = data.review as { decision?: ProviderDecision; internal_note?: string; patient_note?: string; status?: IntakeStatus } | null;
+        if (review) {
+          setDecision(review.decision ?? "");
+          setInternalNote(review.internal_note ?? "");
+          setPatientNote(review.patient_note ?? "");
+          setStatus(review.status ?? "submitted");
+        }
+      })
+      .finally(() => setLoading(false));
+  }, [patientId]);
+
+  if (loading) {
+    return (
+      <MarketingLayout>
+        <div className="veya-container py-16 text-center text-muted-foreground">Loading…</div>
+      </MarketingLayout>
+    );
+  }
+
+  if (!user) {
     return (
       <MarketingLayout>
         <div className="veya-container py-16 text-center">Patient not found.</div>
@@ -28,9 +65,17 @@ function AdminDetailPage() {
     );
   }
 
-  const { user, eligibility, intake, consent, flags } = record;
-
   async function saveReview() {
+    if (isApiEnabled()) {
+      await patchAdminPatient(patientId, {
+        status,
+        internal_note: internalNote,
+        patient_note: patientNote,
+        decision,
+      } as Partial<import("@/lib/types/mvp").ProviderReview>);
+      alert("Review saved.");
+      return;
+    }
     if (!intake) return;
     const review = {
       id: crypto.randomUUID(),
@@ -42,6 +87,7 @@ function AdminDetailPage() {
       decision,
       reviewed_at: new Date().toISOString(),
     };
+    const { syncReview, syncIntake } = await import("@/lib/api/client");
     await syncReview(review);
     await syncIntake({ ...intake, status });
     saveSafetyFlags(user.id, computeSafetyFlags(user, eligibility, intake, !!consent));
@@ -62,7 +108,6 @@ function AdminDetailPage() {
             <p>Phone: {user.phone}</p>
             <p>Treatment interest: {eligibility?.treatment_interest}</p>
             <p>Budget: {eligibility?.budget}</p>
-            <p>Prior GLP-1: {(intake?.weight_history as { prior_meds?: string[] })?.prior_meds?.join(", ") || "—"}</p>
           </SurfaceCard>
 
           <SurfaceCard className="p-6">

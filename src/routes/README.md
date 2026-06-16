@@ -7,7 +7,7 @@ is `src/routes/__root.tsx`.
 
 ## Conventions
 
-| File | URL |
+| File | URL (Uniform Resource Locator) |
 | --- | --- |
 | `index.tsx` | `/` |
 | `about.tsx` | `/about` |
@@ -19,3 +19,7 @@ is `src/routes/__root.tsx`.
 | `__root.tsx` | app shell — wraps every page; preserve `<Outlet />` |
 
 `routeTree.gen.ts` is auto-generated. Don't edit it by hand.
+
+## Archived marketing routes - will add back after MVP
+
+Several marketing routes (`/pricing`, `/switch`, `/insurance`, `/clinicians`, `/safety`, `/faq`, `/learn`, and the full `/how-it-works`) were stubbed for the MVP intake prototype. Full source and restore instructions: **[docs/archived-marketing-pages.md](../../docs/archived-marketing-pages.md)**.

@@ -1,8 +1,8 @@
 /**
- * Django DRF API client — wire to your backend when ready.
+ * Django DRF API client.
  *
  * Set VITE_API_URL in .env (e.g. http://localhost:8000/api).
- * Until the backend is live, calls fall back to localStorage via storage.ts.
+ * When set, PHI is stored on the server — not in localStorage (except auth token).
  */
 
 import type {
@@ -16,12 +16,15 @@ import type {
 import * as store from "@/lib/storage";
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "";
+const USE_API = Boolean(API_BASE);
 
 async function apiFetch<T>(
   path: string,
   options: RequestInit = {},
-): Promise<T | null> {
-  if (!API_BASE) return null;
+): Promise<T> {
+  if (!USE_API) {
+    throw new Error("VITE_API_URL is not configured.");
+  }
   const session = store.getSession();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -31,7 +34,13 @@ async function apiFetch<T>(
 
   const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
   if (!res.ok) throw new Error(await res.text());
+  if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
+}
+
+function persistSession(session: SessionUser) {
+  store.setSession(session);
+  if (!USE_API) store.saveUser(session.user);
 }
 
 export async function registerUser(payload: {
@@ -43,13 +52,12 @@ export async function registerUser(payload: {
   dob: string;
   state: string;
 }): Promise<SessionUser> {
-  const remote = await apiFetch<SessionUser>("/auth/register/", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-  if (remote) {
-    store.setSession(remote);
-    store.saveUser(remote.user);
+  if (USE_API) {
+    const remote = await apiFetch<SessionUser>("/auth/register/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    persistSession(remote);
     return remote;
   }
 
@@ -65,7 +73,7 @@ export async function registerUser(payload: {
   };
   const session: SessionUser = { token: `local-${user.id}`, user };
   store.saveUser(user);
-  store.setSession(session);
+  persistSession(session);
   return session;
 }
 
@@ -73,45 +81,104 @@ export async function loginUser(
   email: string,
   password: string,
 ): Promise<SessionUser> {
-  const remote = await apiFetch<SessionUser>("/auth/login/", {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
-  });
-  if (remote) {
-    store.setSession(remote);
+  if (USE_API) {
+    const remote = await apiFetch<SessionUser>("/auth/login/", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    persistSession(remote);
     return remote;
   }
 
   const user = store.getAllUsers().find((u) => u.email === email);
   if (!user) throw new Error("No account found with that email.");
   const session: SessionUser = { token: `local-${user.id}`, user };
-  store.setSession(session);
+  persistSession(session);
   return session;
 }
 
-export function logoutUser() {
+export async function logoutUser() {
+  if (USE_API && store.getSession()) {
+    try {
+      await apiFetch("/auth/logout/", { method: "POST" });
+    } catch {
+      // still clear local session
+    }
+  }
   store.setSession(null);
 }
 
 export async function syncEligibility(data: EligibilityResponses) {
-  store.saveEligibility(data);
-  await apiFetch("/eligibility/", { method: "POST", body: JSON.stringify(data) });
+  if (!USE_API) {
+    store.saveEligibility(data);
+    return;
+  }
+  try {
+    await apiFetch("/eligibility/me/", { method: "PATCH", body: JSON.stringify(data) });
+  } catch {
+    await apiFetch("/eligibility/", { method: "POST", body: JSON.stringify(data) });
+  }
 }
 
 export async function syncIntake(data: MedicalIntake) {
-  store.saveIntake(data);
-  await apiFetch("/medical-intakes/", { method: "POST", body: JSON.stringify(data) });
+  if (!USE_API) {
+    store.saveIntake(data);
+    return;
+  }
+  await apiFetch("/medical-intakes/me/", {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
 }
 
 export async function syncConsent(data: ConsentRecord) {
-  store.saveConsent(data);
-  await apiFetch("/consent-records/", { method: "POST", body: JSON.stringify(data) });
+  if (!USE_API) {
+    store.saveConsent(data);
+    return;
+  }
+  await apiFetch("/consent-records/me/", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 }
 
 export async function syncReview(data: ProviderReview) {
-  store.saveReview(data);
+  if (!USE_API) {
+    store.saveReview(data);
+    return;
+  }
   await apiFetch("/provider-reviews/", {
     method: "POST",
     body: JSON.stringify(data),
   });
+}
+
+export async function fetchDashboard() {
+  if (!USE_API) return null;
+  return apiFetch<Record<string, unknown>>("/dashboard/me/");
+}
+
+export async function fetchAdminPatients() {
+  if (!USE_API) return null;
+  return apiFetch<unknown[]>("/admin/patients/");
+}
+
+export async function fetchAdminPatient(patientId: string) {
+  if (!USE_API) return null;
+  return apiFetch<Record<string, unknown>>(`/admin/patients/${patientId}/`);
+}
+
+export async function patchAdminPatient(
+  patientId: string,
+  data: Partial<ProviderReview>,
+) {
+  if (!USE_API) return null;
+  return apiFetch<ProviderReview>(`/admin/patients/${patientId}/`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export function isApiEnabled() {
+  return USE_API;
 }

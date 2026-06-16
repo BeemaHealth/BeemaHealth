@@ -1,4 +1,6 @@
-# GLP-1 Telehealth Launch Plan
+# GLP-1 (Glucagon-like Peptide-1) Telehealth Launch Plan
+
+> **Acronyms:** See [../README.md](../README.md#glossary-acronyms-used-in-this-repo) for infrastructure terms. This doc also uses **MVP** (Minimum Viable Product), **FDA** (U.S. Food and Drug Administration), **HIPAA** (Health Insurance Portability and Accountability Act), **MSO** (Management Services Organization), **LLC** (Limited Liability Company), **PC** (Professional Corporation), **MD** (Doctor of Medicine), **DO** (Doctor of Osteopathic Medicine), **NP** (Nurse Practitioner), **DRF** (Django REST Framework), **CAC** (Customer Acquisition Cost), **SEO** (Search Engine Optimization), **QA** (Quality Assurance).
 
 Matt is the person building the software. Charlie is the person finding the suppliers (doctors, pharmacies, partnerships).
 
@@ -8,7 +10,7 @@ Matt is the person building the software. Charlie is the person finding the supp
 
 ## Step 1: Define Veya's Initial Offerings
 
-Veya's goal is to provide Colorado patients with simple, transparent access to effective medical weight-loss treatments. The MVP will intentionally focus on a small number of high-demand offerings that cover the majority of patients while keeping operations as simple as possible.
+Veya's goal is to provide Colorado patients with simple, transparent access to effective medical weight-loss treatments. The MVP (Minimum Viable Product) will intentionally focus on a small number of high-demand offerings that cover the majority of patients while keeping operations as simple as possible.
 
 The objective of the MVP is not to offer every medication available. The objective is to prove that Veya can successfully guide a patient from intake → provider review → prescription → fulfillment → follow-up.
 
@@ -22,7 +24,7 @@ The objective of the MVP is not to offer every medication available. The objecti
 
 **Why we're offering it:**
 
-* One of the most effective FDA-approved weight-loss medications currently available.
+* One of the most effective FDA (U.S. Food and Drug Administration)-approved weight-loss medications currently available.
 * Strong patient demand and brand recognition.
 * Often produces greater average weight loss than semaglutide-based therapies.
 * Will serve as Veya's flagship treatment option.
@@ -41,7 +43,7 @@ The objective of the MVP is not to offer every medication available. The objecti
 
 **Why we're offering it:**
 
-* FDA-approved specifically for chronic weight management.
+* FDA (U.S. Food and Drug Administration)-approved specifically for chronic weight management.
 * One of the most recognized medications in the market.
 * Provides an alternative for patients who may not qualify for Zepbound.
 * Different insurance plans may cover Wegovy when they do not cover Zepbound.
@@ -112,12 +114,12 @@ Potential future offerings include:
 
 ### Ozempic (Semaglutide Injection)
 
-* FDA-approved for type 2 diabetes.
+* FDA (U.S. Food and Drug Administration)-approved for type 2 diabetes.
 * May be appropriate for certain patients at provider discretion.
 
 ### Mounjaro (Tirzepatide Injection)
 
-* FDA-approved for type 2 diabetes.
+* FDA (U.S. Food and Drug Administration)-approved for type 2 diabetes.
 * May become relevant as Veya expands into broader metabolic health services.
 
 ### Foundayo (Orforglipron Pill)
@@ -139,7 +141,7 @@ Potential future offerings include:
 
 ## Long-Term Vision
 
-Veya is not being built as an "Ozempic company" or a "compounded GLP-1 company."
+Veya is not being built as an "Ozempic company" or a "compounded GLP-1 (glucagon-like peptide-1) company."
 
 Veya is being built as a Colorado-first medical weight management platform focused on helping patients access the right treatment for their individual needs, preferences, eligibility, and budget.
 
@@ -161,7 +163,7 @@ You can't just wake up tomorrow and prescribe drugs. You need structure.
 
 ### You
 
-Own **Veya Holdings LLC**, which owns:
+Own **Veya Holdings LLC** (Limited Liability Company), which owns:
 
 - Software
 - Marketing
@@ -178,13 +180,13 @@ Finds:
 - Relationships
 - Growth
 
-### Then create: Professional Corporation (PC)
+### Then create: Professional Corporation (PC — the legal entity through which the doctor practices medicine)
 
 - This is owned by the doctor
 - The doctor legally practices medicine
-- The LLC provides services to the PC
+- The LLC (Limited Liability Company) provides services to the PC
 
-This is called the **MSO model**. Almost every telehealth company uses this.
+This is called the **MSO (Management Services Organization) model**. Almost every telehealth company uses this.
 
 ---
 
@@ -194,8 +196,8 @@ You literally cannot launch without this. You need **one** Colorado provider. Th
 
 Could be:
 
-- Physician (MD/DO)
-- Nurse Practitioner
+- Physician (MD (Doctor of Medicine) / DO (Doctor of Osteopathic Medicine))
+- Nurse Practitioner (NP)
 - Physician Assistant
 
 Colorado is NP-friendly. NPs are cheaper.
@@ -262,11 +264,11 @@ You need a compounding pharmacy. Examples:
 >
 > We're launching a Colorado telehealth weight-management practice.
 >
-> We're evaluating pharmacy partners capable of fulfilling GLP-1 prescriptions.
+> We're evaluating pharmacy partners capable of fulfilling GLP-1 (glucagon-like peptide-1) prescriptions.
 >
 > We'd love to learn:
 >
-> - Which GLP-1 products you currently compound
+> - Which GLP-1 (glucagon-like peptide-1) products you currently compound
 > - Shipping capabilities
 > - Turnaround times
 > - Patient support processes
@@ -319,7 +321,7 @@ Almost everything. You do **not** need automation. Manual is fine.
 
 These **must** be done properly:
 
-- HIPAA security
+- HIPAA (Health Insurance Portability and Accountability Act) security
 - Medical records
 - Audit logs
 - Consent storage
@@ -335,7 +337,7 @@ These **must** be done properly:
 |------|-------|
 | **Week 1** | Lovable — landing page, quiz, questionnaire, Stripe checkout, admin dashboard |
 | **Week 2** | Cursor — move frontend to React + TypeScript |
-| **Week 3** | Django — DRF, Postgres, provider portal |
+| **Week 3** | Django — DRF (Django REST Framework), Postgres, provider portal |
 | **Week 4** | Integrate everything and start testing |
 
 ---
@@ -364,17 +366,17 @@ Your first patient should honestly be someone you know:
 
 ---
 
-## Step 9: Cost to acquire customers (CAC)
+## Step 9: Cost to acquire customers (CAC — Customer Acquisition Cost)
 
 This surprised me. Everyone thinks it's cheap. It isn't.
 
-| Channel | CAC | Notes |
+| Channel | CAC (Customer Acquisition Cost) | Notes |
 |---------|-----|-------|
 | Google Ads | $150–400 | Very competitive |
 | Facebook | $80–250 | Best balance |
 | TikTok | $50–150 | Cheaper; more education needed |
 | Influencers | $50–200 | Variable |
-| SEO | $20–80 | Eventually amazing; slow |
+| SEO (Search Engine Optimization) | $20–80 | Eventually amazing; slow |
 | Referrals | $10–40 | **Best channel** |
 | Colorado Springs partnerships | $10–50 | Gyms, med spas, trainers, CrossFit, Facebook groups — probably your best channel |
 
@@ -441,7 +443,7 @@ AI **can**:
 - Prepare provider summaries
 - Generate marketing content
 - Monitor KPIs
-- Run QA testing
+- Run QA (Quality Assurance) testing
 - Coordinate pharmacy follow-ups
 - Create dashboards
 - Write SOPs
@@ -454,7 +456,7 @@ Think of AI as the doctor's assistant — **not** the doctor.
 
 This is the scary part.
 
-1. FDA changes compounded GLP-1 rules
+1. FDA (U.S. Food and Drug Administration) changes compounded GLP-1 (glucagon-like peptide-1) rules
 2. Compounding pharmacies stop offering them
 3. Your margins collapse
 4. You pivot to brand-name
@@ -466,7 +468,7 @@ Other real risks:
 - Provider quits
 - Pharmacy shuts down
 - Medical board complaints
-- HIPAA breach
+- HIPAA (Health Insurance Portability and Accountability Act) breach
 
 ---
 
@@ -474,7 +476,7 @@ Other real risks:
 
 ### Week 1
 
-- Form LLC
+- Form LLC (Limited Liability Company)
 - Get domain
 - Build landing page
 - Charlie starts calling providers
@@ -527,7 +529,7 @@ Other real risks:
 ### Week 9–12
 
 - Scale to 25–50 active patients
-- Begin SEO
+- Begin SEO (Search Engine Optimization)
 - Expand advertising
 - Add automation carefully
 

@@ -1,15 +1,62 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { computeAge, computeBmi } from "@/lib/safety-flags";
+import { fetchAdminPatients, isApiEnabled } from "@/lib/api/client";
 import { listPatientRecords } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
+
+type AdminRow = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  age: number | null;
+  bmi: number | null;
+  city: string;
+  submitted_at: string | null;
+  treatment_interest: string;
+  flag_count: number;
+  status: string;
+};
 
 export const Route = createFileRoute("/admin")({
   component: AdminListPage,
 });
 
 function AdminListPage() {
-  const records = listPatientRecords().filter((r) => r.intake?.status && r.intake.status !== "draft");
+  const [rows, setRows] = useState<AdminRow[]>([]);
+
+  useEffect(() => {
+    if (isApiEnabled()) {
+      fetchAdminPatients()
+        .then((data) => setRows((data as AdminRow[]) ?? []))
+        .catch(() => setRows([]));
+      return;
+    }
+    const records = listPatientRecords().filter(
+      (r) => r.intake?.status && r.intake.status !== "draft",
+    );
+    setRows(
+      records.map(({ user, eligibility, intake, flags, review }) => ({
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        age: computeAge(user.dob),
+        bmi:
+          eligibility?.bmi ??
+          computeBmi(
+            eligibility?.height_ft ?? "",
+            eligibility?.height_in ?? "",
+            eligibility?.weight ?? "",
+          ),
+        city: eligibility?.city ?? "",
+        submitted_at: intake?.submitted_at ?? null,
+        treatment_interest: eligibility?.treatment_interest ?? "",
+        flag_count: flags.length,
+        status: review?.status ?? intake?.status ?? "draft",
+      })),
+    );
+  }, []);
 
   return (
     <MarketingLayout>
@@ -18,7 +65,9 @@ function AdminListPage() {
           <div>
             <h1 className="text-3xl font-bold text-foreground">Provider review</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Admin dashboard — prototype only. Protect with auth before production.
+              {isApiEnabled()
+                ? "Connected to Django API — provider login required."
+                : "Local prototype mode — data from browser storage."}
             </p>
           </div>
           <Button asChild variant="outline" size="sm">
@@ -36,34 +85,30 @@ function AdminListPage() {
               </tr>
             </thead>
             <tbody>
-              {records.length === 0 && (
+              {rows.length === 0 && (
                 <tr>
                   <td colSpan={9} className="px-4 py-8 text-center text-muted-foreground">
                     No submitted intakes yet.
                   </td>
                 </tr>
               )}
-              {records.map(({ user, eligibility, intake, flags, review }) => {
-                const age = computeAge(user.dob);
-                const bmi = eligibility?.bmi ?? computeBmi(eligibility?.height_ft ?? "", eligibility?.height_in ?? "", eligibility?.weight ?? "");
-                return (
-                  <tr key={user.id} className="border-b border-border/60">
-                    <td className="px-4 py-3 font-medium">{user.first_name} {user.last_name}</td>
-                    <td className="px-4 py-3">{age ?? "—"}</td>
-                    <td className="px-4 py-3">{bmi ?? "—"}</td>
-                    <td className="px-4 py-3">{eligibility?.city}, CO</td>
-                    <td className="px-4 py-3">{intake?.submitted_at ? new Date(intake.submitted_at).toLocaleDateString() : "—"}</td>
-                    <td className="px-4 py-3">{eligibility?.treatment_interest?.replace(/_/g, " ") ?? "—"}</td>
-                    <td className="px-4 py-3">{flags.length || "—"}</td>
-                    <td className="px-4 py-3">{review?.status ?? intake?.status}</td>
-                    <td className="px-4 py-3">
-                      <Link to="/admin/$patientId" params={{ patientId: user.id }} className="text-primary underline">
-                        Review
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
+              {rows.map((row) => (
+                <tr key={row.id} className="border-b border-border/60">
+                  <td className="px-4 py-3 font-medium">{row.first_name} {row.last_name}</td>
+                  <td className="px-4 py-3">{row.age ?? "—"}</td>
+                  <td className="px-4 py-3">{row.bmi ?? "—"}</td>
+                  <td className="px-4 py-3">{row.city}, CO</td>
+                  <td className="px-4 py-3">{row.submitted_at ? new Date(row.submitted_at).toLocaleDateString() : "—"}</td>
+                  <td className="px-4 py-3">{row.treatment_interest?.replace(/_/g, " ") ?? "—"}</td>
+                  <td className="px-4 py-3">{row.flag_count || "—"}</td>
+                  <td className="px-4 py-3">{row.status}</td>
+                  <td className="px-4 py-3">
+                    <Link to="/admin/$patientId" params={{ patientId: row.id }} className="text-primary underline">
+                      Review
+                    </Link>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

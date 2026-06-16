@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: aretide
+      POSTGRES_USER: aretide
+      POSTGRES_PASSWORD: aretide
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aretide -d aretide"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DEBUG: "true"
+      SECRET_KEY: dev-secret-key-change-in-production
+      DATABASE_URL: postgres://aretide:aretide@db:5432/aretide
+      CORS_ALLOWED_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
+      FERNET_KEY: ${FERNET_KEY:-}
+      HOSTING_TARGET: local
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

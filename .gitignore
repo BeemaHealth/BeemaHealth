@@ -18,6 +18,15 @@ dist
 *.log
 npm-debug.log*
 
+# Python / Django
+backend/.venv/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/.pytest_cache/
+backend/staticfiles/
+backend/media/
+backend/dev.db
+
 # OS / editor
 .idea/
 .vscode/

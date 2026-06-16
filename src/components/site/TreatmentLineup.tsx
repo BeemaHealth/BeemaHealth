@@ -6,8 +6,10 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
-
-type Visual = "pen-primary" | "pen-secondary" | "pen-muted" | "pill";
+import zepboundPenImg from "@/assets/treatments/zepbound-pen.png";
+import wegovyPillImg from "@/assets/treatments/wegovy-pill.png";
+import wegovyPenImg from "@/assets/treatments/wegovy-pen.png";
+import compoundedPenImg from "@/assets/treatments/compounded-pen.png";
 
 type Treatment = {
   id: string;
@@ -16,7 +18,9 @@ type Treatment = {
   generic: string;
   badge?: string;
   fdaApproved: boolean;
-  visual: Visual;
+  image: string;
+  imageAlt: string;
+  imageClassName?: string;
 };
 
 const TREATMENTS: Treatment[] = [
@@ -26,7 +30,9 @@ const TREATMENTS: Treatment[] = [
     form: "Weekly injection",
     generic: "Tirzepatide",
     fdaApproved: true,
-    visual: "pen-primary",
+    image: zepboundPenImg,
+    imageAlt: "Zepbound tirzepatide KwikPen auto-injector",
+    imageClassName: "h-56",
   },
   {
     id: "wegovy-pill",
@@ -35,7 +41,9 @@ const TREATMENTS: Treatment[] = [
     generic: "Semaglutide",
     badge: "Pill option",
     fdaApproved: true,
-    visual: "pill",
+    image: wegovyPillImg,
+    imageAlt: "Wegovy semaglutide oral tablet",
+    imageClassName: "h-32",
   },
   {
     id: "wegovy-pen",
@@ -43,7 +51,9 @@ const TREATMENTS: Treatment[] = [
     form: "Weekly injection",
     generic: "Semaglutide",
     fdaApproved: true,
-    visual: "pen-secondary",
+    image: wegovyPenImg,
+    imageAlt: "Wegovy semaglutide injection pen",
+    imageClassName: "h-56",
   },
   {
     id: "compounded",
@@ -52,7 +62,9 @@ const TREATMENTS: Treatment[] = [
     generic: "Semaglutide",
     badge: "Cash-pay option",
     fdaApproved: false,
-    visual: "pen-muted",
+    image: compoundedPenImg,
+    imageAlt: "Compounded semaglutide injection pen",
+    imageClassName: "h-56",
   },
 ];
 
@@ -118,8 +130,15 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
         </span>
       )}
 
-      <div className="flex flex-1 items-center justify-center bg-primary-soft/25 px-6 pt-14">
-        <ProductVisual type={treatment.visual} />
+      <div className="flex flex-1 items-center justify-center bg-gradient-to-b from-primary-soft/20 to-card px-6 pt-14">
+        <img
+          src={treatment.image}
+          alt={treatment.imageAlt}
+          className={cn(
+            "w-auto max-w-[85%] object-contain drop-shadow-lg",
+            treatment.imageClassName ?? "h-48",
+          )}
+        />
       </div>
 
       <div className="space-y-1 border-t border-border bg-card px-6 py-6">
@@ -128,44 +147,5 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
         <p className="text-sm text-muted-foreground">{treatment.generic}</p>
       </div>
     </article>
-  );
-}
-
-function ProductVisual({ type }: { type: Visual }) {
-  if (type === "pill") {
-    return (
-      <svg viewBox="0 0 160 160" className="h-36 w-auto drop-shadow-md" aria-hidden>
-        <ellipse cx="80" cy="82" rx="52" ry="28" fill="var(--color-card)" stroke="var(--color-border)" strokeWidth="2" />
-        <ellipse cx="80" cy="78" rx="48" ry="24" fill="var(--color-background)" />
-        <ellipse cx="80" cy="76" rx="18" ry="10" fill="var(--color-primary-soft)" opacity="0.8" />
-        <text x="80" y="80" textAnchor="middle" fill="var(--color-primary)" fontSize="11" fontWeight="600" fontFamily="system-ui, sans-serif">
-          novo
-        </text>
-      </svg>
-    );
-  }
-
-  const bodyFill =
-    type === "pen-primary"
-      ? "var(--color-primary)"
-      : type === "pen-secondary"
-        ? "var(--color-secondary)"
-        : "var(--color-muted-foreground)";
-
-  const capFill =
-    type === "pen-primary"
-      ? "var(--color-primary-soft)"
-      : type === "pen-secondary"
-        ? "var(--color-secondary-foreground)"
-        : "var(--color-muted)";
-
-  return (
-    <svg viewBox="0 0 120 280" className="h-52 w-auto drop-shadow-md" aria-hidden>
-      <rect x="44" y="8" width="32" height="24" rx="6" fill={capFill} />
-      <rect x="40" y="28" width="40" height="200" rx="20" fill={bodyFill} />
-      <rect x="48" y="228" width="24" height="36" rx="8" fill={bodyFill} opacity="0.85" />
-      <ellipse cx="60" cy="120" rx="7" ry="36" fill="white" opacity="0.2" />
-      <circle cx="60" cy="18" r="5" fill="var(--color-background)" opacity="0.9" />
-    </svg>
   );
 }
