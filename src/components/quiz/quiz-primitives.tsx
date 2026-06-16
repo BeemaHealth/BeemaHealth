@@ -1,0 +1,182 @@
+import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
+import type { ReactNode } from "react";
+
+export const inputCls =
+  "w-full rounded-2xl border border-input bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring";
+
+export function QuizShell({
+  step,
+  totalSteps,
+  label,
+  title,
+  subtitle,
+  children,
+  footer,
+}: {
+  step: number;
+  totalSteps: number;
+  label: string;
+  title: string;
+  subtitle?: string;
+  children: ReactNode;
+  footer?: ReactNode;
+}) {
+  const progress = ((step + 1) / totalSteps) * 100;
+  return (
+    <div className="w-full max-w-xl">
+      <p className="text-sm font-medium text-primary">
+        Step {step + 1} of {totalSteps} · {label}
+      </p>
+      <div className="mt-4 rounded-3xl border border-border bg-card p-6 shadow-soft md:p-8">
+        <h1 className="text-2xl font-bold text-foreground">{title}</h1>
+        {subtitle && (
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{subtitle}</p>
+        )}
+        <div className="mt-6">{children}</div>
+        {footer}
+      </div>
+    </div>
+  );
+}
+
+export function QuizProgressBar({ progress }: { progress: number }) {
+  return (
+    <div className="h-1 w-full bg-muted">
+      <div
+        className="h-1 rounded-r-full bg-primary transition-all duration-300"
+        style={{ width: `${progress}%` }}
+      />
+    </div>
+  );
+}
+
+export function Field({
+  label,
+  children,
+  className,
+  required,
+}: {
+  label: string;
+  children: ReactNode;
+  className?: string;
+  required?: boolean;
+}) {
+  return (
+    <label className={cn("block", className)}>
+      <span className="mb-1.5 block text-sm font-medium text-foreground">
+        {label}
+        {required && <span className="text-destructive"> *</span>}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+export function ChoiceCard({
+  title,
+  desc,
+  selected,
+  onClick,
+  compact,
+}: {
+  title: string;
+  desc?: string;
+  selected: boolean;
+  onClick: () => void;
+  compact?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex w-full items-center justify-between gap-3 rounded-2xl border px-4 text-left transition-all",
+        compact ? "py-3" : "py-4",
+        selected
+          ? "border-primary bg-primary-soft/50 shadow-soft"
+          : "border-border bg-background hover:bg-muted",
+      )}
+    >
+      <span>
+        <span className="block text-base font-semibold text-foreground">{title}</span>
+        {desc && <span className="mt-0.5 block text-sm text-muted-foreground">{desc}</span>}
+      </span>
+      <span
+        className={cn(
+          "grid size-6 shrink-0 place-items-center rounded-full border",
+          selected ? "border-primary bg-primary text-primary-foreground" : "border-border",
+        )}
+      >
+        {selected && <Check className="size-4" />}
+      </span>
+    </button>
+  );
+}
+
+export function YesNoField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: boolean | null;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <div>
+      <p className="text-sm font-medium text-foreground">{label}</p>
+      <div className="mt-2 grid grid-cols-2 gap-3">
+        <ChoiceCard compact selected={value === true} onClick={() => onChange(true)} title="Yes" />
+        <ChoiceCard compact selected={value === false} onClick={() => onChange(false)} title="No" />
+      </div>
+    </div>
+  );
+}
+
+export function BlockedMessage({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-5">
+      <p className="text-base font-semibold text-foreground">{title}</p>
+      <p className="mt-2 text-sm text-muted-foreground">{body}</p>
+    </div>
+  );
+}
+
+export function QuizNav({
+  onBack,
+  onNext,
+  nextLabel = "Continue",
+  nextDisabled,
+  showBack = true,
+}: {
+  onBack?: () => void;
+  onNext: () => void;
+  nextLabel?: string;
+  nextDisabled?: boolean;
+  showBack?: boolean;
+}) {
+  return (
+    <div className="mt-8 flex items-center justify-between gap-3">
+      {showBack && onBack ? (
+        <button
+          type="button"
+          onClick={onBack}
+          className="text-sm font-medium text-muted-foreground hover:text-foreground"
+        >
+          ← Back
+        </button>
+      ) : (
+        <span />
+      )}
+      <button
+        type="button"
+        disabled={nextDisabled}
+        onClick={onNext}
+        className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-50"
+      >
+        {nextLabel}
+      </button>
+    </div>
+  );
+}

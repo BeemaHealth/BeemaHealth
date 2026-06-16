@@ -9,18 +9,23 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
+import { getSession } from "@/lib/storage";
 
-const NAV = [
-  { label: "How it works", to: "/how-it-works" },
-  { label: "Pricing", to: "/pricing" },
-  { label: "Switch to Aretide", to: "/switch" },
-  { label: "Insurance & Pharmacy", to: "/insurance" },
-  { label: "Clinicians", to: "/clinicians" },
-  { label: "Safety", to: "/safety" },
-] as const;
+type NavItem = { label: string; to: string };
+
+/** MVP navigation — uncomment items post-launch as needed. */
+const NAV: NavItem[] = [
+  // { label: "How it works", to: "/how-it-works" },
+  // { label: "Pricing", to: "/pricing" },
+  // { label: "Switch to Aretide", to: "/switch" },
+  // { label: "Insurance & Pharmacy", to: "/insurance" },
+  // { label: "Clinicians", to: "/clinicians" },
+  // { label: "Safety", to: "/safety" },
+];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const session = getSession();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
@@ -29,25 +34,35 @@ export function SiteHeader() {
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          {NAV.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              activeProps={{ className: "text-foreground bg-muted" }}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        {NAV.length > 0 && (
+          <nav className="hidden items-center gap-1 lg:flex">
+            {NAV.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                activeProps={{ className: "text-foreground bg-muted" }}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        )}
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/faq">FAQ</Link>
-          </Button>
+        <div className="hidden items-center gap-2 lg:ml-auto lg:flex">
+          {session ? (
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/dashboard">Dashboard</Link>
+            </Button>
+          ) : (
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/login" search={{ redirect: "/dashboard" }}>
+                Log in
+              </Link>
+            </Button>
+          )}
           <Button asChild>
-            <Link to="/qualify">See if you qualify</Link>
+            <Link to="/qualify">Start eligibility check</Link>
           </Button>
         </div>
 
@@ -75,30 +90,18 @@ export function SiteHeader() {
                 ))}
                 <SheetClose asChild>
                   <Link
-                    to="/faq"
+                    to={session ? "/dashboard" : "/login"}
+                    search={{ redirect: "/dashboard" }}
                     className="rounded-xl px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
                   >
-                    FAQ
-                  </Link>
-                </SheetClose>
-                <SheetClose asChild>
-                  <Link
-                    to="/learn"
-                    className="rounded-xl px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
-                  >
-                    Learn
+                    {session ? "Dashboard" : "Log in"}
                   </Link>
                 </SheetClose>
               </div>
-              <div className="mt-6 flex flex-col gap-3">
+              <div className="mt-6">
                 <SheetClose asChild>
-                  <Button asChild size="lg">
-                    <Link to="/qualify">See if you qualify</Link>
-                  </Button>
-                </SheetClose>
-                <SheetClose asChild>
-                  <Button asChild variant="outline" size="lg">
-                    <Link to="/switch">Switch from another provider</Link>
+                  <Button asChild size="lg" className="w-full">
+                    <Link to="/qualify">Start eligibility check</Link>
                   </Button>
                 </SheetClose>
               </div>

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Aretide wordmark — lowercase "aretide" with a leaf/upward-path shape inside the A.
+ * Aretide wordmark — mountain peak + horizon line (Colorado-inspired, not a V).
  */
 export function Logo({
   className,
@@ -19,17 +19,23 @@ export function Logo({
           fill="none"
           aria-hidden="true"
         >
-          {/* V shape */}
+          {/* horizon */}
           <path
-            d="M5 6.5 L11.2 17.5 a1 1 0 0 0 1.7 0 L19 6.5"
+            d="M4 17.5 H20"
             stroke="var(--color-primary-foreground)"
-            strokeWidth="2.4"
+            strokeWidth="1.5"
             strokeLinecap="round"
-            strokeLinejoin="round"
+            opacity="0.5"
           />
-          {/* leaf / upward path accent rising out of the V */}
+          {/* mountain peak */}
           <path
-            d="M12 14 C 12 10.5 14 8.5 17.5 8 C 17 11.5 15 13.5 12 14 Z"
+            d="M5 17 L12 7 L19 17 Z"
+            fill="var(--color-primary-foreground)"
+            opacity="0.9"
+          />
+          {/* accent snow cap */}
+          <path
+            d="M10.5 11.5 L12 7 L13.5 11.5 Z"
             fill="var(--color-accent)"
           />
         </svg>
@@ -38,7 +44,6 @@ export function Logo({
         <span className="font-display text-2xl font-bold lowercase tracking-tight text-foreground">
           aretide
         </span>
-
       )}
     </span>
   );

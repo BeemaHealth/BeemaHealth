@@ -10,23 +10,36 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SwitchRouteImport } from './routes/switch'
+import { Route as SubmittedRouteImport } from './routes/submitted'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SafetyRouteImport } from './routes/safety'
 import { Route as QualifyRouteImport } from './routes/qualify'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnRouteImport } from './routes/learn'
+import { Route as IntakeRouteImport } from './routes/intake'
 import { Route as InsuranceRouteImport } from './routes/insurance'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as EligibilityRouteImport } from './routes/eligibility'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ConsentRouteImport } from './routes/consent'
 import { Route as CliniciansRouteImport } from './routes/clinicians'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
+import { Route as AdminPatientIdRouteImport } from './routes/admin.$patientId'
 
 const SwitchRoute = SwitchRouteImport.update({
   id: '/switch',
   path: '/switch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubmittedRoute = SubmittedRouteImport.update({
+  id: '/submitted',
+  path: '/submitted',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -49,9 +62,19 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnRoute = LearnRouteImport.update({
   id: '/learn',
   path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntakeRoute = IntakeRouteImport.update({
+  id: '/intake',
+  path: '/intake',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InsuranceRoute = InsuranceRouteImport.update({
@@ -69,9 +92,29 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EligibilityRoute = EligibilityRouteImport.update({
+  id: '/eligibility',
+  path: '/eligibility',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConsentRoute = ConsentRouteImport.update({
+  id: '/consent',
+  path: '/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CliniciansRoute = CliniciansRouteImport.update({
   id: '/clinicians',
   path: '/clinicians',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -94,35 +137,56 @@ const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
   path: '/legal/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPatientIdRoute = AdminPatientIdRouteImport.update({
+  id: '/$patientId',
+  path: '/$patientId',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/clinicians': typeof CliniciansRoute
+  '/consent': typeof ConsentRoute
+  '/dashboard': typeof DashboardRoute
+  '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
+  '/intake': typeof IntakeRoute
   '/learn': typeof LearnRoute
+  '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/clinicians': typeof CliniciansRoute
+  '/consent': typeof ConsentRoute
+  '/dashboard': typeof DashboardRoute
+  '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
+  '/intake': typeof IntakeRoute
   '/learn': typeof LearnRoute
+  '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
@@ -130,16 +194,24 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/clinicians': typeof CliniciansRoute
+  '/consent': typeof ConsentRoute
+  '/dashboard': typeof DashboardRoute
+  '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
+  '/intake': typeof IntakeRoute
   '/learn': typeof LearnRoute
+  '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
@@ -148,48 +220,72 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/clinicians'
+    | '/consent'
+    | '/dashboard'
+    | '/eligibility'
     | '/faq'
     | '/how-it-works'
     | '/insurance'
+    | '/intake'
     | '/learn'
+    | '/login'
     | '/pricing'
     | '/qualify'
     | '/safety'
     | '/sitemap.xml'
+    | '/submitted'
     | '/switch'
+    | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/clinicians'
+    | '/consent'
+    | '/dashboard'
+    | '/eligibility'
     | '/faq'
     | '/how-it-works'
     | '/insurance'
+    | '/intake'
     | '/learn'
+    | '/login'
     | '/pricing'
     | '/qualify'
     | '/safety'
     | '/sitemap.xml'
+    | '/submitted'
     | '/switch'
+    | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/clinicians'
+    | '/consent'
+    | '/dashboard'
+    | '/eligibility'
     | '/faq'
     | '/how-it-works'
     | '/insurance'
+    | '/intake'
     | '/learn'
+    | '/login'
     | '/pricing'
     | '/qualify'
     | '/safety'
     | '/sitemap.xml'
+    | '/submitted'
     | '/switch'
+    | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
@@ -197,15 +293,22 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   CliniciansRoute: typeof CliniciansRoute
+  ConsentRoute: typeof ConsentRoute
+  DashboardRoute: typeof DashboardRoute
+  EligibilityRoute: typeof EligibilityRoute
   FaqRoute: typeof FaqRoute
   HowItWorksRoute: typeof HowItWorksRoute
   InsuranceRoute: typeof InsuranceRoute
+  IntakeRoute: typeof IntakeRoute
   LearnRoute: typeof LearnRoute
+  LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
   QualifyRoute: typeof QualifyRoute
   SafetyRoute: typeof SafetyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SubmittedRoute: typeof SubmittedRoute
   SwitchRoute: typeof SwitchRoute
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTelehealthConsentRoute: typeof LegalTelehealthConsentRoute
@@ -219,6 +322,13 @@ declare module '@tanstack/react-router' {
       path: '/switch'
       fullPath: '/switch'
       preLoaderRoute: typeof SwitchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/submitted': {
+      id: '/submitted'
+      path: '/submitted'
+      fullPath: '/submitted'
+      preLoaderRoute: typeof SubmittedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -249,11 +359,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn': {
       id: '/learn'
       path: '/learn'
       fullPath: '/learn'
       preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intake': {
+      id: '/intake'
+      path: '/intake'
+      fullPath: '/intake'
+      preLoaderRoute: typeof IntakeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/insurance': {
@@ -277,11 +401,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/eligibility': {
+      id: '/eligibility'
+      path: '/eligibility'
+      fullPath: '/eligibility'
+      preLoaderRoute: typeof EligibilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/consent': {
+      id: '/consent'
+      path: '/consent'
+      fullPath: '/consent'
+      preLoaderRoute: typeof ConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/clinicians': {
       id: '/clinicians'
       path: '/clinicians'
       fullPath: '/clinicians'
       preLoaderRoute: typeof CliniciansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -312,20 +464,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalPrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/$patientId': {
+      id: '/admin/$patientId'
+      path: '/$patientId'
+      fullPath: '/admin/$patientId'
+      preLoaderRoute: typeof AdminPatientIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminPatientIdRoute: typeof AdminPatientIdRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminPatientIdRoute: AdminPatientIdRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   CliniciansRoute: CliniciansRoute,
+  ConsentRoute: ConsentRoute,
+  DashboardRoute: DashboardRoute,
+  EligibilityRoute: EligibilityRoute,
   FaqRoute: FaqRoute,
   HowItWorksRoute: HowItWorksRoute,
   InsuranceRoute: InsuranceRoute,
+  IntakeRoute: IntakeRoute,
   LearnRoute: LearnRoute,
+  LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
   QualifyRoute: QualifyRoute,
   SafetyRoute: SafetyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SubmittedRoute: SubmittedRoute,
   SwitchRoute: SwitchRoute,
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTelehealthConsentRoute: LegalTelehealthConsentRoute,
@@ -334,3 +510,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
