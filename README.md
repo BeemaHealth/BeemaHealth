@@ -5,7 +5,7 @@ Colorado-first telehealth medical weight-loss intake platform. This repo contain
 Use this file as the **documentation index** — for humans and AI agents. When looking something up, start here, then follow the link to the right doc.
 
 ---
-
+https://aretide.com/
 ## Glossary (acronyms used in this repo)
 
 | Acronym | Stands for |
@@ -61,7 +61,7 @@ Use this file as the **documentation index** — for humans and AI agents. When 
 | Connect frontend to backend | [.env.example](.env.example) + [Frontend ↔ API](#frontend--api) below |
 | Understand database tables | [backend/DATABASE.md](backend/DATABASE.md) |
 | Deploy backend (Heroku vs AWS) | [backend/HOSTING.md](backend/HOSTING.md) |
-| Business / launch plan | [Starting Point/launchPlan.md](Starting%20Point/launchPlan.md) |
+| Deploy frontend (GitHub Pages) | [docs/DEPLOY-FRONTEND.md](docs/DEPLOY-FRONTEND.md) |
 | Restore removed marketing pages (pricing, nav, etc.) | [docs/archived-marketing-pages.md](docs/archived-marketing-pages.md) |
 
 ---
@@ -79,8 +79,10 @@ Aretide/
 │   ├── HOSTING.md            ← Heroku Shield vs AWS for PHI (Protected Health Information)
 │   └── deploy/aws.md         ← AWS deployment outline
 ├── docs/
+│   ├── DEPLOY-FRONTEND.md              ← GitHub Pages + aretide.com deploy guide
 │   ├── archived-marketing-pages.md   ← Removed marketing nav + pages (restore guide)
 │   └── archived-marketing/           ← Full source copies from pre-MVP site
+├── deploy-frontend-prod.sh           ← Publish frontend to gh-pages
 └── Starting Point/
     └── launchPlan.md         ← Product / business launch plan
 ```
@@ -121,6 +123,13 @@ Aretide/
 | File | Contents |
 |------|----------|
 | [.env.example](.env.example) | `VITE_API_URL`, `DATABASE_URL`, `FERNET_KEY`, AWS/S3, CORS |
+| [.env.production.example](.env.production.example) | Production `VITE_API_URL` for frontend deploy |
+
+### Deployment
+
+| File | Contents |
+|------|----------|
+| [docs/DEPLOY-FRONTEND.md](docs/DEPLOY-FRONTEND.md) | **GitHub Pages + aretide.com** — one-time setup and `deploy-frontend-prod.sh` |
 
 ---
 
