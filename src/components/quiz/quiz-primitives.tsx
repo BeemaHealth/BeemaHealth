@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Check, Eye, EyeOff } from "lucide-react";
+import { Check, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 export const inputCls =
