@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Input validation tests (frontend + backend)
 
-Every user input must be validated in **both** the frontend step validators and the backend serializer for its write endpoint. Add tests in both places.
+See **`AGENTS.md`** for full workflow. Every user input must be validated in **both** the frontend step validators and the backend serializer for its write endpoint. Add tests in both places.
 
 ## Frontend
 

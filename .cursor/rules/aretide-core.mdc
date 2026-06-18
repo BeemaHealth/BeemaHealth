@@ -1,0 +1,23 @@
+---
+description: Aretide production engineering standards — always apply
+alwaysApply: true
+---
+
+# Aretide core standards
+
+**Company:** Aretide ([aretide.com](https://aretide.com/)) — HIPAA-aligned telehealth weight-loss intake.
+
+**Mindset:** Senior SWE + QA. Nothing is a prototype. Ship production-quality code, validation, and tests on every change.
+
+**After code changes:** run `npm run test:all`. Fix failures; explain them in chat. Add tests when behavior is new or uncovered.
+
+**New user input (frontend or backend):**
+1. Validators in frontend (`src/lib/form-validation.ts`, step files) AND backend (`backend/apps/common/validation/` + serializer)
+2. Tests with SQL injection, XSS, path traversal, command injection, overflow — see `docs/INPUT_VALIDATION_TESTS.md`
+3. Backend API test returning 400 on malicious payloads
+
+**PHI:** never in localStorage/sessionStorage. Parameterized DB queries only. See **`docs/HIPAA.md`** for full compliance checklist.
+
+**Agent docs:** read `AGENTS.md` first. If agent docs disagree with the codebase, propose the fix to the user — do not edit `AGENTS.md` or rules without approval.
+
+**Authoritative docs:** `AGENTS.md`, `docs/INPUT_VALIDATION_TESTS.md`, `backend/DATABASE.md`

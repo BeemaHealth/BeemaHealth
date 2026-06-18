@@ -39,8 +39,9 @@ describe("qualify-steps validation", () => {
   });
 
   describe("required field failures", () => {
-    it("treatment_interest required", () => {
-      expect(getQualifyStepError("treatment_interest", validQualifySlice({ treatmentInterest: "" }))).not.toBeNull();
+    it("treatment_interest blocks progress without a user-facing message", () => {
+      expect(getQualifyStepError("treatment_interest", validQualifySlice({ treatmentInterest: "" }))).toBe("");
+      expect(isQualifyStepComplete("treatment_interest", validQualifySlice({ treatmentInterest: "" }))).toBe(false);
     });
 
     it("state and consents required", () => {

@@ -70,6 +70,8 @@ Full local dev guide (identical setup on every machine): **[docs/LOCAL-DEV.md](d
 | Goal | Where to go |
 |------|-------------|
 | Local dev setup (Docker, prerequisites) | [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md) |
+| HIPAA compliance (agents) | [docs/HIPAA.md](docs/HIPAA.md) |
+| Input validation & security tests | [docs/INPUT_VALIDATION_TESTS.md](docs/INPUT_VALIDATION_TESTS.md) |
 | First-time install (deps, env, DB) | [First-time setup](#first-time-setup) below |
 | Connect frontend to backend | `.env.dev` + [Frontend ↔ API](#frontend--api) below |
 | Understand database tables | [backend/DATABASE.md](backend/DATABASE.md) |
@@ -85,6 +87,7 @@ Full local dev guide (identical setup on every machine): **[docs/LOCAL-DEV.md](d
 ```
 Aretide/
 ├── README.md                 ← You are here (doc index)
+├── AGENTS.md                 ← AI agent guide (production standards, tests, security)
 ├── .env.dev                  ← Dev env (ARETIDE_ENV=dev)
 ├── src/                      ← React / TanStack Start frontend
 ├── backend/                  ← Django REST API
@@ -258,10 +261,13 @@ Full research and go/no-go checklist: **[backend/HOSTING.md](backend/HOSTING.md)
 
 ## For AI agents
 
-When answering questions about this codebase:
+**Start here:** **[AGENTS.md](AGENTS.md)** — production mindset, architecture, testing requirements, security checklist, and workflow.
 
 | Topic | Read first |
 |-------|------------|
+| Agent engineering guide (tests, validation, PHI) | **`AGENTS.md`** |
+| HIPAA compliance checklist for agents | **`docs/HIPAA.md`** |
+| Input validation & attack-payload tests | `docs/INPUT_VALIDATION_TESTS.md` |
 | Database schema / tables / why JSON | `backend/DATABASE.md` |
 | Canonical field ownership (no duplicate storage) | `backend/DATABASE.md#canonical-field-ownership-no-duplicates` |
 | Pre-account funnel session (cookie + server draft) | `backend/DATABASE.md#anonymous-funnel-session-pre-account` |
