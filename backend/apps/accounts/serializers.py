@@ -1,6 +1,8 @@
+from django.contrib.auth import password_validation
 from rest_framework import serializers
 
 from apps.accounts.models import User
+from apps.common.validation.form import is_valid_email, is_valid_person_name, is_valid_phone
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -41,6 +43,30 @@ class RegisterSerializer(serializers.ModelSerializer):
             "dob": {"required": False, "allow_null": True},
             "state": {"required": False, "allow_blank": True},
         }
+
+    def validate_email(self, value: str) -> str:
+        if not is_valid_email(value):
+            raise serializers.ValidationError("Enter a valid email address.")
+        return value.strip().lower()
+
+    def validate_first_name(self, value: str) -> str:
+        if not is_valid_person_name(value):
+            raise serializers.ValidationError("Enter your legal first name.")
+        return value.strip()
+
+    def validate_last_name(self, value: str) -> str:
+        if not is_valid_person_name(value):
+            raise serializers.ValidationError("Enter your legal last name.")
+        return value.strip()
+
+    def validate_phone(self, value: str) -> str:
+        if not is_valid_phone(value):
+            raise serializers.ValidationError("Enter a valid 10-digit US phone number.")
+        return value.strip()
+
+    def validate_password(self, value: str) -> str:
+        password_validation.validate_password(value)
+        return value
 
     def create(self, validated_data):
         password = validated_data.pop("password")

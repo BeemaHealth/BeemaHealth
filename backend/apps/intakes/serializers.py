@@ -1,6 +1,7 @@
 from django.utils import timezone
 from rest_framework import serializers
 
+from apps.common.validation.intake import validate_intake_payload
 from apps.eligibility.models import EligibilityResponse
 from apps.eligibility.services import derive_eligibility_flags
 from apps.intakes.deduplication import dedupe_intake_payload
@@ -41,6 +42,15 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         attrs = self._dedupe(attrs)
+
+        user = self.context.get("user") or (self.instance.user if self.instance else None)
+        eligibility = EligibilityResponse.objects.filter(user=user).first() if user else None
+        current_weight = str(eligibility.weight_lbs) if eligibility and eligibility.weight_lbs is not None else None
+
+        intake_errors = validate_intake_payload(attrs, current_weight=current_weight)
+        if intake_errors:
+            raise serializers.ValidationError(intake_errors)
+
         return super().validate(attrs)
 
     def to_representation(self, instance):

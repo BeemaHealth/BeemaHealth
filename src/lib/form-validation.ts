@@ -21,10 +21,12 @@ export function parseNonNegativeInt(value: string, max?: number): number | null 
   return n;
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_RE = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export function isValidEmail(email: string): boolean {
-  return EMAIL_RE.test(email.trim());
+  const trimmed = email.trim();
+  if (!trimmed || trimmed.includes("..") || trimmed.includes("%")) return false;
+  return EMAIL_RE.test(trimmed);
 }
 
 export function normalizePhoneDigits(phone: string): string {

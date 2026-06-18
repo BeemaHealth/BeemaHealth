@@ -13,7 +13,11 @@
     "preview": "vite preview",
     "deploy:frontend": "./deploy-frontend-prod.sh",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:backend": "./scripts/test-backend.sh",
+    "test:all": "npm test && npm run test:backend"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -86,6 +90,7 @@
     "prettier": "^3.7.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^3.2.4"
   }
 }

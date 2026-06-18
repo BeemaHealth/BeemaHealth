@@ -1,0 +1,51 @@
+---
+description: Add validation tests when creating or changing form inputs (frontend + backend)
+globs: src/lib/form-validation.ts,src/lib/address-validation.ts,src/lib/qualify-steps.ts,src/lib/intake-steps.ts,src/routes/qualify.tsx,src/routes/intake.tsx,src/lib/__tests__/**,backend/apps/**/serializers.py,backend/apps/common/validation/**,backend/apps/**/tests/**
+alwaysApply: false
+---
+
+# Input validation tests (frontend + backend)
+
+Every user input must be validated in **both** the frontend step validators and the backend serializer for its write endpoint. Add tests in both places.
+
+## Frontend
+
+| Input type | Validator | Step wiring |
+|------------|-----------|-------------|
+| Email, phone, name, numbers | `src/lib/form-validation.ts` | `qualify-steps.ts` / `intake-steps.ts` |
+| Address, ZIP, city | `src/lib/address-validation.ts` | `intake-steps.ts` |
+
+Tests: `src/lib/__tests/` — run `npm test`
+
+Payloads: `src/lib/__tests__/fixtures/malicious-payloads.ts`
+
+## Backend
+
+| Write endpoint | Serializer | Shared validator |
+|----------------|------------|------------------|
+| POST `/api/auth/register/` | `RegisterSerializer` | `validation/form.py` |
+| PATCH `/api/eligibility/me/` | `EligibilitySerializer` | `validation/eligibility.py` |
+| PATCH `/api/funnel/eligibility/` | `EligibilitySerializer` | `validation/eligibility.py` |
+| PATCH `/api/medical-intakes/me/` | `MedicalIntakeSerializer` | `validation/intake.py` |
+| POST `/api/consent-records/me/` | `ConsentRecordSerializer` | `validation/form.py` |
+
+Tests: `backend/apps/<app>/tests/test_*_api.py` — run `npm run test:backend`
+
+Payloads: `backend/apps/common/validation/payloads.py` (keep in sync with frontend fixtures)
+
+## Required test cases (both layers)
+
+1. **Success** — valid payload passes
+2. **Empty / missing** — returns error
+3. **Invalid format** — wrong type, out of range
+4. **Injection** (strict fields) — `STRICT_FIELD_ATTACKS` → reject
+
+## Checklist for new inputs
+
+- [ ] Frontend validator + step error + Vitest
+- [ ] Backend validator in `apps/common/validation/` + serializer hook
+- [ ] Backend API test asserting 400 on malicious payloads
+- [ ] `npm run test:all` passes
+- [ ] Update `docs/INPUT_VALIDATION_TESTS.md` if patterns change
+
+Full guide: `docs/INPUT_VALIDATION_TESTS.md`

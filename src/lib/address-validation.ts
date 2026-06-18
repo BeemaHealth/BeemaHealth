@@ -14,9 +14,13 @@ export function isValidUsZip(zip: string): boolean {
   return US_ZIP_RE.test(zip.trim());
 }
 
+const UNSAFE_ADDRESS_RE = /[<>]|javascript:|on\w+\s*=|script|alert\s*\(/i;
+
 export function isValidStreetAddress(address: string): boolean {
   const trimmed = address.trim();
-  return trimmed.length >= 5 && STREET_NUMBER_RE.test(trimmed);
+  if (trimmed.length < 5 || !STREET_NUMBER_RE.test(trimmed)) return false;
+  if (UNSAFE_ADDRESS_RE.test(trimmed)) return false;
+  return true;
 }
 
 export function isValidCity(city: string): boolean {

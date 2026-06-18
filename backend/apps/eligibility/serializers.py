@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from apps.common.validation.eligibility import validate_eligibility_fields
 from apps.eligibility.models import EligibilityResponse
 from apps.eligibility.services import derive_eligibility_flags
 from apps.intakes.services import compute_bmi
@@ -64,6 +65,11 @@ class EligibilitySerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Aretide is currently only available for adults 18 and older."
             )
+
+        field_errors = validate_eligibility_fields(attrs, self.instance)
+        if field_errors:
+            raise serializers.ValidationError(field_errors)
+
         return attrs
 
     def _apply_bmi(self, instance: EligibilityResponse) -> None:
