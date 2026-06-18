@@ -30,6 +30,7 @@ import {
   PRIMARY_GOAL_OPTIONS,
   allPreSignupConsents,
   computeIsAdult,
+  getQualifyStepError,
   hasAllPreSignupConsents,
   resolveQualifyStepIndex,
   SEX_OPTIONS,
@@ -228,38 +229,30 @@ function EligibilityPage() {
   }
 
   const canContinue = (() => {
-    switch (currentStep) {
-      case "treatment_interest":
-        return Boolean(data.treatmentInterest);
-      case "primary_goal":
-        return Boolean(data.primaryGoal);
-      case "treatment_priority":
-        return Boolean(data.treatmentPriority);
-      case "weight_loss_goal":
-        return Boolean(data.targetWeightLossRange);
-      case "state_consent":
-        return Boolean(data.state) && hasAllPreSignupConsents(data.consents);
-      case "dob":
-        return Boolean(data.dob) && isAdult !== null;
-      case "body_metrics":
-        return Boolean(data.heightFt && data.weightLbs && data.goalWeightLbs);
-      case "sex_assigned_at_birth":
-        return Boolean(data.sexAssignedAtBirth);
-      case "contraindications":
-        return CONTRAINDICATION_QUESTIONS.every((q) => typeof data.safety[q.key] === "boolean");
-      case "review":
-        return true;
-      case "account":
-        return (
-          Boolean(data.firstName.trim() && data.lastName.trim() && data.phone.trim()) &&
-          Boolean(data.email) &&
-          data.password.length >= 10 &&
-          data.password === data.confirmPassword
-        );
-      default:
-        return false;
-    }
+    if (under18 && currentStep === "dob") return false;
+    return (
+      getQualifyStepError(currentStep, data, {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+      }) === null
+    );
   })();
+
+  const stepValidationError =
+    under18 && currentStep === "dob"
+      ? null
+      : getQualifyStepError(currentStep, data, {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          phone: data.phone,
+          email: data.email,
+          password: data.password,
+          confirmPassword: data.confirmPassword,
+        });
 
   async function handleNext() {
     setError("");
@@ -330,6 +323,9 @@ function EligibilityPage() {
         footer={
           <>
             {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
+            {!error && stepValidationError && (
+              <p className="mt-4 text-sm text-destructive">{stepValidationError}</p>
+            )}
             {under18 && currentStep === "dob" && (
               <div className="mt-4">
                 <BlockedMessage

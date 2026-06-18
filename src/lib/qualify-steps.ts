@@ -7,6 +7,15 @@ import type {
   TreatmentInterest,
   TreatmentPriority,
 } from "@/lib/types/mvp";
+import {
+  isValidEmail,
+  isValidPersonName,
+  isValidPhone,
+  validateGoalWeightLbs,
+  validateHeightFt,
+  validateHeightIn,
+  validateWeightLbs,
+} from "@/lib/form-validation";
 
 export const CONTRAINDICATION_QUESTIONS = [
   {
@@ -200,32 +209,77 @@ export function computeIsAdult(dob: string): boolean | null {
   return age >= 18;
 }
 
-export function isQualifyStepComplete(stepId: QualifyStepId, data: QualifyFormSlice): boolean {
+export type QualifyAccountFields = {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+export function getQualifyStepError(
+  stepId: QualifyStepId,
+  data: QualifyFormSlice,
+  account?: QualifyAccountFields,
+): string | null {
   switch (stepId) {
     case "treatment_interest":
-      return Boolean(data.treatmentInterest);
+      return data.treatmentInterest ? null : "Select a care format to continue.";
     case "primary_goal":
-      return Boolean(data.primaryGoal);
+      return data.primaryGoal ? null : "Select what motivates you to continue.";
     case "treatment_priority":
-      return Boolean(data.treatmentPriority);
+      return data.treatmentPriority ? null : "Select what matters most in your care.";
     case "weight_loss_goal":
-      return Boolean(data.targetWeightLossRange);
+      return data.targetWeightLossRange ? null : "Select a target weight-loss range.";
     case "state_consent":
-      return Boolean(data.state) && hasAllPreSignupConsents(data.consents);
+      if (!data.state) return "Select your state.";
+      if (!hasAllPreSignupConsents(data.consents)) return "Agree to the Terms, Privacy Policy, and Telehealth Consent.";
+      return null;
     case "dob":
-      return Boolean(data.dob) && computeIsAdult(data.dob) !== null;
-    case "body_metrics":
-      return Boolean(data.heightFt && data.weightLbs && data.goalWeightLbs);
+      if (!data.dob) return "Enter your date of birth.";
+      if (computeIsAdult(data.dob) === null) return "Enter a valid date of birth.";
+      if (computeIsAdult(data.dob) === false) return "Aretide is available to adults 18 and older.";
+      return null;
+    case "body_metrics": {
+      const ftErr = validateHeightFt(data.heightFt);
+      if (ftErr) return ftErr;
+      const inErr = validateHeightIn(data.heightIn);
+      if (inErr) return inErr;
+      const weightErr = validateWeightLbs(data.weightLbs, "Current weight");
+      if (weightErr) return weightErr;
+      return validateGoalWeightLbs(data.weightLbs, data.goalWeightLbs);
+    }
     case "sex_assigned_at_birth":
-      return Boolean(data.sexAssignedAtBirth);
-    case "contraindications":
-      return CONTRAINDICATION_QUESTIONS.every((q) => typeof data.safety[q.key] === "boolean");
+      return data.sexAssignedAtBirth ? null : "Select the sex you were assigned at birth.";
+    case "contraindications": {
+      const unanswered = CONTRAINDICATION_QUESTIONS.find((q) => typeof data.safety[q.key] !== "boolean");
+      return unanswered ? "Answer every health screening question." : null;
+    }
     case "review":
-    case "account":
-      return false;
+      return null;
+    case "account": {
+      if (!account) return "Complete all account fields.";
+      if (!isValidPersonName(account.firstName)) return "Enter your legal first name.";
+      if (!isValidPersonName(account.lastName)) return "Enter your legal last name.";
+      if (!isValidPhone(account.phone)) return "Enter a valid 10-digit US phone number.";
+      if (!account.email.trim()) return "Enter your email address.";
+      if (!isValidEmail(account.email)) return "Enter a valid email address.";
+      if (account.password.length < 10) return "Password must be at least 10 characters.";
+      if (account.password !== account.confirmPassword) return "Passwords do not match.";
+      return null;
+    }
     default:
-      return false;
+      return null;
   }
+}
+
+export function isQualifyStepComplete(
+  stepId: QualifyStepId,
+  data: QualifyFormSlice,
+  account?: QualifyAccountFields,
+): boolean {
+  return getQualifyStepError(stepId, data, account) === null;
 }
 
 /** First incomplete pre-signup step, or review when all prior steps are done. */

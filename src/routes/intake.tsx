@@ -19,6 +19,7 @@ import {
   INTAKE_EXCLUDED_CONDITION_KEYS,
   INTAKE_STEP_LABELS,
   isIntakeStepComplete,
+  getIntakeStepError,
   MEDICAL_CONDITIONS,
   PRIOR_MEDS,
   SAFETY_ACKS,
@@ -139,7 +140,7 @@ function IntakePage() {
   const acks = data.safety_acknowledgments as Record<string, boolean>;
 
   const canContinue = isIntakeStepComplete(step, data, eligibility);
-  const identityAddressVerified = id.address_verified === "true";
+  const stepValidationError = getIntakeStepError(step, data, eligibility);
 
   async function handleNext() {
     if (!canContinue || submitting) return;
@@ -192,13 +193,8 @@ function IntakePage() {
               </button>
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
-            {!canContinue && !error && step === 0 && !identityAddressVerified && (
-              <p className="text-sm text-destructive">
-                Enter and verify your home address before continuing.
-              </p>
-            )}
-            {!canContinue && !error && !(step === 0 && !identityAddressVerified) && (
-              <p className="text-sm text-destructive">Required fields are missing.</p>
+            {!error && stepValidationError && (
+              <p className="text-sm text-destructive">{stepValidationError}</p>
             )}
             <QuizNav
               showBack={false}
@@ -319,7 +315,7 @@ function IntakePage() {
 
         {step === 2 && (
           <div className="grid gap-4">
-            <Field label="Weight-loss methods tried">
+            <Field label="Weight-loss methods tried" required>
               <div className="grid gap-2 sm:grid-cols-2">
                 {WEIGHT_METHODS.map((m) => (
                   <ChoiceCard key={m} compact selected={wh.methods.includes(m)} onClick={() => patch("weight_history", { ...wh, methods: wh.methods.includes(m) ? wh.methods.filter((x) => x !== m) : [...wh.methods, m] })} title={m} />
