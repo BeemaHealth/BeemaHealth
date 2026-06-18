@@ -2,6 +2,8 @@
  * Medical intake step field definitions — keeps intake route readable.
  */
 
+import type { MedicalIntake } from "@/lib/types/mvp";
+
 export const INTAKE_STEP_LABELS = [
   "Identity & contact",
   "Weight history & goals",
@@ -135,5 +137,45 @@ export function emptyIntakeData() {
     labs: {} as Record<string, string | boolean>,
     medication_preferences: {} as Record<string, string | boolean>,
     safety_acknowledgments: {} as Record<string, boolean>,
+  };
+}
+
+/** Merge sparse API/local intake payloads with empty defaults (arrays, nested objects). */
+export function normalizeIntake(draft: MedicalIntake): MedicalIntake {
+  const empty = emptyIntakeData();
+  const wh = draft.weight_history as Partial<typeof empty.weight_history>;
+
+  return {
+    ...draft,
+    identity: { ...empty.identity, ...draft.identity },
+    body_metrics: {
+      ...empty.body_metrics,
+      ...draft.body_metrics,
+      goals: Array.isArray(draft.body_metrics?.goals)
+        ? draft.body_metrics.goals
+        : empty.body_metrics.goals,
+    },
+    weight_history: {
+      ...empty.weight_history,
+      ...wh,
+      methods: Array.isArray(wh.methods) ? wh.methods : empty.weight_history.methods,
+      prior_meds: Array.isArray(wh.prior_meds) ? wh.prior_meds : empty.weight_history.prior_meds,
+      prior_details: { ...empty.weight_history.prior_details, ...(wh.prior_details ?? {}) },
+    },
+    medical_conditions: { ...empty.medical_conditions, ...draft.medical_conditions },
+    family_history: { ...empty.family_history, ...draft.family_history },
+    medications: {
+      answers: { ...empty.medications.answers, ...(draft.medications?.answers ?? {}) },
+      list: Array.isArray(draft.medications?.list) ? draft.medications.list : empty.medications.list,
+    },
+    allergies: {
+      answers: { ...empty.allergies.answers, ...(draft.allergies?.answers ?? {}) },
+      list: Array.isArray(draft.allergies?.list) ? draft.allergies.list : empty.allergies.list,
+    },
+    pregnancy: { ...empty.pregnancy, ...draft.pregnancy },
+    lifestyle: { ...empty.lifestyle, ...draft.lifestyle },
+    labs: { ...empty.labs, ...draft.labs },
+    medication_preferences: { ...empty.medication_preferences, ...draft.medication_preferences },
+    safety_acknowledgments: { ...empty.safety_acknowledgments, ...draft.safety_acknowledgments },
   };
 }

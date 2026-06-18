@@ -21,6 +21,7 @@ import {
   SAFETY_ACKS,
   WEIGHT_METHODS,
   emptyIntakeData,
+  normalizeIntake,
 } from "@/lib/intake-steps";
 import { computeBmi } from "@/lib/safety-flags";
 import type { EligibilityResponses, MedicalIntake, User } from "@/lib/types/mvp";
@@ -69,10 +70,10 @@ function IntakePage() {
       if (cancelled) return;
       setEligibility(elig);
       if (draft) {
-        setData(draft);
+        setData(normalizeIntake(draft));
       } else if (!isApiEnabled()) {
         const local = getIntake(session.user.id);
-        if (local) setData(local);
+        if (local) setData(normalizeIntake(local));
       }
       setLoading(false);
     })();
