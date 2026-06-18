@@ -120,6 +120,9 @@ export async function patchFunnelEligibility(
 export async function registerUser(payload: {
   email: string;
   password: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
 }): Promise<SessionUser> {
   if (USE_API) {
     const remote = await apiFetch<SessionUser>("/auth/register/", {
@@ -134,9 +137,9 @@ export async function registerUser(payload: {
   const user: User = {
     id: crypto.randomUUID(),
     email: payload.email,
-    first_name: "",
-    last_name: "",
-    phone: "",
+    first_name: payload.first_name,
+    last_name: payload.last_name,
+    phone: payload.phone,
     dob: "",
     state: "",
     email_verified: true,

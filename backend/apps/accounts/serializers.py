@@ -35,9 +35,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             "state",
         ]
         extra_kwargs = {
-            "first_name": {"required": False, "allow_blank": True},
-            "last_name": {"required": False, "allow_blank": True},
-            "phone": {"required": False, "allow_blank": True},
+            "first_name": {"required": True, "allow_blank": False},
+            "last_name": {"required": True, "allow_blank": False},
+            "phone": {"required": True, "allow_blank": False},
             "dob": {"required": False, "allow_null": True},
             "state": {"required": False, "allow_blank": True},
         }

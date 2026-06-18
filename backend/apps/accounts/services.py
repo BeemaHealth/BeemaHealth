@@ -47,7 +47,12 @@ def send_verification_email(user: User, token: str) -> None:
         [user.email],
         fail_silently=False,
     )
-    logger.info("Email verification link for %s: %s", user.email, verify_url)
+    logger.info(
+        "Sent verification email to %s via %s (link: %s)",
+        user.email,
+        settings.EMAIL_BACKEND,
+        verify_url,
+    )
 
 
 def verify_email_token(token: str) -> User:

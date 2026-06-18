@@ -159,7 +159,7 @@ export const STEP_SUBTITLES: Partial<Record<QualifyStepId, string>> = {
   sex_assigned_at_birth: "Certain treatments are prescribed differently based on biological sex.",
   contraindications: "Your responses are confidential and shared only with your care team.",
   review: "Take a moment to verify your answers before creating your account.",
-  account: "You'll verify your email next, then complete your medical intake.",
+  account: "We'll save your contact details, then send a verification link before your medical intake.",
 };
 
 /** Fields required to decide whether a step is complete (mirrors qualify.tsx validation). */

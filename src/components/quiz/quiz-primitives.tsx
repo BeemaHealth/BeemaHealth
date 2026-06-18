@@ -179,12 +179,14 @@ export function QuizNav({
   onNext,
   nextLabel = "Continue",
   nextDisabled,
+  nextLoading,
   showBack = true,
 }: {
   onBack?: () => void;
   onNext: () => void;
   nextLabel?: string;
   nextDisabled?: boolean;
+  nextLoading?: boolean;
   showBack?: boolean;
 }) {
   return (
@@ -193,7 +195,8 @@ export function QuizNav({
         <button
           type="button"
           onClick={onBack}
-          className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          disabled={nextLoading}
+          className="text-sm font-medium text-muted-foreground hover:text-foreground disabled:opacity-50"
         >
           ← Back
         </button>
@@ -204,8 +207,9 @@ export function QuizNav({
         type="button"
         disabled={nextDisabled}
         onClick={onNext}
-        className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-50"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-50"
       >
+        {nextLoading && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
         {nextLabel}
       </button>
     </div>

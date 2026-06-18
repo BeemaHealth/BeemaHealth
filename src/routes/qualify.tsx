@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import {
   BlockedMessage,
@@ -79,6 +79,9 @@ type FormState = {
   goalWeightLbs: string;
   sexAssignedAtBirth: SexAssignedAtBirth | "";
   safety: EligibilitySafetyScreen;
+  firstName: string;
+  lastName: string;
+  phone: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -98,12 +101,15 @@ const initial: FormState = {
   goalWeightLbs: "",
   sexAssignedAtBirth: "",
   safety: {},
+  firstName: "",
+  lastName: "",
+  phone: "",
   email: "",
   password: "",
   confirmPassword: "",
 };
 
-function draftToForm(draft: EligibilityResponses): FormState {
+function draftToForm(draft: EligibilityResponses): Partial<FormState> {
   return {
     treatmentInterest: draft.treatment_interest || "",
     primaryGoal: draft.primary_goal || "",
@@ -118,8 +124,6 @@ function draftToForm(draft: EligibilityResponses): FormState {
     goalWeightLbs: draft.goal_weight_lbs != null ? String(draft.goal_weight_lbs) : "",
     sexAssignedAtBirth: draft.sex_assigned_at_birth || "",
     safety: draft.safety_screen || {},
-    email: "",
-    password: "",
   };
 }
 
@@ -198,8 +202,9 @@ function EligibilityPage() {
 
         if (!cancelled && draft) {
           const restored = draftToForm(draft);
+          const merged = { ...initial, ...restored };
           setData((prev) => ({ ...prev, ...restored }));
-          setStepIndex(resolveQualifyStepIndex(stepList, restored));
+          setStepIndex(resolveQualifyStepIndex(stepList, merged));
         }
       } catch {
         if (!cancelled) setError("Could not restore your progress. You can still continue.");
@@ -246,6 +251,7 @@ function EligibilityPage() {
         return true;
       case "account":
         return (
+          Boolean(data.firstName.trim() && data.lastName.trim() && data.phone.trim()) &&
           Boolean(data.email) &&
           data.password.length >= 10 &&
           data.password === data.confirmPassword
@@ -258,6 +264,7 @@ function EligibilityPage() {
   async function handleNext() {
     setError("");
     if (currentStep === "account" || (currentStep === "review" && existingSession)) {
+      setSubmitting(true);
       await handleFinish();
       return;
     }
@@ -294,6 +301,9 @@ function EligibilityPage() {
       const session = await registerUser({
         email: data.email,
         password: data.password,
+        first_name: data.firstName.trim(),
+        last_name: data.lastName.trim(),
+        phone: data.phone.trim(),
       });
       setSession(session);
       navigate({ to: "/verify-email/pending" });
@@ -341,9 +351,12 @@ function EligibilityPage() {
                 onBack={() => setStepIndex((i) => i - 1)}
                 onNext={() => void handleNext()}
                 nextDisabled={!canContinue || submitting}
+                nextLoading={submitting}
                 nextLabel={
                   submitting
-                    ? "Saving…"
+                    ? currentStep === "account"
+                      ? "Creating account…"
+                      : "Saving…"
                     : currentStep === "account"
                       ? "Create account"
                       : currentStep === "review" && existingSession
@@ -536,6 +549,35 @@ function EligibilityPage() {
 
         {currentStep === "account" && (
           <div className="grid gap-4">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field label="Legal first name" required>
+                <input
+                  type="text"
+                  className={inputCls}
+                  value={data.firstName}
+                  onChange={(e) => set("firstName", e.target.value)}
+                  autoComplete="given-name"
+                />
+              </Field>
+              <Field label="Legal last name" required>
+                <input
+                  type="text"
+                  className={inputCls}
+                  value={data.lastName}
+                  onChange={(e) => set("lastName", e.target.value)}
+                  autoComplete="family-name"
+                />
+              </Field>
+            </div>
+            <Field label="Phone" required>
+              <input
+                type="tel"
+                className={inputCls}
+                value={data.phone}
+                onChange={(e) => set("phone", e.target.value)}
+                autoComplete="tel"
+              />
+            </Field>
             <Field label="Email" required>
               <input type="email" className={inputCls} value={data.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" />
             </Field>
@@ -552,9 +594,6 @@ function EligibilityPage() {
             {data.confirmPassword && data.password !== data.confirmPassword && (
               <p className="text-sm text-destructive">Passwords do not match.</p>
             )}
-            <p className="text-sm text-muted-foreground">
-              Your legal name, phone, and address are collected once in the medical intake after you verify your email.
-            </p>
           </div>
         )}
       </QuizShell>
