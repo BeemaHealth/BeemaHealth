@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { AddressFields } from "@/components/quiz/AddressFields";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import {
   ChoiceCard,
@@ -114,6 +115,7 @@ function IntakePage() {
   const acks = data.safety_acknowledgments as Record<string, boolean>;
 
   const canContinue = isIntakeStepComplete(step, data, eligibility);
+  const identityAddressVerified = id.address_verified === "true";
 
   async function handleNext() {
     if (!canContinue || submitting) return;
@@ -137,6 +139,8 @@ function IntakePage() {
       String(eligibility?.height_in ?? 0),
       String(eligibility?.weight_lbs ?? ""),
     );
+  const currentWeightLbs =
+    eligibility?.weight_lbs != null ? String(eligibility.weight_lbs) : "";
   const showTreatmentPrefs = !eligibility?.treatment_interest;
 
   if (loading) {
@@ -164,7 +168,12 @@ function IntakePage() {
               </button>
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
-            {!canContinue && !error && (
+            {!canContinue && !error && step === 0 && !identityAddressVerified && (
+              <p className="text-sm text-destructive">
+                Enter and verify your home address before continuing.
+              </p>
+            )}
+            {!canContinue && !error && !(step === 0 && !identityAddressVerified) && (
               <p className="text-sm text-destructive">Required fields are missing.</p>
             )}
             <QuizNav
@@ -181,16 +190,45 @@ function IntakePage() {
           <div className="grid gap-4">
             <AccountSummary user={session.user} eligibility={eligibility} bmi={summaryBmi} />
             <div className="grid gap-3 sm:grid-cols-2">
-              {IDENTITY_FIELDS.map(([k, label]) => (
-                <Field key={k} label={label} required={k !== "preferred"}>
-                  <input
-                    className={inputCls}
-                    type={k === "emergency_phone" ? "tel" : "text"}
-                    value={id[k] ?? ""}
-                    onChange={(e) => patch("identity", { ...id, [k]: e.target.value })}
-                  />
-                </Field>
-              ))}
+              <Field label="Preferred name (optional)">
+                <input
+                  className={inputCls}
+                  value={id.preferred ?? ""}
+                  autoComplete="nickname"
+                  onChange={(e) => patch("identity", { ...id, preferred: e.target.value })}
+                />
+              </Field>
+              <AddressFields
+                expectedState={session.user.state || eligibility?.state}
+                value={{
+                  address: id.address ?? "",
+                  city: id.city ?? "",
+                  zip: id.zip ?? "",
+                  verified: id.address_verified === "true",
+                }}
+                onChange={({ address, city, zip, verified }) =>
+                  patch("identity", {
+                    ...id,
+                    address,
+                    city,
+                    zip,
+                    address_verified: verified ? "true" : "",
+                  })
+                }
+              />
+              {IDENTITY_FIELDS.filter(([k]) => k === "emergency_name" || k === "emergency_phone").map(
+                ([k, label]) => (
+                  <Field key={k} label={label} required>
+                    <input
+                      className={inputCls}
+                      type={k === "emergency_phone" ? "tel" : "text"}
+                      value={id[k] ?? ""}
+                      autoComplete={k === "emergency_phone" ? "tel" : "name"}
+                      onChange={(e) => patch("identity", { ...id, [k]: e.target.value })}
+                    />
+                  </Field>
+                ),
+              )}
             </div>
           </div>
         )}
@@ -203,14 +241,34 @@ function IntakePage() {
             </p>
             {(
               [
-                ["highest_weight", "Highest adult weight (lb)", true],
-                ["lowest_weight", "Lowest adult weight (lb)", true],
-                ["waist", "Waist circumference (optional)", false],
-                ["duration", "How long have you been trying to lose weight?", true],
+                {
+                  key: "highest_weight" as const,
+                  label: "What is the most you've ever weighed in your adult life? (lbs)",
+                },
+                {
+                  key: "lowest_weight" as const,
+                  label: "What is the least you've ever weighed in your adult life? (lbs)",
+                },
               ] as const
-            ).map(([k, label, required]) => (
-              <Field key={k} label={label} required={required}>
-                <input className={inputCls} value={(body[k] as string) ?? ""} onChange={(e) => patch("body_metrics", { ...body, [k]: e.target.value })} />
+            ).map(({ key, label }) => (
+              <Field key={key} label={label} required>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <input
+                    type="number"
+                    className={inputCls}
+                    value={(body[key] as string) ?? ""}
+                    onChange={(e) => patch("body_metrics", { ...body, [key]: e.target.value })}
+                  />
+                  {currentWeightLbs && (
+                    <button
+                      type="button"
+                      className="shrink-0 rounded-full border border-border px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted/50"
+                      onClick={() => patch("body_metrics", { ...body, [key]: currentWeightLbs })}
+                    >
+                      Same as current weight
+                    </button>
+                  )}
+                </div>
               </Field>
             ))}
             <Field label="Main goals (select all)" required>

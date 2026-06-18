@@ -2,6 +2,7 @@
  * Medical intake step field definitions — keeps intake route readable.
  */
 
+import { isIdentityAddressComplete } from "@/lib/address-validation";
 import type { MedicalIntake } from "@/lib/types/mvp";
 
 export const INTAKE_STEP_LABELS = [
@@ -179,12 +180,14 @@ export function isIntakeStepComplete(
 
   switch (step) {
     case 0:
-      return REQUIRED_IDENTITY_FIELDS.every((k) => isFilled(id[k]));
+      return (
+        REQUIRED_IDENTITY_FIELDS.every((k) => isFilled(id[k])) &&
+        isIdentityAddressComplete(id)
+      );
     case 1:
       return (
         isFilled(body.highest_weight) &&
         isFilled(body.lowest_weight) &&
-        isFilled(body.duration) &&
         Array.isArray(body.goals) &&
         body.goals.length > 0
       );
