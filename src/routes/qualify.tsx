@@ -13,6 +13,7 @@ import {
   inputCls,
 } from "@/components/quiz/quiz-primitives";
 import { DateOfBirthField } from "@/components/quiz/DateOfBirthField";
+import { BmiGauge } from "@/components/quiz/BmiGauge";
 import {
   createFunnelSession,
   fetchEligibilityMe,
@@ -470,17 +471,7 @@ function EligibilityPage() {
             <Field label="Target weight (lb)" required>
               <input type="number" className={inputCls} value={data.goalWeightLbs} onChange={(e) => set("goalWeightLbs", e.target.value)} />
             </Field>
-            {bmi != null && (
-              <p className="rounded-2xl bg-primary-soft/50 px-4 py-3 text-sm">
-                Estimated BMI: <strong>{bmi}</strong>
-                {goalBmi != null && (
-                  <>
-                    {" "}
-                    · Target BMI: <strong>{goalBmi}</strong>
-                  </>
-                )}
-              </p>
-            )}
+            <BmiGauge bmi={bmi} goalBmi={goalBmi} />
           </div>
         )}
 
