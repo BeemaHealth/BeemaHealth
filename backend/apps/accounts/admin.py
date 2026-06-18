@@ -5,12 +5,12 @@ from django.contrib.auth.models import Group
 from django.db.models import F, Window
 from django.db.models.functions import RowNumber
 from rest_framework.authtoken.admin import TokenAdmin as BaseTokenAdmin
-from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.models import Token, TokenProxy
 
 from apps.accounts.models import User
 from config.admin_utils import all_list_display_fields, all_model_fields, auto_readonly_fields
 
-for _model in (Group, Token):
+for _model in (Group, Token, TokenProxy):
     if admin.site.is_registered(_model):
         admin.site.unregister(_model)
 
