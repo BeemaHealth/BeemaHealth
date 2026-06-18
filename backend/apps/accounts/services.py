@@ -1,6 +1,7 @@
 import hashlib
 import logging
 import secrets
+import threading
 from datetime import timedelta
 
 from django.conf import settings
@@ -53,6 +54,15 @@ def send_verification_email(user: User, token: str) -> None:
         settings.EMAIL_BACKEND,
         verify_url,
     )
+
+
+def queue_verification_email(user: User, token: str) -> None:
+    """Send verification email without blocking the HTTP response (SMTP can be slow)."""
+    threading.Thread(
+        target=send_verification_email,
+        args=(user, token),
+        daemon=True,
+    ).start()
 
 
 def verify_email_token(token: str) -> User:

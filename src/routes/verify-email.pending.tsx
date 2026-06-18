@@ -1,4 +1,5 @@
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
+import { MailWarning } from "lucide-react";
 import { useState } from "react";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import { Field, QuizShell, inputCls } from "@/components/quiz/quiz-primitives";
@@ -70,6 +71,16 @@ function VerifyEmailPendingPage() {
         subtitle={`We sent a verification link to ${session.user.email}. Open the email and either click the link or paste it below.`}
       >
         <div className="grid gap-4">
+          <div
+            className="flex gap-3 rounded-2xl border border-warning/30 bg-warning/10 px-4 py-3"
+            role="note"
+          >
+            <MailWarning className="mt-0.5 size-5 shrink-0 text-warning" aria-hidden="true" />
+            <p className="text-sm text-foreground">
+              <span className="font-semibold">Check your spam or junk folder.</span> If you don&apos;t
+              see the email within a few minutes, verification messages often land there first.
+            </p>
+          </div>
           <form onSubmit={(e) => void handleManualVerify(e)} className="grid gap-3">
             <Field label="Verification link or token" required>
               <input

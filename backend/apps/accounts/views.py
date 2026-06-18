@@ -9,7 +9,7 @@ from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 
 from apps.accounts.serializers import LoginSerializer, RegisterSerializer, UserSerializer, VerifyEmailSerializer
-from apps.accounts.services import create_email_verification_token, send_verification_email, verify_email_token
+from apps.accounts.services import create_email_verification_token, queue_verification_email, verify_email_token
 from apps.audit.services import log_audit_event
 from apps.eligibility.services import clear_funnel_cookie
 from apps.eligibility.views import claim_funnel_for_user
@@ -40,7 +40,7 @@ class RegisterView(APIView):
 
         token, _ = Token.objects.get_or_create(user=user)
         verification_token = create_email_verification_token(user)
-        send_verification_email(user, verification_token)
+        queue_verification_email(user, verification_token)
 
         log_audit_event(
             user=user,
@@ -141,5 +141,5 @@ class ResendVerificationView(APIView):
         if user.email_verified:
             return Response({"detail": "Email is already verified."})
         verification_token = create_email_verification_token(user)
-        send_verification_email(user, verification_token)
+        queue_verification_email(user, verification_token)
         return Response({"detail": "Verification email sent."})

@@ -293,7 +293,6 @@ function EligibilityPage() {
         return;
       }
 
-      await persistDraft();
       if (data.password !== data.confirmPassword) {
         setError("Passwords do not match.");
         return;
