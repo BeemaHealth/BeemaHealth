@@ -81,6 +81,7 @@ type FormState = {
   safety: EligibilitySafetyScreen;
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
 const initial: FormState = {
@@ -99,6 +100,7 @@ const initial: FormState = {
   safety: {},
   email: "",
   password: "",
+  confirmPassword: "",
 };
 
 function draftToForm(draft: EligibilityResponses): FormState {
@@ -243,7 +245,11 @@ function EligibilityPage() {
       case "review":
         return true;
       case "account":
-        return Boolean(data.email) && data.password.length >= 10;
+        return (
+          Boolean(data.email) &&
+          data.password.length >= 10 &&
+          data.password === data.confirmPassword
+        );
       default:
         return false;
     }
@@ -281,6 +287,10 @@ function EligibilityPage() {
       }
 
       await persistDraft();
+      if (data.password !== data.confirmPassword) {
+        setError("Passwords do not match.");
+        return;
+      }
       const session = await registerUser({
         email: data.email,
         password: data.password,
@@ -532,6 +542,16 @@ function EligibilityPage() {
             <Field label="Password (min 10 characters)" required>
               <PasswordInput value={data.password} onChange={(v) => set("password", v)} autoComplete="new-password" />
             </Field>
+            <Field label="Re-enter password" required>
+              <PasswordInput
+                value={data.confirmPassword}
+                onChange={(v) => set("confirmPassword", v)}
+                autoComplete="new-password"
+              />
+            </Field>
+            {data.confirmPassword && data.password !== data.confirmPassword && (
+              <p className="text-sm text-destructive">Passwords do not match.</p>
+            )}
             <p className="text-sm text-muted-foreground">
               Your legal name, phone, and address are collected once in the medical intake after you verify your email.
             </p>
