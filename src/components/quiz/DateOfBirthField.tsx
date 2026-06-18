@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { computeIsAdult } from "@/lib/qualify-steps";
 import { Field, inputCls } from "./quiz-primitives";
 
@@ -17,11 +17,13 @@ const MONTHS = [
   { value: "12", label: "December" },
 ] as const;
 
+type DateParts = { month: string; day: string; year: string };
+
 function daysInMonth(year: number, month: number): number {
   return new Date(year, month, 0).getDate();
 }
 
-function parseIsoDate(value: string): { month: string; day: string; year: string } {
+function parseIsoDate(value: string): DateParts {
   if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return { month: "", day: "", year: "" };
   }
@@ -40,6 +42,13 @@ function toIsoDate(month: string, day: string, year: string): string {
   return `${year}-${month}-${day.padStart(2, "0")}`;
 }
 
+function clampDay(parts: DateParts): DateParts {
+  if (!parts.month || !parts.day || !parts.year) return parts;
+  const maxDay = daysInMonth(Number(parts.year), Number(parts.month));
+  if (Number(parts.day) <= maxDay) return parts;
+  return { ...parts, day: String(maxDay).padStart(2, "0") };
+}
+
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: CURRENT_YEAR - 1900 + 1 }, (_, i) => CURRENT_YEAR - i);
 
@@ -52,7 +61,13 @@ export function DateOfBirthField({
   onChange: (isoDate: string) => void;
   showAgeHint?: boolean;
 }) {
-  const { month, day, year } = parseIsoDate(value);
+  const [parts, setParts] = useState<DateParts>(() => parseIsoDate(value));
+
+  useEffect(() => {
+    setParts(parseIsoDate(value));
+  }, [value]);
+
+  const { month, day, year } = parts;
 
   const dayOptions = useMemo(() => {
     const y = Number(year) || CURRENT_YEAR;
@@ -64,13 +79,16 @@ export function DateOfBirthField({
   const isAdult = computeIsAdult(value);
 
   function update(part: "month" | "day" | "year", next: string) {
-    const nextMonth = part === "month" ? next : month;
-    const nextDay = part === "day" ? next : day;
-    const nextYear = part === "year" ? next : year;
-    onChange(toIsoDate(nextMonth, nextDay, nextYear));
+    const nextParts = clampDay({
+      month: part === "month" ? next : parts.month,
+      day: part === "day" ? next : parts.day,
+      year: part === "year" ? next : parts.year,
+    });
+    setParts(nextParts);
+    onChange(toIsoDate(nextParts.month, nextParts.day, nextParts.year));
   }
 
-  const selectCls = `${inputCls} appearance-none`;
+  const selectCls = `${inputCls} appearance-none bg-background`;
 
   return (
     <div className="grid gap-3">
