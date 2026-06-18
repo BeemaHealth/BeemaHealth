@@ -68,10 +68,16 @@ describe("qualify-steps validation", () => {
       },
     );
 
-    it("state and consents required", () => {
+    it("state_consent blocks progress without a user-facing message", () => {
       expect(
         getQualifyStepError("state_consent", validQualifySlice({ state: "" })),
-      ).not.toBeNull();
+      ).toBe("");
+      expect(
+        isQualifyStepComplete(
+          "state_consent",
+          validQualifySlice({ state: "" }),
+        ),
+      ).toBe(false);
       expect(
         getQualifyStepError(
           "state_consent",
@@ -79,7 +85,15 @@ describe("qualify-steps validation", () => {
             consents: { terms: false, privacy: true, telehealth: true },
           }),
         ),
-      ).not.toBeNull();
+      ).toBe("");
+      expect(
+        isQualifyStepComplete(
+          "state_consent",
+          validQualifySlice({
+            consents: { terms: false, privacy: true, telehealth: true },
+          }),
+        ),
+      ).toBe(false);
     });
 
     it("rejects under-18 DOB", () => {

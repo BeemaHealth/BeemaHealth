@@ -279,9 +279,8 @@ export function getQualifyStepError(
       // ChoiceCard-only steps: block Continue without a redundant footer message.
       return getChoiceStepValue(stepId, data) ? null : "";
     case "state_consent":
-      if (!data.state) return "Select your state.";
-      if (!hasAllPreSignupConsents(data.consents))
-        return "Agree to the Terms, Privacy Policy, and Telehealth Consent.";
+      if (!data.state) return "";
+      if (!hasAllPreSignupConsents(data.consents)) return "";
       return null;
     case "dob":
       if (!data.dob) return "Enter your date of birth.";
