@@ -12,7 +12,7 @@ class PatientProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     address = EncryptedCharField(max_length=255, blank=True)
     city = models.CharField(max_length=128, blank=True)
-    state = models.CharField(max_length=64, default="Colorado")
+    state = models.CharField(max_length=64, default="", blank=True)
     zip_code = models.CharField(max_length=16, blank=True)
     emergency_contact_name = EncryptedCharField(max_length=255, blank=True)
     emergency_contact_phone = EncryptedCharField(max_length=32, blank=True)

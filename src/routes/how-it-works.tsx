@@ -12,7 +12,7 @@ const STEPS = [
   {
     icon: ClipboardCheck,
     title: "Complete your eligibility check",
-    text: "Answer short questions about your health, location, and treatment interest. Colorado patients only.",
+    text: "Answer short questions about your health, location, and treatment interest.",
   },
   {
     icon: Send,
@@ -22,7 +22,7 @@ const STEPS = [
   {
     icon: Stethoscope,
     title: "Provider review",
-    text: "A Colorado-licensed provider reviews your intake and decides whether treatment may be appropriate. Prescribing is never guaranteed.",
+    text: "A licensed provider reviews your intake and decides whether treatment may be appropriate. Prescribing is never guaranteed.",
   },
 ];
 
@@ -33,7 +33,7 @@ function HowItWorksPage() {
         <SectionHeading
           eyebrow="How it works"
           title="A minimal path from intake to provider review"
-          description="No subscriptions, refill tracking, or messaging in this MVP — just the essentials."
+          description="Medication-only pricing with no platform membership fee — just the essentials from eligibility to provider review."
         />
       </Section>
 
@@ -57,7 +57,7 @@ function HowItWorksPage() {
         <div className="mt-10 text-center">
           <Button asChild size="lg">
             <Link to="/qualify">
-              Start eligibility check <ArrowRight />
+              See if you qualify <ArrowRight />
             </Link>
           </Button>
         </div>

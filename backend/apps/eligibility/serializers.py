@@ -33,13 +33,7 @@ class EligibilitySerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "user_id", "bmi", "safety_concern_flag", "created_at"]
 
     def validate(self, attrs):
-        lives = attrs.get("lives_in_colorado", getattr(self.instance, "lives_in_colorado", None))
-        located = attrs.get("located_in_colorado", getattr(self.instance, "located_in_colorado", None))
         is_adult = attrs.get("is_adult", getattr(self.instance, "is_adult", None))
-        if lives is False or located is False:
-            raise serializers.ValidationError(
-                "Aretide is currently only available to patients located in Colorado."
-            )
         if is_adult is False:
             raise serializers.ValidationError(
                 "Aretide is currently only available for adults 18 and older."

@@ -13,20 +13,18 @@ export const Route = createFileRoute("/pricing")({
       {
         name: "description",
         content:
-          "Clear, separate pricing: $79/month membership plus medication, shipping, and labs shown before any charge. Self-serve pause and cancel.",
+          "Medication-only pricing: pay for your prescription when clinically appropriate. Shipping and labs shown separately before any charge.",
       },
       { property: "og:title", content: "Pricing — Aretide" },
       {
         property: "og:description",
-        content: "Membership and medication billed separately. No hidden fees. Estimate your cost.",
+        content: "No platform membership fee. Estimate your monthly medication cost.",
       },
     ],
     links: [{ rel: "canonical", href: "/pricing" }],
   }),
   component: PricingPage,
 });
-
-const MEMBERSHIP = 79;
 
 const MED_PATHS = [
   { id: "insurance", label: "Insurance (if covered)", low: 25, high: 75, note: "Copay varies by plan; PA may be required." },
@@ -50,8 +48,8 @@ function PricingPage() {
     const s = SHIPPING.find((x) => x.id === ship)!;
     const labCost = labs ? 75 : 0;
     return {
-      low: MEMBERSHIP + p.low + s.cost + labCost,
-      high: MEMBERSHIP + p.high + s.cost + labCost,
+      low: p.low + s.cost + labCost,
+      high: p.high + s.cost + labCost,
       note: p.note,
     };
   }, [path, ship, labs]);
@@ -62,32 +60,26 @@ function PricingPage() {
         <SectionHeading
           eyebrow="Clear-price promise"
           title="Pricing you can actually understand"
-          description="Membership and medication are always billed separately. We show shipping, labs, and what's not included — and remind you before every charge."
+          description="No platform membership fee. You pay for medication when prescribed — plus shipping or labs only when they apply, always shown before you pay."
         />
       </Section>
 
       <Section className="pt-0">
         <div className="grid gap-6 lg:grid-cols-2">
-          {/* Membership */}
           <SurfaceCard>
-            <Eyebrow>Membership</Eyebrow>
-            <div className="mt-5 flex items-end gap-2">
-              <span className="text-5xl font-bold text-foreground">${MEMBERSHIP}</span>
-              <span className="pb-2 text-muted-foreground">/ month</span>
-            </div>
+            <Eyebrow>Medication-only pricing</Eyebrow>
+            <p className="mt-5 text-2xl font-bold text-foreground">Pay for your medication. That's it.</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Cancel or pause anytime — self-serve, never buried.
+              Aretide does not charge a separate monthly membership or subscription fee.
+              Your cost is the medication your clinician prescribes, if appropriate.
             </p>
             <div className="mt-6 grid gap-6 sm:grid-cols-2">
               <div>
-                <p className="text-sm font-semibold text-foreground">What's included</p>
+                <p className="text-sm font-semibold text-foreground">What you pay for</p>
                 <ul className="mt-3 space-y-2 text-sm text-foreground">
                   {[
-                    "Licensed clinician evaluation",
-                    "Secure messaging with care team",
-                    "Refill coordination & risk alerts",
-                    "Insurance & pharmacy rescue desk",
-                    "Progress tracking & check-ins",
+                    "Prescribed medication (per fill or month)",
+                    "Cash-pay, insurance copay, or pharmacy pricing — your path",
                   ].map((t) => (
                     <li key={t} className="flex items-start gap-2">
                       <Check className="mt-0.5 size-4 shrink-0 text-success" /> {t}
@@ -96,13 +88,12 @@ function PricingPage() {
                 </ul>
               </div>
               <div>
-                <p className="text-sm font-semibold text-foreground">What's not included</p>
+                <p className="text-sm font-semibold text-foreground">May be billed separately</p>
                 <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
                   {[
-                    "Medication cost (billed separately)",
-                    "Shipping fees (if any)",
-                    "Lab work (if needed)",
-                    "Insurance copays",
+                    "Shipping (if home delivery)",
+                    "Lab work (only if clinically needed)",
+                    "Insurance deductibles or uncovered costs",
                   ].map((t) => (
                     <li key={t} className="flex items-start gap-2">
                       <X className="mt-0.5 size-4 shrink-0 text-muted-foreground" /> {t}
@@ -113,7 +104,6 @@ function PricingPage() {
             </div>
           </SurfaceCard>
 
-          {/* Calculator */}
           <SurfaceCard className="bg-card">
             <Eyebrow>Estimate your monthly cost</Eyebrow>
             <p className="mt-4 text-sm font-semibold text-foreground">Medication path</p>
@@ -168,7 +158,7 @@ function PricingPage() {
 
             <div className="mt-6 rounded-2xl bg-primary px-5 py-5 text-primary-foreground">
               <p className="text-xs uppercase tracking-wide text-primary-foreground/80">
-                Estimated total / month
+                Estimated medication cost / month
               </p>
               <p className="mt-1 text-3xl font-bold">
                 ${estimate.low}–${estimate.high}
@@ -177,20 +167,19 @@ function PricingPage() {
             </div>
             <p className="mt-3 flex items-start gap-2 text-xs text-muted-foreground">
               <Info className="mt-0.5 size-3.5 shrink-0" />
-              Estimates only. Your exact charge and next billing date are always
-              shown before you pay. Prescribing is never guaranteed.
+              Estimates only. No platform membership fee. Your exact medication charge is
+              always shown before you pay. Prescribing is never guaranteed.
             </p>
           </SurfaceCard>
         </div>
       </Section>
 
-      {/* Cancellation & pause */}
       <Section className="bg-muted/40 pt-0">
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { t: "Cancellation", d: "Cancel anytime in the app. You'll see exactly when access ends and your next billing date, then confirm. We email and text a receipt." },
-            { t: "Pause rules", d: "Pause your membership and we show a clear resume date. No phone calls and no retention mazes." },
-            { t: "Pre-bill reminders", d: "We remind you before every charge and send a confirmation receipt for every billing change." },
+            { t: "Transparent pricing", d: "Medication, shipping, and labs are listed separately. You see the full breakdown before confirming any charge." },
+            { t: "Refill billing", d: "Each refill is billed at the medication price shown for your plan and pharmacy path — no hidden platform fees on top." },
+            { t: "Pre-charge reminders", d: "We remind you before every medication charge and send a receipt for every payment." },
           ].map((c) => (
             <SurfaceCard key={c.t}>
               <h3 className="text-lg font-semibold text-foreground">{c.t}</h3>
@@ -214,7 +203,7 @@ function PricingPage() {
         <div className="rounded-4xl bg-primary px-6 py-12 text-center text-primary-foreground">
           <h2 className="text-2xl font-bold md:text-3xl">No surprises. Ever.</h2>
           <p className="mx-auto mt-2 max-w-lg text-primary-foreground/85">
-            Start with a quick eligibility check — you'll see your full breakdown
+            Start with a quick eligibility check — you'll see medication pricing
             before paying anything.
           </p>
           <Button asChild size="xl" variant="soft" className="mt-6">

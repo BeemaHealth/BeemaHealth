@@ -29,7 +29,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=150)
     phone = EncryptedCharField(max_length=32)
     dob = EncryptedDateField(null=True, blank=True)
-    state = models.CharField(max_length=64, default="Colorado")
+    state = models.CharField(max_length=64, default="", blank=True)
     is_patient = models.BooleanField(default=True)
     is_provider = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)

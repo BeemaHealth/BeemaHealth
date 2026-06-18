@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WeightLossRouteImport } from './routes/weight-loss'
 import { Route as SwitchRouteImport } from './routes/switch'
 import { Route as SubmittedRouteImport } from './routes/submitted'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -23,6 +24,7 @@ import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsentRouteImport } from './routes/consent'
 import { Route as CliniciansRouteImport } from './routes/clinicians'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -32,6 +34,11 @@ import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.teleh
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
 import { Route as AdminPatientIdRouteImport } from './routes/admin.$patientId'
 
+const WeightLossRoute = WeightLossRouteImport.update({
+  id: '/weight-loss',
+  path: '/weight-loss',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SwitchRoute = SwitchRouteImport.update({
   id: '/switch',
   path: '/switch',
@@ -102,6 +109,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsentRoute = ConsentRouteImport.update({
   id: '/consent',
   path: '/consent',
@@ -148,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/clinicians': typeof CliniciansRoute
   '/consent': typeof ConsentRoute
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
@@ -162,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/weight-loss': typeof WeightLossRoute
   '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
@@ -172,6 +186,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRouteWithChildren
   '/clinicians': typeof CliniciansRoute
   '/consent': typeof ConsentRoute
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
@@ -186,6 +201,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/weight-loss': typeof WeightLossRoute
   '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
@@ -197,6 +213,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/clinicians': typeof CliniciansRoute
   '/consent': typeof ConsentRoute
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
@@ -211,6 +228,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/weight-loss': typeof WeightLossRoute
   '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
@@ -223,6 +241,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/clinicians'
     | '/consent'
+    | '/contact'
     | '/dashboard'
     | '/eligibility'
     | '/faq'
@@ -237,6 +256,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/submitted'
     | '/switch'
+    | '/weight-loss'
     | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
@@ -247,6 +267,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/clinicians'
     | '/consent'
+    | '/contact'
     | '/dashboard'
     | '/eligibility'
     | '/faq'
@@ -261,6 +282,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/submitted'
     | '/switch'
+    | '/weight-loss'
     | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
@@ -271,6 +293,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/clinicians'
     | '/consent'
+    | '/contact'
     | '/dashboard'
     | '/eligibility'
     | '/faq'
@@ -285,6 +308,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/submitted'
     | '/switch'
+    | '/weight-loss'
     | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
@@ -296,6 +320,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   CliniciansRoute: typeof CliniciansRoute
   ConsentRoute: typeof ConsentRoute
+  ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   EligibilityRoute: typeof EligibilityRoute
   FaqRoute: typeof FaqRoute
@@ -310,6 +335,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubmittedRoute: typeof SubmittedRoute
   SwitchRoute: typeof SwitchRoute
+  WeightLossRoute: typeof WeightLossRoute
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTelehealthConsentRoute: typeof LegalTelehealthConsentRoute
   LegalTermsRoute: typeof LegalTermsRoute
@@ -317,6 +343,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/weight-loss': {
+      id: '/weight-loss'
+      path: '/weight-loss'
+      fullPath: '/weight-loss'
+      preLoaderRoute: typeof WeightLossRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/switch': {
       id: '/switch'
       path: '/switch'
@@ -415,6 +448,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/consent': {
       id: '/consent'
       path: '/consent'
@@ -489,6 +529,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   CliniciansRoute: CliniciansRoute,
   ConsentRoute: ConsentRoute,
+  ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   EligibilityRoute: EligibilityRoute,
   FaqRoute: FaqRoute,
@@ -503,6 +544,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubmittedRoute: SubmittedRoute,
   SwitchRoute: SwitchRoute,
+  WeightLossRoute: WeightLossRoute,
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTelehealthConsentRoute: LegalTelehealthConsentRoute,
   LegalTermsRoute: LegalTermsRoute,

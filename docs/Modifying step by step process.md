@@ -90,7 +90,7 @@ after clicking the get started button (which is our "see if you qualify" button)
 
     Get started
     Important safety info
-    †Price includes medication only, if prescribed. An active Hims Weight Loss Membership is required ($39 for the first month, auto-renews at $149/month thereafter). Membership is billed separately and does not include or guarantee a prescription. Medication is not available without a membership. Membership fee is not included.
+    †Price includes medication only, if prescribed. Aretide does not charge a separate platform membership or subscription fee — you pay for medication when prescribed. (Competitor reference: Hims requires a separate Weight Loss Membership billed on top of medication.)
 
     Ozempic® and Mounjaro® are FDA approved for type 2 diabetes and are available only to patients who meet clinical eligibility criteria, as determined by a licensed healthcare provider. See more
 

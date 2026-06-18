@@ -13,14 +13,12 @@ import { getSession } from "@/lib/storage";
 
 type NavItem = { label: string; to: string };
 
-/** MVP navigation — uncomment items post-launch as needed. */
 const NAV: NavItem[] = [
-  // { label: "How it works", to: "/how-it-works" },
-  // { label: "Pricing", to: "/pricing" },
-  // { label: "Switch to Aretide", to: "/switch" },
-  // { label: "Insurance & Pharmacy", to: "/insurance" },
-  // { label: "Clinicians", to: "/clinicians" },
-  // { label: "Safety", to: "/safety" },
+  { label: "Weight Loss", to: "/weight-loss" },
+  { label: "Pricing", to: "/pricing" },
+  { label: "FAQ", to: "/faq" },
+  { label: "Safety", to: "/safety" },
+  { label: "Contact", to: "/contact" },
 ];
 
 export function SiteHeader() {
@@ -34,20 +32,18 @@ export function SiteHeader() {
           <Logo />
         </Link>
 
-        {NAV.length > 0 && (
-          <nav className="hidden items-center gap-1 lg:flex">
-            {NAV.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                activeProps={{ className: "text-foreground bg-muted" }}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        )}
+        <nav className="hidden items-center gap-1 lg:flex">
+          {NAV.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              activeProps={{ className: "text-foreground bg-muted" }}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
         <div className="hidden items-center gap-2 lg:ml-auto lg:flex">
           {session ? (
@@ -62,7 +58,7 @@ export function SiteHeader() {
             </Button>
           )}
           <Button asChild>
-            <Link to="/qualify">Start eligibility check</Link>
+            <Link to="/qualify">See if you qualify</Link>
           </Button>
         </div>
 
@@ -101,7 +97,7 @@ export function SiteHeader() {
               <div className="mt-6">
                 <SheetClose asChild>
                   <Button asChild size="lg" className="w-full">
-                    <Link to="/qualify">Start eligibility check</Link>
+                    <Link to="/qualify">See if you qualify</Link>
                   </Button>
                 </SheetClose>
               </div>

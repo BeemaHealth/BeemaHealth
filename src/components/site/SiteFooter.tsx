@@ -3,11 +3,19 @@ import { Logo } from "@/components/brand/Logo";
 
 const COLUMNS = [
   {
-    title: "Helpful links",
+    title: "Product",
     links: [
+      { label: "Weight Loss", to: "/weight-loss" },
+      { label: "Pricing", to: "/pricing" },
       { label: "How it works", to: "/how-it-works" },
-      { label: "Eligibility check", to: "/qualify" },
-      { label: "Patient dashboard", to: "/dashboard" },
+    ],
+  },
+  {
+    title: "Trust",
+    links: [
+      { label: "Safety & eligibility", to: "/safety" },
+      { label: "FAQ", to: "/faq" },
+      { label: "Contact", to: "/contact" },
     ],
   },
   {
@@ -24,17 +32,18 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-muted/40">
       <div className="veya-container py-14">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="max-w-sm">
             <Logo />
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Colorado-first telehealth medical weight-loss intake for provider review.
+              Weight-loss care with real clinicians, clear pricing, and refill
+              help that actually follows through.
             </p>
             <Link
               to="/qualify"
               className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-soft transition-colors hover:bg-primary/90"
             >
-              Start eligibility check
+              See if you qualify
             </Link>
           </div>
 
@@ -57,9 +66,13 @@ export function SiteFooter() {
         <div className="mt-12 space-y-4 border-t border-border pt-8 text-xs leading-relaxed text-muted-foreground">
           <p>
             <strong className="font-semibold text-foreground">Important:</strong>{" "}
-            Completing intake does not guarantee a prescription. Clinicians make all
-            medical decisions independently. This MVP prototype is not HIPAA-compliant
-            production infrastructure.
+            Aretide is a telehealth platform that connects patients with
+            independently licensed clinicians. Completing intake does not guarantee a
+            prescription. Clinicians make all medical decisions independently.
+          </p>
+          <p>
+            If you are experiencing a medical emergency, call 911. This site does
+            not provide emergency care.
           </p>
           <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:items-center sm:justify-between">
             <span>© {new Date().getFullYear()} Aretide Health, Inc.</span>
@@ -70,9 +83,3 @@ export function SiteFooter() {
     </footer>
   );
 }
-
-/*
- * MVP: removed footer links:
- * - Pricing, Switch to Aretide, Insurance & Pharmacy
- * - Clinicians, Safety, Learn, FAQ
- */

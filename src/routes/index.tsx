@@ -15,11 +15,11 @@ import heroImg from "@/assets/hero.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Aretide — Colorado medical weight-loss care" },
+      { title: "Aretide — Medical weight-loss care" },
       {
         name: "description",
         content:
-          "Colorado medical weight-loss care reviewed by a licensed provider. Secure intake for Zepbound, Wegovy, and affordable alternatives when appropriate.",
+          "Medical weight-loss care reviewed by a licensed provider. Secure intake for Zepbound, Wegovy, and affordable alternatives when appropriate.",
       },
     ],
   }),
@@ -39,7 +39,7 @@ const STEPS = [
   },
   {
     icon: Stethoscope,
-    title: "A Colorado-licensed provider reviews",
+    title: "A licensed provider reviews",
     text: "A licensed provider reviews your information and decides next steps. No prescription is guaranteed.",
   },
 ];
@@ -125,7 +125,7 @@ function HomePage() {
         <div className="overflow-hidden rounded-4xl bg-primary px-6 py-14 text-center text-primary-foreground md:px-12">
           <h2 className="text-3xl font-bold">Ready to start?</h2>
           <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">
-            Colorado patients only for this MVP. The eligibility check takes about 5 minutes.
+            The eligibility check takes about 5 minutes.
           </p>
           <Button
             asChild
@@ -133,7 +133,7 @@ function HomePage() {
             className="mt-8 bg-primary-foreground text-primary hover:bg-primary-foreground/90"
           >
             <Link to="/qualify">
-              Start Eligibility Check <ArrowRight />
+              See if you qualify <ArrowRight />
             </Link>
           </Button>
         </div>

@@ -216,10 +216,9 @@ Approved → Prescription → Pharmacy → Shipping Updates
 
 **Collect:**
 
-- Subscription payment
-- Membership fees
+- Medication payment (per fill or month)
 
-**Goal:** Get paid.
+**Goal:** Get paid for prescribed medication.
 
 **Success criteria:** First paid customer.
 
@@ -348,7 +347,7 @@ Charlie's job: find turnkey partners first; later recruit Colorado MD/DO/NP for 
 
 ## Appendix C — Unit economics & CAC
 
-**Compounded example** — patient pays **$299/month**:
+**Compounded example** — patient pays **$299/month** (medication only; no separate platform membership fee):
 
 | Line item | Cost |
 |-----------|------|

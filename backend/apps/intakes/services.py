@@ -23,8 +23,6 @@ def compute_age(dob) -> int | None:
 SAFETY_FLAG_DEFINITIONS = [
     ("bmi_low", "medium", lambda ctx: ctx.get("bmi") is not None and ctx["bmi"] < 27, lambda ctx: f"BMI {ctx['bmi']} is under 27"),
     ("under_18", "high", lambda ctx: ctx.get("age") is not None and ctx["age"] < 18, lambda ctx: "Patient is under 18"),
-    ("not_colorado", "high", lambda ctx: ctx.get("state") != "Colorado", lambda ctx: "State of residence is not Colorado"),
-    ("not_in_colorado", "high", lambda ctx: ctx.get("located_in_colorado") is False, lambda ctx: "Patient not located in Colorado at intake"),
     ("pregnant", "high", lambda ctx: ctx.get("safety", {}).get("pregnant"), lambda ctx: "Currently pregnant"),
     ("trying_pregnant", "high", lambda ctx: ctx.get("safety", {}).get("trying_pregnant"), lambda ctx: "Trying to become pregnant"),
     ("breastfeeding", "high", lambda ctx: ctx.get("safety", {}).get("breastfeeding"), lambda ctx: "Currently breastfeeding"),

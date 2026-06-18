@@ -14,6 +14,7 @@ import {
 import { registerUser, syncEligibility } from "@/lib/api/client";
 import { computeBmi } from "@/lib/safety-flags";
 import { getSession } from "@/lib/storage";
+import { US_STATES } from "@/lib/veya-data";
 import type {
   BiologicalSex,
   BudgetRange,
@@ -55,8 +56,8 @@ type FormState = {
   phone: string;
   dob: string;
   state: string;
-  coloradoLocated: boolean | null;
-  livesInColorado: boolean | null;
+  locatedInState: boolean | null;
+  livesInState: boolean | null;
   city: string;
   zip: string;
   treatmentInterest: TreatmentInterest | "";
@@ -78,9 +79,9 @@ const initial: FormState = {
   lastName: "",
   phone: "",
   dob: "",
-  state: "Colorado",
-  coloradoLocated: null,
-  livesInColorado: null,
+  state: "",
+  locatedInState: null,
+  livesInState: null,
   city: "",
   zip: "",
   treatmentInterest: "",
@@ -114,8 +115,6 @@ function EligibilityPage() {
   );
 
   const under18 = data.isAdult === false;
-  const notColorado =
-    data.livesInColorado === false || data.coloradoLocated === false;
 
   const safetyConcern = SAFETY_QUESTIONS.some((q) => data.safety[q.key] === true);
 
@@ -143,13 +142,12 @@ function EligibilityPage() {
           data.lastName &&
           data.phone &&
           data.dob &&
-          data.state === "Colorado" &&
-          data.coloradoLocated === true
+          data.state
         );
       case 2:
         return (
-          data.livesInColorado === true &&
-          data.coloradoLocated === true &&
+          data.livesInState !== null &&
+          data.locatedInState !== null &&
           data.city &&
           data.zip
         );
@@ -188,8 +186,8 @@ function EligibilityPage() {
         goal_weight: data.goalWeight,
         biological_sex: data.biologicalSex,
         is_adult: data.isAdult,
-        lives_in_colorado: data.livesInColorado,
-        located_in_colorado: data.coloradoLocated,
+        lives_in_colorado: data.livesInState,
+        located_in_colorado: data.locatedInState,
         city: data.city,
         zip: data.zip,
         treatment_interest: data.treatmentInterest,
@@ -227,21 +225,13 @@ function EligibilityPage() {
                 />
               </div>
             )}
-            {notColorado && logicalStep === 2 && (
-              <div className="mt-4">
-                <BlockedMessage
-                  title="Aretide is currently only available to patients located in Colorado."
-                  body="We are Colorado-first for this MVP. Please return when you are physically in Colorado."
-                />
-              </div>
-            )}
             {safetyConcern && logicalStep === 4 && (
               <p className="mt-4 rounded-2xl bg-warning/10 px-4 py-3 text-sm text-foreground">
                 One or more answers will be flagged for provider review. This does not
                 automatically approve or deny treatment.
               </p>
             )}
-            {!under18 && !(notColorado && logicalStep === 2) && (
+            {!under18 && (
               <QuizNav
                 showBack={step > 0}
                 onBack={() => setStep((s) => s - 1)}
@@ -313,24 +303,34 @@ function EligibilityPage() {
             <Field label="Phone" required><input type="tel" className={inputCls} value={data.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
             <Field label="Date of birth" required><input type="date" className={inputCls} value={data.dob} onChange={(e) => set("dob", e.target.value)} /></Field>
             <Field label="State of residence" required>
-              <input className={inputCls} value={data.state} readOnly />
+              <select
+                className={inputCls}
+                value={data.state}
+                onChange={(e) => set("state", e.target.value)}
+              >
+                <option value="">Select your state</option>
+                {US_STATES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
             </Field>
-            <label className="flex items-start gap-3 rounded-2xl border border-border px-4 py-3">
-              <input type="checkbox" checked={data.coloradoLocated === true} onChange={(e) => set("coloradoLocated", e.target.checked)} className="mt-1 size-5" />
-              <span className="text-sm text-muted-foreground">
-                I confirm I am physically located in Colorado at the time of this intake.
-              </span>
-            </label>
-            {data.state !== "Colorado" && (
-              <BlockedMessage title="Colorado only" body="Aretide MVP is limited to Colorado residents." />
-            )}
           </div>
         )}
 
         {logicalStep === 2 && (
           <div className="grid gap-4">
-            <YesNoField label="Do you currently live in Colorado?" value={data.livesInColorado} onChange={(v) => set("livesInColorado", v)} />
-            <YesNoField label="Are you physically located in Colorado right now?" value={data.coloradoLocated} onChange={(v) => set("coloradoLocated", v)} />
+            <YesNoField
+              label={`Do you currently live in ${data.state || "your state of residence"}?`}
+              value={data.livesInState}
+              onChange={(v) => set("livesInState", v)}
+            />
+            <YesNoField
+              label={`Are you physically located in ${data.state || "your state of residence"} right now?`}
+              value={data.locatedInState}
+              onChange={(v) => set("locatedInState", v)}
+            />
             <Field label="City" required><input className={inputCls} value={data.city} onChange={(e) => set("city", e.target.value)} /></Field>
             <Field label="ZIP code" required><input className={inputCls} value={data.zip} onChange={(e) => set("zip", e.target.value)} /></Field>
           </div>
@@ -384,6 +384,7 @@ function EligibilityPage() {
         {logicalStep === 5 && (
           <div className="space-y-3 text-sm">
             <SummaryRow label="BMI" value={bmi?.toString() ?? "—"} />
+            <SummaryRow label="State" value={data.state || "—"} />
             <SummaryRow label="City / ZIP" value={`${data.city}, ${data.zip}`} />
             <SummaryRow label="Treatment interest" value={data.treatmentInterest} />
             {safetyConcern && (
@@ -416,8 +417,8 @@ function getTitle(step: number) {
 function getSubtitle(step: number) {
   const subs = [
     "A few basic questions to start. This takes about 2 minutes.",
-    "We need an account before your full medical intake. Colorado patients only.",
-    "Aretide is currently available only to patients in Colorado.",
+    "We need an account before your full medical intake.",
+    "Confirm where you live and where you are right now for telehealth compliance.",
     "Help us understand what you're looking for. No prescription is guaranteed.",
     "Answer honestly — a licensed provider will review everything.",
     "Confirm your answers, then continue to the medical intake.",

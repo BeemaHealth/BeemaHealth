@@ -17,7 +17,7 @@ export const Route = createFileRoute("/consent")({
 });
 
 const SECTIONS = [
-  { title: "Telehealth Consent", body: "You consent to receive care via telehealth from a Colorado-licensed provider through Aretide." },
+  { title: "Telehealth Consent", body: "You consent to receive care via telehealth from a licensed provider through Aretide." },
   { title: "No Guarantee of Prescription", body: "Completing intake does not guarantee a prescription. Treatment decisions are made only by a licensed medical provider." },
   { title: "Emergency Care Disclaimer", body: "Aretide does not provide emergency care. Call 911 for emergencies." },
   { title: "Medication Risk Acknowledgment", body: "Weight-loss medications have risks including GI side effects, gallbladder issues, and other complications discussed in intake." },

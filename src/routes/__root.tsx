@@ -97,10 +97,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills." },
       { property: "og:description", content: "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills." },
       { name: "twitter:description", content: "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/65d5f215-4638-43bf-887b-e832d1ed1a6d/id-preview-1331f662--e46d3fd1-b3d3-450d-8074-a0d142e5dc93.lovable.app-1781245064150.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/65d5f215-4638-43bf-887b-e832d1ed1a6d/id-preview-1331f662--e46d3fd1-b3d3-450d-8074-a0d142e5dc93.lovable.app-1781245064150.png" },
+      { property: "og:image", content: "/aretide-logo.png" },
+      { name: "twitter:image", content: "/aretide-logo.png" },
     ],
     links: [
+      { rel: "icon", href: "/aretide-logo.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {

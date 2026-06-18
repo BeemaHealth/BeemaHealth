@@ -112,15 +112,15 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "How much does Aretide cost?",
-        a: "The Aretide membership is $79/month and covers your clinician, messaging, refill coordination, and progress tracking. Medication, labs, and shipping are billed separately and shown to you before any charge.",
+        a: "There is no platform membership or subscription fee. You pay for your prescribed medication — typically $199–$349/month cash-pay, or your insurance copay if covered. Shipping and labs, when applicable, are shown separately before any charge.",
       },
       {
-        q: "Is medication included in the membership?",
-        a: "No. Membership and medication are always billed separately so the price is never confusing. Your exact medication cost depends on the path you choose (insurance, cash-pay, or local pharmacy) and is shown before you're charged.",
+        q: "Is there a monthly membership fee?",
+        a: "No. Aretide uses medication-only pricing. Your cost is the medication your clinician prescribes, if appropriate. We do not charge a separate monthly platform or care-coordination membership on top of that.",
       },
       {
         q: "Are there hidden fees?",
-        a: "No. We list membership, medication, shipping, and labs separately, send a reminder before every charge, and email a receipt for every billing change.",
+        a: "No. Medication, shipping, and labs are listed separately. We send a reminder before every charge and email a receipt for every payment.",
       },
     ],
   },
@@ -180,12 +180,12 @@ export const FAQ_GROUPS: FaqGroup[] = [
     category: "Cancellation",
     items: [
       {
-        q: "Can I cancel anytime?",
-        a: "Yes. Cancellation is fully self-serve — never buried. You'll see exactly when access ends and your next billing date, confirm the change, and get an email/SMS receipt.",
+        q: "Can I stop treatment anytime?",
+        a: "Yes. You can stop requesting refills at any time. Because there is no platform membership fee, you are not locked into a separate monthly subscription — you only pay when medication is prescribed and you choose to fill it.",
       },
       {
-        q: "Can I pause instead of cancel?",
-        a: "Yes. You can pause your membership and we'll show you the resume date clearly. No phone calls, no retention mazes.",
+        q: "Can I pause refills?",
+        a: "Yes. If you need a break, you can pause refills and resume when you're ready. We'll show you any upcoming medication charges clearly before they occur.",
       },
     ],
   },
@@ -238,5 +238,5 @@ export const LEARN_POSTS: LearnPost[] = [
   { slug: "protein-strength", title: "Protein and strength training during weight loss", category: "Protein/strength training", excerpt: "Why protecting muscle matters and simple ways to do it.", readMins: 6 },
   { slug: "ask-your-doctor", title: "What to ask your clinician", category: "What to ask your doctor", excerpt: "A checklist of smart questions for your first visit.", readMins: 4 },
   { slug: "switching-providers", title: "Switching providers without a gap in care", category: "Switching providers", excerpt: "How to transfer safely and avoid running out of medication.", readMins: 6 },
-  { slug: "cost-guides", title: "A clear-eyed guide to the real costs", category: "Cost guides", excerpt: "Membership vs medication vs labs vs shipping — what to actually budget for.", readMins: 7 },
+  { slug: "cost-guides", title: "A clear-eyed guide to the real costs", category: "Cost guides", excerpt: "Medication vs labs vs shipping — what to actually budget for with medication-only pricing.", readMins: 7 },
 ];

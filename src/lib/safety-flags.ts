@@ -68,14 +68,6 @@ export function computeSafetyFlags(
   if (age != null && age < 18) {
     flags.push(flag(uid, "under_18", "Patient is under 18", "high"));
   }
-  if (user.state !== "Colorado") {
-    flags.push(flag(uid, "not_colorado", "State of residence is not Colorado", "high"));
-  }
-  if (eligibility?.located_in_colorado === false || eligibility?.lives_in_colorado === false) {
-    flags.push(
-      flag(uid, "not_in_colorado", "Patient not located in Colorado at intake", "high"),
-    );
-  }
 
   const safety = eligibility?.safety_screen ?? {};
   if (safety.pregnant) flags.push(flag(uid, "pregnant", "Currently pregnant", "high"));

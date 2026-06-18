@@ -35,10 +35,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         ]
 
     def validate_state(self, value):
-        if value != "Colorado":
-            raise serializers.ValidationError(
-                "Aretide MVP is only available to Colorado residents."
-            )
+        if not value or not value.strip():
+            raise serializers.ValidationError("State of residence is required.")
         return value
 
     def create(self, validated_data):

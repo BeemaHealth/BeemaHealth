@@ -124,7 +124,7 @@ function IntakePage() {
                 <input
                   className={inputCls}
                   type={k === "dob" ? "date" : k === "email" ? "email" : k === "phone" || k === "emergency_phone" ? "tel" : "text"}
-                  value={id[k] ?? (k === "email" ? session.user.email : k === "state" ? "Colorado" : "")}
+                  value={id[k] ?? (k === "email" ? session.user.email : k === "state" ? session.user.state : "")}
                   onChange={(e) => patch("identity", { ...id, [k]: e.target.value })}
                 />
               </Field>

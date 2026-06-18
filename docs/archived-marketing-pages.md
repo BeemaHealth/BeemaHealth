@@ -98,13 +98,13 @@ Includes SEO meta tags and canonical `/how-it-works`.
 
 ### Pricing (`/pricing`)
 
-**Hero:** "Pricing you can actually understand" — membership and medication billed separately.
+**Hero:** "Pricing you can actually understand" — medication-only pricing, no platform membership fee.
 
-**Membership:** $79/month. Included: clinician evaluation, messaging, refill coordination, insurance & pharmacy rescue desk, progress tracking. Not included: medication, shipping, labs, copays.
+**Medication-only model:** No separate monthly membership. Patients pay for prescribed medication (cash-pay ~$199–349/mo, insurance copay, or local pharmacy). Shipping and labs billed separately when applicable.
 
-**Interactive calculator:** Medication path (insurance $25–75, cash-pay $199–349, local pharmacy $60–320), delivery (standard free, cold-chain $25, pickup free), optional labs (+$75).
+**Interactive calculator:** Medication path (insurance $25–75, cash-pay $199–349, local pharmacy $60–320), delivery (standard free, cold-chain $25, pickup free), optional labs (+$75). No membership line item added to estimates.
 
-**Sections:** Cancellation (self-serve), pause rules, pre-bill reminders; shipping/labs/insurance caveats; closing CTA "No surprises. Ever."
+**Sections:** Transparent pricing, refill billing, pre-charge reminders; shipping/labs/insurance caveats; closing CTA "No surprises. Ever."
 
 ### Switch to Aretide (`/switch`)
 
@@ -216,6 +216,7 @@ These differ from the original marketing site — reconcile when completing [Ste
 | `how-it-works` | 5 steps, pricing CTA | 3 steps, no pricing link |
 | Weight Loss page | — | Not built (Step 1) |
 | Contact page | — | Not built (Step 1) |
+| Pricing model | $79/mo membership + medication | **Medication-only** — no platform membership fee |
 
 ---
 
