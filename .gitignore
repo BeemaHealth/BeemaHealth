@@ -20,6 +20,7 @@ deploy-frontend-prod.sh
 # Logs
 *.log
 npm-debug.log*
+bugs.txt
 
 # Python / Django
 backend/.venv/
