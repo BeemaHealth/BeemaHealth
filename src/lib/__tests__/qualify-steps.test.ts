@@ -96,6 +96,15 @@ describe("qualify-steps validation", () => {
       ).toBe(false);
     });
 
+    it("dob blocks progress without a user-facing message when empty", () => {
+      expect(getQualifyStepError("dob", validQualifySlice({ dob: "" }))).toBe(
+        "",
+      );
+      expect(isQualifyStepComplete("dob", validQualifySlice({ dob: "" }))).toBe(
+        false,
+      );
+    });
+
     it("rejects under-18 DOB", () => {
       expect(
         getQualifyStepError("dob", validQualifySlice({ dob: "2015-01-01" })),

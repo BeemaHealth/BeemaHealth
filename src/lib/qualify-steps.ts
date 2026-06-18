@@ -283,9 +283,8 @@ export function getQualifyStepError(
       if (!hasAllPreSignupConsents(data.consents)) return "";
       return null;
     case "dob":
-      if (!data.dob) return "Enter your date of birth.";
-      if (computeIsAdult(data.dob) === null)
-        return "Enter a valid date of birth.";
+      if (!data.dob) return "";
+      if (computeIsAdult(data.dob) === null) return "";
       if (computeIsAdult(data.dob) === false)
         return "Aretide is available to adults 18 and older.";
       return null;
