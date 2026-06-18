@@ -111,13 +111,31 @@ describe("qualify-steps validation", () => {
       ).toMatch(/18/);
     });
 
-    it("body_metrics validates height inches", () => {
+    it("body_metrics blocks progress without a user-facing message when fields are empty", () => {
       expect(
         getQualifyStepError(
           "body_metrics",
           validQualifySlice({ heightIn: "" }),
         ),
-      ).not.toBeNull();
+      ).toBe("");
+      expect(
+        isQualifyStepComplete(
+          "body_metrics",
+          validQualifySlice({ heightIn: "" }),
+        ),
+      ).toBe(false);
+      expect(
+        getQualifyStepError(
+          "body_metrics",
+          validQualifySlice({ goalWeightLbs: "" }),
+        ),
+      ).toBe("");
+      expect(
+        isQualifyStepComplete(
+          "body_metrics",
+          validQualifySlice({ goalWeightLbs: "" }),
+        ),
+      ).toBe(false);
     });
 
     it("contraindications require all answers", () => {

@@ -289,6 +289,14 @@ export function getQualifyStepError(
         return "Aretide is available to adults 18 and older.";
       return null;
     case "body_metrics": {
+      if (
+        !data.heightFt.trim() ||
+        !data.heightIn.trim() ||
+        !data.weightLbs.trim() ||
+        !data.goalWeightLbs.trim()
+      ) {
+        return "";
+      }
       const ftErr = validateHeightFt(data.heightFt);
       if (ftErr) return ftErr;
       const inErr = validateHeightIn(data.heightIn);
