@@ -8,11 +8,21 @@ from apps.accounts.models import User
 
 
 class PatientProfile(models.Model):
+    SEX_CHOICES = [
+        ("female", "Female"),
+        ("male", "Male"),
+        ("intersex", "Intersex"),
+        ("unknown", "Unknown"),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    sex_assigned_at_birth = models.CharField(
+        max_length=16, choices=SEX_CHOICES, blank=True, default=""
+    )
+    preferred_name = models.CharField(max_length=128, blank=True, default="")
     address = EncryptedCharField(max_length=255, blank=True)
     city = models.CharField(max_length=128, blank=True)
-    state = models.CharField(max_length=64, default="", blank=True)
     zip_code = models.CharField(max_length=16, blank=True)
     emergency_contact_name = EncryptedCharField(max_length=255, blank=True)
     emergency_contact_phone = EncryptedCharField(max_length=32, blank=True)

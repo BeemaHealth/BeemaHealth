@@ -59,13 +59,23 @@ if port_in_use 8000; then
   exit 1
 fi
 
-if [[ ! -f .env ]]; then
-  echo "Warning: no .env file found. Copy .env.example to .env and set FERNET_KEY."
+ARETIDE_ENV="${ARETIDE_ENV:-dev}"
+ENV_FILE=".env.${ARETIDE_ENV}"
+
+if [[ ! -f "$ENV_FILE" ]]; then
+  if [[ -f .env ]]; then
+    echo "Note: $ENV_FILE not found — falling back to .env (ARETIDE_ENV=${ARETIDE_ENV})."
+    ENV_FILE=".env"
+  else
+    echo "Warning: no $ENV_FILE or .env found. Create or edit .env.dev at the repo root and set FERNET_KEY."
+  fi
   echo
 fi
 
-if [[ -f .env ]]; then
-  exec docker compose -f backend/docker-compose.yml --env-file .env up "$@"
+if [[ -f "$ENV_FILE" ]]; then
+  export ARETIDE_ENV
+  exec docker compose -f backend/docker-compose.yml --env-file "$ENV_FILE" up "$@"
 else
+  export ARETIDE_ENV
   exec docker compose -f backend/docker-compose.yml up "$@"
 fi

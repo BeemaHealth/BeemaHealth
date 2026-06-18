@@ -18,5 +18,15 @@ export default defineConfig({
   },
   vite: {
     base: "/",
+    server: {
+      // Same-origin proxy so HttpOnly funnel cookies (aretide_funnel) persist in dev.
+      // Frontend :8080 → /api/* → backend :8000/api/*
+      proxy: {
+        "/api": {
+          target: "http://localhost:8000",
+          changeOrigin: true,
+        },
+      },
+    },
   },
 });

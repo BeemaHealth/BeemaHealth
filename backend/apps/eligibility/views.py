@@ -1,4 +1,7 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -6,6 +9,70 @@ from apps.accounts.permissions import IsPatient
 from apps.audit.services import log_audit_event
 from apps.eligibility.models import EligibilityResponse
 from apps.eligibility.serializers import EligibilitySerializer
+from apps.eligibility.services import (
+    claim_funnel_session,
+    clear_funnel_cookie,
+    create_funnel_session,
+    get_funnel_session,
+    get_or_create_eligibility_for_session,
+    set_funnel_cookie,
+)
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class FunnelSessionView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        existing = get_funnel_session(request)
+        if existing:
+            eligibility = get_or_create_eligibility_for_session(existing)
+            return Response(EligibilitySerializer(eligibility).data)
+
+        session, token = create_funnel_session(request)
+        eligibility = get_or_create_eligibility_for_session(session)
+        response = Response(EligibilitySerializer(eligibility).data, status=status.HTTP_201_CREATED)
+        set_funnel_cookie(response, token)
+        return response
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class FunnelEligibilityView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        session = get_funnel_session(request)
+        if not session:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        eligibility = get_or_create_eligibility_for_session(session)
+        log_audit_event(
+            user=None,
+            action="read",
+            resource_type="eligibility",
+            resource_id=str(eligibility.id),
+            request=request,
+        )
+        return Response(EligibilitySerializer(eligibility).data)
+
+    def patch(self, request):
+        session = get_funnel_session(request)
+        if not session:
+            return Response(
+                {"detail": "No active funnel session. POST /api/funnel/session/ first."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        eligibility = get_or_create_eligibility_for_session(session)
+        serializer = EligibilitySerializer(eligibility, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        record = serializer.save()
+        log_audit_event(
+            user=None,
+            action="update",
+            resource_type="eligibility",
+            resource_id=str(record.id),
+            request=request,
+        )
+        return Response(EligibilitySerializer(record).data)
 
 
 class EligibilityMeView(APIView):
@@ -59,3 +126,18 @@ class EligibilityMeView(APIView):
             request=request,
         )
         return Response(EligibilitySerializer(record).data)
+
+
+def claim_funnel_for_user(request, user):
+    session = get_funnel_session(request)
+    if not session:
+        return None
+    eligibility = claim_funnel_session(session, user)
+    log_audit_event(
+        user=user,
+        action="update",
+        resource_type="funnel_session",
+        resource_id=str(session.id),
+        request=request,
+    )
+    return eligibility

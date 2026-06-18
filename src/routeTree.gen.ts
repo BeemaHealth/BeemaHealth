@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WeightLossRouteImport } from './routes/weight-loss'
+import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as SwitchRouteImport } from './routes/switch'
 import { Route as SubmittedRouteImport } from './routes/submitted'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -29,6 +30,7 @@ import { Route as ConsentRouteImport } from './routes/consent'
 import { Route as CliniciansRouteImport } from './routes/clinicians'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pending'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
@@ -37,6 +39,11 @@ import { Route as AdminPatientIdRouteImport } from './routes/admin.$patientId'
 const WeightLossRoute = WeightLossRouteImport.update({
   id: '/weight-loss',
   path: '/weight-loss',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyEmailRoute = VerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SwitchRoute = SwitchRouteImport.update({
@@ -134,6 +141,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerifyEmailPendingRoute = VerifyEmailPendingRouteImport.update({
+  id: '/pending',
+  path: '/pending',
+  getParentRoute: () => VerifyEmailRoute,
+} as any)
 const LegalTermsRoute = LegalTermsRouteImport.update({
   id: '/legal/terms',
   path: '/legal/terms',
@@ -175,11 +187,13 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
   '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/verify-email/pending': typeof VerifyEmailPendingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -201,11 +215,13 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
   '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/verify-email/pending': typeof VerifyEmailPendingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -228,11 +244,13 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
   '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/verify-email/pending': typeof VerifyEmailPendingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -256,11 +274,13 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/submitted'
     | '/switch'
+    | '/verify-email'
     | '/weight-loss'
     | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
+    | '/verify-email/pending'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -282,11 +302,13 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/submitted'
     | '/switch'
+    | '/verify-email'
     | '/weight-loss'
     | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
+    | '/verify-email/pending'
   id:
     | '__root__'
     | '/'
@@ -308,11 +330,13 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/submitted'
     | '/switch'
+    | '/verify-email'
     | '/weight-loss'
     | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
+    | '/verify-email/pending'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -335,6 +359,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SubmittedRoute: typeof SubmittedRoute
   SwitchRoute: typeof SwitchRoute
+  VerifyEmailRoute: typeof VerifyEmailRouteWithChildren
   WeightLossRoute: typeof WeightLossRoute
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTelehealthConsentRoute: typeof LegalTelehealthConsentRoute
@@ -348,6 +373,13 @@ declare module '@tanstack/react-router' {
       path: '/weight-loss'
       fullPath: '/weight-loss'
       preLoaderRoute: typeof WeightLossRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verify-email': {
+      id: '/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof VerifyEmailRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/switch': {
@@ -483,6 +515,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verify-email/pending': {
+      id: '/verify-email/pending'
+      path: '/pending'
+      fullPath: '/verify-email/pending'
+      preLoaderRoute: typeof VerifyEmailPendingRouteImport
+      parentRoute: typeof VerifyEmailRoute
+    }
     '/legal/terms': {
       id: '/legal/terms'
       path: '/legal/terms'
@@ -524,6 +563,18 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface VerifyEmailRouteChildren {
+  VerifyEmailPendingRoute: typeof VerifyEmailPendingRoute
+}
+
+const VerifyEmailRouteChildren: VerifyEmailRouteChildren = {
+  VerifyEmailPendingRoute: VerifyEmailPendingRoute,
+}
+
+const VerifyEmailRouteWithChildren = VerifyEmailRoute._addFileChildren(
+  VerifyEmailRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -544,6 +595,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SubmittedRoute: SubmittedRoute,
   SwitchRoute: SwitchRoute,
+  VerifyEmailRoute: VerifyEmailRouteWithChildren,
   WeightLossRoute: WeightLossRoute,
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTelehealthConsentRoute: LegalTelehealthConsentRoute,

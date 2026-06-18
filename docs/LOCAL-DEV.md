@@ -54,12 +54,12 @@ From the repo root:
 
 ```bash
 npm install
-cp .env.example .env
 ```
 
-Edit `.env`:
+Create or edit `.env.dev` at the repo root (`ARETIDE_ENV=dev` is the default):
 
-- `VITE_API_URL=http://localhost:8000/api`
+- `ARETIDE_ENV=dev`
+- `VITE_API_URL=/api` (proxied to the API in dev)
 - `FERNET_KEY` — generate with:
   ```bash
   python3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
@@ -161,8 +161,18 @@ Or change the host port mapping in `backend/docker-compose.yml` (not recommended
 
 ### Frontend cannot reach the API
 
-Confirm `.env` has `VITE_API_URL=http://localhost:8000/api` and restart `npm run dev` after changing env vars.
+Confirm `.env.dev` has `VITE_API_URL=/api` and restart `npm run dev` after changing env vars.
 
 ### `FERNET_KEY` / encryption errors
 
-Ensure `FERNET_KEY` is set in the repo root `.env`. Docker Compose reads it via `--env-file .env` when starting the backend.
+Ensure `FERNET_KEY` is set in the repo root `.env.dev`. `npm run dev:backend` passes it via `--env-file .env.dev` (when `ARETIDE_ENV=dev`).
+
+### Email verification during signup
+
+After creating an account at `/qualify`, check Docker logs for the verification link:
+
+```bash
+docker compose -f backend/docker-compose.yml logs -f api
+```
+
+Look for `Email verification link for …` and open that URL. Intake (`/intake`) requires `email_verified=true`.

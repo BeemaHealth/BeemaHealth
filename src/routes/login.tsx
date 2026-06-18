@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { loginUser } from "@/lib/api/client";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
-import { Field, QuizShell, inputCls } from "@/components/quiz/quiz-primitives";
+import { Field, PasswordInput, QuizShell, inputCls } from "@/components/quiz/quiz-primitives";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/login")({
@@ -23,7 +23,11 @@ function LoginPage() {
     e.preventDefault();
     setError("");
     try {
-      await loginUser(email, password);
+      const session = await loginUser(email, password);
+      if (!session.user.email_verified && redirect === "/intake") {
+        navigate({ to: "/verify-email/pending" });
+        return;
+      }
       navigate({ to: redirect });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed.");
@@ -32,13 +36,13 @@ function LoginPage() {
 
   return (
     <FlowLayout progress={0}>
-      <QuizShell step={0} totalSteps={1} label="Login" title="Welcome back">
+      <QuizShell label="Login" title="Welcome back">
         <form onSubmit={handleSubmit} className="grid gap-4">
           <Field label="Email" required>
             <input type="email" className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} />
           </Field>
           <Field label="Password" required>
-            <input type="password" className={inputCls} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <PasswordInput value={password} onChange={setPassword} />
           </Field>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <Button type="submit" className="w-full">Log in</Button>

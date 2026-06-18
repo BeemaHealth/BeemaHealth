@@ -80,11 +80,12 @@ The cookie is how Hims-style funnels remember progress across refresh and new ta
 2. **Set cookie** — Response includes `Set-Cookie` with the opaque ID. Use a reasonable TTL (e.g. 7–30 days) and `expires_at` on the server row for cleanup.
 3. **Save incrementally** — Each step `PATCH`es draft eligibility fields to the server, keyed by funnel session ID from the cookie. Do not wait until “Finish” to persist.
 4. **Restore on load** — `GET` current funnel draft when `/qualify` loads; pre-fill the form from the API response.
-5. **Claim on register** — `POST /api/auth/register/` must accept the funnel cookie (or explicit session header). In one transaction:
+5. **Claim on register** — `POST /api/auth/register/` accepts the funnel cookie. In one transaction:
    - Create `users` (+ `authtoken_token`).
-   - Move or copy draft data into `eligibility_responses` with `user_id` set.
-   - Mark funnel session `claimed_at` / bind `claimed_by_user_id`.
-   - Return auth token; optionally clear or rotate the funnel cookie.
+   - Attach draft `eligibility_responses` to the new user (`user_id` set, `funnel_session_id` cleared).
+   - Copy `dob` / `state` → `users`, `sex_assigned_at_birth` → `patient_profiles`, then **clear those fields from eligibility** (no duplicate storage).
+   - Mark funnel session `claimed_at` / `claimed_by_user_id`.
+   - Return auth token; clear funnel cookie.
 6. **Login path** — If the user already has an account, `POST /api/auth/login/` should not orphan an anonymous draft; either merge draft into existing eligibility (if empty) or discard with audit metadata (product decision).
 7. **Expiry** — Cron or management command deletes unclaimed funnel sessions past `expires_at`.
 8. **Audit** — When PHI in a funnel draft is read or updated, write `audit_events` (same as post-account PHI).
@@ -93,16 +94,18 @@ IP address may be logged for fraud/rate-limiting, but must **not** be the primar
 
 ### Proposed schema addition
 
-Not implemented yet. Recommended shape:
+**Implemented** — see [`apps/eligibility/models.py`](apps/eligibility/models.py) (`FunnelSession`).
 
 **`funnel_sessions`**
 
 | Field | Purpose |
 |-------|---------|
 | `id` (UUID) | Primary key |
-| `token` | Opaque value sent in cookie (store hashed if paranoia warrants) |
+| `token_hash` | Hash of opaque cookie value (plaintext token never stored) |
+| `status` | `active`, `claimed`, `expired`, `abandoned` |
 | `expires_at` | Server-side TTL |
 | `claimed_at`, `claimed_by_user_id` (nullable FK → `users`) | Set when registration links the draft |
+| `ip_address`, `user_agent` | Fraud/rate-limit metadata only |
 | `created_at`, `updated_at` | Housekeeping |
 
 Draft eligibility data can either:
@@ -140,6 +143,25 @@ After claim, use existing authenticated routes (`GET/PATCH /api/eligibility/me/`
 
 ---
 
+## Canonical field ownership (no duplicates)
+
+Each patient fact is stored in **one** table. Other tables may expose it read-only via the API (merged in serializers) but must not persist a second copy.
+
+| Data | Canonical table | Notes |
+|------|-----------------|-------|
+| Email, legal name, phone, DOB, state | `users` | Set at account creation |
+| Sex assigned at birth | `patient_profiles` | Transferred from eligibility on funnel claim |
+| Preferred name, address, city, zip, emergency contact | `patient_profiles` | Synced from intake `identity` JSON on save |
+| Height, weight, goal weight, BMI, safety screen, treatment interest, pre-signup TOS/privacy | `eligibility_responses` | Screening quiz only |
+| Intake-only questionnaire answers | `medical_intakes` JSON | Duplicate keys stripped on save — see below |
+| Telehealth + clinical acknowledgments + typed signature | `consent_records` | `privacy_acknowledgment` is derived from `eligibility.pre_signup_consents` at sign time |
+
+**Pre-account only on eligibility:** `dob`, `state`, and `sex_assigned_at_birth` may exist on an unclaimed eligibility row. On funnel claim they are moved to `users` / `patient_profiles` and cleared from eligibility.
+
+**Enforcement:** [`apps/intakes/deduplication.py`](apps/intakes/deduplication.py) strips duplicate keys from intake JSON; [`apps/eligibility/services.py`](apps/eligibility/services.py) clears identity fields after claim; [`apps/patients/services.py`](apps/patients/services.py) syncs profile fields from intake.
+
+---
+
 ## Table-by-table breakdown
 
 ### 1. `users`
@@ -165,21 +187,19 @@ Django also creates related auth tables (`auth_permission`, `django_session`, et
 
 ### 2. `patient_profiles`
 
-**Purpose:** Extended contact info from the **full medical intake** (Step 1: address, emergency contact).
+**Purpose:** Extended contact and clinical demographics not stored on `users`.
 
 | Field | Why |
 |-------|-----|
-| `address`, `emergency_contact_*` | Encrypted — more sensitive than eligibility city/ZIP |
-| `city`, `state`, `zip_code` | Plain text — useful for provider list/filtering |
+| `sex_assigned_at_birth` | Collected at eligibility; canonical after funnel claim |
+| `preferred_name` | Optional display name from intake |
+| `address`, `emergency_contact_*` | Encrypted — synced from intake step 1 |
+| `city`, `zip_code` | Plain text — useful for provider filtering |
 | One-to-one with `users` | One patient = one profile |
 
-**Decision:** Split from `users` because:
+**Not on this table:** `state` (lives on `users`), legal name / email / phone / DOB (live on `users`).
 
-- Account creation only needs name, email, phone, DOB (date of birth), state.
-- Full address and emergency contact come **later** in the 12-step intake.
-- Keeps `users` lean for auth; profile can be empty until intake Step 1 is filled.
-
-**Note:** The profile model exists, but much intake identity data currently lives in `medical_intakes.identity` (JSON) as the frontend sends it. The profile table is ready for when that data is normalized server-side.
+**Decision:** Split from `users` because account creation only needs core identity; address and emergency contact come later in intake. Intake `identity` JSON holds only profile-only fields; the server syncs them here on save.
 
 **Model:** [`apps/patients/models.py`](apps/patients/models.py)
 
@@ -187,23 +207,21 @@ Django also creates related auth tables (`auth_permission`, `django_session`, et
 
 ### 3. `eligibility_responses`
 
-**Purpose:** The **short eligibility quiz** before/during account creation (height, weight, Colorado, treatment interest, safety screen).
+**Purpose:** The **short eligibility quiz** (treatment interest, height/weight screening, safety screen, pre-signup legal consents).
 
 **Pre-account:** Rows may exist with `user_id` null while tied to a `funnel_sessions` record; registration claims the row. See [Anonymous funnel session](#anonymous-funnel-session-pre-account).
 
 | Field | Why |
 |-------|-----|
-| Structured columns (`height_ft`, `weight`, `bmi`, etc.) | Used in provider admin list — easy to query without parsing JSON |
-| `safety_screen` (JSON) | Flexible yes/no map for safety questions — avoids many similar columns |
-| `safety_concern_flag` | Denormalized boolean for quick “needs review” without re-scanning JSON (JavaScript Object Notation) |
-| `bmi` | Computed server-side (same logic as frontend) so the value is trustworthy |
-| One-to-one with `users` | One eligibility snapshot per patient for MVP (after claim; pre-account draft may have null `user_id`) |
+| `treatment_interest`, `primary_goal`, `treatment_priority`, `target_weight_loss_range` | Marketing / conversion layer |
+| `height_ft`, `height_in`, `weight_lbs`, `goal_weight_lbs`, `bmi` | Screening metrics — **not** duplicated in intake |
+| `safety_screen` (JSON) | Pre-intake contraindication map — **not** duplicated in intake |
+| `pre_signup_consents` (JSON) | `terms` and `privacy` only (at `/qualify` checkbox) |
+| `safety_concern_flag`, `is_likely_eligible`, `needs_clinician_review`, `disqualification_reason` | Server-derived flags |
+| `dob`, `state`, `sex_assigned_at_birth` | **Pre-account funnel only** — cleared after claim (canonical copies on `users` / `patient_profiles`) |
+| One-to-one with `users` | One eligibility snapshot per patient after claim |
 
-**Decision:** Eligibility is **its own table**, not part of `medical_intakes`, because:
-
-- The product treats it as a **separate step** with different UI and timing.
-- Providers care about treatment interest, budget, and BMI **before** reading the full chart.
-- Patients can be blocked or flagged at eligibility without a complete intake.
+**Decision:** Eligibility is **its own table**, not part of `medical_intakes`, because the product treats it as a separate step with different UI and timing.
 
 **Model:** [`apps/eligibility/models.py`](apps/eligibility/models.py)
 
@@ -220,26 +238,28 @@ Django also creates related auth tables (`auth_permission`, `django_session`, et
 | `submitted_at` | Set when consent is signed / intake is finalized |
 | One-to-one with `users` | One active intake per patient for MVP |
 
-**JSON sections:**
+**JSON sections** (intake-only fields — duplicates are stripped on save):
 
-| Column | Intake step |
-|--------|-------------|
-| `identity` | Identity & contact |
-| `body_metrics` | Body metrics & goals |
-| `weight_history` | Weight-loss history |
-| `medical_conditions` | Medical conditions |
-| `family_history` | Family history |
-| `medications` | Current medications |
-| `allergies` | Allergies |
-| `pregnancy` | Pregnancy & reproductive health |
-| `lifestyle` | Lifestyle & behavior |
-| `labs` | Labs & vitals |
-| `medication_preferences` | Medication preferences |
-| `safety_acknowledgments` | Safety acknowledgments |
+| Column | Intake step | Stored fields (MVP) |
+|--------|-------------|---------------------|
+| `identity` | Extended contact | `preferred`, `address`, `city`, `zip`, `emergency_name`, `emergency_phone` only |
+| `body_metrics` | Weight history extras | `highest_weight`, `lowest_weight`, `waist`, `duration`, `goals` — **not** height/weight/goal weight |
+| `weight_history` | Weight-loss history | Methods tried, prior GLP-1 meds, prior details |
+| `medical_conditions` | Medical conditions | All except keys already in `eligibility.safety_screen` |
+| `family_history` | Family history | Family history flags |
+| `medications` | Current medications | Answers + medication list |
+| `allergies` | Allergies | Answers + allergy list — **not** GLP-1 reaction (in `safety_screen`) |
+| `pregnancy` | Reproductive extras | `lmp`, `contraception`, `understand` — **not** pregnant/breastfeeding/trying |
+| `lifestyle` | Lifestyle & behavior | Lifestyle fields |
+| `labs` | Labs & vitals | Lab values and upload notes |
+| `medication_preferences` | Pharmacy / prefs | Self-inject, pharmacy, insurance — **not** `treatment` when `eligibility.treatment_interest` is set |
+| `safety_acknowledgments` | Safety acknowledgments | Checkbox acknowledgments |
+
+**Not stored in intake JSON** (canonical elsewhere): legal name, email, phone, DOB, state (`users`); sex (`patient_profiles`); height, weight, BMI, goal weight, safety screen answers, treatment interest (`eligibility_responses`).
 
 **Decision — JSON vs hundreds of columns:**
 
-The intake has dozens of questions, many conditional (medication lists, allergy lists). For MVP, **JSON columns mirror the frontend shape exactly**:
+The intake has dozens of questions, many conditional (medication lists, allergy lists). For MVP, **JSON columns hold intake-only answers**; duplicate keys are stripped on save (see [Canonical field ownership](#canonical-field-ownership-no-duplicates)).
 
 - Faster to build and sync with [`src/routes/intake.tsx`](../src/routes/intake.tsx)
 - No migration every time a question is tweaked
@@ -275,19 +295,18 @@ This is a deliberate **speed-over-normalization** choice for MVP.
 
 ### 6. `consent_records`
 
-**Purpose:** Legal telehealth consent — **immutable** after signing.
+**Purpose:** Final legal consent with typed signature — **immutable** after signing.
 
 | Field | Why |
 |-------|-----|
-| Six boolean acknowledgments | Matches consent page sections |
+| `telehealth_consent`, medication/emergency/compounded acknowledgments | Collected on `/consent` with signature |
+| `privacy_acknowledgment` | Set server-side from `eligibility.pre_signup_consents.privacy` (not a separate patient input) |
 | `typed_signature`, `signed_at` | Legal record of who agreed and when |
 | One-to-one with `users` | One consent record per intake submission |
 
-**Decision:** Separate table (not JSON on intake) because:
+**Not on this table:** Terms of Service acceptance (stored in `eligibility.pre_signup_consents.terms` at `/qualify`).
 
-- Consent is a **legal artifact** — should not change when intake is edited.
-- API rejects a second POST — consent is write-once.
-- Signing consent **triggers** intake `status → submitted` and safety flag computation.
+**Decision:** Separate table (not JSON on intake) because consent is a legal artifact — should not change when intake is edited. Signing consent triggers intake `status → submitted` and safety flag computation.
 
 **Model:** [`apps/consents/models.py`](apps/consents/models.py)
 
@@ -393,14 +412,15 @@ Those would be new tables in a later phase.
 
 ```
 Funnel start                → funnel_sessions (+ Set-Cookie)
-Each qualify step           → eligibility draft (server, keyed by funnel session)
-Register (with funnel cookie)→ users
-                            → eligibility_responses (draft claimed, user_id set)
+Each qualify step           → eligibility_responses draft (server, keyed by funnel session)
+Register (with funnel cookie)→ users (+ dob/state from eligibility or register payload)
+                            → patient_profiles (+ sex from eligibility)
+                            → eligibility_responses claimed; dob/state/sex cleared on row
                             → funnel_sessions.claimed_at
-Medical questionnaire       → medical_intakes (status=draft, JSON filling up)
-Consent signed              → consent_records
+Medical questionnaire       → medical_intakes (status=draft; intake-only JSON)
+Consent signed              → consent_records (privacy derived from eligibility pre_signup)
                             → medical_intakes.status=submitted
-                            → safety_flags (recomputed)
+                            → safety_flags (recomputed from eligibility + intake + consent)
 Provider opens admin        → audit_events (read)
                             → provider_reviews (update)
 Patient uploads ID/labs     → uploaded_documents + S3 file
@@ -412,7 +432,7 @@ Patient uploads ID/labs     → uploaded_documents + S3 file
 
 | Table | Primary API endpoints |
 |-------|----------------------|
-| `funnel_sessions` (proposed) | `POST /api/funnel/session/`, `GET/PATCH /api/funnel/eligibility/` |
+| `funnel_sessions` | `POST /api/funnel/session/`, `GET/PATCH /api/funnel/eligibility/` |
 | `users` | `POST /api/auth/register/` (claims funnel), `login/`, `logout/` |
 | `eligibility_responses` | Pre-account: funnel `GET/PATCH`; after account: `GET/PATCH /api/eligibility/me/`, `POST /api/eligibility/` |
 | `medical_intakes` | `GET/PATCH /api/medical-intakes/me/` |
@@ -445,12 +465,13 @@ Patient uploads ID/labs     → uploaded_documents + S3 file
 
 If you need reporting or clinical decision support on individual intake answers:
 
-1. Extract high-value fields from JSON into columns (e.g. `current_insulin_use`, `pregnant`).
-2. Move `medical_intakes.identity` into `patient_profiles` on save.
-3. Add normalized child tables for `medications`, `allergies`, and prior GLP-1 (glucagon-like peptide-1) use.
-4. Keep JSON as a snapshot or drop it once normalized.
+1. Extract high-value fields from JSON into columns (e.g. `current_insulin_use`).
+2. Add normalized child tables for `medications`, `allergies`, and prior GLP-1 use.
+3. Keep JSON as a snapshot or drop it once normalized.
 
-For MVP, JSON is the right tradeoff. For scale and analytics, normalize incrementally.
+Profile-only intake fields already sync to `patient_profiles` on save. Do **not** re-introduce duplicate columns for data that already has a canonical owner (see [Canonical field ownership](#canonical-field-ownership-no-duplicates)).
+
+For MVP, JSON is the right tradeoff for intake-only answers. For scale and analytics, normalize incrementally without duplicating eligibility or user fields.
 
 ---
 

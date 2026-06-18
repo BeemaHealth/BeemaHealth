@@ -84,7 +84,7 @@ function ConsentPage() {
   return (
     <FlowLayout progress={100}>
       <div className="w-full max-w-2xl">
-        <QuizShell step={0} totalSteps={1} label="Consent" title="Consent and acknowledgments">
+        <QuizShell label="Consent" title="Consent and acknowledgments">
           <div className="space-y-4">
             {SECTIONS.map((s) => (
               <div key={s.title} className="rounded-2xl border border-border bg-background px-4 py-3">

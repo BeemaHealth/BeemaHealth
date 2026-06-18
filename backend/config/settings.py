@@ -5,15 +5,21 @@ import dj_database_url
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+ROOT_DIR = BASE_DIR.parent
+
+ARETIDE_ENV = os.environ.get("ARETIDE_ENV", "dev")
+_env_file = ROOT_DIR / f".env.{ARETIDE_ENV}"
+if _env_file.is_file():
+    environ.Env.read_env(_env_file)
+environ.Env.read_env(ROOT_DIR / ".env")
+environ.Env.read_env(BASE_DIR / ".env")
 
 env = environ.Env(
     DEBUG=(bool, False),
     ALLOWED_HOSTS=(list, ["localhost", "127.0.0.1"]),
     CORS_ALLOWED_ORIGINS=(list, ["http://localhost:8080"]),
+    CSRF_TRUSTED_ORIGINS=(list, []),
 )
-
-environ.Env.read_env(BASE_DIR.parent / ".env")
-environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY", default="dev-insecure-change-me-in-production")
 DEBUG = env("DEBUG")
@@ -123,6 +129,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS")
 CORS_ALLOW_CREDENTIALS = True
 
+# CSRF — required for Django admin and session auth in dev (http://localhost:8000)
+CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS") or [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+]
+
+if DEBUG:
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_SAMESITE = "Lax"
+
 # DRF
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -190,3 +210,11 @@ LOGGING = {
 
 # Hosting target documentation flag
 HOSTING_TARGET = env("HOSTING_TARGET", default="local")  # local | heroku_shield | aws
+
+# Email — console backend in dev prints verification links to Docker logs
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND",
+    default="django.core.mail.backends.console.EmailBackend",
+)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@aretide.com")
+FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:8080")

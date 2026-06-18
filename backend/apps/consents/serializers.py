@@ -21,7 +21,7 @@ class ConsentRecordSerializer(serializers.ModelSerializer):
             "typed_signature",
             "signed_at",
         ]
-        read_only_fields = ["id", "user_id", "signed_at"]
+        read_only_fields = ["id", "user_id", "signed_at", "privacy_acknowledgment"]
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

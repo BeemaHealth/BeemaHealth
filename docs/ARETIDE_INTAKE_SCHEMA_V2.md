@@ -13,6 +13,8 @@ This schema reflects the updated GLP-1 telehealth flow:
 
 The design keeps marketing qualification, clinical intake, provider review, prescription, and pharmacy fulfillment separate.
 
+> **MVP implementation:** The live Django schema is documented in [backend/DATABASE.md](../backend/DATABASE.md), including [canonical field ownership](../backend/DATABASE.md#canonical-field-ownership-no-duplicates) — each patient fact is stored once. Sections below describe the v2 target; where MVP differs, duplicate fields are omitted or marked **(not stored — canonical elsewhere)**.
+
 ---
 
 ## High-level entity relationship
@@ -91,33 +93,38 @@ Authentication, core identity, and role control.
 
 ## Purpose
 
-Stores extended patient identity/contact information needed for clinician review and pharmacy fulfillment.
+Extended contact and clinical demographics. **MVP:** synced from intake; does not duplicate `users`.
 
-## Fields
+## Fields (MVP — implemented)
 
 | Field | Type | Notes |
 |---|---|---|
 | `id` | UUID PK |  |
 | `user_id` | OneToOne FK → `users.id` |  |
-| `legal_first_name` | encrypted string | Can mirror `users.first_name` |
-| `legal_last_name` | encrypted string | Can mirror `users.last_name` |
+| `sex_assigned_at_birth` | enum | `male`, `female`, `intersex`, `unknown` — canonical after funnel claim |
+| `preferred_name` | string | Optional; from intake |
+| `address` | encrypted string | From intake |
+| `city` | string |  |
+| `zip_code` | string |  |
+| `emergency_contact_name` | encrypted string nullable |  |
+| `emergency_contact_phone` | encrypted string nullable |  |
+| `created_at` | datetime |  |
+| `updated_at` | datetime |  |
+
+**Not stored here (canonical on `users`):** legal first/last name, email, phone, DOB, state.
+
+## Fields (v2+ — not yet implemented)
+
+| Field | Type | Notes |
+|---|---|---|
 | `middle_name` | encrypted string nullable | Pharmacy API supports it |
-| `sex_assigned_at_birth` | enum | `male`, `female`, `intersex`, `unknown` |
 | `gender_identity` | enum/string nullable | Patient-reported |
 | `ethnicity` | string nullable | Optional |
-| `address_line_1` | encrypted string | Required before pharmacy order |
 | `address_line_2` | encrypted string nullable |  |
 | `address_line_3` | encrypted string nullable |  |
-| `city` | string |  |
-| `state` | string(2) |  |
-| `zip_code` | string |  |
 | `country` | string(2) default `US` |  |
 | `preferred_contact_method` | enum | `email`, `sms`, `phone` |
 | `sms_opt_in` | boolean |  |
-| `emergency_contact_name` | encrypted string nullable | Optional |
-| `emergency_contact_phone` | encrypted string nullable | Optional |
-| `created_at` | datetime |  |
-| `updated_at` | datetime |  |
 
 ---
 
@@ -125,11 +132,9 @@ Stores extended patient identity/contact information needed for clinician review
 
 ## Purpose
 
-Stores the pre-signup and early post-signup qualification answers.
+Pre-signup qualification and screening. **Not** the full medical intake.
 
-This is not the full medical intake. This is the short conversion/eligibility layer.
-
-## Fields
+## Fields (MVP — implemented)
 
 | Field | Type | Notes |
 |---|---|---|
@@ -137,19 +142,18 @@ This is not the full medical intake. This is the short conversion/eligibility la
 | `funnel_session_id` | FK nullable → `funnel_sessions.id` | Used before account claim |
 | `user_id` | OneToOne FK nullable → `users.id` | Set after registration |
 | `treatment_interest` | enum | `glp1_pills`, `glp1_injections`, `provider_recommendation`, `not_sure` |
-| `primary_goal` | enum/string | `lose_weight`, `metabolic_health`, `learn_options`, etc. |
-| `treatment_priority` | enum/string | `cost`, `fda_approved`, `results`, `convenience`, `provider_support` |
+| `primary_goal` | enum/string | Motivation |
+| `treatment_priority` | enum/string | `cost`, `fda_approved`, `results`, etc. |
 | `target_weight_loss_range` | enum | `1_15`, `16_50`, `51_100`, `100_plus`, `not_sure` |
-| `state` | string(2) | State availability gate |
-| `is_18_or_older` | boolean | Pre-DOB age gate |
-| `height_ft` | integer nullable | Can be collected pre- or post-signup |
-| `height_in` | integer nullable |  |
-| `weight_lbs` | decimal nullable |  |
-| `goal_weight_lbs` | decimal nullable |  |
+| `height_ft`, `height_in`, `weight_lbs`, `goal_weight_lbs` | integers/decimal | Screening metrics — **not** duplicated in intake |
 | `bmi` | decimal nullable | Computed server-side |
+| `safety_screen` | JSON | Contraindication yes/no map — **not** duplicated in intake |
+| `pre_signup_consents` | JSON | `terms`, `privacy` only (at `/qualify`) |
+| `is_18_or_older` | boolean | Pre-DOB age gate |
 | `is_likely_eligible` | boolean nullable | Derived |
 | `needs_clinician_review` | boolean default false | Derived |
-| `disqualification_reason` | string nullable | Avoid showing too much detail to patient |
+| `disqualification_reason` | string nullable |  |
+| `dob`, `state`, `sex_assigned_at_birth` | various | **Pre-account funnel only** — cleared after claim; canonical on `users` / `patient_profiles` |
 | `completed_at` | datetime nullable |  |
 | `created_at` | datetime |  |
 | `updated_at` | datetime |  |
@@ -160,51 +164,50 @@ This is not the full medical intake. This is the short conversion/eligibility la
 
 ## Purpose
 
-Stores the visit-specific clinical questionnaire submitted before clinician review.
+Visit-specific clinical questionnaire submitted before clinician review.
 
-For MVP, keep this as a versioned JSON snapshot plus a few searchable summary columns. Normalize the recurring lists into child tables.
+**MVP:** JSON columns for intake-only answers. Duplicate fields (identity, height/weight, safety screen, etc.) are **not** stored — see [DATABASE.md](../backend/DATABASE.md#4-medical_intakes).
 
-## Fields
+## Fields (MVP — implemented)
 
 | Field | Type | Notes |
 |---|---|---|
 | `id` | UUID PK |  |
 | `user_id` | OneToOne FK → `users.id` |  |
-| `status` | enum | `draft`, `submitted`, `under_review`, `needs_more_info`, `approved`, `denied`, `cancelled` |
-| `schema_version` | string | Example: `glp1_weight_loss_v2` |
+| `status` | enum | `draft`, `submitted`, `under_review`, `more_info_needed`, `approved`, `not_approved`, `prescription_sent` |
+| `identity` | JSON | `preferred`, `address`, `city`, `zip`, `emergency_name`, `emergency_phone` only |
+| `body_metrics` | JSON | `highest_weight`, `lowest_weight`, `waist`, `duration`, `goals` — not height/weight |
+| `weight_history` | JSON | Methods, prior meds, prior details |
+| `medical_conditions` | JSON | Excludes keys in `eligibility.safety_screen` |
+| `family_history` | JSON |  |
+| `medications` | JSON | Answers + list |
+| `allergies` | JSON | Excludes GLP-1 reaction (in `safety_screen`) |
+| `pregnancy` | JSON | `lmp`, `contraception`, `understand` — not pregnant/breastfeeding/trying |
+| `lifestyle` | JSON |  |
+| `labs` | JSON |  |
+| `medication_preferences` | JSON | Pharmacy/prefs — not `treatment` when eligibility has `treatment_interest` |
+| `safety_acknowledgments` | JSON |  |
 | `submitted_at` | datetime nullable |  |
-| `review_started_at` | datetime nullable |  |
-| `chief_goal` | string | Patient goal in their words or selected |
-| `goal_weight_lbs` | decimal nullable |  |
-| `current_height_ft` | integer |  |
-| `current_height_in` | integer |  |
-| `current_weight_lbs` | decimal |  |
-| `current_bmi` | decimal | Computed server-side |
-| `highest_lifetime_weight_lbs` | decimal nullable |  |
-| `is_current_weight_highest` | boolean nullable |  |
-| `daily_activity_level` | integer | 1-5 scale |
-| `raw_answers` | JSONB | Full immutable-ish intake payload |
 | `created_at` | datetime |  |
 | `updated_at` | datetime |  |
 
-## Suggested `raw_answers` shape
+## Fields (v2+ — not yet implemented)
+
+| Field | Type | Notes |
+|---|---|---|
+| `schema_version` | string | Example: `glp1_weight_loss_v2` |
+| `review_started_at` | datetime nullable |  |
+| `raw_answers` | JSONB | Optional immutable snapshot if normalized child tables are added |
+
+## Suggested v2 `raw_answers` shape (intake-only fields)
 
 ```json
 {
-  "motivation": {
-    "why_lose_weight": ["improve_health", "confidence"],
-    "goal_meaning": ["more_energy", "overall_health"],
-    "treatment_preference": "provider_recommendation",
-    "treatment_priority": "fda_approved"
-  },
-  "body_metrics": {
-    "height_ft": 5,
-    "height_in": 10,
-    "weight_lbs": 220,
-    "goal_weight_lbs": 175,
+  "body_metrics_extras": {
     "highest_lifetime_weight_lbs": 240,
     "is_current_weight_highest": false,
-    "activity_level": 3
+    "activity_level": 3,
+    "goals": ["weight_loss", "better_energy"]
   },
   "weight_history": {
     "previous_attempts": ["diet", "exercise", "noom"],
@@ -217,21 +220,6 @@ For MVP, keep this as a versioned JSON snapshot plus a few searchable summary co
     "current_dose": null,
     "reason_stopped": null,
     "side_effects": []
-  },
-  "contraindications": {
-    "personal_or_family_medullary_thyroid_cancer": false,
-    "men2": false,
-    "pancreatitis": false,
-    "gallbladder_disease": false,
-    "kidney_disease": false,
-    "liver_disease": false,
-    "diabetic_retinopathy": false,
-    "gastroparesis": false
-  },
-  "reproductive_health": {
-    "pregnant": false,
-    "breastfeeding": false,
-    "trying_to_conceive": false
   },
   "eating_disorder_screen": {
     "purging_behavior": false,
@@ -246,16 +234,11 @@ For MVP, keep this as a versioned JSON snapshot plus a few searchable summary co
     "tobacco_use": "never",
     "recreational_drug_use": "never",
     "sleep_quality": "fair"
-  },
-  "consents_and_acknowledgments": {
-    "telehealth_consent": true,
-    "privacy_policy": true,
-    "terms": true,
-    "medication_risks_reviewed": true,
-    "no_emergency_care_acknowledgment": true
   }
 }
 ```
+
+**Not in intake JSON** (canonical elsewhere): height/weight/BMI/goal weight, contraindications, reproductive status (`eligibility_responses`); name/email/phone/DOB/state (`users`); terms/privacy acceptance timing (`eligibility.pre_signup_consents` + `consent_records`).
 
 ---
 
@@ -367,25 +350,35 @@ Derived clinical alerts for the provider.
 
 ## Purpose
 
-Immutable legal record for telehealth, privacy, prescribing, and medication-risk acknowledgments.
+Immutable legal record for final telehealth consent and clinical acknowledgments (with typed signature).
 
-## Fields
+## Fields (MVP — implemented)
 
 | Field | Type | Notes |
 |---|---|---|
 | `id` | UUID PK |  |
 | `user_id` | OneToOne FK → `users.id` |  |
-| `telehealth_consent` | boolean |  |
-| `hipaa_privacy_acknowledgment` | boolean |  |
-| `terms_acceptance` | boolean |  |
-| `e_prescribing_consent` | boolean |  |
+| `telehealth_consent` | boolean | Collected on `/consent` |
+| `no_guarantee_acknowledgment` | boolean |  |
+| `emergency_disclaimer_acknowledgment` | boolean |  |
 | `medication_risk_acknowledgment` | boolean |  |
-| `no_emergency_care_acknowledgment` | boolean |  |
+| `compounded_medication_acknowledgment` | boolean |  |
+| `privacy_acknowledgment` | boolean | Derived from `eligibility.pre_signup_consents.privacy` at sign time |
+| `typed_signature` | string |  |
+| `signed_at` | datetime |  |
+
+**Not on this table:** Terms of Service (`eligibility.pre_signup_consents.terms` at `/qualify`).
+
+## Fields (v2+ — not yet implemented)
+
+| Field | Type | Notes |
+|---|---|---|
+| `hipaa_privacy_acknowledgment` | boolean | If split from MVP privacy flow |
+| `terms_acceptance` | boolean | If moved from eligibility |
+| `e_prescribing_consent` | boolean |  |
 | `refund_policy_acknowledgment` | boolean |  |
-| `typed_signature` | encrypted string |  |
 | `ip_address` | inet nullable |  |
 | `user_agent` | text nullable |  |
-| `signed_at` | datetime |  |
 
 ---
 
@@ -642,17 +635,19 @@ apps/
 
 # Key schema changes from the current DATABASE.md
 
-1. Keep `eligibility_responses`, but expand it for marketing qualification and pre-signup treatment preference.
-2. Keep `medical_intakes`, but add `schema_version`, summary columns, and `raw_answers`.
-3. Add normalized child tables:
+1. Keep `eligibility_responses` for marketing qualification and screening; **no duplicate** identity or metrics on intake after claim.
+2. Keep `medical_intakes` as intake-only JSON (v2 may add `schema_version` and normalized child tables).
+3. Add normalized child tables (v2+):
    - `patient_conditions`
    - `patient_medications`
    - `patient_allergies`
-4. Add pharmacy workflow tables:
+4. Add pharmacy workflow tables (v2+):
    - `prescriptions`
    - `pharmacy_orders`
    - `pharmacy_order_events`
 5. Expand `uploaded_documents` to support ID, selfie, body photos, labs, insurance, and prior prescriptions.
-6. Keep `safety_flags`, but make them tied to `intake_id`.
+6. Keep `safety_flags`, sourced from eligibility + intake without duplicate condition keys.
 7. Keep `provider_reviews`, but add `external_review_id` for OpenLoop/Wheel-style integrations.
 8. Keep `audit_events`, but include pharmacy and webhook actions.
+
+See [backend/DATABASE.md — Canonical field ownership](../backend/DATABASE.md#canonical-field-ownership-no-duplicates) for the live MVP rules.

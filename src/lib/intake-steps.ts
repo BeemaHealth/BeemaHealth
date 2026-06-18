@@ -4,7 +4,7 @@
 
 export const INTAKE_STEP_LABELS = [
   "Identity & contact",
-  "Body metrics & goals",
+  "Weight history & goals",
   "Weight-loss history",
   "Medical conditions",
   "Family history",
@@ -97,6 +97,19 @@ export const SAFETY_ACKS = [
   ["electronic", "I consent to electronic communication."],
   ["storage", "I consent to Aretide storing my intake information for provider review."],
 ] as const;
+
+/** Conditions already captured in eligibility.safety_screen — not re-collected in intake. */
+export const INTAKE_EXCLUDED_CONDITION_KEYS = new Set([
+  "thyroid_cancer",
+  "men2",
+  "pancreatitis",
+  "gallbladder",
+  "kidney",
+  "kidney_severe",
+  "liver",
+  "gastroparesis",
+  "diabetic_retinopathy",
+]);
 
 export function emptyIntakeData() {
   return {

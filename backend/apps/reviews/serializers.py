@@ -45,11 +45,10 @@ class PatientListSerializer(serializers.Serializer):
     email = serializers.EmailField()
     age = serializers.IntegerField(allow_null=True)
     bmi = serializers.FloatField(allow_null=True)
-    city = serializers.CharField(allow_blank=True)
     state = serializers.CharField()
     submitted_at = serializers.DateTimeField(allow_null=True)
     treatment_interest = serializers.CharField(allow_blank=True)
-    budget = serializers.CharField(allow_blank=True)
+    treatment_priority = serializers.CharField(allow_blank=True)
     flag_count = serializers.IntegerField()
     status = serializers.CharField()
 

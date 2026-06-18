@@ -1,26 +1,57 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import {
   BlockedMessage,
   ChoiceCard,
   Field,
+  PasswordInput,
   QuizNav,
   QuizShell,
   YesNoField,
   inputCls,
 } from "@/components/quiz/quiz-primitives";
-import { registerUser, syncEligibility } from "@/lib/api/client";
+import { DateOfBirthField } from "@/components/quiz/DateOfBirthField";
+import {
+  createFunnelSession,
+  fetchEligibilityMe,
+  fetchFunnelEligibility,
+  isApiEnabled,
+  patchFunnelEligibility,
+  registerUser,
+  syncEligibility,
+} from "@/lib/api/client";
+import {
+  ACCOUNT_STEP,
+  CONTRAINDICATION_QUESTIONS,
+  PRE_SIGNUP_STEPS,
+  PRIMARY_GOAL_OPTIONS,
+  allPreSignupConsents,
+  computeIsAdult,
+  hasAllPreSignupConsents,
+  resolveQualifyStepIndex,
+  SEX_OPTIONS,
+  STEP_LABELS,
+  STEP_SUBTITLES,
+  STEP_TITLES,
+  TREATMENT_INTEREST_OPTIONS,
+  TREATMENT_PRIORITY_OPTIONS,
+  WEIGHT_LOSS_GOAL_OPTIONS,
+  type QualifyStepId,
+} from "@/lib/qualify-steps";
 import { computeBmi } from "@/lib/safety-flags";
 import { getSession } from "@/lib/storage";
 import { US_STATES } from "@/lib/veya-data";
 import type {
-  BiologicalSex,
-  BudgetRange,
   EligibilityResponses,
-  InjectionPreference,
+  EligibilitySafetyScreen,
+  PreSignupConsents,
+  PrimaryGoal,
+  SexAssignedAtBirth,
+  TargetWeightLossRange,
   TreatmentInterest,
+  TreatmentPriority,
 } from "@/lib/types/mvp";
 
 export const Route = createFileRoute("/qualify")({
@@ -33,172 +64,222 @@ export const Route = createFileRoute("/qualify")({
   component: EligibilityPage,
 });
 
-const STEP_LABELS = [
-  "Basic info",
-  "Your account",
-  "Location",
-  "Treatment interest",
-  "Safety screen",
-  "Review",
-];
-
 type FormState = {
+  treatmentInterest: TreatmentInterest | "";
+  primaryGoal: PrimaryGoal | "";
+  treatmentPriority: TreatmentPriority | "";
+  targetWeightLossRange: TargetWeightLossRange | "";
+  state: string;
+  consents: PreSignupConsents;
+  dob: string;
   heightFt: string;
   heightIn: string;
-  weight: string;
-  goalWeight: string;
-  biologicalSex: BiologicalSex | "";
-  isAdult: boolean | null;
+  weightLbs: string;
+  goalWeightLbs: string;
+  sexAssignedAtBirth: SexAssignedAtBirth | "";
+  safety: EligibilitySafetyScreen;
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  dob: string;
-  state: string;
-  locatedInState: boolean | null;
-  livesInState: boolean | null;
-  city: string;
-  zip: string;
-  treatmentInterest: TreatmentInterest | "";
-  injectionPreference: InjectionPreference | "";
-  budget: BudgetRange | "";
-  safety: Record<string, boolean>;
 };
 
 const initial: FormState = {
+  treatmentInterest: "",
+  primaryGoal: "",
+  treatmentPriority: "",
+  targetWeightLossRange: "",
+  state: "",
+  consents: {},
+  dob: "",
   heightFt: "",
   heightIn: "",
-  weight: "",
-  goalWeight: "",
-  biologicalSex: "",
-  isAdult: null,
+  weightLbs: "",
+  goalWeightLbs: "",
+  sexAssignedAtBirth: "",
+  safety: {},
   email: "",
   password: "",
-  firstName: "",
-  lastName: "",
-  phone: "",
-  dob: "",
-  state: "",
-  locatedInState: null,
-  livesInState: null,
-  city: "",
-  zip: "",
-  treatmentInterest: "",
-  injectionPreference: "",
-  budget: "",
-  safety: {},
 };
 
-const SAFETY_QUESTIONS = [
-  { key: "pregnant", label: "Are you currently pregnant, trying to become pregnant, or breastfeeding?" },
-  { key: "thyroid_cancer", label: "Personal or family history of medullary thyroid cancer?" },
-  { key: "men2", label: "Multiple Endocrine Neoplasia syndrome type 2 (MEN2)?" },
-  { key: "pancreatitis", label: "History of pancreatitis?" },
-  { key: "glp1_reaction", label: "Severe allergic reaction to semaglutide, tirzepatide, or similar medications?" },
-] as const;
+function draftToForm(draft: EligibilityResponses): FormState {
+  return {
+    treatmentInterest: draft.treatment_interest || "",
+    primaryGoal: draft.primary_goal || "",
+    treatmentPriority: draft.treatment_priority || "",
+    targetWeightLossRange: draft.target_weight_loss_range || "",
+    state: draft.state || "",
+    consents: draft.pre_signup_consents || {},
+    dob: draft.dob || "",
+    heightFt: draft.height_ft != null ? String(draft.height_ft) : "",
+    heightIn: draft.height_in != null ? String(draft.height_in) : "",
+    weightLbs: draft.weight_lbs != null ? String(draft.weight_lbs) : "",
+    goalWeightLbs: draft.goal_weight_lbs != null ? String(draft.goal_weight_lbs) : "",
+    sexAssignedAtBirth: draft.sex_assigned_at_birth || "",
+    safety: draft.safety_screen || {},
+    email: "",
+    password: "",
+  };
+}
+
+function formToPayload(data: FormState): Partial<EligibilityResponses> {
+  const isAdult = computeIsAdult(data.dob);
+  return {
+    treatment_interest: data.treatmentInterest || undefined,
+    primary_goal: data.primaryGoal || undefined,
+    treatment_priority: data.treatmentPriority || undefined,
+    target_weight_loss_range: data.targetWeightLossRange || undefined,
+    state: data.state || undefined,
+    pre_signup_consents: data.consents,
+    dob: data.dob || undefined,
+    is_18_or_older: isAdult,
+    height_ft: data.heightFt ? Number(data.heightFt) : undefined,
+    height_in: data.heightIn ? Number(data.heightIn) : undefined,
+    weight_lbs: data.weightLbs ? Number(data.weightLbs) : undefined,
+    goal_weight_lbs: data.goalWeightLbs ? Number(data.goalWeightLbs) : undefined,
+    sex_assigned_at_birth: data.sexAssignedAtBirth || undefined,
+    safety_screen: data.safety,
+  };
+}
 
 function EligibilityPage() {
   const navigate = useNavigate();
   const existingSession = getSession();
-  const [step, setStep] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
   const [data, setData] = useState<FormState>(initial);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(isApiEnabled());
+
+  const steps: QualifyStepId[] = existingSession
+    ? PRE_SIGNUP_STEPS
+    : [...PRE_SIGNUP_STEPS, ACCOUNT_STEP];
+
+  const currentStep = steps[stepIndex];
+  const progress = ((stepIndex + 1) / steps.length) * 100;
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setData((d) => ({ ...d, [key]: value }));
 
   const bmi = useMemo(
-    () => computeBmi(data.heightFt, data.heightIn, data.weight),
-    [data.heightFt, data.heightIn, data.weight],
+    () => computeBmi(data.heightFt, data.heightIn, data.weightLbs),
+    [data.heightFt, data.heightIn, data.weightLbs],
   );
 
-  const under18 = data.isAdult === false;
+  const isAdult = computeIsAdult(data.dob);
+  const under18 = isAdult === false;
+  const safetyConcern = CONTRAINDICATION_QUESTIONS.some((q) => data.safety[q.key] === true);
 
-  const safetyConcern = SAFETY_QUESTIONS.some((q) => data.safety[q.key] === true);
+  useEffect(() => {
+    if (!isApiEnabled()) {
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const stepList: QualifyStepId[] = existingSession
+          ? PRE_SIGNUP_STEPS
+          : [...PRE_SIGNUP_STEPS, ACCOUNT_STEP];
 
-  const skipAccountStep = !!existingSession;
-  const visibleSteps = skipAccountStep ? STEP_LABELS.filter((_, i) => i !== 1) : STEP_LABELS;
-  const totalSteps = visibleSteps.length;
-  const logicalStep = skipAccountStep && step >= 1 ? step + 1 : step;
-  const progress = ((step + 1) / totalSteps) * 100;
+        let draft: EligibilityResponses | null = null;
+        if (existingSession) {
+          draft = await fetchEligibilityMe();
+        } else {
+          draft = await fetchFunnelEligibility();
+          if (!draft) draft = await createFunnelSession();
+        }
+
+        if (!cancelled && draft) {
+          const restored = draftToForm(draft);
+          setData((prev) => ({ ...prev, ...restored }));
+          setStepIndex(resolveQualifyStepIndex(stepList, restored));
+        }
+      } catch {
+        if (!cancelled) setError("Could not restore your progress. You can still continue.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [existingSession]);
+
+  async function persistDraft() {
+    if (!isApiEnabled()) return;
+    const payload = formToPayload(data);
+    if (existingSession) {
+      await syncEligibility(payload);
+    } else {
+      await patchFunnelEligibility(payload);
+    }
+  }
 
   const canContinue = (() => {
-    switch (logicalStep) {
-      case 0:
-        return (
-          data.heightFt &&
-          data.weight &&
-          data.goalWeight &&
-          data.biologicalSex &&
-          data.isAdult !== null
-        );
-      case 1:
-        return (
-          data.email &&
-          data.password.length >= 8 &&
-          data.firstName &&
-          data.lastName &&
-          data.phone &&
-          data.dob &&
-          data.state
-        );
-      case 2:
-        return (
-          data.livesInState !== null &&
-          data.locatedInState !== null &&
-          data.city &&
-          data.zip
-        );
-      case 3:
-        return data.treatmentInterest && data.injectionPreference && data.budget;
-      case 4:
-        return SAFETY_QUESTIONS.every((q) => typeof data.safety[q.key] === "boolean");
-      default:
+    switch (currentStep) {
+      case "treatment_interest":
+        return Boolean(data.treatmentInterest);
+      case "primary_goal":
+        return Boolean(data.primaryGoal);
+      case "treatment_priority":
+        return Boolean(data.treatmentPriority);
+      case "weight_loss_goal":
+        return Boolean(data.targetWeightLossRange);
+      case "state_consent":
+        return Boolean(data.state) && hasAllPreSignupConsents(data.consents);
+      case "dob":
+        return Boolean(data.dob) && isAdult !== null;
+      case "body_metrics":
+        return Boolean(data.heightFt && data.weightLbs && data.goalWeightLbs);
+      case "sex_assigned_at_birth":
+        return Boolean(data.sexAssignedAtBirth);
+      case "contraindications":
+        return CONTRAINDICATION_QUESTIONS.every((q) => typeof data.safety[q.key] === "boolean");
+      case "review":
         return true;
+      case "account":
+        return Boolean(data.email) && data.password.length >= 10;
+      default:
+        return false;
     }
   })();
+
+  async function handleNext() {
+    setError("");
+    if (currentStep === "account" || (currentStep === "review" && existingSession)) {
+      await handleFinish();
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await persistDraft();
+      setStepIndex((i) => i + 1);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not save your progress.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   async function handleFinish() {
     setSubmitting(true);
     setError("");
     try {
-      const session =
-        existingSession ??
-        (await registerUser({
-          email: data.email,
-          password: data.password,
-          first_name: data.firstName,
-          last_name: data.lastName,
-          phone: data.phone,
-          dob: data.dob,
-          state: data.state,
-        }));
+      if (existingSession) {
+        await persistDraft();
+        if (existingSession.user.email_verified) {
+          navigate({ to: "/intake" });
+        } else {
+          navigate({ to: "/verify-email/pending" });
+        }
+        return;
+      }
 
-      const record: EligibilityResponses = {
-        id: crypto.randomUUID(),
-        user_id: session.user.id,
-        height_ft: data.heightFt,
-        height_in: data.heightIn,
-        weight: data.weight,
-        bmi,
-        goal_weight: data.goalWeight,
-        biological_sex: data.biologicalSex,
-        is_adult: data.isAdult,
-        lives_in_colorado: data.livesInState,
-        located_in_colorado: data.locatedInState,
-        city: data.city,
-        zip: data.zip,
-        treatment_interest: data.treatmentInterest,
-        injection_preference: data.injectionPreference,
-        budget: data.budget,
-        safety_screen: data.safety,
-        safety_concern_flag: safetyConcern,
-        created_at: new Date().toISOString(),
-      };
-      await syncEligibility(record);
-      navigate({ to: "/intake" });
+      await persistDraft();
+      await registerUser({
+        email: data.email,
+        password: data.password,
+      });
+      navigate({ to: "/verify-email/pending" });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");
     } finally {
@@ -206,18 +287,24 @@ function EligibilityPage() {
     }
   }
 
+  if (loading) {
+    return (
+      <FlowLayout progress={0}>
+        <div className="w-full max-w-xl text-center text-muted-foreground">Loading your progress…</div>
+      </FlowLayout>
+    );
+  }
+
   return (
     <FlowLayout progress={progress}>
       <QuizShell
-        step={step}
-        totalSteps={totalSteps}
-        label={visibleSteps[step]}
-        title={getTitle(logicalStep)}
-        subtitle={getSubtitle(logicalStep)}
+        label={STEP_LABELS[currentStep]}
+        title={STEP_TITLES[currentStep]}
+        subtitle={STEP_SUBTITLES[currentStep]}
         footer={
           <>
             {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
-            {under18 && logicalStep === 0 && (
+            {under18 && currentStep === "dob" && (
               <div className="mt-4">
                 <BlockedMessage
                   title="Aretide is currently only available for adults 18 and older."
@@ -225,34 +312,35 @@ function EligibilityPage() {
                 />
               </div>
             )}
-            {safetyConcern && logicalStep === 4 && (
+            {safetyConcern && currentStep === "contraindications" && (
               <p className="mt-4 rounded-2xl bg-warning/10 px-4 py-3 text-sm text-foreground">
-                One or more answers will be flagged for provider review. This does not
+                Some answers may need a closer look from your clinician. This does not
                 automatically approve or deny treatment.
               </p>
             )}
             {!under18 && (
               <QuizNav
-                showBack={step > 0}
-                onBack={() => setStep((s) => s - 1)}
-                onNext={() => {
-                  if (logicalStep === 5) void handleFinish();
-                  else setStep((s) => s + 1);
-                }}
+                showBack={stepIndex > 0}
+                onBack={() => setStepIndex((i) => i - 1)}
+                onNext={() => void handleNext()}
                 nextDisabled={!canContinue || submitting}
                 nextLabel={
-                  logicalStep === 5
-                    ? submitting
-                      ? "Saving…"
-                      : "Continue to medical intake"
-                    : "Continue"
+                  submitting
+                    ? "Saving…"
+                    : currentStep === "account"
+                      ? "Create account"
+                      : currentStep === "review" && existingSession
+                        ? "Continue to medical intake"
+                        : currentStep === "review"
+                          ? "Create account"
+                          : "Continue"
                 }
               />
             )}
-            {logicalStep === 1 && (
+            {currentStep === "account" && (
               <p className="mt-4 text-center text-sm text-muted-foreground">
                 Already have an account?{" "}
-                <Link to="/login" search={{ redirect: "/qualify" }} className="text-primary underline">
+                <Link to="/login" search={{ redirect: "/intake" }} className="text-primary underline">
                   Log in
                 </Link>
               </p>
@@ -260,7 +348,102 @@ function EligibilityPage() {
           </>
         }
       >
-        {logicalStep === 0 && (
+        {currentStep === "treatment_interest" && (
+          <div className="grid gap-2">
+            {TREATMENT_INTEREST_OPTIONS.map((opt) => (
+              <ChoiceCard
+                key={opt.value}
+                compact
+                selected={data.treatmentInterest === opt.value}
+                onClick={() => set("treatmentInterest", opt.value)}
+                title={opt.label}
+              />
+            ))}
+          </div>
+        )}
+
+        {currentStep === "primary_goal" && (
+          <div className="grid gap-2">
+            {PRIMARY_GOAL_OPTIONS.map((opt) => (
+              <ChoiceCard
+                key={opt.value}
+                compact
+                selected={data.primaryGoal === opt.value}
+                onClick={() => set("primaryGoal", opt.value)}
+                title={opt.label}
+              />
+            ))}
+          </div>
+        )}
+
+        {currentStep === "treatment_priority" && (
+          <div className="grid gap-2">
+            {TREATMENT_PRIORITY_OPTIONS.map((opt) => (
+              <ChoiceCard
+                key={opt.value}
+                compact
+                selected={data.treatmentPriority === opt.value}
+                onClick={() => set("treatmentPriority", opt.value)}
+                title={opt.label}
+              />
+            ))}
+          </div>
+        )}
+
+        {currentStep === "weight_loss_goal" && (
+          <div className="grid gap-2">
+            {WEIGHT_LOSS_GOAL_OPTIONS.map((opt) => (
+              <ChoiceCard
+                key={opt.value}
+                compact
+                selected={data.targetWeightLossRange === opt.value}
+                onClick={() => set("targetWeightLossRange", opt.value)}
+                title={opt.label}
+              />
+            ))}
+          </div>
+        )}
+
+        {currentStep === "state_consent" && (
+          <div className="grid gap-4">
+            <Field label="Your state" required>
+              <select
+                className={inputCls}
+                value={data.state}
+                onChange={(e) => set("state", e.target.value)}
+              >
+                <option value="">Choose a state</option>
+                {US_STATES.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </Field>
+            <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border px-4 py-3">
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={hasAllPreSignupConsents(data.consents)}
+                onChange={(e) => set("consents", allPreSignupConsents(e.target.checked))}
+              />
+              <span className="text-sm text-foreground">
+                I agree to the{" "}
+                <Link to="/legal/terms" className="text-primary underline" target="_blank">
+                  Terms of Service
+                </Link>{" "}
+                and the{" "}
+                <Link to="/legal/privacy" className="text-primary underline" target="_blank">
+                  Privacy Policy
+                </Link>
+              </span>
+            </label>
+          </div>
+        )}
+
+        {currentStep === "dob" && (
+          <DateOfBirthField value={data.dob} onChange={(v) => set("dob", v)} />
+        )}
+
+        {currentStep === "body_metrics" && (
           <div className="grid gap-4">
             <div className="grid grid-cols-3 gap-3">
               <Field label="Height (ft)" required>
@@ -270,20 +453,12 @@ function EligibilityPage() {
                 <input type="number" className={inputCls} value={data.heightIn} onChange={(e) => set("heightIn", e.target.value)} placeholder="8" />
               </Field>
               <Field label="Weight (lb)" required>
-                <input type="number" className={inputCls} value={data.weight} onChange={(e) => set("weight", e.target.value)} placeholder="190" />
+                <input type="number" className={inputCls} value={data.weightLbs} onChange={(e) => set("weightLbs", e.target.value)} placeholder="190" />
               </Field>
             </div>
-            <Field label="Goal weight (lb)" required>
-              <input type="number" className={inputCls} value={data.goalWeight} onChange={(e) => set("goalWeight", e.target.value)} />
+            <Field label="Target weight (lb)" required>
+              <input type="number" className={inputCls} value={data.goalWeightLbs} onChange={(e) => set("goalWeightLbs", e.target.value)} />
             </Field>
-            <Field label="Biological sex" required>
-              <div className="grid grid-cols-3 gap-2">
-                {(["female", "male", "other"] as const).map((s) => (
-                  <ChoiceCard key={s} compact selected={data.biologicalSex === s} onClick={() => set("biologicalSex", s)} title={s.charAt(0).toUpperCase() + s.slice(1)} />
-                ))}
-              </div>
-            </Field>
-            <YesNoField label="Are you at least 18 years old?" value={data.isAdult} onChange={(v) => set("isAdult", v)} />
             {bmi != null && (
               <p className="rounded-2xl bg-primary-soft/50 px-4 py-3 text-sm">
                 Estimated BMI: <strong>{bmi}</strong>
@@ -292,85 +467,23 @@ function EligibilityPage() {
           </div>
         )}
 
-        {logicalStep === 1 && (
-          <div className="grid gap-4">
-            <Field label="Email" required><input type="email" className={inputCls} value={data.email} onChange={(e) => set("email", e.target.value)} /></Field>
-            <Field label="Password (min 8 characters)" required><input type="password" className={inputCls} value={data.password} onChange={(e) => set("password", e.target.value)} /></Field>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="First name" required><input className={inputCls} value={data.firstName} onChange={(e) => set("firstName", e.target.value)} /></Field>
-              <Field label="Last name" required><input className={inputCls} value={data.lastName} onChange={(e) => set("lastName", e.target.value)} /></Field>
-            </div>
-            <Field label="Phone" required><input type="tel" className={inputCls} value={data.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
-            <Field label="Date of birth" required><input type="date" className={inputCls} value={data.dob} onChange={(e) => set("dob", e.target.value)} /></Field>
-            <Field label="State of residence" required>
-              <select
-                className={inputCls}
-                value={data.state}
-                onChange={(e) => set("state", e.target.value)}
-              >
-                <option value="">Select your state</option>
-                {US_STATES.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </Field>
+        {currentStep === "sex_assigned_at_birth" && (
+          <div className="grid grid-cols-2 gap-2">
+            {SEX_OPTIONS.map((opt) => (
+              <ChoiceCard
+                key={opt.value}
+                compact
+                selected={data.sexAssignedAtBirth === opt.value}
+                onClick={() => set("sexAssignedAtBirth", opt.value)}
+                title={opt.label}
+              />
+            ))}
           </div>
         )}
 
-        {logicalStep === 2 && (
-          <div className="grid gap-4">
-            <YesNoField
-              label={`Do you currently live in ${data.state || "your state of residence"}?`}
-              value={data.livesInState}
-              onChange={(v) => set("livesInState", v)}
-            />
-            <YesNoField
-              label={`Are you physically located in ${data.state || "your state of residence"} right now?`}
-              value={data.locatedInState}
-              onChange={(v) => set("locatedInState", v)}
-            />
-            <Field label="City" required><input className={inputCls} value={data.city} onChange={(e) => set("city", e.target.value)} /></Field>
-            <Field label="ZIP code" required><input className={inputCls} value={data.zip} onChange={(e) => set("zip", e.target.value)} /></Field>
-          </div>
-        )}
-
-        {logicalStep === 3 && (
+        {currentStep === "contraindications" && (
           <div className="grid gap-5">
-            <Field label="Which best describes your interest?" required>
-              <div className="grid gap-2">
-                <ChoiceCard compact selected={data.treatmentInterest === "insurance_brand"} onClick={() => set("treatmentInterest", "insurance_brand")} title="Brand-name medication through insurance" />
-                <ChoiceCard compact selected={data.treatmentInterest === "cash_pay"} onClick={() => set("treatmentInterest", "cash_pay")} title="Cash-pay options" />
-                <ChoiceCard compact selected={data.treatmentInterest === "not_sure"} onClick={() => set("treatmentInterest", "not_sure")} title="I'm not sure" />
-              </div>
-            </Field>
-            <Field label="Comfortable with injections?" required>
-              <div className="grid gap-2">
-                <ChoiceCard compact selected={data.injectionPreference === "yes"} onClick={() => set("injectionPreference", "yes")} title="Yes" />
-                <ChoiceCard compact selected={data.injectionPreference === "pill_preferred"} onClick={() => set("injectionPreference", "pill_preferred")} title="No, I prefer a pill if possible" />
-                <ChoiceCard compact selected={data.injectionPreference === "not_sure"} onClick={() => set("injectionPreference", "not_sure")} title="Not sure" />
-              </div>
-            </Field>
-            <Field label="Approximate monthly medication budget" required>
-              <div className="grid gap-2">
-                {[
-                  ["under_200", "Under $200"],
-                  ["200_300", "$200–$300"],
-                  ["300_500", "$300–$500"],
-                  ["500_plus", "$500+"],
-                  ["insurance", "I plan to use insurance"],
-                ].map(([v, label]) => (
-                  <ChoiceCard key={v} compact selected={data.budget === v} onClick={() => set("budget", v as BudgetRange)} title={label} />
-                ))}
-              </div>
-            </Field>
-          </div>
-        )}
-
-        {logicalStep === 4 && (
-          <div className="grid gap-5">
-            {SAFETY_QUESTIONS.map((q) => (
+            {CONTRAINDICATION_QUESTIONS.map((q) => (
               <YesNoField
                 key={q.key}
                 label={q.label}
@@ -381,19 +494,38 @@ function EligibilityPage() {
           </div>
         )}
 
-        {logicalStep === 5 && (
+        {currentStep === "review" && (
           <div className="space-y-3 text-sm">
-            <SummaryRow label="BMI" value={bmi?.toString() ?? "—"} />
+            <SummaryRow label="Care format" value={labelFor(TREATMENT_INTEREST_OPTIONS, data.treatmentInterest)} />
+            <SummaryRow label="Motivation" value={labelFor(PRIMARY_GOAL_OPTIONS, data.primaryGoal)} />
+            <SummaryRow label="Care priority" value={labelFor(TREATMENT_PRIORITY_OPTIONS, data.treatmentPriority)} />
+            <SummaryRow label="Target range" value={labelFor(WEIGHT_LOSS_GOAL_OPTIONS, data.targetWeightLossRange)} />
             <SummaryRow label="State" value={data.state || "—"} />
-            <SummaryRow label="City / ZIP" value={`${data.city}, ${data.zip}`} />
-            <SummaryRow label="Treatment interest" value={data.treatmentInterest} />
+            <SummaryRow label="BMI" value={bmi?.toString() ?? "—"} />
+            <SummaryRow label="Biological sex" value={labelFor(SEX_OPTIONS, data.sexAssignedAtBirth)} />
             {safetyConcern && (
               <p className="flex items-center gap-2 rounded-2xl bg-warning/10 px-4 py-3 text-foreground">
-                <CheckCircle2 className="size-4" /> Flagged for provider safety review
+                <CheckCircle2 className="size-4" /> Marked for clinician review
               </p>
             )}
             <p className="text-xs text-muted-foreground">
-              Next: complete the full medical intake questionnaire. You can save and continue later.
+              {existingSession
+                ? "Up next: your medical intake questionnaire."
+                : "Up next: create your account, then complete the medical intake."}
+            </p>
+          </div>
+        )}
+
+        {currentStep === "account" && (
+          <div className="grid gap-4">
+            <Field label="Email" required>
+              <input type="email" className={inputCls} value={data.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" />
+            </Field>
+            <Field label="Password (min 10 characters)" required>
+              <PasswordInput value={data.password} onChange={(v) => set("password", v)} autoComplete="new-password" />
+            </Field>
+            <p className="text-sm text-muted-foreground">
+              Your legal name, phone, and address are collected once in the medical intake after you verify your email.
             </p>
           </div>
         )}
@@ -402,28 +534,11 @@ function EligibilityPage() {
   );
 }
 
-function getTitle(step: number) {
-  const titles = [
-    "Let's check your eligibility",
-    "Create your account",
-    "Confirm your location",
-    "Treatment preferences",
-    "Safety screening",
-    "Review eligibility answers",
-  ];
-  return titles[step] ?? "";
-}
-
-function getSubtitle(step: number) {
-  const subs = [
-    "A few basic questions to start. This takes about 2 minutes.",
-    "We need an account before your full medical intake.",
-    "Confirm where you live and where you are right now for telehealth compliance.",
-    "Help us understand what you're looking for. No prescription is guaranteed.",
-    "Answer honestly — a licensed provider will review everything.",
-    "Confirm your answers, then continue to the medical intake.",
-  ];
-  return subs[step];
+function labelFor<T extends string>(
+  options: ReadonlyArray<{ value: T; label: string }>,
+  value: string,
+) {
+  return options.find((o) => o.value === value)?.label ?? (value || "—");
 }
 
 function SummaryRow({ label, value }: { label: string; value: string }) {

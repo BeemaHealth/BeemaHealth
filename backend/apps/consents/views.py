@@ -37,10 +37,21 @@ class ConsentMeView(APIView):
             )
         serializer = ConsentRecordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        consent = serializer.save(user=request.user, signed_at=timezone.now())
+        eligibility = EligibilityResponse.objects.filter(user=request.user).first()
+        pre_signup = (eligibility.pre_signup_consents if eligibility else {}) or {}
+        if not pre_signup.get("terms") or not pre_signup.get("privacy"):
+            return Response(
+                {"detail": "Terms of Service and Privacy Policy must be accepted during eligibility."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        consent = serializer.save(
+            user=request.user,
+            signed_at=timezone.now(),
+            privacy_acknowledgment=True,
+        )
 
         intake = MedicalIntake.objects.filter(user=request.user).first()
-        eligibility = EligibilityResponse.objects.filter(user=request.user).first()
         if intake:
             intake.status = "submitted"
             intake.submitted_at = timezone.now()

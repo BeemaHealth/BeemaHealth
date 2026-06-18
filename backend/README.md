@@ -16,25 +16,33 @@ From the repo root (after [first-time setup](../README.md#first-time-setup)):
 npm run dev:backend
 ```
 
-First-time only — migrations and admin user:
+Migrations run automatically when the API container starts. First-time only — create an admin user:
 
 ```bash
-docker compose -f backend/docker-compose.yml exec api python manage.py migrate
 docker compose -f backend/docker-compose.yml exec api python manage.py createsuperuser
 ```
 
+To run migrations manually (e.g. after pulling new migration files without restarting):
+
+```bash
+docker compose -f backend/docker-compose.yml exec api python manage.py migrate
+```
+
 API: http://localhost:8000/api/health/  
-Docs: http://localhost:8000/api/docs/
+Docs: http://localhost:8000/api/docs/  
+Admin: http://localhost:8000/admin/ (use `createsuperuser` credentials; requires `CSRF_TRUSTED_ORIGINS` for localhost — included in `.env.dev`)
 
 ## API endpoints
 
 | Method | Path | Auth |
 |--------|------|------|
-| POST | `/api/funnel/session/` | Public — **planned** (anonymous funnel; see [DATABASE.md — Anonymous funnel session](DATABASE.md#anonymous-funnel-session-pre-account)) |
-| GET/PATCH | `/api/funnel/eligibility/` | Funnel cookie — **planned** |
-| POST | `/api/auth/register/` | Public (will claim funnel cookie on register) |
+| POST | `/api/funnel/session/` | Public — anonymous funnel ([DATABASE.md — Anonymous funnel session](DATABASE.md#anonymous-funnel-session-pre-account)) |
+| GET/PATCH | `/api/funnel/eligibility/` | Funnel cookie |
+| POST | `/api/auth/register/` | Public (claims funnel cookie; sends verification email) |
 | POST | `/api/auth/login/` | Public |
 | POST | `/api/auth/logout/` | Token |
+| POST | `/api/auth/verify-email/` | Public — verify email with token from link |
+| POST | `/api/auth/resend-verification/` | Token — resend verification email |
 | GET/PATCH | `/api/eligibility/me/` | Patient |
 | POST | `/api/eligibility/` | Patient |
 | GET/PATCH | `/api/medical-intakes/me/` | Patient |
@@ -98,10 +106,31 @@ See [HOSTING.md](./HOSTING.md) for hosting go/no-go and:
 
 ## Frontend integration
 
-Set in repo root `.env`:
+Each patient field has a single canonical table — no duplicate storage across `users`, `patient_profiles`, `eligibility_responses`, or intake JSON. See [DATABASE.md — Canonical field ownership](DATABASE.md#canonical-field-ownership-no-duplicates).
+
+Environment files live at the repo root as `.env.dev`, `.env.staging`, or `.env.production`. Set `ARETIDE_ENV` to pick which file the backend loads (`dev` is the default). `npm run dev` uses Vite mode `dev` (`.env.dev`); `npm run build:staging` uses `.env.staging`.
 
 ```
-VITE_API_URL=http://localhost:8000/api
+ARETIDE_ENV=dev
+VITE_API_URL=/api
 ```
 
 Restart the Vite dev server after changing env vars.
+
+## Email verification (local dev)
+
+Registration sends a verification email using Django's **console email backend** (default in dev). The verification link is also logged by the API:
+
+```bash
+docker compose -f backend/docker-compose.yml logs -f api
+```
+
+After signing up, look for a line like:
+
+```
+Email verification link for you@example.com: http://localhost:8080/verify-email?token=...
+```
+
+Open that URL in the browser to verify, then continue to `/intake`.
+
+To resend from the UI, use the **Resend verification email** button on `/verify-email/pending`.

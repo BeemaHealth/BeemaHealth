@@ -61,7 +61,7 @@ From the **repo root**, open **two terminals** and run one command in each:
 | **Frontend** | `npm run dev` | http://localhost:8080/ |
 | **Backend** | `npm run dev:backend` | http://localhost:8000/api/health/ |
 
-Assumes you have already run [first-time setup](#first-time-setup): **Docker Desktop**, `npm install`, a root `.env`, and backend migrations.
+Assumes you have already run [first-time setup](#first-time-setup): **Docker Desktop**, `npm install`, a root `.env.dev` (or `.env`), and backend migrations.
 
 Full local dev guide (identical setup on every machine): **[docs/LOCAL-DEV.md](docs/LOCAL-DEV.md)**
 
@@ -71,8 +71,9 @@ Full local dev guide (identical setup on every machine): **[docs/LOCAL-DEV.md](d
 |------|-------------|
 | Local dev setup (Docker, prerequisites) | [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md) |
 | First-time install (deps, env, DB) | [First-time setup](#first-time-setup) below |
-| Connect frontend to backend | [.env.example](.env.example) + [Frontend ↔ API](#frontend--api) below |
+| Connect frontend to backend | `.env.dev` + [Frontend ↔ API](#frontend--api) below |
 | Understand database tables | [backend/DATABASE.md](backend/DATABASE.md) |
+| Which table owns each patient field (no duplicates) | [backend/DATABASE.md — Canonical field ownership](backend/DATABASE.md#canonical-field-ownership-no-duplicates) |
 | Deploy backend (Heroku vs AWS) | [backend/HOSTING.md](backend/HOSTING.md) |
 | Deploy frontend (GitHub Pages) | [docs/DEPLOY-FRONTEND.md](docs/DEPLOY-FRONTEND.md) |
 | Restore removed marketing pages (pricing, nav, etc.) | [docs/archived-marketing-pages.md](docs/archived-marketing-pages.md) |
@@ -84,7 +85,7 @@ Full local dev guide (identical setup on every machine): **[docs/LOCAL-DEV.md](d
 ```
 Aretide/
 ├── README.md                 ← You are here (doc index)
-├── .env.example              ← Env vars for frontend + backend
+├── .env.dev                  ← Dev env (ARETIDE_ENV=dev)
 ├── src/                      ← React / TanStack Start frontend
 ├── backend/                  ← Django REST API
 │   ├── README.md             ← Backend setup, API list, HIPAA notes
@@ -144,7 +145,7 @@ Aretide/
 
 | File | Contents |
 |------|----------|
-| [.env.example](.env.example) | `VITE_API_URL`, `DATABASE_URL`, `FERNET_KEY`, AWS/S3, CORS |
+| `.env.dev` | `VITE_API_URL`, `DATABASE_URL`, `FERNET_KEY`, AWS/S3, CORS (see `backend/README.md` for staging/production) |
 | [.env.production.example](.env.production.example) | Production `VITE_API_URL` for frontend deploy |
 
 ### Deployment
@@ -171,11 +172,7 @@ npm install
 
 ### 2. Environment
 
-```bash
-cp .env.example .env
-```
-
-Set `VITE_API_URL=http://localhost:8000/api` and generate `FERNET_KEY` (see comments in `.env.example`).
+Create `.env.dev` at the repo root. Set `VITE_API_URL=/api` (Vite proxies to the API) and generate `FERNET_KEY`. The backend and frontend both use `ARETIDE_ENV` (default `dev`) to load `.env.dev`. A legacy root `.env` still works as a fallback overlay.
 
 ### 3. Backend (Docker)
 
@@ -229,10 +226,12 @@ Production: **AWS EC2** ([backend/deploy/aws.md](backend/deploy/aws.md)) or **He
 
 ## Frontend ↔ API
 
-1. Copy [.env.example](.env.example) to `.env` at the repo root.
-2. Set `VITE_API_URL=http://localhost:8000/api`
-3. Generate `FERNET_KEY` for the backend (see `.env.example` comments).
+1. Create or edit `.env.dev` at the repo root (`ARETIDE_ENV=dev` is the default; a legacy root `.env` still works as a fallback overlay).
+2. Set `ARETIDE_ENV=dev` and `VITE_API_URL=/api` (Vite proxies API requests to `localhost:8000` in dev).
+3. Generate `FERNET_KEY` for the backend.
 4. Restart both servers after changing env vars.
+
+**Environment switching:** `ARETIDE_ENV` selects `.env.dev`, `.env.staging`, or `.env.production`. Frontend npm scripts map to Vite modes: `npm run dev` → dev, `npm run build:staging` → staging, `npm run build` → production.
 
 PHI must **never** be stored in `localStorage` or `sessionStorage`. When `VITE_API_URL` is set, the frontend sends PHI to the API. A temporary `localStorage` fallback in the prototype will be removed.
 
@@ -264,6 +263,7 @@ When answering questions about this codebase:
 | Topic | Read first |
 |-------|------------|
 | Database schema / tables / why JSON | `backend/DATABASE.md` |
+| Canonical field ownership (no duplicate storage) | `backend/DATABASE.md#canonical-field-ownership-no-duplicates` |
 | Pre-account funnel session (cookie + server draft) | `backend/DATABASE.md#anonymous-funnel-session-pre-account` |
 | Run backend, API routes, auth | `backend/README.md`, `docs/LOCAL-DEV.md` |
 | Production hosting, HIPAA infra | `backend/HOSTING.md` |
@@ -272,7 +272,7 @@ When answering questions about this codebase:
 | API ↔ frontend types | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |
 | MVP launch plan (build order, success criteria) | `Starting Point/launchPlan.md` |
 | Restore archived marketing pages / nav | `docs/archived-marketing-pages.md` |
-| Env vars | `.env.example` |
+| Env vars | `.env.dev`, `.env.staging`, `.env.production` — `backend/README.md` |
 
 **Do not** treat local Docker or browser `localStorage` as HIPAA-compliant storage for PHI (Protected Health Information).
 

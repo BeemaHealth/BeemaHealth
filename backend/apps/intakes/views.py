@@ -32,7 +32,7 @@ class MedicalIntakeMeView(APIView):
                 {"detail": "Intake exists. Use PATCH to update."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        serializer = MedicalIntakeSerializer(data=request.data)
+        serializer = MedicalIntakeSerializer(data=request.data, context={"user": request.user})
         serializer.is_valid(raise_exception=True)
         intake = serializer.save(user=request.user)
         log_audit_event(
@@ -46,7 +46,7 @@ class MedicalIntakeMeView(APIView):
 
     def patch(self, request):
         intake = self.get_object(request.user)
-        serializer = MedicalIntakeSerializer(intake, data=request.data, partial=True)
+        serializer = MedicalIntakeSerializer(intake, data=request.data, partial=True, context={"user": request.user})
         serializer.is_valid(raise_exception=True)
         intake = serializer.save()
         log_audit_event(

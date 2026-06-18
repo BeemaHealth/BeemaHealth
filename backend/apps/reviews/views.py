@@ -35,8 +35,12 @@ class PatientListView(APIView):
             review = ProviderReview.objects.filter(user=user).first()
             flags = SafetyFlag.objects.filter(user=user).count()
             bmi = eligibility.bmi if eligibility else None
-            if bmi is None and eligibility:
-                bmi = compute_bmi(eligibility.height_ft, eligibility.height_in, eligibility.weight)
+            if bmi is None and eligibility and eligibility.height_ft and eligibility.weight_lbs:
+                bmi = compute_bmi(
+                    str(eligibility.height_ft),
+                    str(eligibility.height_in or 0),
+                    str(eligibility.weight_lbs),
+                )
             results.append(
                 {
                     "id": user.id,
@@ -45,11 +49,10 @@ class PatientListView(APIView):
                     "email": user.email,
                     "age": compute_age(user.dob),
                     "bmi": bmi,
-                    "city": eligibility.city if eligibility else "",
                     "state": user.state,
                     "submitted_at": intake.submitted_at if intake else None,
                     "treatment_interest": eligibility.treatment_interest if eligibility else "",
-                    "budget": eligibility.budget if eligibility else "",
+                    "treatment_priority": eligibility.treatment_priority if eligibility else "",
                     "flag_count": flags,
                     "status": review.status if review else (intake.status if intake else "draft"),
                 }

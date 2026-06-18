@@ -24,15 +24,15 @@ SAFETY_FLAG_DEFINITIONS = [
     ("bmi_low", "medium", lambda ctx: ctx.get("bmi") is not None and ctx["bmi"] < 27, lambda ctx: f"BMI {ctx['bmi']} is under 27"),
     ("under_18", "high", lambda ctx: ctx.get("age") is not None and ctx["age"] < 18, lambda ctx: "Patient is under 18"),
     ("pregnant", "high", lambda ctx: ctx.get("safety", {}).get("pregnant"), lambda ctx: "Currently pregnant"),
-    ("trying_pregnant", "high", lambda ctx: ctx.get("safety", {}).get("trying_pregnant"), lambda ctx: "Trying to become pregnant"),
+    ("trying_pregnant", "high", lambda ctx: ctx.get("safety", {}).get("trying_to_conceive"), lambda ctx: "Trying to become pregnant"),
     ("breastfeeding", "high", lambda ctx: ctx.get("safety", {}).get("breastfeeding"), lambda ctx: "Currently breastfeeding"),
     ("thyroid_cancer", "high", lambda ctx: ctx.get("safety", {}).get("thyroid_cancer"), lambda ctx: "Thyroid cancer history"),
     ("men2", "high", lambda ctx: ctx.get("safety", {}).get("men2"), lambda ctx: "MEN2 history"),
     ("pancreatitis", "high", lambda ctx: ctx.get("safety", {}).get("pancreatitis"), lambda ctx: "Pancreatitis history"),
     ("glp1_reaction", "high", lambda ctx: ctx.get("safety", {}).get("glp1_reaction"), lambda ctx: "Prior severe GLP-1 reaction"),
-    ("gallbladder", "medium", lambda ctx: ctx.get("conditions", {}).get("gallbladder"), lambda ctx: "Gallbladder disease reported"),
-    ("kidney_severe", "high", lambda ctx: ctx.get("conditions", {}).get("kidney_severe"), lambda ctx: "Severe kidney disease reported"),
-    ("gastroparesis", "high", lambda ctx: ctx.get("conditions", {}).get("gastroparesis"), lambda ctx: "Gastroparesis reported"),
+    ("gallbladder", "medium", lambda ctx: ctx.get("safety", {}).get("gallbladder_disease") or ctx.get("conditions", {}).get("gallbladder"), lambda ctx: "Gallbladder disease reported"),
+    ("kidney_severe", "high", lambda ctx: ctx.get("safety", {}).get("kidney_disease") or ctx.get("conditions", {}).get("kidney_severe"), lambda ctx: "Severe kidney disease reported"),
+    ("gastroparesis", "high", lambda ctx: ctx.get("safety", {}).get("gastroparesis") or ctx.get("conditions", {}).get("gastroparesis"), lambda ctx: "Gastroparesis reported"),
     ("eating_disorder", "high", lambda ctx: ctx.get("conditions", {}).get("eating_disorder"), lambda ctx: "Eating disorder history"),
     ("suicidal", "high", lambda ctx: ctx.get("conditions", {}).get("suicidal"), lambda ctx: "Suicidal thoughts or self-harm history"),
     ("upcoming_surgery", "medium", lambda ctx: ctx.get("conditions", {}).get("upcoming_surgery"), lambda ctx: "Upcoming surgery or anesthesia"),
@@ -47,14 +47,16 @@ def build_safety_context(user, eligibility, intake, consent_complete: bool) -> d
     conditions = (intake.medical_conditions if intake else {}) or {}
     med_answers = ((intake.medications or {}).get("answers", {}) if intake else {}) or {}
     bmi = eligibility.bmi if eligibility else None
-    if bmi is None and eligibility:
-        bmi = compute_bmi(eligibility.height_ft, eligibility.height_in, eligibility.weight)
+    if bmi is None and eligibility and eligibility.height_ft and eligibility.weight_lbs:
+        bmi = compute_bmi(
+            str(eligibility.height_ft),
+            str(eligibility.height_in or 0),
+            str(eligibility.weight_lbs),
+        )
     return {
         "bmi": bmi,
         "age": compute_age(user.dob),
         "state": user.state,
-        "located_in_colorado": eligibility.located_in_colorado if eligibility else None,
-        "lives_in_colorado": eligibility.lives_in_colorado if eligibility else None,
         "safety": safety,
         "conditions": conditions,
         "med_answers": med_answers,

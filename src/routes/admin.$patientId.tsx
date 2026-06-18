@@ -99,7 +99,7 @@ function AdminDetailPage() {
       <div className="veya-container py-12">
         <Link to="/admin" className="text-sm text-primary underline">← Back to list</Link>
         <h1 className="mt-4 text-3xl font-bold">{user.first_name} {user.last_name}</h1>
-        <p className="text-muted-foreground">BMI {eligibility?.bmi ?? "—"} · {eligibility?.city ?? "—"}, {user.state}</p>
+        <p className="text-muted-foreground">BMI {eligibility?.bmi ?? "—"} · {user.state}</p>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <SurfaceCard className="space-y-3 p-6 text-sm">
@@ -107,7 +107,8 @@ function AdminDetailPage() {
             <p>Email: {user.email}</p>
             <p>Phone: {user.phone}</p>
             <p>Treatment interest: {eligibility?.treatment_interest}</p>
-            <p>Budget: {eligibility?.budget}</p>
+            <p>Treatment priority: {eligibility?.treatment_priority}</p>
+            <p>Primary goal: {eligibility?.primary_goal}</p>
           </SurfaceCard>
 
           <SurfaceCard className="p-6">

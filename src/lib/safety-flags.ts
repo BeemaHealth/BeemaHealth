@@ -56,9 +56,9 @@ export function computeSafetyFlags(
   const bmi =
     eligibility?.bmi ??
     computeBmi(
-      eligibility?.height_ft ?? "",
-      eligibility?.height_in ?? "",
-      eligibility?.weight ?? "",
+      String(eligibility?.height_ft ?? ""),
+      String(eligibility?.height_in ?? 0),
+      String(eligibility?.weight_lbs ?? ""),
     );
   const age = computeAge(user.dob);
 
@@ -71,7 +71,7 @@ export function computeSafetyFlags(
 
   const safety = eligibility?.safety_screen ?? {};
   if (safety.pregnant) flags.push(flag(uid, "pregnant", "Currently pregnant", "high"));
-  if (safety.trying_pregnant) {
+  if (safety.trying_to_conceive) {
     flags.push(flag(uid, "trying_pregnant", "Trying to become pregnant", "high"));
   }
   if (safety.breastfeeding) {

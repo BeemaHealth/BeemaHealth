@@ -1,34 +1,29 @@
 import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
-import type { ReactNode } from "react";
+import { Check, Eye, EyeOff } from "lucide-react";
+import { useState, type ReactNode } from "react";
 
 export const inputCls =
   "w-full rounded-2xl border border-input bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring";
 
 export function QuizShell({
-  step,
-  totalSteps,
   label,
   title,
   subtitle,
   children,
   footer,
 }: {
-  step: number;
-  totalSteps: number;
-  label: string;
+  label?: string;
   title: string;
   subtitle?: string;
   children: ReactNode;
   footer?: ReactNode;
 }) {
-  const progress = ((step + 1) / totalSteps) * 100;
   return (
     <div className="w-full max-w-xl">
-      <p className="text-sm font-medium text-primary">
-        Step {step + 1} of {totalSteps} · {label}
-      </p>
-      <div className="mt-4 rounded-3xl border border-border bg-card p-6 shadow-soft md:p-8">
+      {label && (
+        <p className="text-sm font-medium text-primary">{label}</p>
+      )}
+      <div className={cn("rounded-3xl border border-border bg-card p-6 shadow-soft md:p-8", label && "mt-4")}>
         <h1 className="text-2xl font-bold text-foreground">{title}</h1>
         {subtitle && (
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{subtitle}</p>
@@ -130,6 +125,42 @@ export function YesNoField({
         <ChoiceCard compact selected={value === true} onClick={() => onChange(true)} title="Yes" />
         <ChoiceCard compact selected={value === false} onClick={() => onChange(false)} title="No" />
       </div>
+    </div>
+  );
+}
+
+export function PasswordInput({
+  value,
+  onChange,
+  placeholder,
+  className,
+  autoComplete = "current-password",
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  className?: string;
+  autoComplete?: string;
+}) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="relative">
+      <input
+        type={visible ? "text" : "password"}
+        className={cn(inputCls, "pr-12", className)}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+      />
+      <button
+        type="button"
+        onClick={() => setVisible((v) => !v)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-muted-foreground hover:text-foreground"
+        aria-label={visible ? "Hide password" : "Show password"}
+      >
+        {visible ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+      </button>
     </div>
   );
 }

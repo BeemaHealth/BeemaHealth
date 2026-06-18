@@ -14,9 +14,10 @@ class UserSerializer(serializers.ModelSerializer):
             "phone",
             "dob",
             "state",
+            "email_verified",
             "created_at",
         ]
-        read_only_fields = ["id", "created_at"]
+        read_only_fields = ["id", "created_at", "email_verified"]
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -33,15 +34,17 @@ class RegisterSerializer(serializers.ModelSerializer):
             "dob",
             "state",
         ]
-
-    def validate_state(self, value):
-        if not value or not value.strip():
-            raise serializers.ValidationError("State of residence is required.")
-        return value
+        extra_kwargs = {
+            "first_name": {"required": False, "allow_blank": True},
+            "last_name": {"required": False, "allow_blank": True},
+            "phone": {"required": False, "allow_blank": True},
+            "dob": {"required": False, "allow_null": True},
+            "state": {"required": False, "allow_blank": True},
+        }
 
     def create(self, validated_data):
         password = validated_data.pop("password")
-        user = User.objects.create_user(**validated_data, is_patient=True)
+        user = User.objects.create_user(**validated_data, is_patient=True, email_verified=False)
         user.set_password(password)
         user.save()
         return user
@@ -50,3 +53,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
+
+
+class VerifyEmailSerializer(serializers.Serializer):
+    token = serializers.CharField()

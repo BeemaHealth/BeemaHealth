@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import {
@@ -9,10 +9,11 @@ import {
   YesNoField,
   inputCls,
 } from "@/components/quiz/quiz-primitives";
-import { syncIntake } from "@/lib/api/client";
+import { fetchEligibilityMe, fetchIntakeMe, isApiEnabled, syncIntake } from "@/lib/api/client";
 import {
   FAMILY_HISTORY,
   GOAL_OPTIONS,
+  INTAKE_EXCLUDED_CONDITION_KEYS,
   INTAKE_STEP_LABELS,
   MEDICAL_CONDITIONS,
   PRIOR_MEDS,
@@ -20,28 +21,66 @@ import {
   WEIGHT_METHODS,
   emptyIntakeData,
 } from "@/lib/intake-steps";
+import { computeBmi } from "@/lib/safety-flags";
+import type { EligibilityResponses, MedicalIntake, User } from "@/lib/types/mvp";
 import { getSession, getIntake, saveIntake } from "@/lib/storage";
-import type { MedicalIntake } from "@/lib/types/mvp";
 
 export const Route = createFileRoute("/intake")({
   beforeLoad: () => {
-    if (!getSession()) throw redirect({ to: "/qualify" });
+    const session = getSession();
+    if (!session) throw redirect({ to: "/qualify" });
+    if (!session.user.email_verified) throw redirect({ to: "/verify-email/pending" });
   },
   component: IntakePage,
 });
 
+/** Intake-only identity fields — account/contact data lives on users / patient_profiles. */
+const IDENTITY_FIELDS = [
+  ["preferred", "Preferred name (optional)"],
+  ["address", "Home address"],
+  ["city", "City"],
+  ["zip", "ZIP"],
+  ["emergency_name", "Emergency contact name"],
+  ["emergency_phone", "Emergency contact phone"],
+] as const;
+
 function IntakePage() {
   const navigate = useNavigate();
   const session = getSession()!;
-  const existing = getIntake(session.user.id);
   const [step, setStep] = useState(0);
-  const [data, setData] = useState(() => existing ?? makeDraft(session.user.id));
+  const [data, setData] = useState<MedicalIntake>(() => makeDraft(session.user.id));
+  const [eligibility, setEligibility] = useState<EligibilityResponses | null>(null);
+  const [loading, setLoading] = useState(true);
   const total = INTAKE_STEP_LABELS.length;
   const progress = ((step + 1) / total) * 100;
 
+  const intakeConditions = useMemo(
+    () => MEDICAL_CONDITIONS.filter(([k]) => !INTAKE_EXCLUDED_CONDITION_KEYS.has(k)),
+    [],
+  );
+
   useEffect(() => {
-    saveIntake(data);
-  }, [data]);
+    let cancelled = false;
+    (async () => {
+      const [draft, elig] = await Promise.all([fetchIntakeMe(), fetchEligibilityMe()]);
+      if (cancelled) return;
+      setEligibility(elig);
+      if (draft) {
+        setData(draft);
+      } else if (!isApiEnabled()) {
+        const local = getIntake(session.user.id);
+        if (local) setData(local);
+      }
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [session.user.id]);
+
+  useEffect(() => {
+    if (!loading) saveIntake(data);
+  }, [data, loading]);
 
   function patch<K extends keyof MedicalIntake>(section: K, value: MedicalIntake[K]) {
     setData((d) => ({ ...d, [section]: value, updated_at: new Date().toISOString() }));
@@ -76,12 +115,26 @@ function IntakePage() {
   const acks = data.safety_acknowledgments as Record<string, boolean>;
 
   const allAcksChecked = SAFETY_ACKS.every(([k]) => acks[k] === true);
+  const summaryBmi =
+    eligibility?.bmi ??
+    computeBmi(
+      String(eligibility?.height_ft ?? ""),
+      String(eligibility?.height_in ?? 0),
+      String(eligibility?.weight_lbs ?? ""),
+    );
+  const showTreatmentPrefs = !eligibility?.treatment_interest;
+
+  if (loading) {
+    return (
+      <FlowLayout progress={0}>
+        <div className="w-full max-w-xl text-center text-muted-foreground">Loading your intake…</div>
+      </FlowLayout>
+    );
+  }
 
   return (
     <FlowLayout progress={progress}>
       <QuizShell
-        step={step}
-        totalSteps={total}
         label={INTAKE_STEP_LABELS[step]}
         title={INTAKE_STEP_LABELS[step]}
         subtitle="Plain-language questions. Required fields are marked. Progress saves automatically."
@@ -105,44 +158,34 @@ function IntakePage() {
         }
       >
         {step === 0 && (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {[
-              ["legal_first", "Legal first name"],
-              ["legal_last", "Legal last name"],
-              ["preferred", "Preferred name"],
-              ["dob", "Date of birth"],
-              ["email", "Email"],
-              ["phone", "Phone"],
-              ["address", "Home address"],
-              ["city", "City"],
-              ["state", "State"],
-              ["zip", "ZIP"],
-              ["emergency_name", "Emergency contact name"],
-              ["emergency_phone", "Emergency contact phone"],
-            ].map(([k, label]) => (
-              <Field key={k} label={label} required>
-                <input
-                  className={inputCls}
-                  type={k === "dob" ? "date" : k === "email" ? "email" : k === "phone" || k === "emergency_phone" ? "tel" : "text"}
-                  value={id[k] ?? (k === "email" ? session.user.email : k === "state" ? session.user.state : "")}
-                  onChange={(e) => patch("identity", { ...id, [k]: e.target.value })}
-                />
-              </Field>
-            ))}
+          <div className="grid gap-4">
+            <AccountSummary user={session.user} eligibility={eligibility} bmi={summaryBmi} />
+            <div className="grid gap-3 sm:grid-cols-2">
+              {IDENTITY_FIELDS.map(([k, label]) => (
+                <Field key={k} label={label} required={k !== "preferred"}>
+                  <input
+                    className={inputCls}
+                    type={k === "emergency_phone" ? "tel" : "text"}
+                    value={id[k] ?? ""}
+                    onChange={(e) => patch("identity", { ...id, [k]: e.target.value })}
+                  />
+                </Field>
+              ))}
+            </div>
           </div>
         )}
 
         {step === 1 && (
           <div className="grid gap-4">
+            <p className="rounded-2xl bg-primary-soft/50 px-4 py-3 text-sm text-muted-foreground">
+              Height, weight, and goal weight are already on file from your eligibility check
+              {summaryBmi != null ? ` (BMI ${summaryBmi})` : ""}.
+            </p>
             {[
-              ["current_weight", "Current weight (lb)"],
-              ["height_ft", "Height (ft)"],
-              ["height_in", "Height (in)"],
-              ["goal_weight", "Goal weight"],
-              ["highest_weight", "Highest adult weight"],
-              ["lowest_weight", "Lowest adult weight"],
+              ["highest_weight", "Highest adult weight (lb)"],
+              ["lowest_weight", "Lowest adult weight (lb)"],
               ["waist", "Waist circumference (optional)"],
-              ["duration", "How long trying to lose weight?"],
+              ["duration", "How long have you been trying to lose weight?"],
             ].map(([k, label]) => (
               <Field key={k} label={label}>
                 <input className={inputCls} value={(body[k] as string) ?? ""} onChange={(e) => patch("body_metrics", { ...body, [k]: e.target.value })} />
@@ -200,7 +243,10 @@ function IntakePage() {
 
         {step === 3 && (
           <div className="grid gap-4 max-h-[50vh] overflow-y-auto pr-1">
-            {MEDICAL_CONDITIONS.map(([k, label]) => (
+            <p className="text-sm text-muted-foreground">
+              Conditions from your eligibility screening are already on file and not shown again.
+            </p>
+            {intakeConditions.map(([k, label]) => (
               <div key={k}>
                 <YesNoField label={label} value={mc[k] === true ? true : mc[k] === false ? false : null} onChange={(v) => patch("medical_conditions", { ...mc, [k]: v })} />
                 {mc[k] === true && (
@@ -253,7 +299,6 @@ function IntakePage() {
           <div className="grid gap-4">
             <YesNoField label="Medication allergies?" value={allergies.answers.has_med === true ? true : allergies.answers.has_med === false ? false : null} onChange={(v) => patch("allergies", { ...allergies, answers: { ...allergies.answers, has_med: v } })} />
             <YesNoField label="Food allergies?" value={allergies.answers.has_food === true ? true : allergies.answers.has_food === false ? false : null} onChange={(v) => patch("allergies", { ...allergies, answers: { ...allergies.answers, has_food: v } })} />
-            <YesNoField label="Allergic reaction to GLP-1 medications?" value={allergies.answers.glp1 === true ? true : allergies.answers.glp1 === false ? false : null} onChange={(v) => patch("allergies", { ...allergies, answers: { ...allergies.answers, glp1: v } })} />
             {allergies.list.map((a, i) => (
               <div key={i} className="grid gap-2 sm:grid-cols-3">
                 {(["allergy", "reaction", "severity"] as const).map((f) => (
@@ -269,21 +314,17 @@ function IntakePage() {
 
         {step === 7 && (
           <div className="grid gap-4">
+            <p className="text-sm text-muted-foreground">
+              Pregnancy and breastfeeding status were captured during your eligibility screening.
+            </p>
             {[
-              ["pregnant", "Are you pregnant?"],
-              ["trying", "Trying to become pregnant?"],
-              ["breastfeeding", "Breastfeeding?"],
               ["lmp", "Date of last menstrual period (optional)"],
               ["contraception", "Using contraception?"],
-            ].map(([k, label]) =>
-              k === "lmp" || k === "contraception" ? (
-                <Field key={k} label={label}>
-                  <input className={inputCls} value={(preg[k] as string) ?? ""} onChange={(e) => patch("pregnancy", { ...preg, [k]: e.target.value })} />
-                </Field>
-              ) : (
-                <YesNoField key={k} label={label} value={preg[k] === true ? true : preg[k] === false ? false : null} onChange={(v) => patch("pregnancy", { ...preg, [k]: v })} />
-              ),
-            )}
+            ].map(([k, label]) => (
+              <Field key={k} label={label}>
+                <input className={inputCls} value={(preg[k] as string) ?? ""} onChange={(e) => patch("pregnancy", { ...preg, [k]: e.target.value })} />
+              </Field>
+            ))}
             <label className="flex gap-3 text-sm">
               <input type="checkbox" checked={preg.understand === true} onChange={(e) => patch("pregnancy", { ...preg, understand: e.target.checked })} />
               I understand weight-loss medications may not be appropriate during pregnancy or breastfeeding.
@@ -335,19 +376,25 @@ function IntakePage() {
 
         {step === 10 && (
           <div className="grid gap-4">
-            <Field label="Treatment option of interest">
-              <div className="grid gap-2">
-                {[
-                  ["zepbound", "Zepbound injection"],
-                  ["wegovy_inj", "Wegovy injection"],
-                  ["wegovy_pill", "Wegovy pill, if available"],
-                  ["compounded_sema", "Compounded semaglutide injection, if legally available"],
-                  ["provider_choice", "Not sure — provider to recommend"],
-                ].map(([k, label]) => (
-                  <ChoiceCard key={k} compact selected={prefs.treatment === k} onClick={() => patch("medication_preferences", { ...prefs, treatment: k })} title={label} />
-                ))}
-              </div>
-            </Field>
+            {showTreatmentPrefs ? (
+              <Field label="Treatment option of interest">
+                <div className="grid gap-2">
+                  {[
+                    ["zepbound", "Zepbound injection"],
+                    ["wegovy_inj", "Wegovy injection"],
+                    ["wegovy_pill", "Wegovy pill, if available"],
+                    ["compounded_sema", "Compounded semaglutide injection, if legally available"],
+                    ["provider_choice", "Not sure — provider to recommend"],
+                  ].map(([k, label]) => (
+                    <ChoiceCard key={k} compact selected={prefs.treatment === k} onClick={() => patch("medication_preferences", { ...prefs, treatment: k })} title={label} />
+                  ))}
+                </div>
+              </Field>
+            ) : (
+              <p className="rounded-2xl bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
+                Treatment format preference was captured during eligibility ({eligibility?.treatment_interest?.replace(/_/g, " ")}).
+              </p>
+            )}
             <YesNoField label="Comfortable self-injecting?" value={prefs.self_inject === true ? true : prefs.self_inject === false ? false : null} onChange={(v) => patch("medication_preferences", { ...prefs, self_inject: v })} />
             <Field label="Pharmacy preference (pickup or shipping)">
               <input className={inputCls} value={(prefs.shipping_preference as string) ?? ""} onChange={(e) => patch("medication_preferences", { ...prefs, shipping_preference: e.target.value })} placeholder="Local pickup or home shipping" />
@@ -373,6 +420,47 @@ function IntakePage() {
         )}
       </QuizShell>
     </FlowLayout>
+  );
+}
+
+function AccountSummary({
+  user,
+  eligibility,
+  bmi,
+}: {
+  user: User;
+  eligibility: EligibilityResponses | null;
+  bmi: number | null;
+}) {
+  const rows = [
+    ["Name", `${user.first_name} ${user.last_name}`.trim() || "—"],
+    ["Email", user.email],
+    ["Phone", user.phone || "—"],
+    ["Date of birth", user.dob || eligibility?.dob || "—"],
+    ["State", user.state || eligibility?.state || "—"],
+    [
+      "Height",
+      eligibility?.height_ft != null
+        ? `${eligibility.height_ft}' ${eligibility.height_in ?? 0}"`
+        : "—",
+    ],
+    ["Weight", eligibility?.weight_lbs != null ? `${eligibility.weight_lbs} lb` : "—"],
+    ["Goal weight", eligibility?.goal_weight_lbs != null ? `${eligibility.goal_weight_lbs} lb` : "—"],
+    ["BMI", bmi != null ? String(bmi) : "—"],
+  ];
+
+  return (
+    <div className="rounded-2xl border border-border bg-muted/30 px-4 py-3">
+      <p className="text-sm font-medium text-foreground">Already on file from your account & eligibility check</p>
+      <dl className="mt-2 grid gap-1 text-sm">
+        {rows.map(([label, value]) => (
+          <div key={label} className="flex justify-between gap-4">
+            <dt className="text-muted-foreground">{label}</dt>
+            <dd className="font-medium text-foreground">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   );
 }
 
