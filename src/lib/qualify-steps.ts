@@ -309,7 +309,7 @@ export function getQualifyStepError(
       const unanswered = CONTRAINDICATION_QUESTIONS.find(
         (q) => typeof data.safety[q.key] !== "boolean",
       );
-      return unanswered ? "Answer every health screening question." : null;
+      return unanswered ? "" : null;
     }
     case "review":
       return null;

@@ -138,7 +138,7 @@ describe("qualify-steps validation", () => {
       ).toBe(false);
     });
 
-    it("contraindications require all answers", () => {
+    it("contraindications blocks progress without a user-facing message", () => {
       const partialSafety = Object.fromEntries(
         CONTRAINDICATION_QUESTIONS.slice(0, -1).map((q) => [q.key, false]),
       ) as ReturnType<typeof validQualifySlice>["safety"];
@@ -147,7 +147,13 @@ describe("qualify-steps validation", () => {
           "contraindications",
           validQualifySlice({ safety: partialSafety }),
         ),
-      ).not.toBeNull();
+      ).toBe("");
+      expect(
+        isQualifyStepComplete(
+          "contraindications",
+          validQualifySlice({ safety: partialSafety }),
+        ),
+      ).toBe(false);
     });
   });
 
