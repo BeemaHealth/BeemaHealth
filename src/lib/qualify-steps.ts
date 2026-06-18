@@ -225,7 +225,7 @@ export function getQualifyStepError(
 ): string | null {
   switch (stepId) {
     case "treatment_interest":
-      return data.treatmentInterest ? null : "Select a care format to continue.";
+      return data.treatmentInterest ? null : "";
     case "primary_goal":
       return data.primaryGoal ? null : "Select what motivates you to continue.";
     case "treatment_priority":
