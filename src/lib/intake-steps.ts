@@ -103,15 +103,21 @@ export const PRIOR_MED_DETAIL_FIELDS = [
   ["stopped", "When did you stop?", true],
   ["stop_reason", "Why did you stop?", true],
   ["side_effects", "Side effects (optional)", false],
-] as const satisfies ReadonlyArray<
-  [keyof PriorMedDetails, string, boolean]
->;
+] as const satisfies ReadonlyArray<[keyof PriorMedDetails, string, boolean]>;
 
 export function emptyPriorMedDetails(): PriorMedDetails {
-  return { dose: "", started: "", stopped: "", stop_reason: "", side_effects: "" };
+  return {
+    dose: "",
+    started: "",
+    stopped: "",
+    stop_reason: "",
+    side_effects: "",
+  };
 }
 
-export function isPriorMedDetailsComplete(details: Partial<PriorMedDetails> | undefined): boolean {
+export function isPriorMedDetailsComplete(
+  details: Partial<PriorMedDetails> | undefined,
+): boolean {
   return (
     Boolean(String(details?.dose ?? "").trim()) &&
     Boolean(String(details?.stopped ?? "").trim()) &&
@@ -127,7 +133,10 @@ export function normalizePriorDetails(
   for (const med of priorMeds) {
     const existing = raw?.[med];
     if (existing && typeof existing === "object" && !Array.isArray(existing)) {
-      result[med] = { ...emptyPriorMedDetails(), ...(existing as Partial<PriorMedDetails>) };
+      result[med] = {
+        ...emptyPriorMedDetails(),
+        ...(existing as Partial<PriorMedDetails>),
+      };
     } else {
       result[med] = emptyPriorMedDetails();
     }
@@ -145,15 +154,36 @@ export const GOAL_OPTIONS = [
 ] as const;
 
 export const SAFETY_ACKS = [
-  ["no_guarantee", "I understand that completing this form does not guarantee a prescription."],
-  ["provider_review", "I understand that a licensed provider will review my information before any treatment decision."],
-  ["side_effects", "I understand that medical weight-loss medications may cause side effects including nausea, vomiting, diarrhea, constipation, abdominal pain, dehydration, gallbladder issues, and other risks."],
-  ["emergency", "I understand that I must seek emergency care for severe abdominal pain, allergic reaction, chest pain, fainting, trouble breathing, or other emergency symptoms."],
-  ["compounded", "I understand that compounded medications, if offered, are not FDA-approved and may only be used when legally available and clinically appropriate."],
-  ["accurate", "I confirm that the information I provided is accurate and complete."],
+  [
+    "no_guarantee",
+    "I understand that completing this form does not guarantee a prescription.",
+  ],
+  [
+    "provider_review",
+    "I understand that a licensed provider will review my information before any treatment decision.",
+  ],
+  [
+    "side_effects",
+    "I understand that medical weight-loss medications may cause side effects including nausea, vomiting, diarrhea, constipation, abdominal pain, dehydration, gallbladder issues, and other risks.",
+  ],
+  [
+    "emergency",
+    "I understand that I must seek emergency care for severe abdominal pain, allergic reaction, chest pain, fainting, trouble breathing, or other emergency symptoms.",
+  ],
+  [
+    "compounded",
+    "I understand that compounded medications, if offered, are not FDA-approved and may only be used when legally available and clinically appropriate.",
+  ],
+  [
+    "accurate",
+    "I confirm that the information I provided is accurate and complete.",
+  ],
   ["telehealth", "I consent to telehealth evaluation."],
   ["electronic", "I consent to electronic communication."],
-  ["storage", "I consent to Aretide storing my intake information for provider review."],
+  [
+    "storage",
+    "I consent to Aretide storing my intake information for provider review.",
+  ],
 ] as const;
 
 /** Conditions already captured in eligibility.safety_screen — not re-collected in intake. */
@@ -178,9 +208,9 @@ export const IDENTITY_FIELDS = [
   ["emergency_phone", "Emergency contact phone"],
 ] as const;
 
-export const REQUIRED_IDENTITY_FIELDS = IDENTITY_FIELDS.filter(([k]) => k !== "preferred").map(
-  ([k]) => k,
-);
+export const REQUIRED_IDENTITY_FIELDS = IDENTITY_FIELDS.filter(
+  ([k]) => k !== "preferred",
+).map(([k]) => k);
 
 const MEDICATION_ANSWER_KEYS = [
   "taking_prescription",
@@ -208,13 +238,18 @@ const LIFESTYLE_FIELD_KEYS = [
 ] as const;
 
 function intakeConditionKeys(): string[] {
-  return MEDICAL_CONDITIONS.filter(([k]) => !INTAKE_EXCLUDED_CONDITION_KEYS.has(k)).map(([k]) => k);
+  return MEDICAL_CONDITIONS.filter(
+    ([k]) => !INTAKE_EXCLUDED_CONDITION_KEYS.has(k),
+  ).map(([k]) => k);
 }
 
 export function getIntakeStepError(
   step: number,
   data: MedicalIntake,
-  eligibility: { treatment_interest?: string | null; weight_lbs?: number | null } | null = null,
+  eligibility: {
+    treatment_interest?: string | null;
+    weight_lbs?: number | null;
+  } | null = null,
 ): string | null {
   const id = data.identity as Record<string, string>;
   const body = data.body_metrics as Record<string, string | string[]>;
@@ -241,8 +276,10 @@ export function getIntakeStepError(
           return `Complete ${label.toLowerCase()}.`;
         }
       }
-      if (!isValidPhone(id.emergency_phone ?? "")) return "Enter a valid emergency contact phone number.";
-      if (!isIdentityAddressComplete(id)) return "Enter and verify your home address before continuing.";
+      if (!isValidPhone(id.emergency_phone ?? ""))
+        return "Enter a valid emergency contact phone number.";
+      if (!isIdentityAddressComplete(id))
+        return "Enter and verify your home address before continuing.";
       return null;
     }
     case 1: {
@@ -252,11 +289,11 @@ export function getIntakeStepError(
         eligibility?.weight_lbs != null ? String(eligibility.weight_lbs) : null,
       );
       if (weightErr) return weightErr;
-      if (!Array.isArray(body.goals) || body.goals.length === 0) return "Select at least one main goal.";
+      if (!Array.isArray(body.goals) || body.goals.length === 0) return "";
       return null;
     }
     case 2: {
-      if (!wh.methods?.length) return "Select at least one weight-loss method you've tried.";
+      if (!wh.methods?.length) return "";
       const priorMeds = wh.prior_meds ?? [];
       if (priorMeds.length === 0) return null;
       const details = wh.prior_details ?? {};
@@ -269,22 +306,29 @@ export function getIntakeStepError(
       return null;
     }
     case 3: {
-      const unanswered = intakeConditionKeys().find((k) => typeof mc[k] !== "boolean");
+      const unanswered = intakeConditionKeys().find(
+        (k) => typeof mc[k] !== "boolean",
+      );
       return unanswered ? "Answer every medical condition question." : null;
     }
     case 4: {
-      const unanswered = FAMILY_HISTORY.find(([k]) => typeof fh[k] !== "boolean");
+      const unanswered = FAMILY_HISTORY.find(
+        ([k]) => typeof fh[k] !== "boolean",
+      );
       return unanswered ? "Answer every family history question." : null;
     }
     case 5: {
-      const unanswered = MEDICATION_ANSWER_KEYS.find((k) => typeof meds.answers[k] !== "boolean");
+      const unanswered = MEDICATION_ANSWER_KEYS.find(
+        (k) => typeof meds.answers[k] !== "boolean",
+      );
       if (unanswered) return "Answer every current medication question.";
       const needsList =
         meds.answers.taking_prescription === true ||
         meds.answers.taking_otc === true ||
         meds.answers.supplements === true;
       if (needsList) {
-        if (!meds.list.length) return "Add at least one medication or supplement.";
+        if (!meds.list.length)
+          return "Add at least one medication or supplement.";
         for (const row of meds.list) {
           const rowErr = validateMedicationRow(row);
           if (rowErr) return rowErr;
@@ -293,9 +337,13 @@ export function getIntakeStepError(
       return null;
     }
     case 6: {
-      if (typeof allergies.answers.has_med !== "boolean") return "Answer whether you have medication allergies.";
-      if (typeof allergies.answers.has_food !== "boolean") return "Answer whether you have food allergies.";
-      const needsList = allergies.answers.has_med === true || allergies.answers.has_food === true;
+      if (typeof allergies.answers.has_med !== "boolean")
+        return "Answer whether you have medication allergies.";
+      if (typeof allergies.answers.has_food !== "boolean")
+        return "Answer whether you have food allergies.";
+      const needsList =
+        allergies.answers.has_med === true ||
+        allergies.answers.has_food === true;
       if (needsList) {
         if (!allergies.list.length) return "Add at least one allergy.";
         for (const row of allergies.list) {
@@ -306,7 +354,9 @@ export function getIntakeStepError(
       return null;
     }
     case 7:
-      return preg.understand === true ? null : "Confirm you understand the reproductive health information.";
+      return preg.understand === true
+        ? null
+        : "Confirm you understand the reproductive health information.";
     case 8: {
       const unanswered = LIFESTYLE_FIELD_KEYS.find((k) => !isFilled(life[k]));
       return unanswered ? "Answer every lifestyle question." : null;
@@ -318,27 +368,40 @@ export function getIntakeStepError(
         ["glucose", "glucose"],
         ["cholesterol", "cholesterol"],
       ] as const) {
-        const labErr = validateOptionalNumericLab(String(labs[key] ?? ""), label);
+        const labErr = validateOptionalNumericLab(
+          String(labs[key] ?? ""),
+          label,
+        );
         if (labErr) return labErr;
       }
-      if (typeof labs.recent_labs !== "boolean") return "Answer whether you've had recent labs.";
-      if (typeof labs.willing !== "boolean") return "Answer whether you're willing to complete labs if needed.";
+      if (typeof labs.recent_labs !== "boolean")
+        return "Answer whether you've had recent labs.";
+      if (typeof labs.willing !== "boolean")
+        return "Answer whether you're willing to complete labs if needed.";
       return null;
     }
     case 10: {
       const needsTreatment = !eligibility?.treatment_interest;
-      if (needsTreatment && !isFilled(prefs.treatment)) return "Select a treatment preference.";
-      if (typeof prefs.self_inject !== "boolean") return "Answer whether you're comfortable with self-injection.";
-      if (!isFilled(prefs.shipping_preference)) return "Enter your shipping preference.";
-      if (typeof prefs.cash_pay_ok !== "boolean") return "Answer whether cash pay works for you.";
-      if (isFilled(prefs.pharmacy_phone) && !isValidPhone(String(prefs.pharmacy_phone))) {
+      if (needsTreatment && !isFilled(prefs.treatment)) return "";
+      if (typeof prefs.self_inject !== "boolean")
+        return "Answer whether you're comfortable with self-injection.";
+      if (!isFilled(prefs.shipping_preference))
+        return "Enter your shipping preference.";
+      if (typeof prefs.cash_pay_ok !== "boolean")
+        return "Answer whether cash pay works for you.";
+      if (
+        isFilled(prefs.pharmacy_phone) &&
+        !isValidPhone(String(prefs.pharmacy_phone))
+      ) {
         return "Enter a valid pharmacy phone number.";
       }
       return null;
     }
     case 11: {
       const unchecked = SAFETY_ACKS.find(([k]) => acks[k] !== true);
-      return unchecked ? "Check every safety acknowledgment to continue." : null;
+      return unchecked
+        ? "Check every safety acknowledgment to continue."
+        : null;
     }
     default:
       return null;
@@ -349,7 +412,10 @@ export function getIntakeStepError(
 export function isIntakeStepComplete(
   step: number,
   data: MedicalIntake,
-  eligibility: { treatment_interest?: string | null; weight_lbs?: number | null } | null = null,
+  eligibility: {
+    treatment_interest?: string | null;
+    weight_lbs?: number | null;
+  } | null = null,
 ): boolean {
   return getIntakeStepError(step, data, eligibility) === null;
 }
@@ -369,7 +435,10 @@ export function resolveIntakeStepIndex(
 export function emptyIntakeData() {
   return {
     identity: {} as Record<string, string>,
-    body_metrics: { goals: [] as string[] } as Record<string, string | string[]>,
+    body_metrics: { goals: [] as string[] } as Record<
+      string,
+      string | string[]
+    >,
     weight_history: {
       methods: [] as string[],
       prior_meds: [] as string[],
@@ -379,7 +448,12 @@ export function emptyIntakeData() {
     family_history: {} as Record<string, boolean>,
     medications: {
       answers: {} as Record<string, boolean | string>,
-      list: [] as { name: string; dose: string; frequency: string; reason: string }[],
+      list: [] as {
+        name: string;
+        dose: string;
+        frequency: string;
+        reason: string;
+      }[],
     },
     allergies: {
       answers: {} as Record<string, boolean | string>,
@@ -411,27 +485,50 @@ export function normalizeIntake(draft: MedicalIntake): MedicalIntake {
     weight_history: {
       ...empty.weight_history,
       ...wh,
-      methods: Array.isArray(wh.methods) ? wh.methods : empty.weight_history.methods,
-      prior_meds: Array.isArray(wh.prior_meds) ? wh.prior_meds : empty.weight_history.prior_meds,
+      methods: Array.isArray(wh.methods)
+        ? wh.methods
+        : empty.weight_history.methods,
+      prior_meds: Array.isArray(wh.prior_meds)
+        ? wh.prior_meds
+        : empty.weight_history.prior_meds,
       prior_details: normalizePriorDetails(
         Array.isArray(wh.prior_meds) ? wh.prior_meds : [],
         wh.prior_details as Record<string, unknown> | undefined,
       ),
     },
-    medical_conditions: { ...empty.medical_conditions, ...draft.medical_conditions },
+    medical_conditions: {
+      ...empty.medical_conditions,
+      ...draft.medical_conditions,
+    },
     family_history: { ...empty.family_history, ...draft.family_history },
     medications: {
-      answers: { ...empty.medications.answers, ...(draft.medications?.answers ?? {}) },
-      list: Array.isArray(draft.medications?.list) ? draft.medications.list : empty.medications.list,
+      answers: {
+        ...empty.medications.answers,
+        ...(draft.medications?.answers ?? {}),
+      },
+      list: Array.isArray(draft.medications?.list)
+        ? draft.medications.list
+        : empty.medications.list,
     },
     allergies: {
-      answers: { ...empty.allergies.answers, ...(draft.allergies?.answers ?? {}) },
-      list: Array.isArray(draft.allergies?.list) ? draft.allergies.list : empty.allergies.list,
+      answers: {
+        ...empty.allergies.answers,
+        ...(draft.allergies?.answers ?? {}),
+      },
+      list: Array.isArray(draft.allergies?.list)
+        ? draft.allergies.list
+        : empty.allergies.list,
     },
     pregnancy: { ...empty.pregnancy, ...draft.pregnancy },
     lifestyle: { ...empty.lifestyle, ...draft.lifestyle },
     labs: { ...empty.labs, ...draft.labs },
-    medication_preferences: { ...empty.medication_preferences, ...draft.medication_preferences },
-    safety_acknowledgments: { ...empty.safety_acknowledgments, ...draft.safety_acknowledgments },
+    medication_preferences: {
+      ...empty.medication_preferences,
+      ...draft.medication_preferences,
+    },
+    safety_acknowledgments: {
+      ...empty.safety_acknowledgments,
+      ...draft.safety_acknowledgments,
+    },
   };
 }

@@ -36,7 +36,8 @@ export const CONTRAINDICATION_QUESTIONS = [
   },
   {
     key: "men2" as const,
-    label: "Have you been diagnosed with MEN2 (Multiple Endocrine Neoplasia type 2)?",
+    label:
+      "Have you been diagnosed with MEN2 (Multiple Endocrine Neoplasia type 2)?",
   },
   {
     key: "pancreatitis" as const,
@@ -64,20 +65,33 @@ export const CONTRAINDICATION_QUESTIONS = [
   },
   {
     key: "glp1_reaction" as const,
-    label: "Have you had a serious allergic reaction to semaglutide, tirzepatide, or similar drugs?",
+    label:
+      "Have you had a serious allergic reaction to semaglutide, tirzepatide, or similar drugs?",
   },
-] satisfies ReadonlyArray<{ key: keyof EligibilitySafetyScreen; label: string }>;
+] satisfies ReadonlyArray<{
+  key: keyof EligibilitySafetyScreen;
+  label: string;
+}>;
 
 export const TREATMENT_INTEREST_OPTIONS = [
   { value: "glp1_pills" as const, label: "Oral GLP-1 tablets" },
   { value: "glp1_injections" as const, label: "Injectable GLP-1 therapy" },
-  { value: "provider_recommendation" as const, label: "I'd like my clinician to recommend the best option" },
+  {
+    value: "provider_recommendation" as const,
+    label: "I'd like my clinician to recommend the best option",
+  },
 ] as const;
 
 export const PRIMARY_GOAL_OPTIONS = [
   { value: "improve_health" as const, label: "Support my long-term health" },
-  { value: "gain_confidence" as const, label: "Feel more confident day to day" },
-  { value: "feel_better_clothes" as const, label: "Move and feel better in my body" },
+  {
+    value: "gain_confidence" as const,
+    label: "Feel more confident day to day",
+  },
+  {
+    value: "feel_better_clothes" as const,
+    label: "Move and feel better in my body",
+  },
   { value: "something_else" as const, label: "Something else motivates me" },
 ] as const;
 
@@ -85,7 +99,10 @@ export const TREATMENT_PRIORITY_OPTIONS = [
   { value: "fda_approved" as const, label: "FDA-approved treatment options" },
   { value: "cost" as const, label: "Keeping monthly costs manageable" },
   { value: "results" as const, label: "Durable, lasting results" },
-  { value: "provider_support" as const, label: "Ongoing support from licensed clinicians" },
+  {
+    value: "provider_support" as const,
+    label: "Ongoing support from licensed clinicians",
+  },
 ] as const;
 
 export const WEIGHT_LOSS_GOAL_OPTIONS = [
@@ -158,17 +175,23 @@ export const STEP_TITLES: Record<QualifyStepId, string> = {
 };
 
 export const STEP_SUBTITLES: Partial<Record<QualifyStepId, string>> = {
-  treatment_interest: "Your answer helps us align you with an appropriate care pathway.",
+  treatment_interest:
+    "Your answer helps us align you with an appropriate care pathway.",
   primary_goal: "Everyone's journey is different — choose what fits you best.",
-  treatment_priority: "There is no one-size-fits-all approach. A clinician makes the final treatment decision.",
-  weight_loss_goal: "An estimate is fine. Your provider will review your full health picture.",
+  treatment_priority:
+    "There is no one-size-fits-all approach. A clinician makes the final treatment decision.",
+  weight_loss_goal:
+    "An estimate is fine. Your provider will review your full health picture.",
   state_consent: "Licensed telehealth is regulated differently in each state.",
   dob: "Aretide care is available to adults 18 and older.",
   body_metrics: "These figures help us calculate BMI for your clinical review.",
-  sex_assigned_at_birth: "Certain treatments are prescribed differently based on biological sex.",
-  contraindications: "Your responses are confidential and shared only with your care team.",
+  sex_assigned_at_birth:
+    "Certain treatments are prescribed differently based on biological sex.",
+  contraindications:
+    "Your responses are confidential and shared only with your care team.",
   review: "Take a moment to verify your answers before creating your account.",
-  account: "We'll save your contact details, then send a verification link before your medical intake.",
+  account:
+    "We'll save your contact details, then send a verification link before your medical intake.",
 };
 
 /** Fields required to decide whether a step is complete (mirrors qualify.tsx validation). */
@@ -189,7 +212,11 @@ export type QualifyFormSlice = {
 };
 
 export function hasAllPreSignupConsents(consents: PreSignupConsents): boolean {
-  return consents.terms === true && consents.privacy === true && consents.telehealth === true;
+  return (
+    consents.terms === true &&
+    consents.privacy === true &&
+    consents.telehealth === true
+  );
 }
 
 export function allPreSignupConsents(checked: boolean): PreSignupConsents {
@@ -218,6 +245,26 @@ export type QualifyAccountFields = {
   confirmPassword: string;
 };
 
+function getChoiceStepValue(
+  stepId: QualifyStepId,
+  data: QualifyFormSlice,
+): string {
+  switch (stepId) {
+    case "treatment_interest":
+      return data.treatmentInterest;
+    case "primary_goal":
+      return data.primaryGoal;
+    case "treatment_priority":
+      return data.treatmentPriority;
+    case "weight_loss_goal":
+      return data.targetWeightLossRange;
+    case "sex_assigned_at_birth":
+      return data.sexAssignedAtBirth;
+    default:
+      return "";
+  }
+}
+
 export function getQualifyStepError(
   stepId: QualifyStepId,
   data: QualifyFormSlice,
@@ -225,21 +272,23 @@ export function getQualifyStepError(
 ): string | null {
   switch (stepId) {
     case "treatment_interest":
-      return data.treatmentInterest ? null : "";
     case "primary_goal":
-      return data.primaryGoal ? null : "Select what motivates you to continue.";
     case "treatment_priority":
-      return data.treatmentPriority ? null : "Select what matters most in your care.";
     case "weight_loss_goal":
-      return data.targetWeightLossRange ? null : "Select a target weight-loss range.";
+    case "sex_assigned_at_birth":
+      // ChoiceCard-only steps: block Continue without a redundant footer message.
+      return getChoiceStepValue(stepId, data) ? null : "";
     case "state_consent":
       if (!data.state) return "Select your state.";
-      if (!hasAllPreSignupConsents(data.consents)) return "Agree to the Terms, Privacy Policy, and Telehealth Consent.";
+      if (!hasAllPreSignupConsents(data.consents))
+        return "Agree to the Terms, Privacy Policy, and Telehealth Consent.";
       return null;
     case "dob":
       if (!data.dob) return "Enter your date of birth.";
-      if (computeIsAdult(data.dob) === null) return "Enter a valid date of birth.";
-      if (computeIsAdult(data.dob) === false) return "Aretide is available to adults 18 and older.";
+      if (computeIsAdult(data.dob) === null)
+        return "Enter a valid date of birth.";
+      if (computeIsAdult(data.dob) === false)
+        return "Aretide is available to adults 18 and older.";
       return null;
     case "body_metrics": {
       const ftErr = validateHeightFt(data.heightFt);
@@ -250,23 +299,28 @@ export function getQualifyStepError(
       if (weightErr) return weightErr;
       return validateGoalWeightLbs(data.weightLbs, data.goalWeightLbs);
     }
-    case "sex_assigned_at_birth":
-      return data.sexAssignedAtBirth ? null : "Select the sex you were assigned at birth.";
     case "contraindications": {
-      const unanswered = CONTRAINDICATION_QUESTIONS.find((q) => typeof data.safety[q.key] !== "boolean");
+      const unanswered = CONTRAINDICATION_QUESTIONS.find(
+        (q) => typeof data.safety[q.key] !== "boolean",
+      );
       return unanswered ? "Answer every health screening question." : null;
     }
     case "review":
       return null;
     case "account": {
       if (!account) return "Complete all account fields.";
-      if (!isValidPersonName(account.firstName)) return "Enter your legal first name.";
-      if (!isValidPersonName(account.lastName)) return "Enter your legal last name.";
-      if (!isValidPhone(account.phone)) return "Enter a valid 10-digit US phone number.";
+      if (!isValidPersonName(account.firstName))
+        return "Enter your legal first name.";
+      if (!isValidPersonName(account.lastName))
+        return "Enter your legal last name.";
+      if (!isValidPhone(account.phone))
+        return "Enter a valid 10-digit US phone number.";
       if (!account.email.trim()) return "Enter your email address.";
       if (!isValidEmail(account.email)) return "Enter a valid email address.";
-      if (account.password.length < 10) return "Password must be at least 10 characters.";
-      if (account.password !== account.confirmPassword) return "Passwords do not match.";
+      if (account.password.length < 10)
+        return "Password must be at least 10 characters.";
+      if (account.password !== account.confirmPassword)
+        return "Passwords do not match.";
       return null;
     }
     default:

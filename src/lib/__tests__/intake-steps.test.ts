@@ -1,16 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { getIntakeStepError, isIntakeStepComplete, emptyIntakeData, normalizeIntake } from "@/lib/intake-steps";
+import {
+  getIntakeStepError,
+  isIntakeStepComplete,
+  emptyIntakeData,
+  normalizeIntake,
+  type PriorMedDetails,
+} from "@/lib/intake-steps";
 import type { MedicalIntake } from "@/lib/types/mvp";
-import { SQL_INJECTION, STRICT_FIELD_ATTACKS } from "./fixtures/malicious-payloads";
+import {
+  SQL_INJECTION,
+  STRICT_FIELD_ATTACKS,
+} from "./fixtures/malicious-payloads";
 import { validEligibility, validIntake } from "./helpers/test-data";
 
 const STEP_COUNT = 12;
 
 describe("intake-steps validation", () => {
   describe("happy paths", () => {
-    it.each(Array.from({ length: STEP_COUNT }, (_, i) => i))("step %i passes with validIntake()", (step) => {
-      expect(getIntakeStepError(step, validIntake(), validEligibility())).toBeNull();
-    });
+    it.each(Array.from({ length: STEP_COUNT }, (_, i) => i))(
+      "step %i passes with validIntake()",
+      (step) => {
+        expect(
+          getIntakeStepError(step, validIntake(), validEligibility()),
+        ).toBeNull();
+      },
+    );
   });
 
   describe("step 0 identity", () => {
@@ -28,47 +42,64 @@ describe("intake-steps validation", () => {
       expect(getIntakeStepError(0, data)).not.toBeNull();
     });
 
-    it.each(STRICT_FIELD_ATTACKS)("rejects malicious emergency phone %j", (payload) => {
-      const data = validIntake({
-        identity: {
-          address: "123 Main St",
-          city: "Denver",
-          zip: "80202",
-          address_verified: "true",
-          emergency_name: "John",
-          emergency_phone: payload,
-        },
-      });
-      expect(getIntakeStepError(0, data)).not.toBeNull();
-    });
+    it.each(STRICT_FIELD_ATTACKS)(
+      "rejects malicious emergency phone %j",
+      (payload) => {
+        const data = validIntake({
+          identity: {
+            address: "123 Main St",
+            city: "Denver",
+            zip: "80202",
+            address_verified: "true",
+            emergency_name: "John",
+            emergency_phone: payload,
+          },
+        });
+        expect(getIntakeStepError(0, data)).not.toBeNull();
+      },
+    );
   });
 
   describe("step 1 body metrics", () => {
-    it("requires goals and valid weights", () => {
-      expect(
-        getIntakeStepError(
-          1,
-          validIntake({ body_metrics: { highest_weight: "210", lowest_weight: "165", goals: [] } }),
-          { weight_lbs: 190 },
-        ),
-      ).not.toBeNull();
+    it("blocks progress without a user-facing message when goals are empty", () => {
+      const data = validIntake({
+        body_metrics: {
+          highest_weight: "210",
+          lowest_weight: "165",
+          goals: [],
+        },
+      });
+      expect(getIntakeStepError(1, data, { weight_lbs: 190 })).toBe("");
+      expect(isIntakeStepComplete(1, data, { weight_lbs: 190 })).toBe(false);
     });
 
-    it.each(SQL_INJECTION)("rejects injection in highest_weight %j", (payload) => {
-      expect(
-        getIntakeStepError(
-          1,
-          validIntake({ body_metrics: { highest_weight: payload, lowest_weight: "165", goals: ["Weight loss"] } }),
-          { weight_lbs: 190 },
-        ),
-      ).not.toBeNull();
-    });
+    it.each(SQL_INJECTION)(
+      "rejects injection in highest_weight %j",
+      (payload) => {
+        expect(
+          getIntakeStepError(
+            1,
+            validIntake({
+              body_metrics: {
+                highest_weight: payload,
+                lowest_weight: "165",
+                goals: ["Weight loss"],
+              },
+            }),
+            { weight_lbs: 190 },
+          ),
+        ).not.toBeNull();
+      },
+    );
   });
 
   describe("step 2 weight history", () => {
-    it("requires at least one method", () => {
-      const data = validIntake({ weight_history: { methods: [], prior_meds: [], prior_details: {} } });
-      expect(getIntakeStepError(2, data)).not.toBeNull();
+    it("blocks progress without a user-facing message when no methods selected", () => {
+      const data = validIntake({
+        weight_history: { methods: [], prior_meds: [], prior_details: {} },
+      });
+      expect(getIntakeStepError(2, data)).toBe("");
+      expect(isIntakeStepComplete(2, data)).toBe(false);
     });
 
     it("requires per-med details when prior med selected", () => {
@@ -76,7 +107,15 @@ describe("intake-steps validation", () => {
         weight_history: {
           methods: ["Diet changes"],
           prior_meds: ["Semaglutide"],
-          prior_details: { Semaglutide: { dose: "", started: "", stopped: "", stop_reason: "", side_effects: "" } },
+          prior_details: {
+            Semaglutide: {
+              dose: "",
+              started: "",
+              stopped: "",
+              stop_reason: "",
+              side_effects: "",
+            },
+          },
         },
       });
       expect(getIntakeStepError(2, data)).toMatch(/dose for Semaglutide/);
@@ -121,7 +160,9 @@ describe("intake-steps validation", () => {
           list: [],
         },
       });
-      expect(getIntakeStepError(5, data)).toMatch(/Add at least one medication/);
+      expect(getIntakeStepError(5, data)).toMatch(
+        /Add at least one medication/,
+      );
     });
   });
 
@@ -138,13 +179,42 @@ describe("intake-steps validation", () => {
   });
 
   describe("step 9 labs", () => {
-    it.each(SQL_INJECTION)("rejects non-numeric lab injection %j", (payload) => {
-      const data = validIntake({ labs: { bp: payload, recent_labs: false, willing: true } });
-      expect(getIntakeStepError(9, data)).not.toBeNull();
-    });
+    it.each(SQL_INJECTION)(
+      "rejects non-numeric lab injection %j",
+      (payload) => {
+        const data = validIntake({
+          labs: { bp: payload, recent_labs: false, willing: true },
+        });
+        expect(getIntakeStepError(9, data)).not.toBeNull();
+      },
+    );
   });
 
   describe("step 10 medication preferences", () => {
+    it("blocks progress without a user-facing message when treatment preference is missing", () => {
+      const data = validIntake({
+        medication_preferences: {
+          self_inject: true,
+          shipping_preference: "Standard",
+          cash_pay_ok: true,
+        },
+      });
+      expect(
+        getIntakeStepError(
+          10,
+          data,
+          validEligibility({ treatment_interest: undefined }),
+        ),
+      ).toBe("");
+      expect(
+        isIntakeStepComplete(
+          10,
+          data,
+          validEligibility({ treatment_interest: undefined }),
+        ),
+      ).toBe(false);
+    });
+
     it("validates pharmacy phone when provided", () => {
       const data = validIntake({
         medication_preferences: {
@@ -154,13 +224,18 @@ describe("intake-steps validation", () => {
           pharmacy_phone: "' OR 1=1--",
         },
       });
-      expect(getIntakeStepError(10, data, validEligibility())).toMatch(/pharmacy phone/);
+      expect(getIntakeStepError(10, data, validEligibility())).toMatch(
+        /pharmacy phone/,
+      );
     });
   });
 
   describe("step 11 safety acknowledgments", () => {
     it("requires all checkboxes", () => {
-      const acks = validIntake().safety_acknowledgments as Record<string, boolean>;
+      const acks = validIntake().safety_acknowledgments as Record<
+        string,
+        boolean
+      >;
       const partial = { ...acks, accurate: false };
       const data = validIntake({ safety_acknowledgments: partial });
       expect(getIntakeStepError(11, data)).not.toBeNull();
@@ -174,7 +249,13 @@ describe("intake-steps validation", () => {
         weight_history: {
           methods: ["Diet changes"],
           prior_meds: ["Semaglutide"],
-          prior_details: { Semaglutide: { dose: SQL_INJECTION[0], stopped: "2024", stop_reason: "side effects" } },
+          prior_details: {
+            Semaglutide: {
+              dose: SQL_INJECTION[0],
+              stopped: "2024",
+              stop_reason: "side effects",
+            },
+          },
         },
       };
       const normalized = normalizeIntake({
@@ -186,7 +267,11 @@ describe("intake-steps validation", () => {
         submitted_at: null,
         ...raw,
       } as MedicalIntake);
-      expect(normalized.weight_history.prior_details.Semaglutide.dose).toBe(SQL_INJECTION[0]);
+      const priorDetails = normalized.weight_history.prior_details as Record<
+        string,
+        PriorMedDetails
+      >;
+      expect(priorDetails.Semaglutide.dose).toBe(SQL_INJECTION[0]);
     });
   });
 

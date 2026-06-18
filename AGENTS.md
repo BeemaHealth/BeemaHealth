@@ -95,16 +95,23 @@ Both frontend **and** backend must reject malicious input on strict fields.
 
 **After every code change**, before marking the task done:
 
-1. **Run the full suite** — `npm run test:all` (frontend Vitest + backend Django). Run `npm run lint` when UI/TS changed.
-2. **Report results in chat** — state explicitly that frontend and backend tests ran, with the outcome (e.g. “371 tests passed” or what failed and why).
-3. **Ensure existing tests pass** — fix regressions; do not ignore or skip failures.
-4. **Decide if new tests are needed** — if behavior is new or the change could regress silently, add tests before finishing; if existing tests already cover it, say so in chat.
+1. **Run the full suite** — `npm run test:all` (frontend Vitest + backend Django).
+2. **Run static checks on every changed `.ts` / `.tsx` file** — this clears IDE/source-control red diagnostics (TypeScript + ESLint):
+   - `npm run lint` — ESLint project-wide (required when any UI/TS changed).
+   - `npx tsc --noEmit` — TypeScript; fix errors in **files you touched** (imports, types, test helpers). Pre-existing errors elsewhere do not block your task, but new errors in your diff must be zero.
+   - Optionally spot-check: `npx vitest run src/lib/__tests__/qualify-steps.test.ts` (or the specific test file you edited).
+3. **Report results in chat** — state explicitly that frontend and backend tests ran, plus lint/tsc outcome on changed files (e.g. “342 tests passed; lint clean; no TS errors in qualify-steps.test.ts”).
+4. **Call out test changes** — if you add, update, or remove tests, say which test files changed and what they now assert (not only that the suite passed).
+5. **Ensure existing tests pass** — fix regressions; do not ignore or skip failures.
+6. **Decide if new tests are needed** — if behavior is new or the change could regress silently, add tests before finishing; if existing tests already cover it, say so in chat.
 
 ```bash
 npm run test:all     # frontend (Vitest) + backend (Django) — preferred
-npm test             # frontend only (337 tests)
+npm test             # frontend only
 npm run test:backend # backend only (34 tests)
-npm run lint         # when UI/TS changed
+npm run lint         # ESLint — run when any TS/TSX changed
+npx tsc --noEmit     # TypeScript — fix errors in files you edited
+npx vitest run path/to/changed.test.ts   # optional: single test file
 ```
 
 If tests fail:
