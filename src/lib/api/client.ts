@@ -14,18 +14,30 @@
 
 import type {
   ConsentRecord,
+  DashboardData,
   EligibilityResponses,
   MedicalIntake,
   ProviderReview,
   SessionUser,
   User,
 } from "@/lib/types/mvp";
+import { applySession, clearSession } from "@/lib/session";
 import * as store from "@/lib/storage";
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "";
 const USE_API = Boolean(API_BASE);
 
 type ApiOptions = RequestInit & { withCredentials?: boolean };
+
+export class ApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
 
 async function apiFetch<T>(path: string, options: ApiOptions = {}): Promise<T> {
   if (!USE_API) {
@@ -39,11 +51,16 @@ async function apiFetch<T>(path: string, options: ApiOptions = {}): Promise<T> {
   if (session?.token) headers.Authorization = `Token ${session.token}`;
 
   const { withCredentials, ...fetchOptions } = options;
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...fetchOptions,
-    headers,
-    credentials: withCredentials ? "include" : "same-origin",
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      ...fetchOptions,
+      headers,
+      credentials: withCredentials ? "include" : "same-origin",
+    });
+  } catch {
+    throw new ApiError("Unable to reach the server.", 0);
+  }
   if (!res.ok) {
     let message = await res.text();
     try {
@@ -52,14 +69,17 @@ async function apiFetch<T>(path: string, options: ApiOptions = {}): Promise<T> {
     } catch {
       // use raw text
     }
-    throw new Error(message || `Request failed (${res.status})`);
+    if (res.status === 401 && !path.startsWith("/auth/login")) {
+      clearSession();
+    }
+    throw new ApiError(message || `Request failed (${res.status})`, res.status);
   }
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
 }
 
 function persistSession(session: SessionUser) {
-  store.setSession(session);
+  applySession(session);
   if (!USE_API) store.saveUser(session.user);
 }
 
@@ -178,7 +198,11 @@ export async function logoutUser() {
       // still clear local session
     }
   }
-  store.setSession(null);
+  clearSession();
+}
+
+export async function fetchAuthMe(): Promise<SessionUser> {
+  return apiFetch<SessionUser>("/auth/me/");
 }
 
 export async function fetchEligibilityMe(): Promise<EligibilityResponses | null> {
@@ -251,9 +275,9 @@ export async function syncReview(data: ProviderReview) {
   });
 }
 
-export async function fetchDashboard() {
+export async function fetchDashboard(): Promise<DashboardData | null> {
   if (!USE_API) return null;
-  return apiFetch<Record<string, unknown>>("/dashboard/me/");
+  return apiFetch<DashboardData>("/dashboard/me/");
 }
 
 export async function fetchAdminPatients() {

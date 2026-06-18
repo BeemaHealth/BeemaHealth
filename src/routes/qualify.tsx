@@ -41,7 +41,7 @@ import {
   type QualifyStepId,
 } from "@/lib/qualify-steps";
 import { computeBmi } from "@/lib/safety-flags";
-import { getSession } from "@/lib/storage";
+import { useAuth } from "@/context/AuthContext";
 import { US_STATES } from "@/lib/veya-data";
 import type {
   EligibilityResponses,
@@ -142,7 +142,7 @@ function formToPayload(data: FormState): Partial<EligibilityResponses> {
 
 function EligibilityPage() {
   const navigate = useNavigate();
-  const existingSession = getSession();
+  const { session: existingSession, isInitialized, setSession } = useAuth();
   const [stepIndex, setStepIndex] = useState(0);
   const [data, setData] = useState<FormState>(initial);
   const [error, setError] = useState("");
@@ -275,10 +275,11 @@ function EligibilityPage() {
       }
 
       await persistDraft();
-      await registerUser({
+      const session = await registerUser({
         email: data.email,
         password: data.password,
       });
+      setSession(session);
       navigate({ to: "/verify-email/pending" });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");
@@ -287,7 +288,7 @@ function EligibilityPage() {
     }
   }
 
-  if (loading) {
+  if (!isInitialized || loading) {
     return (
       <FlowLayout progress={0}>
         <div className="w-full max-w-xl text-center text-muted-foreground">Loading your progress…</div>

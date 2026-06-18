@@ -213,3 +213,11 @@ export interface SessionUser {
   token: string;
   user: User;
 }
+
+export interface DashboardData {
+  user: User;
+  intake_status: IntakeStatus;
+  submitted_at: string | null;
+  treatment_interest: TreatmentInterest | null;
+  patient_note: string;
+}

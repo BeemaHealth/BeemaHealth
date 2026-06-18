@@ -87,6 +87,16 @@ class LoginView(APIView):
         return Response({"token": token.key, "user": UserSerializer(user).data})
 
 
+class MeView(APIView):
+    """Validate the current auth token and return the signed-in user."""
+
+    def get(self, request):
+        token = Token.objects.filter(user=request.user).first()
+        if token is None:
+            token = Token.objects.create(user=request.user)
+        return Response({"token": token.key, "user": UserSerializer(request.user).data})
+
+
 class LogoutView(APIView):
     def post(self, request):
         Token.objects.filter(user=request.user).delete()

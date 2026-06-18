@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { loginUser } from "@/lib/api/client";
+import { useAuth } from "@/context/AuthContext";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import { Field, PasswordInput, QuizShell, inputCls } from "@/components/quiz/quiz-primitives";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/login")({
 function LoginPage() {
   const navigate = useNavigate();
   const { redirect } = Route.useSearch();
+  const { setSession } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,6 +26,7 @@ function LoginPage() {
     setError("");
     try {
       const session = await loginUser(email, password);
+      setSession(session);
       if (!session.user.email_verified && redirect === "/intake") {
         navigate({ to: "/verify-email/pending" });
         return;

@@ -4,22 +4,25 @@ import { FlowLayout } from "@/components/quiz/FlowLayout";
 import { QuizShell } from "@/components/quiz/quiz-primitives";
 import { Button } from "@/components/ui/button";
 import { resendVerificationEmail } from "@/lib/api/client";
-import { getSession } from "@/lib/storage";
+import { requireAuth } from "@/lib/auth";
+import { useAuth } from "@/context/AuthContext";
 
 export const Route = createFileRoute("/verify-email/pending")({
-  beforeLoad: () => {
-    const session = getSession();
-    if (!session) throw redirect({ to: "/qualify" });
+  ssr: false,
+  beforeLoad: async () => {
+    const session = await requireAuth({ redirectTo: "/qualify", redirectPath: "/intake" });
     if (session.user.email_verified) throw redirect({ to: "/intake" });
   },
   component: VerifyEmailPendingPage,
 });
 
 function VerifyEmailPendingPage() {
-  const session = getSession()!;
+  const { session } = useAuth();
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+
+  if (!session) return null;
 
   async function handleResend() {
     setSending(true);

@@ -10,6 +10,7 @@ import {
   inputCls,
 } from "@/components/quiz/quiz-primitives";
 import { fetchEligibilityMe, fetchIntakeMe, isApiEnabled, syncIntake } from "@/lib/api/client";
+import { requireAuth } from "@/lib/auth";
 import {
   FAMILY_HISTORY,
   GOAL_OPTIONS,
@@ -23,12 +24,13 @@ import {
 } from "@/lib/intake-steps";
 import { computeBmi } from "@/lib/safety-flags";
 import type { EligibilityResponses, MedicalIntake, User } from "@/lib/types/mvp";
-import { getSession, getIntake, saveIntake } from "@/lib/storage";
+import { getIntake, saveIntake } from "@/lib/storage";
+import { useAuth } from "@/context/AuthContext";
 
 export const Route = createFileRoute("/intake")({
-  beforeLoad: () => {
-    const session = getSession();
-    if (!session) throw redirect({ to: "/qualify" });
+  ssr: false,
+  beforeLoad: async () => {
+    const session = await requireAuth({ redirectTo: "/qualify", redirectPath: "/intake" });
     if (!session.user.email_verified) throw redirect({ to: "/verify-email/pending" });
   },
   component: IntakePage,
@@ -46,7 +48,8 @@ const IDENTITY_FIELDS = [
 
 function IntakePage() {
   const navigate = useNavigate();
-  const session = getSession()!;
+  const { session } = useAuth();
+  if (!session) return null;
   const [step, setStep] = useState(0);
   const [data, setData] = useState<MedicalIntake>(() => makeDraft(session.user.id));
   const [eligibility, setEligibility] = useState<EligibilityResponses | null>(null);

@@ -2,16 +2,24 @@ import { useState } from "react";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import { Field, QuizShell, inputCls } from "@/components/quiz/quiz-primitives";
-import { syncConsent, syncIntake } from "@/lib/api/client";
+import { syncConsent, syncIntake, fetchIntakeMe, isApiEnabled } from "@/lib/api/client";
+import { requireAuth } from "@/lib/auth";
 import { computeSafetyFlags } from "@/lib/safety-flags";
-import { getConsent, getEligibility, getIntake, getSession, saveSafetyFlags } from "@/lib/storage";
+import { getConsent, getEligibility, getIntake, saveSafetyFlags } from "@/lib/storage";
 import type { ConsentRecord } from "@/lib/types/mvp";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 
 export const Route = createFileRoute("/consent")({
-  beforeLoad: () => {
-    if (!getSession()) throw redirect({ to: "/qualify" });
-    if (!getIntake(getSession()!.user.id)) throw redirect({ to: "/intake" });
+  ssr: false,
+  beforeLoad: async () => {
+    const session = await requireAuth({ redirectTo: "/qualify", redirectPath: "/consent" });
+    if (isApiEnabled()) {
+      const intake = await fetchIntakeMe();
+      if (!intake) throw redirect({ to: "/intake" });
+      return;
+    }
+    if (!getIntake(session.user.id)) throw redirect({ to: "/intake" });
   },
   component: ConsentPage,
 });
@@ -28,7 +36,8 @@ const SECTIONS = [
 
 function ConsentPage() {
   const navigate = useNavigate();
-  const session = getSession()!;
+  const { session } = useAuth();
+  if (!session) return null;
   const [signature, setSignature] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");

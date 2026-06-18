@@ -9,7 +9,7 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import { getSession } from "@/lib/storage";
+import { useAuth } from "@/context/AuthContext";
 
 type NavItem = { label: string; to: string };
 
@@ -23,7 +23,7 @@ const NAV: NavItem[] = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const session = getSession();
+  const { session, isInitialized } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
@@ -46,7 +46,9 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:ml-auto lg:flex">
-          {session ? (
+          {!isInitialized ? (
+            <div className="h-9 w-24" aria-hidden />
+          ) : session ? (
             <Button asChild variant="ghost" size="sm">
               <Link to="/dashboard">Dashboard</Link>
             </Button>
@@ -86,11 +88,11 @@ export function SiteHeader() {
                 ))}
                 <SheetClose asChild>
                   <Link
-                    to={session ? "/dashboard" : "/login"}
+                    to={isInitialized && session ? "/dashboard" : "/login"}
                     search={{ redirect: "/dashboard" }}
                     className="rounded-xl px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
                   >
-                    {session ? "Dashboard" : "Log in"}
+                    {isInitialized && session ? "Dashboard" : "Log in"}
                   </Link>
                 </SheetClose>
               </div>

@@ -13,7 +13,17 @@ export default defineConfig({
     server: { entry: "server" },
     // Static export for GitHub Pages (aretide.com)
     spa: { enabled: true },
-    prerender: { enabled: true },
+    prerender: {
+      enabled: true,
+      filter: ({ path }) =>
+        ![
+          "/dashboard",
+          "/intake",
+          "/consent",
+          "/verify-email/pending",
+          "/admin",
+        ].some((prefix) => path === prefix || path.startsWith(`${prefix}/`)),
+    },
     client: { base: "/" },
   },
   vite: {
