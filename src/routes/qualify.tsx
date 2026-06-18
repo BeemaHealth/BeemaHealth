@@ -427,14 +427,19 @@ function EligibilityPage() {
                 onChange={(e) => set("consents", allPreSignupConsents(e.target.checked))}
               />
               <span className="text-sm text-foreground">
-                I agree to the{" "}
+                I have read and agree to the{" "}
                 <Link to="/legal/terms" className="text-primary underline" target="_blank">
                   Terms of Service
-                </Link>{" "}
-                and the{" "}
+                </Link>
+                ,{" "}
                 <Link to="/legal/privacy" className="text-primary underline" target="_blank">
                   Privacy Policy
                 </Link>
+                , and{" "}
+                <Link to="/legal/telehealth-consent" className="text-primary underline" target="_blank">
+                  Telehealth Consent
+                </Link>
+                .
               </span>
             </label>
           </div>

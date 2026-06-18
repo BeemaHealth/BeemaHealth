@@ -180,11 +180,11 @@ export type QualifyFormSlice = {
 };
 
 export function hasAllPreSignupConsents(consents: PreSignupConsents): boolean {
-  return consents.terms === true && consents.privacy === true;
+  return consents.terms === true && consents.privacy === true && consents.telehealth === true;
 }
 
 export function allPreSignupConsents(checked: boolean): PreSignupConsents {
-  return { terms: checked, privacy: checked };
+  return { terms: checked, privacy: checked, telehealth: checked };
 }
 
 export function computeIsAdult(dob: string): boolean | null {

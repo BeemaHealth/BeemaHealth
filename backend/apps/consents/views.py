@@ -39,9 +39,18 @@ class ConsentMeView(APIView):
         serializer.is_valid(raise_exception=True)
         eligibility = EligibilityResponse.objects.filter(user=request.user).first()
         pre_signup = (eligibility.pre_signup_consents if eligibility else {}) or {}
-        if not pre_signup.get("terms") or not pre_signup.get("privacy"):
+        if (
+            not pre_signup.get("terms")
+            or not pre_signup.get("privacy")
+            or not pre_signup.get("telehealth")
+        ):
             return Response(
-                {"detail": "Terms of Service and Privacy Policy must be accepted during eligibility."},
+                {
+                    "detail": (
+                        "Terms of Service, Privacy Policy, and Telehealth Consent "
+                        "must be accepted during eligibility."
+                    ),
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
