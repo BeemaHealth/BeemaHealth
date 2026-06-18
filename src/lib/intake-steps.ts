@@ -80,6 +80,53 @@ export const PRIOR_MEDS = [
   "Other",
 ] as const;
 
+export type PriorMedDetails = {
+  dose: string;
+  started: string;
+  stopped: string;
+  stop_reason: string;
+  side_effects: string;
+};
+
+/** Per-medication follow-up when a prior GLP-1 / weight med is selected. */
+export const PRIOR_MED_DETAIL_FIELDS = [
+  ["dose", "Dose (e.g. 0.5 mg weekly)", true],
+  ["started", "When did you start?", false],
+  ["stopped", "When did you stop?", true],
+  ["stop_reason", "Why did you stop?", true],
+  ["side_effects", "Side effects (optional)", false],
+] as const satisfies ReadonlyArray<
+  [keyof PriorMedDetails, string, boolean]
+>;
+
+export function emptyPriorMedDetails(): PriorMedDetails {
+  return { dose: "", started: "", stopped: "", stop_reason: "", side_effects: "" };
+}
+
+export function isPriorMedDetailsComplete(details: Partial<PriorMedDetails> | undefined): boolean {
+  return (
+    Boolean(String(details?.dose ?? "").trim()) &&
+    Boolean(String(details?.stopped ?? "").trim()) &&
+    Boolean(String(details?.stop_reason ?? "").trim())
+  );
+}
+
+export function normalizePriorDetails(
+  priorMeds: readonly string[],
+  raw: Record<string, unknown> | undefined,
+): Record<string, PriorMedDetails> {
+  const result: Record<string, PriorMedDetails> = {};
+  for (const med of priorMeds) {
+    const existing = raw?.[med];
+    if (existing && typeof existing === "object" && !Array.isArray(existing)) {
+      result[med] = { ...emptyPriorMedDetails(), ...(existing as Partial<PriorMedDetails>) };
+    } else {
+      result[med] = emptyPriorMedDetails();
+    }
+  }
+  return result;
+}
+
 export const GOAL_OPTIONS = [
   "Weight loss",
   "Better blood sugar",
@@ -177,6 +224,10 @@ export function isIntakeStepComplete(
   const labs = data.labs as Record<string, string | boolean>;
   const prefs = data.medication_preferences as Record<string, string | boolean>;
   const acks = data.safety_acknowledgments as Record<string, boolean>;
+  const wh = data.weight_history as {
+    prior_meds?: string[];
+    prior_details?: Record<string, PriorMedDetails>;
+  };
 
   switch (step) {
     case 0:
@@ -191,8 +242,12 @@ export function isIntakeStepComplete(
         Array.isArray(body.goals) &&
         body.goals.length > 0
       );
-    case 2:
-      return true;
+    case 2: {
+      const priorMeds = wh.prior_meds ?? [];
+      if (priorMeds.length === 0) return true;
+      const details = wh.prior_details ?? {};
+      return priorMeds.every((med) => isPriorMedDetailsComplete(details[med]));
+    }
     case 3:
       return intakeConditionKeys().every((k) => typeof mc[k] === "boolean");
     case 4:
@@ -245,7 +300,7 @@ export function emptyIntakeData() {
     weight_history: {
       methods: [] as string[],
       prior_meds: [] as string[],
-      prior_details: {} as Record<string, string>,
+      prior_details: {} as Record<string, PriorMedDetails>,
     },
     medical_conditions: {} as Record<string, boolean | string>,
     family_history: {} as Record<string, boolean>,
@@ -285,7 +340,10 @@ export function normalizeIntake(draft: MedicalIntake): MedicalIntake {
       ...wh,
       methods: Array.isArray(wh.methods) ? wh.methods : empty.weight_history.methods,
       prior_meds: Array.isArray(wh.prior_meds) ? wh.prior_meds : empty.weight_history.prior_meds,
-      prior_details: { ...empty.weight_history.prior_details, ...(wh.prior_details ?? {}) },
+      prior_details: normalizePriorDetails(
+        Array.isArray(wh.prior_meds) ? wh.prior_meds : [],
+        wh.prior_details as Record<string, unknown> | undefined,
+      ),
     },
     medical_conditions: { ...empty.medical_conditions, ...draft.medical_conditions },
     family_history: { ...empty.family_history, ...draft.family_history },

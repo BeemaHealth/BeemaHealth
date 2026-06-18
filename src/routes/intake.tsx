@@ -24,8 +24,12 @@ import {
   SAFETY_ACKS,
   WEIGHT_METHODS,
   emptyIntakeData,
+  emptyPriorMedDetails,
   normalizeIntake,
   resolveIntakeStepIndex,
+  PRIOR_MED_DETAIL_FIELDS,
+  normalizePriorDetails,
+  type PriorMedDetails,
 } from "@/lib/intake-steps";
 import { computeBmi } from "@/lib/safety-flags";
 import type { EligibilityResponses, MedicalIntake, User } from "@/lib/types/mvp";
@@ -97,12 +101,32 @@ function IntakePage() {
     navigate({ to: "/dashboard" });
   }
 
+  function togglePriorMed(med: string) {
+    const selected = wh.prior_meds.includes(med);
+    const nextMeds = selected ? wh.prior_meds.filter((x) => x !== med) : [...wh.prior_meds, med];
+    patch("weight_history", {
+      ...wh,
+      prior_meds: nextMeds,
+      prior_details: normalizePriorDetails(nextMeds, wh.prior_details),
+    });
+  }
+
+  function patchPriorMedDetail(med: string, field: keyof PriorMedDetails, value: string) {
+    patch("weight_history", {
+      ...wh,
+      prior_details: {
+        ...wh.prior_details,
+        [med]: { ...(wh.prior_details[med] ?? emptyPriorMedDetails()), [field]: value },
+      },
+    });
+  }
+
   const id = data.identity as Record<string, string>;
   const body = data.body_metrics as Record<string, string | string[]>;
   const wh = data.weight_history as {
     methods: string[];
     prior_meds: string[];
-    prior_details: Record<string, string>;
+    prior_details: Record<string, PriorMedDetails>;
   };
   const mc = data.medical_conditions as Record<string, boolean | string>;
   const fh = data.family_history as Record<string, boolean>;
@@ -305,16 +329,35 @@ function IntakePage() {
             <Field label="Prior GLP-1 / weight medications used">
               <div className="grid gap-2 sm:grid-cols-2">
                 {PRIOR_MEDS.map((m) => (
-                  <ChoiceCard key={m} compact selected={wh.prior_meds.includes(m)} onClick={() => patch("weight_history", { ...wh, prior_meds: wh.prior_meds.includes(m) ? wh.prior_meds.filter((x) => x !== m) : [...wh.prior_meds, m] })} title={m} />
+                  <ChoiceCard
+                    key={m}
+                    compact
+                    selected={wh.prior_meds.includes(m)}
+                    onClick={() => togglePriorMed(m)}
+                    title={m}
+                  />
                 ))}
               </div>
             </Field>
             {wh.prior_meds.length > 0 && (
-              <div className="grid gap-3">
-                {["medication", "dose", "started", "stopped", "stop_reason", "side_effects"].map((f) => (
-                  <Field key={f} label={f.replace("_", " ")}>
-                    <input className={inputCls} value={wh.prior_details[f] ?? ""} onChange={(e) => patch("weight_history", { ...wh, prior_details: { ...wh.prior_details, [f]: e.target.value } })} />
-                  </Field>
+              <div className="grid gap-4">
+                <p className="text-sm text-muted-foreground">
+                  For each medication below, tell your clinician the dose, when you stopped, and why
+                  — this helps with safe prescribing. It does not affect eligibility.
+                </p>
+                {wh.prior_meds.map((med) => (
+                  <div key={med} className="grid gap-3 rounded-2xl border border-border px-4 py-4">
+                    <h3 className="text-sm font-semibold text-foreground">{med}</h3>
+                    {PRIOR_MED_DETAIL_FIELDS.map(([field, label, required]) => (
+                      <Field key={field} label={label} required={required}>
+                        <input
+                          className={inputCls}
+                          value={wh.prior_details[med]?.[field] ?? ""}
+                          onChange={(e) => patchPriorMedDetail(med, field, e.target.value)}
+                        />
+                      </Field>
+                    ))}
+                  </div>
                 ))}
               </div>
             )}
