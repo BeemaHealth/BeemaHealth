@@ -14,14 +14,17 @@ import { requireAuth } from "@/lib/auth";
 import {
   FAMILY_HISTORY,
   GOAL_OPTIONS,
+  IDENTITY_FIELDS,
   INTAKE_EXCLUDED_CONDITION_KEYS,
   INTAKE_STEP_LABELS,
+  isIntakeStepComplete,
   MEDICAL_CONDITIONS,
   PRIOR_MEDS,
   SAFETY_ACKS,
   WEIGHT_METHODS,
   emptyIntakeData,
   normalizeIntake,
+  resolveIntakeStepIndex,
 } from "@/lib/intake-steps";
 import { computeBmi } from "@/lib/safety-flags";
 import type { EligibilityResponses, MedicalIntake, User } from "@/lib/types/mvp";
@@ -37,16 +40,6 @@ export const Route = createFileRoute("/intake")({
   component: IntakePage,
 });
 
-/** Intake-only identity fields — account/contact data lives on users / patient_profiles. */
-const IDENTITY_FIELDS = [
-  ["preferred", "Preferred name (optional)"],
-  ["address", "Home address"],
-  ["city", "City"],
-  ["zip", "ZIP"],
-  ["emergency_name", "Emergency contact name"],
-  ["emergency_phone", "Emergency contact phone"],
-] as const;
-
 function IntakePage() {
   const navigate = useNavigate();
   const { session } = useAuth();
@@ -55,6 +48,8 @@ function IntakePage() {
   const [data, setData] = useState<MedicalIntake>(() => makeDraft(session.user.id));
   const [eligibility, setEligibility] = useState<EligibilityResponses | null>(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const total = INTAKE_STEP_LABELS.length;
   const progress = ((step + 1) / total) * 100;
 
@@ -69,11 +64,12 @@ function IntakePage() {
       const [draft, elig] = await Promise.all([fetchIntakeMe(), fetchEligibilityMe()]);
       if (cancelled) return;
       setEligibility(elig);
-      if (draft) {
-        setData(normalizeIntake(draft));
-      } else if (!isApiEnabled()) {
-        const local = getIntake(session.user.id);
-        if (local) setData(normalizeIntake(local));
+      const restored =
+        draft ?? (!isApiEnabled() ? getIntake(session.user.id) : null);
+      if (restored) {
+        const normalized = normalizeIntake(restored);
+        setData(normalized);
+        setStep(resolveIntakeStepIndex(normalized, elig));
       }
       setLoading(false);
     })();
@@ -90,15 +86,14 @@ function IntakePage() {
     setData((d) => ({ ...d, [section]: value, updated_at: new Date().toISOString() }));
   }
 
-  async function saveAndExit() {
-    await syncIntake({ ...data, status: "draft" });
-    navigate({ to: "/dashboard" });
-  }
-
-  async function goToConsent() {
+  async function persistDraft() {
     const updated = { ...data, status: "draft" as const, updated_at: new Date().toISOString() };
     await syncIntake(updated);
-    navigate({ to: "/consent" });
+  }
+
+  async function saveAndExit() {
+    await persistDraft();
+    navigate({ to: "/dashboard" });
   }
 
   const id = data.identity as Record<string, string>;
@@ -118,7 +113,23 @@ function IntakePage() {
   const prefs = data.medication_preferences as Record<string, string | boolean>;
   const acks = data.safety_acknowledgments as Record<string, boolean>;
 
-  const allAcksChecked = SAFETY_ACKS.every(([k]) => acks[k] === true);
+  const canContinue = isIntakeStepComplete(step, data, eligibility);
+
+  async function handleNext() {
+    if (!canContinue || submitting) return;
+    setError("");
+    setSubmitting(true);
+    try {
+      await persistDraft();
+      if (step < total - 1) setStep((s) => s + 1);
+      else navigate({ to: "/consent" });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not save your progress.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   const summaryBmi =
     eligibility?.bmi ??
     computeBmi(
@@ -152,10 +163,15 @@ function IntakePage() {
                 Save & continue later
               </button>
             </div>
+            {error && <p className="text-sm text-destructive">{error}</p>}
+            {!canContinue && !error && (
+              <p className="text-sm text-destructive">Required fields are missing.</p>
+            )}
             <QuizNav
               showBack={false}
-              onNext={() => (step < total - 1 ? setStep((s) => s + 1) : void goToConsent())}
-              nextDisabled={step === total - 1 && !allAcksChecked}
+              onNext={() => void handleNext()}
+              nextDisabled={!canContinue || submitting}
+              nextLoading={submitting}
               nextLabel={step < total - 1 ? "Next" : "Continue to consent"}
             />
           </div>
@@ -185,17 +201,19 @@ function IntakePage() {
               Height, weight, and goal weight are already on file from your eligibility check
               {summaryBmi != null ? ` (BMI ${summaryBmi})` : ""}.
             </p>
-            {[
-              ["highest_weight", "Highest adult weight (lb)"],
-              ["lowest_weight", "Lowest adult weight (lb)"],
-              ["waist", "Waist circumference (optional)"],
-              ["duration", "How long have you been trying to lose weight?"],
-            ].map(([k, label]) => (
-              <Field key={k} label={label}>
+            {(
+              [
+                ["highest_weight", "Highest adult weight (lb)", true],
+                ["lowest_weight", "Lowest adult weight (lb)", true],
+                ["waist", "Waist circumference (optional)", false],
+                ["duration", "How long have you been trying to lose weight?", true],
+              ] as const
+            ).map(([k, label, required]) => (
+              <Field key={k} label={label} required={required}>
                 <input className={inputCls} value={(body[k] as string) ?? ""} onChange={(e) => patch("body_metrics", { ...body, [k]: e.target.value })} />
               </Field>
             ))}
-            <Field label="Main goals (select all)">
+            <Field label="Main goals (select all)" required>
               <div className="grid gap-2 sm:grid-cols-2">
                 {GOAL_OPTIONS.map((g) => (
                   <ChoiceCard

@@ -113,6 +113,128 @@ export const INTAKE_EXCLUDED_CONDITION_KEYS = new Set([
   "diabetic_retinopathy",
 ]);
 
+export const IDENTITY_FIELDS = [
+  ["preferred", "Preferred name (optional)"],
+  ["address", "Home address"],
+  ["city", "City"],
+  ["zip", "ZIP"],
+  ["emergency_name", "Emergency contact name"],
+  ["emergency_phone", "Emergency contact phone"],
+] as const;
+
+export const REQUIRED_IDENTITY_FIELDS = IDENTITY_FIELDS.filter(([k]) => k !== "preferred").map(
+  ([k]) => k,
+);
+
+const MEDICATION_ANSWER_KEYS = [
+  "taking_prescription",
+  "taking_otc",
+  "supplements",
+  "insulin",
+  "sulfonylurea",
+  "bp_meds",
+  "psych_meds",
+  "opioids",
+  "weight_meds",
+] as const;
+
+const LIFESTYLE_FIELD_KEYS = [
+  "exercise_days",
+  "exercise_type",
+  "diet",
+  "smoke",
+  "alcohol",
+  "drugs",
+  "sleep",
+  "binge",
+  "night_eating",
+  "struggle",
+] as const;
+
+function intakeConditionKeys(): string[] {
+  return MEDICAL_CONDITIONS.filter(([k]) => !INTAKE_EXCLUDED_CONDITION_KEYS.has(k)).map(([k]) => k);
+}
+
+function isFilled(value: unknown): boolean {
+  return Boolean(String(value ?? "").trim());
+}
+
+/** Whether the current intake step has all required answers (mirrors intake.tsx field rules). */
+export function isIntakeStepComplete(
+  step: number,
+  data: MedicalIntake,
+  eligibility: { treatment_interest?: string | null } | null = null,
+): boolean {
+  const id = data.identity as Record<string, string>;
+  const body = data.body_metrics as Record<string, string | string[]>;
+  const mc = data.medical_conditions as Record<string, boolean | string>;
+  const fh = data.family_history as Record<string, boolean>;
+  const meds = data.medications;
+  const allergies = data.allergies;
+  const preg = data.pregnancy as Record<string, string | boolean>;
+  const life = data.lifestyle as Record<string, string | boolean>;
+  const labs = data.labs as Record<string, string | boolean>;
+  const prefs = data.medication_preferences as Record<string, string | boolean>;
+  const acks = data.safety_acknowledgments as Record<string, boolean>;
+
+  switch (step) {
+    case 0:
+      return REQUIRED_IDENTITY_FIELDS.every((k) => isFilled(id[k]));
+    case 1:
+      return (
+        isFilled(body.highest_weight) &&
+        isFilled(body.lowest_weight) &&
+        isFilled(body.duration) &&
+        Array.isArray(body.goals) &&
+        body.goals.length > 0
+      );
+    case 2:
+      return true;
+    case 3:
+      return intakeConditionKeys().every((k) => typeof mc[k] === "boolean");
+    case 4:
+      return FAMILY_HISTORY.every(([k]) => typeof fh[k] === "boolean");
+    case 5:
+      return MEDICATION_ANSWER_KEYS.every((k) => typeof meds.answers[k] === "boolean");
+    case 6:
+      return (
+        typeof allergies.answers.has_med === "boolean" &&
+        typeof allergies.answers.has_food === "boolean"
+      );
+    case 7:
+      return preg.understand === true;
+    case 8:
+      return LIFESTYLE_FIELD_KEYS.every((k) => isFilled(life[k]));
+    case 9:
+      return typeof labs.recent_labs === "boolean" && typeof labs.willing === "boolean";
+    case 10: {
+      const needsTreatment = !eligibility?.treatment_interest;
+      return (
+        typeof prefs.self_inject === "boolean" &&
+        typeof prefs.cash_pay_ok === "boolean" &&
+        isFilled(prefs.shipping_preference) &&
+        (!needsTreatment || isFilled(prefs.treatment))
+      );
+    }
+    case 11:
+      return SAFETY_ACKS.every(([k]) => acks[k] === true);
+    default:
+      return false;
+  }
+}
+
+/** First incomplete intake step, or last step when all prior steps are done. */
+export function resolveIntakeStepIndex(
+  data: MedicalIntake,
+  eligibility: { treatment_interest?: string | null } | null = null,
+): number {
+  const total = INTAKE_STEP_LABELS.length;
+  for (let i = 0; i < total; i++) {
+    if (!isIntakeStepComplete(i, data, eligibility)) return i;
+  }
+  return total - 1;
+}
+
 export function emptyIntakeData() {
   return {
     identity: {} as Record<string, string>,
