@@ -28,14 +28,12 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsentRouteImport } from './routes/consent'
 import { Route as CliniciansRouteImport } from './routes/clinicians'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerifyEmailIndexRouteImport } from './routes/verify-email.index'
 import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pending'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
-import { Route as AdminPatientIdRouteImport } from './routes/admin.$patientId'
 
 const WeightLossRoute = WeightLossRouteImport.update({
   id: '/weight-loss',
@@ -132,11 +130,6 @@ const CliniciansRoute = CliniciansRouteImport.update({
   path: '/clinicians',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -167,15 +160,9 @@ const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
   path: '/legal/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminPatientIdRoute = AdminPatientIdRouteImport.update({
-  id: '/$patientId',
-  path: '/$patientId',
-  getParentRoute: () => AdminRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/clinicians': typeof CliniciansRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
@@ -195,7 +182,6 @@ export interface FileRoutesByFullPath {
   '/switch': typeof SwitchRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
-  '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
@@ -204,7 +190,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/clinicians': typeof CliniciansRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
@@ -223,7 +208,6 @@ export interface FileRoutesByTo {
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
   '/weight-loss': typeof WeightLossRoute
-  '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
@@ -233,7 +217,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/clinicians': typeof CliniciansRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
@@ -253,7 +236,6 @@ export interface FileRoutesById {
   '/switch': typeof SwitchRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
-  '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
@@ -264,7 +246,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/admin'
     | '/clinicians'
     | '/consent'
     | '/contact'
@@ -284,7 +265,6 @@ export interface FileRouteTypes {
     | '/switch'
     | '/verify-email'
     | '/weight-loss'
-    | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
@@ -293,7 +273,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/clinicians'
     | '/consent'
     | '/contact'
@@ -312,7 +291,6 @@ export interface FileRouteTypes {
     | '/submitted'
     | '/switch'
     | '/weight-loss'
-    | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
@@ -321,7 +299,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/admin'
     | '/clinicians'
     | '/consent'
     | '/contact'
@@ -341,7 +318,6 @@ export interface FileRouteTypes {
     | '/switch'
     | '/verify-email'
     | '/weight-loss'
-    | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
@@ -351,7 +327,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRouteWithChildren
   CliniciansRoute: typeof CliniciansRoute
   ConsentRoute: typeof ConsentRoute
   ContactRoute: typeof ContactRoute
@@ -511,13 +486,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CliniciansRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -560,25 +528,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalPrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/$patientId': {
-      id: '/admin/$patientId'
-      path: '/$patientId'
-      fullPath: '/admin/$patientId'
-      preLoaderRoute: typeof AdminPatientIdRouteImport
-      parentRoute: typeof AdminRoute
-    }
   }
 }
-
-interface AdminRouteChildren {
-  AdminPatientIdRoute: typeof AdminPatientIdRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminPatientIdRoute: AdminPatientIdRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface VerifyEmailRouteChildren {
   VerifyEmailPendingRoute: typeof VerifyEmailPendingRoute
@@ -596,7 +547,6 @@ const VerifyEmailRouteWithChildren = VerifyEmailRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRouteWithChildren,
   CliniciansRoute: CliniciansRoute,
   ConsentRoute: ConsentRoute,
   ContactRoute: ContactRoute,

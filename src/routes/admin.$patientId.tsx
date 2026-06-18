@@ -1,3 +1,9 @@
+/**
+ * DISABLED — Provider admin detail route (/admin/$patientId) is not implemented yet.
+ * To restore: uncomment the block below.
+ */
+
+/*
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
@@ -169,3 +175,4 @@ function AdminDetailPage() {
     </MarketingLayout>
   );
 }
+*/

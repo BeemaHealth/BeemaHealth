@@ -280,6 +280,7 @@ export async function fetchDashboard(): Promise<DashboardData | null> {
   return apiFetch<DashboardData>("/dashboard/me/");
 }
 
+/*
 export async function fetchAdminPatients() {
   if (!USE_API) return null;
   return apiFetch<unknown[]>("/admin/patients/");
@@ -300,6 +301,7 @@ export async function patchAdminPatient(
     body: JSON.stringify(data),
   });
 }
+*/
 
 export function isApiEnabled() {
   return USE_API;

@@ -370,9 +370,8 @@ function IntakePage() {
             ))}
             <YesNoField label="Labs in last 12 months?" value={labs.recent_labs === true ? true : labs.recent_labs === false ? false : null} onChange={(v) => patch("labs", { ...labs, recent_labs: v })} />
             <YesNoField label="Willing to complete labs if required?" value={labs.willing === true ? true : labs.willing === false ? false : null} onChange={(v) => patch("labs", { ...labs, willing: v })} />
-            <Field label="Upload lab results, insurance card, or photo ID (prototype)">
+            <Field label="Upload lab results, insurance card, or photo ID">
               <input type="file" multiple className="text-sm" onChange={() => patch("labs", { ...labs, uploads_noted: true })} />
-              <p className="mt-1 text-xs text-muted-foreground">File upload UI only — connect to secure storage when backend is ready.</p>
             </Field>
           </div>
         )}

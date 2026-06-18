@@ -30,18 +30,21 @@ const SECTIONS = [
   { title: "Emergency Care Disclaimer", body: "Aretide does not provide emergency care. Call 911 for emergencies." },
   { title: "Medication Risk Acknowledgment", body: "Weight-loss medications have risks including GI side effects, gallbladder issues, and other complications discussed in intake." },
   { title: "Compounded Medication Disclosure", body: "Compounded semaglutide, if offered, is not FDA-approved and is only used when legally available and clinically appropriate." },
-  { title: "Privacy and Data Use", body: "Prototype storage only — production requires HIPAA-compliant infrastructure, encryption, audit logs, and BAAs." },
+  { title: "Privacy and Data Use", body: "Your health information is collected and stored securely to support your care. Use and disclosure are limited to providing telehealth services and as described in our Privacy Policy." },
   { title: "Accuracy Certification", body: "You certify that your intake information is accurate and complete to the best of your knowledge." },
 ];
 
 function ConsentPage() {
   const navigate = useNavigate();
   const { session } = useAuth();
-  if (!session) return null;
   const [signature, setSignature] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  if (!session) return null;
+
+  const { user } = session;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -53,7 +56,7 @@ function ConsentPage() {
     try {
       const consent: ConsentRecord = {
         id: crypto.randomUUID(),
-        user_id: session.user.id,
+        user_id: user.id,
         telehealth_consent: true,
         no_guarantee_acknowledgment: true,
         emergency_disclaimer_acknowledgment: true,
@@ -65,7 +68,7 @@ function ConsentPage() {
       };
       await syncConsent(consent);
 
-      const intake = getIntake(session.user.id)!;
+      const intake = getIntake(user.id)!;
       const submitted = {
         ...intake,
         status: "submitted" as const,
@@ -75,12 +78,12 @@ function ConsentPage() {
       await syncIntake(submitted);
 
       const flags = computeSafetyFlags(
-        session.user,
-        getEligibility(session.user.id),
+        user,
+        getEligibility(user.id),
         submitted,
         true,
       );
-      saveSafetyFlags(session.user.id, flags);
+      saveSafetyFlags(user.id, flags);
 
       navigate({ to: "/submitted" });
     } catch (err) {

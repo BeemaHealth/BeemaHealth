@@ -21,7 +21,6 @@ export default defineConfig({
           "/intake",
           "/consent",
           "/verify-email/pending",
-          "/admin",
         ].some((prefix) => path === prefix || path.startsWith(`${prefix}/`)),
     },
     client: { base: "/" },

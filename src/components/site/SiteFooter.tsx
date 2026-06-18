@@ -74,9 +74,8 @@ export function SiteFooter() {
             If you are experiencing a medical emergency, call 911. This site does
             not provide emergency care.
           </p>
-          <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="pt-2">
             <span>© {new Date().getFullYear()} Aretide Health, Inc.</span>
-            <Link to="/admin" className="hover:text-foreground">Provider admin (prototype)</Link>
           </div>
         </div>
       </div>

@@ -31,9 +31,6 @@ export function FlowLayout({
       <main className="flex flex-1 items-start justify-center px-5 py-10 md:py-16">
         {children}
       </main>
-      <p className="pb-6 text-center text-xs text-muted-foreground">
-        Prototype only — not HIPAA-compliant PHI storage. Emergency? Call 911.
-      </p>
     </div>
   );
 }

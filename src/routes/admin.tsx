@@ -1,3 +1,9 @@
+/**
+ * DISABLED — Provider admin list route (/admin) is not implemented yet.
+ * To restore: uncomment the block below.
+ */
+
+/*
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
@@ -45,11 +51,11 @@ function AdminListPage() {
         bmi:
           eligibility?.bmi ??
           computeBmi(
-            eligibility?.height_ft ?? "",
-            eligibility?.height_in ?? "",
-            eligibility?.weight ?? "",
+            String(eligibility?.height_ft ?? ""),
+            String(eligibility?.height_in ?? ""),
+            String(eligibility?.weight_lbs ?? ""),
           ),
-        city: eligibility?.city ?? "",
+        city: eligibility?.state ?? "",
         submitted_at: intake?.submitted_at ?? null,
         treatment_interest: eligibility?.treatment_interest ?? "",
         flag_count: flags.length,
@@ -66,8 +72,8 @@ function AdminListPage() {
             <h1 className="text-3xl font-bold text-foreground">Provider review</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               {isApiEnabled()
-                ? "Connected to Django API — provider login required."
-                : "Local prototype mode — data from browser storage."}
+                ? "Connected to provider API — provider login required."
+                : "Review submitted patient intakes."}
             </p>
           </div>
           <Button asChild variant="outline" size="sm">
@@ -97,7 +103,7 @@ function AdminListPage() {
                   <td className="px-4 py-3 font-medium">{row.first_name} {row.last_name}</td>
                   <td className="px-4 py-3">{row.age ?? "—"}</td>
                   <td className="px-4 py-3">{row.bmi ?? "—"}</td>
-                  <td className="px-4 py-3">{row.city}, CO</td>
+                  <td className="px-4 py-3">{row.city || "—"}</td>
                   <td className="px-4 py-3">{row.submitted_at ? new Date(row.submitted_at).toLocaleDateString() : "—"}</td>
                   <td className="px-4 py-3">{row.treatment_interest?.replace(/_/g, " ") ?? "—"}</td>
                   <td className="px-4 py-3">{row.flag_count || "—"}</td>
@@ -116,3 +122,4 @@ function AdminListPage() {
     </MarketingLayout>
   );
 }
+*/
