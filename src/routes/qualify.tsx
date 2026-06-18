@@ -164,6 +164,11 @@ function EligibilityPage() {
     [data.heightFt, data.heightIn, data.weightLbs],
   );
 
+  const goalBmi = useMemo(
+    () => computeBmi(data.heightFt, data.heightIn, data.goalWeightLbs),
+    [data.heightFt, data.heightIn, data.goalWeightLbs],
+  );
+
   const isAdult = computeIsAdult(data.dob);
   const under18 = isAdult === false;
   const safetyConcern = CONTRAINDICATION_QUESTIONS.some((q) => data.safety[q.key] === true);
@@ -468,6 +473,12 @@ function EligibilityPage() {
             {bmi != null && (
               <p className="rounded-2xl bg-primary-soft/50 px-4 py-3 text-sm">
                 Estimated BMI: <strong>{bmi}</strong>
+                {goalBmi != null && (
+                  <>
+                    {" "}
+                    · Target BMI: <strong>{goalBmi}</strong>
+                  </>
+                )}
               </p>
             )}
           </div>
