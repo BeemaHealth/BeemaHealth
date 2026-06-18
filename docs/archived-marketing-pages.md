@@ -1,6 +1,8 @@
-# Archived marketing pages (pre-MVP)
+# Archived marketing pages (pre–Step 1 launch)
 
-> **Purpose:** Full marketing site navigation and page content from the original Lovable import, removed for the MVP intake prototype. Use this doc (and the files in [`archived-marketing/`](archived-marketing/)) to restore pages when the product is ready.
+> **Purpose:** Full marketing site navigation and page content from the original Lovable import, removed while building the intake funnel (Steps 2–8). Use this doc (and the files in [`archived-marketing/`](archived-marketing/)) to restore pages for **[Step 1 — Marketing Website](../Starting%20Point/launchPlan.md#step-1--build-the-marketing-website)**.
+
+**Step 1 target pages:** Home, Weight Loss, Pricing, FAQ, Safety, Contact — each driving **"See If You Qualify"** → `/qualify`.
 
 **Source commit:** `bbe01d1` ("Import Lovable site") — archived copies match that commit.
 
@@ -8,18 +10,21 @@
 
 ## What was removed
 
-For the MVP, marketing pages were stubbed with redirects to `/` and nav links were commented out. Only a **simplified** `/how-it-works` page remains live (3 steps instead of 5).
+For Step 1, marketing pages were stubbed with redirects to `/` and nav links were commented out. Only a **simplified** `/how-it-works` page remains live (3 steps instead of 5). **Weight Loss** and **Contact** are net-new pages not in the archive.
 
-| Route | Nav label | MVP status | Archived source |
-|-------|-----------|------------|-----------------|
+| Route | Nav label | Step 1 status | Archived source |
+|-------|-----------|---------------|-----------------|
+| `/` | Home | **Live** | — |
+| *(TBD)* | Weight Loss | **Not built** | — |
 | `/how-it-works` | How it works | **Simplified** (live, 3 steps) | [routes/how-it-works.tsx](archived-marketing/routes/how-it-works.tsx) — full 5-step version |
 | `/pricing` | Pricing | Redirect → `/` | [routes/pricing.tsx](archived-marketing/routes/pricing.tsx) |
-| `/switch` | Switch to Aretide | Redirect → `/` | [routes/switch.tsx](archived-marketing/routes/switch.tsx) |
-| `/insurance` | Insurance & Pharmacy | Redirect → `/` | [routes/insurance.tsx](archived-marketing/routes/insurance.tsx) |
-| `/clinicians` | Clinicians | Redirect → `/` | [routes/clinicians.tsx](archived-marketing/routes/clinicians.tsx) |
-| `/safety` | Safety | Redirect → `/` | [routes/safety.tsx](archived-marketing/routes/safety.tsx) |
 | `/faq` | FAQ | Redirect → `/` (header + footer only) | [routes/faq.tsx](archived-marketing/routes/faq.tsx) |
-| `/learn` | Learn | Redirect → `/` (footer + mobile menu only) | [routes/learn.tsx](archived-marketing/routes/learn.tsx) |
+| `/safety` | Safety | Redirect → `/` | [routes/safety.tsx](archived-marketing/routes/safety.tsx) |
+| *(TBD)* | Contact | **Not built** | — |
+| `/switch` | Switch to Aretide | Redirect → `/` (not in Step 1) | [routes/switch.tsx](archived-marketing/routes/switch.tsx) |
+| `/insurance` | Insurance & Pharmacy | Redirect → `/` (not in Step 1) | [routes/insurance.tsx](archived-marketing/routes/insurance.tsx) |
+| `/clinicians` | Clinicians | Redirect → `/` (not in Step 1) | [routes/clinicians.tsx](archived-marketing/routes/clinicians.tsx) |
+| `/learn` | Learn | Redirect → `/` (footer + mobile menu only; not in Step 1) | [routes/learn.tsx](archived-marketing/routes/learn.tsx) |
 
 ### Navigation (header)
 
@@ -199,16 +204,18 @@ To restore **only nav + specific pages**, copy just those route files and add on
 
 ---
 
-## Related MVP changes (not in archive)
+## Related changes (not in archive)
 
-These differ from the original marketing site but are **intentional MVP choices** — reconcile when restoring:
+These differ from the original marketing site — reconcile when completing [Step 1](../Starting%20Point/launchPlan.md#step-1--build-the-marketing-website):
 
-| Area | Original | MVP |
-|------|----------|-----|
-| Primary CTA copy | "See if you qualify" | "Start eligibility check" |
+| Area | Original | Current (pre–Step 1) |
+|------|----------|----------------------|
+| Primary CTA | "See if you qualify" | "Start eligibility check" — **Step 1 success criteria requires "See If You Qualify"** |
 | Header auth | FAQ + qualify only | Log in / Dashboard when session exists |
 | Landing [`src/routes/index.tsx`](../src/routes/index.tsx) | Full marketing homepage | Trimmed for intake funnel |
 | `how-it-works` | 5 steps, pricing CTA | 3 steps, no pricing link |
+| Weight Loss page | — | Not built (Step 1) |
+| Contact page | — | Not built (Step 1) |
 
 ---
 

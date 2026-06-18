@@ -1,546 +1,404 @@
-# GLP-1 (Glucagon-like Peptide-1) Telehealth Launch Plan
+# Aretide MVP Launch Plan
 
-> **Acronyms:** See [../README.md](../README.md#glossary-acronyms-used-in-this-repo) for infrastructure terms. This doc also uses **MVP** (Minimum Viable Product), **FDA** (U.S. Food and Drug Administration), **HIPAA** (Health Insurance Portability and Accountability Act), **MSO** (Management Services Organization), **LLC** (Limited Liability Company), **PC** (Professional Corporation), **MD** (Doctor of Medicine), **DO** (Doctor of Osteopathic Medicine), **NP** (Nurse Practitioner), **DRF** (Django REST Framework), **CAC** (Customer Acquisition Cost), **SEO** (Search Engine Optimization), **QA** (Quality Assurance).
+> **Acronyms:** See [../README.md](../README.md#glossary-acronyms-used-in-this-repo) for infrastructure terms. This doc also uses **MVP** (Minimum Viable Product), **FDA** (U.S. Food and Drug Administration), **HIPAA** (Health Insurance Portability and Accountability Act), **MSO** (Management Services Organization), **LLC** (Limited Liability Company), **PC** (Professional Corporation), **MD** (Doctor of Medicine), **DO** (Doctor of Osteopathic Medicine), **NP** (Nurse Practitioner), **CAC** (Customer Acquisition Cost), **SEO** (Search Engine Optimization).
 
-Matt is the person building the software. Charlie is the person finding the suppliers (doctors, pharmacies, partnerships).
+Matt builds the software. Charlie finds suppliers (turnkey clinical partners, pharmacies, growth).
 
 **Our goal is NOT to build Hims.** Our goal is to get our first paying customer as quickly and legally as possible.
 
 ---
 
-## Step 1: Define Veya's Initial Offerings
+## Strategy
 
-Veya's goal is to provide Colorado patients with simple, transparent access to effective medical weight-loss treatments. The MVP (Minimum Viable Product) will intentionally focus on a small number of high-demand offerings that cover the majority of patients while keeping operations as simple as possible.
+Assume a **turnkey provider/pharmacy partner** first (OpenLoop, Wheel, SteadyMD, MediVera, Empower, Strive, etc.). Build only what is required to prove the business exists. Do not build internal clinical operations until patient volume justifies it.
 
-The objective of the MVP is not to offer every medication available. The objective is to prove that Veya can successfully guide a patient from intake → provider review → prescription → fulfillment → follow-up.
+| Phase | Steps | Purpose |
+|-------|-------|---------|
+| **Required to launch** | 1–12 | Prove the business exists |
+| **Optimization** | 13–20 | Reduce cost, improve retention, scale — only after Step 12 metrics are known |
 
----
+**Do not build anything past Step 12 until:**
 
-### MVP Offerings
-
-#### 1. Zepbound (Tirzepatide Injection)
-
-**Type:** Once-weekly injection
-
-**Why we're offering it:**
-
-* One of the most effective FDA (U.S. Food and Drug Administration)-approved weight-loss medications currently available.
-* Strong patient demand and brand recognition.
-* Often produces greater average weight loss than semaglutide-based therapies.
-* Will serve as Veya's flagship treatment option.
-
-**Ideal patients:**
-
-* Patients seeking the most effective treatment currently available.
-* Patients with insurance coverage for Zepbound.
-* Patients comfortable with injections.
+- Patients are converting
+- CAC (Customer Acquisition Cost) is known
+- Retention is known
+- Unit economics work
 
 ---
 
-#### 2. Wegovy (Semaglutide)
+## Build order (Steps 1–20)
 
-**Type:** Injection and/or Pill, depending on provider discretion and availability
+### Step 1 — Build the Marketing Website
 
-**Why we're offering it:**
+**Pages:**
 
-* FDA (U.S. Food and Drug Administration)-approved specifically for chronic weight management.
-* One of the most recognized medications in the market.
-* Provides an alternative for patients who may not qualify for Zepbound.
-* Different insurance plans may cover Wegovy when they do not cover Zepbound.
-* Offers flexibility for patients who strongly prefer oral treatment options.
+- Home
+- Weight Loss
+- Pricing
+- FAQ
+- Safety
+- Contact
 
-**Ideal patients:**
+**Goal:** Generate trust, explain how it works, drive users into the funnel.
 
-* Patients whose insurance favors Wegovy.
-* Patients who are not candidates for tirzepatide.
-* Patients who prefer a semaglutide-based treatment.
-* Patients who prefer pills over injections, if oral formulations are available.
+**Success criteria:** User can click **"See If You Qualify"**.
 
----
-
-#### 3. Compounded Semaglutide*
-
-**Type:** Typically once-weekly injection
-
-**Why we're offering it:**
-
-* Provides a significantly lower-cost option for cash-pay patients.
-* Expands access to patients who cannot obtain insurance coverage for brand-name medications.
-* Represents one of the largest segments of the telehealth weight-loss market.
-* Creates an affordable pathway without requiring patients to spend over $1,000 per month.
-
-**Estimated Patient Cost:** Approximately $199–$299/month.
-
-**Ideal patients:**
-
-* Patients without insurance coverage.
-* Patients paying entirely out of pocket.
-* Patients seeking a more affordable treatment pathway.
+**Codebase:** `/` (landing). Archived marketing routes to restore: [docs/archived-marketing-pages.md](../docs/archived-marketing-pages.md). Weight Loss and Contact pages are net-new for this step.
 
 ---
 
-## Why These Three Offerings
+### Step 2 — Build the Qualification Funnel
 
-These offerings were intentionally selected because they provide the greatest balance between simplicity, accessibility, and market demand.
+**Collect:**
 
-Together, they allow Veya to:
+- Treatment interest
+- Weight loss goal
+- State
+- DOB (date of birth)
+- Height
+- Weight
+- Goal weight
+- Sex assigned at birth
+- Major contraindications
 
-* Serve both insured and cash-pay patients.
-* Offer both injection and potential pill options.
-* Address the majority of patient situations without overwhelming operational complexity.
-* Compete directly with larger telehealth providers.
-* Launch quickly while minimizing execution risk.
-* Validate the business before expanding into additional treatments.
+**Goal:** Determine likely eligibility; capture lead.
 
-These three pathways are expected to address the needs of approximately 80–90% of potential patients.
+**Success criteria:** User reaches account creation.
 
----
-
-## Future Expansion Opportunities
-
-Once the MVP has been validated and Veya has successfully enrolled patients, additional treatment options may be introduced.
-
-Potential future offerings include:
-
-### Zepbound KwikPen (Tirzepatide Injection)
-
-* Premium branded delivery format.
-* Additional convenience for patients.
-
-### Compounded Tirzepatide
-
-* Lower-cost tirzepatide option for cash-pay patients.
-* Expands affordability for patients seeking tirzepatide-based treatment.
-
-### Ozempic (Semaglutide Injection)
-
-* FDA (U.S. Food and Drug Administration)-approved for type 2 diabetes.
-* May be appropriate for certain patients at provider discretion.
-
-### Mounjaro (Tirzepatide Injection)
-
-* FDA (U.S. Food and Drug Administration)-approved for type 2 diabetes.
-* May become relevant as Veya expands into broader metabolic health services.
-
-### Foundayo (Orforglipron Pill)
-
-* Emerging oral weight-loss therapy.
-* May provide an attractive no-injection alternative as availability increases.
-
-### Retatrutide-Based Therapies
-
-* Next-generation triple-agonist treatments currently under development.
-* Potential future category leaders in obesity medicine.
-
-### Cagrilintide-Based Therapies (including CagriSema)
-
-* Promising metabolic therapies combining multiple mechanisms of action.
-* May significantly expand future treatment options.
+**Codebase:** `/qualify`. Flow design notes: [docs/Modifying step by step process.md](../docs/Modifying%20step%20by%20step%20process.md). Pre-account persistence: [backend/DATABASE.md — Anonymous funnel session](../backend/DATABASE.md#anonymous-funnel-session-pre-account).
 
 ---
 
-## Long-Term Vision
+### Step 3 — Build Account Creation
 
-Veya is not being built as an "Ozempic company" or a "compounded GLP-1 (glucagon-like peptide-1) company."
+**Collect:**
 
-Veya is being built as a Colorado-first medical weight management platform focused on helping patients access the right treatment for their individual needs, preferences, eligibility, and budget.
+- Email
+- Password
+- Name
 
-The MVP will remain intentionally simple.
+**Goal:** Create patient account.
 
-Success is defined as proving that Veya can safely and compliantly guide real patients through the complete journey:
+**Success criteria:** User can sign in and resume intake.
 
-**Ad → Intake → Provider Review → Prescription → Fulfillment → Follow-Up → Refill**
-
-Once that process has been validated, Veya can thoughtfully expand its offerings over time.
-
-* Compounded medications will only be offered through licensed pharmacy partners and only when legally available under applicable federal and state regulations.
-
-
-
-## Step 2: Form the business
-
-You can't just wake up tomorrow and prescribe drugs. You need structure.
-
-### You
-
-Own **Veya Holdings LLC** (Limited Liability Company), which owns:
-
-- Software
-- Marketing
-- Employees
-- Brand
-- Website
-
-### Charlie
-
-Finds:
-
-- Doctors
-- Pharmacies
-- Relationships
-- Growth
-
-### Then create: Professional Corporation (PC — the legal entity through which the doctor practices medicine)
-
-- This is owned by the doctor
-- The doctor legally practices medicine
-- The LLC (Limited Liability Company) provides services to the PC
-
-This is called the **MSO (Management Services Organization) model**. Almost every telehealth company uses this.
+**Codebase:** `POST /api/auth/register/`, `POST /api/auth/login/`. Registration must claim the anonymous funnel draft (see DATABASE.md).
 
 ---
 
-## Step 3: Find a doctor
+### Step 4 — Build Full Medical Intake
 
-You literally cannot launch without this. You need **one** Colorado provider. That's it.
+**Collect:**
 
-Could be:
+- Address
+- Phone
+- Conditions
+- Medications
+- Allergies
+- Prior GLP-1 use
+- Pregnancy screening
+- Eating disorder screening
+- Lifestyle questions
+- Document uploads
 
-- Physician (MD (Doctor of Medicine) / DO (Doctor of Osteopathic Medicine))
-- Nurse Practitioner (NP)
-- Physician Assistant
+**Goal:** Gather everything the clinician needs.
 
-Colorado is NP-friendly. NPs are cheaper.
+**Success criteria:** Intake can be submitted.
 
-### Cost
-
-| Model | Cost |
-|-------|------|
-| Medical Director | $1,000–3,000/month |
-| Per patient reviewed | $20–50 |
-
-This is what I'd do: **pay per completed consult**.
-
----
-
-### Charlie's job
-
-Reach out to:
-
-- Local NPs
-- Weight loss clinics
-- Med spas
-- Part-time telehealth providers
-
-**Script:**
-
-> Hi Dr. Smith,
->
-> We're launching a Colorado-first telehealth weight management platform focused on transparent pricing and exceptional patient experience.
->
-> We're seeking a Colorado-licensed provider interested in reviewing patient intakes remotely on a flexible basis.
->
-> Compensation is per consult completed.
->
-> Would you be open to a brief discussion?
+**Codebase:** `/intake`. Schema reference: [docs/ARETIDE_INTAKE_SCHEMA_V2.md](../docs/ARETIDE_INTAKE_SCHEMA_V2.md).
 
 ---
 
-## Step 4: Find a pharmacy
+### Step 5 — Build Consent Signing
 
-This is your second most important relationship. You only need **one**. That's it.
+**Collect:**
 
-### If doing brand-name
+- Telehealth consent
+- HIPAA/privacy consent
+- Medication acknowledgements
+- Typed signature
 
-You can use:
+**Goal:** Legally submit case.
 
-- CVS
-- Walgreens
-- King Soopers
+**Success criteria:** Case marked **"Submitted"**.
 
-Patient picks pharmacy. Easy.
-
-### If doing compounded
-
-You need a compounding pharmacy. Examples:
-
-- National pharmacies
-- Colorado pharmacies
-- Local Colorado Springs pharmacies
-
-**Charlie's script:**
-
-> Hi,
->
-> We're launching a Colorado telehealth weight-management practice.
->
-> We're evaluating pharmacy partners capable of fulfilling GLP-1 (glucagon-like peptide-1) prescriptions.
->
-> We'd love to learn:
->
-> - Which GLP-1 (glucagon-like peptide-1) products you currently compound
-> - Shipping capabilities
-> - Turnaround times
-> - Patient support processes
-> - Provider onboarding requirements
->
-> Would someone be available for a short introductory call?
+**Codebase:** `/consent`. `consent_records` table — [backend/DATABASE.md](../backend/DATABASE.md).
 
 ---
 
-## Step 5: Build the world's simplest website
+### Step 6 — Build Patient Dashboard
 
-**THIS is where founders screw up.**
+**Show:**
 
-Do **not** build Hims. Do **not** build AI doctors. Do **not** build mobile apps.
+- Intake Submitted
+- Under Review
+- Need More Information
+- Approved
+- Denied
+- Prescription Sent
+- Shipped
 
-Build this:
+**Goal:** Patient always knows status.
 
-1. Homepage
-2. Eligibility quiz
-3. Account creation
-4. Medical questionnaire
-5. Upload ID
-6. Consent forms
-7. Payment
-8. Doctor review
-9. Prescription
-10. Pharmacy ships medication
+**Success criteria:** Patient can see current stage.
 
-**Done.**
-
-That's literally enough. You can do this in Lovable, then move it into Cursor, then Django.
+**Codebase:** `/dashboard`. `GET /api/dashboard/me/`.
 
 ---
 
-## Step 6: What can be manual?
+### Step 7 — Build Admin Dashboard
 
-Almost everything. You do **not** need automation. Manual is fine.
+**Show:**
 
-### Manual
+- Patient list
+- Status
+- BMI
+- State
+- Submission date
 
-- Doctor notifications
-- Prescription status updates
-- Customer support
-- Pharmacy coordination
-- Refill reminders
-- Checking intakes
-- Adverse event follow-up
+**Goal:** Manage patients.
 
-### Cannot be manual
+**Success criteria:** Admin can open any patient.
 
-These **must** be done properly:
-
-- HIPAA (Health Insurance Portability and Accountability Act) security
-- Medical records
-- Audit logs
-- Consent storage
-- Access controls
-- Payment security
-- Identity verification
+**Codebase:** `/admin`. `GET /api/admin/patients/`.
 
 ---
 
-## Step 7: Build the software
+### Step 8 — Build Patient Detail Screen
 
-| Week | Focus |
-|------|-------|
-| **Week 1** | Lovable — landing page, quiz, questionnaire, Stripe checkout, admin dashboard |
-| **Week 2** | Cursor — move frontend to React + TypeScript |
-| **Week 3** | Django — DRF (Django REST Framework), Postgres, provider portal |
-| **Week 4** | Integrate everything and start testing |
+**Show:**
 
----
+- Eligibility answers
+- Full intake
+- Uploaded docs
+- Consents
 
-## Step 8: First beta patient
+**Goal:** Single source of truth for ops.
 
-Your first patient should honestly be someone you know:
+**Success criteria:** Admin sees complete chart.
 
-- Friend
-- Family friend
-- Coworker's spouse
-- Someone trustworthy
-
-### Flow
-
-1. They click ad
-2. Quiz
-3. Pay
-4. Doctor reviews
-5. Prescription
-6. Pharmacy ships
-7. Follow up weekly
-8. Refill
-
-**Your goal is NOT profit.** Find every place the process breaks.
+**Codebase:** `/admin` patient detail. `GET/PATCH /api/admin/patients/{id}/`.
 
 ---
 
-## Step 9: Cost to acquire customers (CAC — Customer Acquisition Cost)
+### Step 9 — Integrate Turnkey Partner
 
-This surprised me. Everyone thinks it's cheap. It isn't.
+**Connect:** OpenLoop, Wheel, SteadyMD, etc.
 
-| Channel | CAC (Customer Acquisition Cost) | Notes |
-|---------|-----|-------|
-| Google Ads | $150–400 | Very competitive |
-| Facebook | $80–250 | Best balance |
-| TikTok | $50–150 | Cheaper; more education needed |
-| Influencers | $50–200 | Variable |
-| SEO (Search Engine Optimization) | $20–80 | Eventually amazing; slow |
-| Referrals | $10–40 | **Best channel** |
-| Colorado Springs partnerships | $10–50 | Gyms, med spas, trainers, CrossFit, Facebook groups — probably your best channel |
+**Workflow:**
 
-### If I were launching tomorrow
+```text
+Submit Intake → Send To Partner → Receive Status Updates
+```
 
-| Spend | Amount |
-|-------|--------|
-| Facebook | $500 |
-| TikTok | $500 |
-| Local partnerships | $500 |
-| **Total** | **$1,500** |
+**Goal:** Real clinician review without building an internal provider portal first.
 
-**Goal:** 10–20 consultations.
+**Success criteria:** First real patient submitted to partner.
 
 ---
 
-## Step 10: What does one patient cost?
+### Step 10 — Integrate Pharmacy Partner
 
-**Compounded example** — patient pays **$299/month**.
+**Connect:** MediVera, Empower, Strive, etc.
+
+**Workflow:**
+
+```text
+Approved → Prescription → Pharmacy → Shipping Updates
+```
+
+**Goal:** Medication gets delivered.
+
+**Success criteria:** First shipped order.
+
+---
+
+### Step 11 — Add Stripe
+
+**Collect:**
+
+- Subscription payment
+- Membership fees
+
+**Goal:** Get paid.
+
+**Success criteria:** First paid customer.
+
+---
+
+### Step 12 — Launch
+
+**Do not build anything else.** Start running ads.
+
+**Goal:** Get first 10 patients.
+
+**Success criteria:** 10 real patients through the full funnel.
+
+---
+
+## Post-launch optimization (Steps 13–20)
+
+Only after Step 12 metrics are proven. Everything below is **not** required for MVP.
+
+### Step 13 — Build Internal Provider Portal
+
+Add provider dashboard, case review, approval workflow, prescription creation.
+
+**Goal:** Reduce dependency on turnkey provider.
+
+---
+
+### Step 14 — Recruit Your Own Providers
+
+Start with a Colorado physician and Colorado NP.
+
+**Goal:** Lower clinical costs.
+
+---
+
+### Step 15 — Build Prescription Management
+
+Add prescriptions table, refill workflows, provider signing.
+
+**Goal:** Internal clinical operations.
+
+---
+
+### Step 16 — Build Pharmacy Routing
+
+Add pharmacy partners, product catalog, order routing.
+
+**Goal:** Use multiple pharmacies.
+
+---
+
+### Step 17 — Add Direct Pharmacy Relationships
+
+Partner with MediVera, Empower, Strive, Red Rock, Hallandale.
+
+**Goal:** Better pricing and control.
+
+---
+
+### Step 18 — Add Messaging
+
+Add patient ↔ provider messaging and refill communications.
+
+**Goal:** Better patient retention.
+
+---
+
+### Step 19 — Add Automation
+
+Add refill reminders, follow-up reminders, shipment notifications, provider queues.
+
+**Goal:** Reduce operational workload.
+
+---
+
+### Step 20 — Scale
+
+Only after conversion, CAC, retention, and unit economics are known.
+
+---
+
+## What can be manual (Steps 1–12)
+
+Almost everything except compliance-critical systems:
+
+| Manual is fine | Must be built properly |
+|----------------|------------------------|
+| Doctor notifications | HIPAA security |
+| Prescription status updates (until partner API) | Medical records + audit logs |
+| Customer support | Consent storage |
+| Pharmacy coordination | Access controls (RBAC) |
+| Refill reminders | Payment security (Stripe) |
+| Checking intakes | Identity verification |
+
+---
+
+## Appendix A — MVP offerings
+
+Aretide's MVP intentionally focuses on a small number of high-demand treatments. The objective is not every medication — it is proving intake → provider review → prescription → fulfillment.
+
+| Offering | Type | Why |
+|----------|------|-----|
+| **Zepbound** (tirzepatide) | Once-weekly injection | Flagship; strong efficacy and demand |
+| **Wegovy** (semaglutide) | Injection and/or pill | FDA-approved for chronic weight management; insurance alternative |
+| **Compounded semaglutide*** | Typically injection | Lower-cost cash-pay path (~$199–299/mo) |
+
+These three pathways cover roughly 80–90% of patient situations without overwhelming ops complexity.
+
+*Compounded medications only through licensed pharmacy partners and only when legally available under federal and state regulations.
+
+**Future expansion** (post-Step 12): Zepbound KwikPen, compounded tirzepatide, Ozempic, Mounjaro, Foundayo, retatrutide, cagrilintide-based therapies.
+
+---
+
+## Appendix B — Business structure
+
+You cannot prescribe without legal structure.
+
+**Holdings LLC** (e.g. Veya Holdings LLC) owns software, marketing, brand, employees.
+
+**Professional Corporation (PC)** — owned by the licensed provider; the provider practices medicine. The LLC provides services to the PC. This **MSO (Management Services Organization) model** is standard in telehealth.
+
+Charlie's job: find turnkey partners first; later recruit Colorado MD/DO/NP for Step 14.
+
+---
+
+## Appendix C — Unit economics & CAC
+
+**Compounded example** — patient pays **$299/month**:
 
 | Line item | Cost |
 |-----------|------|
-| Doctor | $30 |
-| Medication | $90 |
-| Cold shipping | $20 |
-| Payment processing | $9 |
-| Support | $10 |
-| Refund reserve | $10 |
-| Software | $5 |
+| Doctor / turnkey review | ~$30 |
+| Medication | ~$90 |
+| Cold shipping | ~$20 |
+| Payment processing | ~$9 |
+| Support | ~$10 |
+| Refund reserve | ~$10 |
+| Software | ~$5 |
 | **Total** | **≈ $174** |
 
-**Profit:** ≈ **$125/month** before marketing.
+Profit ≈ **$125/month** before marketing. Break-even around Month 2 if CAC ≈ $125.
 
-If CAC is $125, you break even around **Month 2**.
+| Channel | CAC | Notes |
+|---------|-----|-------|
+| Google Ads | $150–400 | Very competitive |
+| Facebook | $80–250 | Best balance |
+| TikTok | $50–150 | Cheaper; more education |
+| Referrals | $10–40 | Best long-term |
+| Colorado local partnerships | $10–50 | Gyms, med spas, trainers |
 
----
+**Launch ads budget suggestion:** ~$1,500 total (Facebook + TikTok + local partnerships). Goal: 10–20 consultations.
 
-## Step 11: How many patients do you need?
-
-| Target | Patients needed |
-|--------|-----------------|
+| Target | Active patients needed |
+|--------|------------------------|
 | Break-even | ≈ 20–30 |
 | $10k/month profit | ≈ 100–150 |
-| $50k/month profit | ≈ 500–700 |
-| $1M revenue/year | ≈ 280–350 active patients at ~$299/month |
-
-That shocked me. **You don't need thousands.**
+| $1M revenue/year | ≈ 280–350 at ~$299/mo |
 
 ---
 
-## Step 12: What AI can do
+## Appendix D — Risks
 
-AI **cannot**:
-
-- Prescribe
-- Diagnose
-- Approve medications
-- Replace doctors
-
-AI **can**:
-
-- Draft support emails
-- Check intake completeness
-- Prepare provider summaries
-- Generate marketing content
-- Monitor KPIs
-- Run QA (Quality Assurance) testing
-- Coordinate pharmacy follow-ups
-- Create dashboards
-- Write SOPs
-
-Think of AI as the doctor's assistant — **not** the doctor.
+1. FDA changes to compounded GLP-1 rules
+2. Compounding pharmacies stop offering products
+3. Margin collapse → pivot to brand-name
+4. Insurance coverage changes
+5. Ad platform restrictions
+6. Turnkey partner or pharmacy shuts down
+7. HIPAA breach
 
 ---
 
-## Step 13: Things that can kill the business
-
-This is the scary part.
-
-1. FDA (U.S. Food and Drug Administration) changes compounded GLP-1 (glucagon-like peptide-1) rules
-2. Compounding pharmacies stop offering them
-3. Your margins collapse
-4. You pivot to brand-name
-
-Other real risks:
-
-- Insurance coverage changes
-- Google bans ads
-- Provider quits
-- Pharmacy shuts down
-- Medical board complaints
-- HIPAA (Health Insurance Portability and Accountability Act) breach
-
----
-
-## Step 14: The actual launch order
-
-### Week 1
-
-- Form LLC (Limited Liability Company)
-- Get domain
-- Build landing page
-- Charlie starts calling providers
-- Charlie starts calling pharmacies
-
-### Week 2
-
-- Secure Colorado provider
-- Secure pharmacy
-- Set up Stripe
-- Write intake forms
-- Create consents
-
-### Week 3
-
-- Build Lovable MVP
-- Eligibility quiz
-- Account creation
-- Medical questionnaire
-- Payment
-- Admin dashboard
-
-### Week 4
-
-- Move into React/Django
-- Test internally
-- Fix bugs
-
-### Week 5
-
-- Launch ads
-- Partner with local gyms
-- Reach out to friends
-- Enroll first beta patient
-
-### Week 6
-
-- Get first prescription shipped
-- Document everything
-- Fix friction
-- Collect testimonials
-
-### Week 7–8
-
-- Enroll 5–10 patients
-- Refine SOPs
-- Improve conversion
-- Start referral program
-
-### Week 9–12
-
-- Scale to 25–50 active patients
-- Begin SEO (Search Engine Optimization)
-- Expand advertising
-- Add automation carefully
-
----
-
-## Minimum cash I'd personally want before launching
+## Appendix E — Minimum cash before launch
 
 | Category | Amount |
 |----------|--------|
 | Legal/entity setup | ~$2,000 |
-| Medical director/provider onboarding | ~$3,000 |
+| Provider / turnkey onboarding | ~$3,000 |
 | Insurance/compliance | ~$2,000 |
 | Software | ~$500 |
 | Marketing | ~$2,000 |
@@ -549,14 +407,13 @@ Other real risks:
 
 ---
 
-## If I were you
+## Related docs
 
-I would **not** spend six months building.
-
-1. Spend 2 weeks getting Charlie to find **one** doctor and **one** pharmacy
-2. Build the ugliest functional website imaginable
-3. Get one patient
-
-Because the hardest part of this business isn't coding.
-
-It's proving that a real person will trust you enough to put their health in your hands and pay you for it. Once one person does that, getting the second is much easier.
+| Topic | File |
+|-------|------|
+| Restore marketing pages (Step 1) | [docs/archived-marketing-pages.md](../docs/archived-marketing-pages.md) |
+| Qualify flow design notes (Step 2) | [docs/Modifying step by step process.md](../docs/Modifying%20step%20by%20step%20process.md) |
+| Database schema | [backend/DATABASE.md](../backend/DATABASE.md) |
+| Intake schema v2 (Step 4) | [docs/ARETIDE_INTAKE_SCHEMA_V2.md](../docs/ARETIDE_INTAKE_SCHEMA_V2.md) |
+| Frontend routes | [src/routes/README.md](../src/routes/README.md) |
+| HIPAA hosting | [backend/HOSTING.md](../backend/HOSTING.md) |

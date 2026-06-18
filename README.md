@@ -20,9 +20,7 @@ https://aretide.com/
 | DO | Doctor of Osteopathic Medicine |
 | DOB | Date of birth |
 | DRF | Django REST Framework |
-| EB | Elastic Beanstalk |
-| ECS | Amazon Elastic Container Service |
-| ECR | Elastic Container Registry |
+| EC2 | Amazon Elastic Compute Cloud |
 | EHR | Electronic Health Record |
 | FDA | U.S. Food and Drug Administration |
 | FK | Foreign key |
@@ -54,10 +52,25 @@ https://aretide.com/
 
 ## Quick start
 
+### Already installed? Run these
+
+From the **repo root**, open **two terminals** and run one command in each:
+
+| Terminal | Command | URL |
+|----------|---------|-----|
+| **Frontend** | `npm run dev` | http://localhost:8080/ |
+| **Backend** | `npm run dev:backend` | http://localhost:8000/api/health/ |
+
+Assumes you have already run [first-time setup](#first-time-setup): **Docker Desktop**, `npm install`, a root `.env`, and backend migrations.
+
+Full local dev guide (identical setup on every machine): **[docs/LOCAL-DEV.md](docs/LOCAL-DEV.md)**
+
+### Doc index
+
 | Goal | Where to go |
 |------|-------------|
-| Run the frontend locally | [Frontend setup](#frontend) below |
-| Run the backend locally | [backend/README.md](backend/README.md) |
+| Local dev setup (Docker, prerequisites) | [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md) |
+| First-time install (deps, env, DB) | [First-time setup](#first-time-setup) below |
 | Connect frontend to backend | [.env.example](.env.example) + [Frontend ↔ API](#frontend--api) below |
 | Understand database tables | [backend/DATABASE.md](backend/DATABASE.md) |
 | Deploy backend (Heroku vs AWS) | [backend/HOSTING.md](backend/HOSTING.md) |
@@ -76,15 +89,18 @@ Aretide/
 ├── backend/                  ← Django REST API
 │   ├── README.md             ← Backend setup, API list, HIPAA notes
 │   ├── DATABASE.md           ← Tables, schema decisions, data flow
-│   ├── HOSTING.md            ← Heroku Shield vs AWS for PHI (Protected Health Information)
-│   └── deploy/aws.md         ← AWS deployment outline
+│   ├── HOSTING.md            ← Heroku Shield (pending BAA) vs AWS EC2
+│   └── deploy/aws.md         ← AWS EC2 deployment outline
 ├── docs/
+│   ├── LOCAL-DEV.md                    ← Docker local dev (required for backend)
 │   ├── DEPLOY-FRONTEND.md              ← GitHub Pages + aretide.com deploy guide
 │   ├── archived-marketing-pages.md   ← Removed marketing nav + pages (restore guide)
 │   └── archived-marketing/           ← Full source copies from pre-MVP site
+├── scripts/
+│   └── dev-backend.sh                ← Starts backend via Docker Compose
 ├── deploy-frontend-prod.sh           ← Publish frontend to gh-pages
 └── Starting Point/
-    └── launchPlan.md         ← Product / business launch plan
+    └── launchPlan.md         ← 20-step MVP launch plan (Steps 1–12 = ship; 13–20 = optimize)
 ```
 
 ---
@@ -95,8 +111,14 @@ Aretide/
 
 | File | Contents |
 |------|----------|
-| [Starting Point/launchPlan.md](Starting%20Point/launchPlan.md) | MVP (Minimum Viable Product) offerings, legal/compliance goals, Colorado telehealth scope, business context |
+| [Starting Point/launchPlan.md](Starting%20Point/launchPlan.md) | **20-step MVP launch plan** — turnkey partner first; Steps 1–12 required to launch; offerings, unit economics, risks in appendices |
 | [docs/archived-marketing-pages.md](docs/archived-marketing-pages.md) | **Removed marketing site** — nav links, page content, and step-by-step restore instructions for `/pricing`, `/switch`, `/insurance`, `/clinicians`, `/safety`, `/faq`, `/learn`, full `/how-it-works` |
+
+### Development
+
+| File | Contents |
+|------|----------|
+| [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md) | **Local dev with Docker** — prerequisites, first-time setup, daily commands, troubleshooting |
 
 ### Frontend (React / TanStack Start)
 
@@ -107,16 +129,16 @@ Aretide/
 | [src/lib/api/client.ts](src/lib/api/client.ts) | API client — calls Django when `VITE_API_URL` is set |
 | [src/lib/safety-flags.ts](src/lib/safety-flags.ts) | Client-side safety flag logic (mirrored in backend) |
 
-**Key frontend routes:** `/` (landing), `/qualify` (eligibility), `/intake`, `/consent`, `/dashboard`, `/admin`
+**Key frontend routes:** See [src/routes/README.md](src/routes/README.md) for the Step 1–8 route map (`/`, `/qualify`, `/intake`, `/consent`, `/dashboard`, `/admin`).
 
 ### Backend (Django + DRF)
 
 | File | Contents |
 |------|----------|
-| [backend/README.md](backend/README.md) | **How to run the backend** (Docker + local Python), API endpoints, roles, HIPAA technical safeguards, frontend integration |
+| [backend/README.md](backend/README.md) | **How to run the backend** (Docker), API endpoints, roles, HIPAA technical safeguards |
 | [backend/DATABASE.md](backend/DATABASE.md) | **All database tables**, relationships, design decisions, JSON vs columns, API/type mapping |
-| [backend/HOSTING.md](backend/HOSTING.md) | **Where to deploy for PHI (Protected Health Information)** — Heroku Shield + BAA requirements vs AWS fallback |
-| [backend/deploy/aws.md](backend/deploy/aws.md) | AWS production deployment steps (ECS, RDS, S3, BAA) |
+| [backend/HOSTING.md](backend/HOSTING.md) | **Production hosting** — Heroku Shield (pending BAA) vs AWS EC2 |
+| [backend/deploy/aws.md](backend/deploy/aws.md) | AWS EC2 production deployment (RDS, S3, ALB, BAA) |
 
 ### Configuration
 
@@ -133,20 +155,54 @@ Aretide/
 
 ---
 
+## First-time setup
+
+Do this once before using the [one-command launch](#already-installed-run-these) above. See **[docs/LOCAL-DEV.md](docs/LOCAL-DEV.md)** for the full guide.
+
+### 0. Docker Desktop
+
+Install and start [Docker Desktop](https://www.docker.com/products/docker-desktop/) — **required** for the backend.
+
+### 1. Frontend dependencies
+
+```bash
+npm install
+```
+
+### 2. Environment
+
+```bash
+cp .env.example .env
+```
+
+Set `VITE_API_URL=http://localhost:8000/api` and generate `FERNET_KEY` (see comments in `.env.example`).
+
+### 3. Backend (Docker)
+
+Build and start Postgres + API (first run downloads images):
+
+```bash
+npm run dev:backend
+```
+
+In a **second terminal**, run migrations and create an admin user:
+
+```bash
+docker compose -f backend/docker-compose.yml exec api python manage.py migrate
+docker compose -f backend/docker-compose.yml exec api python manage.py createsuperuser
+```
+
+After that, day-to-day dev is `npm run dev` + `npm run dev:backend` in two terminals.
+
+---
+
 ## Frontend
 
 **Stack:** React 19, TanStack Start, TanStack Router, Tailwind, shadcn/ui.
 
-```bash
-npm install
-npm run dev
-```
-
-Opens at **http://localhost:8080/** by default.
-
 | Command | Purpose |
 |---------|---------|
-| `npm run dev` | Development server |
+| `npm run dev` | Development server (http://localhost:8080/) |
 | `npm run build` | Production build |
 | `npm run preview` | Preview production build |
 
@@ -154,21 +210,20 @@ Opens at **http://localhost:8080/** by default.
 
 ## Backend
 
-**Stack:** Django 5, Django REST Framework (DRF), PostgreSQL, Token auth.
+**Stack:** Django 5, Django REST Framework (DRF), PostgreSQL 16 (Docker), Token auth.
 
-Full instructions: **[backend/README.md](backend/README.md)**
+Local dev requires **Docker** — see [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md).
 
-**Docker (recommended):**
-
-```bash
-cd backend
-docker compose up --build
-docker compose exec api python manage.py migrate
-docker compose exec api python manage.py createsuperuser
-```
+| Command | Purpose |
+|---------|---------|
+| `npm run dev:backend` | Start API + Postgres via Docker Compose |
+| `docker compose -f backend/docker-compose.yml exec api python manage.py migrate` | Apply DB migrations |
+| `docker compose -f backend/docker-compose.yml exec api python manage.py createsuperuser` | Create admin user |
 
 API health check: http://localhost:8000/api/health/  
 API docs: http://localhost:8000/api/docs/
+
+Production: **AWS EC2** ([backend/deploy/aws.md](backend/deploy/aws.md)) or **Heroku Shield** if BAA confirmed ([backend/HOSTING.md](backend/HOSTING.md))
 
 ---
 
@@ -191,14 +246,14 @@ PHI must **never** be stored in `localStorage` or `sessionStorage`. When `VITE_A
 
 | Option | PHI-safe? (Protected Health Information) | Summary |
 |--------|-----------|---------|
-| **Local / Docker** | No | Development and fake data only |
-| **Heroku Shield + BAA** | Yes, if contracted | Shield Private Space, Shield Postgres, Shield Dynos only; signed BAA (Business Associate Agreement) with Salesforce required |
+| **Local Docker** | No | Development and fake data only — [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md) |
+| **Heroku Shield + BAA** | Yes, if contracted | Alternate if Salesforce confirms Shield + BAA |
 | **Standard Heroku** | **No** | Not permitted for PHI (Protected Health Information) |
-| **AWS (Amazon Web Services) + BAA** | Yes | Recommended fallback if Heroku BAA unavailable — RDS (Relational Database Service), S3 (Simple Storage Service), ECS (Elastic Container Service) / EB (Elastic Beanstalk) |
+| **AWS EC2 + RDS + S3 + BAA** | Yes | **Planned production path** — [backend/deploy/aws.md](backend/deploy/aws.md) |
 
 Full research and go/no-go checklist: **[backend/HOSTING.md](backend/HOSTING.md)**
 
-**Current recommendation:** Confirm Heroku Shield + BAA with Salesforce. If unavailable within ~2 weeks, use **AWS** ([backend/deploy/aws.md](backend/deploy/aws.md)).
+**Current plan:** Develop locally with Docker. Complete Heroku BAA inquiry in parallel. **Default production to AWS EC2** unless Heroku Shield + BAA is confirmed and preferred.
 
 ---
 
@@ -210,12 +265,12 @@ When answering questions about this codebase:
 |-------|------------|
 | Database schema / tables / why JSON | `backend/DATABASE.md` |
 | Pre-account funnel session (cookie + server draft) | `backend/DATABASE.md#anonymous-funnel-session-pre-account` |
-| Run backend, API routes, auth | `backend/README.md` |
+| Run backend, API routes, auth | `backend/README.md`, `docs/LOCAL-DEV.md` |
 | Production hosting, HIPAA infra | `backend/HOSTING.md` |
-| AWS deploy | `backend/deploy/aws.md` |
+| AWS EC2 deploy | `backend/deploy/aws.md` |
 | Frontend routes | `src/routes/README.md` |
 | API ↔ frontend types | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |
-| MVP product scope | `Starting Point/launchPlan.md` |
+| MVP launch plan (build order, success criteria) | `Starting Point/launchPlan.md` |
 | Restore archived marketing pages / nav | `docs/archived-marketing-pages.md` |
 | Env vars | `.env.example` |
 
@@ -225,6 +280,7 @@ When answering questions about this codebase:
 
 ## Related links (internal)
 
+- [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md)
 - [backend/README.md](backend/README.md)
 - [backend/DATABASE.md](backend/DATABASE.md)
 - [backend/HOSTING.md](backend/HOSTING.md)

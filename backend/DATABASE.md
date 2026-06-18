@@ -10,9 +10,10 @@ This document explains every Django database table, how they relate, and why the
 
 The tables were driven by three inputs:
 
-1. **MVP product spec** — Patient flow: anonymous eligibility quiz → account creation (link draft) → full intake → consent → provider review. See [Anonymous funnel session (pre-account)](#anonymous-funnel-session-pre-account).
-2. **Frontend types** — [`src/lib/types/mvp.ts`](../src/lib/types/mvp.ts) defines the API contract between React and Django.
-3. **HIPAA / telehealth constraints** — Separate sensitive data, audit PHI (Protected Health Information) access, encrypt high-risk fields, keep the MVP small (no billing, pharmacy APIs, messaging, etc.).
+1. **MVP launch plan** — [Starting Point/launchPlan.md](../Starting%20Point/launchPlan.md): Steps 2–8 map to funnel → account → intake → consent → dashboards. Steps 9–11 (turnkey partner, pharmacy, Stripe) are post-schema integrations. Steps 13+ are explicitly out of MVP scope.
+2. **Patient flow (Steps 2–5)** — Anonymous qualification funnel → account creation (claim draft) → full medical intake → consent → case submitted. See [Anonymous funnel session (pre-account)](#anonymous-funnel-session-pre-account).
+3. **Frontend types** — [`src/lib/types/mvp.ts`](../src/lib/types/mvp.ts) defines the API contract between React and Django.
+4. **HIPAA / telehealth constraints** — Separate sensitive data, audit PHI (Protected Health Information) access, encrypt high-risk fields, keep the MVP small (no billing, pharmacy APIs, messaging, etc. until Steps 9–11).
 
 The goal was a **minimum schema that matches the existing app**, not a full EHR.
 

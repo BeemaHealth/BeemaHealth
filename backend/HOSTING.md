@@ -1,18 +1,18 @@
-# Hosting Go/No-Go: Heroku Shield vs AWS
+# Hosting Go/No-Go: Heroku Shield vs AWS EC2
 
 > **Documentation index:** [../README.md](../README.md) — links to all project docs (includes acronym glossary).
 
-**AWS** = Amazon Web Services. **BAA** = Business Associate Agreement. **PHI** = **Protected Health Information** — any health data tied to an identifiable patient (name, date of birth, phone, intake answers, uploaded labs/ID, etc.).
+**AWS** = Amazon Web Services. **BAA** = Business Associate Agreement. **EC2** = Amazon Elastic Compute Cloud. **PHI** = **Protected Health Information** — any health data tied to an identifiable patient (name, date of birth, phone, intake answers, uploaded labs/ID, etc.).
 
-**Status:** Decision required before production PHI.
+**Status:** Heroku BAA inquiry in progress. **Default production plan: AWS EC2** (see [deploy/aws.md](./deploy/aws.md)).
 
-## Heroku
+## Heroku (alternate — pending BAA response)
 
 | Requirement | Detail |
 |-------------|--------|
-| PHI-safe tier | **Heroku Shield only** (Private Space, Shield Dynos, Shield Postgres) — required for Protected Health Information |
+| PHI-safe tier | **Heroku Shield only** (Private Space, Shield Dynos, Shield Postgres) |
 | BAA | Signed Business Associate Agreement with Salesforce |
-| Standard Heroku | **Not permitted for PHI** (Protected Health Information) |
+| Standard Heroku | **Not permitted for PHI** |
 
 ### Action items
 
@@ -26,18 +26,20 @@
 - Use only Shield-tier add-ons for any service touching PHI
 - Deploy via `Procfile` with `release: python manage.py migrate`
 
-## AWS (Amazon Web Services) (fallback)
+## AWS EC2 (planned production path)
 
-Use if Heroku BAA is unavailable or cost-prohibitive.
+Use when Heroku BAA is unavailable, declined, or cost-prohibitive. **We are not using Elastic Beanstalk, ECS, or Fargate** for this project.
 
 | Component | Service |
 |-----------|---------|
-| API (Application Programming Interface) | **ECS** (Elastic Container Service) Fargate or Elastic Beanstalk |
-| Database | **RDS** (Relational Database Service) PostgreSQL 16 (encryption at rest enabled) |
-| Documents | **S3** (Simple Storage Service) with **SSE-KMS** (Server-Side Encryption with AWS Key Management Service) |
+| API | **EC2** running the production Docker image (`backend/Dockerfile`) |
+| Database | **RDS** PostgreSQL 16 (encryption at rest enabled) |
+| Documents | **S3** with **SSE-KMS** |
+| TLS | **ACM** + **ALB** in front of EC2 |
 | Secrets | Secrets Manager |
-| TLS (Transport Layer Security) | **ACM** (AWS Certificate Manager) + **ALB** (Application Load Balancer) |
 | Audit | CloudTrail + application `audit_events` table |
+
+HIPAA requires a **signed AWS BAA**, encryption, access controls, and administrative safeguards — not a specific compute product like ECS. EC2 with RDS and S3 is a standard HIPAA-eligible architecture when configured correctly.
 
 ### Action items
 
@@ -45,10 +47,20 @@ Use if Heroku BAA is unavailable or cost-prohibitive.
 2. Deploy to `us-west-2` (close to Colorado)
 3. Set `HOSTING_TARGET=aws`
 4. Enable `DATABASE_SSL_REQUIRE=true` and `SECURE_SSL_REDIRECT=true`
+5. Follow [deploy/aws.md](./deploy/aws.md)
+
+## Local development
+
+All developers use **Docker Compose** for the backend so every machine runs the same Postgres 16 + Python 3.12 stack. See [docs/LOCAL-DEV.md](../docs/LOCAL-DEV.md).
+
+Local Docker is **not** HIPAA-compliant — use fake data only.
 
 ## Current recommendation
 
-Build and test locally with Docker Compose (no real PHI). Complete the Heroku BAA inquiry in parallel. **Default to AWS if Heroku cannot offer a BAA within 2 weeks.**
+1. **Develop locally** with Docker Compose ([docs/LOCAL-DEV.md](../docs/LOCAL-DEV.md))
+2. **Complete Heroku BAA inquiry** in parallel
+3. **Plan production on AWS EC2** unless Heroku Shield + BAA is confirmed and preferred
+4. Sign AWS BAA before any real PHI reaches production infrastructure
 
 ## Record decision
 

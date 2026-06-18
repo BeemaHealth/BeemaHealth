@@ -1,39 +1,30 @@
 # Aretide Backend (Django + DRF)
 
-> **Documentation index:** [../README.md](../README.md) — links to all project docs (includes acronym glossary).
+> **Documentation index:** [../README.md](../README.md) — links to all project docs (includes acronym glossary). **Launch plan:** [Starting Point/launchPlan.md](../Starting%20Point/launchPlan.md) — API endpoints below map to Steps 2–8; partner/pharmacy/Stripe integrations are Steps 9–11.
 
 **DRF** = Django REST Framework. **HIPAA** = Health Insurance Portability and Accountability Act. **PHI** = **Protected Health Information** (patient-identifying health data: name, DOB, phone, intake answers, uploads, etc.).
 
 HIPAA-aligned technical controls for telehealth intake. **Local development is not HIPAA-compliant.** Do not store real patient PHI until production infrastructure and administrative safeguards are in place.
 
-## Quick start (Docker)
+## Quick start (Docker — required)
+
+Local backend development uses **Docker Compose** so every developer gets the same Postgres 16 + Python 3.12 environment. Full guide: **[docs/LOCAL-DEV.md](../docs/LOCAL-DEV.md)**.
+
+From the repo root (after [first-time setup](../README.md#first-time-setup)):
 
 ```bash
-cd backend
-python3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-# Add output to FERNET_KEY in ../.env
-
-docker compose up --build
-docker compose exec api python manage.py migrate
-docker compose exec api python manage.py createsuperuser
+npm run dev:backend
 ```
 
-API (Application Programming Interface): http://localhost:8000/api/health/  
+First-time only — migrations and admin user:
+
+```bash
+docker compose -f backend/docker-compose.yml exec api python manage.py migrate
+docker compose -f backend/docker-compose.yml exec api python manage.py createsuperuser
+```
+
+API: http://localhost:8000/api/health/  
 Docs: http://localhost:8000/api/docs/
-
-## Quick start (local Python)
-
-```bash
-cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements/dev.txt
-export DATABASE_URL=postgres://aretide:aretide@localhost:5432/aretide
-export SECRET_KEY=dev-secret
-export FERNET_KEY=$(python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
-python manage.py migrate
-python manage.py runserver 8000
-```
 
 ## API endpoints
 
@@ -60,7 +51,7 @@ python manage.py runserver 8000
 - **Provider** (`is_provider=True`): set via `createsuperuser` or Django admin
 
 ```bash
-python manage.py shell -c "from apps.accounts.models import User; u=User.objects.get(email='provider@example.com'); u.is_provider=True; u.save()"
+docker compose -f backend/docker-compose.yml exec api python manage.py shell -c "from apps.accounts.models import User; u=User.objects.get(email='provider@example.com'); u.is_provider=True; u.save()"
 ```
 
 ## HIPAA technical safeguards (implemented)
@@ -79,7 +70,7 @@ python manage.py shell -c "from apps.accounts.models import User; u=User.objects
 
 See [HOSTING.md](./HOSTING.md) for hosting go/no-go and:
 
-1. Signed **BAA** (Business Associate Agreement) with hosting provider (Heroku Shield or **AWS** (Amazon Web Services))
+1. Signed **BAA** (Business Associate Agreement) with hosting provider (Heroku Shield or **AWS**)
 2. BAAs with all subprocessors (email, monitoring, etc.)
 3. Privacy Policy + Notice of Privacy Practices
 4. Security risk assessment (annual)
@@ -92,17 +83,18 @@ See [HOSTING.md](./HOSTING.md) for hosting go/no-go and:
 
 ## Production deployment
 
-### Heroku Shield (if BAA confirmed)
+### AWS EC2 (planned)
+
+- **EC2** instance running the production Docker image + **RDS** (encrypted) + S3 (SSE-KMS)
+- Set `HOSTING_TARGET=aws`
+- Enable AWS BAA before PHI
+- Details: [deploy/aws.md](./deploy/aws.md)
+
+### Heroku Shield (alternate — if BAA confirmed)
 
 - Shield Private Space + Shield Postgres + Shield Dynos only
 - Set `HOSTING_TARGET=heroku_shield`
 - Use `Procfile` release phase for migrations
-
-### AWS (recommended fallback)
-
-- **ECS** (Elastic Container Service) Fargate or Elastic Beanstalk + **RDS** (Relational Database Service, encrypted) + S3 (SSE-KMS)
-- Set `HOSTING_TARGET=aws`
-- Enable AWS BAA before PHI
 
 ## Frontend integration
 
