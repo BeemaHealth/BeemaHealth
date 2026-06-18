@@ -30,6 +30,7 @@ import { Route as ConsentRouteImport } from './routes/consent'
 import { Route as CliniciansRouteImport } from './routes/clinicians'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VerifyEmailIndexRouteImport } from './routes/verify-email.index'
 import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pending'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
@@ -141,6 +142,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerifyEmailIndexRoute = VerifyEmailIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VerifyEmailRoute,
+} as any)
 const VerifyEmailPendingRoute = VerifyEmailPendingRouteImport.update({
   id: '/pending',
   path: '/pending',
@@ -194,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/verify-email/': typeof VerifyEmailIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -215,13 +222,13 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
-  '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
   '/admin/$patientId': typeof AdminPatientIdRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/verify-email': typeof VerifyEmailIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -251,6 +258,7 @@ export interface FileRoutesById {
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/verify-email/': typeof VerifyEmailIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -281,6 +289,7 @@ export interface FileRouteTypes {
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/verify-email/pending'
+    | '/verify-email/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -302,13 +311,13 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/submitted'
     | '/switch'
-    | '/verify-email'
     | '/weight-loss'
     | '/admin/$patientId'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/verify-email/pending'
+    | '/verify-email'
   id:
     | '__root__'
     | '/'
@@ -337,6 +346,7 @@ export interface FileRouteTypes {
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/verify-email/pending'
+    | '/verify-email/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -515,6 +525,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verify-email/': {
+      id: '/verify-email/'
+      path: '/'
+      fullPath: '/verify-email/'
+      preLoaderRoute: typeof VerifyEmailIndexRouteImport
+      parentRoute: typeof VerifyEmailRoute
+    }
     '/verify-email/pending': {
       id: '/verify-email/pending'
       path: '/pending'
@@ -565,10 +582,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface VerifyEmailRouteChildren {
   VerifyEmailPendingRoute: typeof VerifyEmailPendingRoute
+  VerifyEmailIndexRoute: typeof VerifyEmailIndexRoute
 }
 
 const VerifyEmailRouteChildren: VerifyEmailRouteChildren = {
   VerifyEmailPendingRoute: VerifyEmailPendingRoute,
+  VerifyEmailIndexRoute: VerifyEmailIndexRoute,
 }
 
 const VerifyEmailRouteWithChildren = VerifyEmailRoute._addFileChildren(

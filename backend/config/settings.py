@@ -211,10 +211,17 @@ LOGGING = {
 # Hosting target documentation flag
 HOSTING_TARGET = env("HOSTING_TARGET", default="local")  # local | heroku_shield | aws
 
-# Email — console backend in dev prints verification links to Docker logs
+# Email — console backend in dev prints verification links to Docker logs.
+# Set EMAIL_BACKEND to django.core.mail.backends.smtp.EmailBackend for real delivery (e.g. Zoho).
 EMAIL_BACKEND = env(
     "EMAIL_BACKEND",
     default="django.core.mail.backends.console.EmailBackend",
 )
+EMAIL_HOST = env("EMAIL_HOST", default="")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@aretide.com")
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:8080")
