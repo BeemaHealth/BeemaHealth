@@ -1,11 +1,22 @@
 import { useState } from "react";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from "@tanstack/react-router";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import { Field, QuizShell, inputCls } from "@/components/quiz/quiz-primitives";
-import { syncConsent, syncIntake, fetchIntakeMe, isApiEnabled } from "@/lib/api/client";
+import {
+  fetchEligibilityMe,
+  fetchIntakeMe,
+  isApiEnabled,
+  syncConsent,
+  syncIntake,
+} from "@/lib/api/client";
 import { requireAuth } from "@/lib/auth";
 import { computeSafetyFlags } from "@/lib/safety-flags";
-import { getConsent, getEligibility, getIntake, saveSafetyFlags } from "@/lib/storage";
+import { getEligibility, getIntake, saveSafetyFlags } from "@/lib/storage";
 import type { ConsentRecord } from "@/lib/types/mvp";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -13,7 +24,10 @@ import { useAuth } from "@/context/AuthContext";
 export const Route = createFileRoute("/consent")({
   ssr: false,
   beforeLoad: async () => {
-    const session = await requireAuth({ redirectTo: "/qualify", redirectPath: "/consent" });
+    const session = await requireAuth({
+      redirectTo: "/qualify",
+      redirectPath: "/consent",
+    });
     if (isApiEnabled()) {
       const intake = await fetchIntakeMe();
       if (!intake) throw redirect({ to: "/intake" });
@@ -23,16 +37,6 @@ export const Route = createFileRoute("/consent")({
   },
   component: ConsentPage,
 });
-
-const SECTIONS = [
-  { title: "Telehealth Consent", body: "You consent to receive care via telehealth from a licensed provider through Aretide." },
-  { title: "No Guarantee of Prescription", body: "Completing intake does not guarantee a prescription. Treatment decisions are made only by a licensed medical provider." },
-  { title: "Emergency Care Disclaimer", body: "Aretide does not provide emergency care. Call 911 for emergencies." },
-  { title: "Medication Risk Acknowledgment", body: "Weight-loss medications have risks including GI side effects, gallbladder issues, and other complications discussed in intake." },
-  { title: "Compounded Medication Disclosure", body: "Compounded semaglutide, if offered, is not FDA-approved and is only used when legally available and clinically appropriate." },
-  { title: "Privacy and Data Use", body: "Your health information is collected and stored securely to support your care. Use and disclosure are limited to providing telehealth services and as described in our Privacy Policy." },
-  { title: "Accuracy Certification", body: "You certify that your intake information is accurate and complete to the best of your knowledge." },
-];
 
 function ConsentPage() {
   const navigate = useNavigate();
@@ -45,14 +49,16 @@ function ConsentPage() {
   if (!session) return null;
 
   const { user } = session;
+  const defaultSignature = `${user.first_name} ${user.last_name}`.trim();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!agreed || !signature.trim()) {
-      setError("Please type your full legal name and check I agree.");
+      setError("Please type your full legal name and confirm below.");
       return;
     }
     setSubmitting(true);
+    setError("");
     try {
       const consent: ConsentRecord = {
         id: crypto.randomUUID(),
@@ -68,7 +74,13 @@ function ConsentPage() {
       };
       await syncConsent(consent);
 
-      const intake = getIntake(user.id)!;
+      const intake = isApiEnabled()
+        ? await fetchIntakeMe()
+        : getIntake(user.id);
+      if (!intake) {
+        throw new Error("Could not load your intake. Please try again.");
+      }
+
       const submitted = {
         ...intake,
         status: "submitted" as const,
@@ -77,12 +89,11 @@ function ConsentPage() {
       };
       await syncIntake(submitted);
 
-      const flags = computeSafetyFlags(
-        user,
-        getEligibility(user.id),
-        submitted,
-        true,
-      );
+      const eligibility = isApiEnabled()
+        ? await fetchEligibilityMe()
+        : getEligibility(user.id);
+
+      const flags = computeSafetyFlags(user, eligibility, submitted, true);
       saveSafetyFlags(user.id, flags);
 
       navigate({ to: "/submitted" });
@@ -96,25 +107,56 @@ function ConsentPage() {
   return (
     <FlowLayout progress={100}>
       <div className="w-full max-w-2xl">
-        <QuizShell label="Consent" title="Consent and acknowledgments">
-          <div className="space-y-4">
-            {SECTIONS.map((s) => (
-              <div key={s.title} className="rounded-2xl border border-border bg-background px-4 py-3">
-                <p className="font-semibold text-foreground">{s.title}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{s.body}</p>
-              </div>
-            ))}
-          </div>
+        <QuizShell label="Submit" title="Sign and submit your intake">
+          <p className="text-sm text-muted-foreground">
+            You already agreed to the{" "}
+            <Link
+              to="/legal/intake-acknowledgments"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline"
+            >
+              Intake Acknowledgments &amp; Informed Consent
+            </Link>{" "}
+            on the previous step. Type your legal name below to sign and submit
+            your intake for provider review.
+          </p>
           <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
             <Field label="Full legal name (typed signature)" required>
-              <input className={inputCls} value={signature} onChange={(e) => setSignature(e.target.value)} placeholder="Jordan Avery" />
+              <input
+                className={inputCls}
+                value={signature}
+                onChange={(e) => setSignature(e.target.value)}
+                placeholder={defaultSignature || "Jordan Avery"}
+              />
             </Field>
             <Field label="Date">
-              <input className={inputCls} readOnly value={new Date().toLocaleDateString()} />
+              <input
+                className={inputCls}
+                readOnly
+                value={new Date().toLocaleDateString()}
+              />
             </Field>
-            <label className="flex items-start gap-3 text-sm">
-              <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="mt-1 size-4" />
-              I agree to all sections above.
+            <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border px-4 py-3">
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                className="mt-1 size-4"
+              />
+              <span className="text-sm text-foreground">
+                I certify that my typed signature applies to the{" "}
+                <Link
+                  to="/legal/intake-acknowledgments"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Intake Acknowledgments &amp; Informed Consent
+                </Link>{" "}
+                and I am ready to submit my intake for provider review.
+              </span>
             </label>
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Button type="submit" disabled={submitting} className="w-full">

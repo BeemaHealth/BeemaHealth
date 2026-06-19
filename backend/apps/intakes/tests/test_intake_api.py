@@ -133,6 +133,40 @@ class IntakeApiValidationTests(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_rejects_malicious_alternate_shipping_address(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {
+                "medication_preferences": {
+                    "use_different_shipping_address": True,
+                    "shipping_address": SQL_INJECTION[0],
+                    "shipping_city": "Denver",
+                    "shipping_zip": "80202",
+                    "shipping_county": "Denver County",
+                    "shipping_address_verified": "true",
+                }
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_accepts_verified_alternate_shipping_address(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {
+                "medication_preferences": {
+                    "use_different_shipping_address": True,
+                    "shipping_address": "456 Oak Ave",
+                    "shipping_city": "Denver",
+                    "shipping_zip": "80203",
+                    "shipping_county": "Denver County",
+                    "shipping_address_verified": "true",
+                }
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_rejects_non_numeric_lab_values(self):
         response = self.client.patch(
             reverse("intake-me"),

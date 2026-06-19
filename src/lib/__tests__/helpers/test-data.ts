@@ -167,19 +167,7 @@ export function validIntake(
       shipping_preference: "shipping",
       cash_pay_ok: true,
     },
-    safety_acknowledgments: Object.fromEntries(
-      [
-        "no_guarantee",
-        "provider_review",
-        "side_effects",
-        "emergency",
-        "compounded",
-        "accurate",
-        "telehealth",
-        "electronic",
-        "storage",
-      ].map((k) => [k, true]),
-    ),
+    safety_acknowledgments: { agreed: true },
     ...overrides,
   } as MedicalIntake);
 

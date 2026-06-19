@@ -14,6 +14,10 @@ import {
   validateOptionalNumericLab,
   validateOptionalBloodPressure,
 } from "@/lib/form-validation";
+import {
+  isIntakeAcknowledgmentsComplete,
+  normalizeSafetyAcknowledgments,
+} from "@/lib/intake-acknowledgments";
 import type { MedicalIntake, SexAssignedAtBirth } from "@/lib/types/mvp";
 import {
   isPregnancyIntakeStepApplicable,
@@ -32,7 +36,7 @@ export const INTAKE_STEP_LABELS = [
   "Lifestyle",
   "Labs & vitals",
   "Medication preferences",
-  "Safety acknowledgments",
+  "Review & agree",
 ] as const;
 
 export const MEDICAL_CONDITIONS = [
@@ -158,39 +162,6 @@ export const GOAL_OPTIONS = [
   "Reduce cravings",
   "Improve confidence",
   "Other",
-] as const;
-
-export const SAFETY_ACKS = [
-  [
-    "no_guarantee",
-    "I understand that completing this form does not guarantee a prescription.",
-  ],
-  [
-    "provider_review",
-    "I understand that a licensed provider will review my information before any treatment decision.",
-  ],
-  [
-    "side_effects",
-    "I understand that medical weight-loss medications may cause side effects including nausea, vomiting, diarrhea, constipation, abdominal pain, dehydration, gallbladder issues, and other risks.",
-  ],
-  [
-    "emergency",
-    "I understand that I must seek emergency care for severe abdominal pain, allergic reaction, chest pain, fainting, trouble breathing, or other emergency symptoms.",
-  ],
-  [
-    "compounded",
-    "I understand that compounded medications, if offered, are not FDA-approved and may only be used when legally available and clinically appropriate.",
-  ],
-  [
-    "accurate",
-    "I confirm that the information I provided is accurate and complete.",
-  ],
-  ["telehealth", "I consent to telehealth evaluation."],
-  ["electronic", "I consent to electronic communication."],
-  [
-    "storage",
-    "I consent to Aretide storing my intake information for provider review.",
-  ],
 ] as const;
 
 /** Conditions already captured in eligibility.safety_screen — not re-collected in intake. */
@@ -407,11 +378,16 @@ export function getIntakeStepError(
         String(prefs.member_id ?? ""),
       );
       if (memberIdErr) return memberIdErr;
+      if (usesDifferentShippingAddress(prefs)) {
+        if (!isIdentityAddressComplete(shippingAddressFromPrefs(prefs))) {
+          return "";
+        }
+      }
       return null;
     }
     case 11: {
-      const unchecked = SAFETY_ACKS.find(([k]) => acks[k] !== true);
-      return unchecked ? "" : null;
+      if (!isIntakeAcknowledgmentsComplete(acks)) return "";
+      return null;
     }
     default:
       return null;
@@ -483,6 +459,32 @@ export const PHARMACY_PICKUP_KEYS = [
   "pharmacy_phone",
   "pharmacy_address",
 ] as const;
+
+export const SHIPPING_ADDRESS_KEYS = [
+  "shipping_address",
+  "shipping_city",
+  "shipping_zip",
+  "shipping_county",
+  "shipping_address_verified",
+] as const;
+
+export function shippingAddressFromPrefs(
+  prefs: Record<string, string | boolean>,
+): Record<string, string> {
+  return {
+    address: String(prefs.shipping_address ?? ""),
+    city: String(prefs.shipping_city ?? ""),
+    zip: String(prefs.shipping_zip ?? ""),
+    county: String(prefs.shipping_county ?? ""),
+    address_verified: String(prefs.shipping_address_verified ?? ""),
+  };
+}
+
+export function usesDifferentShippingAddress(
+  prefs: Record<string, string | boolean>,
+): boolean {
+  return prefs.use_different_shipping_address === true;
+}
 
 /** MVP: shipping-only fulfillment — migrate pickup drafts and drop stale pharmacy fields. */
 function normalizeMedicationPreferences(
@@ -560,9 +562,8 @@ export function normalizeIntake(draft: MedicalIntake): MedicalIntake {
     medication_preferences: normalizeMedicationPreferences(
       draft.medication_preferences,
     ),
-    safety_acknowledgments: {
-      ...empty.safety_acknowledgments,
-      ...draft.safety_acknowledgments,
-    },
+    safety_acknowledgments: normalizeSafetyAcknowledgments(
+      draft.safety_acknowledgments as Record<string, boolean | undefined>,
+    ),
   };
 }

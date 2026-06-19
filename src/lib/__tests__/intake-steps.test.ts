@@ -463,18 +463,90 @@ describe("intake-steps validation", () => {
         /member ID/,
       );
     });
+
+    it("blocks progress when alternate shipping address is incomplete", () => {
+      const data = validIntake({
+        medication_preferences: {
+          self_inject: true,
+          shipping_preference: "shipping",
+          cash_pay_ok: true,
+          use_different_shipping_address: true,
+          shipping_address: "456 Oak Ave",
+          shipping_city: "Denver",
+          shipping_zip: "80203",
+          shipping_county: "Denver County",
+        },
+      });
+      expect(getIntakeStepError(10, data, validEligibility())).toBe("");
+      expect(isIntakeStepComplete(10, data, validEligibility())).toBe(false);
+    });
+
+    it("accepts a verified alternate shipping address", () => {
+      const data = validIntake({
+        medication_preferences: {
+          self_inject: true,
+          shipping_preference: "shipping",
+          cash_pay_ok: true,
+          use_different_shipping_address: true,
+          shipping_address: "456 Oak Ave",
+          shipping_city: "Denver",
+          shipping_zip: "80203",
+          shipping_county: "Denver County",
+          shipping_address_verified: "true",
+        },
+      });
+      expect(getIntakeStepError(10, data, validEligibility())).toBeNull();
+    });
   });
 
-  describe("step 11 safety acknowledgments", () => {
-    it("blocks progress without a footer message when checkboxes are unchecked", () => {
-      const acks = validIntake().safety_acknowledgments as Record<
-        string,
-        boolean
-      >;
-      const partial = { ...acks, accurate: false };
-      const data = validIntake({ safety_acknowledgments: partial });
+  describe("step 11 review & agree", () => {
+    it("blocks progress without a footer message when acknowledgment is unchecked", () => {
+      const data = validIntake({
+        safety_acknowledgments: { agreed: false },
+      });
       expect(getIntakeStepError(11, data)).toBe("");
       expect(isIntakeStepComplete(11, data)).toBe(false);
+    });
+
+    it("accepts legacy all-true checkbox drafts", () => {
+      const data = validIntake({
+        safety_acknowledgments: {
+          no_guarantee: true,
+          provider_review: true,
+          side_effects: true,
+          emergency: true,
+          compounded: true,
+          accurate: true,
+          telehealth: true,
+          electronic: true,
+          storage: true,
+        },
+      });
+      expect(isIntakeStepComplete(11, data)).toBe(true);
+    });
+
+    it("normalizes legacy acknowledgments to single agreed flag", () => {
+      const normalized = normalizeIntake({
+        id: "x",
+        user_id: "y",
+        status: "draft",
+        created_at: "",
+        updated_at: "",
+        submitted_at: null,
+        ...emptyIntakeData(),
+        safety_acknowledgments: {
+          no_guarantee: true,
+          provider_review: true,
+          side_effects: true,
+          emergency: true,
+          compounded: true,
+          accurate: true,
+          telehealth: true,
+          electronic: true,
+          storage: true,
+        },
+      } as MedicalIntake);
+      expect(normalized.safety_acknowledgments).toEqual({ agreed: true });
     });
   });
 

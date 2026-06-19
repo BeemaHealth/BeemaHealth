@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from "@tanstack/react-router";
 import { AddressFields } from "@/components/quiz/AddressFields";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import {
@@ -32,7 +37,6 @@ import {
   getIntakeStepError,
   MEDICAL_CONDITIONS,
   PRIOR_MEDS,
-  SAFETY_ACKS,
   WEIGHT_METHODS,
   emptyIntakeData,
   emptyPriorMedDetails,
@@ -44,6 +48,7 @@ import {
   normalizePriorDetails,
   type PriorMedDetails,
 } from "@/lib/intake-steps";
+import { INTAKE_ACKNOWLEDGMENT_KEY } from "@/lib/intake-acknowledgments";
 import {
   getApplicableIntakeStepIndices,
   nextApplicableIntakeStep,
@@ -987,7 +992,7 @@ function IntakePage() {
 
         {step === 10 && (
           <div className="grid gap-4">
-            {showTreatmentPrefs ? (
+            {showTreatmentPrefs && (
               <Field label="Treatment option of interest" required>
                 <div className="grid gap-2">
                   {[
@@ -1015,11 +1020,6 @@ function IntakePage() {
                   ))}
                 </div>
               </Field>
-            ) : (
-              <p className="rounded-2xl bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
-                Treatment format preference was captured during eligibility (
-                {eligibility?.treatment_interest?.replace(/_/g, " ")}).
-              </p>
             )}
             <YesNoField
               label="Comfortable self-injecting?"
@@ -1040,24 +1040,78 @@ function IntakePage() {
               address from our pharmacy partner. We&apos;ll confirm details
               after your clinician review.
             </p>
-            <Field label="Shipping address">
-              <div className="rounded-2xl border border-border bg-muted/20 px-4 py-3 text-sm">
-                <p className="whitespace-pre-line">
-                  {[
-                    id.address,
-                    [id.city, eligibility?.state, id.zip]
-                      .filter(Boolean)
-                      .join(", "),
-                  ]
-                    .filter(Boolean)
-                    .join("\n") || "—"}
-                </p>
-                <p className="mt-2 text-muted-foreground">
-                  We&apos;ll ship to the address above. Update it on step 1
-                  (About you) if needed.
-                </p>
+            {prefs.use_different_shipping_address === true ? (
+              <div className="grid gap-3">
+                <AddressFields
+                  label="Shipping address"
+                  expectedState={session.user.state || eligibility?.state}
+                  value={{
+                    address: String(prefs.shipping_address ?? ""),
+                    city: String(prefs.shipping_city ?? ""),
+                    zip: String(prefs.shipping_zip ?? ""),
+                    county: String(prefs.shipping_county ?? ""),
+                    verified: prefs.shipping_address_verified === "true",
+                  }}
+                  onChange={({ address, city, zip, county, verified }) =>
+                    patch("medication_preferences", {
+                      ...prefs,
+                      use_different_shipping_address: true,
+                      shipping_address: address,
+                      shipping_city: city,
+                      shipping_zip: zip,
+                      shipping_county: county,
+                      shipping_address_verified: verified ? "true" : "",
+                    })
+                  }
+                />
+                <button
+                  type="button"
+                  className="justify-self-start text-sm text-primary underline"
+                  onClick={() =>
+                    patch("medication_preferences", {
+                      ...prefs,
+                      use_different_shipping_address: false,
+                      shipping_address: "",
+                      shipping_city: "",
+                      shipping_zip: "",
+                      shipping_county: "",
+                      shipping_address_verified: "",
+                    })
+                  }
+                >
+                  Use home address instead
+                </button>
               </div>
-            </Field>
+            ) : (
+              <Field label="Shipping address" required>
+                <div className="grid gap-3">
+                  <div className="rounded-2xl border border-border bg-muted/20 px-4 py-3 text-sm">
+                    <p className="whitespace-pre-line">
+                      {[
+                        id.address,
+                        [id.city, eligibility?.state, id.zip]
+                          .filter(Boolean)
+                          .join(", "),
+                      ]
+                        .filter(Boolean)
+                        .join("\n") || "—"}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="justify-self-start text-sm text-primary underline"
+                    onClick={() =>
+                      patch("medication_preferences", {
+                        ...prefs,
+                        use_different_shipping_address: true,
+                      })
+                    }
+                  >
+                    Use a different address
+                  </button>
+                </div>
+              </Field>
+            )}
             <Field label="Insurance provider">
               <input
                 className={inputCls}
@@ -1102,29 +1156,38 @@ function IntakePage() {
         )}
 
         {step === 11 && (
-          <div className="grid gap-3">
-            {SAFETY_ACKS.map(([k, label]) => (
-              <label
-                key={k}
-                className="flex items-start gap-3 rounded-2xl border border-border px-4 py-3 text-sm"
-              >
-                <input
-                  type="checkbox"
-                  className="mt-1 size-4"
-                  checked={acks[k] === true}
-                  onChange={(e) =>
-                    patch("safety_acknowledgments", {
-                      ...acks,
-                      [k]: e.target.checked,
-                    })
-                  }
-                />
-                <span>
-                  {label}
-                  <span className="text-destructive"> *</span>
-                </span>
-              </label>
-            ))}
+          <div className="grid gap-4">
+            <p className="text-sm text-muted-foreground">
+              Please review our intake acknowledgments — including medication
+              risks, emergency care, telehealth care, and how we use your
+              information — then confirm below.
+            </p>
+            <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border px-4 py-3">
+              <input
+                type="checkbox"
+                className="mt-1 size-4"
+                checked={acks[INTAKE_ACKNOWLEDGMENT_KEY] === true}
+                onChange={(e) =>
+                  patch("safety_acknowledgments", {
+                    [INTAKE_ACKNOWLEDGMENT_KEY]: e.target.checked,
+                  })
+                }
+              />
+              <span className="text-sm text-foreground">
+                I have read and agree to the{" "}
+                <Link
+                  to="/legal/intake-acknowledgments"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Intake Acknowledgments &amp; Informed Consent
+                </Link>
+                .
+                <span className="text-destructive"> *</span>
+              </span>
+            </label>
           </div>
         )}
       </QuizShell>

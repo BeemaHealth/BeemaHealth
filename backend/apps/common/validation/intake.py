@@ -177,6 +177,46 @@ def validate_medication_preferences_section(prefs: dict[str, Any]) -> dict[str, 
                 "Enter a valid member ID (letters, numbers, and dashes).",
             )
 
+    use_different_shipping = prefs.get("use_different_shipping_address") is True
+    shipping = {
+        "address": str(prefs.get("shipping_address", "")),
+        "city": str(prefs.get("shipping_city", "")),
+        "zip": str(prefs.get("shipping_zip", "")),
+        "county": str(prefs.get("shipping_county", "")),
+        "address_verified": str(prefs.get("shipping_address_verified", "")),
+    }
+    if use_different_shipping or any(
+        key in prefs
+        for key in (
+            "shipping_address",
+            "shipping_city",
+            "shipping_zip",
+            "shipping_county",
+            "shipping_address_verified",
+        )
+    ):
+        address = shipping["address"]
+        if "shipping_address" in prefs and address.strip() and not is_valid_street_address(address):
+            return _section_error("medication_preferences", "Enter a valid shipping address.")
+
+        city = shipping["city"]
+        if "shipping_city" in prefs and city.strip() and not is_valid_city(city):
+            return _section_error("medication_preferences", "Enter a valid shipping city name.")
+
+        zip_code = shipping["zip"]
+        if "shipping_zip" in prefs and zip_code.strip() and not is_valid_us_zip(zip_code):
+            return _section_error("medication_preferences", "Enter a valid shipping ZIP code.")
+
+        county = shipping["county"]
+        if "shipping_county" in prefs and county.strip() and not is_valid_county(county):
+            return _section_error("medication_preferences", "Enter a valid shipping county name.")
+
+        if shipping["address_verified"] == "true" and not is_identity_address_complete(shipping):
+            return _section_error(
+                "medication_preferences",
+                "Enter and verify your shipping address before continuing.",
+            )
+
     return {}
 
 

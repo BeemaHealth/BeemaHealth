@@ -31,10 +31,12 @@ export function AddressFields({
   value,
   expectedState,
   onChange,
+  label = "Home address",
 }: {
   value: AddressValue;
   expectedState?: string | null;
   onChange: (next: AddressValue) => void;
+  label?: string;
 }) {
   const onChangeRef = useRef(onChange);
   const expectedStateRef = useRef(expectedState);
@@ -169,7 +171,7 @@ export function AddressFields({
 
   return (
     <div ref={containerRef} className="grid gap-2 sm:col-span-2">
-      <Field label="Home address" required>
+      <Field label={label} required>
         <div className="relative">
           <input
             className={inputCls}

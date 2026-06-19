@@ -34,6 +34,7 @@ import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pe
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
+import { Route as LegalIntakeAcknowledgmentsRouteImport } from './routes/legal.intake-acknowledgments'
 
 const WeightLossRoute = WeightLossRouteImport.update({
   id: '/weight-loss',
@@ -160,6 +161,12 @@ const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
   path: '/legal/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalIntakeAcknowledgmentsRoute =
+  LegalIntakeAcknowledgmentsRouteImport.update({
+    id: '/legal/intake-acknowledgments',
+    path: '/legal/intake-acknowledgments',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/switch': typeof SwitchRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
+  '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
@@ -208,6 +216,7 @@ export interface FileRoutesByTo {
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
   '/weight-loss': typeof WeightLossRoute
+  '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
@@ -236,6 +245,7 @@ export interface FileRoutesById {
   '/switch': typeof SwitchRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
+  '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/switch'
     | '/verify-email'
     | '/weight-loss'
+    | '/legal/intake-acknowledgments'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/submitted'
     | '/switch'
     | '/weight-loss'
+    | '/legal/intake-acknowledgments'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
@@ -318,6 +330,7 @@ export interface FileRouteTypes {
     | '/switch'
     | '/verify-email'
     | '/weight-loss'
+    | '/legal/intake-acknowledgments'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
@@ -346,6 +359,7 @@ export interface RootRouteChildren {
   SwitchRoute: typeof SwitchRoute
   VerifyEmailRoute: typeof VerifyEmailRouteWithChildren
   WeightLossRoute: typeof WeightLossRoute
+  LegalIntakeAcknowledgmentsRoute: typeof LegalIntakeAcknowledgmentsRoute
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTelehealthConsentRoute: typeof LegalTelehealthConsentRoute
   LegalTermsRoute: typeof LegalTermsRoute
@@ -528,6 +542,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalPrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/intake-acknowledgments': {
+      id: '/legal/intake-acknowledgments'
+      path: '/legal/intake-acknowledgments'
+      fullPath: '/legal/intake-acknowledgments'
+      preLoaderRoute: typeof LegalIntakeAcknowledgmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -566,6 +587,7 @@ const rootRouteChildren: RootRouteChildren = {
   SwitchRoute: SwitchRoute,
   VerifyEmailRoute: VerifyEmailRouteWithChildren,
   WeightLossRoute: WeightLossRoute,
+  LegalIntakeAcknowledgmentsRoute: LegalIntakeAcknowledgmentsRoute,
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTelehealthConsentRoute: LegalTelehealthConsentRoute,
   LegalTermsRoute: LegalTermsRoute,
