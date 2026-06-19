@@ -38,24 +38,33 @@ function SummaryCard({
   title,
   status,
   sub,
-  className,
+  iconTone,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   status: string;
   sub: string;
-  className?: string;
+  iconTone: "review" | "prescription" | "shipping" | "messages";
 }) {
+  const iconWrap = {
+    review: "bg-warning/25 text-warning-foreground",
+    prescription: "bg-success/20 text-success",
+    shipping: "bg-muted text-muted-foreground",
+    messages: "bg-accent/70 text-accent-foreground",
+  } as const;
+
   return (
-    <div
-      className={cn(
-        "rounded-3xl border border-border bg-card p-4 shadow-soft md:p-5",
-        className,
-      )}
-    >
+    <div className="rounded-3xl border border-border bg-card p-4 shadow-soft md:p-5">
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-medium text-muted-foreground">{title}</p>
-        <Icon className="size-4 text-primary" aria-hidden />
+        <span
+          className={cn(
+            "flex size-8 shrink-0 items-center justify-center rounded-full",
+            iconWrap[iconTone],
+          )}
+        >
+          <Icon className="size-4" aria-hidden />
+        </span>
       </div>
       <p className="mt-2 text-lg font-semibold text-foreground">{status}</p>
       <p className="mt-0.5 text-xs text-muted-foreground">{sub}</p>
@@ -77,11 +86,11 @@ function DashboardHomePage() {
         subtitle="Here's where your care stands today."
       />
 
-      <section className="rounded-3xl border border-primary/10 bg-primary-soft/40 p-5 md:p-8">
+      <section className="rounded-3xl border border-primary/15 bg-primary-soft/70 p-5 md:p-8">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-sm font-medium text-primary">Current status</p>
-            <h2 className="mt-1 text-2xl font-bold text-foreground md:text-3xl">
+            <h2 className="mt-1 text-2xl font-bold text-primary md:text-3xl">
               {statusLabel}
             </h2>
           </div>
@@ -92,12 +101,11 @@ function DashboardHomePage() {
         </div>
 
         {data.intake_status === "more_info_needed" && data.patient_note && (
-          <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between md:p-5">
+          <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-primary/10 bg-card p-4 shadow-soft sm:flex-row sm:items-center sm:justify-between md:p-5">
             <div className="flex gap-3">
-              <Bell
-                className="mt-0.5 size-5 shrink-0 text-warning"
-                aria-hidden
-              />
+              <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-warning/25 text-warning-foreground">
+                <Bell className="size-4" aria-hidden />
+              </span>
               <div>
                 <p className="font-medium text-foreground">
                   Next action needed
@@ -128,24 +136,28 @@ function DashboardHomePage() {
           title="Provider review"
           status={summary.providerReview.label}
           sub={summary.providerReview.sub}
+          iconTone="review"
         />
         <SummaryCard
           icon={Pill}
           title="Prescription"
           status={summary.prescription.label}
           sub={summary.prescription.sub}
+          iconTone="prescription"
         />
         <SummaryCard
           icon={Truck}
           title="Shipping"
           status={summary.shipping.label}
           sub={summary.shipping.sub}
+          iconTone="shipping"
         />
         <SummaryCard
           icon={MessageSquare}
           title="Messages"
           status="Coming soon"
           sub="Secure messaging"
+          iconTone="messages"
         />
       </div>
 
@@ -169,6 +181,22 @@ function DashboardHomePage() {
         </section>
 
         <div className="space-y-4">
+          <section className="rounded-3xl border border-border bg-card p-5 shadow-soft">
+            <h2 className="text-sm font-semibold text-foreground">Messages</h2>
+            <div className="mt-3 rounded-2xl border border-border/80 bg-muted/60 p-3">
+              <p className="text-xs font-medium text-muted-foreground">
+                Your clinician
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-foreground/90">
+                Secure messaging is coming soon. We will notify you when you can
+                chat with your care team here.
+              </p>
+            </div>
+            <p className="mt-3 text-sm font-medium text-primary/70">
+              Open messages →
+            </p>
+          </section>
+
           {data.patient_note && data.intake_status !== "more_info_needed" && (
             <section className="rounded-3xl border border-border bg-card p-5 shadow-soft">
               <h2 className="text-sm font-semibold text-foreground">

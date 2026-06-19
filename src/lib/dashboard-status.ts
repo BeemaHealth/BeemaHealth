@@ -83,7 +83,10 @@ export function buildCareTimeline(
       title: STATUS_LABELS[status] ?? "Under provider review",
       description: "Your clinician is reviewing your intake",
       timestamp: submittedAt,
-      tone: status === "more_info_needed" ? "orange" : "gray",
+      tone:
+        status === "more_info_needed" || status === "under_review"
+          ? "orange"
+          : "gray",
     });
   }
 

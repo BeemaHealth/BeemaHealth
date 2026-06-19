@@ -1,7 +1,9 @@
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UPLOAD_DOCUMENT_TYPES } from "@/lib/api/client";
+import { getDocumentTypeMeta } from "@/lib/portal-documents";
 import type { DocumentType } from "@/lib/types/mvp";
+import { cn } from "@/lib/utils";
 import { inputCls } from "@/components/quiz/quiz-primitives";
 
 export function DocumentFileRow({
@@ -19,15 +21,45 @@ export function DocumentFileRow({
   onRemove: () => void;
   showPlaceholder?: boolean;
 }) {
+  const meta = documentType ? getDocumentTypeMeta(documentType) : null;
+  const Icon = meta?.icon;
+
   return (
-    <li className="grid min-w-0 max-w-full gap-2 overflow-hidden rounded-xl border border-border bg-muted/20 px-3 py-2">
-      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
-        <span
-          className="block min-w-0 truncate text-sm text-foreground"
-          title={filename}
-        >
-          {filename}
-        </span>
+    <li
+      className={cn(
+        "grid min-w-0 max-w-full gap-3 overflow-hidden rounded-2xl border px-3 py-3",
+        meta ? meta.section : "border-border bg-muted/25",
+      )}
+    >
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+        <div className="flex min-w-0 items-start gap-3">
+          {meta && Icon ? (
+            <span
+              className={cn(
+                "flex size-9 shrink-0 items-center justify-center rounded-xl",
+                meta.iconWrap,
+              )}
+            >
+              <Icon className="size-4" aria-hidden />
+            </span>
+          ) : null}
+          <div className="min-w-0">
+            {meta ? (
+              <p className="text-sm font-medium text-foreground">
+                {meta.label}
+              </p>
+            ) : null}
+            <span
+              className={cn(
+                "block min-w-0 truncate text-sm",
+                meta ? "text-muted-foreground" : "text-foreground",
+              )}
+              title={filename}
+            >
+              {filename}
+            </span>
+          </div>
+        </div>
         <Button
           type="button"
           variant="ghost"
@@ -41,7 +73,7 @@ export function DocumentFileRow({
         </Button>
       </div>
       <select
-        className={`${inputCls} min-w-0 w-full max-w-full`}
+        className={cn(inputCls, "min-w-0 w-full max-w-full bg-card/90")}
         value={documentType}
         disabled={disabled}
         onChange={(e) => onTypeChange(e.target.value as DocumentType)}

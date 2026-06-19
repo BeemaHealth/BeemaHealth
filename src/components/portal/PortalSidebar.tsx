@@ -81,7 +81,7 @@ export function PortalSidebar({ user }: { user: User }) {
                       className={cn(
                         "h-10 rounded-xl px-3",
                         isActive &&
-                          "bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary hover:text-sidebar-primary-foreground",
+                          "bg-sidebar-accent font-medium text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                       )}
                     >
                       <Link to={item.to}>
