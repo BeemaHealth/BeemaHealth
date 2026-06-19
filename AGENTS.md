@@ -96,16 +96,16 @@ Both frontend **and** backend must reject malicious input on strict fields.
 **After every code change**, before marking the task done:
 
 1. **Run the full suite** — `npm run test:all` (frontend Vitest + backend Django).
-2. **Run static checks on changed `.ts` / `.tsx` files only** — fix TypeScript/ESLint diagnostics in files you touched:
+2. **Run static checks on changed `.ts` / `.tsx` files** — both are required when you touch TypeScript; ESLint alone is **not** enough:
    - **ESLint (changed files only)** — do **not** run `npm run lint` project-wide (thousands of pre-existing issues). Lint your diff:
      ```bash
      FILES=$(git diff --name-only --diff-filter=ACMR HEAD -- '*.ts' '*.tsx')
      [ -n "$FILES" ] && echo "$FILES" | xargs npx eslint
      ```
      Or pass explicit paths: `npx eslint src/lib/foo.ts src/routes/bar.tsx`
-   - `npx tsc --noEmit` — TypeScript; fix errors in **files you touched** (imports, types, test helpers). Pre-existing errors elsewhere do not block your task, but new errors in your diff must be zero.
+   - **`npx tsc --noEmit` (required)** — catches missing imports, undefined names, and type errors that ESLint often misses (especially in `src/routes/*.tsx`). Vitest does **not** typecheck route files. Fix errors in **files you touched**; pre-existing errors elsewhere do not block your task, but you must not introduce new TS errors in your diff.
    - Optionally spot-check: `npx vitest run src/lib/__tests__/qualify-steps.test.ts` (or the specific test file you edited).
-3. **Report results in chat** — state explicitly that frontend and backend tests ran, plus lint/tsc outcome on changed files (e.g. “342 tests passed; lint clean; no TS errors in qualify-steps.test.ts”).
+3. **Report results in chat** — state explicitly that frontend and backend tests ran, plus **both** ESLint and `tsc` outcomes on changed files (e.g. “569 tests passed; ESLint clean on qualify.tsx; `tsc --noEmit` clean — no errors in changed files”).
 4. **Call out test changes** — if you add, update, or remove tests, say which test files changed and what they now assert (not only that the suite passed).
 5. **Ensure existing tests pass** — fix regressions; do not ignore or skip failures.
 6. **Decide if new tests are needed** — if behavior is new or the change could regress silently, add tests before finishing; if existing tests already cover it, say so in chat.
@@ -115,7 +115,7 @@ npm run test:all     # frontend (Vitest) + backend (Django) — preferred
 npm test             # frontend only
 npm run test:backend # backend only
 # ESLint — changed TS/TSX only (see workflow §3); do not run npm run lint project-wide
-npx tsc --noEmit     # TypeScript — fix errors in files you edited
+npx tsc --noEmit     # required when any TS/TSX changed — not optional
 npx vitest run path/to/changed.test.ts   # optional: single test file
 ```
 
@@ -242,6 +242,7 @@ Use shared fixtures — do not invent one-off strings:
 | `npm run dev:backend` | Backend + Postgres via Docker → http://localhost:8000 |
 | `npm run test:all` | Run all validation/regression tests |
 | ESLint on changed `.ts`/`.tsx` only | See workflow §3 — `npx eslint <paths>` or git-diff pipe; not `npm run lint` |
+| `npx tsc --noEmit` | **Required** when any TS/TSX changed — catches errors ESLint/Vitest miss in routes |
 | `docker compose -f backend/docker-compose.yml exec api python manage.py migrate` | Apply migrations |
 
 ---
