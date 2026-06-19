@@ -585,6 +585,7 @@ function IntakePage() {
               <YesNoField
                 key={k}
                 label={label}
+                required
                 value={
                   meds.answers[k] === true
                     ? true

@@ -291,6 +291,14 @@ describe("intake-steps validation", () => {
   });
 
   describe("step 5 medications", () => {
+    it("blocks progress without a footer message when questions are unanswered", () => {
+      const data = validIntake({
+        medications: { answers: {}, list: [] },
+      });
+      expect(getIntakeStepError(5, data)).toBe("");
+      expect(isIntakeStepComplete(5, data)).toBe(false);
+    });
+
     it("requires medication list when taking Rx", () => {
       const data = validIntake({
         medications: {

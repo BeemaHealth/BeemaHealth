@@ -317,7 +317,7 @@ export function getIntakeStepError(
       const unanswered = MEDICATION_ANSWER_KEYS.find(
         (k) => typeof meds.answers[k] !== "boolean",
       );
-      if (unanswered) return "Answer every current medication question.";
+      if (unanswered) return "";
       const needsList =
         meds.answers.taking_prescription === true ||
         meds.answers.taking_otc === true ||
