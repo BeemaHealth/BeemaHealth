@@ -65,6 +65,13 @@ class ConsentMeView(APIView):
             intake.status = "submitted"
             intake.submitted_at = timezone.now()
             intake.save()
+            log_audit_event(
+                user=request.user,
+                action="update",
+                resource_type="medical_intake",
+                resource_id=str(intake.id),
+                request=request,
+            )
 
         SafetyFlag.objects.filter(user=request.user).delete()
         flag_data = compute_safety_flags(

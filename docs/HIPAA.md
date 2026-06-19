@@ -92,7 +92,11 @@ These are **launch blockers for real PHI** — not fully automatable in code:
 |---------|----------------|-------------|
 | PHI access logging | `audit_events` table via `log_audit_event()` | Log create/read/update on PHI resources — follow existing views |
 | What is logged | `user`, `action`, `resource_type`, `resource_id`, `ip`, `user_agent` | **Do not log PHI field values** in audit rows |
+| Read deduplication | `READ_DEDUPE_SECONDS = 60` in `log_audit_event()` | First PHI **read** per `(user, resource_type, resource_id)` per 60s window; anonymous funnel reads also match `ip_address` |
+| Writes and auth | Always logged (never deduped) | **create**, **update**, **delete**, **login**, **logout** always insert a row |
 | Middleware | `AuditMiddleware` — PHI path prefixes defined | Extend `PHI_PATH_PREFIXES` if new PHI API namespaces added |
+
+**Read deduplication policy:** Application audit logs record the first PHI **read** of a given resource per user (or per IP for anonymous funnel sessions) within a 60-second window. Repeated reads of the same resource in that window are not logged separately. All **create**, **update**, **delete**, and **authentication** events are always logged. This satisfies §164.312(b) by recording meaningful access and all mutations without logging duplicate fetches caused by page remounts or dev tooling.
 
 **Code:** `backend/apps/audit/services.py`, `backend/apps/audit/middleware.py`
 

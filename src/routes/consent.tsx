@@ -8,7 +8,6 @@ import {
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import { Field, QuizShell, inputCls } from "@/components/quiz/quiz-primitives";
 import {
-  fetchEligibilityMe,
   fetchIntakeMe,
   isApiEnabled,
   syncConsent,
@@ -74,9 +73,12 @@ function ConsentPage() {
       };
       await syncConsent(consent);
 
-      const intake = isApiEnabled()
-        ? await fetchIntakeMe()
-        : getIntake(user.id);
+      if (isApiEnabled()) {
+        navigate({ to: "/submitted" });
+        return;
+      }
+
+      const intake = getIntake(user.id);
       if (!intake) {
         throw new Error("Could not load your intake. Please try again.");
       }
@@ -89,10 +91,7 @@ function ConsentPage() {
       };
       await syncIntake(submitted);
 
-      const eligibility = isApiEnabled()
-        ? await fetchEligibilityMe()
-        : getEligibility(user.id);
-
+      const eligibility = getEligibility(user.id);
       const flags = computeSafetyFlags(user, eligibility, submitted, true);
       saveSafetyFlags(user.id, flags);
 

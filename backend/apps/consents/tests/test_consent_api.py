@@ -4,8 +4,10 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from apps.accounts.models import User
+from apps.audit.models import AuditEvent
 from apps.common.validation.payloads import STRICT_FIELD_ATTACKS
 from apps.eligibility.models import EligibilityResponse
+from apps.intakes.models import MedicalIntake
 
 
 def valid_consent_payload(**overrides):
@@ -40,6 +42,22 @@ class ConsentApiValidationTests(TestCase):
     def test_valid_consent(self):
         response = self.client.post(reverse("consent-me"), valid_consent_payload(), format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_consent_submit_audits_intake_update(self):
+        intake = MedicalIntake.objects.create(user=self.user, status="draft")
+        response = self.client.post(reverse("consent-me"), valid_consent_payload(), format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        intake.refresh_from_db()
+        self.assertEqual(intake.status, "submitted")
+        self.assertEqual(
+            AuditEvent.objects.filter(
+                user=self.user,
+                action="update",
+                resource_type="medical_intake",
+                resource_id=str(intake.id),
+            ).count(),
+            1,
+        )
 
     def test_rejects_false_acknowledgments(self):
         response = self.client.post(

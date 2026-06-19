@@ -92,11 +92,4 @@ class DocumentFileUploadView(APIView):
         except ValueError:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        log_audit_event(
-            user=request.user,
-            action="update",
-            resource_type="document",
-            resource_id=str(doc.id),
-            request=request,
-        )
         return Response(UploadedDocumentSerializer(doc).data)
