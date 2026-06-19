@@ -1,3 +1,4 @@
+import { DisplayField } from "@/components/portal/AccountSectionCard";
 import { snapshotRowsForStep } from "@/lib/intake-submission-display";
 import type { IntakeSubmissionSnapshot } from "@/lib/types/mvp";
 
@@ -19,17 +20,14 @@ export function IntakeStepReadOnly({
   }
 
   return (
-    <dl className="grid gap-3 text-sm">
+    <dl className="grid gap-4 sm:grid-cols-2">
       {rows.map((row) => (
-        <div
+        <DisplayField
           key={`${step}-${row.label}`}
-          className="grid gap-1 border-b border-border/60 pb-3 last:border-0 last:pb-0 sm:grid-cols-[minmax(0,38%)_1fr] sm:gap-4"
-        >
-          <dt className="text-muted-foreground">{row.label}</dt>
-          <dd className="font-medium text-foreground break-words">
-            {row.value}
-          </dd>
-        </div>
+          label={row.label}
+          value={row.value}
+          className={row.value.length > 80 ? "sm:col-span-2" : undefined}
+        />
       ))}
     </dl>
   );

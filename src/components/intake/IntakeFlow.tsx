@@ -3,8 +3,13 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { EligibilityAccountEditor } from "@/components/intake/EligibilityAccountEditor";
 import { IntakeHomeAddressSection } from "@/components/intake/IntakeHomeAddressSection";
 import { LifestyleStepFields } from "@/components/intake/LifestyleStepFields";
+import {
+  IntakePortalStepNav,
+  IntakePortalStepNavSelect,
+} from "@/components/intake/IntakePortalStepNav";
 import { IntakeStepReadOnly } from "@/components/intake/IntakeStepReadOnly";
 import { IntakeSubmissionViewer } from "@/components/intake/IntakeSubmissionViewer";
+import { AccountSectionCard } from "@/components/portal/AccountSectionCard";
 import { DocumentTypeUpload } from "@/components/portal/DocumentTypeUpload";
 import { UploadedDocumentsList } from "@/components/portal/UploadedDocumentsList";
 import { PortalPageHeader } from "@/components/portal/PortalPageHeader";
@@ -66,6 +71,7 @@ import {
   normalizePriorDetails,
   type PriorMedDetails,
 } from "@/lib/intake-steps";
+import { getIntakeStepMeta } from "@/lib/intake-portal-ui";
 import { INTAKE_ACKNOWLEDGMENT_KEY } from "@/lib/intake-acknowledgments";
 import {
   getApplicableIntakeStepIndices,
@@ -1324,6 +1330,9 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
     );
 
   if (mode === "portal") {
+    const stepMeta = getIntakeStepMeta(step);
+    const StepIcon = stepMeta.icon;
+
     return (
       <div className="mx-auto max-w-6xl space-y-6">
         <PortalPageHeader
@@ -1386,62 +1395,30 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
             </div>
           </DialogContent>
         </Dialog>
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,15rem)_1fr]">
-          <nav className="hidden lg:block">
-            <ol className="space-y-1">
-              {INTAKE_STEP_LABELS.map((label, index) => {
-                const applicable = applicableSteps.includes(index);
-                const active = step === index;
-                return (
-                  <li key={label}>
-                    <button
-                      type="button"
-                      disabled={!applicable || submitting}
-                      onClick={() => handlePortalStepSelect(index)}
-                      className={cn(
-                        "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm transition-colors",
-                        active && "bg-primary-soft font-medium text-primary",
-                        !active &&
-                          applicable &&
-                          "text-foreground hover:bg-muted/60",
-                        !applicable &&
-                          "cursor-not-allowed text-muted-foreground/50",
-                      )}
-                    >
-                      <span className="text-xs text-muted-foreground">
-                        {index + 1}
-                      </span>
-                      <span className="truncate">{label}</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ol>
-          </nav>
-          <div className="lg:hidden">
-            <label className="grid gap-1.5 text-sm">
-              <span className="font-medium text-foreground">Jump to step</span>
-              <select
-                className="rounded-xl border border-input bg-background px-3 py-2.5"
-                value={step}
-                onChange={(e) => handlePortalStepSelect(Number(e.target.value))}
-              >
-                {INTAKE_STEP_LABELS.map((label, index) =>
-                  applicableSteps.includes(index) ? (
-                    <option key={label} value={index}>
-                      {index + 1}. {label}
-                    </option>
-                  ) : null,
-                )}
-              </select>
-            </label>
-          </div>
-          <div className="rounded-3xl border border-border bg-card p-5 shadow-soft md:p-8">
-            <h2 className="text-lg font-semibold text-foreground">
-              {INTAKE_STEP_LABELS[step]}
-            </h2>
-            <div className="mt-6">{stepFields}</div>
-            {footerNav}
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,16rem)_1fr]">
+          <IntakePortalStepNav
+            className="hidden lg:block"
+            step={step}
+            applicableSteps={applicableSteps}
+            submitting={submitting}
+            onSelect={handlePortalStepSelect}
+          />
+          <div className="min-w-0 space-y-4">
+            <IntakePortalStepNavSelect
+              className="lg:hidden"
+              step={step}
+              applicableSteps={applicableSteps}
+              onSelect={handlePortalStepSelect}
+            />
+            <AccountSectionCard
+              title={INTAKE_STEP_LABELS[step]}
+              description={stepMeta.description}
+              icon={StepIcon}
+              tone={stepMeta.tone}
+            >
+              {stepFields}
+              {footerNav}
+            </AccountSectionCard>
           </div>
         </div>
       </div>

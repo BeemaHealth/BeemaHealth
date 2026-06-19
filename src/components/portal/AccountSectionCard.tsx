@@ -263,3 +263,12 @@ export function accountSectionBadgeOnClass(tone: AccountSectionTone): string {
 export function accountSectionRowIconClass(tone: AccountSectionTone): string {
   return toneStyles[tone].rowIcon;
 }
+
+export function accountSectionNavIconClass(tone: AccountSectionTone): string {
+  return toneStyles[tone].icon;
+}
+
+export function accountSectionNavActiveClass(tone: AccountSectionTone): string {
+  const styles = toneStyles[tone];
+  return cn(styles.header, styles.title, "font-medium shadow-sm");
+}
