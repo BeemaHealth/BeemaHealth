@@ -62,3 +62,55 @@ class SafetyFlag(models.Model):
 
     def __str__(self):
         return f"{self.flag_type} ({self.severity})"
+
+
+class SideEffectCheckIn(models.Model):
+    SIDE_EFFECT_CHOICES = [
+        ("none", "None"),
+        ("mild_nausea", "Mild nausea"),
+        ("reduced_appetite", "Reduced appetite"),
+        ("constipation", "Constipation"),
+        ("fatigue", "Fatigue"),
+        ("other", "Other"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="side_effect_check_ins"
+    )
+    side_effect = models.CharField(max_length=32, choices=SIDE_EFFECT_CHOICES)
+    experienced_on = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "side_effect_check_ins"
+        ordering = ["-experienced_on", "-created_at"]
+
+    def __str__(self):
+        return f"{self.side_effect} on {self.experienced_on}"
+
+
+class RefillRequest(models.Model):
+    STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("approved", "Approved"),
+        ("denied", "Denied"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="refill_requests"
+    )
+    side_effect_check_in = models.ForeignKey(
+        SideEffectCheckIn,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="refill_requests",
+    )
+    status = models.CharField(max_length=16, choices=STATUS_CHOICES, default="pending")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "refill_requests"
+        ordering = ["-created_at"]

@@ -1,32 +1,16 @@
-from rest_framework import serializers
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.accounts.permissions import IsPatient
 from apps.accounts.serializers import UserSerializer
+from apps.audit.services import log_audit_event
 from apps.consents.models import ConsentRecord
 from apps.eligibility.models import EligibilityResponse
 from apps.intakes.models import MedicalIntake
-from apps.patients.models import PatientProfile
+from apps.patients.models import PatientProfile, PatientSettings
+from apps.patients.serializers import PatientProfileSerializer, PatientSettingsSerializer
 from apps.reviews.models import ProviderReview
-
-
-class PatientProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PatientProfile
-        fields = [
-            "id",
-            "sex_assigned_at_birth",
-            "gender_identity",
-            "preferred_name",
-            "address",
-            "city",
-            "county",
-            "zip_code",
-            "emergency_contact_name",
-            "emergency_contact_phone",
-        ]
-        read_only_fields = ["id"]
 
 
 class DashboardView(APIView):
@@ -51,3 +35,122 @@ class DashboardView(APIView):
                 "patient_note": review.patient_note if review else "",
             }
         )
+
+
+class PatientProfileMeView(APIView):
+    permission_classes = [IsPatient]
+
+    def get_object(self, user):
+        profile, _ = PatientProfile.objects.get_or_create(user=user)
+        return profile
+
+    def get(self, request):
+        profile = self.get_object(request.user)
+        log_audit_event(
+            user=request.user,
+            action="read",
+            resource_type="patient_profile",
+            resource_id=str(profile.id),
+            request=request,
+        )
+        return Response(PatientProfileSerializer(profile).data)
+
+    def patch(self, request):
+        profile = self.get_object(request.user)
+        serializer = PatientProfileSerializer(profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        profile = serializer.save()
+
+        intake = MedicalIntake.objects.filter(user=request.user).first()
+        if intake:
+            identity = dict(intake.identity or {})
+            if profile.address:
+                identity["address"] = profile.address
+            if profile.city:
+                identity["city"] = profile.city
+            if profile.county:
+                identity["county"] = profile.county
+            if profile.zip_code:
+                identity["zip"] = profile.zip_code
+            intake.identity = identity
+            intake.save(update_fields=["identity", "updated_at"])
+
+        log_audit_event(
+            user=request.user,
+            action="update",
+            resource_type="patient_profile",
+            resource_id=str(profile.id),
+            request=request,
+        )
+        return Response(PatientProfileSerializer(profile).data)
+
+
+class PatientSettingsMeView(APIView):
+    permission_classes = [IsPatient]
+
+    def get_object(self, user):
+        settings_obj, _ = PatientSettings.objects.get_or_create(user=user)
+        return settings_obj
+
+    def get(self, request):
+        settings_obj = self.get_object(request.user)
+        return Response(PatientSettingsSerializer(settings_obj).data)
+
+    def patch(self, request):
+        data = dict(request.data)
+        if data.get("two_factor_enabled") is True:
+            return Response(
+                {"detail": "Use the two-factor confirm endpoint to enable 2FA."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        settings_obj = self.get_object(request.user)
+        serializer = PatientSettingsSerializer(
+            settings_obj, data=request.data, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        settings_obj = serializer.save()
+        log_audit_event(
+            user=request.user,
+            action="update",
+            resource_type="patient_settings",
+            resource_id=str(settings_obj.id),
+            request=request,
+        )
+        return Response(PatientSettingsSerializer(settings_obj).data)
+
+
+class PatientTwoFactorSendCodeView(APIView):
+    permission_classes = [IsPatient]
+
+    def post(self, request):
+        from apps.accounts.services import (
+            create_login_mfa_challenge,
+            queue_login_mfa_email,
+        )
+
+        challenge, code = create_login_mfa_challenge(request.user)
+        queue_login_mfa_email(request.user, code)
+        return Response({"challenge_id": str(challenge.id)})
+
+
+class PatientTwoFactorConfirmView(APIView):
+    permission_classes = [IsPatient]
+
+    def post(self, request):
+        from apps.accounts.serializers import TwoFactorConfirmSerializer
+        from apps.accounts.services import verify_login_mfa_challenge
+
+        serializer = TwoFactorConfirmSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            verify_login_mfa_challenge(
+                str(serializer.validated_data["challenge_id"]),
+                serializer.validated_data["code"],
+            )
+        except ValueError as exc:
+            return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
+        settings_obj, _ = PatientSettings.objects.get_or_create(user=request.user)
+        settings_obj.two_factor_enabled = True
+        settings_obj.save(update_fields=["two_factor_enabled", "updated_at"])
+        return Response(PatientSettingsSerializer(settings_obj).data)

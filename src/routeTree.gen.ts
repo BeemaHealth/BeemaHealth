@@ -30,11 +30,17 @@ import { Route as ConsentRouteImport } from './routes/consent'
 import { Route as CliniciansRouteImport } from './routes/clinicians'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerifyEmailIndexRouteImport } from './routes/verify-email.index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pending'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
 import { Route as LegalIntakeAcknowledgmentsRouteImport } from './routes/legal.intake-acknowledgments'
+import { Route as DashboardRefillsRouteImport } from './routes/dashboard.refills'
+import { Route as DashboardOrdersRouteImport } from './routes/dashboard.orders'
+import { Route as DashboardIntakeRouteImport } from './routes/dashboard.intake'
+import { Route as DashboardDocumentsRouteImport } from './routes/dashboard.documents'
+import { Route as DashboardAccountRouteImport } from './routes/dashboard.account'
 
 const WeightLossRoute = WeightLossRouteImport.update({
   id: '/weight-loss',
@@ -141,6 +147,11 @@ const VerifyEmailIndexRoute = VerifyEmailIndexRouteImport.update({
   path: '/',
   getParentRoute: () => VerifyEmailRoute,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const VerifyEmailPendingRoute = VerifyEmailPendingRouteImport.update({
   id: '/pending',
   path: '/pending',
@@ -167,13 +178,38 @@ const LegalIntakeAcknowledgmentsRoute =
     path: '/legal/intake-acknowledgments',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DashboardRefillsRoute = DashboardRefillsRouteImport.update({
+  id: '/refills',
+  path: '/refills',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardOrdersRoute = DashboardOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardIntakeRoute = DashboardIntakeRouteImport.update({
+  id: '/intake',
+  path: '/intake',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardDocumentsRoute = DashboardDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAccountRoute = DashboardAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/clinicians': typeof CliniciansRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -189,11 +225,17 @@ export interface FileRoutesByFullPath {
   '/switch': typeof SwitchRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
+  '/dashboard/account': typeof DashboardAccountRoute
+  '/dashboard/documents': typeof DashboardDocumentsRoute
+  '/dashboard/intake': typeof DashboardIntakeRoute
+  '/dashboard/orders': typeof DashboardOrdersRoute
+  '/dashboard/refills': typeof DashboardRefillsRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
 }
 export interface FileRoutesByTo {
@@ -201,7 +243,6 @@ export interface FileRoutesByTo {
   '/clinicians': typeof CliniciansRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -216,11 +257,17 @@ export interface FileRoutesByTo {
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
   '/weight-loss': typeof WeightLossRoute
+  '/dashboard/account': typeof DashboardAccountRoute
+  '/dashboard/documents': typeof DashboardDocumentsRoute
+  '/dashboard/intake': typeof DashboardIntakeRoute
+  '/dashboard/orders': typeof DashboardOrdersRoute
+  '/dashboard/refills': typeof DashboardRefillsRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/verify-email': typeof VerifyEmailIndexRoute
 }
 export interface FileRoutesById {
@@ -229,7 +276,7 @@ export interface FileRoutesById {
   '/clinicians': typeof CliniciansRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -245,11 +292,17 @@ export interface FileRoutesById {
   '/switch': typeof SwitchRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
+  '/dashboard/account': typeof DashboardAccountRoute
+  '/dashboard/documents': typeof DashboardDocumentsRoute
+  '/dashboard/intake': typeof DashboardIntakeRoute
+  '/dashboard/orders': typeof DashboardOrdersRoute
+  '/dashboard/refills': typeof DashboardRefillsRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
 }
 export interface FileRouteTypes {
@@ -275,11 +328,17 @@ export interface FileRouteTypes {
     | '/switch'
     | '/verify-email'
     | '/weight-loss'
+    | '/dashboard/account'
+    | '/dashboard/documents'
+    | '/dashboard/intake'
+    | '/dashboard/orders'
+    | '/dashboard/refills'
     | '/legal/intake-acknowledgments'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/verify-email/pending'
+    | '/dashboard/'
     | '/verify-email/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -287,7 +346,6 @@ export interface FileRouteTypes {
     | '/clinicians'
     | '/consent'
     | '/contact'
-    | '/dashboard'
     | '/eligibility'
     | '/faq'
     | '/how-it-works'
@@ -302,11 +360,17 @@ export interface FileRouteTypes {
     | '/submitted'
     | '/switch'
     | '/weight-loss'
+    | '/dashboard/account'
+    | '/dashboard/documents'
+    | '/dashboard/intake'
+    | '/dashboard/orders'
+    | '/dashboard/refills'
     | '/legal/intake-acknowledgments'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/verify-email/pending'
+    | '/dashboard'
     | '/verify-email'
   id:
     | '__root__'
@@ -330,11 +394,17 @@ export interface FileRouteTypes {
     | '/switch'
     | '/verify-email'
     | '/weight-loss'
+    | '/dashboard/account'
+    | '/dashboard/documents'
+    | '/dashboard/intake'
+    | '/dashboard/orders'
+    | '/dashboard/refills'
     | '/legal/intake-acknowledgments'
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/verify-email/pending'
+    | '/dashboard/'
     | '/verify-email/'
   fileRoutesById: FileRoutesById
 }
@@ -343,7 +413,7 @@ export interface RootRouteChildren {
   CliniciansRoute: typeof CliniciansRoute
   ConsentRoute: typeof ConsentRoute
   ContactRoute: typeof ContactRoute
-  DashboardRoute: typeof DashboardRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   EligibilityRoute: typeof EligibilityRoute
   FaqRoute: typeof FaqRoute
   HowItWorksRoute: typeof HowItWorksRoute
@@ -514,6 +584,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerifyEmailIndexRouteImport
       parentRoute: typeof VerifyEmailRoute
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/verify-email/pending': {
       id: '/verify-email/pending'
       path: '/pending'
@@ -549,8 +626,65 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalIntakeAcknowledgmentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/refills': {
+      id: '/dashboard/refills'
+      path: '/refills'
+      fullPath: '/dashboard/refills'
+      preLoaderRoute: typeof DashboardRefillsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/orders': {
+      id: '/dashboard/orders'
+      path: '/orders'
+      fullPath: '/dashboard/orders'
+      preLoaderRoute: typeof DashboardOrdersRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/intake': {
+      id: '/dashboard/intake'
+      path: '/intake'
+      fullPath: '/dashboard/intake'
+      preLoaderRoute: typeof DashboardIntakeRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/documents': {
+      id: '/dashboard/documents'
+      path: '/documents'
+      fullPath: '/dashboard/documents'
+      preLoaderRoute: typeof DashboardDocumentsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/account': {
+      id: '/dashboard/account'
+      path: '/account'
+      fullPath: '/dashboard/account'
+      preLoaderRoute: typeof DashboardAccountRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
+
+interface DashboardRouteChildren {
+  DashboardAccountRoute: typeof DashboardAccountRoute
+  DashboardDocumentsRoute: typeof DashboardDocumentsRoute
+  DashboardIntakeRoute: typeof DashboardIntakeRoute
+  DashboardOrdersRoute: typeof DashboardOrdersRoute
+  DashboardRefillsRoute: typeof DashboardRefillsRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAccountRoute: DashboardAccountRoute,
+  DashboardDocumentsRoute: DashboardDocumentsRoute,
+  DashboardIntakeRoute: DashboardIntakeRoute,
+  DashboardOrdersRoute: DashboardOrdersRoute,
+  DashboardRefillsRoute: DashboardRefillsRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
 
 interface VerifyEmailRouteChildren {
   VerifyEmailPendingRoute: typeof VerifyEmailPendingRoute
@@ -571,7 +705,7 @@ const rootRouteChildren: RootRouteChildren = {
   CliniciansRoute: CliniciansRoute,
   ConsentRoute: ConsentRoute,
   ContactRoute: ContactRoute,
-  DashboardRoute: DashboardRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   EligibilityRoute: EligibilityRoute,
   FaqRoute: FaqRoute,
   HowItWorksRoute: HowItWorksRoute,

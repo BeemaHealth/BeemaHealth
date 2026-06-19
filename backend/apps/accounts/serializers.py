@@ -83,3 +83,47 @@ class LoginSerializer(serializers.Serializer):
 
 class VerifyEmailSerializer(serializers.Serializer):
     token = serializers.CharField()
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["email", "first_name", "last_name", "phone", "dob", "state"]
+        extra_kwargs = {
+            "email": {"required": False},
+            "first_name": {"required": False},
+            "last_name": {"required": False},
+            "phone": {"required": False},
+            "dob": {"required": False, "allow_null": True},
+            "state": {"required": False},
+        }
+
+    def validate_email(self, value: str) -> str:
+        if not is_valid_email(value):
+            raise serializers.ValidationError("Enter a valid email address.")
+        return value.strip().lower()
+
+    def validate_first_name(self, value: str) -> str:
+        if value and not is_valid_person_name(value):
+            raise serializers.ValidationError("Enter your legal first name.")
+        return value.strip() if value else value
+
+    def validate_last_name(self, value: str) -> str:
+        if value and not is_valid_person_name(value):
+            raise serializers.ValidationError("Enter your legal last name.")
+        return value.strip() if value else value
+
+    def validate_phone(self, value: str) -> str:
+        if value and not is_valid_phone(value):
+            raise serializers.ValidationError("Enter a valid 10-digit US phone number.")
+        return value.strip() if value else value
+
+
+class LoginMfaSerializer(serializers.Serializer):
+    mfa_challenge_id = serializers.UUIDField()
+    code = serializers.CharField(min_length=6, max_length=6)
+
+
+class TwoFactorConfirmSerializer(serializers.Serializer):
+    challenge_id = serializers.UUIDField()
+    code = serializers.CharField(min_length=6, max_length=6)

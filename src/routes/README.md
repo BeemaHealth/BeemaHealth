@@ -45,7 +45,22 @@ Also archived: `/switch`, `/insurance`, `/clinicians`, `/learn`, full `/how-it-w
 | 3 — Account creation | `/qualify` (account step) + auth API | Register/login; claim funnel draft |
 | 4 — Medical intake | `/intake` | Full clinical questionnaire + uploads |
 | 5 — Consent | `/consent` | Telehealth, HIPAA, medication acks, signature |
-| 6 — Patient dashboard | `/dashboard` | Case status (submitted → shipped) |
+| 6 — Patient dashboard | `/dashboard` | Case status portal (sidebar layout) |
+
+## Patient portal routes (Step 6 detail)
+
+Authenticated portal shell at `/dashboard` (layout route). Messages nav is feature-flagged off in `src/lib/portal-nav.ts`.
+
+| Route | Purpose |
+|-------|---------|
+| `/dashboard/` | Home — status, timeline, order preview |
+| `/dashboard/intake` | Edit intake by step (jump navigation) |
+| `/dashboard/orders` | Order tracking (prototype data until pharmacy API) |
+| `/dashboard/refills` | Refill request UI (prototype) |
+| `/dashboard/documents` | Document upload + status |
+| `/dashboard/account` | Profile, contact, consents (read-only v1) |
+
+First-time funnel still uses `/intake` with `FlowLayout`; returning patients edit at `/dashboard/intake`.
 
 ## Admin routes (Steps 7–8)
 

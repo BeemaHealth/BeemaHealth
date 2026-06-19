@@ -38,3 +38,22 @@ class PatientProfile(models.Model):
 
     def __str__(self):
         return f"Profile for {self.user.email}"
+
+
+class PatientSettings(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="patient_settings"
+    )
+    email_notifications = models.BooleanField(default=True)
+    sms_notifications = models.BooleanField(default=True)
+    product_emails = models.BooleanField(default=False)
+    two_factor_enabled = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "patient_settings"
+
+    def __str__(self):
+        return f"Settings for {self.user.email}"

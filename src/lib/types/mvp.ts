@@ -70,16 +70,16 @@ export interface User {
 
 export interface PatientProfile {
   id: string;
-  user_id: string;
   sex_assigned_at_birth?: SexAssignedAtBirth | "";
   gender_identity?: SexAssignedAtBirth | "";
+  preferred_name?: string;
   address: string;
   city: string;
   county: string;
-  state: string;
   zip: string;
   emergency_contact_name: string;
   emergency_contact_phone: string;
+  updated_at?: string;
 }
 
 export interface EligibilitySafetyScreen {
@@ -251,4 +251,42 @@ export interface DocumentUploadPresign {
 export interface DocumentUploadResponse {
   document: UploadedDocument;
   upload: DocumentUploadPresign;
+}
+
+export type SideEffectType =
+  | "none"
+  | "mild_nausea"
+  | "reduced_appetite"
+  | "constipation"
+  | "fatigue"
+  | "other";
+
+export interface SideEffectCheckIn {
+  id: string;
+  user_id: string;
+  side_effect: SideEffectType;
+  experienced_on: string;
+  created_at: string;
+}
+
+export interface PatientSettings {
+  email_notifications: boolean;
+  sms_notifications: boolean;
+  product_emails: boolean;
+  two_factor_enabled: boolean;
+  updated_at?: string;
+}
+
+export interface RefillRequest {
+  id: string;
+  user_id: string;
+  side_effect_check_in_id: string | null;
+  status: "pending" | "approved" | "denied";
+  created_at: string;
+}
+
+export interface LoginMfaChallenge {
+  mfa_required: true;
+  mfa_challenge_id: string;
+  detail: string;
 }

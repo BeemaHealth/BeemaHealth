@@ -5,7 +5,7 @@ from apps.common.validation.intake import validate_intake_payload
 from apps.eligibility.models import EligibilityResponse
 from apps.eligibility.services import derive_eligibility_flags
 from apps.intakes.deduplication import dedupe_intake_payload
-from apps.intakes.models import MedicalIntake
+from apps.intakes.models import MedicalIntake, SideEffectCheckIn
 from apps.patients.services import sync_patient_profile_from_intake
 
 
@@ -79,3 +79,31 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
         intake = super().update(instance, validated_data)
         sync_patient_profile_from_intake(intake.user, intake.identity)
         return intake
+
+
+class SideEffectCheckInSerializer(serializers.ModelSerializer):
+    user_id = serializers.UUIDField(read_only=True)
+
+    class Meta:
+        model = SideEffectCheckIn
+        fields = ["id", "user_id", "side_effect", "experienced_on", "created_at"]
+        read_only_fields = ["id", "user_id", "created_at"]
+
+    def validate_side_effect(self, value):
+        allowed = {choice[0] for choice in SideEffectCheckIn.SIDE_EFFECT_CHOICES}
+        if value not in allowed:
+            raise serializers.ValidationError("Invalid side effect.")
+        return value
+
+    def validate_experienced_on(self, value):
+        if value > timezone.now().date():
+            raise serializers.ValidationError("Date cannot be in the future.")
+        return value
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["user_id"] = str(instance.user_id)
+        data["experienced_on"] = instance.experienced_on.isoformat()
+        if instance.created_at:
+            data["created_at"] = instance.created_at.isoformat()
+        return data

@@ -18,11 +18,16 @@ import type {
   DocumentType,
   DocumentUploadResponse,
   EligibilityResponses,
+  LoginMfaChallenge,
   MedicalIntake,
+  PatientProfile,
+  PatientSettings,
   ProviderReview,
+  RefillRequest,
   SessionUser,
   UploadedDocument,
   User,
+  SideEffectCheckIn,
 } from "@/lib/types/mvp";
 import { applySession, clearSession } from "@/lib/session";
 import * as store from "@/lib/storage";
@@ -57,10 +62,21 @@ async function parseApiErrorMessage(
 
   if (contentType.includes("application/json")) {
     try {
-      const parsed = JSON.parse(body) as { detail?: unknown };
+      const parsed = JSON.parse(body) as Record<string, unknown>;
       if (typeof parsed.detail === "string" && parsed.detail.trim()) {
         return parsed.detail;
       }
+      const messages: string[] = [];
+      for (const value of Object.values(parsed)) {
+        if (Array.isArray(value)) {
+          for (const item of value) {
+            if (typeof item === "string" && item.trim()) messages.push(item);
+          }
+        } else if (typeof value === "string" && value.trim()) {
+          messages.push(value);
+        }
+      }
+      if (messages.length > 0) return messages.join(" ");
     } catch {
       // fall through to generic handling
     }
@@ -209,15 +225,21 @@ export async function resendVerificationEmail(): Promise<void> {
 export async function loginUser(
   email: string,
   password: string,
-): Promise<SessionUser> {
+): Promise<SessionUser | LoginMfaChallenge> {
   if (USE_API) {
-    const remote = await apiFetch<SessionUser>("/auth/login/", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      withCredentials: true,
-    });
-    persistSession(remote);
-    return remote;
+    const remote = await apiFetch<SessionUser | LoginMfaChallenge>(
+      "/auth/login/",
+      {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+        withCredentials: true,
+      },
+    );
+    if ("mfa_required" in remote && remote.mfa_required) {
+      return remote;
+    }
+    persistSession(remote as SessionUser);
+    return remote as SessionUser;
   }
 
   const user = store.getAllUsers().find((u) => u.email === email);
@@ -225,6 +247,32 @@ export async function loginUser(
   const session: SessionUser = { token: `local-${user.id}`, user };
   persistSession(session);
   return session;
+}
+
+export async function loginMfa(
+  mfaChallengeId: string,
+  code: string,
+): Promise<SessionUser> {
+  const remote = await apiFetch<SessionUser>("/auth/login/mfa/", {
+    method: "POST",
+    body: JSON.stringify({ mfa_challenge_id: mfaChallengeId, code }),
+    withCredentials: true,
+  });
+  persistSession(remote);
+  return remote;
+}
+
+export async function patchAuthMe(
+  data: Partial<
+    Pick<User, "email" | "first_name" | "last_name" | "phone" | "dob" | "state">
+  >,
+): Promise<SessionUser> {
+  const remote = await apiFetch<SessionUser>("/auth/me/", {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+  persistSession(remote);
+  return remote;
 }
 
 export async function logoutUser() {
@@ -254,19 +302,21 @@ export async function fetchEligibilityMe(): Promise<EligibilityResponses | null>
   }
 }
 
-export async function syncEligibility(data: Partial<EligibilityResponses>) {
+export async function syncEligibility(
+  data: Partial<EligibilityResponses>,
+): Promise<EligibilityResponses | void> {
   if (!USE_API) {
     if (!data.user_id) return;
     store.saveEligibility(data as EligibilityResponses);
     return;
   }
   try {
-    await apiFetch("/eligibility/me/", {
+    return await apiFetch<EligibilityResponses>("/eligibility/me/", {
       method: "PATCH",
       body: JSON.stringify(data),
     });
   } catch {
-    await apiFetch("/eligibility/", {
+    return await apiFetch<EligibilityResponses>("/eligibility/", {
       method: "POST",
       body: JSON.stringify(data),
     });
@@ -285,15 +335,29 @@ export async function fetchIntakeMe(): Promise<MedicalIntake | null> {
   }
 }
 
-export async function syncIntake(data: MedicalIntake) {
+export async function syncIntake(
+  data: MedicalIntake,
+): Promise<MedicalIntake | void> {
   if (!USE_API) {
     store.saveIntake(data);
-    return;
+    return data;
   }
-  await apiFetch("/medical-intakes/me/", {
+  return apiFetch<MedicalIntake>("/medical-intakes/me/", {
     method: "PATCH",
     body: JSON.stringify(data),
   });
+}
+
+export async function fetchConsentMe(): Promise<ConsentRecord | null> {
+  if (!USE_API) {
+    const session = store.getSession();
+    return session ? store.getConsent(session.user.id) : null;
+  }
+  try {
+    return await apiFetch<ConsentRecord>("/consent-records/me/");
+  } catch {
+    return null;
+  }
 }
 
 export async function syncConsent(data: ConsentRecord) {
@@ -427,3 +491,101 @@ export async function uploadDocumentFile(
     throw new ApiError(message, res.status);
   }
 }
+
+export async function fetchSideEffectCheckIns(): Promise<SideEffectCheckIn[]> {
+  if (!USE_API) return [];
+  try {
+    return await apiFetch<SideEffectCheckIn[]>("/side-effect-check-ins/me/");
+  } catch {
+    return [];
+  }
+}
+
+export async function submitSideEffectCheckIn(payload: {
+  side_effect: SideEffectCheckIn["side_effect"];
+  experienced_on: string;
+}): Promise<SideEffectCheckIn> {
+  return apiFetch<SideEffectCheckIn>("/side-effect-check-ins/me/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function fetchPatientProfile(): Promise<PatientProfile | null> {
+  if (!USE_API) return null;
+  try {
+    return await apiFetch<PatientProfile>("/patient-profile/me/");
+  } catch {
+    return null;
+  }
+}
+
+export async function patchPatientProfile(
+  data: Partial<PatientProfile>,
+): Promise<PatientProfile> {
+  return apiFetch<PatientProfile>("/patient-profile/me/", {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function fetchPatientSettings(): Promise<PatientSettings | null> {
+  if (!USE_API) return null;
+  try {
+    return await apiFetch<PatientSettings>("/patient-settings/me/");
+  } catch {
+    return null;
+  }
+}
+
+export async function patchPatientSettings(
+  data: Partial<PatientSettings>,
+): Promise<PatientSettings> {
+  return apiFetch<PatientSettings>("/patient-settings/me/", {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function sendTwoFactorSetupCode(): Promise<{
+  challenge_id: string;
+}> {
+  return apiFetch<{ challenge_id: string }>(
+    "/patient-settings/me/two-factor/send-code/",
+    { method: "POST" },
+  );
+}
+
+export async function confirmTwoFactor(
+  challengeId: string,
+  code: string,
+): Promise<PatientSettings> {
+  return apiFetch<PatientSettings>("/patient-settings/me/two-factor/confirm/", {
+    method: "POST",
+    body: JSON.stringify({ challenge_id: challengeId, code }),
+  });
+}
+
+export async function submitRefillRequest(payload?: {
+  side_effect_check_in_id?: string;
+}): Promise<RefillRequest> {
+  return apiFetch<RefillRequest>("/refill-requests/me/", {
+    method: "POST",
+    body: JSON.stringify(payload ?? {}),
+  });
+}
+
+export async function fetchRefillRequests(): Promise<RefillRequest[]> {
+  if (!USE_API) return [];
+  try {
+    return await apiFetch<RefillRequest[]>("/refill-requests/me/");
+  } catch {
+    return [];
+  }
+}
+
+export const UPLOAD_DOCUMENT_TYPES: { value: DocumentType; label: string }[] = [
+  { value: "photo_id", label: "Photo ID" },
+  { value: "insurance_card", label: "Insurance card" },
+  { value: "lab_results", label: "Lab result" },
+];
