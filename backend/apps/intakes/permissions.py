@@ -32,11 +32,6 @@ def patient_can_edit_intake_screening(intake) -> bool:
 
 def patient_has_active_prescription(user) -> bool:
     """Whether the patient has an active prescription (refills / side-effect check-ins)."""
-    from apps.intakes.models import MedicalIntake
-    from apps.reviews.models import ProviderReview
+    from apps.prescriptions.services import patient_has_active_prescription as has_prescription
 
-    review = ProviderReview.objects.filter(user=user).first()
-    if review and review.status == "prescription_sent":
-        return True
-    intake = MedicalIntake.objects.filter(user=user).first()
-    return intake is not None and intake.status == "prescription_sent"
+    return has_prescription(user)

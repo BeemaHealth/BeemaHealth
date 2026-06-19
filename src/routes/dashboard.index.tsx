@@ -68,7 +68,7 @@ function DashboardHomePage() {
   const summary = getStatusSummary(data.intake_status);
   const timeline = buildCareTimeline(data.intake_status, data.submitted_at);
   const statusLabel = STATUS_LABELS[data.intake_status] ?? data.intake_status;
-  const refillsAvailable = canManageRefills(data.intake_status);
+  const refillsAvailable = canManageRefills(data.has_active_prescription);
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -206,7 +206,7 @@ function DashboardHomePage() {
             <p className="mt-2 text-sm text-muted-foreground">
               {refillsAvailable
                 ? "Log side effects and request a refill when you are ready."
-                : "Refill management opens after your prescription is active."}
+                : "Refill management opens after your clinician prescribes medication."}
             </p>
             {refillsAvailable && (
               <Link

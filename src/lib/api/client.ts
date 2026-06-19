@@ -15,6 +15,7 @@
 import type {
   ConsentRecord,
   DashboardData,
+  PatientPrescription,
   DocumentType,
   DocumentUploadResponse,
   EligibilityResponses,
@@ -633,6 +634,15 @@ export async function submitRefillRequest(payload?: {
     method: "POST",
     body: JSON.stringify(payload ?? {}),
   });
+}
+
+export async function fetchPatientPrescription(): Promise<PatientPrescription | null> {
+  if (!USE_API) return null;
+  try {
+    return await apiFetch<PatientPrescription | null>("/prescriptions/me/");
+  } catch {
+    return null;
+  }
 }
 
 export async function fetchRefillRequests(): Promise<RefillRequest[]> {

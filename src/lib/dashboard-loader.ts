@@ -25,6 +25,7 @@ export async function loadDashboardData(): Promise<DashboardData> {
     submitted_at: intake?.submitted_at ?? null,
     treatment_interest: eligibility?.treatment_interest || null,
     patient_note: review?.patient_note ?? "",
+    has_active_prescription: false,
   };
 }
 

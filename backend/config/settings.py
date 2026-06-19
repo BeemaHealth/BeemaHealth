@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "apps.consents",
     "apps.documents",
     "apps.reviews",
+    "apps.prescriptions",
     "apps.audit",
     "apps.common",
 ]

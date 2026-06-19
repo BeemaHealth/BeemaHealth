@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { submitRefillRequest, submitSideEffectCheckIn } from "@/lib/api/client";
 import type {
+  PatientPrescription,
   RefillRequest,
   SideEffectCheckIn,
   SideEffectType,
@@ -24,14 +25,59 @@ const REFILL_STATUS_LABELS: Record<RefillRequest["status"], string> = {
   denied: "Denied",
 };
 
+const ROUTE_LABELS: Record<string, string> = {
+  injection: "Injection",
+  oral: "Oral",
+  other: "Other",
+};
+
+function PrescriptionDetails({
+  prescription,
+}: {
+  prescription: PatientPrescription;
+}) {
+  return (
+    <div className="flex items-start gap-4 rounded-3xl border border-border bg-card p-5 shadow-soft">
+      <div className="flex size-12 items-center justify-center rounded-full bg-primary-soft text-primary">
+        <RefreshCw className="size-6" aria-hidden />
+      </div>
+      <div className="min-w-0 space-y-2">
+        <div>
+          <p className="text-lg font-semibold text-foreground">
+            {prescription.medication_name}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {prescription.dosage} · {prescription.frequency}
+            {prescription.route
+              ? ` · ${ROUTE_LABELS[prescription.route] ?? prescription.route}`
+              : ""}
+          </p>
+        </div>
+        {prescription.pharmacy_name ? (
+          <p className="text-sm text-muted-foreground">
+            Pharmacy: {prescription.pharmacy_name}
+          </p>
+        ) : null}
+        {prescription.instructions ? (
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {prescription.instructions}
+          </p>
+        ) : null}
+        <p className="text-sm text-muted-foreground">
+          Log how you&apos;ve been feeling since your last dose, then request a
+          refill when you&apos;re ready.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export function RefillForm({
-  medicationLabel,
-  canManageRefills,
+  prescription,
   initialCheckIns,
   initialRefillRequests,
 }: {
-  medicationLabel: string;
-  canManageRefills: boolean;
+  prescription: PatientPrescription;
   initialCheckIns: SideEffectCheckIn[];
   initialRefillRequests: RefillRequest[];
 }) {
@@ -46,7 +92,6 @@ export function RefillForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!canManageRefills) return;
     setSubmitting(true);
     try {
       const created = await submitSideEffectCheckIn({
@@ -65,7 +110,6 @@ export function RefillForm({
   }
 
   async function handleRequestRefill() {
-    if (!canManageRefills) return;
     setRequestingRefill(true);
     try {
       const latestCheckIn = recent[0];
@@ -90,34 +134,7 @@ export function RefillForm({
       onSubmit={(e) => void handleSubmit(e)}
       className="mx-auto max-w-2xl space-y-6"
     >
-      <div className="flex items-start gap-4 rounded-3xl border border-border bg-card p-5 shadow-soft">
-        <div className="flex size-12 items-center justify-center rounded-full bg-primary-soft text-primary">
-          <RefreshCw className="size-6" aria-hidden />
-        </div>
-        <div>
-          <p className="text-lg font-semibold text-foreground">
-            {medicationLabel}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            {canManageRefills
-              ? "Log how you've been feeling since your last dose, then request a refill when you're ready."
-              : "Side-effect check-ins and refill requests open after your prescription is sent to the pharmacy."}
-          </p>
-        </div>
-      </div>
-
-      {!canManageRefills && (
-        <div className="rounded-3xl border border-border bg-muted/40 p-5 text-sm text-muted-foreground">
-          <p className="font-medium text-foreground">
-            Prescription not active yet
-          </p>
-          <p className="mt-1">
-            Once your clinician sends your prescription, you can log side
-            effects and request refills here. Check your dashboard for status
-            updates.
-          </p>
-        </div>
-      )}
+      <PrescriptionDetails prescription={prescription} />
 
       <div className="rounded-3xl border border-border bg-card p-5 shadow-soft md:p-6">
         <h2 className="font-semibold text-foreground">Side effect check-in</h2>
@@ -128,10 +145,9 @@ export function RefillForm({
           <label className="grid gap-1.5 text-sm">
             <span className="font-medium text-foreground">Side effect</span>
             <select
-              className="rounded-xl border border-input bg-background px-3 py-2.5 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-xl border border-input bg-background px-3 py-2.5"
               value={sideEffect}
               onChange={(e) => setSideEffect(e.target.value as SideEffectType)}
-              disabled={!canManageRefills}
             >
               {SIDE_EFFECTS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -146,12 +162,11 @@ export function RefillForm({
             </span>
             <input
               type="date"
-              className="rounded-xl border border-input bg-background px-3 py-2.5 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-xl border border-input bg-background px-3 py-2.5"
               value={experiencedOn}
               max={new Date().toISOString().slice(0, 10)}
               onChange={(e) => setExperiencedOn(e.target.value)}
               required
-              disabled={!canManageRefills}
             />
           </label>
         </div>
@@ -199,14 +214,14 @@ export function RefillForm({
           type="submit"
           variant="outline"
           className="h-12 rounded-xl text-base"
-          disabled={!canManageRefills || submitting}
+          disabled={submitting}
         >
           {submitting ? "Saving…" : "Submit check-in"}
         </Button>
         <Button
           type="button"
           className="h-12 rounded-xl text-base"
-          disabled={!canManageRefills || requestingRefill}
+          disabled={requestingRefill}
           onClick={() => void handleRequestRefill()}
         >
           {requestingRefill ? "Submitting…" : "Request refill"}

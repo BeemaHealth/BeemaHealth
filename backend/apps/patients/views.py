@@ -10,6 +10,7 @@ from apps.eligibility.models import EligibilityResponse
 from apps.intakes.models import MedicalIntake
 from apps.patients.models import PatientProfile, PatientSettings
 from apps.patients.serializers import PatientProfileSerializer, PatientSettingsSerializer
+from apps.prescriptions.services import patient_has_active_prescription
 from apps.reviews.models import ProviderReview
 
 
@@ -33,6 +34,7 @@ class DashboardView(APIView):
                 "submitted_at": intake.submitted_at if intake else None,
                 "treatment_interest": eligibility.treatment_interest if eligibility else None,
                 "patient_note": review.patient_note if review else "",
+                "has_active_prescription": patient_has_active_prescription(user),
             }
         )
 

@@ -121,32 +121,7 @@ export function buildCareTimeline(
   return events;
 }
 
-const TREATMENT_LABELS: Record<string, string> = {
-  zepbound: "Zepbound injection",
-  wegovy_inj: "Wegovy injection",
-  wegovy_pill: "Wegovy pill",
-  compounded_sema: "Compounded semaglutide injection",
-  provider_choice: "Clinician recommendation",
-  glp1_pills: "GLP-1 oral medication",
-  glp1_injections: "GLP-1 injection",
-  provider_recommendation: "Clinician recommendation",
-  not_sure: "To be determined",
-};
-
-/** Refills and side-effect check-ins require an active prescription. */
-export function canManageRefills(status: IntakeStatus): boolean {
-  return status === "prescription_sent";
-}
-
-export function getMedicationLabel(
-  treatmentKey: string | undefined,
-  treatmentInterest: string | null | undefined,
-): string {
-  if (treatmentKey && TREATMENT_LABELS[treatmentKey]) {
-    return TREATMENT_LABELS[treatmentKey];
-  }
-  if (treatmentInterest && TREATMENT_LABELS[treatmentInterest]) {
-    return TREATMENT_LABELS[treatmentInterest];
-  }
-  return "Your prescribed medication";
+/** Refills and side-effect check-ins require an active prescription record. */
+export function canManageRefills(hasActivePrescription: boolean): boolean {
+  return hasActivePrescription;
 }

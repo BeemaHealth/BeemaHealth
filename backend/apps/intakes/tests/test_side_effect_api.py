@@ -7,6 +7,7 @@ from rest_framework.test import APIClient
 
 from apps.accounts.models import User
 from apps.intakes.models import MedicalIntake, SideEffectCheckIn
+from apps.prescriptions.models import PatientPrescription
 from apps.reviews.models import ProviderReview
 
 
@@ -25,6 +26,12 @@ class SideEffectCheckInApiTests(TestCase):
     def _mark_prescription_sent(self):
         MedicalIntake.objects.create(user=self.user, status="prescription_sent")
         ProviderReview.objects.create(user=self.user, status="prescription_sent")
+        PatientPrescription.objects.create(
+            user=self.user,
+            medication_name="Wegovy",
+            dosage="0.25 mg",
+            frequency="Once weekly",
+        )
 
     def test_create_and_list_check_in(self):
         self._mark_prescription_sent()
@@ -55,6 +62,8 @@ class SideEffectCheckInApiTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_rejects_check_in_without_prescription(self):
+        MedicalIntake.objects.create(user=self.user, status="prescription_sent")
+        ProviderReview.objects.create(user=self.user, status="prescription_sent")
         response = self.client.post(
             reverse("side-effect-check-in-me"),
             {"side_effect": "fatigue", "experienced_on": "2026-06-15"},

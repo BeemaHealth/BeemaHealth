@@ -19,5 +19,6 @@ python manage.py test \
   apps.intakes.tests \
   apps.consents.tests \
   apps.documents.tests \
+  apps.prescriptions.tests \
   --settings=config.settings_test \
   "$@"

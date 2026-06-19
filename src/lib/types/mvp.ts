@@ -289,6 +289,25 @@ export interface DashboardData {
   submitted_at: string | null;
   treatment_interest: TreatmentInterest | null;
   patient_note: string;
+  has_active_prescription: boolean;
+}
+
+export type PrescriptionRoute = "injection" | "oral" | "other";
+
+export interface PatientPrescription {
+  id: string;
+  user_id: string;
+  medication_name: string;
+  dosage: string;
+  frequency: string;
+  route: PrescriptionRoute | "";
+  instructions: string;
+  pharmacy_name: string;
+  is_active: boolean;
+  prescribed_at: string;
+  prescribed_by_id: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export type DocumentType =

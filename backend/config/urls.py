@@ -5,6 +5,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from apps.accounts.views import HealthCheckView
 from apps.eligibility.urls import funnel_urlpatterns
 from apps.intakes.urls import refill_urlpatterns, side_effect_urlpatterns
+from apps.prescriptions.urls import urlpatterns as prescription_urlpatterns
 from apps.patients.urls import profile_urlpatterns, settings_urlpatterns
 from apps.reviews.views import ProviderReviewSyncView
 
@@ -24,6 +25,7 @@ urlpatterns = [
     path("api/patient-settings/", include(settings_urlpatterns)),
     path("api/documents/", include("apps.documents.urls")),
     path("api/refill-requests/", include(refill_urlpatterns)),
+    path("api/prescriptions/", include(prescription_urlpatterns)),
     path("api/admin/", include("apps.reviews.urls")),
     path("api/provider-reviews/", ProviderReviewSyncView.as_view(), name="provider-reviews"),
 ]

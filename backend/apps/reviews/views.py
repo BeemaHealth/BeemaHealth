@@ -11,6 +11,8 @@ from apps.consents.models import ConsentRecord
 from apps.eligibility.models import EligibilityResponse
 from apps.intakes.models import MedicalIntake, SafetyFlag
 from apps.intakes.services import compute_age, compute_bmi
+from apps.prescriptions.serializers import PatientPrescriptionSerializer
+from apps.prescriptions.services import get_active_prescription
 from apps.reviews.models import ProviderReview
 from apps.reviews.serializers import (
     PatientListSerializer,
@@ -78,6 +80,7 @@ class PatientDetailView(APIView):
         consent = ConsentRecord.objects.filter(user=user).first()
         flags = SafetyFlag.objects.filter(user=user)
         review = ProviderReview.objects.filter(user=user).first()
+        prescription = get_active_prescription(user)
         active_submission = get_active_submission(intake) if intake else None
         log_audit_event(
             user=request.user,
@@ -99,6 +102,11 @@ class PatientDetailView(APIView):
                 "consent": ConsentRecordSerializer(consent).data if consent else None,
                 "flags": SafetyFlagSerializer(flags, many=True).data,
                 "review": ProviderReviewSerializer(review).data if review else None,
+                "prescription": (
+                    PatientPrescriptionSerializer(prescription).data
+                    if prescription
+                    else None
+                ),
             }
         )
 

@@ -72,10 +72,10 @@ if [[ ! -f "$ENV_FILE" ]]; then
   echo
 fi
 
+COMPOSE=(docker compose -f backend/docker-compose.yml)
 if [[ -f "$ENV_FILE" ]]; then
-  export ARETIDE_ENV
-  exec docker compose -f backend/docker-compose.yml --env-file "$ENV_FILE" up "$@"
-else
-  export ARETIDE_ENV
-  exec docker compose -f backend/docker-compose.yml up "$@"
+  COMPOSE+=(--env-file "$ENV_FILE")
 fi
+export ARETIDE_ENV
+"${COMPOSE[@]}" run --rm api python manage.py migrate
+exec "${COMPOSE[@]}" up "$@"
