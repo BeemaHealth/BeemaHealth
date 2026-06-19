@@ -1,6 +1,11 @@
 import { cn } from "@/lib/utils";
 import { Check, Eye, EyeOff, Loader2 } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import {
+  forwardRef,
+  useState,
+  type FocusEventHandler,
+  type ReactNode,
+} from "react";
 
 export const inputCls =
   "w-full rounded-2xl border border-input bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring";
@@ -172,29 +177,62 @@ export function YesNoField({
   );
 }
 
-export function PasswordInput({
-  value,
-  onChange,
-  placeholder,
-  className,
-  autoComplete = "current-password",
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  className?: string;
-  autoComplete?: string;
-}) {
+export const PasswordInput = forwardRef<
+  HTMLInputElement,
+  {
+    id?: string;
+    name?: string;
+    value?: string;
+    onChange?: (value: string) => void;
+    placeholder?: string;
+    className?: string;
+    autoComplete?: string;
+    required?: boolean;
+    tabIndex?: number;
+    /** Chrome autofill hack: readOnly until focus so the browser can inject values. */
+    autofillHack?: boolean;
+    onFocus?: FocusEventHandler<HTMLInputElement>;
+  }
+>(function PasswordInput(
+  {
+    id,
+    name,
+    value,
+    onChange,
+    placeholder,
+    className,
+    autoComplete = "current-password",
+    required,
+    tabIndex,
+    autofillHack = false,
+    onFocus,
+  },
+  ref,
+) {
   const [visible, setVisible] = useState(false);
+  const [readOnly, setReadOnly] = useState(autofillHack);
+  const isControlled = value !== undefined;
+
   return (
     <div className="relative">
       <input
+        ref={ref}
+        id={id}
+        name={name}
         type={visible ? "text" : "password"}
         className={cn(inputCls, "pr-12", className)}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        {...(isControlled
+          ? { value, onChange: (e) => onChange?.(e.target.value) }
+          : {})}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        required={required}
+        tabIndex={tabIndex}
+        readOnly={autofillHack ? readOnly : undefined}
+        onFocus={(event) => {
+          if (autofillHack) setReadOnly(false);
+          onFocus?.(event);
+        }}
       />
       <button
         type="button"
@@ -206,7 +244,7 @@ export function PasswordInput({
       </button>
     </div>
   );
-}
+});
 
 export function BlockedMessage({
   title,

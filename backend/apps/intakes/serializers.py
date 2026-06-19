@@ -5,7 +5,9 @@ from apps.common.validation.intake import validate_intake_payload
 from apps.eligibility.models import EligibilityResponse
 from apps.eligibility.services import derive_eligibility_flags
 from apps.intakes.deduplication import dedupe_intake_payload
-from apps.intakes.models import MedicalIntake, SideEffectCheckIn
+from apps.intakes.models import IntakeSubmission, MedicalIntake, SideEffectCheckIn
+from apps.intakes.permissions import patient_can_edit_intake
+from apps.intakes.screening import ensure_account_screening
 from apps.patients.services import sync_patient_profile_from_intake
 
 
@@ -30,10 +32,21 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
             "labs",
             "medication_preferences",
             "safety_acknowledgments",
+            "account_screening",
             "submitted_at",
+            "active_submission_version",
+            "working_version",
             "updated_at",
         ]
-        read_only_fields = ["id", "user_id", "submitted_at", "updated_at"]
+        read_only_fields = [
+            "id",
+            "user_id",
+            "submitted_at",
+            "active_submission_version",
+            "working_version",
+            "account_screening",
+            "updated_at",
+        ]
 
     def _dedupe(self, attrs: dict) -> dict:
         user = self.context.get("user") or (self.instance.user if self.instance else None)
@@ -41,6 +54,10 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
         return dedupe_intake_payload(attrs, user, eligibility)
 
     def validate(self, attrs):
+        if self.instance and not patient_can_edit_intake(self.instance):
+            raise serializers.ValidationError(
+                "This intake cannot be edited. Contact your care team if changes are needed."
+            )
         attrs = self._dedupe(attrs)
 
         user = self.context.get("user") or (self.instance.user if self.instance else None)
@@ -60,6 +77,8 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
             data["updated_at"] = instance.updated_at.isoformat()
         if instance.submitted_at:
             data["submitted_at"] = instance.submitted_at.isoformat()
+        if not instance.account_screening:
+            data["account_screening"] = ensure_account_screening(instance)
         return data
 
     def validate_status(self, value):
@@ -69,7 +88,8 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         intake = super().create(validated_data)
-        sync_patient_profile_from_intake(intake.user, intake.identity)
+        if intake.status == "draft":
+            sync_patient_profile_from_intake(intake.user, intake.identity)
         return intake
 
     def update(self, instance, validated_data):
@@ -77,8 +97,38 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
         if status == "submitted" and not instance.submitted_at:
             validated_data["submitted_at"] = timezone.now()
         intake = super().update(instance, validated_data)
-        sync_patient_profile_from_intake(intake.user, intake.identity)
+        if intake.status == "draft":
+            sync_patient_profile_from_intake(intake.user, intake.identity)
         return intake
+
+
+class IntakeSubmissionSerializer(serializers.ModelSerializer):
+    user_id = serializers.UUIDField(read_only=True)
+    medical_intake_id = serializers.UUIDField(read_only=True)
+
+    class Meta:
+        model = IntakeSubmission
+        fields = [
+            "id",
+            "user_id",
+            "medical_intake_id",
+            "version",
+            "status_at_submit",
+            "snapshot",
+            "submitted_at",
+            "created_at",
+        ]
+        read_only_fields = fields
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["user_id"] = str(instance.user_id)
+        data["medical_intake_id"] = str(instance.medical_intake_id)
+        if instance.submitted_at:
+            data["submitted_at"] = instance.submitted_at.isoformat()
+        if instance.created_at:
+            data["created_at"] = instance.created_at.isoformat()
+        return data
 
 
 class SideEffectCheckInSerializer(serializers.ModelSerializer):

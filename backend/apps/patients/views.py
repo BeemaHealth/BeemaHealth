@@ -61,20 +61,6 @@ class PatientProfileMeView(APIView):
         serializer.is_valid(raise_exception=True)
         profile = serializer.save()
 
-        intake = MedicalIntake.objects.filter(user=request.user).first()
-        if intake:
-            identity = dict(intake.identity or {})
-            if profile.address:
-                identity["address"] = profile.address
-            if profile.city:
-                identity["city"] = profile.city
-            if profile.county:
-                identity["county"] = profile.county
-            if profile.zip_code:
-                identity["zip"] = profile.zip_code
-            intake.identity = identity
-            intake.save(update_fields=["identity", "updated_at"])
-
         log_audit_event(
             user=request.user,
             action="update",

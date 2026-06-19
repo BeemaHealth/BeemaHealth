@@ -9,7 +9,9 @@ from apps.consents.models import ConsentRecord
 from apps.consents.serializers import ConsentRecordSerializer
 from apps.eligibility.models import EligibilityResponse
 from apps.intakes.models import MedicalIntake, SafetyFlag
+from apps.intakes.screening import refresh_account_screening
 from apps.intakes.services import compute_safety_flags
+from apps.intakes.submissions import create_intake_submission
 
 
 class ConsentMeView(APIView):
@@ -64,7 +66,9 @@ class ConsentMeView(APIView):
         if intake:
             intake.status = "submitted"
             intake.submitted_at = timezone.now()
+            refresh_account_screening(intake)
             intake.save()
+            create_intake_submission(request.user, intake, submitted_at=intake.submitted_at)
             log_audit_event(
                 user=request.user,
                 action="update",

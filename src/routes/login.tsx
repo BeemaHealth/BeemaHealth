@@ -1,6 +1,7 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useRef, useState } from "react";
 import { loginMfa, loginUser } from "@/lib/api/client";
+import { storeLoginCredentials } from "@/lib/credential-storage";
 import type { SessionUser } from "@/lib/types/mvp";
 import { useAuth } from "@/context/AuthContext";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
@@ -19,19 +20,49 @@ export const Route = createFileRoute("/login")({
   }),
 });
 
+function redirectAfterLogin(session: SessionUser, redirect: string) {
+  const target =
+    !session.user.email_verified && redirect === "/intake"
+      ? "/verify-email/pending"
+      : redirect;
+  // Full navigation helps browsers detect a successful login and offer to save credentials.
+  window.location.assign(target);
+}
+
+async function finishLogin(
+  session: SessionUser,
+  redirect: string,
+  email: string,
+  password: string,
+  setSession: (session: SessionUser) => void,
+) {
+  setSession(session);
+  await storeLoginCredentials(email, password);
+  redirectAfterLogin(session, redirect);
+}
+
 function LoginPage() {
-  const navigate = useNavigate();
   const { redirect } = Route.useSearch();
   const { setSession } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const [credentialsLocked, setCredentialsLocked] = useState(true);
   const [error, setError] = useState("");
   const [mfaChallengeId, setMfaChallengeId] = useState<string | null>(null);
   const [mfaCode, setMfaCode] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  function readCredentials() {
+    return {
+      email: emailRef.current?.value ?? "",
+      password: passwordRef.current?.value ?? "",
+    };
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (mfaChallengeId) return;
+    const { email, password } = readCredentials();
     setError("");
     setSubmitting(true);
     try {
@@ -41,12 +72,7 @@ function LoginPage() {
         return;
       }
       const session = result as SessionUser;
-      setSession(session);
-      if (!session.user.email_verified && redirect === "/intake") {
-        navigate({ to: "/verify-email/pending" });
-        return;
-      }
-      navigate({ to: redirect });
+      await finishLogin(session, redirect, email, password, setSession);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed.");
     } finally {
@@ -57,12 +83,12 @@ function LoginPage() {
   async function handleMfaSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!mfaChallengeId) return;
+    const { email, password } = readCredentials();
     setError("");
     setSubmitting(true);
     try {
       const session = await loginMfa(mfaChallengeId, mfaCode);
-      setSession(session);
-      navigate({ to: redirect });
+      await finishLogin(session, redirect, email, password, setSession);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Invalid verification code.",
@@ -72,30 +98,89 @@ function LoginPage() {
     }
   }
 
+  function unlockCredentials() {
+    setCredentialsLocked(false);
+  }
+
   return (
     <FlowLayout progress={0}>
       <QuizShell
         label="Login"
         title={mfaChallengeId ? "Verify your sign-in" : "Welcome back"}
       >
-        {mfaChallengeId ? (
-          <form onSubmit={handleMfaSubmit} className="grid gap-4">
-            <p className="text-sm text-muted-foreground">
-              Enter the 6-digit code sent to your email to finish signing in.
-            </p>
-            <Field label="Verification code" required>
+        <form
+          method="post"
+          action="/login"
+          autoComplete="on"
+          onSubmit={mfaChallengeId ? handleMfaSubmit : handleSubmit}
+          className="grid gap-4"
+        >
+          <div
+            className={mfaChallengeId ? "sr-only" : "grid gap-4"}
+            aria-hidden={mfaChallengeId ? true : undefined}
+          >
+            <Field label="Email" required>
               <input
+                ref={emailRef}
+                id="login-username"
+                name="username"
+                type="email"
                 className={inputCls}
-                inputMode="numeric"
-                maxLength={6}
-                value={mfaCode}
-                onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, ""))}
+                autoComplete="username"
+                required
+                tabIndex={mfaChallengeId ? -1 : undefined}
+                readOnly={credentialsLocked}
+                onFocus={unlockCredentials}
               />
             </Field>
-            {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button type="submit" className="w-full" disabled={submitting}>
-              {submitting ? "Verifying…" : "Continue"}
-            </Button>
+            <Field label="Password" required>
+              <PasswordInput
+                ref={passwordRef}
+                id="login-password"
+                name="password"
+                autoComplete="current-password"
+                required
+                tabIndex={mfaChallengeId ? -1 : undefined}
+                autofillHack
+                onFocus={unlockCredentials}
+              />
+            </Field>
+          </div>
+
+          {mfaChallengeId && (
+            <>
+              <p className="text-sm text-muted-foreground">
+                Enter the 6-digit code sent to your email to finish signing in.
+              </p>
+              <Field label="Verification code" required>
+                <input
+                  id="login-mfa-code"
+                  name="otp"
+                  className={inputCls}
+                  inputMode="numeric"
+                  maxLength={6}
+                  value={mfaCode}
+                  onChange={(e) =>
+                    setMfaCode(e.target.value.replace(/\D/g, ""))
+                  }
+                  autoComplete="one-time-code"
+                  required
+                />
+              </Field>
+            </>
+          )}
+
+          {error && <p className="text-sm text-destructive">{error}</p>}
+          <Button type="submit" className="w-full" disabled={submitting}>
+            {submitting
+              ? mfaChallengeId
+                ? "Verifying…"
+                : "Signing in…"
+              : mfaChallengeId
+                ? "Continue"
+                : "Log in"}
+          </Button>
+          {mfaChallengeId && (
             <Button
               type="button"
               variant="ghost"
@@ -108,26 +193,8 @@ function LoginPage() {
             >
               Back to login
             </Button>
-          </form>
-        ) : (
-          <form onSubmit={handleSubmit} className="grid gap-4">
-            <Field label="Email" required>
-              <input
-                type="email"
-                className={inputCls}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Field>
-            <Field label="Password" required>
-              <PasswordInput value={password} onChange={setPassword} />
-            </Field>
-            {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button type="submit" className="w-full" disabled={submitting}>
-              {submitting ? "Signing in…" : "Log in"}
-            </Button>
-          </form>
-        )}
+          )}
+        </form>
         <p className="mt-4 text-center text-sm text-muted-foreground">
           New patient?{" "}
           <Link to="/qualify" className="text-primary underline">

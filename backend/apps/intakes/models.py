@@ -31,7 +31,10 @@ class MedicalIntake(models.Model):
     labs = models.JSONField(default=dict)
     medication_preferences = models.JSONField(default=dict)
     safety_acknowledgments = models.JSONField(default=dict)
+    account_screening = models.JSONField(default=dict)
     submitted_at = models.DateTimeField(null=True, blank=True)
+    active_submission_version = models.PositiveSmallIntegerField(null=True, blank=True)
+    working_version = models.PositiveSmallIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -40,6 +43,42 @@ class MedicalIntake(models.Model):
 
     def __str__(self):
         return f"Intake for {self.user.email}"
+
+
+class IntakeSubmission(models.Model):
+    STATUS_AT_SUBMIT_CHOICES = [
+        ("submitted", "Submitted"),
+        ("resubmitted", "Resubmitted"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="intake_submissions"
+    )
+    medical_intake = models.ForeignKey(
+        MedicalIntake,
+        on_delete=models.CASCADE,
+        related_name="submissions",
+    )
+    version = models.PositiveSmallIntegerField()
+    status_at_submit = models.CharField(
+        max_length=32, choices=STATUS_AT_SUBMIT_CHOICES, default="submitted"
+    )
+    snapshot = models.JSONField(default=dict)
+    submitted_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "intake_submissions"
+        ordering = ["-version"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "version"], name="unique_intake_submission_version"
+            )
+        ]
+
+    def __str__(self):
+        return f"Intake submission v{self.version} for {self.user.email}"
 
 
 class SafetyFlag(models.Model):

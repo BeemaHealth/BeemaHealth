@@ -18,7 +18,6 @@ from apps.eligibility.services import (
     set_funnel_cookie,
 )
 
-
 @method_decorator(csrf_exempt, name="dispatch")
 class FunnelSessionView(APIView):
     permission_classes = [AllowAny]

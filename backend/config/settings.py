@@ -229,3 +229,6 @@ EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
 EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@aretide.com")
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:8080")
+
+# Patient portal intake editing (flip to True to allow broader post-submit edits).
+INTAKE_PORTAL_EDITING_ENABLED = env.bool("INTAKE_PORTAL_EDITING_ENABLED", default=False)

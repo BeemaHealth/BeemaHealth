@@ -20,6 +20,7 @@ import type {
   EligibilityResponses,
   LoginMfaChallenge,
   MedicalIntake,
+  IntakeSubmission,
   PatientProfile,
   PatientSettings,
   ProviderReview,
@@ -333,6 +334,35 @@ export async function fetchIntakeMe(): Promise<MedicalIntake | null> {
   } catch {
     return null;
   }
+}
+
+export async function refreshIntakeAccountScreening(): Promise<MedicalIntake | null> {
+  if (!USE_API) return null;
+  try {
+    return await apiFetch<MedicalIntake>(
+      "/medical-intakes/me/refresh-account-screening/",
+      { method: "POST" },
+    );
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchIntakeSubmissions(): Promise<IntakeSubmission[]> {
+  if (!USE_API) return [];
+  try {
+    return await apiFetch<IntakeSubmission[]>(
+      "/medical-intakes/me/submissions/",
+    );
+  } catch {
+    return [];
+  }
+}
+
+export async function resubmitIntake(): Promise<MedicalIntake> {
+  return apiFetch<MedicalIntake>("/medical-intakes/me/resubmit/", {
+    method: "POST",
+  });
 }
 
 export async function syncIntake(

@@ -1,6 +1,9 @@
 from django.urls import path
 
 from apps.intakes.views import (
+    IntakeRefreshAccountScreeningView,
+    IntakeResubmitMeView,
+    IntakeSubmissionsMeView,
     MedicalIntakeMeView,
     RefillRequestMeView,
     SideEffectCheckInMeView,
@@ -8,6 +11,13 @@ from apps.intakes.views import (
 
 urlpatterns = [
     path("me/", MedicalIntakeMeView.as_view(), name="intake-me"),
+    path(
+        "me/refresh-account-screening/",
+        IntakeRefreshAccountScreeningView.as_view(),
+        name="intake-refresh-account-screening",
+    ),
+    path("me/submissions/", IntakeSubmissionsMeView.as_view(), name="intake-submissions-me"),
+    path("me/resubmit/", IntakeResubmitMeView.as_view(), name="intake-resubmit-me"),
     path("", MedicalIntakeMeView.as_view(), name="intake-create"),
 ]
 

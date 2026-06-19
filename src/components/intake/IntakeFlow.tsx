@@ -1,8 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { EligibilityAccountEditor } from "@/components/intake/EligibilityAccountEditor";
+import { IntakeHomeAddressSection } from "@/components/intake/IntakeHomeAddressSection";
+import { LifestyleStepFields } from "@/components/intake/LifestyleStepFields";
+import { IntakeStepReadOnly } from "@/components/intake/IntakeStepReadOnly";
+import { IntakeSubmissionViewer } from "@/components/intake/IntakeSubmissionViewer";
 import { DocumentTypeUpload } from "@/components/portal/DocumentTypeUpload";
 import { PortalPageHeader } from "@/components/portal/PortalPageHeader";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { AddressFields } from "@/components/quiz/AddressFields";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import { toast } from "sonner";
@@ -20,9 +31,14 @@ import {
   fetchEligibilityMe,
   fetchIntakeMe,
   isApiEnabled,
+  resubmitIntake,
   syncIntake,
   uploadDocumentFile,
 } from "@/lib/api/client";
+import {
+  canEditEligibilitySummary,
+  canEditIntake,
+} from "@/lib/intake-edit-policy";
 import { sanitizePreferredFirstName } from "@/lib/form-validation";
 import {
   FAMILY_HISTORY,
@@ -55,6 +71,7 @@ import { computeBmi } from "@/lib/safety-flags";
 import type {
   DocumentType,
   EligibilityResponses,
+  IntakeSubmission,
   MedicalIntake,
   UploadedDocument,
 } from "@/lib/types/mvp";
@@ -79,6 +96,10 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
   const [uploadedDocs, setUploadedDocs] = useState<UploadedDocument[]>([]);
   const [uploadError, setUploadError] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [canEdit, setCanEdit] = useState(true);
+  const [activeSubmission, setActiveSubmission] =
+    useState<IntakeSubmission | null>(null);
+  const [viewingSubmission, setViewingSubmission] = useState(false);
   const total = INTAKE_STEP_LABELS.length;
   const intakeEligibility = useMemo(
     () =>
@@ -126,6 +147,8 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
       if (restored) {
         const normalized = normalizeIntake(restored);
         setData(normalized);
+        setCanEdit(restored.can_edit ?? canEditIntake(normalized.status));
+        setActiveSubmission(restored.active_submission ?? null);
         setStep(resolveIntakeStepIndex(normalized, elig));
       }
       setLoading(false);
@@ -257,13 +280,38 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
   }, [step]);
 
   async function persistDraft() {
+    if (mode === "portal" && !canEdit) return;
     const saved = await syncIntake({
       ...data,
       status: data.status,
       updated_at: new Date().toISOString(),
     });
     if (saved) {
-      setData(normalizeIntake(saved));
+      const normalized = normalizeIntake(saved);
+      setData(normalized);
+      setCanEdit(saved.can_edit ?? canEditIntake(normalized.status));
+      setActiveSubmission(saved.active_submission ?? null);
+    }
+  }
+
+  async function handleResubmit() {
+    if (data.status !== "more_info_needed" || submitting) return;
+    setError("");
+    setSubmitting(true);
+    try {
+      await persistDraft();
+      const saved = await resubmitIntake();
+      const normalized = normalizeIntake(saved);
+      setData(normalized);
+      setCanEdit(saved.can_edit ?? canEditIntake(normalized.status));
+      setActiveSubmission(saved.active_submission ?? null);
+      toast.success("Your updated intake was resubmitted for review.");
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "Could not resubmit your intake.",
+      );
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -271,6 +319,7 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
     files: FileList,
     documentType: DocumentType,
   ) {
+    if (mode === "portal" && !canEdit) return;
     if (!files.length) return;
     if (!isApiEnabled()) {
       setUploadError("Document upload requires the backend API.");
@@ -356,6 +405,7 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
 
   async function handleNext() {
     if (!canContinue || submitting) return;
+    if (mode === "portal" && !canEdit) return;
     setError("");
     setSubmitting(true);
     try {
@@ -415,20 +465,20 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
     );
   }
 
+  const intakeLocked = mode === "portal" && !canEdit;
+  const showResubmit =
+    mode === "portal" &&
+    canEdit &&
+    data.status === "more_info_needed" &&
+    isLastApplicableStep;
+
+  const firstApplicableStep = applicableSteps[0] ?? 0;
+  const showBackButton = step > firstApplicableStep;
+
   const footerNav = (
     <div className="mt-8 space-y-3">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <button
-          type="button"
-          onClick={() =>
-            setStep(prevApplicableIntakeStep(step, intakeEligibility, total))
-          }
-          className="text-sm text-muted-foreground hover:text-foreground"
-          disabled={applicableStepIndex <= 0}
-        >
-          ← Back
-        </button>
-        {mode === "funnel" && (
+      {mode === "funnel" && (
+        <div className="flex flex-wrap items-center justify-end gap-3">
           <button
             type="button"
             onClick={saveAndExit}
@@ -436,29 +486,43 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
           >
             Save & continue later
           </button>
-        )}
-      </div>
+        </div>
+      )}
       {error && <p className="text-sm text-destructive">{error}</p>}
-      {!error && stepValidationError && (
+      {!error && stepValidationError && !intakeLocked && (
         <p className="text-sm text-destructive">{stepValidationError}</p>
       )}
-      <QuizNav
-        showBack={false}
-        onNext={() => void handleNext()}
-        nextDisabled={!canContinue || submitting}
-        nextLoading={submitting}
-        nextLabel={
-          isLastApplicableStep
-            ? mode === "portal"
-              ? "Save changes"
-              : "Continue to consent"
-            : "Continue →"
-        }
-      />
+      {showResubmit ? (
+        <Button
+          type="button"
+          className="h-12 w-full rounded-xl text-base"
+          disabled={submitting || !canContinue}
+          onClick={() => void handleResubmit()}
+        >
+          {submitting ? "Submitting…" : "Resubmit for review"}
+        </Button>
+      ) : !intakeLocked ? (
+        <QuizNav
+          showBack={showBackButton}
+          onBack={() =>
+            setStep(prevApplicableIntakeStep(step, intakeEligibility, total))
+          }
+          onNext={() => void handleNext()}
+          nextDisabled={!canContinue || submitting}
+          nextLoading={submitting}
+          nextLabel={
+            isLastApplicableStep
+              ? mode === "portal"
+                ? "Save changes"
+                : "Continue to consent"
+              : "Continue →"
+          }
+        />
+      ) : null}
     </div>
   );
 
-  const stepFields = (
+  const stepFieldsInner = (
     <>
       {step === 0 && (
         <div className="grid gap-4">
@@ -466,9 +530,22 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
             user={session.user}
             eligibility={eligibility}
             bmi={summaryBmi}
-            onSaved={(user, elig) => {
+            accountScreening={data.account_screening}
+            activeSubmission={activeSubmission}
+            canEditSummary={canEditEligibilitySummary(
+              data.status,
+              mode,
+              canEdit,
+            )}
+            onSaved={(user, elig, refreshed) => {
               setSession({ ...session, user });
               setEligibility(elig);
+              if (refreshed?.account_screening) {
+                setData((prev) => ({
+                  ...prev,
+                  account_screening: refreshed.account_screening,
+                }));
+              }
             }}
           />
           <div className="grid gap-3 sm:grid-cols-2">
@@ -491,7 +568,8 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
                 }
               />
             </Field>
-            <AddressFields
+            <IntakeHomeAddressSection
+              key={`${id.address ?? ""}|${id.city ?? ""}|${id.zip ?? ""}`}
               expectedState={session.user.state || eligibility?.state}
               value={{
                 address: id.address ?? "",
@@ -500,7 +578,7 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
                 county: id.county ?? "",
                 verified: id.address_verified === "true",
               }}
-              onChange={({ address, city, zip, county, verified }) =>
+              onSave={({ address, city, zip, county, verified }) =>
                 patchIdentity({
                   address,
                   city,
@@ -899,33 +977,15 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
       )}
 
       {step === 8 && (
-        <div className="grid gap-3">
-          {[
-            ["exercise_days", "Days per week exercising"],
-            ["exercise_type", "Type of exercise"],
-            ["diet", "How would you describe your diet?"],
-            ["smoke", "Do you smoke or vape?"],
-            ["alcohol", "Do you drink alcohol?"],
-            ["drugs", "Recreational drug use?"],
-            ["sleep", "Hours of sleep per night"],
-            ["binge", "Binge eating episodes?"],
-            ["night_eating", "Frequently eat at night?"],
-            [
-              "struggle",
-              "Struggle more with hunger, cravings, portions, or emotional eating?",
-            ],
-          ].map(([k, label]) => (
-            <Field key={k} label={label} required>
-              <input
-                className={inputCls}
-                value={(life[k] as string) ?? ""}
-                onChange={(e) =>
-                  patch("lifestyle", { ...life, [k]: e.target.value })
-                }
-              />
-            </Field>
-          ))}
-        </div>
+        <LifestyleStepFields
+          life={life}
+          onChange={(next) =>
+            patch(
+              "lifestyle",
+              next as Record<string, string | boolean>,
+            )
+          }
+        />
       )}
 
       {step === 9 && (
@@ -1194,13 +1254,81 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
     </>
   );
 
+  const stepFields =
+    intakeLocked && activeSubmission?.snapshot ? (
+      <IntakeStepReadOnly step={step} snapshot={activeSubmission.snapshot} />
+    ) : (
+      <fieldset
+        disabled={intakeLocked}
+        className="m-0 min-w-0 border-0 p-0 disabled:opacity-100"
+      >
+        {stepFieldsInner}
+      </fieldset>
+    );
+
   if (mode === "portal") {
     return (
       <div className="mx-auto max-w-6xl space-y-6">
         <PortalPageHeader
           title="Medical intake"
-          subtitle={`Step ${applicableStepIndex + 1} of ${applicableSteps.length} · ${INTAKE_STEP_LABELS[step]}`}
+          subtitle={
+            intakeLocked
+              ? `View only · version ${activeSubmission?.version ?? "—"} on file`
+              : `Step ${applicableStepIndex + 1} of ${applicableSteps.length} · ${INTAKE_STEP_LABELS[step]}`
+          }
         />
+        {activeSubmission && intakeLocked && (
+          <div
+            role="status"
+            className="rounded-2xl border-2 border-primary/25 bg-primary-soft px-5 py-4 shadow-sm"
+          >
+            <p className="text-base font-semibold text-foreground">
+              Your intake is under clinician review. This copy is read only.
+            </p>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              Your clinician is reviewing intake version{" "}
+              {activeSubmission.version}
+              {activeSubmission.submitted_at
+                ? ` (submitted ${new Date(activeSubmission.submitted_at).toLocaleDateString()})`
+                : ""}
+              . You cannot edit your medical intake while it is being reviewed.
+              Changes to your account will not affect this submitted version.
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-3 rounded-xl"
+              onClick={() => setViewingSubmission(true)}
+            >
+              View what your clinician sees
+            </Button>
+          </div>
+        )}
+        {data.status === "more_info_needed" && canEdit && (
+          <div className="rounded-2xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-foreground">
+            Your clinician requested updates. Edit the sections below, then
+            resubmit for review on the final step.
+          </div>
+        )}
+        <Dialog open={viewingSubmission} onOpenChange={setViewingSubmission}>
+          <DialogContent className="grid max-h-[90vh] grid-rows-[auto_minmax(0,1fr)] gap-4 overflow-hidden sm:max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>Submitted medical intake</DialogTitle>
+            </DialogHeader>
+            <div className="min-h-0 overflow-y-auto overscroll-contain pr-1">
+              {activeSubmission?.snapshot ? (
+                <IntakeSubmissionViewer
+                  snapshot={activeSubmission.snapshot}
+                  version={activeSubmission.version}
+                />
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No submission snapshot is available.
+                </p>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
         <div className="grid gap-6 lg:grid-cols-[minmax(0,15rem)_1fr]">
           <nav className="hidden lg:block">
             <ol className="space-y-1">

@@ -42,6 +42,7 @@ import {
   WEIGHT_LOSS_GOAL_OPTIONS,
   type QualifyStepId,
 } from "@/lib/qualify-steps";
+import { formatPhoneInput } from "@/lib/form-validation";
 import { computeBmi } from "@/lib/safety-flags";
 import { useAuth } from "@/context/AuthContext";
 import { US_STATES } from "@/lib/veya-data";
@@ -688,9 +689,11 @@ function EligibilityPage() {
               <input
                 type="tel"
                 className={inputCls}
+                inputMode="numeric"
+                autoComplete="tel-national"
+                maxLength={14}
                 value={data.phone}
-                onChange={(e) => set("phone", e.target.value)}
-                autoComplete="tel"
+                onChange={(e) => set("phone", formatPhoneInput(e.target.value))}
               />
             </Field>
             <Field label="Email" required>

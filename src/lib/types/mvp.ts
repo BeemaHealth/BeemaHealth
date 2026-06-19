@@ -177,7 +177,72 @@ export interface MedicalIntake {
   medication_preferences: Record<string, string | boolean>;
   safety_acknowledgments: Record<string, boolean>;
   submitted_at: string | null;
+  active_submission_version?: number | null;
+  working_version?: number;
+  account_screening?: AccountScreening;
   updated_at: string;
+  can_edit?: boolean;
+  active_submission?: IntakeSubmission | null;
+}
+
+export interface AccountScreening {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  dob: string;
+  state: string;
+  height_ft: number | null;
+  height_in: number | null;
+  weight_lbs: string | null;
+  goal_weight_lbs: string | null;
+  bmi: number | null;
+}
+
+export interface IntakeSubmissionSnapshot {
+  meta: {
+    version: number;
+    submitted_at: string;
+    intake_id: string;
+    intake_status: string;
+  };
+  account: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    dob: string;
+    state: string;
+  };
+  account_summary: {
+    first_name: string;
+    last_name: string;
+    full_name: string;
+    email: string;
+    phone: string;
+    dob: string;
+    state: string;
+    height_ft: number | null;
+    height_in: number | null;
+    weight_lbs: string | null;
+    goal_weight_lbs: string | null;
+    bmi: number | null;
+  };
+  eligibility_screening: Record<string, unknown>;
+  identity_contact: Record<string, string>;
+  clinical: Record<string, unknown>;
+  consent: Record<string, unknown> | null;
+}
+
+export interface IntakeSubmission {
+  id: string;
+  user_id: string;
+  medical_intake_id: string;
+  version: number;
+  status_at_submit: "submitted" | "resubmitted";
+  snapshot: IntakeSubmissionSnapshot;
+  submitted_at: string;
+  created_at: string;
 }
 
 export interface ConsentRecord {

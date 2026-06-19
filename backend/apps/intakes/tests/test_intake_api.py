@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from apps.accounts.models import User
-from apps.common.validation.payloads import SQL_INJECTION, STRICT_FIELD_ATTACKS
+from apps.common.validation.payloads import SQL_INJECTION, STRICT_FIELD_ATTACKS, XSS_PAYLOADS
 from apps.eligibility.models import EligibilityResponse
 from apps.intakes.models import MedicalIntake
 
@@ -171,6 +171,72 @@ class IntakeApiValidationTests(TestCase):
         response = self.client.patch(
             reverse("intake-me"),
             {"labs": {"bp": SQL_INJECTION[0]}},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_patch_valid_lifestyle(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {
+                "lifestyle": {
+                    "exercise_days": "3",
+                    "exercise_type": "Walking",
+                    "diet": "balanced",
+                    "smoke": "no",
+                    "alcohol": "occasionally",
+                    "drugs": "no",
+                    "sleep": "7_8",
+                    "binge": "never",
+                    "night_eating": "no",
+                    "struggle": "cravings",
+                }
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_rejects_invalid_lifestyle_enum(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {"lifestyle": {"diet": SQL_INJECTION[0]}},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_patch_accepts_new_lifestyle_enum_values(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {
+                "lifestyle": {
+                    "diet": "mediterranean",
+                    "binge": "daily",
+                    "night_eating": "most_nights",
+                }
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_rejects_legacy_lifestyle_enum_values(self):
+        for field, value in (("diet", "Balanced"), ("binge", "weekly_plus")):
+            with self.subTest(field=field, value=value):
+                response = self.client.patch(
+                    reverse("intake-me"),
+                    {"lifestyle": {field: value}},
+                    format="json",
+                )
+                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_rejects_malicious_lifestyle_drugs_detail(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {
+                "lifestyle": {
+                    "drugs": "yes",
+                    "drugs_detail": XSS_PAYLOADS[0],
+                }
+            },
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

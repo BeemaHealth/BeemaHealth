@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, getRouteApi } from "@tanstack/react-router";
 import { PortalPageHeader } from "@/components/portal/PortalPageHeader";
-import { AddressFields } from "@/components/quiz/AddressFields";
+import {
+  ShippingAddressSection,
+  type ShippingAddressValue,
+} from "@/components/portal/ShippingAddressSection";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -30,16 +33,23 @@ import type {
 } from "@/lib/types/mvp";
 import { useAuth } from "@/context/AuthContext";
 import { inputCls } from "@/components/quiz/quiz-primitives";
+import { formatPhoneInput } from "@/lib/form-validation";
 import { toast } from "sonner";
 
 const dashboardRoute = getRouteApi("/dashboard");
 
-const SEX_OPTIONS: { value: SexAssignedAtBirth; label: string }[] = [
+const SEX_AT_BIRTH_OPTIONS: { value: "male" | "female"; label: string }[] = [
   { value: "female", label: "Female" },
   { value: "male", label: "Male" },
-  { value: "intersex", label: "Intersex" },
-  { value: "unknown", label: "Prefer not to say" },
 ];
+
+const GENDER_IDENTITY_OPTIONS: { value: SexAssignedAtBirth; label: string }[] =
+  [
+    { value: "female", label: "Female" },
+    { value: "male", label: "Male" },
+    { value: "intersex", label: "Intersex" },
+    { value: "unknown", label: "Prefer not to say" },
+  ];
 
 export const Route = createFileRoute("/dashboard/account")({
   component: DashboardAccountPage,
@@ -96,7 +106,7 @@ function DashboardAccountPage() {
   const [phone, setPhone] = useState(user.phone ?? "");
   const [dob, setDob] = useState(user.dob ?? "");
   const [state, setState] = useState(user.state ?? "");
-  const [sexAtBirth, setSexAtBirth] = useState<SexAssignedAtBirth | "">("");
+  const [sexAtBirth, setSexAtBirth] = useState<"male" | "female" | "">("");
   const [genderIdentity, setGenderIdentity] = useState<SexAssignedAtBirth | "">(
     "",
   );
@@ -158,20 +168,23 @@ function DashboardAccountPage() {
     setDob(user.dob ?? eligibility?.dob ?? "");
     setState(user.state ?? eligibility?.state ?? "");
     setSexAtBirth(
-      profile?.sex_assigned_at_birth ??
-        eligibility?.sex_assigned_at_birth ??
-        "",
+      (profile?.sex_assigned_at_birth === "male" ||
+      profile?.sex_assigned_at_birth === "female"
+        ? profile.sex_assigned_at_birth
+        : eligibility?.sex_assigned_at_birth === "male" ||
+            eligibility?.sex_assigned_at_birth === "female"
+          ? eligibility.sex_assigned_at_birth
+          : "") as "male" | "female" | "",
     );
     setGenderIdentity(
       profile?.gender_identity ?? eligibility?.gender_identity ?? "",
     );
-    const identity = (intake?.identity ?? {}) as Record<string, string>;
     setAddress({
-      address: profile?.address || identity.address || "",
-      city: profile?.city || identity.city || "",
-      zip: profile?.zip || identity.zip || "",
-      county: profile?.county || identity.county || "",
-      verified: identity.address_verified === "true",
+      address: profile?.address || "",
+      city: profile?.city || "",
+      zip: profile?.zip || "",
+      county: profile?.county || "",
+      verified: false,
     });
     if (settings) {
       setEmailNotifications(settings.email_notifications);
@@ -203,10 +216,6 @@ function DashboardAccountPage() {
       const updatedProfile = await patchPatientProfile({
         sex_assigned_at_birth: sexAtBirth || undefined,
         gender_identity: genderIdentity || undefined,
-        address: address.address,
-        city: address.city,
-        county: address.county,
-        zip: address.zip,
       });
       setProfile(updatedProfile);
 
@@ -284,6 +293,11 @@ function DashboardAccountPage() {
     consent.no_guarantee_acknowledgment &&
     consent.emergency_disclaimer_acknowledgment;
 
+  const intakeUnderReview =
+    intake != null &&
+    intake.status !== "draft" &&
+    intake.status !== "more_info_needed";
+
   if (loading) {
     return (
       <div className="mx-auto max-w-6xl py-12 text-center text-muted-foreground">
@@ -296,7 +310,7 @@ function DashboardAccountPage() {
     <div className="mx-auto max-w-6xl space-y-6">
       <PortalPageHeader
         title="Account"
-        subtitle="Manage your profile, contact, and privacy"
+        subtitle="Update your login, contact, and shipping details. These changes apply to your account only, not your submitted medical intake."
         action={
           <Button
             className="rounded-xl"
@@ -307,6 +321,24 @@ function DashboardAccountPage() {
           </Button>
         }
       />
+
+      {intakeUnderReview && (
+        <div
+          role="status"
+          className="rounded-2xl border-2 border-primary/25 bg-primary-soft px-5 py-4"
+        >
+          <p className="font-semibold text-foreground">
+            Account edits do not change your submitted intake
+          </p>
+          <p className="mt-1.5 text-sm text-muted-foreground">
+            You can update name, email, phone, and shipping here for contact and
+            delivery. Your clinician still sees the medical intake you submitted
+            (version {intake?.active_submission_version ?? "—"}). Clinical
+            intake information can only be changed if your clinician requests
+            updates.
+          </p>
+        </div>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         <AccountCard title="Profile">
@@ -352,11 +384,11 @@ function DashboardAccountPage() {
                 className={inputCls}
                 value={sexAtBirth}
                 onChange={(e) =>
-                  setSexAtBirth(e.target.value as SexAssignedAtBirth)
+                  setSexAtBirth(e.target.value as "male" | "female" | "")
                 }
               >
                 <option value="">Select</option>
-                {SEX_OPTIONS.map((opt) => (
+                {SEX_AT_BIRTH_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>
@@ -372,7 +404,7 @@ function DashboardAccountPage() {
                 }
               >
                 <option value="">Select</option>
-                {SEX_OPTIONS.map((opt) => (
+                {GENDER_IDENTITY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>
@@ -396,18 +428,37 @@ function DashboardAccountPage() {
               <input
                 type="tel"
                 className={inputCls}
+                inputMode="numeric"
+                autoComplete="tel-national"
+                maxLength={14}
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => setPhone(formatPhoneInput(e.target.value))}
               />
             </EditableField>
           </div>
         </AccountCard>
 
         <AccountCard title="Shipping address">
-          <AddressFields
+          <ShippingAddressSection
             expectedState={state}
             value={address}
-            onChange={setAddress}
+            onSave={async (next: ShippingAddressValue) => {
+              const updatedProfile = await patchPatientProfile({
+                address: next.address,
+                city: next.city,
+                county: next.county,
+                zip: next.zip,
+              });
+              setProfile(updatedProfile);
+              setAddress({
+                address: updatedProfile.address ?? next.address,
+                city: updatedProfile.city ?? next.city,
+                zip: updatedProfile.zip ?? next.zip,
+                county: updatedProfile.county ?? next.county,
+                verified: next.verified,
+              });
+              toast.success("Shipping address updated.");
+            }}
           />
         </AccountCard>
 

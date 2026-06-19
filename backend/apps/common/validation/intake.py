@@ -11,6 +11,7 @@ from apps.common.validation.address import (
     is_valid_street_address,
     is_valid_us_zip,
 )
+from apps.common.validation.lifestyle import validate_lifestyle_section
 from apps.common.validation.form import (
     is_filled,
     is_valid_optional_free_text,
@@ -240,5 +241,7 @@ def validate_intake_payload(
         errors.update(validate_labs_section(attrs["labs"]))
     if "medication_preferences" in attrs:
         errors.update(validate_medication_preferences_section(attrs["medication_preferences"]))
+    if "lifestyle" in attrs:
+        errors.update(validate_lifestyle_section(attrs["lifestyle"]))
 
     return errors

@@ -7,8 +7,6 @@ import {
   isFilled,
   isValidPhone,
   validateAdultWeightHistory,
-  validateAllergyRow,
-  validateMedicationRow,
   validateOptionalInsuranceProvider,
   validateOptionalMemberId,
   validateOptionalNumericLab,
@@ -18,6 +16,10 @@ import {
   isIntakeAcknowledgmentsComplete,
   normalizeSafetyAcknowledgments,
 } from "@/lib/intake-acknowledgments";
+import {
+  isLifestyleStepComplete,
+  normalizeLifestyleFields,
+} from "@/lib/lifestyle-fields";
 import type { MedicalIntake, SexAssignedAtBirth } from "@/lib/types/mvp";
 import {
   isPregnancyIntakeStepApplicable,
@@ -202,19 +204,6 @@ const MEDICATION_ANSWER_KEYS = [
   "weight_meds",
 ] as const;
 
-const LIFESTYLE_FIELD_KEYS = [
-  "exercise_days",
-  "exercise_type",
-  "diet",
-  "smoke",
-  "alcohol",
-  "drugs",
-  "sleep",
-  "binge",
-  "night_eating",
-  "struggle",
-] as const;
-
 function intakeConditionKeys(): string[] {
   return MEDICAL_CONDITIONS.filter(
     ([k]) => !INTAKE_EXCLUDED_CONDITION_KEYS.has(k),
@@ -238,6 +227,10 @@ export function isIntakeStepApplicable(
   return true;
 }
 
+/**
+ * Step validation for intake footer + Continue gating.
+ * Return `null` when complete, `""` when incomplete (no footer copy), or a message when input is invalid.
+ */
 export function getIntakeStepError(
   step: number,
   data: MedicalIntake,
@@ -271,13 +264,16 @@ export function getIntakeStepError(
       return null;
     }
     case 1: {
+      const highest = String(body.highest_weight ?? "");
+      const lowest = String(body.lowest_weight ?? "");
+      if (!isFilled(highest) || !isFilled(lowest)) return "";
+      if (!Array.isArray(body.goals) || body.goals.length === 0) return "";
       const weightErr = validateAdultWeightHistory(
-        String(body.highest_weight ?? ""),
-        String(body.lowest_weight ?? ""),
+        highest,
+        lowest,
         eligibility?.weight_lbs != null ? String(eligibility.weight_lbs) : null,
       );
       if (weightErr) return weightErr;
-      if (!Array.isArray(body.goals) || body.goals.length === 0) return "";
       return null;
     }
     case 2: {
@@ -287,9 +283,13 @@ export function getIntakeStepError(
       const details = wh.prior_details ?? {};
       for (const med of priorMeds) {
         const d = details[med];
-        if (!isFilled(d?.dose)) return `Enter the dose for ${med}.`;
-        if (!isFilled(d?.stopped)) return `Enter when you stopped ${med}.`;
-        if (!isFilled(d?.stop_reason)) return `Enter why you stopped ${med}.`;
+        if (
+          !isFilled(d?.dose) ||
+          !isFilled(d?.stopped) ||
+          !isFilled(d?.stop_reason)
+        ) {
+          return "";
+        }
       }
       return null;
     }
@@ -297,7 +297,7 @@ export function getIntakeStepError(
       const unanswered = intakeConditionKeys().find(
         (k) => typeof mc[k] !== "boolean",
       );
-      return unanswered ? "Answer every medical condition question." : null;
+      return unanswered ? "" : null;
     }
     case 4: {
       const unanswered = FAMILY_HISTORY.find(
@@ -315,11 +315,15 @@ export function getIntakeStepError(
         meds.answers.taking_otc === true ||
         meds.answers.supplements === true;
       if (needsList) {
-        if (!meds.list.length)
-          return "Add at least one medication or supplement.";
+        if (!meds.list.length) return "";
         for (const row of meds.list) {
-          const rowErr = validateMedicationRow(row);
-          if (rowErr) return rowErr;
+          if (
+            !isFilled(row.name) ||
+            !isFilled(row.dose) ||
+            !isFilled(row.frequency)
+          ) {
+            return "";
+          }
         }
       }
       return null;
@@ -331,10 +335,11 @@ export function getIntakeStepError(
         allergies.answers.has_med === true ||
         allergies.answers.has_food === true;
       if (needsList) {
-        if (!allergies.list.length) return "Add at least one allergy.";
+        if (!allergies.list.length) return "";
         for (const row of allergies.list) {
-          const rowErr = validateAllergyRow(row);
-          if (rowErr) return rowErr;
+          if (!isFilled(row.allergy) || !isFilled(row.reaction)) {
+            return "";
+          }
         }
       }
       return null;
@@ -342,11 +347,11 @@ export function getIntakeStepError(
     case 7:
       if (!isPregnancyIntakeStepApplicable(eligibility)) return null;
       return preg.understand === true ? null : "";
-    case 8: {
-      const unanswered = LIFESTYLE_FIELD_KEYS.find((k) => !isFilled(life[k]));
-      return unanswered ? "" : null;
-    }
+    case 8:
+      return isLifestyleStepComplete(life) ? null : "";
     case 9: {
+      if (typeof labs.recent_labs !== "boolean") return "";
+      if (typeof labs.willing !== "boolean") return "";
       const bpErr = validateOptionalBloodPressure(String(labs.bp ?? ""));
       if (bpErr) return bpErr;
       for (const [key, label] of [
@@ -360,8 +365,6 @@ export function getIntakeStepError(
         );
         if (labErr) return labErr;
       }
-      if (typeof labs.recent_labs !== "boolean") return "";
-      if (typeof labs.willing !== "boolean") return "";
       return null;
     }
     case 10: {
@@ -557,7 +560,10 @@ export function normalizeIntake(draft: MedicalIntake): MedicalIntake {
         : empty.allergies.list,
     },
     pregnancy: { ...empty.pregnancy, ...draft.pregnancy },
-    lifestyle: { ...empty.lifestyle, ...draft.lifestyle },
+    lifestyle: normalizeLifestyleFields({
+      ...empty.lifestyle,
+      ...draft.lifestyle,
+    }),
     labs: { ...empty.labs, ...draft.labs },
     medication_preferences: normalizeMedicationPreferences(
       draft.medication_preferences,

@@ -151,7 +151,13 @@ function DashboardHomePage() {
               Case timeline
             </h2>
             <Button asChild variant="outline" size="sm" className="rounded-xl">
-              <Link to="/dashboard/intake">View intake</Link>
+              <Link to="/dashboard/intake">
+                {data.intake_status === "more_info_needed"
+                  ? "Update intake"
+                  : data.intake_status === "draft"
+                    ? "Continue intake"
+                    : "View intake (read-only)"}
+              </Link>
             </Button>
           </div>
           <CaseTimeline events={timeline} />

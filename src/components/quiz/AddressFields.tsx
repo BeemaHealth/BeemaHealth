@@ -32,11 +32,17 @@ export function AddressFields({
   expectedState,
   onChange,
   label = "Home address",
+  lockWhenVerified = true,
+  hideVerifiedActions = false,
 }: {
   value: AddressValue;
   expectedState?: string | null;
   onChange: (next: AddressValue) => void;
   label?: string;
+  /** When false, verified addresses stay editable (e.g. account shipping). */
+  lockWhenVerified?: boolean;
+  /** Hide verified-state link and message when a parent manages display/save. */
+  hideVerifiedActions?: boolean;
 }) {
   const onChangeRef = useRef(onChange);
   const expectedStateRef = useRef(expectedState);
@@ -178,9 +184,9 @@ export function AddressFields({
             value={query}
             autoComplete="off"
             placeholder="Start typing your full address…"
-            readOnly={value.verified}
+            readOnly={lockWhenVerified && value.verified}
             onChange={(e) => {
-              if (value.verified) return;
+              if (lockWhenVerified && value.verified) return;
               setQuery(e.target.value);
               setLookupError("");
               onChangeRef.current({
@@ -247,7 +253,7 @@ export function AddressFields({
         )}
       </Field>
 
-      {value.verified && (
+      {value.verified && !hideVerifiedActions && (
         <button
           type="button"
           className="justify-self-start text-sm text-primary underline"
@@ -261,7 +267,7 @@ export function AddressFields({
         <p className="text-sm text-muted-foreground">Verifying address…</p>
       )}
       {lookupError && <p className="text-sm text-destructive">{lookupError}</p>}
-      {value.verified && !lookupError && (
+      {value.verified && !lookupError && !hideVerifiedActions && (
         <p className="text-sm text-primary">Address verified for delivery.</p>
       )}
     </div>

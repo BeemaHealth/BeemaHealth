@@ -1,5 +1,8 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Logo } from "@/components/brand/Logo";
+import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +14,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
+import { logoutUser } from "@/lib/api/client";
 import { getVisiblePortalNav } from "@/lib/portal-nav";
 import type { User } from "@/lib/types/mvp";
 import { cn } from "@/lib/utils";
@@ -24,7 +29,28 @@ function userInitials(user: User): string {
 
 export function PortalSidebar({ user }: { user: User }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const { isMobile, setOpenMobile } = useSidebar();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const nav = getVisiblePortalNav();
+
+  useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [pathname, isMobile, setOpenMobile]);
+
+  async function handleLogout() {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await logoutUser();
+      if (isMobile) setOpenMobile(false);
+      navigate({ to: "/login", search: { redirect: "/dashboard" } });
+    } finally {
+      setIsLoggingOut(false);
+    }
+  }
 
   return (
     <Sidebar className="border-r border-sidebar-border bg-sidebar">
@@ -72,10 +98,10 @@ export function PortalSidebar({ user }: { user: User }) {
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border p-4">
         <div className="flex items-center gap-3">
-          <div className="flex size-9 items-center justify-center rounded-full bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground">
             {userInitials(user)}
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-foreground">
               {user.first_name} {user.last_name}
             </p>
@@ -83,6 +109,18 @@ export function PortalSidebar({ user }: { user: User }) {
               Member · {user.state || "—"}
             </p>
           </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="shrink-0 rounded-xl px-2 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            onClick={() => void handleLogout()}
+            disabled={isLoggingOut}
+            aria-label="Log out"
+          >
+            <LogOut className="size-4" aria-hidden />
+            <span>Log out</span>
+          </Button>
         </div>
       </SidebarFooter>
     </Sidebar>

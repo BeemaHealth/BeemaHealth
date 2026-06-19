@@ -17,7 +17,8 @@ from apps.reviews.serializers import (
     ProviderReviewSerializer,
 )
 from apps.eligibility.serializers import EligibilitySerializer
-from apps.intakes.serializers import MedicalIntakeSerializer
+from apps.intakes.serializers import IntakeSubmissionSerializer, MedicalIntakeSerializer
+from apps.intakes.submissions import get_active_submission
 from apps.consents.serializers import ConsentRecordSerializer
 from apps.reviews.serializers import SafetyFlagSerializer
 from apps.accounts.serializers import UserSerializer
@@ -77,6 +78,7 @@ class PatientDetailView(APIView):
         consent = ConsentRecord.objects.filter(user=user).first()
         flags = SafetyFlag.objects.filter(user=user)
         review = ProviderReview.objects.filter(user=user).first()
+        active_submission = get_active_submission(intake) if intake else None
         log_audit_event(
             user=request.user,
             action="read",
@@ -89,6 +91,11 @@ class PatientDetailView(APIView):
                 "user": UserSerializer(user).data,
                 "eligibility": EligibilitySerializer(eligibility).data if eligibility else None,
                 "intake": MedicalIntakeSerializer(intake).data if intake else None,
+                "submission": (
+                    IntakeSubmissionSerializer(active_submission).data
+                    if active_submission
+                    else None
+                ),
                 "consent": ConsentRecordSerializer(consent).data if consent else None,
                 "flags": SafetyFlagSerializer(flags, many=True).data,
                 "review": ProviderReviewSerializer(review).data if review else None,
