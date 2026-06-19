@@ -1,11 +1,33 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, getRouteApi } from "@tanstack/react-router";
+import {
+  Bell,
+  BookOpen,
+  CheckCircle2,
+  Clock,
+  FileCheck2,
+  LockKeyhole,
+  Mail,
+  Phone,
+  ShieldCheck,
+  Smartphone,
+  Truck,
+  UserRound,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  AccountSectionCard,
+  accountSectionBadgeOnClass,
+  accountSectionDividerClass,
+  accountSectionRowIconClass,
+  DisplayField,
+  EditableField,
+} from "@/components/portal/AccountSectionCard";
 import { PortalPageHeader } from "@/components/portal/PortalPageHeader";
 import {
   ShippingAddressSection,
   type ShippingAddressValue,
 } from "@/components/portal/ShippingAddressSection";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
   confirmTwoFactor,
@@ -35,6 +57,7 @@ import { useAuth } from "@/context/AuthContext";
 import { inputCls } from "@/components/quiz/quiz-primitives";
 import { formatPhoneInput } from "@/lib/form-validation";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 const dashboardRoute = getRouteApi("/dashboard");
 
@@ -51,39 +74,35 @@ const GENDER_IDENTITY_OPTIONS: { value: SexAssignedAtBirth; label: string }[] =
     { value: "unknown", label: "Prefer not to say" },
   ];
 
+type EditingSection =
+  | "profile"
+  | "contact"
+  | "shipping"
+  | "communication"
+  | null;
+
+function labelForOption<T extends string>(
+  value: T | "",
+  options: { value: T; label: string }[],
+): string {
+  if (!value) return "";
+  return options.find((opt) => opt.value === value)?.label ?? value;
+}
+
+function formatDobDisplay(dob: string): string {
+  if (!dob) return "";
+  const parsed = new Date(`${dob}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return dob;
+  return parsed.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
 export const Route = createFileRoute("/dashboard/account")({
   component: DashboardAccountPage,
 });
-
-function AccountCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="rounded-3xl border border-border bg-card p-5 shadow-soft md:p-6">
-      <h2 className="text-lg font-semibold text-foreground">{title}</h2>
-      <div className="mt-4">{children}</div>
-    </section>
-  );
-}
-
-function EditableField({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="grid gap-1.5 text-sm">
-      <span className="font-medium text-foreground">{label}</span>
-      {children}
-    </label>
-  );
-}
 
 function DashboardAccountPage() {
   const { user: loaderUser } = dashboardRoute.useLoaderData();
@@ -98,7 +117,9 @@ function DashboardAccountPage() {
   const [settings, setSettings] = useState<PatientSettings | null>(null);
   const [consent, setConsent] = useState<ConsentRecord | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+
+  const [editingSection, setEditingSection] = useState<EditingSection>(null);
+  const [savingSection, setSavingSection] = useState<EditingSection>(null);
 
   const [firstName, setFirstName] = useState(user.first_name);
   const [lastName, setLastName] = useState(user.last_name);
@@ -110,13 +131,14 @@ function DashboardAccountPage() {
   const [genderIdentity, setGenderIdentity] = useState<SexAssignedAtBirth | "">(
     "",
   );
-  const [address, setAddress] = useState({
+  const [address, setAddress] = useState<ShippingAddressValue>({
     address: "",
     city: "",
     zip: "",
     county: "",
     verified: false,
   });
+  const [addressDraft, setAddressDraft] = useState(address);
 
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsNotifications, setSmsNotifications] = useState(true);
@@ -179,29 +201,75 @@ function DashboardAccountPage() {
     setGenderIdentity(
       profile?.gender_identity ?? eligibility?.gender_identity ?? "",
     );
-    setAddress({
+    const nextAddress = {
       address: profile?.address || "",
       city: profile?.city || "",
       zip: profile?.zip || "",
       county: profile?.county || "",
       verified: false,
-    });
+    };
+    setAddress(nextAddress);
+    if (editingSection !== "shipping") {
+      setAddressDraft(nextAddress);
+    }
     if (settings) {
       setEmailNotifications(settings.email_notifications);
       setSmsNotifications(settings.sms_notifications);
       setProductEmails(settings.product_emails);
       setTwoFactorEnabled(settings.two_factor_enabled);
     }
-  }, [user, eligibility, profile, intake, settings]);
+  }, [user, eligibility, profile, intake, settings, editingSection]);
 
-  async function handleSave() {
-    setSaving(true);
+  function startEditing(section: EditingSection) {
+    if (editingSection && editingSection !== section) {
+      cancelEditing(editingSection);
+    }
+    if (section === "shipping") {
+      setAddressDraft(address);
+    }
+    setEditingSection(section);
+  }
+
+  function cancelEditing(section: EditingSection) {
+    if (section === "profile") {
+      setFirstName(user.first_name);
+      setLastName(user.last_name);
+      setDob(user.dob ?? eligibility?.dob ?? "");
+      setState(user.state ?? eligibility?.state ?? "");
+      setSexAtBirth(
+        (profile?.sex_assigned_at_birth === "male" ||
+        profile?.sex_assigned_at_birth === "female"
+          ? profile.sex_assigned_at_birth
+          : eligibility?.sex_assigned_at_birth === "male" ||
+              eligibility?.sex_assigned_at_birth === "female"
+            ? eligibility.sex_assigned_at_birth
+            : "") as "male" | "female" | "",
+      );
+      setGenderIdentity(
+        profile?.gender_identity ?? eligibility?.gender_identity ?? "",
+      );
+    }
+    if (section === "contact") {
+      setEmail(user.email);
+      setPhone(user.phone ?? "");
+    }
+    if (section === "shipping") {
+      setAddressDraft(address);
+    }
+    if (section === "communication" && settings) {
+      setEmailNotifications(settings.email_notifications);
+      setSmsNotifications(settings.sms_notifications);
+      setProductEmails(settings.product_emails);
+    }
+    setEditingSection(null);
+  }
+
+  async function handleSaveProfile() {
+    setSavingSection("profile");
     try {
       const sessionResult = await patchAuthMe({
         first_name: firstName.trim(),
         last_name: lastName.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
         dob: dob || undefined,
         state,
       });
@@ -219,18 +287,73 @@ function DashboardAccountPage() {
       });
       setProfile(updatedProfile);
 
+      setEditingSection(null);
+      toast.success("Profile updated.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not save.");
+    } finally {
+      setSavingSection(null);
+    }
+  }
+
+  async function handleSaveContact() {
+    setSavingSection("contact");
+    try {
+      const sessionResult = await patchAuthMe({
+        email: email.trim(),
+        phone: phone.trim(),
+      });
+      setSession(sessionResult);
+      setEditingSection(null);
+      toast.success("Contact info updated.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not save.");
+    } finally {
+      setSavingSection(null);
+    }
+  }
+
+  async function handleSaveShipping() {
+    setSavingSection("shipping");
+    try {
+      const updatedProfile = await patchPatientProfile({
+        address: addressDraft.address,
+        city: addressDraft.city,
+        county: addressDraft.county,
+        zip: addressDraft.zip,
+      });
+      setProfile(updatedProfile);
+      setAddress({
+        address: updatedProfile.address ?? addressDraft.address,
+        city: updatedProfile.city ?? addressDraft.city,
+        zip: updatedProfile.zip ?? addressDraft.zip,
+        county: updatedProfile.county ?? addressDraft.county,
+        verified: addressDraft.verified,
+      });
+      setEditingSection(null);
+      toast.success("Shipping address updated.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not save.");
+    } finally {
+      setSavingSection(null);
+    }
+  }
+
+  async function handleSaveCommunication() {
+    setSavingSection("communication");
+    try {
       const updatedSettings = await patchPatientSettings({
         email_notifications: emailNotifications,
         sms_notifications: smsNotifications,
         product_emails: productEmails,
       });
       setSettings(updatedSettings);
-
-      toast.success("Account updated.");
+      setEditingSection(null);
+      toast.success("Communication preferences updated.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not save.");
     } finally {
-      setSaving(false);
+      setSavingSection(null);
     }
   }
 
@@ -311,15 +434,6 @@ function DashboardAccountPage() {
       <PortalPageHeader
         title="Account"
         subtitle="Update your login, contact, and shipping details. These changes apply to your account only, not your submitted medical intake."
-        action={
-          <Button
-            className="rounded-xl"
-            disabled={saving}
-            onClick={() => void handleSave()}
-          >
-            {saving ? "Saving…" : "Save changes"}
-          </Button>
-        }
       />
 
       {intakeUnderReview && (
@@ -341,232 +455,306 @@ function DashboardAccountPage() {
       )}
 
       <div className="grid gap-6 md:grid-cols-2">
-        <AccountCard title="Profile">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <EditableField label="First name">
-              <input
-                className={inputCls}
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+        <AccountSectionCard
+          title="Profile"
+          description="Your legal name and demographic details"
+          icon={UserRound}
+          tone="primary"
+          editable
+          editing={editingSection === "profile"}
+          saving={savingSection === "profile"}
+          onEdit={() => startEditing("profile")}
+          onSave={() => void handleSaveProfile()}
+          onCancel={() => cancelEditing("profile")}
+        >
+          {editingSection === "profile" ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <EditableField label="First name">
+                <input
+                  className={inputCls}
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </EditableField>
+              <EditableField label="Last name">
+                <input
+                  className={inputCls}
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </EditableField>
+              <EditableField label="Date of birth">
+                <input
+                  type="date"
+                  className={inputCls}
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                />
+              </EditableField>
+              <EditableField label="State">
+                <select
+                  className={inputCls}
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                >
+                  <option value="">Select state</option>
+                  {US_STATE_ENTRIES.map(([abbr, name]) => (
+                    <option key={abbr} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </EditableField>
+              <EditableField label="Sex at birth">
+                <select
+                  className={inputCls}
+                  value={sexAtBirth}
+                  onChange={(e) =>
+                    setSexAtBirth(e.target.value as "male" | "female" | "")
+                  }
+                >
+                  <option value="">Select</option>
+                  {SEX_AT_BIRTH_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </EditableField>
+              <EditableField label="Gender identity">
+                <select
+                  className={inputCls}
+                  value={genderIdentity}
+                  onChange={(e) =>
+                    setGenderIdentity(e.target.value as SexAssignedAtBirth)
+                  }
+                >
+                  <option value="">Select</option>
+                  {GENDER_IDENTITY_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </EditableField>
+            </div>
+          ) : (
+            <dl className="grid gap-4 sm:grid-cols-2">
+              <DisplayField label="First name" value={firstName} />
+              <DisplayField label="Last name" value={lastName} />
+              <DisplayField
+                label="Date of birth"
+                value={formatDobDisplay(dob)}
               />
-            </EditableField>
-            <EditableField label="Last name">
-              <input
-                className={inputCls}
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+              <DisplayField label="State" value={state} />
+              <DisplayField
+                label="Sex at birth"
+                value={labelForOption(sexAtBirth, SEX_AT_BIRTH_OPTIONS)}
               />
-            </EditableField>
-            <EditableField label="Date of birth">
-              <input
-                type="date"
-                className={inputCls}
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
+              <DisplayField
+                label="Gender identity"
+                value={labelForOption(genderIdentity, GENDER_IDENTITY_OPTIONS)}
               />
-            </EditableField>
-            <EditableField label="State">
-              <select
-                className={inputCls}
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-              >
-                <option value="">Select state</option>
-                {US_STATE_ENTRIES.map(([abbr, name]) => (
-                  <option key={abbr} value={name}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </EditableField>
-            <EditableField label="Sex at birth">
-              <select
-                className={inputCls}
-                value={sexAtBirth}
-                onChange={(e) =>
-                  setSexAtBirth(e.target.value as "male" | "female" | "")
-                }
-              >
-                <option value="">Select</option>
-                {SEX_AT_BIRTH_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </EditableField>
-            <EditableField label="Gender identity">
-              <select
-                className={inputCls}
-                value={genderIdentity}
-                onChange={(e) =>
-                  setGenderIdentity(e.target.value as SexAssignedAtBirth)
-                }
-              >
-                <option value="">Select</option>
-                {GENDER_IDENTITY_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </EditableField>
-          </div>
-        </AccountCard>
+            </dl>
+          )}
+        </AccountSectionCard>
 
-        <AccountCard title="Contact info">
-          <div className="grid gap-4">
-            <EditableField label="Email">
-              <input
-                type="email"
-                className={inputCls}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </EditableField>
-            <EditableField label="Phone">
-              <input
-                type="tel"
-                className={inputCls}
-                inputMode="numeric"
-                autoComplete="tel-national"
-                maxLength={14}
-                value={phone}
-                onChange={(e) => setPhone(formatPhoneInput(e.target.value))}
-              />
-            </EditableField>
-          </div>
-        </AccountCard>
+        <AccountSectionCard
+          title="Contact info"
+          description="How we reach you about your care"
+          icon={Mail}
+          tone="contact"
+          editable
+          editing={editingSection === "contact"}
+          saving={savingSection === "contact"}
+          onEdit={() => startEditing("contact")}
+          onSave={() => void handleSaveContact()}
+          onCancel={() => cancelEditing("contact")}
+        >
+          {editingSection === "contact" ? (
+            <div className="grid gap-4">
+              <EditableField label="Email">
+                <input
+                  type="email"
+                  className={inputCls}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </EditableField>
+              <EditableField label="Phone">
+                <input
+                  type="tel"
+                  className={inputCls}
+                  inputMode="numeric"
+                  autoComplete="tel-national"
+                  maxLength={14}
+                  value={phone}
+                  onChange={(e) => setPhone(formatPhoneInput(e.target.value))}
+                />
+              </EditableField>
+            </div>
+          ) : (
+            <dl className="grid gap-4">
+              <ContactDisplayRow icon={Mail} label="Email" value={email} />
+              <ContactDisplayRow icon={Phone} label="Phone" value={phone} />
+            </dl>
+          )}
+        </AccountSectionCard>
 
-        <AccountCard title="Shipping address">
+        <AccountSectionCard
+          title="Shipping address"
+          description="Where your medication is delivered"
+          icon={Truck}
+          tone="shipping"
+          editable
+          editing={editingSection === "shipping"}
+          saving={savingSection === "shipping"}
+          onEdit={() => startEditing("shipping")}
+          onSave={() => void handleSaveShipping()}
+          onCancel={() => cancelEditing("shipping")}
+        >
           <ShippingAddressSection
             expectedState={state}
             value={address}
-            onSave={async (next: ShippingAddressValue) => {
-              const updatedProfile = await patchPatientProfile({
-                address: next.address,
-                city: next.city,
-                county: next.county,
-                zip: next.zip,
-              });
-              setProfile(updatedProfile);
-              setAddress({
-                address: updatedProfile.address ?? next.address,
-                city: updatedProfile.city ?? next.city,
-                zip: updatedProfile.zip ?? next.zip,
-                county: updatedProfile.county ?? next.county,
-                verified: next.verified,
-              });
-              toast.success("Shipping address updated.");
-            }}
+            draft={addressDraft}
+            onDraftChange={setAddressDraft}
+            editing={editingSection === "shipping"}
+            showActions={false}
           />
-        </AccountCard>
+        </AccountSectionCard>
 
-        <AccountCard title="Communication preferences">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-medium text-foreground">
-                  Email notifications
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Care updates and reminders
-                </p>
-              </div>
-              <Switch
+        <AccountSectionCard
+          title="Communication preferences"
+          description="Choose how you'd like to hear from us"
+          icon={Bell}
+          tone="communication"
+          editable
+          editing={editingSection === "communication"}
+          saving={savingSection === "communication"}
+          onEdit={() => startEditing("communication")}
+          onSave={() => void handleSaveCommunication()}
+          onCancel={() => cancelEditing("communication")}
+        >
+          {editingSection === "communication" ? (
+            <div
+              className={cn(
+                "divide-y",
+                accountSectionDividerClass("communication"),
+              )}
+            >
+              <PreferenceRow
+                icon={Mail}
+                iconClassName={accountSectionRowIconClass("communication")}
+                title="Email notifications"
+                description="Care updates and reminders"
                 checked={emailNotifications}
                 onCheckedChange={setEmailNotifications}
               />
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-medium text-foreground">
-                  SMS notifications
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Time-sensitive alerts
-                </p>
-              </div>
-              <Switch
+              <PreferenceRow
+                icon={Smartphone}
+                iconClassName={accountSectionRowIconClass("communication")}
+                title="SMS notifications"
+                description="Time-sensitive alerts"
                 checked={smsNotifications}
                 onCheckedChange={setSmsNotifications}
               />
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-medium text-foreground">
-                  Product & education emails
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Tips and program news
-                </p>
-              </div>
-              <Switch
+              <PreferenceRow
+                icon={BookOpen}
+                iconClassName={accountSectionRowIconClass("communication")}
+                title="Product & education emails"
+                description="Tips and program news"
                 checked={productEmails}
                 onCheckedChange={setProductEmails}
               />
             </div>
-          </div>
-        </AccountCard>
-
-        <AccountCard title="Consent records">
-          <ul className="space-y-3 text-sm">
-            <li className="flex items-center justify-between gap-3">
-              <span className="text-foreground">
-                Intake Acknowledgments & Informed Consent
-              </span>
-              <span className="text-muted-foreground">
-                {intakeAckSigned && consent?.signed_at
-                  ? `Signed ${new Date(consent.signed_at).toLocaleDateString()}`
-                  : "Not signed"}
-              </span>
-            </li>
-            <li className="flex items-center justify-between gap-3">
-              <span className="text-foreground">
-                Telehealth informed consent
-              </span>
-              <span className="text-muted-foreground">
-                {consent?.signed_at
-                  ? `Signed ${new Date(consent.signed_at).toLocaleDateString()}`
-                  : "Not signed"}
-              </span>
-            </li>
-            <li className="flex items-center justify-between gap-3">
-              <span className="text-foreground">Privacy policy</span>
-              <span className="text-muted-foreground">
-                {consent?.privacy_acknowledgment ? "Accepted" : "Pending"}
-              </span>
-            </li>
-            <li className="flex items-center justify-between gap-3">
-              <span className="text-foreground">Terms of service</span>
-              <span className="text-muted-foreground">
-                {consent?.telehealth_consent ? "Accepted" : "Pending"}
-              </span>
-            </li>
-          </ul>
-        </AccountCard>
-
-        <AccountCard title="Security">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-medium text-foreground">
-                  Two-factor authentication
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Email code required when signing in
-                </p>
-              </div>
-              <Switch
-                checked={twoFactorEnabled}
-                disabled={twoFactorBusy || Boolean(twoFactorSetup)}
-                onCheckedChange={(checked) =>
-                  void handleTwoFactorToggle(checked)
-                }
+          ) : (
+            <dl
+              className={cn(
+                "divide-y",
+                accountSectionDividerClass("communication"),
+              )}
+            >
+              <PreferenceDisplay
+                icon={Mail}
+                iconClassName={accountSectionRowIconClass("communication")}
+                title="Email notifications"
+                description="Care updates and reminders"
+                enabled={emailNotifications}
               />
-            </div>
+              <PreferenceDisplay
+                icon={Smartphone}
+                iconClassName={accountSectionRowIconClass("communication")}
+                title="SMS notifications"
+                description="Time-sensitive alerts"
+                enabled={smsNotifications}
+              />
+              <PreferenceDisplay
+                icon={BookOpen}
+                iconClassName={accountSectionRowIconClass("communication")}
+                title="Product & education emails"
+                description="Tips and program news"
+                enabled={productEmails}
+              />
+            </dl>
+          )}
+        </AccountSectionCard>
+
+        <AccountSectionCard
+          title="Consent records"
+          description="Agreements you've accepted"
+          icon={FileCheck2}
+          tone="consent"
+        >
+          <ul className={cn("divide-y", accountSectionDividerClass("consent"))}>
+            <ConsentRow
+              label="Intake Acknowledgments & Informed Consent"
+              status={
+                intakeAckSigned && consent?.signed_at
+                  ? `Signed ${new Date(consent.signed_at).toLocaleDateString()}`
+                  : "Not signed"
+              }
+              complete={Boolean(intakeAckSigned && consent?.signed_at)}
+            />
+            <ConsentRow
+              label="Telehealth informed consent"
+              status={
+                consent?.signed_at
+                  ? `Signed ${new Date(consent.signed_at).toLocaleDateString()}`
+                  : "Not signed"
+              }
+              complete={Boolean(consent?.signed_at)}
+            />
+            <ConsentRow
+              label="Privacy policy"
+              status={consent?.privacy_acknowledgment ? "Accepted" : "Pending"}
+              complete={Boolean(consent?.privacy_acknowledgment)}
+            />
+            <ConsentRow
+              label="Terms of service"
+              status={consent?.telehealth_consent ? "Accepted" : "Pending"}
+              complete={Boolean(consent?.telehealth_consent)}
+            />
+          </ul>
+        </AccountSectionCard>
+
+        <AccountSectionCard
+          title="Security"
+          description="Protect your account"
+          icon={ShieldCheck}
+          tone="security"
+        >
+          <div className="space-y-4">
+            <PreferenceRow
+              icon={LockKeyhole}
+              iconClassName={accountSectionRowIconClass("security")}
+              title="Two-factor authentication"
+              description="Email code required when signing in"
+              checked={twoFactorEnabled}
+              disabled={twoFactorBusy || Boolean(twoFactorSetup)}
+              onCheckedChange={(checked) => void handleTwoFactorToggle(checked)}
+            />
             {twoFactorSetup && (
-              <div className="rounded-2xl border border-border bg-muted/30 p-4">
+              <div className="rounded-2xl border border-destructive/20 bg-card/70 p-4">
                 <p className="text-sm text-muted-foreground">
                   Enter the 6-digit code sent to your email to enable 2FA.
                 </p>
@@ -606,8 +794,148 @@ function DashboardAccountPage() {
               </div>
             )}
           </div>
-        </AccountCard>
+        </AccountSectionCard>
       </div>
     </div>
+  );
+}
+
+function ContactDisplayRow({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <span
+        className={cn(
+          "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full",
+          accountSectionRowIconClass("contact"),
+        )}
+      >
+        <Icon className="size-4" aria-hidden />
+      </span>
+      <DisplayField label={label} value={value} className="min-w-0 flex-1" />
+    </div>
+  );
+}
+
+function PreferenceRow({
+  icon: Icon,
+  iconClassName = "bg-secondary/15 text-secondary",
+  title,
+  description,
+  checked,
+  disabled,
+  onCheckedChange,
+}: {
+  icon?: React.ComponentType<{ className?: string }>;
+  iconClassName?: string;
+  title: string;
+  description: string;
+  checked: boolean;
+  disabled?: boolean;
+  onCheckedChange: (checked: boolean) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+      <div className="flex min-w-0 items-start gap-3">
+        {Icon && (
+          <span
+            className={cn(
+              "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full",
+              iconClassName,
+            )}
+          >
+            <Icon className="size-4" aria-hidden />
+          </span>
+        )}
+        <div>
+          <p className="text-sm font-medium text-foreground">{title}</p>
+          <p className="text-xs text-muted-foreground">{description}</p>
+        </div>
+      </div>
+      <Switch
+        checked={checked}
+        disabled={disabled}
+        onCheckedChange={onCheckedChange}
+      />
+    </div>
+  );
+}
+
+function PreferenceDisplay({
+  icon: Icon,
+  iconClassName = accountSectionRowIconClass("communication"),
+  title,
+  description,
+  enabled,
+}: {
+  icon?: React.ComponentType<{ className?: string }>;
+  iconClassName?: string;
+  title: string;
+  description: string;
+  enabled: boolean;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+      <div className="flex min-w-0 items-start gap-3">
+        {Icon && (
+          <span
+            className={cn(
+              "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full",
+              iconClassName,
+            )}
+          >
+            <Icon className="size-4" aria-hidden />
+          </span>
+        )}
+        <div>
+          <p className="text-sm font-medium text-foreground">{title}</p>
+          <p className="text-xs text-muted-foreground">{description}</p>
+        </div>
+      </div>
+      <span
+        className={cn(
+          "rounded-full px-2.5 py-0.5 text-xs font-medium",
+          enabled
+            ? accountSectionBadgeOnClass("communication")
+            : "bg-muted text-muted-foreground",
+        )}
+      >
+        {enabled ? "On" : "Off"}
+      </span>
+    </div>
+  );
+}
+
+function ConsentRow({
+  label,
+  status,
+  complete,
+}: {
+  label: string;
+  status: string;
+  complete: boolean;
+}) {
+  const StatusIcon = complete ? CheckCircle2 : Clock;
+
+  return (
+    <li className="flex items-center justify-between gap-3 py-3 text-sm first:pt-0 last:pb-0">
+      <span className="text-foreground">{label}</span>
+      <span
+        className={cn(
+          "flex shrink-0 items-center gap-1.5",
+          complete ? "text-success" : "text-muted-foreground",
+        )}
+      >
+        <StatusIcon className="size-4" aria-hidden />
+        {status}
+      </span>
+    </li>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddressFields } from "@/components/quiz/AddressFields";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,14 +12,35 @@ export function ShippingAddressSection({
   value,
   expectedState,
   onSave,
+  editing: controlledEditing,
+  onEditingChange,
+  draft: controlledDraft,
+  onDraftChange,
+  showActions = true,
 }: {
   value: ShippingAddressValue;
   expectedState?: string;
-  onSave: (next: ShippingAddressValue) => Promise<void>;
+  onSave?: (next: ShippingAddressValue) => Promise<void>;
+  editing?: boolean;
+  onEditingChange?: (editing: boolean) => void;
+  draft?: ShippingAddressValue;
+  onDraftChange?: (draft: ShippingAddressValue) => void;
+  showActions?: boolean;
 }) {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(value);
+  const [internalEditing, setInternalEditing] = useState(false);
+  const [internalDraft, setInternalDraft] = useState(value);
   const [saving, setSaving] = useState(false);
+
+  const editing = controlledEditing ?? internalEditing;
+  const setEditing = onEditingChange ?? setInternalEditing;
+  const draft = controlledDraft ?? internalDraft;
+  const setDraft = onDraftChange ?? setInternalDraft;
+
+  useEffect(() => {
+    if (!editing && controlledDraft === undefined) {
+      setInternalDraft(value);
+    }
+  }, [value, editing, controlledDraft]);
 
   const lines = formatShippingAddressLines(value);
 
@@ -34,6 +55,7 @@ export function ShippingAddressSection({
   }
 
   async function saveEdit() {
+    if (!onSave) return;
     setSaving(true);
     try {
       await onSave(draft);
@@ -59,16 +81,18 @@ export function ShippingAddressSection({
             No shipping address on file.
           </p>
         )}
-        <Button
-          type="button"
-          variant="outline"
-          className="rounded-xl"
-          onClick={openEditor}
-        >
-          {lines.length > 0
-            ? "Change shipping address"
-            : "Add shipping address"}
-        </Button>
+        {showActions && (
+          <Button
+            type="button"
+            variant="outline"
+            className="rounded-xl"
+            onClick={openEditor}
+          >
+            {lines.length > 0
+              ? "Change shipping address"
+              : "Add shipping address"}
+          </Button>
+        )}
       </div>
     );
   }
@@ -82,25 +106,27 @@ export function ShippingAddressSection({
         onChange={setDraft}
         lockWhenVerified={false}
       />
-      <div className="flex flex-wrap gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          className="rounded-xl"
-          disabled={saving}
-          onClick={cancelEdit}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="button"
-          className="rounded-xl"
-          disabled={saving}
-          onClick={() => void saveEdit()}
-        >
-          {saving ? "Saving…" : "Save new address"}
-        </Button>
-      </div>
+      {showActions && (
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="rounded-xl"
+            disabled={saving}
+            onClick={cancelEdit}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            className="rounded-xl"
+            disabled={saving}
+            onClick={() => void saveEdit()}
+          >
+            {saving ? "Saving…" : "Save new address"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
