@@ -828,6 +828,7 @@ function IntakePage() {
                 <input
                   className={inputCls}
                   value={(labs[k] as string) ?? ""}
+                  placeholder={k === "bp" ? "e.g. 120/80" : undefined}
                   onChange={(e) =>
                     patch("labs", { ...labs, [k]: e.target.value })
                   }

@@ -401,11 +401,18 @@ describe("intake-steps validation", () => {
       "rejects non-numeric lab injection %j",
       (payload) => {
         const data = validIntake({
-          labs: { bp: payload, recent_labs: false, willing: true },
+          labs: { a1c: payload, recent_labs: false, willing: true },
         });
         expect(getIntakeStepError(9, data)).not.toBeNull();
       },
     );
+
+    it("accepts blood pressure as systolic/diastolic", () => {
+      const data = validIntake({
+        labs: { bp: "157/32", recent_labs: true, willing: true },
+      });
+      expect(getIntakeStepError(9, data)).toBeNull();
+    });
   });
 
   describe("step 10 medication preferences", () => {

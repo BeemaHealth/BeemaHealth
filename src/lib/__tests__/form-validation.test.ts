@@ -16,6 +16,7 @@ import {
   validateHeightIn,
   validateMedicationRow,
   validateOptionalNumericLab,
+  validateOptionalBloodPressure,
   validateWeightLbs,
 } from "@/lib/form-validation";
 import {
@@ -251,6 +252,27 @@ describe("form-validation", () => {
 
     it.each(SQL_INJECTION)("rejects injection in lab field %j", (payload) => {
       expect(validateOptionalNumericLab(payload, "glucose")).not.toBeNull();
+    });
+  });
+
+  describe("validateOptionalBloodPressure", () => {
+    it("allows empty optional blood pressure", () => {
+      expect(validateOptionalBloodPressure("")).toBeNull();
+    });
+
+    it("accepts systolic/diastolic format", () => {
+      expect(validateOptionalBloodPressure("120/80")).toBeNull();
+      expect(validateOptionalBloodPressure("157/32")).toBeNull();
+      expect(validateOptionalBloodPressure("120 / 80")).toBeNull();
+    });
+
+    it("rejects plain numbers and injection strings", () => {
+      expect(validateOptionalBloodPressure("120")).not.toBeNull();
+      expect(validateOptionalBloodPressure(SQL_INJECTION[0])).not.toBeNull();
+    });
+
+    it("rejects when systolic is not higher than diastolic", () => {
+      expect(validateOptionalBloodPressure("80/120")).not.toBeNull();
     });
   });
 

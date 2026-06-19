@@ -18,6 +18,7 @@ from apps.common.validation.form import (
     validate_adult_weight_history,
     validate_allergy_row,
     validate_medication_row,
+    validate_optional_blood_pressure,
     validate_optional_numeric_lab,
 )
 
@@ -129,7 +130,11 @@ def validate_labs_section(labs: dict[str, Any]) -> dict[str, str]:
 
     for key, label in LAB_FIELDS:
         if key in labs:
-            err = validate_optional_numeric_lab(str(labs.get(key, "")), label)
+            raw = str(labs.get(key, ""))
+            if key == "bp":
+                err = validate_optional_blood_pressure(raw)
+            else:
+                err = validate_optional_numeric_lab(raw, label)
             if err:
                 return _section_error("labs", err)
 

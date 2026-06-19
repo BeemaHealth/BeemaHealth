@@ -158,3 +158,21 @@ def validate_optional_numeric_lab(value: str, label: str) -> str | None:
     if n < 0:
         return f"Enter a valid number for {label}."
     return None
+
+
+_BLOOD_PRESSURE_PATTERN = re.compile(r"^\s*(\d{2,3})\s*/\s*(\d{2,3})\s*$")
+
+
+def validate_optional_blood_pressure(value: str) -> str | None:
+    if not is_filled(value):
+        return None
+    match = _BLOOD_PRESSURE_PATTERN.match(value.strip())
+    if not match:
+        return "Enter blood pressure as systolic/diastolic (e.g. 120/80)."
+    systolic = int(match.group(1))
+    diastolic = int(match.group(2))
+    if systolic < 50 or systolic > 300 or diastolic < 30 or diastolic > 200:
+        return "Enter a realistic blood pressure reading (e.g. 120/80)."
+    if systolic <= diastolic:
+        return "Systolic (first number) should be higher than diastolic."
+    return None

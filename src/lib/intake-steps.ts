@@ -10,6 +10,7 @@ import {
   validateAllergyRow,
   validateMedicationRow,
   validateOptionalNumericLab,
+  validateOptionalBloodPressure,
 } from "@/lib/form-validation";
 import type { MedicalIntake, SexAssignedAtBirth } from "@/lib/types/mvp";
 import {
@@ -373,8 +374,9 @@ export function getIntakeStepError(
       return unanswered ? "" : null;
     }
     case 9: {
+      const bpErr = validateOptionalBloodPressure(String(labs.bp ?? ""));
+      if (bpErr) return bpErr;
       for (const [key, label] of [
-        ["bp", "blood pressure"],
         ["a1c", "A1C"],
         ["glucose", "glucose"],
         ["cholesterol", "cholesterol"],

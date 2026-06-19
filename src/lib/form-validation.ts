@@ -147,3 +147,23 @@ export function validateOptionalNumericLab(
   if (!Number.isFinite(n) || n < 0) return `Enter a valid number for ${label}.`;
   return null;
 }
+
+const BLOOD_PRESSURE_PATTERN = /^\s*(\d{2,3})\s*\/\s*(\d{2,3})\s*$/;
+
+/** Optional BP reading as systolic/diastolic (e.g. 120/80). */
+export function validateOptionalBloodPressure(value: string): string | null {
+  if (!isFilled(value)) return null;
+  const match = value.trim().match(BLOOD_PRESSURE_PATTERN);
+  if (!match) {
+    return "Enter blood pressure as systolic/diastolic (e.g. 120/80).";
+  }
+  const systolic = Number(match[1]);
+  const diastolic = Number(match[2]);
+  if (systolic < 50 || systolic > 300 || diastolic < 30 || diastolic > 200) {
+    return "Enter a realistic blood pressure reading (e.g. 120/80).";
+  }
+  if (systolic <= diastolic) {
+    return "Systolic (first number) should be higher than diastolic.";
+  }
+  return null;
+}
