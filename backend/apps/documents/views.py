@@ -1,3 +1,4 @@
+from django.http import FileResponse
 from django.conf import settings
 from rest_framework import status
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -12,7 +13,12 @@ from apps.documents.serializers import (
     DocumentUploadRequestSerializer,
     UploadedDocumentSerializer,
 )
-from apps.documents.storage import delete_stored_document, generate_presigned_upload, save_local_upload
+from apps.documents.storage import (
+    delete_stored_document,
+    generate_presigned_upload,
+    local_document_path,
+    save_local_upload,
+)
 
 
 class DocumentListCreateView(APIView):
@@ -27,7 +33,13 @@ class DocumentListCreateView(APIView):
             resource_id=str(request.user.id),
             request=request,
         )
-        return Response(UploadedDocumentSerializer(docs, many=True).data)
+        return Response(
+            UploadedDocumentSerializer(
+                docs,
+                many=True,
+                context={"request": request},
+            ).data
+        )
 
     def post(self, request):
         serializer = DocumentUploadRequestSerializer(data=request.data)
@@ -55,7 +67,10 @@ class DocumentListCreateView(APIView):
         )
         return Response(
             {
-                "document": UploadedDocumentSerializer(doc).data,
+                "document": UploadedDocumentSerializer(
+                    doc,
+                    context={"request": request},
+                ).data,
                 "upload": presign,
             },
             status=status.HTTP_201_CREATED,
@@ -96,7 +111,58 @@ class DocumentFileUploadView(APIView):
         except ValueError:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        return Response(UploadedDocumentSerializer(doc).data)
+        return Response(
+            UploadedDocumentSerializer(doc, context={"request": request}).data
+        )
+
+
+class DocumentFileView(APIView):
+    """Stream an uploaded document file for the authenticated patient."""
+
+    permission_classes = [IsPatient]
+
+    def get(self, request, document_id):
+        try:
+            doc = UploadedDocument.objects.get(id=document_id, user=request.user)
+        except UploadedDocument.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if settings.USE_S3_STORAGE:
+            return Response(
+                {"detail": "Use the presigned file_url from the document record."},
+                status=status.HTTP_405_METHOD_NOT_ALLOWED,
+            )
+
+        prefix = f"local/{request.user.id}/"
+        if not doc.file_key.startswith(prefix):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            path = local_document_path(doc.file_key)
+        except ValueError:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        if not path.is_file():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        log_audit_event(
+            user=request.user,
+            action="read",
+            resource_type="document_file",
+            resource_id=str(doc.id),
+            request=request,
+        )
+
+        response = FileResponse(
+            path.open("rb"),
+            content_type=doc.content_type or "application/octet-stream",
+            as_attachment=False,
+            filename=doc.original_filename,
+        )
+        response["Content-Disposition"] = (
+            f'inline; filename="{doc.original_filename}"'
+        )
+        return response
 
 
 class DocumentDetailView(APIView):
@@ -124,7 +190,9 @@ class DocumentDetailView(APIView):
             resource_id=str(doc.id),
             request=request,
         )
-        return Response(UploadedDocumentSerializer(doc).data)
+        return Response(
+            UploadedDocumentSerializer(doc, context={"request": request}).data
+        )
 
     def delete(self, request, document_id):
         doc = self._get_document(request, document_id)

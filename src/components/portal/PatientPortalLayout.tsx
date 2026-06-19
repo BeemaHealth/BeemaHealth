@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { PortalSidebar } from "@/components/portal/PortalSidebar";
+import { Toaster } from "@/components/ui/sonner";
 import {
   SidebarInset,
   SidebarProvider,
@@ -26,6 +27,7 @@ export function PatientPortalLayout({
         </header>
         <div className="flex-1 px-4 py-6 md:px-8 md:py-8">{children}</div>
       </SidebarInset>
+      <Toaster />
     </SidebarProvider>
   );
 }

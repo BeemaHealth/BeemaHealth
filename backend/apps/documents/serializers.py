@@ -45,16 +45,27 @@ class UploadedDocumentSerializer(serializers.ModelSerializer):
 
     def get_file_url(self, obj):
         from django.conf import settings
+        from django.urls import reverse
 
-        if not settings.USE_S3_STORAGE:
+        request = self.context.get("request")
+
+        if settings.USE_S3_STORAGE:
+            from apps.documents.storage import get_s3_client
+
+            client = get_s3_client()
+            return client.generate_presigned_url(
+                "get_object",
+                Params={"Bucket": settings.AWS_STORAGE_BUCKET_NAME, "Key": obj.file_key},
+                ExpiresIn=3600,
+            )
+
+        from apps.documents.storage import local_document_exists
+
+        if not local_document_exists(obj.file_key) or request is None:
             return None
-        from apps.documents.storage import get_s3_client
 
-        client = get_s3_client()
-        return client.generate_presigned_url(
-            "get_object",
-            Params={"Bucket": settings.AWS_STORAGE_BUCKET_NAME, "Key": obj.file_key},
-            ExpiresIn=3600,
+        return request.build_absolute_uri(
+            reverse("document-file", kwargs={"document_id": obj.id})
         )
 
 

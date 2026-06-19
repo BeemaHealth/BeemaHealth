@@ -477,7 +477,7 @@ export async function createDocumentUpload(payload: {
 export async function uploadDocumentFile(
   file: File,
   response: DocumentUploadResponse,
-): Promise<void> {
+): Promise<UploadedDocument> {
   const { upload, document } = response;
   if (upload.method === "s3" && upload.upload_url) {
     let putRes: Response;
@@ -496,7 +496,7 @@ export async function uploadDocumentFile(
     if (!putRes.ok) {
       throw new ApiError("File upload to storage failed.", putRes.status);
     }
-    return;
+    return document;
   }
 
   const formData = new FormData();
@@ -521,6 +521,53 @@ export async function uploadDocumentFile(
     const message = await parseApiErrorMessage(res, body);
     throw new ApiError(message, res.status);
   }
+  return res.json() as Promise<UploadedDocument>;
+}
+
+export type DocumentPreview = {
+  objectUrl: string;
+  contentType: string;
+};
+
+function isPresignedDocumentUrl(url: string): boolean {
+  return /amazonaws\.com/i.test(url) || /X-Amz-Signature/i.test(url);
+}
+
+export async function fetchUploadedDocumentPreview(
+  document: UploadedDocument,
+): Promise<DocumentPreview> {
+  if (!document.file_url) {
+    throw new ApiError("This document is not ready to view yet.", 404);
+  }
+
+  const headers: Record<string, string> = {};
+  if (!isPresignedDocumentUrl(document.file_url)) {
+    const session = store.getSession();
+    if (session?.token) headers.Authorization = `Token ${session.token}`;
+  }
+
+  let res: Response;
+  try {
+    res = await fetch(document.file_url, {
+      headers,
+      credentials: "same-origin",
+    });
+  } catch {
+    throw new ApiError("Unable to load document.", 0);
+  }
+
+  if (!res.ok) {
+    const body = await res.text();
+    const message = await parseApiErrorMessage(res, body);
+    throw new ApiError(message, res.status);
+  }
+
+  const blob = await res.blob();
+  return {
+    objectUrl: URL.createObjectURL(blob),
+    contentType:
+      blob.type || document.content_type || "application/octet-stream",
+  };
 }
 
 export async function uploadDocumentBatch(
@@ -533,8 +580,8 @@ export async function uploadDocumentBatch(
       filename: file.name,
       content_type: file.type || "application/octet-stream",
     });
-    await uploadDocumentFile(file, response);
-    newDocs.push(response.document);
+    const uploaded = await uploadDocumentFile(file, response);
+    newDocs.push(uploaded);
   }
   return newDocs;
 }

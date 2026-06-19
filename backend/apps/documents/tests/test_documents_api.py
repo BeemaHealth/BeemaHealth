@@ -90,6 +90,47 @@ class DocumentsApiTests(TestCase):
                 saved = Path(media_root) / file_key
                 self.assertTrue(saved.is_file())
                 self.assertEqual(saved.read_bytes(), b"%PDF-1.4 test content")
+                self.assertIsNotNone(response.data["file_url"])
+
+    @override_settings(USE_S3_STORAGE=False)
+    def test_download_own_document_file(self):
+        with tempfile.TemporaryDirectory() as media_root:
+            with self.settings(MEDIA_ROOT=media_root):
+                create = self.client.post(
+                    self.list_url,
+                    valid_document_payload(filename="view-me.pdf"),
+                    format="json",
+                )
+                doc_id = create.data["document"]["id"]
+                upload_url = reverse("document-upload", kwargs={"document_id": doc_id})
+                file = SimpleUploadedFile(
+                    "view-me.pdf",
+                    b"%PDF-1.4 view content",
+                    content_type="application/pdf",
+                )
+                self.client.post(upload_url, {"file": file}, format="multipart")
+
+                file_url = reverse("document-file", kwargs={"document_id": doc_id})
+                response = self.client.get(file_url)
+                self.assertEqual(response.status_code, status.HTTP_200_OK)
+                self.assertEqual(
+                    b"".join(response.streaming_content),
+                    b"%PDF-1.4 view content",
+                )
+                self.assertEqual(response["Content-Type"], "application/pdf")
+
+    @override_settings(USE_S3_STORAGE=False, MEDIA_ROOT=tempfile.gettempdir())
+    def test_cannot_download_other_users_document_file(self):
+        doc = UploadedDocument.objects.create(
+            user=self.other,
+            document_type="lab_results",
+            file_key=f"local/{self.other.id}/lab_results/abc-test.pdf",
+            original_filename="test.pdf",
+            content_type="application/pdf",
+        )
+        file_url = reverse("document-file", kwargs={"document_id": doc.id})
+        response = self.client.get(file_url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     @override_settings(USE_S3_STORAGE=False, MEDIA_ROOT=tempfile.gettempdir())
     def test_create_png_screenshot_filename(self):

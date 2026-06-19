@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { DocumentTypeUpload } from "@/components/portal/DocumentTypeUpload";
 import { UploadedDocumentCard } from "@/components/portal/UploadedDocumentCard";
 import { PortalPageHeader } from "@/components/portal/PortalPageHeader";
@@ -65,7 +66,15 @@ function DashboardDocumentsPage() {
               onTypeChange={(type) =>
                 void upload.updateDocumentType(doc.id, type)
               }
-              onRemove={() => void upload.removeDocument(doc.id)}
+              onRemove={async () => {
+                const filename = doc.original_filename || "Document";
+                const removed = await upload.removeDocument(doc.id);
+                if (removed) {
+                  toast.success("Document removed", {
+                    description: `Successfully removed ${filename}.`,
+                  });
+                }
+              }}
             />
           ))}
         </div>

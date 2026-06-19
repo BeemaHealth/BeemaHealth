@@ -71,24 +71,29 @@ export function useDocumentUpload() {
     [handleUploadBatch],
   );
 
-  const removeDocument = useCallback(async (documentId: string) => {
-    if (!isApiEnabled()) {
-      setUploadError("Document upload requires the backend API.");
-      return;
-    }
-    setUploadError("");
-    setBusyDocumentId(documentId);
-    try {
-      await deleteDocument(documentId);
-      setUploadedDocs((prev) => prev.filter((doc) => doc.id !== documentId));
-    } catch (err) {
-      setUploadError(
-        err instanceof Error ? err.message : "Could not remove document.",
-      );
-    } finally {
-      setBusyDocumentId(null);
-    }
-  }, []);
+  const removeDocument = useCallback(
+    async (documentId: string): Promise<boolean> => {
+      if (!isApiEnabled()) {
+        setUploadError("Document upload requires the backend API.");
+        return false;
+      }
+      setUploadError("");
+      setBusyDocumentId(documentId);
+      try {
+        await deleteDocument(documentId);
+        setUploadedDocs((prev) => prev.filter((doc) => doc.id !== documentId));
+        return true;
+      } catch (err) {
+        setUploadError(
+          err instanceof Error ? err.message : "Could not remove document.",
+        );
+        return false;
+      } finally {
+        setBusyDocumentId(null);
+      }
+    },
+    [],
+  );
 
   const updateDocumentType = useCallback(
     async (documentId: string, documentType: DocumentType) => {

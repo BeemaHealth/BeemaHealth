@@ -39,14 +39,26 @@ def generate_presigned_upload(user_id: str, document_type: str, filename: str, c
     return {"upload_url": upload_url, "file_key": file_key, "method": "s3"}
 
 
-def save_local_upload(file_key: str, file_obj) -> None:
-    """Write uploaded bytes to MEDIA_ROOT under a sanitized relative key."""
+def local_document_path(file_key: str) -> Path:
+    """Resolve a sanitized local storage path under MEDIA_ROOT."""
     if not file_key.startswith("local/"):
         raise ValueError("Invalid local file key.")
     relative = Path(file_key)
     if ".." in relative.parts:
         raise ValueError("Invalid local file key.")
-    dest = Path(settings.MEDIA_ROOT) / relative
+    return Path(settings.MEDIA_ROOT) / relative
+
+
+def local_document_exists(file_key: str) -> bool:
+    try:
+        return local_document_path(file_key).is_file()
+    except ValueError:
+        return False
+
+
+def save_local_upload(file_key: str, file_obj) -> None:
+    """Write uploaded bytes to MEDIA_ROOT under a sanitized relative key."""
+    dest = local_document_path(file_key)
     dest.parent.mkdir(parents=True, exist_ok=True)
     with dest.open("wb") as handle:
         for chunk in file_obj.chunks():
@@ -56,10 +68,10 @@ def save_local_upload(file_key: str, file_obj) -> None:
 def delete_stored_document(file_key: str) -> None:
     """Best-effort removal of stored bytes for a document file key."""
     if file_key.startswith("local/"):
-        relative = Path(file_key)
-        if ".." in relative.parts:
+        try:
+            dest = local_document_path(file_key)
+        except ValueError:
             return
-        dest = Path(settings.MEDIA_ROOT) / relative
         if dest.is_file():
             dest.unlink()
         return
