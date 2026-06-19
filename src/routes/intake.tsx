@@ -274,7 +274,6 @@ function IntakePage() {
       <QuizShell
         label={INTAKE_STEP_LABELS[step]}
         title={INTAKE_STEP_LABELS[step]}
-        subtitle="Plain-language questions. Required fields are marked. Progress saves automatically."
         showRequiredLegend
         footer={
           <div className="mt-8 space-y-3">
