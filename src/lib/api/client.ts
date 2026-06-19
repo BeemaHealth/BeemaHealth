@@ -522,6 +522,22 @@ export async function uploadDocumentFile(
   }
 }
 
+export async function uploadDocumentBatch(
+  items: { file: File; documentType: DocumentType }[],
+): Promise<UploadedDocument[]> {
+  const newDocs: UploadedDocument[] = [];
+  for (const { file, documentType } of items) {
+    const response = await createDocumentUpload({
+      document_type: documentType,
+      filename: file.name,
+      content_type: file.type || "application/octet-stream",
+    });
+    await uploadDocumentFile(file, response);
+    newDocs.push(response.document);
+  }
+  return newDocs;
+}
+
 export async function fetchSideEffectCheckIns(): Promise<SideEffectCheckIn[]> {
   if (!USE_API) return [];
   try {
@@ -619,3 +635,9 @@ export const UPLOAD_DOCUMENT_TYPES: { value: DocumentType; label: string }[] = [
   { value: "insurance_card", label: "Insurance card" },
   { value: "lab_results", label: "Lab result" },
 ];
+
+export function documentTypeLabel(type: DocumentType): string {
+  return (
+    UPLOAD_DOCUMENT_TYPES.find((option) => option.value === type)?.label ?? type
+  );
+}

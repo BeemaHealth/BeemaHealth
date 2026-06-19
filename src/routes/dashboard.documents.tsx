@@ -57,18 +57,13 @@ function DashboardDocumentsPage() {
       <section className="rounded-3xl border border-border bg-card p-5 shadow-soft">
         <h2 className="font-semibold text-foreground">Upload a document</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Choose the document type, then select your file.
+          Choose your files, then select a type for each before uploading.
         </p>
         <div className="mt-4">
           <DocumentTypeUpload
             uploading={upload.uploading}
             error={upload.uploadError}
-            onFilesSelected={(files, documentType) => {
-              const input = {
-                target: { files, value: "" },
-              } as React.ChangeEvent<HTMLInputElement>;
-              void upload.handleFilesSelected(input, documentType);
-            }}
+            onUpload={upload.handleUploadBatch}
           />
         </div>
       </section>

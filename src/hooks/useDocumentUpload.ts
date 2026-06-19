@@ -1,10 +1,8 @@
 import { useCallback, useRef, useState, type ChangeEvent } from "react";
 import {
-  createDocumentUpload,
   fetchDocuments,
-  inferDocumentType,
   isApiEnabled,
-  uploadDocumentFile,
+  uploadDocumentBatch,
 } from "@/lib/api/client";
 import type { DocumentType, UploadedDocument } from "@/lib/types/mvp";
 
@@ -25,39 +23,49 @@ export function useDocumentUpload() {
     fileInputRef.current?.click();
   }, []);
 
-  const handleFilesSelected = useCallback(
-    async (e: ChangeEvent<HTMLInputElement>, documentType?: DocumentType) => {
-      const files = e.target.files;
-      if (!files?.length) return;
+  const handleUploadBatch = useCallback(
+    async (items: { file: File; documentType: DocumentType }[]) => {
+      if (!items.length) return;
       if (!isApiEnabled()) {
         setUploadError("Document upload requires the backend API.");
-        e.target.value = "";
         return;
       }
       setUploadError("");
       setUploading(true);
       try {
-        const newDocs: UploadedDocument[] = [];
-        for (const file of Array.from(files)) {
-          const response = await createDocumentUpload({
-            document_type: documentType ?? inferDocumentType(file.name),
-            filename: file.name,
-            content_type: file.type || "application/octet-stream",
-          });
-          await uploadDocumentFile(file, response);
-          newDocs.push(response.document);
-        }
+        const newDocs = await uploadDocumentBatch(items);
         setUploadedDocs((prev) => [...prev, ...newDocs]);
       } catch (err) {
         setUploadError(
           err instanceof Error ? err.message : "Could not upload file(s).",
         );
+        throw err;
       } finally {
         setUploading(false);
-        e.target.value = "";
       }
     },
     [],
+  );
+
+  const handleFilesSelected = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>, documentType?: DocumentType) => {
+      const files = e.target.files;
+      if (!files?.length) return;
+      if (!documentType) {
+        e.target.value = "";
+        return;
+      }
+      try {
+        await handleUploadBatch(
+          Array.from(files).map((file) => ({ file, documentType })),
+        );
+      } catch {
+        // uploadError already set
+      } finally {
+        e.target.value = "";
+      }
+    },
+    [handleUploadBatch],
   );
 
   return {
@@ -69,5 +77,6 @@ export function useDocumentUpload() {
     loadDocuments,
     openFilePicker,
     handleFilesSelected,
+    handleUploadBatch,
   };
 }

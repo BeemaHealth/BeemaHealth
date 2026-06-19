@@ -26,14 +26,14 @@ import {
   inputCls,
 } from "@/components/quiz/quiz-primitives";
 import {
-  createDocumentUpload,
+  documentTypeLabel,
   fetchDocuments,
   fetchEligibilityMe,
   fetchIntakeMe,
   isApiEnabled,
   resubmitIntake,
   syncIntake,
-  uploadDocumentFile,
+  uploadDocumentBatch,
 } from "@/lib/api/client";
 import {
   canEditEligibilitySummary,
@@ -318,12 +318,11 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
     }
   }
 
-  async function handleDocumentFilesSelected(
-    files: FileList,
-    documentType: DocumentType,
+  async function handleDocumentUpload(
+    items: { file: File; documentType: DocumentType }[],
   ) {
     if (mode === "portal" && !canEdit) return;
-    if (!files.length) return;
+    if (!items.length) return;
     if (!isApiEnabled()) {
       setUploadError("Document upload requires the backend API.");
       return;
@@ -331,22 +330,14 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
     setUploadError("");
     setUploading(true);
     try {
-      const newDocs: UploadedDocument[] = [];
-      for (const file of Array.from(files)) {
-        const response = await createDocumentUpload({
-          document_type: documentType,
-          filename: file.name,
-          content_type: file.type || "application/octet-stream",
-        });
-        await uploadDocumentFile(file, response);
-        newDocs.push(response.document);
-      }
+      const newDocs = await uploadDocumentBatch(items);
       setUploadedDocs((prev) => [...prev, ...newDocs]);
       patch("labs", { ...labs, uploads_noted: true });
     } catch (err) {
       setUploadError(
         err instanceof Error ? err.message : "Could not upload file(s).",
       );
+      throw err;
     } finally {
       setUploading(false);
     }
@@ -1048,15 +1039,14 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
             <DocumentTypeUpload
               uploading={uploading}
               error={uploadError}
-              onFilesSelected={(files, type) =>
-                void handleDocumentFilesSelected(files, type)
-              }
+              onUpload={handleDocumentUpload}
             />
             {uploadedDocs.length > 0 && (
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                 {uploadedDocs.map((doc) => (
                   <li key={doc.id}>
-                    {doc.original_filename || doc.document_type}
+                    {doc.original_filename || "Document"} —{" "}
+                    {documentTypeLabel(doc.document_type)}
                   </li>
                 ))}
               </ul>
