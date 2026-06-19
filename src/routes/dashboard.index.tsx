@@ -185,15 +185,15 @@ function DashboardHomePage() {
             <h2 className="text-sm font-semibold text-foreground">Messages</h2>
             <div className="mt-3 rounded-2xl border border-border/80 bg-muted/60 p-3">
               <p className="text-xs font-medium text-muted-foreground">
-                Your clinician
+                Secure messaging
               </p>
               <p className="mt-1 text-sm leading-relaxed text-foreground/90">
-                Secure messaging is coming soon. We will notify you when you can
-                chat with your care team here.
+                Coming soon. We will notify you when you can message your care
+                team from your dashboard.
               </p>
             </div>
-            <p className="mt-3 text-sm font-medium text-primary/70">
-              Open messages →
+            <p className="mt-3 text-sm font-medium text-muted-foreground">
+              Coming soon
             </p>
           </section>
 
@@ -218,15 +218,14 @@ function DashboardHomePage() {
                 ? "Order tracking will appear here once pharmacy fulfillment is connected."
                 : "No active order. Your medication will appear here once approved and shipped."}
             </p>
-            {(data.intake_status === "prescription_sent" ||
-              data.intake_status === "approved") && (
-              <Link
-                to="/dashboard/orders"
-                className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
-              >
-                View orders →
-              </Link>
-            )}
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="mt-3 rounded-xl"
+            >
+              <Link to="/dashboard/orders">View orders →</Link>
+            </Button>
           </section>
 
           <section className="rounded-3xl border border-border bg-card p-5 shadow-soft">
@@ -236,14 +235,16 @@ function DashboardHomePage() {
                 ? "Log side effects and request a refill when you are ready."
                 : "Refill management opens after your clinician prescribes medication."}
             </p>
-            {refillsAvailable && (
-              <Link
-                to="/dashboard/refills"
-                className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
-              >
-                Request refill →
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="mt-3 rounded-xl"
+            >
+              <Link to="/dashboard/refills">
+                {refillsAvailable ? "Request refill →" : "View refills →"}
               </Link>
-            )}
+            </Button>
           </section>
         </div>
       </div>

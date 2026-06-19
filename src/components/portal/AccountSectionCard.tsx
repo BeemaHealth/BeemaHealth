@@ -26,76 +26,76 @@ const toneStyles: Record<
   }
 > = {
   primary: {
-    section: "border-warning/45",
-    header: "bg-warning/32",
-    icon: "bg-warning-foreground text-warning shadow-sm",
-    title: "text-warning-foreground",
-    description: "text-warning-foreground/80",
-    editingRing: "ring-warning/40",
-    footer: "bg-warning/20",
-    divider: "border-warning/25",
-    badgeOn: "bg-warning/30 text-warning-foreground",
-    rowIcon: "bg-warning/30 text-warning-foreground",
+    section: "border-border",
+    header: "bg-warning/14",
+    icon: "bg-warning/18 text-warning-foreground",
+    title: "text-foreground",
+    description: "text-muted-foreground",
+    editingRing: "ring-warning/20",
+    footer: "bg-warning/10",
+    divider: "border-border/80",
+    badgeOn: "bg-warning/15 text-warning-foreground",
+    rowIcon: "bg-warning/15 text-warning-foreground",
   },
   contact: {
-    section: "border-foreground/18",
-    header: "bg-muted",
-    icon: "bg-foreground/14 text-foreground shadow-sm",
+    section: "border-border",
+    header: "bg-muted/70",
+    icon: "bg-foreground/8 text-foreground/70",
     title: "text-foreground",
-    description: "text-foreground/65",
-    editingRing: "ring-foreground/20",
-    footer: "bg-muted/80",
-    divider: "border-foreground/12",
-    badgeOn: "bg-foreground/10 text-foreground",
-    rowIcon: "bg-foreground/12 text-foreground",
+    description: "text-muted-foreground",
+    editingRing: "ring-foreground/12",
+    footer: "bg-muted/50",
+    divider: "border-border/80",
+    badgeOn: "bg-muted text-foreground/80",
+    rowIcon: "bg-foreground/8 text-foreground/70",
   },
   shipping: {
-    section: "border-secondary/40",
-    header: "bg-secondary/16",
-    icon: "bg-secondary text-secondary-foreground shadow-sm",
-    title: "text-secondary",
-    description: "text-secondary/80",
-    editingRing: "ring-secondary/35",
-    footer: "bg-secondary/10",
-    divider: "border-secondary/20",
-    badgeOn: "bg-secondary/15 text-secondary",
-    rowIcon: "bg-secondary text-secondary-foreground",
+    section: "border-border",
+    header: "bg-secondary/10",
+    icon: "bg-secondary/12 text-secondary",
+    title: "text-foreground",
+    description: "text-muted-foreground",
+    editingRing: "ring-secondary/18",
+    footer: "bg-secondary/6",
+    divider: "border-border/80",
+    badgeOn: "bg-secondary/10 text-secondary",
+    rowIcon: "bg-secondary/12 text-secondary",
   },
   communication: {
-    section: "border-accent-foreground/22",
-    header: "bg-accent/75",
-    icon: "bg-accent-foreground text-accent shadow-sm",
-    title: "text-accent-foreground",
-    description: "text-accent-foreground/80",
-    editingRing: "ring-accent-foreground/25",
-    footer: "bg-accent/45",
-    divider: "border-accent-foreground/15",
-    badgeOn: "bg-accent-foreground/12 text-accent-foreground",
-    rowIcon: "bg-accent-foreground/12 text-accent-foreground",
+    section: "border-border",
+    header: "bg-accent/30",
+    icon: "bg-accent-foreground/10 text-accent-foreground",
+    title: "text-foreground",
+    description: "text-muted-foreground",
+    editingRing: "ring-accent-foreground/15",
+    footer: "bg-accent/20",
+    divider: "border-border/80",
+    badgeOn: "bg-accent-foreground/10 text-accent-foreground",
+    rowIcon: "bg-accent-foreground/10 text-accent-foreground",
   },
   consent: {
-    section: "border-success/40",
-    header: "bg-success/18",
-    icon: "bg-success text-success-foreground shadow-sm",
-    title: "text-success",
-    description: "text-success/80",
-    editingRing: "ring-success/30",
-    footer: "bg-success/10",
-    divider: "border-success/20",
-    badgeOn: "bg-success/20 text-success",
-    rowIcon: "bg-success/15 text-success",
+    section: "border-border",
+    header: "bg-success/10",
+    icon: "bg-success/12 text-success",
+    title: "text-foreground",
+    description: "text-muted-foreground",
+    editingRing: "ring-success/18",
+    footer: "bg-success/6",
+    divider: "border-border/80",
+    badgeOn: "bg-success/12 text-success",
+    rowIcon: "bg-success/12 text-success",
   },
   security: {
-    section: "border-destructive/30",
-    header: "bg-destructive/10",
-    icon: "bg-destructive text-destructive-foreground shadow-sm",
-    title: "text-destructive",
-    description: "text-destructive/75",
-    editingRing: "ring-destructive/25",
-    footer: "bg-destructive/8",
-    divider: "border-destructive/15",
-    badgeOn: "bg-destructive/12 text-destructive",
-    rowIcon: "bg-destructive/12 text-destructive",
+    section: "border-border",
+    header: "bg-destructive/8",
+    icon: "bg-destructive/10 text-destructive",
+    title: "text-foreground",
+    description: "text-muted-foreground",
+    editingRing: "ring-destructive/15",
+    footer: "bg-destructive/6",
+    divider: "border-border/80",
+    badgeOn: "bg-destructive/10 text-destructive",
+    rowIcon: "bg-destructive/10 text-destructive",
   },
 };
 
@@ -193,13 +193,11 @@ export function AccountSectionCard({
             </div>
           )}
           <div className="min-w-0">
-            <h2
-              className={cn("text-base font-semibold md:text-lg", styles.title)}
-            >
+            <h2 className="text-base font-semibold text-foreground md:text-lg">
               {title}
             </h2>
             {description && (
-              <p className={cn("mt-0.5 text-sm", styles.description)}>
+              <p className="mt-0.5 text-sm text-muted-foreground">
                 {description}
               </p>
             )}
@@ -270,5 +268,5 @@ export function accountSectionNavIconClass(tone: AccountSectionTone): string {
 
 export function accountSectionNavActiveClass(tone: AccountSectionTone): string {
   const styles = toneStyles[tone];
-  return cn(styles.header, styles.title, "font-medium shadow-sm");
+  return cn(styles.header, "font-medium text-foreground");
 }

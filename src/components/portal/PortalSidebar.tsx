@@ -53,14 +53,28 @@ export function PortalSidebar({ user }: { user: User }) {
   }
 
   return (
-    <Sidebar className="border-r border-sidebar-border bg-sidebar">
+    <Sidebar
+      side={isMobile ? "right" : "left"}
+      className={cn(
+        "bg-sidebar",
+        isMobile
+          ? "border-l border-sidebar-border"
+          : "border-r border-sidebar-border",
+      )}
+    >
       <SidebarHeader className="px-4 py-5">
-        <Link to="/dashboard" className="flex items-center gap-2">
-          <Logo className="h-16 w-auto" />
-        </Link>
-        <p className="mt-4 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-          Patient portal
-        </p>
+        {!isMobile && (
+          <Link to="/dashboard" className="flex items-center gap-2">
+            <Logo className="h-16 w-auto" />
+          </Link>
+        )}
+        {isMobile ? (
+          <p className="text-sm font-semibold text-foreground">Menu</p>
+        ) : (
+          <p className="mt-4 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            Patient portal
+          </p>
+        )}
       </SidebarHeader>
       <SidebarContent className="flex-1">
         <SidebarGroup>
