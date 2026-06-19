@@ -333,10 +333,8 @@ export function getIntakeStepError(
       return null;
     }
     case 6: {
-      if (typeof allergies.answers.has_med !== "boolean")
-        return "Answer whether you have medication allergies.";
-      if (typeof allergies.answers.has_food !== "boolean")
-        return "Answer whether you have food allergies.";
+      if (typeof allergies.answers.has_med !== "boolean") return "";
+      if (typeof allergies.answers.has_food !== "boolean") return "";
       const needsList =
         allergies.answers.has_med === true ||
         allergies.answers.has_food === true;
@@ -350,12 +348,10 @@ export function getIntakeStepError(
       return null;
     }
     case 7:
-      return preg.understand === true
-        ? null
-        : "Confirm you understand the reproductive health information.";
+      return preg.understand === true ? null : "";
     case 8: {
       const unanswered = LIFESTYLE_FIELD_KEYS.find((k) => !isFilled(life[k]));
-      return unanswered ? "Answer every lifestyle question." : null;
+      return unanswered ? "" : null;
     }
     case 9: {
       for (const [key, label] of [
@@ -370,21 +366,16 @@ export function getIntakeStepError(
         );
         if (labErr) return labErr;
       }
-      if (typeof labs.recent_labs !== "boolean")
-        return "Answer whether you've had recent labs.";
-      if (typeof labs.willing !== "boolean")
-        return "Answer whether you're willing to complete labs if needed.";
+      if (typeof labs.recent_labs !== "boolean") return "";
+      if (typeof labs.willing !== "boolean") return "";
       return null;
     }
     case 10: {
       const needsTreatment = !eligibility?.treatment_interest;
       if (needsTreatment && !isFilled(prefs.treatment)) return "";
-      if (typeof prefs.self_inject !== "boolean")
-        return "Answer whether you're comfortable with self-injection.";
-      if (!isFilled(prefs.shipping_preference))
-        return "Enter your shipping preference.";
-      if (typeof prefs.cash_pay_ok !== "boolean")
-        return "Answer whether cash pay works for you.";
+      if (typeof prefs.self_inject !== "boolean") return "";
+      if (!isFilled(prefs.shipping_preference)) return "";
+      if (typeof prefs.cash_pay_ok !== "boolean") return "";
       if (
         isFilled(prefs.pharmacy_phone) &&
         !isValidPhone(String(prefs.pharmacy_phone))
@@ -395,9 +386,7 @@ export function getIntakeStepError(
     }
     case 11: {
       const unchecked = SAFETY_ACKS.find(([k]) => acks[k] !== true);
-      return unchecked
-        ? "Check every safety acknowledgment to continue."
-        : null;
+      return unchecked ? "" : null;
     }
     default:
       return null;

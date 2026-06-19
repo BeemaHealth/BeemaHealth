@@ -323,6 +323,14 @@ describe("intake-steps validation", () => {
   });
 
   describe("step 6 allergies", () => {
+    it("blocks progress without a footer message when questions are unanswered", () => {
+      const data = validIntake({
+        allergies: { answers: {}, list: [] },
+      });
+      expect(getIntakeStepError(6, data)).toBe("");
+      expect(isIntakeStepComplete(6, data)).toBe(false);
+    });
+
     it("requires allergy rows when has_med true", () => {
       const data = validIntake({
         allergies: {
@@ -334,7 +342,33 @@ describe("intake-steps validation", () => {
     });
   });
 
+  describe("step 7 pregnancy", () => {
+    it("blocks progress without a footer message when acknowledgment is unchecked", () => {
+      const data = validIntake({
+        pregnancy: { understand: false },
+      });
+      expect(getIntakeStepError(7, data)).toBe("");
+      expect(isIntakeStepComplete(7, data)).toBe(false);
+    });
+  });
+
+  describe("step 8 lifestyle", () => {
+    it("blocks progress without a footer message when fields are empty", () => {
+      const data = validIntake({ lifestyle: {} });
+      expect(getIntakeStepError(8, data)).toBe("");
+      expect(isIntakeStepComplete(8, data)).toBe(false);
+    });
+  });
+
   describe("step 9 labs", () => {
+    it("blocks progress without a footer message when yes/no questions are unanswered", () => {
+      const data = validIntake({
+        labs: { bp: "", a1c: "", glucose: "", cholesterol: "" },
+      });
+      expect(getIntakeStepError(9, data)).toBe("");
+      expect(isIntakeStepComplete(9, data)).toBe(false);
+    });
+
     it.each(SQL_INJECTION)(
       "rejects non-numeric lab injection %j",
       (payload) => {
@@ -387,14 +421,15 @@ describe("intake-steps validation", () => {
   });
 
   describe("step 11 safety acknowledgments", () => {
-    it("requires all checkboxes", () => {
+    it("blocks progress without a footer message when checkboxes are unchecked", () => {
       const acks = validIntake().safety_acknowledgments as Record<
         string,
         boolean
       >;
       const partial = { ...acks, accurate: false };
       const data = validIntake({ safety_acknowledgments: partial });
-      expect(getIntakeStepError(11, data)).not.toBeNull();
+      expect(getIntakeStepError(11, data)).toBe("");
+      expect(isIntakeStepComplete(11, data)).toBe(false);
     });
   });
 

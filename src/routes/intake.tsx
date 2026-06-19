@@ -644,6 +644,7 @@ function IntakePage() {
           <div className="grid gap-4">
             <YesNoField
               label="Medication allergies?"
+              required
               value={
                 allergies.answers.has_med === true
                   ? true
@@ -660,6 +661,7 @@ function IntakePage() {
             />
             <YesNoField
               label="Food allergies?"
+              required
               value={
                 allergies.answers.has_food === true
                   ? true
@@ -737,8 +739,11 @@ function IntakePage() {
                   patch("pregnancy", { ...preg, understand: e.target.checked })
                 }
               />
-              I understand weight-loss medications may not be appropriate during
-              pregnancy or breastfeeding.
+              <span>
+                I understand weight-loss medications may not be appropriate
+                during pregnancy or breastfeeding.
+                <span className="text-destructive"> *</span>
+              </span>
             </label>
           </div>
         )}
@@ -760,7 +765,7 @@ function IntakePage() {
                 "Struggle more with hunger, cravings, portions, or emotional eating?",
               ],
             ].map(([k, label]) => (
-              <Field key={k} label={label}>
+              <Field key={k} label={label} required>
                 <input
                   className={inputCls}
                   value={(life[k] as string) ?? ""}
@@ -793,6 +798,7 @@ function IntakePage() {
             ))}
             <YesNoField
               label="Labs in last 12 months?"
+              required
               value={
                 labs.recent_labs === true
                   ? true
@@ -804,6 +810,7 @@ function IntakePage() {
             />
             <YesNoField
               label="Willing to complete labs if required?"
+              required
               value={
                 labs.willing === true
                   ? true
@@ -827,7 +834,7 @@ function IntakePage() {
         {step === 10 && (
           <div className="grid gap-4">
             {showTreatmentPrefs ? (
-              <Field label="Treatment option of interest">
+              <Field label="Treatment option of interest" required>
                 <div className="grid gap-2">
                   {[
                     ["zepbound", "Zepbound injection"],
@@ -862,6 +869,7 @@ function IntakePage() {
             )}
             <YesNoField
               label="Comfortable self-injecting?"
+              required
               value={
                 prefs.self_inject === true
                   ? true
@@ -873,7 +881,7 @@ function IntakePage() {
                 patch("medication_preferences", { ...prefs, self_inject: v })
               }
             />
-            <Field label="Pharmacy preference (pickup or shipping)">
+            <Field label="Pharmacy preference (pickup or shipping)" required>
               <input
                 className={inputCls}
                 value={(prefs.shipping_preference as string) ?? ""}
@@ -908,6 +916,7 @@ function IntakePage() {
             ))}
             <YesNoField
               label="Open to cash-pay if insurance doesn't cover?"
+              required
               value={
                 prefs.cash_pay_ok === true
                   ? true
@@ -940,7 +949,10 @@ function IntakePage() {
                     })
                   }
                 />
-                <span>{label}</span>
+                <span>
+                  {label}
+                  <span className="text-destructive"> *</span>
+                </span>
               </label>
             ))}
           </div>
