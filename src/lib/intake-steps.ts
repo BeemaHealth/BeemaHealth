@@ -200,7 +200,7 @@ export const INTAKE_EXCLUDED_CONDITION_KEYS = new Set([
 ]);
 
 export const IDENTITY_FIELDS = [
-  ["preferred", "Preferred name (optional)"],
+  ["preferred", "Preferred first name (optional)"],
   ["address", "Home address"],
   ["city", "City"],
   ["zip", "ZIP"],
@@ -271,15 +271,11 @@ export function getIntakeStepError(
   switch (step) {
     case 0: {
       for (const k of REQUIRED_IDENTITY_FIELDS) {
-        if (!isFilled(id[k])) {
-          const label = IDENTITY_FIELDS.find(([key]) => key === k)?.[1] ?? k;
-          return `Complete ${label.toLowerCase()}.`;
-        }
+        if (!isFilled(id[k])) return "";
       }
       if (!isValidPhone(id.emergency_phone ?? ""))
         return "Enter a valid emergency contact phone number.";
-      if (!isIdentityAddressComplete(id))
-        return "Enter and verify your home address before continuing.";
+      if (!isIdentityAddressComplete(id)) return "";
       return null;
     }
     case 1: {

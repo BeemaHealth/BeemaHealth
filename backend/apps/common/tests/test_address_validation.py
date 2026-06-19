@@ -21,6 +21,12 @@ class AddressValidationTests(TestCase):
 
     def test_valid_street(self):
         self.assertTrue(is_valid_street_address("123 Main St"))
+        self.assertTrue(is_valid_street_address("2510 Summit Drive"))
+
+    def test_rejects_incomplete_or_invalid_streets(self):
+        for street in ("Main St", "2510 sum", "12", "sum"):
+            with self.subTest(street=street):
+                self.assertFalse(is_valid_street_address(street))
 
     def test_rejects_xss_street(self):
         for payload in XSS_PAYLOADS:

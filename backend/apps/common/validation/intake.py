@@ -8,6 +8,7 @@ from apps.common.validation.address import is_identity_address_complete, is_vali
 from apps.common.validation.form import (
     is_filled,
     is_valid_phone,
+    is_valid_preferred_first_name,
     validate_adult_weight_history,
     validate_allergy_row,
     validate_medication_row,
@@ -45,6 +46,10 @@ def validate_identity_section(identity: dict[str, Any]) -> dict[str, str]:
     emergency_phone = identity.get("emergency_phone")
     if emergency_phone is not None and str(emergency_phone).strip() and not is_valid_phone(str(emergency_phone)):
         return _section_error("identity", "Enter a valid emergency contact phone number.")
+
+    preferred = identity.get("preferred") or identity.get("preferred_name")
+    if preferred is not None and str(preferred).strip() and not is_valid_preferred_first_name(str(preferred)):
+        return _section_error("identity", "Preferred first name may only contain letters.")
 
     if identity.get("address_verified") == "true" and not is_identity_address_complete({k: str(v) for k, v in identity.items()}):
         return _section_error("identity", "Enter and verify your home address before continuing.")

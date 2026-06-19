@@ -12,7 +12,10 @@ export function parsePositiveNumber(value: string): number | null {
   return n;
 }
 
-export function parseNonNegativeInt(value: string, max?: number): number | null {
+export function parseNonNegativeInt(
+  value: string,
+  max?: number,
+): number | null {
   const trimmed = value.trim();
   if (trimmed === "") return null;
   const n = Number(trimmed);
@@ -44,6 +47,19 @@ export function isValidPersonName(name: string): boolean {
   return /^[a-zA-Z .'-]{1,60}$/.test(name.trim());
 }
 
+const PREFERRED_FIRST_NAME_RE = /^[A-Za-z]{1,40}$/;
+
+/** Optional display first name — letters only. */
+export function sanitizePreferredFirstName(value: string): string {
+  return value.replace(/[^A-Za-z]/g, "").slice(0, 40);
+}
+
+export function isValidPreferredFirstName(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return true;
+  return PREFERRED_FIRST_NAME_RE.test(trimmed);
+}
+
 export function validateHeightFt(value: string): string | null {
   const ft = parseNonNegativeInt(value);
   if (ft == null) return "Enter your height in feet (3–8).";
@@ -57,14 +73,20 @@ export function validateHeightIn(value: string): string | null {
   return null;
 }
 
-export function validateWeightLbs(value: string, label = "Weight"): string | null {
+export function validateWeightLbs(
+  value: string,
+  label = "Weight",
+): string | null {
   const n = parsePositiveNumber(value);
   if (n == null) return `Enter a valid ${label.toLowerCase()} in pounds.`;
   if (n < 50 || n > 1000) return `${label} must be between 50 and 1,000 lb.`;
   return null;
 }
 
-export function validateGoalWeightLbs(currentWeight: string, goalWeight: string): string | null {
+export function validateGoalWeightLbs(
+  currentWeight: string,
+  goalWeight: string,
+): string | null {
   const goalErr = validateWeightLbs(goalWeight, "Goal weight");
   if (goalErr) return goalErr;
   const current = parsePositiveNumber(currentWeight);
@@ -116,7 +138,10 @@ export function validateAllergyRow(row: {
   return null;
 }
 
-export function validateOptionalNumericLab(value: string, label: string): string | null {
+export function validateOptionalNumericLab(
+  value: string,
+  label: string,
+): string | null {
   if (!isFilled(value)) return null;
   const n = Number(value.trim());
   if (!Number.isFinite(n) || n < 0) return `Enter a valid number for ${label}.`;

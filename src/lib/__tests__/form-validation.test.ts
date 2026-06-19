@@ -3,6 +3,8 @@ import {
   isFilled,
   isValidEmail,
   isValidPersonName,
+  isValidPreferredFirstName,
+  sanitizePreferredFirstName,
   isValidPhone,
   normalizePhoneDigits,
   parseNonNegativeInt,
@@ -28,12 +30,16 @@ import {
 
 describe("form-validation", () => {
   describe("isFilled", () => {
-    it.each([["hello", true], ["  x  ", true], ["", false], ["   ", false], [null, false], [undefined, false]])(
-      "isFilled(%j) => %s",
-      (value, expected) => {
-        expect(isFilled(value)).toBe(expected);
-      },
-    );
+    it.each([
+      ["hello", true],
+      ["  x  ", true],
+      ["", false],
+      ["   ", false],
+      [null, false],
+      [undefined, false],
+    ])("isFilled(%j) => %s", (value, expected) => {
+      expect(isFilled(value)).toBe(expected);
+    });
   });
 
   describe("isValidEmail", () => {
@@ -42,12 +48,16 @@ describe("form-validation", () => {
       expect(isValidEmail("  user.name+tag@example.co  ")).toBe(true);
     });
 
-    it.each(["", "not-an-email", "missing-at.com", "@no-local.com", ...maliciousEmails(), ...XSS_PAYLOADS])(
-      "rejects invalid or malicious email: %j",
-      (email) => {
-        expect(isValidEmail(email)).toBe(false);
-      },
-    );
+    it.each([
+      "",
+      "not-an-email",
+      "missing-at.com",
+      "@no-local.com",
+      ...maliciousEmails(),
+      ...XSS_PAYLOADS,
+    ])("rejects invalid or malicious email: %j", (email) => {
+      expect(isValidEmail(email)).toBe(false);
+    });
   });
 
   describe("isValidPhone", () => {
@@ -57,12 +67,14 @@ describe("form-validation", () => {
       expect(isValidPhone("+1 303-555-0100")).toBe(true);
     });
 
-    it.each([...STRICT_FIELD_ATTACKS, ...NULL_AND_CONTROL, "123", "123456789012345"])(
-      "rejects invalid phone: %j",
-      (phone) => {
-        expect(isValidPhone(phone)).toBe(false);
-      },
-    );
+    it.each([
+      ...STRICT_FIELD_ATTACKS,
+      ...NULL_AND_CONTROL,
+      "123",
+      "123456789012345",
+    ])("rejects invalid phone: %j", (phone) => {
+      expect(isValidPhone(phone)).toBe(false);
+    });
   });
 
   describe("normalizePhoneDigits", () => {
@@ -78,22 +90,48 @@ describe("form-validation", () => {
 
     it.each(
       [...STRICT_FIELD_ATTACKS, ...XSS_PAYLOADS, "12345", "Name@corp"].filter(
-        (p) => !KNOWN_NAME_FORMAT_PASSES.includes(p as (typeof KNOWN_NAME_FORMAT_PASSES)[number]),
+        (p) =>
+          !KNOWN_NAME_FORMAT_PASSES.includes(
+            p as (typeof KNOWN_NAME_FORMAT_PASSES)[number],
+          ),
       ),
     )("rejects malicious or invalid names: %j", (name) => {
-        expect(isValidPersonName(name)).toBe(false);
+      expect(isValidPersonName(name)).toBe(false);
+    });
+
+    it.each(KNOWN_NAME_FORMAT_PASSES)(
+      "documents format-only pass for name %j (DB must parameterize)",
+      (name) => {
+        expect(isValidPersonName(name)).toBe(true);
       },
     );
+  });
 
-    it.each(KNOWN_NAME_FORMAT_PASSES)("documents format-only pass for name %j (DB must parameterize)", (name) => {
-      expect(isValidPersonName(name)).toBe(true);
+  describe("preferred first name", () => {
+    it("accepts letters only and empty optional value", () => {
+      expect(isValidPreferredFirstName("")).toBe(true);
+      expect(isValidPreferredFirstName("Matt")).toBe(true);
+    });
+
+    it("rejects spaces, numbers, and symbols", () => {
+      expect(isValidPreferredFirstName("matt a")).toBe(false);
+      expect(isValidPreferredFirstName("matt1")).toBe(false);
+      expect(isValidPreferredFirstName("matt!")).toBe(false);
+    });
+
+    it("sanitizePreferredFirstName strips non-letters", () => {
+      expect(sanitizePreferredFirstName("matt123")).toBe("matt");
+      expect(sanitizePreferredFirstName(" Mary-Jane ")).toBe("MaryJane");
     });
   });
 
   describe("numeric parsers", () => {
-    it.each(SQL_INJECTION)("parsePositiveNumber rejects injection %j", (payload) => {
-      expect(parsePositiveNumber(payload)).toBeNull();
-    });
+    it.each(SQL_INJECTION)(
+      "parsePositiveNumber rejects injection %j",
+      (payload) => {
+        expect(parsePositiveNumber(payload)).toBeNull();
+      },
+    );
 
     it.each(["190", " 210.5 "])("parsePositiveNumber accepts %j", (value) => {
       expect(parsePositiveNumber(value)).not.toBeNull();
@@ -155,29 +193,50 @@ describe("form-validation", () => {
       expect(validateAdultWeightHistory("165", "220", "190")).not.toBeNull();
     });
 
-    it.each(SQL_INJECTION)("rejects injection in highest weight %j", (payload) => {
-      expect(validateAdultWeightHistory(payload, "165", "190")).not.toBeNull();
-    });
+    it.each(SQL_INJECTION)(
+      "rejects injection in highest weight %j",
+      (payload) => {
+        expect(
+          validateAdultWeightHistory(payload, "165", "190"),
+        ).not.toBeNull();
+      },
+    );
   });
 
   describe("validateMedicationRow", () => {
     it("requires name, dose, frequency", () => {
-      expect(validateMedicationRow({ name: "Metformin", dose: "500mg", frequency: "Daily" })).toBeNull();
-      expect(validateMedicationRow({ name: "", dose: "500mg", frequency: "Daily" })).not.toBeNull();
+      expect(
+        validateMedicationRow({
+          name: "Metformin",
+          dose: "500mg",
+          frequency: "Daily",
+        }),
+      ).toBeNull();
+      expect(
+        validateMedicationRow({ name: "", dose: "500mg", frequency: "Daily" }),
+      ).not.toBeNull();
     });
 
     it("allows free-text dose containing SQL (stored as literal JSON)", () => {
       const payload = SQL_INJECTION[0];
       expect(
-        validateMedicationRow({ name: "Drug", dose: payload, frequency: "Daily" }),
+        validateMedicationRow({
+          name: "Drug",
+          dose: payload,
+          frequency: "Daily",
+        }),
       ).toBeNull();
     });
   });
 
   describe("validateAllergyRow", () => {
     it("requires allergy and reaction", () => {
-      expect(validateAllergyRow({ allergy: "Penicillin", reaction: "Hives" })).toBeNull();
-      expect(validateAllergyRow({ allergy: "", reaction: "Hives" })).not.toBeNull();
+      expect(
+        validateAllergyRow({ allergy: "Penicillin", reaction: "Hives" }),
+      ).toBeNull();
+      expect(
+        validateAllergyRow({ allergy: "", reaction: "Hives" }),
+      ).not.toBeNull();
     });
   });
 
@@ -196,8 +255,11 @@ describe("form-validation", () => {
   });
 
   describe("overflow handling", () => {
-    it.each(OVERFLOW)("very long numeric strings fail weight validation: %j", (payload) => {
-      expect(validateWeightLbs(payload)).not.toBeNull();
-    });
+    it.each(OVERFLOW)(
+      "very long numeric strings fail weight validation: %j",
+      (payload) => {
+        expect(validateWeightLbs(payload)).not.toBeNull();
+      },
+    );
   });
 });

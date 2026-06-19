@@ -20,6 +20,9 @@ def is_valid_street_address(address: str) -> bool:
         return False
     if UNSAFE_ADDRESS_RE.search(trimmed):
         return False
+    street_name = re.sub(r"^\d+\s*", "", trimmed)
+    if len(street_name) < 4 or not re.search(r"[a-zA-Z]{3,}", street_name):
+        return False
     return True
 
 

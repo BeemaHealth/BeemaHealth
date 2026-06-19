@@ -155,6 +155,31 @@ describe("qualify-steps validation", () => {
         ),
       ).toBe(false);
     });
+
+    it.each([
+      ["firstName", { firstName: "" }],
+      ["lastName", { lastName: "" }],
+      ["phone", { phone: "" }],
+      ["email", { email: "" }],
+      ["password", { password: "" }],
+      ["confirmPassword", { confirmPassword: "" }],
+    ] as const)(
+      "account blocks progress without a user-facing message when %s is empty",
+      (_field, overrides) => {
+        const account = validAccountFields(overrides);
+        expect(
+          getQualifyStepError("account", validQualifySlice(), account),
+        ).toBe("");
+        expect(
+          isQualifyStepComplete("account", validQualifySlice(), account),
+        ).toBe(false);
+      },
+    );
+
+    it("account blocks progress without a user-facing message when account is missing", () => {
+      expect(getQualifyStepError("account", validQualifySlice())).toBe("");
+      expect(isQualifyStepComplete("account", validQualifySlice())).toBe(false);
+    });
   });
 
   describe("account step injection resistance", () => {

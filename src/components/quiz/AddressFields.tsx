@@ -1,11 +1,12 @@
+import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import type { ParsedUsAddress } from "@/lib/address-validation";
 import {
-  isValidCity,
-  isValidStreetAddress,
-  isValidUsZip,
-  parseGoogleAddressComponents,
-  verifyCityZip,
-} from "@/lib/address-validation";
+  formatVerifiedAddress,
+  searchUsAddressSuggestions,
+  verifyParsedUsAddress,
+  type AddressSuggestion,
+} from "@/lib/address-search";
 import { Field, inputCls } from "./quiz-primitives";
 
 type AddressValue = {
@@ -15,49 +16,13 @@ type AddressValue = {
   verified: boolean;
 };
 
-type GoogleMapsPlaces = {
-  maps: {
-    places: {
-      Autocomplete: new (
-        input: HTMLInputElement,
-        opts?: {
-          componentRestrictions?: { country: string | string[] };
-          fields?: string[];
-          types?: string[];
-        },
-      ) => {
-        addListener: (event: string, handler: () => void) => void;
-        getPlace: () => { address_components?: { long_name: string; short_name: string; types: string[] }[] };
-      };
-    };
+function toParsed(value: AddressValue, state?: string | null): ParsedUsAddress {
+  return {
+    address: value.address,
+    city: value.city,
+    zip: value.zip,
+    state: state ?? "",
   };
-};
-
-declare global {
-  interface Window {
-    google?: GoogleMapsPlaces;
-  }
-}
-
-const GOOGLE_KEY = import.meta.env.VITE_GOOGLE_PLACES_API_KEY?.trim() ?? "";
-
-let googleLoader: Promise<void> | null = null;
-
-function loadGooglePlaces(): Promise<void> {
-  if (!GOOGLE_KEY) return Promise.reject(new Error("Google Places API key not configured"));
-  if (window.google?.maps?.places) return Promise.resolve();
-  if (googleLoader) return googleLoader;
-
-  googleLoader = new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_KEY)}&libraries=places&loading=async`;
-    script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Failed to load address suggestions"));
-    document.head.appendChild(script);
-  });
-
-  return googleLoader;
 }
 
 export function AddressFields({
@@ -69,14 +34,21 @@ export function AddressFields({
   expectedState?: string | null;
   onChange: (next: AddressValue) => void;
 }) {
-  const addressRef = useRef<HTMLInputElement>(null);
   const onChangeRef = useRef(onChange);
   const expectedStateRef = useRef(expectedState);
-  const valueRef = useRef(value);
-  const skipNextBlurRef = useRef(false);
-  const [lookupError, setLookupError] = useState("");
+  const searchSeqRef = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const [query, setQuery] = useState(() =>
+    value.verified && value.address
+      ? formatVerifiedAddress(toParsed(value, expectedState))
+      : "",
+  );
+  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [checking, setChecking] = useState(false);
-  const [placesReady, setPlacesReady] = useState(false);
+  const [lookupError, setLookupError] = useState("");
 
   useEffect(() => {
     onChangeRef.current = onChange;
@@ -87,163 +59,202 @@ export function AddressFields({
   }, [expectedState]);
 
   useEffect(() => {
-    valueRef.current = value;
-  }, [value]);
+    if (value.verified && value.address) {
+      setQuery(formatVerifiedAddress(toParsed(value, expectedState)));
+    }
+    // Keep summary in sync when a saved draft is loaded.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- value fields listed above
+  }, [value.verified, value.address, value.city, value.zip, expectedState]);
 
   useEffect(() => {
-    if (value.verified) return;
-    if (!isValidStreetAddress(value.address) || !isValidCity(value.city) || !isValidUsZip(value.zip)) {
-      return;
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
     }
-    void validateManualEntry(value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
-    if (!GOOGLE_KEY) return;
-    let cancelled = false;
+    if (value.verified) {
+      setSuggestions([]);
+      setDropdownOpen(false);
+      return;
+    }
 
-    loadGooglePlaces()
-      .then(() => {
-        if (cancelled || !addressRef.current || !window.google?.maps?.places) return;
+    const trimmed = query.trim();
+    if (trimmed.length < 4) {
+      setSuggestions([]);
+      setDropdownOpen(false);
+      setSearching(false);
+      return;
+    }
 
-        const autocomplete = new window.google.maps.places.Autocomplete(addressRef.current, {
-          componentRestrictions: { country: "us" },
-          fields: ["address_components"],
-          types: ["address"],
-        });
-
-        autocomplete.addListener("place_changed", () => {
-          const place = autocomplete.getPlace();
-          if (!place.address_components?.length) return;
-
-          const parsed = parseGoogleAddressComponents(place.address_components);
-          if (!parsed.address || !parsed.city || !parsed.zip) {
-            setLookupError("Select a complete street address from the suggestions.");
-            onChangeRef.current({ address: parsed.address, city: parsed.city, zip: parsed.zip, verified: false });
-            return;
-          }
-
-          const accountState = expectedStateRef.current?.trim();
-          if (accountState && parsed.state.toUpperCase() !== accountState.toUpperCase()) {
-            setLookupError(
-              `This address is in ${parsed.state}, but your account state is ${accountState.toUpperCase()}. Use your home address in ${accountState.toUpperCase()}.`,
-            );
-            onChangeRef.current({
-              address: parsed.address,
-              city: parsed.city,
-              zip: parsed.zip,
-              verified: false,
-            });
-            return;
-          }
-
+    const seq = ++searchSeqRef.current;
+    setSearching(true);
+    setDropdownOpen(true);
+    const timer = window.setTimeout(() => {
+      void searchUsAddressSuggestions(trimmed).then((items) => {
+        if (seq !== searchSeqRef.current) return;
+        setSuggestions(items);
+        setDropdownOpen(items.length > 0);
+        setSearching(false);
+        if (items.length === 0) {
+          setLookupError(
+            "No matching addresses found. Try adding city or ZIP, then pick a suggestion.",
+          );
+        } else {
           setLookupError("");
-          skipNextBlurRef.current = true;
-          onChangeRef.current({
-            address: parsed.address,
-            city: parsed.city,
-            zip: parsed.zip,
-            verified: true,
-          });
-        });
-
-        setPlacesReady(true);
-      })
-      .catch(() => {
-        if (!cancelled) setPlacesReady(false);
+        }
       });
+    }, 350);
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    return () => window.clearTimeout(timer);
+  }, [query, value.verified]);
 
-  function handleBlur() {
-    if (skipNextBlurRef.current) {
-      skipNextBlurRef.current = false;
-      return;
-    }
-    void validateManualEntry(valueRef.current);
+  function clearAddress() {
+    setQuery("");
+    setSuggestions([]);
+    setDropdownOpen(false);
+    setLookupError("");
+    onChangeRef.current({
+      address: "",
+      city: "",
+      zip: "",
+      verified: false,
+    });
   }
 
-  async function validateManualEntry(next: AddressValue) {
+  async function selectSuggestion(suggestion: AddressSuggestion) {
+    setDropdownOpen(false);
+    setSuggestions([]);
     setLookupError("");
-    if (!isValidStreetAddress(next.address)) {
-      onChange({ ...next, verified: false });
-      return;
-    }
-    if (!isValidCity(next.city) || !isValidUsZip(next.zip)) {
-      onChange({ ...next, verified: false });
-      return;
-    }
-
     setChecking(true);
-    const result = await verifyCityZip(next.city, next.zip, expectedState);
+
+    const result = await verifyParsedUsAddress(
+      suggestion.parsed,
+      expectedStateRef.current,
+    );
     setChecking(false);
 
     if (!result.ok) {
       setLookupError(result.message);
-      onChange({ ...next, verified: false });
+      onChangeRef.current({
+        address: suggestion.parsed.address,
+        city: suggestion.parsed.city,
+        zip: suggestion.parsed.zip,
+        verified: false,
+      });
+      setQuery(suggestion.label.split(",").slice(0, 2).join(",").trim());
       return;
     }
 
-    setLookupError("");
-    onChange({ ...next, verified: true });
-  }
-
-  function patch(partial: Partial<AddressValue>) {
-    const next = { ...value, ...partial, verified: false };
-    onChange(next);
-    setLookupError("");
+    setQuery(formatVerifiedAddress(suggestion.parsed));
+    onChangeRef.current({
+      address: suggestion.parsed.address,
+      city: suggestion.parsed.city,
+      zip: suggestion.parsed.zip,
+      verified: true,
+    });
   }
 
   return (
-    <div className="grid gap-3 sm:col-span-2">
+    <div ref={containerRef} className="grid gap-2 sm:col-span-2">
       <Field label="Home address" required>
-        <input
-          ref={addressRef}
-          className={inputCls}
-          value={value.address}
-          autoComplete="street-address"
-          placeholder={placesReady ? "Start typing your street address…" : "123 Main St"}
-          onChange={(e) => patch({ address: e.target.value })}
-          onBlur={handleBlur}
-        />
-        {placesReady && (
+        <div className="relative">
+          <input
+            className={inputCls}
+            value={query}
+            autoComplete="off"
+            placeholder="Start typing your full address…"
+            readOnly={value.verified}
+            onChange={(e) => {
+              if (value.verified) return;
+              setQuery(e.target.value);
+              setLookupError("");
+              onChangeRef.current({
+                address: "",
+                city: "",
+                zip: "",
+                verified: false,
+              });
+            }}
+            onFocus={() => {
+              if (
+                !value.verified &&
+                query.trim().length >= 4 &&
+                (searching || suggestions.length > 0)
+              ) {
+                setDropdownOpen(true);
+              }
+            }}
+          />
+          {dropdownOpen &&
+            !value.verified &&
+            query.trim().length >= 4 &&
+            (searching || suggestions.length > 0) && (
+              <ul
+                className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-2xl border border-border bg-background py-1 shadow-lg"
+                role="listbox"
+              >
+                {searching ? (
+                  <li
+                    className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    <Loader2
+                      className="size-4 shrink-0 animate-spin"
+                      aria-hidden="true"
+                    />
+                    Searching addresses…
+                  </li>
+                ) : (
+                  suggestions.map((item) => (
+                    <li key={item.id}>
+                      <button
+                        type="button"
+                        role="option"
+                        className="w-full px-4 py-2.5 text-left text-sm text-foreground hover:bg-muted/60"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => void selectSuggestion(item)}
+                      >
+                        {item.label}
+                      </button>
+                    </li>
+                  ))
+                )}
+              </ul>
+            )}
+        </div>
+        {!value.verified && (
           <p className="mt-1.5 text-xs text-muted-foreground">
-            Select your address from the suggestions so we can verify it.
+            Type your street address, city, or ZIP — then choose your home
+            address from the list.
           </p>
         )}
       </Field>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Field label="City" required>
-          <input
-            className={inputCls}
-            value={value.city}
-            autoComplete="address-level2"
-            onChange={(e) => patch({ city: e.target.value })}
-            onBlur={handleBlur}
-          />
-        </Field>
-        <Field label="ZIP" required>
-          <input
-            className={inputCls}
-            value={value.zip}
-            inputMode="numeric"
-            autoComplete="postal-code"
-            placeholder="12345"
-            onChange={(e) => patch({ zip: e.target.value })}
-            onBlur={handleBlur}
-          />
-        </Field>
-      </div>
+      {value.verified && (
+        <button
+          type="button"
+          className="justify-self-start text-sm text-primary underline"
+          onClick={clearAddress}
+        >
+          Change address
+        </button>
+      )}
 
-      {checking && <p className="text-sm text-muted-foreground">Checking address…</p>}
+      {checking && (
+        <p className="text-sm text-muted-foreground">Verifying address…</p>
+      )}
       {lookupError && <p className="text-sm text-destructive">{lookupError}</p>}
       {value.verified && !lookupError && (
-        <p className="text-sm text-primary">Address verified.</p>
+        <p className="text-sm text-primary">Address verified for delivery.</p>
       )}
     </div>
   );

@@ -7,6 +7,7 @@ from typing import Any
 
 EMAIL_RE = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 PERSON_NAME_RE = re.compile(r"^[a-zA-Z .'-]{1,60}$")
+PREFERRED_FIRST_NAME_RE = re.compile(r"^[a-zA-Z]{1,40}$")
 
 
 def is_filled(value: Any) -> bool:
@@ -61,6 +62,13 @@ def is_valid_phone(phone: str) -> bool:
 
 def is_valid_person_name(name: str) -> bool:
     return bool(PERSON_NAME_RE.match(name.strip()))
+
+
+def is_valid_preferred_first_name(name: str) -> bool:
+    trimmed = name.strip()
+    if not trimmed:
+        return True
+    return bool(PREFERRED_FIRST_NAME_RE.match(trimmed))
 
 
 def validate_height_ft(value: str) -> str | None:

@@ -5,28 +5,48 @@ import { useState, type ReactNode } from "react";
 export const inputCls =
   "w-full rounded-2xl border border-input bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring";
 
+export function RequiredFieldLegend() {
+  return (
+    <p className="text-xs text-muted-foreground">
+      <span className="text-destructive">*</span> indicates a required field
+    </p>
+  );
+}
+
 export function QuizShell({
   label,
   title,
   subtitle,
+  showRequiredLegend,
   children,
   footer,
 }: {
   label?: string;
   title: string;
   subtitle?: string;
+  showRequiredLegend?: boolean;
   children: ReactNode;
   footer?: ReactNode;
 }) {
   return (
     <div className="w-full max-w-xl">
-      {label && (
-        <p className="text-sm font-medium text-primary">{label}</p>
-      )}
-      <div className={cn("rounded-3xl border border-border bg-card p-6 shadow-soft md:p-8", label && "mt-4")}>
+      {label && <p className="text-sm font-medium text-primary">{label}</p>}
+      <div
+        className={cn(
+          "rounded-3xl border border-border bg-card p-6 shadow-soft md:p-8",
+          label && "mt-4",
+        )}
+      >
         <h1 className="text-2xl font-bold text-foreground">{title}</h1>
         {subtitle && (
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{subtitle}</p>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            {subtitle}
+          </p>
+        )}
+        {showRequiredLegend && (
+          <div className={subtitle ? "mt-3" : "mt-2"}>
+            <RequiredFieldLegend />
+          </div>
         )}
         <div className="mt-6">{children}</div>
         {footer}
@@ -94,13 +114,21 @@ export function ChoiceCard({
       )}
     >
       <span>
-        <span className="block text-base font-semibold text-foreground">{title}</span>
-        {desc && <span className="mt-0.5 block text-sm text-muted-foreground">{desc}</span>}
+        <span className="block text-base font-semibold text-foreground">
+          {title}
+        </span>
+        {desc && (
+          <span className="mt-0.5 block text-sm text-muted-foreground">
+            {desc}
+          </span>
+        )}
       </span>
       <span
         className={cn(
           "grid size-6 shrink-0 place-items-center rounded-full border",
-          selected ? "border-primary bg-primary text-primary-foreground" : "border-border",
+          selected
+            ? "border-primary bg-primary text-primary-foreground"
+            : "border-border",
         )}
       >
         {selected && <Check className="size-4" />}
@@ -122,8 +150,18 @@ export function YesNoField({
     <div>
       <p className="text-sm font-medium text-foreground">{label}</p>
       <div className="mt-2 grid grid-cols-2 gap-3">
-        <ChoiceCard compact selected={value === true} onClick={() => onChange(true)} title="Yes" />
-        <ChoiceCard compact selected={value === false} onClick={() => onChange(false)} title="No" />
+        <ChoiceCard
+          compact
+          selected={value === true}
+          onClick={() => onChange(true)}
+          title="Yes"
+        />
+        <ChoiceCard
+          compact
+          selected={value === false}
+          onClick={() => onChange(false)}
+          title="No"
+        />
       </div>
     </div>
   );
@@ -165,7 +203,13 @@ export function PasswordInput({
   );
 }
 
-export function BlockedMessage({ title, body }: { title: string; body: string }) {
+export function BlockedMessage({
+  title,
+  body,
+}: {
+  title: string;
+  body: string;
+}) {
   return (
     <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-5">
       <p className="text-base font-semibold text-foreground">{title}</p>
@@ -209,7 +253,9 @@ export function QuizNav({
         onClick={onNext}
         className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-50"
       >
-        {nextLoading && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
+        {nextLoading && (
+          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+        )}
         {nextLabel}
       </button>
     </div>

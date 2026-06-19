@@ -50,6 +50,14 @@ class IntakeApiValidationTests(TestCase):
                 )
                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_rejects_invalid_preferred_first_name(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {"identity": {"preferred": "matt123"}},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_rejects_sql_injection_in_body_metrics(self):
         for payload in SQL_INJECTION:
             with self.subTest(payload=payload):

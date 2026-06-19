@@ -12,6 +12,7 @@ import {
   STRICT_FIELD_ATTACKS,
 } from "./fixtures/malicious-payloads";
 import { validEligibility, validIntake } from "./helpers/test-data";
+import { VERIFIABLE_PARSED_ADDRESSES } from "./fixtures/address-fixtures";
 
 const STEP_COUNT = 12;
 
@@ -28,7 +29,22 @@ describe("intake-steps validation", () => {
   });
 
   describe("step 0 identity", () => {
-    it("requires verified address", () => {
+    it("blocks progress without a user-facing message when required fields are empty", () => {
+      const data = validIntake({
+        identity: {
+          address: "",
+          city: "",
+          zip: "",
+          address_verified: "",
+          emergency_name: "",
+          emergency_phone: "",
+        },
+      });
+      expect(getIntakeStepError(0, data)).toBe("");
+      expect(isIntakeStepComplete(0, data)).toBe(false);
+    });
+
+    it("blocks progress without a user-facing message when address is unverified", () => {
       const data = validIntake({
         identity: {
           address: "123 Main St",
@@ -39,7 +55,8 @@ describe("intake-steps validation", () => {
           emergency_phone: "3035550100",
         },
       });
-      expect(getIntakeStepError(0, data)).not.toBeNull();
+      expect(getIntakeStepError(0, data)).toBe("");
+      expect(isIntakeStepComplete(0, data)).toBe(false);
     });
 
     it.each(STRICT_FIELD_ATTACKS)(
@@ -56,6 +73,46 @@ describe("intake-steps validation", () => {
           },
         });
         expect(getIntakeStepError(0, data)).not.toBeNull();
+      },
+    );
+
+    it.each(VERIFIABLE_PARSED_ADDRESSES.map((c) => [c.label, c.parsed]))(
+      "passes with verified deliverable address: %s",
+      (_label, parsed) => {
+        const data = validIntake({
+          identity: {
+            address: parsed.address,
+            city: parsed.city,
+            zip: parsed.zip,
+            address_verified: "true",
+            emergency_name: "John",
+            emergency_phone: "3035550100",
+          },
+        });
+        expect(getIntakeStepError(0, data)).toBeNull();
+        expect(isIntakeStepComplete(0, data)).toBe(true);
+      },
+    );
+
+    it.each([
+      ["missing street number", { address: "Main St" }],
+      ["incomplete street name", { address: "2510 sum" }],
+    ] as const)(
+      "blocks verified identity with invalid street: %s",
+      (_label, overrides) => {
+        const data = validIntake({
+          identity: {
+            address: "123 Main St",
+            city: "Denver",
+            zip: "80202",
+            address_verified: "true",
+            emergency_name: "John",
+            emergency_phone: "3035550100",
+            ...overrides,
+          },
+        });
+        expect(getIntakeStepError(0, data)).toBe("");
+        expect(isIntakeStepComplete(0, data)).toBe(false);
       },
     );
   });

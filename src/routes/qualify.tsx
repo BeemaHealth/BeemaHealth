@@ -56,6 +56,13 @@ import type {
   TreatmentPriority,
 } from "@/lib/types/mvp";
 
+const QUALIFY_STEPS_WITH_REQUIRED_FIELDS = new Set<QualifyStepId>([
+  "state_consent",
+  "dob",
+  "body_metrics",
+  "account",
+]);
+
 export const Route = createFileRoute("/qualify")({
   head: () => ({
     meta: [
@@ -122,7 +129,8 @@ function draftToForm(draft: EligibilityResponses): Partial<FormState> {
     heightFt: draft.height_ft != null ? String(draft.height_ft) : "",
     heightIn: draft.height_in != null ? String(draft.height_in) : "",
     weightLbs: draft.weight_lbs != null ? String(draft.weight_lbs) : "",
-    goalWeightLbs: draft.goal_weight_lbs != null ? String(draft.goal_weight_lbs) : "",
+    goalWeightLbs:
+      draft.goal_weight_lbs != null ? String(draft.goal_weight_lbs) : "",
     sexAssignedAtBirth: draft.sex_assigned_at_birth || "",
     safety: draft.safety_screen || {},
   };
@@ -142,7 +150,9 @@ function formToPayload(data: FormState): Partial<EligibilityResponses> {
     height_ft: data.heightFt ? Number(data.heightFt) : undefined,
     height_in: data.heightIn ? Number(data.heightIn) : undefined,
     weight_lbs: data.weightLbs ? Number(data.weightLbs) : undefined,
-    goal_weight_lbs: data.goalWeightLbs ? Number(data.goalWeightLbs) : undefined,
+    goal_weight_lbs: data.goalWeightLbs
+      ? Number(data.goalWeightLbs)
+      : undefined,
     sex_assigned_at_birth: data.sexAssignedAtBirth || undefined,
     safety_screen: data.safety,
   };
@@ -179,7 +189,9 @@ function EligibilityPage() {
 
   const isAdult = computeIsAdult(data.dob);
   const under18 = isAdult === false;
-  const safetyConcern = CONTRAINDICATION_QUESTIONS.some((q) => data.safety[q.key] === true);
+  const safetyConcern = CONTRAINDICATION_QUESTIONS.some(
+    (q) => data.safety[q.key] === true,
+  );
 
   useEffect(() => {
     if (!isApiEnabled()) {
@@ -208,7 +220,8 @@ function EligibilityPage() {
           setStepIndex(resolveQualifyStepIndex(stepList, merged));
         }
       } catch {
-        if (!cancelled) setError("Could not restore your progress. You can still continue.");
+        if (!cancelled)
+          setError("Could not restore your progress. You can still continue.");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -256,7 +269,10 @@ function EligibilityPage() {
 
   async function handleNext() {
     setError("");
-    if (currentStep === "account" || (currentStep === "review" && existingSession)) {
+    if (
+      currentStep === "account" ||
+      (currentStep === "review" && existingSession)
+    ) {
       setSubmitting(true);
       await handleFinish();
       return;
@@ -266,7 +282,9 @@ function EligibilityPage() {
       await persistDraft();
       setStepIndex((i) => i + 1);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not save your progress.");
+      setError(
+        e instanceof Error ? e.message : "Could not save your progress.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -309,7 +327,9 @@ function EligibilityPage() {
   if (!isInitialized || loading) {
     return (
       <FlowLayout progress={0}>
-        <div className="w-full max-w-xl text-center text-muted-foreground">Loading your progress…</div>
+        <div className="w-full max-w-xl text-center text-muted-foreground">
+          Loading your progress…
+        </div>
       </FlowLayout>
     );
   }
@@ -320,11 +340,14 @@ function EligibilityPage() {
         label={STEP_LABELS[currentStep]}
         title={STEP_TITLES[currentStep]}
         subtitle={STEP_SUBTITLES[currentStep]}
+        showRequiredLegend={QUALIFY_STEPS_WITH_REQUIRED_FIELDS.has(currentStep)}
         footer={
           <>
             {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
             {!error && stepValidationError && (
-              <p className="mt-4 text-sm text-destructive">{stepValidationError}</p>
+              <p className="mt-4 text-sm text-destructive">
+                {stepValidationError}
+              </p>
             )}
             {under18 && currentStep === "dob" && (
               <div className="mt-4">
@@ -336,8 +359,8 @@ function EligibilityPage() {
             )}
             {safetyConcern && currentStep === "contraindications" && (
               <p className="mt-4 rounded-2xl bg-warning/10 px-4 py-3 text-sm text-foreground">
-                Some answers may need a closer look from your clinician. This does not
-                automatically approve or deny treatment.
+                Some answers may need a closer look from your clinician. This
+                does not automatically approve or deny treatment.
               </p>
             )}
             {!under18 && (
@@ -357,7 +380,7 @@ function EligibilityPage() {
                       : currentStep === "review" && existingSession
                         ? "Continue to medical intake"
                         : currentStep === "review"
-                          ? "Create account"
+                          ? "Proceed to create account"
                           : "Continue"
                 }
               />
@@ -365,7 +388,11 @@ function EligibilityPage() {
             {currentStep === "account" && (
               <p className="mt-4 text-center text-sm text-muted-foreground">
                 Already have an account?{" "}
-                <Link to="/login" search={{ redirect: "/intake" }} className="text-primary underline">
+                <Link
+                  to="/login"
+                  search={{ redirect: "/intake" }}
+                  className="text-primary underline"
+                >
                   Log in
                 </Link>
               </p>
@@ -439,7 +466,9 @@ function EligibilityPage() {
               >
                 <option value="">Choose a state</option>
                 {US_STATES.map((s) => (
-                  <option key={s} value={s}>{s}</option>
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
                 ))}
               </select>
             </Field>
@@ -448,19 +477,33 @@ function EligibilityPage() {
                 type="checkbox"
                 className="mt-1"
                 checked={hasAllPreSignupConsents(data.consents)}
-                onChange={(e) => set("consents", allPreSignupConsents(e.target.checked))}
+                onChange={(e) =>
+                  set("consents", allPreSignupConsents(e.target.checked))
+                }
               />
               <span className="text-sm text-foreground">
                 I have read and agree to the{" "}
-                <Link to="/legal/terms" className="text-primary underline" target="_blank">
+                <Link
+                  to="/legal/terms"
+                  className="text-primary underline"
+                  target="_blank"
+                >
                   Terms of Service
                 </Link>
                 ,{" "}
-                <Link to="/legal/privacy" className="text-primary underline" target="_blank">
+                <Link
+                  to="/legal/privacy"
+                  className="text-primary underline"
+                  target="_blank"
+                >
                   Privacy Policy
                 </Link>
                 , and{" "}
-                <Link to="/legal/telehealth-consent" className="text-primary underline" target="_blank">
+                <Link
+                  to="/legal/telehealth-consent"
+                  className="text-primary underline"
+                  target="_blank"
+                >
                   Telehealth Consent
                 </Link>
                 .
@@ -477,17 +520,40 @@ function EligibilityPage() {
           <div className="grid gap-4">
             <div className="grid grid-cols-3 gap-3">
               <Field label="Height (ft)" required>
-                <input type="number" className={inputCls} value={data.heightFt} onChange={(e) => set("heightFt", e.target.value)} placeholder="5" />
+                <input
+                  type="number"
+                  className={inputCls}
+                  value={data.heightFt}
+                  onChange={(e) => set("heightFt", e.target.value)}
+                  placeholder="5"
+                />
               </Field>
               <Field label="Height (in)" required>
-                <input type="number" className={inputCls} value={data.heightIn} onChange={(e) => set("heightIn", e.target.value)} placeholder="8" />
+                <input
+                  type="number"
+                  className={inputCls}
+                  value={data.heightIn}
+                  onChange={(e) => set("heightIn", e.target.value)}
+                  placeholder="8"
+                />
               </Field>
               <Field label="Weight (lb)" required>
-                <input type="number" className={inputCls} value={data.weightLbs} onChange={(e) => set("weightLbs", e.target.value)} placeholder="190" />
+                <input
+                  type="number"
+                  className={inputCls}
+                  value={data.weightLbs}
+                  onChange={(e) => set("weightLbs", e.target.value)}
+                  placeholder="190"
+                />
               </Field>
             </div>
             <Field label="Target weight (lb)" required>
-              <input type="number" className={inputCls} value={data.goalWeightLbs} onChange={(e) => set("goalWeightLbs", e.target.value)} />
+              <input
+                type="number"
+                className={inputCls}
+                value={data.goalWeightLbs}
+                onChange={(e) => set("goalWeightLbs", e.target.value)}
+              />
             </Field>
             <BmiGauge bmi={bmi} goalBmi={goalBmi} />
           </div>
@@ -522,13 +588,38 @@ function EligibilityPage() {
 
         {currentStep === "review" && (
           <div className="space-y-3 text-sm">
-            <SummaryRow label="Care format" value={labelFor(TREATMENT_INTEREST_OPTIONS, data.treatmentInterest)} />
-            <SummaryRow label="Motivation" value={labelFor(PRIMARY_GOAL_OPTIONS, data.primaryGoal)} />
-            <SummaryRow label="Care priority" value={labelFor(TREATMENT_PRIORITY_OPTIONS, data.treatmentPriority)} />
-            <SummaryRow label="Target range" value={labelFor(WEIGHT_LOSS_GOAL_OPTIONS, data.targetWeightLossRange)} />
+            <SummaryRow
+              label="Care format"
+              value={labelFor(
+                TREATMENT_INTEREST_OPTIONS,
+                data.treatmentInterest,
+              )}
+            />
+            <SummaryRow
+              label="Motivation"
+              value={labelFor(PRIMARY_GOAL_OPTIONS, data.primaryGoal)}
+            />
+            <SummaryRow
+              label="Care priority"
+              value={labelFor(
+                TREATMENT_PRIORITY_OPTIONS,
+                data.treatmentPriority,
+              )}
+            />
+            <SummaryRow
+              label="Target range"
+              value={labelFor(
+                WEIGHT_LOSS_GOAL_OPTIONS,
+                data.targetWeightLossRange,
+              )}
+            />
             <SummaryRow label="State" value={data.state || "—"} />
-            <SummaryRow label="BMI" value={bmi?.toString() ?? "—"} />
-            <SummaryRow label="Biological sex" value={labelFor(SEX_OPTIONS, data.sexAssignedAtBirth)} />
+            <SummaryRow label="Current BMI" value={bmi?.toString() ?? "—"} />
+            <SummaryRow label="Target BMI" value={goalBmi?.toString() ?? "—"} />
+            <SummaryRow
+              label="Biological sex"
+              value={labelFor(SEX_OPTIONS, data.sexAssignedAtBirth)}
+            />
             {safetyConcern && (
               <p className="flex items-center gap-2 rounded-2xl bg-warning/10 px-4 py-3 text-foreground">
                 <CheckCircle2 className="size-4" /> Marked for clinician review
@@ -574,10 +665,20 @@ function EligibilityPage() {
               />
             </Field>
             <Field label="Email" required>
-              <input type="email" className={inputCls} value={data.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" />
+              <input
+                type="email"
+                className={inputCls}
+                value={data.email}
+                onChange={(e) => set("email", e.target.value)}
+                autoComplete="email"
+              />
             </Field>
             <Field label="Password (min 10 characters)" required>
-              <PasswordInput value={data.password} onChange={(v) => set("password", v)} autoComplete="new-password" />
+              <PasswordInput
+                value={data.password}
+                onChange={(v) => set("password", v)}
+                autoComplete="new-password"
+              />
             </Field>
             <Field label="Re-enter password" required>
               <PasswordInput
@@ -587,7 +688,9 @@ function EligibilityPage() {
               />
             </Field>
             {data.confirmPassword && data.password !== data.confirmPassword && (
-              <p className="text-sm text-destructive">Passwords do not match.</p>
+              <p className="text-sm text-destructive">
+                Passwords do not match.
+              </p>
             )}
           </div>
         )}

@@ -4,6 +4,7 @@ from apps.common.validation.form import (
     is_valid_email,
     is_valid_person_name,
     is_valid_phone,
+    is_valid_preferred_first_name,
     validate_height_ft,
     validate_optional_numeric_lab,
     validate_weight_lbs,
@@ -52,3 +53,9 @@ class FormValidationTests(TestCase):
                 self.assertIsNotNone(validate_height_ft(payload))
                 self.assertIsNotNone(validate_weight_lbs(payload))
                 self.assertIsNotNone(validate_optional_numeric_lab(payload, "A1C"))
+
+    def test_preferred_first_name_letters_only(self):
+        self.assertTrue(is_valid_preferred_first_name("Matt"))
+        self.assertTrue(is_valid_preferred_first_name(""))
+        self.assertFalse(is_valid_preferred_first_name("matt1"))
+        self.assertFalse(is_valid_preferred_first_name("matt a"))

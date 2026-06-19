@@ -15,17 +15,8 @@ export const LAUNCH_STATES = [
   "Colorado",
 ] as const;
 
-export const US_STATES = [
-  "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
-  "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
-  "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine",
-  "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
-  "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
-  "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio",
-  "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
-  "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia",
-  "Washington", "West Virginia", "Wisconsin", "Wyoming",
-] as const;
+export { US_STATES } from "@/lib/us-states";
+export type { UsStateName } from "@/lib/us-states";
 
 export type Clinician = {
   id: string;
@@ -79,7 +70,8 @@ export type PharmacyPartner = {
 export const PHARMACY_PARTNERS: PharmacyPartner[] = [
   {
     name: "Aretide Mail Pharmacy",
-    detail: "Cold-chain shipping with tracking. 2–4 business days in launch states.",
+    detail:
+      "Cold-chain shipping with tracking. 2–4 business days in launch states.",
     shipping: true,
     pickup: false,
     insurance: true,
@@ -87,7 +79,8 @@ export const PHARMACY_PARTNERS: PharmacyPartner[] = [
   },
   {
     name: "Regional Compounding Partner",
-    detail: "Cash-pay options where clinically appropriate and legally permitted.",
+    detail:
+      "Cash-pay options where clinically appropriate and legally permitted.",
     shipping: true,
     pickup: false,
     insurance: false,
@@ -231,12 +224,65 @@ export type LearnPost = {
 };
 
 export const LEARN_POSTS: LearnPost[] = [
-  { slug: "glp1-basics", title: "GLP-1 basics: how this class of medication works", category: "GLP-1 basics", excerpt: "A plain-language guide to what GLP-1 medications do, what to expect, and common questions.", readMins: 6 },
-  { slug: "insurance-guide", title: "Understanding insurance coverage for weight care", category: "Insurance", excerpt: "Formularies, prior authorizations, and what to check before you start.", readMins: 8 },
-  { slug: "prior-authorizations", title: "Prior authorizations, explained simply", category: "Prior authorizations", excerpt: "What a PA is, why it happens, and how Aretide helps you through it.", readMins: 5 },
-  { slug: "side-effects", title: "Managing common side effects", category: "Side effects", excerpt: "Practical tips for nausea, appetite changes, and when to message your clinician.", readMins: 7 },
-  { slug: "protein-strength", title: "Protein and strength training during weight loss", category: "Protein/strength training", excerpt: "Why protecting muscle matters and simple ways to do it.", readMins: 6 },
-  { slug: "ask-your-doctor", title: "What to ask your clinician", category: "What to ask your doctor", excerpt: "A checklist of smart questions for your first visit.", readMins: 4 },
-  { slug: "switching-providers", title: "Switching providers without a gap in care", category: "Switching providers", excerpt: "How to transfer safely and avoid running out of medication.", readMins: 6 },
-  { slug: "cost-guides", title: "A clear-eyed guide to the real costs", category: "Cost guides", excerpt: "Medication vs labs vs shipping — what to actually budget for with medication-only pricing.", readMins: 7 },
+  {
+    slug: "glp1-basics",
+    title: "GLP-1 basics: how this class of medication works",
+    category: "GLP-1 basics",
+    excerpt:
+      "A plain-language guide to what GLP-1 medications do, what to expect, and common questions.",
+    readMins: 6,
+  },
+  {
+    slug: "insurance-guide",
+    title: "Understanding insurance coverage for weight care",
+    category: "Insurance",
+    excerpt:
+      "Formularies, prior authorizations, and what to check before you start.",
+    readMins: 8,
+  },
+  {
+    slug: "prior-authorizations",
+    title: "Prior authorizations, explained simply",
+    category: "Prior authorizations",
+    excerpt:
+      "What a PA is, why it happens, and how Aretide helps you through it.",
+    readMins: 5,
+  },
+  {
+    slug: "side-effects",
+    title: "Managing common side effects",
+    category: "Side effects",
+    excerpt:
+      "Practical tips for nausea, appetite changes, and when to message your clinician.",
+    readMins: 7,
+  },
+  {
+    slug: "protein-strength",
+    title: "Protein and strength training during weight loss",
+    category: "Protein/strength training",
+    excerpt: "Why protecting muscle matters and simple ways to do it.",
+    readMins: 6,
+  },
+  {
+    slug: "ask-your-doctor",
+    title: "What to ask your clinician",
+    category: "What to ask your doctor",
+    excerpt: "A checklist of smart questions for your first visit.",
+    readMins: 4,
+  },
+  {
+    slug: "switching-providers",
+    title: "Switching providers without a gap in care",
+    category: "Switching providers",
+    excerpt: "How to transfer safely and avoid running out of medication.",
+    readMins: 6,
+  },
+  {
+    slug: "cost-guides",
+    title: "A clear-eyed guide to the real costs",
+    category: "Cost guides",
+    excerpt:
+      "Medication vs labs vs shipping — what to actually budget for with medication-only pricing.",
+    readMins: 7,
+  },
 ];

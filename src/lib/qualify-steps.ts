@@ -314,19 +314,28 @@ export function getQualifyStepError(
     case "review":
       return null;
     case "account": {
-      if (!account) return "Complete all account fields.";
-      if (!isValidPersonName(account.firstName))
-        return "Enter your legal first name.";
-      if (!isValidPersonName(account.lastName))
-        return "Enter your legal last name.";
-      if (!isValidPhone(account.phone))
+      if (!account) return "";
+      const { firstName, lastName, phone, email, password, confirmPassword } =
+        account;
+      if (
+        !firstName.trim() ||
+        !lastName.trim() ||
+        !phone.trim() ||
+        !email.trim() ||
+        !password ||
+        !confirmPassword
+      ) {
+        return "";
+      }
+      if (!isValidPersonName(firstName))
+        return "Enter a valid legal first name.";
+      if (!isValidPersonName(lastName)) return "Enter a valid legal last name.";
+      if (!isValidPhone(phone))
         return "Enter a valid 10-digit US phone number.";
-      if (!account.email.trim()) return "Enter your email address.";
-      if (!isValidEmail(account.email)) return "Enter a valid email address.";
-      if (account.password.length < 10)
+      if (!isValidEmail(email)) return "Enter a valid email address.";
+      if (password.length < 10)
         return "Password must be at least 10 characters.";
-      if (account.password !== account.confirmPassword)
-        return "Passwords do not match.";
+      if (password !== confirmPassword) return "Passwords do not match.";
       return null;
     }
     default:
