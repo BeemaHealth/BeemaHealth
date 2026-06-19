@@ -84,7 +84,9 @@ class LoginView(APIView):
             resource_id=str(user.id),
             request=request,
         )
-        return Response({"token": token.key, "user": UserSerializer(user).data})
+        response = Response({"token": token.key, "user": UserSerializer(user).data})
+        clear_funnel_cookie(response)
+        return response
 
 
 class MeView(APIView):

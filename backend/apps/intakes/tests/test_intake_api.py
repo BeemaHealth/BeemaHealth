@@ -94,13 +94,44 @@ class IntakeApiValidationTests(TestCase):
                 )
                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_rejects_invalid_pharmacy_phone(self):
+    def test_rejects_pickup_shipping_preference(self):
         response = self.client.patch(
             reverse("intake-me"),
-            {"medication_preferences": {"pharmacy_phone": "' OR 1=1--"}},
+            {"medication_preferences": {"shipping_preference": "pickup"}},
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("pickup", str(response.data).lower())
+
+    def test_rejects_invalid_shipping_preference(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {"medication_preferences": {"shipping_preference": "Standard"}},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_rejects_invalid_member_id(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {"medication_preferences": {"member_id": "<script>alert(1)</script>"}},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_accepts_valid_medication_preferences(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {
+                "medication_preferences": {
+                    "shipping_preference": "shipping",
+                    "insurance_provider": "Aetna",
+                    "member_id": "ABC123-45",
+                }
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_rejects_non_numeric_lab_values(self):
         response = self.client.patch(

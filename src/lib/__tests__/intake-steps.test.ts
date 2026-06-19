@@ -420,7 +420,7 @@ describe("intake-steps validation", () => {
       const data = validIntake({
         medication_preferences: {
           self_inject: true,
-          shipping_preference: "Standard",
+          shipping_preference: "shipping",
           cash_pay_ok: true,
         },
       });
@@ -440,17 +440,27 @@ describe("intake-steps validation", () => {
       ).toBe(false);
     });
 
-    it("validates pharmacy phone when provided", () => {
+    it("blocks progress when shipping preference is not shipping", () => {
+      const data = validIntake();
+      data.medication_preferences = {
+        ...(data.medication_preferences as Record<string, string | boolean>),
+        shipping_preference: "pickup",
+      };
+      expect(getIntakeStepError(10, data, validEligibility())).toBe("");
+      expect(isIntakeStepComplete(10, data, validEligibility())).toBe(false);
+    });
+
+    it("validates member ID when provided", () => {
       const data = validIntake({
         medication_preferences: {
           self_inject: true,
-          shipping_preference: "Standard",
+          shipping_preference: "shipping",
           cash_pay_ok: true,
-          pharmacy_phone: "' OR 1=1--",
+          member_id: "' OR 1=1--",
         },
       });
       expect(getIntakeStepError(10, data, validEligibility())).toMatch(
-        /pharmacy phone/,
+        /member ID/,
       );
     });
   });
@@ -469,6 +479,32 @@ describe("intake-steps validation", () => {
   });
 
   describe("normalizeIntake", () => {
+    it("migrates pickup drafts to shipping and clears pharmacy fields", () => {
+      const normalized = normalizeIntake({
+        id: "x",
+        user_id: "y",
+        status: "draft",
+        created_at: "",
+        updated_at: "",
+        submitted_at: null,
+        ...emptyIntakeData(),
+        medication_preferences: {
+          shipping_preference: "pickup",
+          preferred_pharmacy: "CVS",
+          pharmacy_phone: "(303) 555-0100",
+          pharmacy_address: "123 Main St",
+        },
+      } as MedicalIntake);
+      const prefs = normalized.medication_preferences as Record<
+        string,
+        unknown
+      >;
+      expect(prefs.shipping_preference).toBe("shipping");
+      expect(prefs.preferred_pharmacy).toBeUndefined();
+      expect(prefs.pharmacy_phone).toBeUndefined();
+      expect(prefs.pharmacy_address).toBeUndefined();
+    });
+
     it("does not crash on malicious nested prior_details", () => {
       const raw = {
         ...emptyIntakeData(),

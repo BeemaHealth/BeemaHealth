@@ -37,6 +37,7 @@ import {
   emptyIntakeData,
   emptyPriorMedDetails,
   normalizeIntake,
+  PHARMACY_PICKUP_KEYS,
   resolveIntakeStepIndex,
   isIntakeStepApplicable,
   PRIOR_MED_DETAIL_FIELDS,
@@ -179,6 +180,34 @@ function IntakePage() {
     return () => {
       cancelled = true;
     };
+  }, [step]);
+
+  useEffect(() => {
+    if (step !== 10) return;
+    setData((d) => {
+      const current = d.medication_preferences as Record<
+        string,
+        string | boolean
+      >;
+      const hasStalePickupFields = PHARMACY_PICKUP_KEYS.some(
+        (key) => current[key] != null && current[key] !== "",
+      );
+      if (current.shipping_preference === "shipping" && !hasStalePickupFields) {
+        return d;
+      }
+      const next: Record<string, string | boolean> = {
+        ...current,
+        shipping_preference: "shipping",
+      };
+      for (const key of PHARMACY_PICKUP_KEYS) {
+        delete next[key];
+      }
+      return {
+        ...d,
+        medication_preferences: next,
+        updated_at: new Date().toISOString(),
+      };
+    });
   }, [step]);
 
   function patch<K extends keyof MedicalIntake>(
@@ -1006,39 +1035,55 @@ function IntakePage() {
                 patch("medication_preferences", { ...prefs, self_inject: v })
               }
             />
-            <Field label="Pharmacy preference (pickup or shipping)" required>
+            <p className="rounded-2xl bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
+              If prescribed, your medication will be shipped to your home
+              address from our pharmacy partner. We&apos;ll confirm details
+              after your clinician review.
+            </p>
+            <Field label="Shipping address">
+              <div className="rounded-2xl border border-border bg-muted/20 px-4 py-3 text-sm">
+                <p className="whitespace-pre-line">
+                  {[
+                    id.address,
+                    [id.city, eligibility?.state, id.zip]
+                      .filter(Boolean)
+                      .join(", "),
+                  ]
+                    .filter(Boolean)
+                    .join("\n") || "—"}
+                </p>
+                <p className="mt-2 text-muted-foreground">
+                  We&apos;ll ship to the address above. Update it on step 1
+                  (About you) if needed.
+                </p>
+              </div>
+            </Field>
+            <Field label="Insurance provider">
               <input
                 className={inputCls}
-                value={(prefs.shipping_preference as string) ?? ""}
+                value={(prefs.insurance_provider as string) ?? ""}
+                placeholder="e.g. Aetna, Blue Cross, UnitedHealthcare"
                 onChange={(e) =>
                   patch("medication_preferences", {
                     ...prefs,
-                    shipping_preference: e.target.value,
+                    insurance_provider: e.target.value,
                   })
                 }
-                placeholder="Local pickup or home shipping"
               />
             </Field>
-            {[
-              "preferred_pharmacy",
-              "pharmacy_phone",
-              "pharmacy_address",
-              "insurance_provider",
-              "member_id",
-            ].map((k) => (
-              <Field key={k} label={k.replace(/_/g, " ")}>
-                <input
-                  className={inputCls}
-                  value={(prefs[k] as string) ?? ""}
-                  onChange={(e) =>
-                    patch("medication_preferences", {
-                      ...prefs,
-                      [k]: e.target.value,
-                    })
-                  }
-                />
-              </Field>
-            ))}
+            <Field label="Member ID">
+              <input
+                className={inputCls}
+                value={(prefs.member_id as string) ?? ""}
+                placeholder="Letters and numbers from your insurance card"
+                onChange={(e) =>
+                  patch("medication_preferences", {
+                    ...prefs,
+                    member_id: e.target.value,
+                  })
+                }
+              />
+            </Field>
             <YesNoField
               label="Open to cash-pay if insurance doesn't cover?"
               required

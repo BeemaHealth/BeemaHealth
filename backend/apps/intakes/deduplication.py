@@ -53,6 +53,9 @@ SAFETY_SCREEN_CONDITION_KEYS = frozenset(
     }
 )
 
+# MVP: shipping-only — strip retail pickup fields from intake JSON.
+PHARMACY_PICKUP_KEYS = frozenset({"preferred_pharmacy", "pharmacy_phone", "pharmacy_address"})
+
 # Allergy answers covered by eligibility.safety_screen.glp1_reaction.
 ALLERGY_DUPLICATE_ANSWER_KEYS = frozenset({"glp1"})
 
@@ -96,6 +99,8 @@ def dedupe_intake_sections(
     cleaned_allergies["answers"] = answers
 
     cleaned_prefs = dict(medication_preferences or {})
+    for key in PHARMACY_PICKUP_KEYS:
+        cleaned_prefs.pop(key, None)
     if eligibility and eligibility.treatment_interest:
         cleaned_prefs.pop("treatment", None)
 

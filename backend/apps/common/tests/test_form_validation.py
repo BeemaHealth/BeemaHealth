@@ -2,9 +2,11 @@ from django.test import TestCase
 
 from apps.common.validation.form import (
     is_valid_email,
+    is_valid_optional_member_id,
     is_valid_person_name,
     is_valid_phone,
     is_valid_preferred_first_name,
+    is_valid_shipping_preference,
     validate_height_ft,
     validate_optional_blood_pressure,
     validate_optional_numeric_lab,
@@ -68,3 +70,13 @@ class FormValidationTests(TestCase):
         self.assertTrue(is_valid_preferred_first_name(""))
         self.assertFalse(is_valid_preferred_first_name("matt1"))
         self.assertFalse(is_valid_preferred_first_name("matt a"))
+
+    def test_shipping_preference_values(self):
+        self.assertTrue(is_valid_shipping_preference("pickup"))
+        self.assertTrue(is_valid_shipping_preference("shipping"))
+        self.assertFalse(is_valid_shipping_preference("Standard"))
+
+    def test_optional_member_id(self):
+        self.assertTrue(is_valid_optional_member_id(""))
+        self.assertTrue(is_valid_optional_member_id("ABC123-45"))
+        self.assertFalse(is_valid_optional_member_id("' OR 1=1--"))

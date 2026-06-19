@@ -164,7 +164,7 @@ export function validIntake(
     labs: { recent_labs: false, willing: true },
     medication_preferences: {
       self_inject: true,
-      shipping_preference: "Standard",
+      shipping_preference: "shipping",
       cash_pay_ok: true,
     },
     safety_acknowledgments: Object.fromEntries(

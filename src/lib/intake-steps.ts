@@ -9,6 +9,8 @@ import {
   validateAdultWeightHistory,
   validateAllergyRow,
   validateMedicationRow,
+  validateOptionalInsuranceProvider,
+  validateOptionalMemberId,
   validateOptionalNumericLab,
   validateOptionalBloodPressure,
 } from "@/lib/form-validation";
@@ -395,14 +397,16 @@ export function getIntakeStepError(
       const needsTreatment = !eligibility?.treatment_interest;
       if (needsTreatment && !isFilled(prefs.treatment)) return "";
       if (typeof prefs.self_inject !== "boolean") return "";
-      if (!isFilled(prefs.shipping_preference)) return "";
+      if (prefs.shipping_preference !== "shipping") return "";
       if (typeof prefs.cash_pay_ok !== "boolean") return "";
-      if (
-        isFilled(prefs.pharmacy_phone) &&
-        !isValidPhone(String(prefs.pharmacy_phone))
-      ) {
-        return "Enter a valid pharmacy phone number.";
-      }
+      const insuranceErr = validateOptionalInsuranceProvider(
+        String(prefs.insurance_provider ?? ""),
+      );
+      if (insuranceErr) return insuranceErr;
+      const memberIdErr = validateOptionalMemberId(
+        String(prefs.member_id ?? ""),
+      );
+      if (memberIdErr) return memberIdErr;
       return null;
     }
     case 11: {
@@ -474,6 +478,30 @@ export function emptyIntakeData() {
   };
 }
 
+export const PHARMACY_PICKUP_KEYS = [
+  "preferred_pharmacy",
+  "pharmacy_phone",
+  "pharmacy_address",
+] as const;
+
+/** MVP: shipping-only fulfillment — migrate pickup drafts and drop stale pharmacy fields. */
+function normalizeMedicationPreferences(
+  prefs: MedicalIntake["medication_preferences"] | undefined,
+): Record<string, string | boolean> {
+  const merged = {
+    ...(emptyIntakeData().medication_preferences as Record<
+      string,
+      string | boolean
+    >),
+    ...(prefs ?? {}),
+  };
+  merged.shipping_preference = "shipping";
+  for (const key of PHARMACY_PICKUP_KEYS) {
+    delete merged[key];
+  }
+  return merged;
+}
+
 /** Merge sparse API/local intake payloads with empty defaults (arrays, nested objects). */
 export function normalizeIntake(draft: MedicalIntake): MedicalIntake {
   const empty = emptyIntakeData();
@@ -529,10 +557,9 @@ export function normalizeIntake(draft: MedicalIntake): MedicalIntake {
     pregnancy: { ...empty.pregnancy, ...draft.pregnancy },
     lifestyle: { ...empty.lifestyle, ...draft.lifestyle },
     labs: { ...empty.labs, ...draft.labs },
-    medication_preferences: {
-      ...empty.medication_preferences,
-      ...draft.medication_preferences,
-    },
+    medication_preferences: normalizeMedicationPreferences(
+      draft.medication_preferences,
+    ),
     safety_acknowledgments: {
       ...empty.safety_acknowledgments,
       ...draft.safety_acknowledgments,

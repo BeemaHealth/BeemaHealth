@@ -1,5 +1,19 @@
 /** Shared input validation for qualify and intake flows. */
 
+import { isValidStreetAddress } from "@/lib/address-validation";
+
+export const SHIPPING_PREFERENCE_VALUES = ["pickup", "shipping"] as const;
+export type ShippingPreference = (typeof SHIPPING_PREFERENCE_VALUES)[number];
+
+export const SHIPPING_PREFERENCE_LABELS: Record<ShippingPreference, string> = {
+  pickup: "Pickup",
+  shipping: "Shipping",
+};
+
+const UNSAFE_FREE_TEXT_RE =
+  /[<>;|`$]|javascript:|on\w+\s*=|\.\.|%2e%2e|--|\b(drop|union|select|table)\b|script|alert\s*\(/i;
+const MEMBER_ID_RE = /^[a-zA-Z0-9\- ]{1,64}$/;
+
 export function isFilled(value: unknown): boolean {
   return Boolean(String(value ?? "").trim());
 }
@@ -41,6 +55,68 @@ export function normalizePhoneDigits(phone: string): string {
 export function isValidPhone(phone: string): boolean {
   const digits = normalizePhoneDigits(phone);
   return digits.length === 10;
+}
+
+/** Format partial or complete US phone digits for display (e.g. (303) 555-0100). */
+export function formatPhoneInput(value: string): string {
+  const digits = normalizePhoneDigits(value).slice(0, 10);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
+export function isValidShippingPreference(value: string): boolean {
+  return SHIPPING_PREFERENCE_VALUES.includes(value as ShippingPreference);
+}
+
+export function isValidOptionalFreeText(
+  value: string,
+  maxLength = 128,
+): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return true;
+  if (trimmed.length > maxLength) return false;
+  return !UNSAFE_FREE_TEXT_RE.test(trimmed);
+}
+
+export function isValidOptionalMemberId(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return true;
+  return MEMBER_ID_RE.test(trimmed);
+}
+
+export function validateOptionalPharmacyPhone(phone: string): string | null {
+  if (!isFilled(phone)) return null;
+  if (!isValidPhone(phone)) return "Enter a valid pharmacy phone number.";
+  return null;
+}
+
+export function validateOptionalPharmacyAddress(
+  address: string,
+): string | null {
+  if (!isFilled(address)) return null;
+  if (!isValidStreetAddress(address)) {
+    return "Enter a valid pharmacy street address.";
+  }
+  return null;
+}
+
+export function validateOptionalInsuranceProvider(
+  value: string,
+): string | null {
+  if (!isFilled(value)) return null;
+  if (!isValidOptionalFreeText(value, 128)) {
+    return "Enter a valid insurance provider name.";
+  }
+  return null;
+}
+
+export function validateOptionalMemberId(value: string): string | null {
+  if (!isFilled(value)) return null;
+  if (!isValidOptionalMemberId(value)) {
+    return "Enter a valid member ID (letters, numbers, and dashes).";
+  }
+  return null;
 }
 
 export function isValidPersonName(name: string): boolean {

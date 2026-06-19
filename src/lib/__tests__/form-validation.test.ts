@@ -6,6 +6,8 @@ import {
   isValidPreferredFirstName,
   sanitizePreferredFirstName,
   isValidPhone,
+  isValidShippingPreference,
+  formatPhoneInput,
   normalizePhoneDigits,
   parseNonNegativeInt,
   parsePositiveNumber,
@@ -15,8 +17,13 @@ import {
   validateHeightFt,
   validateHeightIn,
   validateMedicationRow,
+  validateOptionalInsuranceProvider,
+  validateOptionalMemberId,
   validateOptionalNumericLab,
   validateOptionalBloodPressure,
+  validateOptionalPharmacyAddress,
+  validateOptionalPharmacyPhone,
+  isValidOptionalMemberId,
   validateWeightLbs,
 } from "@/lib/form-validation";
 import {
@@ -81,6 +88,47 @@ describe("form-validation", () => {
   describe("normalizePhoneDigits", () => {
     it("strips country code 1", () => {
       expect(normalizePhoneDigits("13035550100")).toBe("3035550100");
+    });
+  });
+
+  describe("formatPhoneInput", () => {
+    it("formats partial and complete US numbers", () => {
+      expect(formatPhoneInput("303")).toBe("303");
+      expect(formatPhoneInput("3035550")).toBe("(303) 555-0");
+      expect(formatPhoneInput("3035550100")).toBe("(303) 555-0100");
+    });
+  });
+
+  describe("shipping preference", () => {
+    it("accepts pickup and shipping only", () => {
+      expect(isValidShippingPreference("pickup")).toBe(true);
+      expect(isValidShippingPreference("shipping")).toBe(true);
+      expect(isValidShippingPreference("Standard")).toBe(false);
+    });
+  });
+
+  describe("pharmacy and insurance optional fields", () => {
+    it("validates pharmacy phone when provided", () => {
+      expect(validateOptionalPharmacyPhone("")).toBeNull();
+      expect(validateOptionalPharmacyPhone("(303) 555-0100")).toBeNull();
+      expect(validateOptionalPharmacyPhone("' OR 1=1--")).toMatch(/phone/);
+    });
+
+    it("validates pharmacy address when provided", () => {
+      expect(validateOptionalPharmacyAddress("")).toBeNull();
+      expect(validateOptionalPharmacyAddress("2510 Main Street")).toBeNull();
+      expect(validateOptionalPharmacyAddress("2510")).not.toBeNull();
+    });
+
+    it("validates insurance provider when provided", () => {
+      expect(validateOptionalInsuranceProvider("Aetna")).toBeNull();
+      expect(validateOptionalInsuranceProvider("<script>")).not.toBeNull();
+    });
+
+    it("validates member ID when provided", () => {
+      expect(isValidOptionalMemberId("ABC123-45")).toBe(true);
+      expect(validateOptionalMemberId("")).toBeNull();
+      expect(validateOptionalMemberId("' OR 1=1--")).not.toBeNull();
     });
   });
 

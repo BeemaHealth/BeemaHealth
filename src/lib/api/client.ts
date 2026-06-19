@@ -42,6 +42,42 @@ export class ApiError extends Error {
   }
 }
 
+const GENERIC_SERVER_ERROR = "Something went wrong. Please try again.";
+
+function looksLikeHtml(body: string): boolean {
+  const trimmed = body.trimStart().toLowerCase();
+  return trimmed.startsWith("<!doctype html") || trimmed.startsWith("<html");
+}
+
+async function parseApiErrorMessage(
+  res: Response,
+  body: string,
+): Promise<string> {
+  const contentType = res.headers.get("content-type") ?? "";
+
+  if (contentType.includes("application/json")) {
+    try {
+      const parsed = JSON.parse(body) as { detail?: unknown };
+      if (typeof parsed.detail === "string" && parsed.detail.trim()) {
+        return parsed.detail;
+      }
+    } catch {
+      // fall through to generic handling
+    }
+  }
+
+  if (
+    res.status >= 500 ||
+    contentType.includes("text/html") ||
+    looksLikeHtml(body)
+  ) {
+    return GENERIC_SERVER_ERROR;
+  }
+
+  const trimmed = body.trim();
+  return trimmed || `Request failed (${res.status})`;
+}
+
 async function apiFetch<T>(path: string, options: ApiOptions = {}): Promise<T> {
   if (!USE_API) {
     throw new Error("VITE_API_URL is not configured.");
@@ -65,17 +101,12 @@ async function apiFetch<T>(path: string, options: ApiOptions = {}): Promise<T> {
     throw new ApiError("Unable to reach the server.", 0);
   }
   if (!res.ok) {
-    let message = await res.text();
-    try {
-      const parsed = JSON.parse(message) as { detail?: string };
-      if (parsed.detail) message = parsed.detail;
-    } catch {
-      // use raw text
-    }
+    const body = await res.text();
+    const message = await parseApiErrorMessage(res, body);
     if (res.status === 401 && !path.startsWith("/auth/login")) {
       clearSession();
     }
-    throw new ApiError(message || `Request failed (${res.status})`, res.status);
+    throw new ApiError(message, res.status);
   }
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
@@ -230,9 +261,15 @@ export async function syncEligibility(data: Partial<EligibilityResponses>) {
     return;
   }
   try {
-    await apiFetch("/eligibility/me/", { method: "PATCH", body: JSON.stringify(data) });
+    await apiFetch("/eligibility/me/", {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
   } catch {
-    await apiFetch("/eligibility/", { method: "POST", body: JSON.stringify(data) });
+    await apiFetch("/eligibility/", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
   }
 }
 
@@ -385,13 +422,8 @@ export async function uploadDocumentFile(
     throw new ApiError("Unable to upload file.", 0);
   }
   if (!res.ok) {
-    let message = await res.text();
-    try {
-      const parsed = JSON.parse(message) as { detail?: string };
-      if (parsed.detail) message = parsed.detail;
-    } catch {
-      // use raw text
-    }
-    throw new ApiError(message || "File upload failed.", res.status);
+    const body = await res.text();
+    const message = await parseApiErrorMessage(res, body);
+    throw new ApiError(message, res.status);
   }
 }

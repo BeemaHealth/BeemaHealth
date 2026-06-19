@@ -3,6 +3,7 @@ import secrets
 from datetime import timedelta
 
 from django.conf import settings
+from django.db import transaction
 from django.utils import timezone
 
 from apps.eligibility.models import EligibilityResponse, FunnelSession
@@ -71,23 +72,96 @@ def clear_funnel_cookie(response) -> None:
 
 
 def claim_funnel_session(session: FunnelSession, user) -> EligibilityResponse | None:
-    eligibility = EligibilityResponse.objects.filter(funnel_session=session).first()
-    if eligibility:
-        eligibility.user = user
-        eligibility.funnel_session = None
-        if eligibility.dob and not user.dob:
-            user.dob = eligibility.dob
-        if eligibility.state and not user.state:
-            user.state = eligibility.state
-        user.save()
-        _sync_patient_profile(user, eligibility)
-        _clear_claimed_identity_from_eligibility(eligibility)
+    with transaction.atomic():
+        funnel_eligibility = EligibilityResponse.objects.filter(funnel_session=session).first()
+        existing_eligibility = EligibilityResponse.objects.filter(user=user).first()
+        claimed_eligibility = existing_eligibility
 
-    session.claimed_by_user = user
-    session.claimed_at = timezone.now()
-    session.status = FunnelSession.Status.CLAIMED
-    session.save()
-    return eligibility
+        if funnel_eligibility:
+            if existing_eligibility:
+                _merge_funnel_eligibility_into_existing(
+                    existing_eligibility, funnel_eligibility, user
+                )
+                funnel_eligibility.delete()
+            else:
+                funnel_eligibility.user = user
+                funnel_eligibility.funnel_session = None
+                if funnel_eligibility.dob and not user.dob:
+                    user.dob = funnel_eligibility.dob
+                if funnel_eligibility.state and not user.state:
+                    user.state = funnel_eligibility.state
+                user.save()
+                _sync_patient_profile(user, funnel_eligibility)
+                _clear_claimed_identity_from_eligibility(funnel_eligibility)
+                claimed_eligibility = funnel_eligibility
+
+        session.claimed_by_user = user
+        session.claimed_at = timezone.now()
+        session.status = FunnelSession.Status.CLAIMED
+        session.save()
+        return claimed_eligibility
+
+
+def _merge_funnel_eligibility_into_existing(
+    existing: EligibilityResponse,
+    funnel: EligibilityResponse,
+    user,
+) -> None:
+    """Merge draft funnel answers into the user's existing eligibility row."""
+    if funnel.dob and not user.dob:
+        user.dob = funnel.dob
+    if funnel.state and not user.state:
+        user.state = funnel.state
+    user.save()
+    _sync_patient_profile(user, funnel)
+
+    char_fields = (
+        "treatment_interest",
+        "primary_goal",
+        "treatment_priority",
+        "target_weight_loss_range",
+        "disqualification_reason",
+    )
+    for field in char_fields:
+        funnel_value = getattr(funnel, field)
+        if funnel_value and not getattr(existing, field):
+            setattr(existing, field, funnel_value)
+
+    nullable_fields = (
+        "height_ft",
+        "height_in",
+        "weight_lbs",
+        "goal_weight_lbs",
+        "bmi",
+        "is_18_or_older",
+        "is_likely_eligible",
+        "completed_at",
+    )
+    for field in nullable_fields:
+        funnel_value = getattr(funnel, field)
+        if funnel_value is not None and getattr(existing, field) is None:
+            setattr(existing, field, funnel_value)
+
+    if funnel.safety_screen:
+        merged = dict(existing.safety_screen or {})
+        for key, value in funnel.safety_screen.items():
+            if key not in merged or merged[key] in (None, ""):
+                merged[key] = value
+        existing.safety_screen = merged
+
+    if funnel.pre_signup_consents:
+        merged = dict(existing.pre_signup_consents or {})
+        for key, value in funnel.pre_signup_consents.items():
+            if key not in merged or merged[key] in (None, "", False):
+                merged[key] = value
+        existing.pre_signup_consents = merged
+
+    if funnel.safety_concern_flag and not existing.safety_concern_flag:
+        existing.safety_concern_flag = True
+    if funnel.needs_clinician_review and not existing.needs_clinician_review:
+        existing.needs_clinician_review = True
+
+    existing.save()
 
 
 def _sync_patient_profile(user, eligibility: EligibilityResponse) -> None:

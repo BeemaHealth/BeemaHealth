@@ -13,6 +13,8 @@ from apps.common.validation.address import (
 )
 from apps.common.validation.form import (
     is_filled,
+    is_valid_optional_free_text,
+    is_valid_optional_member_id,
     is_valid_phone,
     is_valid_preferred_first_name,
     validate_adult_weight_history,
@@ -145,9 +147,35 @@ def validate_medication_preferences_section(prefs: dict[str, Any]) -> dict[str, 
     if not isinstance(prefs, dict):
         return _section_error("medication_preferences", "Medication preferences must be an object.")
 
-    pharmacy_phone = prefs.get("pharmacy_phone")
-    if pharmacy_phone is not None and is_filled(pharmacy_phone) and not is_valid_phone(str(pharmacy_phone)):
-        return _section_error("medication_preferences", "Enter a valid pharmacy phone number.")
+    shipping_preference = prefs.get("shipping_preference")
+    if shipping_preference is not None and is_filled(shipping_preference):
+        sp = str(shipping_preference)
+        if sp == "pickup":
+            return _section_error(
+                "medication_preferences",
+                "Local pharmacy pickup is not available yet. Medications ship to your home address.",
+            )
+        if sp != "shipping":
+            return _section_error(
+                "medication_preferences",
+                "Select shipping for medication delivery.",
+            )
+
+    insurance_provider = prefs.get("insurance_provider")
+    if insurance_provider is not None and is_filled(insurance_provider):
+        if not is_valid_optional_free_text(str(insurance_provider)):
+            return _section_error(
+                "medication_preferences",
+                "Enter a valid insurance provider name.",
+            )
+
+    member_id = prefs.get("member_id")
+    if member_id is not None and is_filled(member_id):
+        if not is_valid_optional_member_id(str(member_id)):
+            return _section_error(
+                "medication_preferences",
+                "Enter a valid member ID (letters, numbers, and dashes).",
+            )
 
     return {}
 

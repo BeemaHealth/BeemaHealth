@@ -176,3 +176,31 @@ def validate_optional_blood_pressure(value: str) -> str | None:
     if systolic <= diastolic:
         return "Systolic (first number) should be higher than diastolic."
     return None
+
+
+SHIPPING_PREFERENCE_VALUES = frozenset({"pickup", "shipping"})
+MEMBER_ID_RE = re.compile(r"^[a-zA-Z0-9\- ]{1,64}$")
+UNSAFE_FREE_TEXT_RE = re.compile(
+    r"[<>;|`$]|javascript:|on\w+\s*=|\.\.|%2e%2e|--|\b(drop|union|select|table)\b|script|alert\s*\(",
+    re.IGNORECASE,
+)
+
+
+def is_valid_shipping_preference(value: str) -> bool:
+    return value.strip() in SHIPPING_PREFERENCE_VALUES
+
+
+def is_valid_optional_free_text(value: str, max_length: int = 128) -> bool:
+    trimmed = value.strip()
+    if not trimmed:
+        return True
+    if len(trimmed) > max_length:
+        return False
+    return not UNSAFE_FREE_TEXT_RE.search(trimmed)
+
+
+def is_valid_optional_member_id(value: str) -> bool:
+    trimmed = value.strip()
+    if not trimmed:
+        return True
+    return bool(MEMBER_ID_RE.match(trimmed))
