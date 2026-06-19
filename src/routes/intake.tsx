@@ -558,6 +558,7 @@ function IntakePage() {
               <YesNoField
                 key={k}
                 label={label}
+                required
                 value={fh[k] ?? null}
                 onChange={(v) => patch("family_history", { ...fh, [k]: v })}
               />

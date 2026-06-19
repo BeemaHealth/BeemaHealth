@@ -311,7 +311,7 @@ export function getIntakeStepError(
       const unanswered = FAMILY_HISTORY.find(
         ([k]) => typeof fh[k] !== "boolean",
       );
-      return unanswered ? "Answer every family history question." : null;
+      return unanswered ? "" : null;
     }
     case 5: {
       const unanswered = MEDICATION_ANSWER_KEYS.find(

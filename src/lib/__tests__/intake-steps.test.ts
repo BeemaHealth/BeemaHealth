@@ -282,6 +282,14 @@ describe("intake-steps validation", () => {
     });
   });
 
+  describe("step 4 family history", () => {
+    it("blocks progress without a footer message when questions are unanswered", () => {
+      const data = validIntake({ family_history: {} });
+      expect(getIntakeStepError(4, data)).toBe("");
+      expect(isIntakeStepComplete(4, data)).toBe(false);
+    });
+  });
+
   describe("step 5 medications", () => {
     it("requires medication list when taking Rx", () => {
       const data = validIntake({

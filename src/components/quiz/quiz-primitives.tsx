@@ -141,14 +141,19 @@ export function YesNoField({
   label,
   value,
   onChange,
+  required,
 }: {
   label: string;
   value: boolean | null;
   onChange: (v: boolean) => void;
+  required?: boolean;
 }) {
   return (
     <div>
-      <p className="text-sm font-medium text-foreground">{label}</p>
+      <p className="text-sm font-medium text-foreground">
+        {label}
+        {required && <span className="text-destructive"> *</span>}
+      </p>
       <div className="mt-2 grid grid-cols-2 gap-3">
         <ChoiceCard
           compact
