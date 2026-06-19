@@ -4,6 +4,7 @@ import {
   isDeliverableGeocodeResult,
   isIdentityAddressComplete,
   isValidCity,
+  isValidCounty,
   isValidStreetAddress,
   isValidUsZip,
   verifyCityZip,
@@ -17,6 +18,7 @@ import {
 import {
   SQL_INJECTION,
   STRICT_FIELD_ATTACKS,
+  OVERFLOW,
   XSS_PAYLOADS,
 } from "./fixtures/malicious-payloads";
 import {
@@ -53,8 +55,33 @@ describe("address-validation", () => {
       expect(isValidStreetAddress("12")).toBe(false);
     });
 
-    it.each(XSS_PAYLOADS)("rejects xss-only address %j", (payload) => {
+    it.each(STRICT_FIELD_ATTACKS)("rejects malicious street %j", (payload) => {
       expect(isValidStreetAddress(payload)).toBe(false);
+    });
+  });
+
+  describe("isValidCounty", () => {
+    it("accepts normal county names", () => {
+      expect(isValidCounty("Denver County")).toBe(true);
+      expect(isValidCounty("El Paso County")).toBe(true);
+      expect(isValidCounty("St. Louis City")).toBe(true);
+    });
+
+    it.each([
+      ...SQL_INJECTION.filter((c) => c !== "admin'--"),
+      ...XSS_PAYLOADS,
+      "A",
+      "123",
+    ])("rejects invalid county %j", (county) => {
+      expect(isValidCounty(county)).toBe(false);
+    });
+
+    it("documents SQL probe admin'-- passes county format (DB must parameterize)", () => {
+      expect(isValidCounty("admin'--")).toBe(true);
+    });
+
+    it.each(OVERFLOW)("rejects overflow county %j", (county) => {
+      expect(isValidCounty(county)).toBe(false);
     });
   });
 
@@ -64,17 +91,9 @@ describe("address-validation", () => {
       expect(isValidCity("St. Louis")).toBe(true);
     });
 
-    it.each([
-      ...SQL_INJECTION.filter((c) => c !== "admin'--"),
-      ...XSS_PAYLOADS,
-      "A",
-      "123",
-    ])("rejects invalid city %j", (city) => {
-      expect(isValidCity(city)).toBe(false);
-    });
-
-    it("documents SQL probe admin'-- passes city format (DB must parameterize)", () => {
-      expect(isValidCity("admin'--")).toBe(true);
+    it.each(STRICT_FIELD_ATTACKS)("rejects malicious city %j", (payload) => {
+      if (payload === "admin'--") return;
+      expect(isValidCity(payload)).toBe(false);
     });
   });
 
@@ -99,7 +118,19 @@ describe("address-validation", () => {
   });
 
   describe("isIdentityAddressComplete", () => {
-    it("requires verified flag and valid parts", () => {
+    it("requires verified flag, valid parts, and county", () => {
+      expect(
+        isIdentityAddressComplete({
+          address: "123 Main St",
+          city: "Denver",
+          zip: "80202",
+          county: "Denver County",
+          address_verified: "true",
+        }),
+      ).toBe(true);
+    });
+
+    it("fails when county is missing or invalid", () => {
       expect(
         isIdentityAddressComplete({
           address: "123 Main St",
@@ -107,7 +138,16 @@ describe("address-validation", () => {
           zip: "80202",
           address_verified: "true",
         }),
-      ).toBe(true);
+      ).toBe(false);
+      expect(
+        isIdentityAddressComplete({
+          address: "123 Main St",
+          city: "Denver",
+          zip: "80202",
+          county: "<script>alert(1)</script>",
+          address_verified: "true",
+        }),
+      ).toBe(false);
     });
 
     it("fails when address_verified is missing", () => {
@@ -116,21 +156,53 @@ describe("address-validation", () => {
           address: "123 Main St",
           city: "Denver",
           zip: "80202",
+          county: "Denver County",
           address_verified: "false",
         }),
       ).toBe(false);
     });
 
-    it.each(SQL_INJECTION)("rejects injection in zip %j", (payload) => {
-      expect(
-        isIdentityAddressComplete({
-          address: "123 Main St",
-          city: "Denver",
-          zip: payload,
-          address_verified: "true",
-        }),
-      ).toBe(false);
-    });
+    it.each(STRICT_FIELD_ATTACKS)(
+      "rejects malicious address field values %j",
+      (payload) => {
+        expect(
+          isIdentityAddressComplete({
+            address: payload,
+            city: "Denver",
+            zip: "80202",
+            county: "Denver County",
+            address_verified: "true",
+          }),
+        ).toBe(false);
+        expect(
+          isIdentityAddressComplete({
+            address: "123 Main St",
+            city: payload === "admin'--" ? "Denver" : payload,
+            zip: "80202",
+            county: "Denver County",
+            address_verified: "true",
+          }),
+        ).toBe(payload === "admin'--");
+        expect(
+          isIdentityAddressComplete({
+            address: "123 Main St",
+            city: "Denver",
+            zip: payload,
+            county: "Denver County",
+            address_verified: "true",
+          }),
+        ).toBe(false);
+        expect(
+          isIdentityAddressComplete({
+            address: "123 Main St",
+            city: "Denver",
+            zip: "80202",
+            county: payload === "admin'--" ? "Denver County" : payload,
+            address_verified: "true",
+          }),
+        ).toBe(payload === "admin'--");
+      },
+    );
   });
 
   describe("normalizeUsState", () => {

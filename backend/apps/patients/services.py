@@ -15,6 +15,9 @@ def sync_patient_profile_from_intake(user, identity: dict | None) -> PatientProf
     if city := identity.get("city"):
         profile.city = city[:128]
 
+    if county := identity.get("county"):
+        profile.county = county[:128]
+
     if zip_code := identity.get("zip"):
         profile.zip_code = zip_code[:16]
 

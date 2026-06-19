@@ -13,6 +13,7 @@ type AddressValue = {
   address: string;
   city: string;
   zip: string;
+  county: string;
   verified: boolean;
 };
 
@@ -22,6 +23,7 @@ function toParsed(value: AddressValue, state?: string | null): ParsedUsAddress {
     city: value.city,
     zip: value.zip,
     state: state ?? "",
+    county: value.county,
   };
 }
 
@@ -125,6 +127,7 @@ export function AddressFields({
       address: "",
       city: "",
       zip: "",
+      county: "",
       verified: false,
     });
   }
@@ -147,6 +150,7 @@ export function AddressFields({
         address: suggestion.parsed.address,
         city: suggestion.parsed.city,
         zip: suggestion.parsed.zip,
+        county: suggestion.parsed.county,
         verified: false,
       });
       setQuery(suggestion.label.split(",").slice(0, 2).join(",").trim());
@@ -158,6 +162,7 @@ export function AddressFields({
       address: suggestion.parsed.address,
       city: suggestion.parsed.city,
       zip: suggestion.parsed.zip,
+      county: suggestion.parsed.county,
       verified: true,
     });
   }
@@ -180,6 +185,7 @@ export function AddressFields({
                 address: "",
                 city: "",
                 zip: "",
+                county: "",
                 verified: false,
               });
             }}

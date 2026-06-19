@@ -151,7 +151,7 @@ Each patient fact is stored in **one** table. Other tables may expose it read-on
 |------|-----------------|-------|
 | Email, legal name, phone, DOB, state | `users` | Set at account creation |
 | Sex assigned at birth | `patient_profiles` | Transferred from eligibility on funnel claim |
-| Preferred name, address, city, zip, emergency contact | `patient_profiles` | Synced from intake `identity` JSON on save |
+| Preferred name, address, city, county, zip, emergency contact | `patient_profiles` | Synced from intake `identity` JSON on save |
 | Height, weight, goal weight, BMI, safety screen, treatment interest, pre-signup TOS/privacy | `eligibility_responses` | Screening quiz only |
 | Intake-only questionnaire answers | `medical_intakes` JSON | Duplicate keys stripped on save — see below |
 | Telehealth + clinical acknowledgments + typed signature | `consent_records` | `privacy_acknowledgment` is derived from `eligibility.pre_signup_consents` at sign time |
@@ -194,7 +194,7 @@ Django also creates related auth tables (`auth_permission`, `django_session`, et
 | `sex_assigned_at_birth` | Collected at eligibility; canonical after funnel claim |
 | `preferred_name` | Optional display name from intake |
 | `address`, `emergency_contact_*` | Encrypted — synced from intake step 1 |
-| `city`, `zip_code` | Plain text — useful for provider filtering |
+| `city`, `county`, `zip_code` | Plain text — useful for provider filtering |
 | One-to-one with `users` | One patient = one profile |
 
 **Not on this table:** `state` (lives on `users`), legal name / email / phone / DOB (live on `users`).
@@ -242,7 +242,7 @@ Django also creates related auth tables (`auth_permission`, `django_session`, et
 
 | Column | Intake step | Stored fields (MVP) |
 |--------|-------------|---------------------|
-| `identity` | Extended contact | `preferred`, `address`, `city`, `zip`, `emergency_name`, `emergency_phone` only |
+| `identity` | Extended contact | `preferred`, `address`, `city`, `county`, `zip`, `emergency_name`, `emergency_phone` only |
 | `body_metrics` | Weight history extras | `highest_weight`, `lowest_weight`, `waist`, `duration`, `goals` — **not** height/weight/goal weight |
 | `weight_history` | Weight-loss history | Methods tried, prior GLP-1 meds, prior details |
 | `medical_conditions` | Medical conditions | All except keys already in `eligibility.safety_screen` |

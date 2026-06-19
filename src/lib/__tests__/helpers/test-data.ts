@@ -53,6 +53,7 @@ export function validIntake(overrides: Partial<MedicalIntake> = {}): MedicalInta
     identity: {
       address: "123 Main St",
       city: "Denver",
+      county: "Denver County",
       zip: "80202",
       address_verified: "true",
       emergency_name: "John Doe",

@@ -4,7 +4,13 @@ from __future__ import annotations
 
 from typing import Any
 
-from apps.common.validation.address import is_identity_address_complete, is_valid_city, is_valid_street_address, is_valid_us_zip
+from apps.common.validation.address import (
+    is_identity_address_complete,
+    is_valid_city,
+    is_valid_county,
+    is_valid_street_address,
+    is_valid_us_zip,
+)
 from apps.common.validation.form import (
     is_filled,
     is_valid_phone,
@@ -42,6 +48,10 @@ def validate_identity_section(identity: dict[str, Any]) -> dict[str, str]:
     zip_code = str(identity.get("zip", ""))
     if "zip" in identity and zip_code.strip() and not is_valid_us_zip(zip_code):
         return _section_error("identity", "Enter a valid 5-digit US ZIP code.")
+
+    county = str(identity.get("county", ""))
+    if "county" in identity and county.strip() and not is_valid_county(county):
+        return _section_error("identity", "Enter a valid county name.")
 
     emergency_phone = identity.get("emergency_phone")
     if emergency_phone is not None and str(emergency_phone).strip() and not is_valid_phone(str(emergency_phone)):

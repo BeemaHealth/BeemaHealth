@@ -30,6 +30,7 @@ class IntakeApiValidationTests(TestCase):
                 "identity": {
                     "address": "123 Main St",
                     "city": "Denver",
+                    "county": "Denver County",
                     "zip": "80202",
                     "address_verified": "true",
                     "emergency_name": "John Doe",
@@ -39,6 +40,31 @@ class IntakeApiValidationTests(TestCase):
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user.profile.refresh_from_db()
+        self.assertEqual(self.user.profile.county, "Denver County")
+
+    def test_rejects_malicious_identity_address_fields(self):
+        valid_base = {
+            "address": "123 Main St",
+            "city": "Denver",
+            "county": "Denver County",
+            "zip": "80202",
+            "address_verified": "true",
+            "emergency_name": "John Doe",
+            "emergency_phone": "3035550101",
+        }
+        for field in ("address", "city", "zip", "county"):
+            for payload in STRICT_FIELD_ATTACKS:
+                if field in ("city", "county") and payload == "admin'--":
+                    continue
+                with self.subTest(field=field, payload=payload):
+                    identity = {**valid_base, field: payload}
+                    response = self.client.patch(
+                        reverse("intake-me"),
+                        {"identity": identity},
+                        format="json",
+                    )
+                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_rejects_malicious_emergency_phone(self):
         for payload in STRICT_FIELD_ATTACKS:

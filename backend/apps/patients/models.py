@@ -23,6 +23,7 @@ class PatientProfile(models.Model):
     preferred_name = models.CharField(max_length=128, blank=True, default="")
     address = EncryptedCharField(max_length=255, blank=True)
     city = models.CharField(max_length=128, blank=True)
+    county = models.CharField(max_length=128, blank=True)
     zip_code = models.CharField(max_length=16, blank=True)
     emergency_contact_name = EncryptedCharField(max_length=255, blank=True)
     emergency_contact_phone = EncryptedCharField(max_length=32, blank=True)

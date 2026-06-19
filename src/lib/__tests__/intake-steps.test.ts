@@ -35,6 +35,7 @@ describe("intake-steps validation", () => {
           address: "",
           city: "",
           zip: "",
+          county: "",
           address_verified: "",
           emergency_name: "",
           emergency_phone: "",
@@ -50,6 +51,7 @@ describe("intake-steps validation", () => {
           address: "123 Main St",
           city: "Denver",
           zip: "80202",
+          county: "Denver County",
           address_verified: "false",
           emergency_name: "John",
           emergency_phone: "3035550100",
@@ -67,6 +69,7 @@ describe("intake-steps validation", () => {
             address: "123 Main St",
             city: "Denver",
             zip: "80202",
+            county: "Denver County",
             address_verified: "true",
             emergency_name: "John",
             emergency_phone: payload,
@@ -84,6 +87,7 @@ describe("intake-steps validation", () => {
             address: parsed.address,
             city: parsed.city,
             zip: parsed.zip,
+            county: parsed.county,
             address_verified: "true",
             emergency_name: "John",
             emergency_phone: "3035550100",
@@ -102,16 +106,95 @@ describe("intake-steps validation", () => {
       (_label, overrides) => {
         const data = validIntake({
           identity: {
-            address: "123 Main St",
-            city: "Denver",
-            zip: "80202",
-            address_verified: "true",
-            emergency_name: "John",
-            emergency_phone: "3035550100",
+            ...{
+              address: "123 Main St",
+              city: "Denver",
+              zip: "80202",
+              county: "Denver County",
+              address_verified: "true",
+              emergency_name: "John",
+              emergency_phone: "3035550100",
+            },
             ...overrides,
           },
         });
         expect(getIntakeStepError(0, data)).toBe("");
+        expect(isIntakeStepComplete(0, data)).toBe(false);
+      },
+    );
+
+    it.each(STRICT_FIELD_ATTACKS)(
+      "rejects malicious identity address %j",
+      (payload) => {
+        const data = validIntake({
+          identity: {
+            address: payload,
+            city: "Denver",
+            zip: "80202",
+            county: "Denver County",
+            address_verified: "true",
+            emergency_name: "John",
+            emergency_phone: "3035550100",
+          },
+        });
+        expect(getIntakeStepError(0, data)).not.toBeNull();
+        expect(isIntakeStepComplete(0, data)).toBe(false);
+      },
+    );
+
+    it.each(STRICT_FIELD_ATTACKS.filter((p) => p !== "admin'--"))(
+      "rejects malicious identity city %j",
+      (payload) => {
+        const data = validIntake({
+          identity: {
+            address: "123 Main St",
+            city: payload,
+            zip: "80202",
+            county: "Denver County",
+            address_verified: "true",
+            emergency_name: "John",
+            emergency_phone: "3035550100",
+          },
+        });
+        expect(getIntakeStepError(0, data)).not.toBeNull();
+        expect(isIntakeStepComplete(0, data)).toBe(false);
+      },
+    );
+
+    it.each(STRICT_FIELD_ATTACKS)(
+      "rejects malicious identity zip %j",
+      (payload) => {
+        const data = validIntake({
+          identity: {
+            address: "123 Main St",
+            city: "Denver",
+            zip: payload,
+            county: "Denver County",
+            address_verified: "true",
+            emergency_name: "John",
+            emergency_phone: "3035550100",
+          },
+        });
+        expect(getIntakeStepError(0, data)).not.toBeNull();
+        expect(isIntakeStepComplete(0, data)).toBe(false);
+      },
+    );
+
+    it.each(STRICT_FIELD_ATTACKS.filter((p) => p !== "admin'--"))(
+      "rejects malicious identity county %j",
+      (payload) => {
+        const data = validIntake({
+          identity: {
+            address: "123 Main St",
+            city: "Denver",
+            zip: "80202",
+            county: payload,
+            address_verified: "true",
+            emergency_name: "John",
+            emergency_phone: "3035550100",
+          },
+        });
+        expect(getIntakeStepError(0, data)).not.toBeNull();
         expect(isIntakeStepComplete(0, data)).toBe(false);
       },
     );

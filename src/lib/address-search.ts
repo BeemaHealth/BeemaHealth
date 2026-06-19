@@ -37,6 +37,7 @@ type NominatimAddress = {
   town?: string;
   village?: string;
   hamlet?: string;
+  county?: string;
   postcode?: string;
   state?: string;
 };
@@ -61,9 +62,10 @@ export function parseNominatimResult(
   if (!addr?.house_number || !addr.road) return null;
 
   const city = nominatimCity(addr);
+  const county = (addr.county ?? "").trim();
   const zip = (addr.postcode ?? "").trim().slice(0, 5);
   const state = (addr.state ?? "").trim();
-  if (!city || !zip || !state) return null;
+  if (!city || !county || !zip || !state) return null;
 
   const streetLine = `${addr.house_number} ${addr.road}`.trim();
   if (!isValidStreetAddress(streetLine)) return null;
@@ -73,6 +75,7 @@ export function parseNominatimResult(
     city,
     zip,
     state,
+    county,
   };
 }
 

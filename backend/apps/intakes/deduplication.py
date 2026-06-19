@@ -3,7 +3,7 @@ Strip intake JSON fields that belong on other tables.
 
 Canonical ownership:
 - users: email, first_name, last_name, phone, dob, state
-- patient_profiles: sex_assigned_at_birth, address, city, zip_code, emergency contacts
+- patient_profiles: sex_assigned_at_birth, address, city, county, zip_code, emergency contacts
 - eligibility_responses: height/weight/bmi, safety_screen, treatment_interest, pre_signup_consents
 """
 

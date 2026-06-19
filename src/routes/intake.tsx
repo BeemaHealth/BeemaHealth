@@ -342,13 +342,15 @@ function IntakePage() {
                   address: id.address ?? "",
                   city: id.city ?? "",
                   zip: id.zip ?? "",
+                  county: id.county ?? "",
                   verified: id.address_verified === "true",
                 }}
-                onChange={({ address, city, zip, verified }) =>
+                onChange={({ address, city, zip, county, verified }) =>
                   patchIdentity({
                     address,
                     city,
                     zip,
+                    county,
                     address_verified: verified ? "true" : "",
                   })
                 }

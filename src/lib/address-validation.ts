@@ -4,6 +4,7 @@ import { formatUsStateName, usStatesMatch } from "@/lib/us-states";
 
 const US_ZIP_RE = /^\d{5}(-\d{4})?$/;
 const STREET_NUMBER_RE = /\d/;
+const MAX_COUNTY_LENGTH = 128;
 const GOOGLE_GEOCODE_KEY =
   import.meta.env.VITE_GOOGLE_PLACES_API_KEY?.trim() ?? "";
 
@@ -20,13 +21,15 @@ export type ParsedUsAddress = {
   city: string;
   zip: string;
   state: string;
+  county: string;
 };
 
 export function isValidUsZip(zip: string): boolean {
   return US_ZIP_RE.test(zip.trim());
 }
 
-const UNSAFE_ADDRESS_RE = /[<>]|javascript:|on\w+\s*=|script|alert\s*\(/i;
+const UNSAFE_ADDRESS_RE =
+  /[<>;|`$]|javascript:|on\w+\s*=|\.\.|%2e%2e|--|\b(drop|union|select|table)\b|script|alert\s*\(/i;
 
 export function isValidStreetAddress(address: string): boolean {
   const trimmed = address.trim();
@@ -39,6 +42,15 @@ export function isValidStreetAddress(address: string): boolean {
 
 export function isValidCity(city: string): boolean {
   return /^[a-zA-Z .'-]{2,}$/.test(city.trim());
+}
+
+export function isValidCounty(county: string): boolean {
+  const trimmed = county.trim();
+  return (
+    trimmed.length >= 2 &&
+    trimmed.length <= MAX_COUNTY_LENGTH &&
+    /^[a-zA-Z .'-]+$/.test(trimmed)
+  );
 }
 
 export function normalizeCity(city: string): string {
@@ -269,11 +281,16 @@ export function parseGoogleAddressComponents(
     if (types.includes("postal_code")) zip = component.long_name;
   }
 
+  const countyComponent = components.find((c) =>
+    c.types.includes("administrative_area_level_2"),
+  );
+
   return {
     address: `${streetNumber} ${route}`.trim(),
     city,
     zip: normalizeZip(zip),
     state,
+    county: countyComponent?.long_name ?? "",
   };
 }
 
@@ -281,20 +298,28 @@ export function isAddressReadyForVerification(
   address: string,
   city: string,
   zip: string,
+  county?: string,
 ): boolean {
   return (
-    isValidStreetAddress(address) && isValidCity(city) && isValidUsZip(zip)
+    isValidStreetAddress(address) &&
+    isValidCity(city) &&
+    isValidUsZip(zip) &&
+    (county === undefined || county === "" || isValidCounty(county))
   );
 }
 
 export function isIdentityAddressComplete(
   identity: Record<string, string>,
 ): boolean {
+  const county = identity.county ?? "";
   return (
     isAddressReadyForVerification(
       identity.address ?? "",
       identity.city ?? "",
       identity.zip ?? "",
-    ) && identity.address_verified === "true"
+      county,
+    ) &&
+    isValidCounty(county) &&
+    identity.address_verified === "true"
   );
 }

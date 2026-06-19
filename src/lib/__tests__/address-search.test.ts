@@ -31,6 +31,7 @@ describe("address-search", () => {
         expect(parsed!.city.length).toBeGreaterThan(1);
         expect(parsed!.zip).toMatch(/^\d{5}$/);
         expect(parsed!.state.length).toBeGreaterThan(1);
+        expect(parsed!.county.length).toBeGreaterThan(1);
       },
     );
 
@@ -41,14 +42,26 @@ describe("address-search", () => {
       },
     );
 
-    it("uses town when city is absent", () => {
+    it("uses town when city is absent and parses county", () => {
       const stLouis = VALID_NOMINATIM_RESULTS.find((r) => r.place_id === 5)!;
       expect(parseNominatimResult(stLouis)).toEqual({
         address: "88 Market St",
         city: "St. Louis",
         zip: "63101",
         state: "Missouri",
+        county: "St. Louis City",
       });
+    });
+
+    it("rejects nominatim results without county", () => {
+      const withoutCounty = {
+        ...VALID_NOMINATIM_RESULTS[0],
+        address: {
+          ...VALID_NOMINATIM_RESULTS[0].address!,
+          county: undefined,
+        },
+      };
+      expect(parseNominatimResult(withoutCounty)).toBeNull();
     });
   });
 
@@ -227,6 +240,7 @@ describe("address-search", () => {
           city: "Colorado Springs",
           zip: "80909",
           state: "CO",
+          county: "El Paso County",
         },
         "2510 Summit Drive, Colorado Springs, Colorado 80909",
       ],
@@ -237,6 +251,7 @@ describe("address-search", () => {
           city: "Denver",
           zip: "80202",
           state: "Colorado",
+          county: "Denver County",
         },
         "123 Main Street, Denver, Colorado 80202",
       ],

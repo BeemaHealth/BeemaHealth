@@ -20,6 +20,7 @@ class PatientProfileSerializer(serializers.ModelSerializer):
             "preferred_name",
             "address",
             "city",
+            "county",
             "zip_code",
             "emergency_contact_name",
             "emergency_contact_phone",

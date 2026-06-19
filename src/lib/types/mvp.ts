@@ -73,6 +73,7 @@ export interface PatientProfile {
   user_id: string;
   address: string;
   city: string;
+  county: string;
   state: string;
   zip: string;
   emergency_contact_name: string;

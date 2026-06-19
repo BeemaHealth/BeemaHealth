@@ -12,6 +12,7 @@ export type NominatimFixture = {
     city?: string;
     town?: string;
     village?: string;
+    county?: string;
     postcode?: string;
     state?: string;
   };
@@ -28,6 +29,7 @@ export const VALID_NOMINATIM_RESULTS: NominatimFixture[] = [
       house_number: "2510",
       road: "Summit Drive",
       city: "Colorado Springs",
+      county: "El Paso County",
       postcode: "80909",
       state: "Colorado",
     },
@@ -42,6 +44,7 @@ export const VALID_NOMINATIM_RESULTS: NominatimFixture[] = [
       house_number: "1600",
       road: "Pennsylvania Avenue NW",
       city: "Washington",
+      county: "District of Columbia",
       postcode: "20500",
       state: "District of Columbia",
     },
@@ -56,6 +59,7 @@ export const VALID_NOMINATIM_RESULTS: NominatimFixture[] = [
       house_number: "123",
       road: "Main Street",
       city: "Denver",
+      county: "Denver County",
       postcode: "80202",
       state: "Colorado",
     },
@@ -70,6 +74,7 @@ export const VALID_NOMINATIM_RESULTS: NominatimFixture[] = [
       house_number: "500",
       road: "Oak Ave",
       city: "Austin",
+      county: "Travis County",
       postcode: "78701",
       state: "Texas",
     },
@@ -83,6 +88,7 @@ export const VALID_NOMINATIM_RESULTS: NominatimFixture[] = [
       house_number: "88",
       road: "Market St",
       town: "St. Louis",
+      county: "St. Louis City",
       postcode: "63101",
       state: "Missouri",
     },
@@ -190,6 +196,7 @@ export const VERIFIABLE_PARSED_ADDRESSES: Array<{
       city: "Colorado Springs",
       zip: "80909",
       state: "Colorado",
+      county: "El Paso County",
     },
     accountState: "Colorado",
     zippopotam: {
@@ -206,6 +213,7 @@ export const VERIFIABLE_PARSED_ADDRESSES: Array<{
       city: "Denver",
       zip: "80202",
       state: "Colorado",
+      county: "Denver County",
     },
     accountState: "CO",
     zippopotam: {
@@ -220,6 +228,7 @@ export const VERIFIABLE_PARSED_ADDRESSES: Array<{
       city: "Austin",
       zip: "78701",
       state: "Texas",
+      county: "Travis County",
     },
     accountState: "Texas",
     zippopotam: {
@@ -247,6 +256,7 @@ export const UNVERIFIABLE_PARSED_ADDRESSES: Array<{
       city: "Denver",
       zip: "80202",
       state: "Colorado",
+      county: "Denver County",
     },
     accountState: "Texas",
     messageMatch: /account state is Texas/,
@@ -258,6 +268,7 @@ export const UNVERIFIABLE_PARSED_ADDRESSES: Array<{
       city: "Boulder",
       zip: "80909",
       state: "Colorado",
+      county: "El Paso County",
     },
     accountState: "Colorado",
     zippopotam: {
@@ -275,6 +286,7 @@ export const UNVERIFIABLE_PARSED_ADDRESSES: Array<{
       city: "Denver",
       zip: "80202",
       state: "Colorado",
+      county: "Denver County",
     },
     accountState: "Colorado",
     messageMatch: /complete street address/,
@@ -286,6 +298,7 @@ export const UNVERIFIABLE_PARSED_ADDRESSES: Array<{
       city: "Denver",
       zip: "8020",
       state: "Colorado",
+      county: "Denver County",
     },
     accountState: "Colorado",
     messageMatch: /complete street address|valid 5-digit US ZIP/,
@@ -297,6 +310,7 @@ export const UNVERIFIABLE_PARSED_ADDRESSES: Array<{
       city: "Denver",
       zip: "99999",
       state: "Colorado",
+      county: "Denver County",
     },
     accountState: "Colorado",
     messageMatch: /couldn't find that ZIP|City and ZIP don't match/,
