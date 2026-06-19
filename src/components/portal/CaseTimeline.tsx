@@ -1,24 +1,6 @@
 import type { CareTimelineEvent } from "@/lib/dashboard-status";
+import { TIMELINE_TONE_STYLES } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
-
-const toneStyles = {
-  blue: {
-    dot: "bg-secondary",
-    badge: "border-secondary/20 bg-secondary/12 text-secondary",
-  },
-  green: {
-    dot: "bg-success",
-    badge: "border-success/20 bg-success/12 text-success",
-  },
-  orange: {
-    dot: "bg-warning",
-    badge: "border-warning/25 bg-warning/20 text-warning-foreground",
-  },
-  gray: {
-    dot: "bg-muted-foreground/45",
-    badge: "border-border bg-muted text-muted-foreground",
-  },
-} as const;
 
 function formatTimelineDate(timestamp: string) {
   return new Date(timestamp).toLocaleString(undefined, {
@@ -39,7 +21,7 @@ export function CaseTimeline({ events }: { events: CareTimelineEvent[] }) {
   return (
     <ol className="relative space-y-6 border-l border-border/80 pl-6">
       {events.map((event) => {
-        const styles = toneStyles[event.tone];
+        const styles = TIMELINE_TONE_STYLES[event.tone];
 
         return (
           <li key={event.id} className="relative">

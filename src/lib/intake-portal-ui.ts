@@ -13,12 +13,12 @@ import {
   UserRound,
   Users,
 } from "lucide-react";
-import type { AccountSectionTone } from "@/components/portal/AccountSectionCard";
+import type { SectionTone } from "@/lib/design-tokens";
 import { INTAKE_STEP_LABELS } from "@/lib/intake-steps";
 
 export type IntakeStepMeta = {
   icon: LucideIcon;
-  tone: AccountSectionTone;
+  tone: SectionTone;
   description: string;
 };
 

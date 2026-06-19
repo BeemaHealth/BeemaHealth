@@ -1,103 +1,18 @@
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  getSectionToneStyles,
+  sectionBadgeOnClass,
+  sectionDividerClass,
+  sectionNavActiveClass,
+  sectionNavIconClass,
+  sectionRowIconClass,
+  type SectionTone,
+} from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
-export type AccountSectionTone =
-  | "primary"
-  | "contact"
-  | "shipping"
-  | "communication"
-  | "consent"
-  | "security";
-
-const toneStyles: Record<
-  AccountSectionTone,
-  {
-    section: string;
-    header: string;
-    icon: string;
-    title: string;
-    description: string;
-    editingRing: string;
-    footer: string;
-    divider: string;
-    badgeOn: string;
-    rowIcon: string;
-  }
-> = {
-  primary: {
-    section: "border-border",
-    header: "bg-warning/14",
-    icon: "bg-warning/18 text-warning-foreground",
-    title: "text-foreground",
-    description: "text-muted-foreground",
-    editingRing: "ring-warning/20",
-    footer: "bg-warning/10",
-    divider: "border-border/80",
-    badgeOn: "bg-warning/15 text-warning-foreground",
-    rowIcon: "bg-warning/15 text-warning-foreground",
-  },
-  contact: {
-    section: "border-border",
-    header: "bg-muted/70",
-    icon: "bg-foreground/8 text-foreground/70",
-    title: "text-foreground",
-    description: "text-muted-foreground",
-    editingRing: "ring-foreground/12",
-    footer: "bg-muted/50",
-    divider: "border-border/80",
-    badgeOn: "bg-muted text-foreground/80",
-    rowIcon: "bg-foreground/8 text-foreground/70",
-  },
-  shipping: {
-    section: "border-border",
-    header: "bg-secondary/10",
-    icon: "bg-secondary/12 text-secondary",
-    title: "text-foreground",
-    description: "text-muted-foreground",
-    editingRing: "ring-secondary/18",
-    footer: "bg-secondary/6",
-    divider: "border-border/80",
-    badgeOn: "bg-secondary/10 text-secondary",
-    rowIcon: "bg-secondary/12 text-secondary",
-  },
-  communication: {
-    section: "border-border",
-    header: "bg-accent/30",
-    icon: "bg-accent-foreground/10 text-accent-foreground",
-    title: "text-foreground",
-    description: "text-muted-foreground",
-    editingRing: "ring-accent-foreground/15",
-    footer: "bg-accent/20",
-    divider: "border-border/80",
-    badgeOn: "bg-accent-foreground/10 text-accent-foreground",
-    rowIcon: "bg-accent-foreground/10 text-accent-foreground",
-  },
-  consent: {
-    section: "border-border",
-    header: "bg-success/10",
-    icon: "bg-success/12 text-success",
-    title: "text-foreground",
-    description: "text-muted-foreground",
-    editingRing: "ring-success/18",
-    footer: "bg-success/6",
-    divider: "border-border/80",
-    badgeOn: "bg-success/12 text-success",
-    rowIcon: "bg-success/12 text-success",
-  },
-  security: {
-    section: "border-border",
-    header: "bg-destructive/8",
-    icon: "bg-destructive/10 text-destructive",
-    title: "text-foreground",
-    description: "text-muted-foreground",
-    editingRing: "ring-destructive/15",
-    footer: "bg-destructive/6",
-    divider: "border-border/80",
-    badgeOn: "bg-destructive/10 text-destructive",
-    rowIcon: "bg-destructive/10 text-destructive",
-  },
-};
+/** @deprecated Use `SectionTone` from `@/lib/design-tokens` */
+export type AccountSectionTone = SectionTone;
 
 export function DisplayField({
   label,
@@ -154,7 +69,7 @@ export function AccountSectionCard({
   title: string;
   description?: string;
   icon?: LucideIcon;
-  tone?: AccountSectionTone;
+  tone?: SectionTone;
   editable?: boolean;
   editing?: boolean;
   saving?: boolean;
@@ -164,7 +79,7 @@ export function AccountSectionCard({
   children: React.ReactNode;
   className?: string;
 }) {
-  const styles = toneStyles[tone];
+  const styles = getSectionToneStyles(tone);
 
   return (
     <section
@@ -250,23 +165,8 @@ export function AccountSectionCard({
   );
 }
 
-export function accountSectionDividerClass(tone: AccountSectionTone): string {
-  return toneStyles[tone].divider;
-}
-
-export function accountSectionBadgeOnClass(tone: AccountSectionTone): string {
-  return toneStyles[tone].badgeOn;
-}
-
-export function accountSectionRowIconClass(tone: AccountSectionTone): string {
-  return toneStyles[tone].rowIcon;
-}
-
-export function accountSectionNavIconClass(tone: AccountSectionTone): string {
-  return toneStyles[tone].icon;
-}
-
-export function accountSectionNavActiveClass(tone: AccountSectionTone): string {
-  const styles = toneStyles[tone];
-  return cn(styles.header, "font-medium text-foreground");
-}
+export const accountSectionDividerClass = sectionDividerClass;
+export const accountSectionBadgeOnClass = sectionBadgeOnClass;
+export const accountSectionRowIconClass = sectionRowIconClass;
+export const accountSectionNavIconClass = sectionNavIconClass;
+export const accountSectionNavActiveClass = sectionNavActiveClass;

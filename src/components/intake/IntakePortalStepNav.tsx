@@ -1,9 +1,9 @@
 import type { LucideIcon } from "lucide-react";
-import type { AccountSectionTone } from "@/components/portal/AccountSectionCard";
 import {
-  accountSectionNavActiveClass,
-  accountSectionNavIconClass,
-} from "@/components/portal/AccountSectionCard";
+  sectionNavActiveClass,
+  sectionNavIconClass,
+  type SectionTone,
+} from "@/lib/design-tokens";
 import { getIntakeStepMeta } from "@/lib/intake-portal-ui";
 import { INTAKE_STEP_LABELS } from "@/lib/intake-steps";
 import { cn } from "@/lib/utils";
@@ -38,7 +38,7 @@ export function IntakePortalStepNav({
                 onClick={() => onSelect(index)}
                 className={cn(
                   "flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left text-sm transition-colors",
-                  active && accountSectionNavActiveClass(meta.tone),
+                  active && sectionNavActiveClass(meta.tone),
                   !active && applicable && "text-foreground hover:bg-muted/55",
                   !applicable && "cursor-not-allowed text-muted-foreground/45",
                 )}
@@ -47,7 +47,7 @@ export function IntakePortalStepNav({
                   className={cn(
                     "flex size-8 shrink-0 items-center justify-center rounded-xl",
                     active
-                      ? accountSectionNavIconClass(meta.tone)
+                      ? sectionNavIconClass(meta.tone)
                       : applicable
                         ? "bg-muted text-muted-foreground"
                         : "bg-muted/50 text-muted-foreground/50",
@@ -109,7 +109,7 @@ export function IntakePortalStepNavSelect({
   );
 }
 
-export function intakeStepToneFor(step: number): AccountSectionTone {
+export function intakeStepToneFor(step: number): SectionTone {
   return getIntakeStepMeta(step).tone;
 }
 

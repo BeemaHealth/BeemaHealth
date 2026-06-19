@@ -11,6 +11,7 @@
  * Warm off-white backgrounds, soft deep green/teal primary, muted blue
  * secondary, soft mint accent, dark charcoal text. Rounded cards, soft shadows.
  * All colors use oklch. Use semantic tokens only — never ad hoc colors.
+ * TypeScript usage patterns: see src/lib/design-tokens.ts
  */
 
 @theme inline {

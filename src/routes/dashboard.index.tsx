@@ -10,6 +10,10 @@ import {
   canManageRefills,
   getStatusSummary,
 } from "@/lib/dashboard-status";
+import {
+  DASHBOARD_SUMMARY_ICON_STYLES,
+  type DashboardSummaryIconTone,
+} from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 const dashboardRoute = getRouteApi("/dashboard");
@@ -44,15 +48,8 @@ function SummaryCard({
   title: string;
   status: string;
   sub: string;
-  iconTone: "review" | "prescription" | "shipping" | "messages";
+  iconTone: DashboardSummaryIconTone;
 }) {
-  const iconWrap = {
-    review: "bg-warning/25 text-warning-foreground",
-    prescription: "bg-success/20 text-success",
-    shipping: "bg-muted text-muted-foreground",
-    messages: "bg-accent/70 text-accent-foreground",
-  } as const;
-
   return (
     <div className="rounded-3xl border border-border bg-card p-4 shadow-soft md:p-5">
       <div className="flex items-start justify-between gap-2">
@@ -60,7 +57,7 @@ function SummaryCard({
         <span
           className={cn(
             "flex size-8 shrink-0 items-center justify-center rounded-full",
-            iconWrap[iconTone],
+            DASHBOARD_SUMMARY_ICON_STYLES[iconTone],
           )}
         >
           <Icon className="size-4" aria-hidden />

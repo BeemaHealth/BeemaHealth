@@ -1,23 +1,5 @@
 import { cn } from "@/lib/utils";
-
-const toneStyles = {
-  success: {
-    badge: "border-success/30 bg-success/15 text-foreground",
-    dot: "bg-success",
-  },
-  warning: {
-    badge: "border-warning/35 bg-warning/25 text-foreground",
-    dot: "bg-warning-foreground/70",
-  },
-  info: {
-    badge: "border-secondary/25 bg-secondary/12 text-foreground",
-    dot: "bg-secondary",
-  },
-  muted: {
-    badge: "border-border bg-muted text-muted-foreground",
-    dot: "bg-muted-foreground/50",
-  },
-} as const;
+import { STATUS_BADGE_STYLES, type StatusBadgeTone } from "@/lib/design-tokens";
 
 export function StatusBadge({
   label,
@@ -25,10 +7,10 @@ export function StatusBadge({
   className,
 }: {
   label: string;
-  tone?: keyof typeof toneStyles;
+  tone?: StatusBadgeTone;
   className?: string;
 }) {
-  const styles = toneStyles[tone];
+  const styles = STATUS_BADGE_STYLES[tone];
 
   return (
     <span
