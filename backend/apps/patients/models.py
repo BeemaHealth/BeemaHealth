@@ -20,6 +20,9 @@ class PatientProfile(models.Model):
     sex_assigned_at_birth = models.CharField(
         max_length=16, choices=SEX_CHOICES, blank=True, default=""
     )
+    gender_identity = models.CharField(
+        max_length=16, choices=SEX_CHOICES, blank=True, default=""
+    )
     preferred_name = models.CharField(max_length=128, blank=True, default="")
     address = EncryptedCharField(max_length=255, blank=True)
     city = models.CharField(max_length=128, blank=True)

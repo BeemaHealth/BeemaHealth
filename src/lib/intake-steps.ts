@@ -11,7 +11,11 @@ import {
   validateMedicationRow,
   validateOptionalNumericLab,
 } from "@/lib/form-validation";
-import type { MedicalIntake } from "@/lib/types/mvp";
+import type { MedicalIntake, SexAssignedAtBirth } from "@/lib/types/mvp";
+import {
+  isPregnancyIntakeStepApplicable,
+  PREGNANCY_INTAKE_STEP,
+} from "@/lib/reproductive-intake";
 
 export const INTAKE_STEP_LABELS = [
   "Identity & contact",
@@ -243,13 +247,27 @@ function intakeConditionKeys(): string[] {
   ).map(([k]) => k);
 }
 
+export type IntakeEligibilityContext = {
+  treatment_interest?: string | null;
+  weight_lbs?: number | null;
+  sex_assigned_at_birth?: SexAssignedAtBirth | "" | null;
+  gender_identity?: SexAssignedAtBirth | "" | null;
+};
+
+export function isIntakeStepApplicable(
+  step: number,
+  eligibility: IntakeEligibilityContext | null,
+): boolean {
+  if (step === PREGNANCY_INTAKE_STEP) {
+    return isPregnancyIntakeStepApplicable(eligibility);
+  }
+  return true;
+}
+
 export function getIntakeStepError(
   step: number,
   data: MedicalIntake,
-  eligibility: {
-    treatment_interest?: string | null;
-    weight_lbs?: number | null;
-  } | null = null,
+  eligibility: IntakeEligibilityContext | null = null,
 ): string | null {
   const id = data.identity as Record<string, string>;
   const body = data.body_metrics as Record<string, string | string[]>;
@@ -348,6 +366,7 @@ export function getIntakeStepError(
       return null;
     }
     case 7:
+      if (!isPregnancyIntakeStepApplicable(eligibility)) return null;
       return preg.understand === true ? null : "";
     case 8: {
       const unanswered = LIFESTYLE_FIELD_KEYS.find((k) => !isFilled(life[k]));
@@ -397,24 +416,25 @@ export function getIntakeStepError(
 export function isIntakeStepComplete(
   step: number,
   data: MedicalIntake,
-  eligibility: {
-    treatment_interest?: string | null;
-    weight_lbs?: number | null;
-  } | null = null,
+  eligibility: IntakeEligibilityContext | null = null,
 ): boolean {
+  if (!isIntakeStepApplicable(step, eligibility)) return true;
   return getIntakeStepError(step, data, eligibility) === null;
 }
 
 /** First incomplete intake step, or last step when all prior steps are done. */
 export function resolveIntakeStepIndex(
   data: MedicalIntake,
-  eligibility: { treatment_interest?: string | null } | null = null,
+  eligibility: IntakeEligibilityContext | null = null,
 ): number {
   const total = INTAKE_STEP_LABELS.length;
+  let lastApplicable = total - 1;
   for (let i = 0; i < total; i++) {
+    if (!isIntakeStepApplicable(i, eligibility)) continue;
+    lastApplicable = i;
     if (!isIntakeStepComplete(i, data, eligibility)) return i;
   }
-  return total - 1;
+  return lastApplicable;
 }
 
 export function emptyIntakeData() {

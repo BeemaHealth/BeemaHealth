@@ -116,6 +116,10 @@ class EligibilityResponse(models.Model):
         max_length=16, choices=SEX_CHOICES, blank=True, default=""
     )
 
+    gender_identity = models.CharField(
+        max_length=16, choices=SEX_CHOICES, blank=True, default=""
+    )
+
     safety_screen = models.JSONField(default=dict, blank=True)
     safety_concern_flag = models.BooleanField(default=False)
     is_likely_eligible = models.BooleanField(null=True, blank=True)

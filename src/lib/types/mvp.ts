@@ -71,6 +71,8 @@ export interface User {
 export interface PatientProfile {
   id: string;
   user_id: string;
+  sex_assigned_at_birth?: SexAssignedAtBirth | "";
+  gender_identity?: SexAssignedAtBirth | "";
   address: string;
   city: string;
   county: string;
@@ -118,6 +120,7 @@ export interface EligibilityResponses {
   goal_weight_lbs: number | null;
   bmi: number | null;
   sex_assigned_at_birth: SexAssignedAtBirth | "";
+  gender_identity: SexAssignedAtBirth | "";
   safety_screen: EligibilitySafetyScreen;
   safety_concern_flag: boolean;
   is_likely_eligible: boolean | null;

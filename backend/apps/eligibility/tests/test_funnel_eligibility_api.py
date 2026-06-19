@@ -30,3 +30,15 @@ class FunnelEligibilityApiValidationTests(TestCase):
                     format="json",
                 )
                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_patch_gender_identity(self):
+        response = self.client.patch(
+            reverse("funnel-eligibility"),
+            {
+                "sex_assigned_at_birth": "male",
+                "gender_identity": "female",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["gender_identity"], "female")

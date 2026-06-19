@@ -27,6 +27,7 @@ class EligibilitySerializer(serializers.ModelSerializer):
             "goal_weight_lbs",
             "bmi",
             "sex_assigned_at_birth",
+            "gender_identity",
             "safety_screen",
             "safety_concern_flag",
             "is_likely_eligible",
@@ -50,7 +51,7 @@ class EligibilitySerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
-    _CLAIMED_IDENTITY_FIELDS = ("dob", "state", "sex_assigned_at_birth")
+    _CLAIMED_IDENTITY_FIELDS = ("dob", "state", "sex_assigned_at_birth", "gender_identity")
 
     def validate(self, attrs):
         if self.instance and self.instance.user_id:
@@ -114,6 +115,10 @@ class EligibilitySerializer(serializers.ModelSerializer):
                 profile = None
             if profile and profile.sex_assigned_at_birth:
                 data["sex_assigned_at_birth"] = profile.sex_assigned_at_birth
+            if profile:
+                gender = profile.gender_identity or profile.sex_assigned_at_birth
+                if gender:
+                    data["gender_identity"] = gender
         elif instance.dob:
             data["dob"] = instance.dob.isoformat()
 

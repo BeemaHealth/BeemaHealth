@@ -34,10 +34,16 @@ import {
   emptyPriorMedDetails,
   normalizeIntake,
   resolveIntakeStepIndex,
+  isIntakeStepApplicable,
   PRIOR_MED_DETAIL_FIELDS,
   normalizePriorDetails,
   type PriorMedDetails,
 } from "@/lib/intake-steps";
+import {
+  getApplicableIntakeStepIndices,
+  nextApplicableIntakeStep,
+  prevApplicableIntakeStep,
+} from "@/lib/reproductive-intake";
 import { computeBmi } from "@/lib/safety-flags";
 import type {
   EligibilityResponses,
@@ -75,7 +81,29 @@ function IntakePage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const total = INTAKE_STEP_LABELS.length;
-  const progress = ((step + 1) / total) * 100;
+  const intakeEligibility = useMemo(
+    () =>
+      eligibility
+        ? {
+            treatment_interest: eligibility.treatment_interest,
+            weight_lbs: eligibility.weight_lbs,
+            sex_assigned_at_birth: eligibility.sex_assigned_at_birth,
+            gender_identity: eligibility.gender_identity,
+          }
+        : null,
+    [eligibility],
+  );
+  const applicableSteps = useMemo(
+    () => getApplicableIntakeStepIndices(intakeEligibility, total),
+    [intakeEligibility, total],
+  );
+  const applicableStepIndex = applicableSteps.indexOf(step);
+  const progress =
+    applicableStepIndex >= 0
+      ? ((applicableStepIndex + 1) / applicableSteps.length) * 100
+      : ((step + 1) / total) * 100;
+  const isLastApplicableStep =
+    applicableStepIndex === applicableSteps.length - 1;
 
   const intakeConditions = useMemo(
     () =>
@@ -107,6 +135,11 @@ function IntakePage() {
       cancelled = true;
     };
   }, [session.user.id]);
+
+  useEffect(() => {
+    if (loading || applicableSteps.includes(step)) return;
+    setStep(resolveIntakeStepIndex(data, intakeEligibility));
+  }, [loading, step, applicableSteps, data, intakeEligibility]);
 
   useEffect(() => {
     if (!loading) saveIntake(data);
@@ -228,8 +261,8 @@ function IntakePage() {
   const prefs = data.medication_preferences as Record<string, string | boolean>;
   const acks = data.safety_acknowledgments as Record<string, boolean>;
 
-  const canContinue = isIntakeStepComplete(step, data, eligibility);
-  const stepValidationError = getIntakeStepError(step, data, eligibility);
+  const canContinue = isIntakeStepComplete(step, data, intakeEligibility);
+  const stepValidationError = getIntakeStepError(step, data, intakeEligibility);
 
   async function handleNext() {
     if (!canContinue || submitting) return;
@@ -237,8 +270,9 @@ function IntakePage() {
     setSubmitting(true);
     try {
       await persistDraft();
-      if (step < total - 1) setStep((s) => s + 1);
-      else navigate({ to: "/consent" });
+      if (!isLastApplicableStep) {
+        setStep(nextApplicableIntakeStep(step, intakeEligibility, total));
+      } else navigate({ to: "/consent" });
     } catch (e) {
       setError(
         e instanceof Error ? e.message : "Could not save your progress.",
@@ -280,9 +314,13 @@ function IntakePage() {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <button
                 type="button"
-                onClick={() => setStep((s) => Math.max(0, s - 1))}
+                onClick={() =>
+                  setStep(
+                    prevApplicableIntakeStep(step, intakeEligibility, total),
+                  )
+                }
                 className="text-sm text-muted-foreground hover:text-foreground"
-                disabled={step === 0}
+                disabled={applicableStepIndex <= 0}
               >
                 ← Back
               </button>
@@ -303,7 +341,7 @@ function IntakePage() {
               onNext={() => void handleNext()}
               nextDisabled={!canContinue || submitting}
               nextLoading={submitting}
-              nextLabel={step < total - 1 ? "Next" : "Continue to consent"}
+              nextLabel={isLastApplicableStep ? "Continue to consent" : "Next"}
             />
           </div>
         }
@@ -711,7 +749,7 @@ function IntakePage() {
           </div>
         )}
 
-        {step === 7 && (
+        {step === 7 && isIntakeStepApplicable(7, intakeEligibility) && (
           <div className="grid gap-4">
             <p className="text-sm text-muted-foreground">
               Pregnancy and breastfeeding status were captured during your

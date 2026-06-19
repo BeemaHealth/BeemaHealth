@@ -25,7 +25,7 @@ import {
 } from "@/lib/api/client";
 import {
   ACCOUNT_STEP,
-  CONTRAINDICATION_QUESTIONS,
+  applicableContraindicationQuestions,
   PRE_SIGNUP_STEPS,
   PRIMARY_GOAL_OPTIONS,
   allPreSignupConsents,
@@ -86,6 +86,7 @@ type FormState = {
   weightLbs: string;
   goalWeightLbs: string;
   sexAssignedAtBirth: SexAssignedAtBirth | "";
+  genderIdentity: SexAssignedAtBirth | "";
   safety: EligibilitySafetyScreen;
   firstName: string;
   lastName: string;
@@ -108,6 +109,7 @@ const initial: FormState = {
   weightLbs: "",
   goalWeightLbs: "",
   sexAssignedAtBirth: "",
+  genderIdentity: "",
   safety: {},
   firstName: "",
   lastName: "",
@@ -132,6 +134,7 @@ function draftToForm(draft: EligibilityResponses): Partial<FormState> {
     goalWeightLbs:
       draft.goal_weight_lbs != null ? String(draft.goal_weight_lbs) : "",
     sexAssignedAtBirth: draft.sex_assigned_at_birth || "",
+    genderIdentity: draft.gender_identity || "",
     safety: draft.safety_screen || {},
   };
 }
@@ -154,6 +157,7 @@ function formToPayload(data: FormState): Partial<EligibilityResponses> {
       ? Number(data.goalWeightLbs)
       : undefined,
     sex_assigned_at_birth: data.sexAssignedAtBirth || undefined,
+    gender_identity: data.genderIdentity || undefined,
     safety_screen: data.safety,
   };
 }
@@ -189,7 +193,7 @@ function EligibilityPage() {
 
   const isAdult = computeIsAdult(data.dob);
   const under18 = isAdult === false;
-  const safetyConcern = CONTRAINDICATION_QUESTIONS.some(
+  const safetyConcern = applicableContraindicationQuestions(data).some(
     (q) => data.safety[q.key] === true,
   );
 
@@ -566,7 +570,27 @@ function EligibilityPage() {
                 key={opt.value}
                 compact
                 selected={data.sexAssignedAtBirth === opt.value}
-                onClick={() => set("sexAssignedAtBirth", opt.value)}
+                onClick={() =>
+                  setData((d) => ({
+                    ...d,
+                    sexAssignedAtBirth: opt.value,
+                    genderIdentity: d.genderIdentity || opt.value,
+                  }))
+                }
+                title={opt.label}
+              />
+            ))}
+          </div>
+        )}
+
+        {currentStep === "gender_identity" && (
+          <div className="grid grid-cols-2 gap-2">
+            {SEX_OPTIONS.map((opt) => (
+              <ChoiceCard
+                key={opt.value}
+                compact
+                selected={data.genderIdentity === opt.value}
+                onClick={() => set("genderIdentity", opt.value)}
                 title={opt.label}
               />
             ))}
@@ -575,10 +599,11 @@ function EligibilityPage() {
 
         {currentStep === "contraindications" && (
           <div className="grid gap-5">
-            {CONTRAINDICATION_QUESTIONS.map((q) => (
+            {applicableContraindicationQuestions(data).map((q) => (
               <YesNoField
                 key={q.key}
                 label={q.label}
+                required
                 value={data.safety[q.key] ?? null}
                 onChange={(v) => set("safety", { ...data.safety, [q.key]: v })}
               />
@@ -619,6 +644,10 @@ function EligibilityPage() {
             <SummaryRow
               label="Biological sex"
               value={labelFor(SEX_OPTIONS, data.sexAssignedAtBirth)}
+            />
+            <SummaryRow
+              label="Current identity"
+              value={labelFor(SEX_OPTIONS, data.genderIdentity)}
             />
             {safetyConcern && (
               <p className="flex items-center gap-2 rounded-2xl bg-warning/10 px-4 py-3 text-foreground">

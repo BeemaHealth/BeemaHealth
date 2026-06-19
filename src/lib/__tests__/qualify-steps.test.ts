@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  applicableContraindicationQuestions,
   CONTRAINDICATION_QUESTIONS,
   getQualifyStepError,
   isQualifyStepComplete,
@@ -24,6 +25,7 @@ const PRE_SIGNUP_STEPS: QualifyStepId[] = [
   "dob",
   "body_metrics",
   "sex_assigned_at_birth",
+  "gender_identity",
   "contraindications",
   "review",
 ];
@@ -57,6 +59,7 @@ describe("qualify-steps validation", () => {
       ["treatment_priority", { treatmentPriority: "" }],
       ["weight_loss_goal", { targetWeightLossRange: "" }],
       ["sex_assigned_at_birth", { sexAssignedAtBirth: "" }],
+      ["gender_identity", { genderIdentity: "" }],
     ];
 
     it.each(choiceStepsWithoutMessage)(
@@ -140,7 +143,9 @@ describe("qualify-steps validation", () => {
 
     it("contraindications blocks progress without a user-facing message", () => {
       const partialSafety = Object.fromEntries(
-        CONTRAINDICATION_QUESTIONS.slice(0, -1).map((q) => [q.key, false]),
+        applicableContraindicationQuestions(validQualifySlice())
+          .slice(0, -1)
+          .map((q) => [q.key, false]),
       ) as ReturnType<typeof validQualifySlice>["safety"];
       expect(
         getQualifyStepError(
@@ -296,6 +301,49 @@ describe("qualify-steps validation", () => {
           validAccountFields({ email: "bad" }),
         ),
       ).toBe(false);
+    });
+  });
+
+  describe("reproductive gating", () => {
+    it("does not require reproductive contraindications for male/male", () => {
+      const base = validQualifySlice({
+        sexAssignedAtBirth: "male",
+        genderIdentity: "male",
+      });
+      const safety = Object.fromEntries(
+        applicableContraindicationQuestions(base).map((q) => [q.key, false]),
+      ) as QualifyFormSlice["safety"];
+      expect(
+        getQualifyStepError("contraindications", { ...base, safety }),
+      ).toBeNull();
+    });
+
+    it("does not require reproductive contraindications when gender identity is missing", () => {
+      const base = validQualifySlice({
+        sexAssignedAtBirth: "male",
+        genderIdentity: "",
+      });
+      const safety = Object.fromEntries(
+        applicableContraindicationQuestions(base).map((q) => [q.key, false]),
+      ) as QualifyFormSlice["safety"];
+      expect(
+        getQualifyStepError("contraindications", { ...base, safety }),
+      ).toBeNull();
+    });
+
+    it("requires reproductive contraindications for male at birth and female identity", () => {
+      const base = validQualifySlice({
+        sexAssignedAtBirth: "male",
+        genderIdentity: "female",
+      });
+      const safety = Object.fromEntries(
+        applicableContraindicationQuestions(base)
+          .filter((q) => q.key !== "pregnant")
+          .map((q) => [q.key, false]),
+      ) as QualifyFormSlice["safety"];
+      expect(
+        getQualifyStepError("contraindications", { ...base, safety }),
+      ).toBe("");
     });
   });
 });

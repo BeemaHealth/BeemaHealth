@@ -343,12 +343,40 @@ describe("intake-steps validation", () => {
   });
 
   describe("step 7 pregnancy", () => {
-    it("blocks progress without a footer message when acknowledgment is unchecked", () => {
-      const data = validIntake({
-        pregnancy: { understand: false },
+    it("auto-completes when reproductive questions do not apply", () => {
+      const eligibility = validEligibility({
+        sex_assigned_at_birth: "male",
+        gender_identity: "male",
       });
-      expect(getIntakeStepError(7, data)).toBe("");
-      expect(isIntakeStepComplete(7, data)).toBe(false);
+      const data = validIntake({ pregnancy: {} });
+      expect(getIntakeStepError(7, data, eligibility)).toBeNull();
+      expect(isIntakeStepComplete(7, data, eligibility)).toBe(true);
+    });
+
+    it("auto-completes for male at birth when gender identity was never stored", () => {
+      const eligibility = validEligibility({
+        sex_assigned_at_birth: "male",
+        gender_identity: "",
+      });
+      const data = validIntake({ pregnancy: {} });
+      expect(getIntakeStepError(7, data, eligibility)).toBeNull();
+      expect(isIntakeStepComplete(7, data, eligibility)).toBe(true);
+    });
+
+    it("blocks progress without a footer message when acknowledgment is unchecked", () => {
+      const data = validIntake({ pregnancy: { understand: false } });
+      expect(getIntakeStepError(7, data, validEligibility())).toBe("");
+      expect(isIntakeStepComplete(7, data, validEligibility())).toBe(false);
+    });
+
+    it("requires acknowledgment for male at birth and female identity", () => {
+      const eligibility = validEligibility({
+        sex_assigned_at_birth: "male",
+        gender_identity: "female",
+      });
+      const data = validIntake({ pregnancy: {} });
+      expect(getIntakeStepError(7, data, eligibility)).toBe("");
+      expect(isIntakeStepComplete(7, data, eligibility)).toBe(false);
     });
   });
 

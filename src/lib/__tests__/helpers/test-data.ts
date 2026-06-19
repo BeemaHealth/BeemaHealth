@@ -1,8 +1,18 @@
-import { CONTRAINDICATION_QUESTIONS, type QualifyAccountFields, type QualifyFormSlice } from "@/lib/qualify-steps";
-import { emptyIntakeData, normalizeIntake, type PriorMedDetails } from "@/lib/intake-steps";
+import {
+  CONTRAINDICATION_QUESTIONS,
+  type QualifyAccountFields,
+  type QualifyFormSlice,
+} from "@/lib/qualify-steps";
+import {
+  emptyIntakeData,
+  normalizeIntake,
+  type PriorMedDetails,
+} from "@/lib/intake-steps";
 import type { MedicalIntake } from "@/lib/types/mvp";
 
-export function validQualifySlice(overrides: Partial<QualifyFormSlice> = {}): QualifyFormSlice {
+export function validQualifySlice(
+  overrides: Partial<QualifyFormSlice> = {},
+): QualifyFormSlice {
   const safety = Object.fromEntries(
     CONTRAINDICATION_QUESTIONS.map((q) => [q.key, false]),
   ) as QualifyFormSlice["safety"];
@@ -20,12 +30,15 @@ export function validQualifySlice(overrides: Partial<QualifyFormSlice> = {}): Qu
     weightLbs: "190",
     goalWeightLbs: "160",
     sexAssignedAtBirth: "female",
+    genderIdentity: "female",
     safety,
     ...overrides,
   };
 }
 
-export function validAccountFields(overrides: Partial<QualifyAccountFields> = {}): QualifyAccountFields {
+export function validAccountFields(
+  overrides: Partial<QualifyAccountFields> = {},
+): QualifyAccountFields {
   return {
     firstName: "Jane",
     lastName: "Doe",
@@ -37,11 +50,26 @@ export function validAccountFields(overrides: Partial<QualifyAccountFields> = {}
   };
 }
 
-export function validEligibility(overrides: { treatment_interest?: string; weight_lbs?: number } = {}) {
-  return { treatment_interest: "glp1_pills", weight_lbs: 190, ...overrides };
+export function validEligibility(
+  overrides: {
+    treatment_interest?: string;
+    weight_lbs?: number;
+    sex_assigned_at_birth?: string;
+    gender_identity?: string;
+  } = {},
+) {
+  return {
+    treatment_interest: "glp1_pills",
+    weight_lbs: 190,
+    sex_assigned_at_birth: "female",
+    gender_identity: "female",
+    ...overrides,
+  };
 }
 
-export function validIntake(overrides: Partial<MedicalIntake> = {}): MedicalIntake {
+export function validIntake(
+  overrides: Partial<MedicalIntake> = {},
+): MedicalIntake {
   const base = emptyIntakeData();
   const draft: MedicalIntake = normalizeIntake({
     id: "test-intake",
@@ -93,7 +121,14 @@ export function validIntake(overrides: Partial<MedicalIntake> = {}): MedicalInta
       ].map((k) => [k, false]),
     ),
     family_history: Object.fromEntries(
-      ["thyroid_cancer", "men2", "pancreatitis", "diabetes", "obesity", "heart"].map((k) => [k, false]),
+      [
+        "thyroid_cancer",
+        "men2",
+        "pancreatitis",
+        "diabetes",
+        "obesity",
+        "heart",
+      ].map((k) => [k, false]),
     ),
     medications: {
       answers: {

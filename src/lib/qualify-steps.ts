@@ -16,6 +16,10 @@ import {
   validateHeightIn,
   validateWeightLbs,
 } from "@/lib/form-validation";
+import {
+  needsReproductiveQuestions,
+  REPRODUCTIVE_SAFETY_KEYS,
+} from "@/lib/reproductive-intake";
 
 export const CONTRAINDICATION_QUESTIONS = [
   {
@@ -127,6 +131,7 @@ export type QualifyStepId =
   | "dob"
   | "body_metrics"
   | "sex_assigned_at_birth"
+  | "gender_identity"
   | "contraindications"
   | "review"
   | "account";
@@ -140,6 +145,7 @@ export const PRE_SIGNUP_STEPS: QualifyStepId[] = [
   "dob",
   "body_metrics",
   "sex_assigned_at_birth",
+  "gender_identity",
   "contraindications",
   "review",
 ];
@@ -155,6 +161,7 @@ export const STEP_LABELS: Record<QualifyStepId, string> = {
   dob: "Birth date",
   body_metrics: "Height & weight",
   sex_assigned_at_birth: "Biological sex",
+  gender_identity: "Current identity",
   contraindications: "Health history",
   review: "Confirm details",
   account: "Create account",
@@ -169,6 +176,7 @@ export const STEP_TITLES: Record<QualifyStepId, string> = {
   dob: "When were you born?",
   body_metrics: "What are your current height and weight?",
   sex_assigned_at_birth: "What sex were you assigned at birth?",
+  gender_identity: "What is your current sex or gender identity?",
   contraindications: "A brief health screening",
   review: "Does everything look correct?",
   account: "Create your account",
@@ -187,6 +195,8 @@ export const STEP_SUBTITLES: Partial<Record<QualifyStepId, string>> = {
   body_metrics: "These figures help us calculate BMI for your clinical review.",
   sex_assigned_at_birth:
     "Certain treatments are prescribed differently based on biological sex.",
+  gender_identity:
+    "This helps us ask the right reproductive health questions for your care.",
   contraindications:
     "Your responses are confidential and shared only with your care team.",
   review: "Take a moment to verify your answers before creating your account.",
@@ -208,8 +218,23 @@ export type QualifyFormSlice = {
   weightLbs: string;
   goalWeightLbs: string;
   sexAssignedAtBirth: SexAssignedAtBirth | "";
+  genderIdentity: SexAssignedAtBirth | "";
   safety: EligibilitySafetyScreen;
 };
+
+export function applicableContraindicationQuestions(data: QualifyFormSlice) {
+  const showReproductive = needsReproductiveQuestions(
+    data.sexAssignedAtBirth,
+    data.genderIdentity,
+  );
+  return CONTRAINDICATION_QUESTIONS.filter(
+    (q) =>
+      showReproductive ||
+      !REPRODUCTIVE_SAFETY_KEYS.includes(
+        q.key as (typeof REPRODUCTIVE_SAFETY_KEYS)[number],
+      ),
+  );
+}
 
 export function hasAllPreSignupConsents(consents: PreSignupConsents): boolean {
   return (
@@ -260,6 +285,8 @@ function getChoiceStepValue(
       return data.targetWeightLossRange;
     case "sex_assigned_at_birth":
       return data.sexAssignedAtBirth;
+    case "gender_identity":
+      return data.genderIdentity;
     default:
       return "";
   }
@@ -276,6 +303,7 @@ export function getQualifyStepError(
     case "treatment_priority":
     case "weight_loss_goal":
     case "sex_assigned_at_birth":
+    case "gender_identity":
       // ChoiceCard-only steps: block Continue without a redundant footer message.
       return getChoiceStepValue(stepId, data) ? null : "";
     case "state_consent":
@@ -306,7 +334,7 @@ export function getQualifyStepError(
       return validateGoalWeightLbs(data.weightLbs, data.goalWeightLbs);
     }
     case "contraindications": {
-      const unanswered = CONTRAINDICATION_QUESTIONS.find(
+      const unanswered = applicableContraindicationQuestions(data).find(
         (q) => typeof data.safety[q.key] !== "boolean",
       );
       return unanswered ? "" : null;

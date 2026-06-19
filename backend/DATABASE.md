@@ -83,7 +83,7 @@ The cookie is how Hims-style funnels remember progress across refresh and new ta
 5. **Claim on register** — `POST /api/auth/register/` accepts the funnel cookie. In one transaction:
    - Create `users` (+ `authtoken_token`).
    - Attach draft `eligibility_responses` to the new user (`user_id` set, `funnel_session_id` cleared).
-   - Copy `dob` / `state` → `users`, `sex_assigned_at_birth` → `patient_profiles`, then **clear those fields from eligibility** (no duplicate storage).
+   - Copy `dob` / `state` → `users`, `sex_assigned_at_birth` / `gender_identity` → `patient_profiles`, then **clear those fields from eligibility** (no duplicate storage).
    - Mark funnel session `claimed_at` / `claimed_by_user_id`.
    - Return auth token; clear funnel cookie.
 6. **Login path** — If the user already has an account, `POST /api/auth/login/` should not orphan an anonymous draft; either merge draft into existing eligibility (if empty) or discard with audit metadata (product decision).
@@ -156,7 +156,7 @@ Each patient fact is stored in **one** table. Other tables may expose it read-on
 | Intake-only questionnaire answers | `medical_intakes` JSON | Duplicate keys stripped on save — see below |
 | Telehealth + clinical acknowledgments + typed signature | `consent_records` | `privacy_acknowledgment` is derived from `eligibility.pre_signup_consents` at sign time |
 
-**Pre-account only on eligibility:** `dob`, `state`, and `sex_assigned_at_birth` may exist on an unclaimed eligibility row. On funnel claim they are moved to `users` / `patient_profiles` and cleared from eligibility.
+**Pre-account only on eligibility:** `dob`, `state`, `sex_assigned_at_birth`, and `gender_identity` may exist on an unclaimed eligibility row. On funnel claim they are moved to `users` / `patient_profiles` and cleared from eligibility.
 
 **Enforcement:** [`apps/intakes/deduplication.py`](apps/intakes/deduplication.py) strips duplicate keys from intake JSON; [`apps/eligibility/services.py`](apps/eligibility/services.py) clears identity fields after claim; [`apps/patients/services.py`](apps/patients/services.py) syncs profile fields from intake.
 
@@ -192,6 +192,7 @@ Django also creates related auth tables (`auth_permission`, `django_session`, et
 | Field | Why |
 |-------|-----|
 | `sex_assigned_at_birth` | Collected at eligibility; canonical after funnel claim |
+| `gender_identity` | Current sex/gender identity at eligibility; canonical after funnel claim |
 | `preferred_name` | Optional display name from intake |
 | `address`, `emergency_contact_*` | Encrypted — synced from intake step 1 |
 | `city`, `county`, `zip_code` | Plain text — useful for provider filtering |
@@ -218,7 +219,7 @@ Django also creates related auth tables (`auth_permission`, `django_session`, et
 | `safety_screen` (JSON) | Pre-intake contraindication map — **not** duplicated in intake |
 | `pre_signup_consents` (JSON) | `terms` and `privacy` only (at `/qualify` checkbox) |
 | `safety_concern_flag`, `is_likely_eligible`, `needs_clinician_review`, `disqualification_reason` | Server-derived flags |
-| `dob`, `state`, `sex_assigned_at_birth` | **Pre-account funnel only** — cleared after claim (canonical copies on `users` / `patient_profiles`) |
+| `dob`, `state`, `sex_assigned_at_birth`, `gender_identity` | **Pre-account funnel only** — cleared after claim (canonical copies on `users` / `patient_profiles`) |
 | One-to-one with `users` | One eligibility snapshot per patient after claim |
 
 **Decision:** Eligibility is **its own table**, not part of `medical_intakes`, because the product treats it as a separate step with different UI and timing.

@@ -96,6 +96,13 @@ def _sync_patient_profile(user, eligibility: EligibilityResponse) -> None:
     profile, _ = PatientProfile.objects.get_or_create(user=user)
     if eligibility.sex_assigned_at_birth and not profile.sex_assigned_at_birth:
         profile.sex_assigned_at_birth = eligibility.sex_assigned_at_birth
+    if eligibility.gender_identity and not profile.gender_identity:
+        profile.gender_identity = eligibility.gender_identity
+    elif (
+        eligibility.sex_assigned_at_birth
+        and not profile.gender_identity
+    ):
+        profile.gender_identity = eligibility.sex_assigned_at_birth
     profile.save()
 
 
@@ -104,8 +111,17 @@ def _clear_claimed_identity_from_eligibility(eligibility: EligibilityResponse) -
     eligibility.dob = None
     eligibility.state = ""
     eligibility.sex_assigned_at_birth = ""
+    eligibility.gender_identity = ""
     eligibility.save(
-        update_fields=["user", "funnel_session", "dob", "state", "sex_assigned_at_birth", "updated_at"]
+        update_fields=[
+            "user",
+            "funnel_session",
+            "dob",
+            "state",
+            "sex_assigned_at_birth",
+            "gender_identity",
+            "updated_at",
+        ]
     )
 
 
