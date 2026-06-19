@@ -133,6 +133,11 @@ const TREATMENT_LABELS: Record<string, string> = {
   not_sure: "To be determined",
 };
 
+/** Refills and side-effect check-ins require an active prescription. */
+export function canManageRefills(status: IntakeStatus): boolean {
+  return status === "prescription_sent";
+}
+
 export function getMedicationLabel(
   treatmentKey: string | undefined,
   treatmentInterest: string | null | undefined,

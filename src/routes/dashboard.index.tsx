@@ -5,7 +5,11 @@ import { PortalPageHeader } from "@/components/portal/PortalPageHeader";
 import { StatusBadge } from "@/components/portal/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { STATUS_LABELS } from "@/lib/dashboard-loader";
-import { buildCareTimeline, getStatusSummary } from "@/lib/dashboard-status";
+import {
+  buildCareTimeline,
+  canManageRefills,
+  getStatusSummary,
+} from "@/lib/dashboard-status";
 import { cn } from "@/lib/utils";
 
 const dashboardRoute = getRouteApi("/dashboard");
@@ -64,6 +68,7 @@ function DashboardHomePage() {
   const summary = getStatusSummary(data.intake_status);
   const timeline = buildCareTimeline(data.intake_status, data.submitted_at);
   const statusLabel = STATUS_LABELS[data.intake_status] ?? data.intake_status;
+  const refillsAvailable = canManageRefills(data.intake_status);
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -199,13 +204,11 @@ function DashboardHomePage() {
           <section className="rounded-3xl border border-border bg-card p-5 shadow-soft">
             <h2 className="text-sm font-semibold text-foreground">Refills</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              {data.intake_status === "prescription_sent" ||
-              data.intake_status === "approved"
+              {refillsAvailable
                 ? "Log side effects and request a refill when you are ready."
                 : "Refill management opens after your prescription is active."}
             </p>
-            {(data.intake_status === "prescription_sent" ||
-              data.intake_status === "approved") && (
+            {refillsAvailable && (
               <Link
                 to="/dashboard/refills"
                 className="mt-2 inline-block text-sm font-medium text-primary hover:underline"

@@ -6,7 +6,8 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from apps.accounts.models import User
-from apps.intakes.models import SideEffectCheckIn
+from apps.intakes.models import MedicalIntake, SideEffectCheckIn
+from apps.reviews.models import ProviderReview
 
 
 class SideEffectCheckInApiTests(TestCase):
@@ -21,7 +22,12 @@ class SideEffectCheckInApiTests(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
+    def _mark_prescription_sent(self):
+        MedicalIntake.objects.create(user=self.user, status="prescription_sent")
+        ProviderReview.objects.create(user=self.user, status="prescription_sent")
+
     def test_create_and_list_check_in(self):
+        self._mark_prescription_sent()
         payload = {"side_effect": "mild_nausea", "experienced_on": "2026-06-15"}
         create = self.client.post(
             reverse("side-effect-check-in-me"),
@@ -37,6 +43,7 @@ class SideEffectCheckInApiTests(TestCase):
         self.assertEqual(SideEffectCheckIn.objects.filter(user=self.user).count(), 1)
 
     def test_rejects_future_date(self):
+        self._mark_prescription_sent()
         response = self.client.post(
             reverse("side-effect-check-in-me"),
             {
@@ -46,6 +53,14 @@ class SideEffectCheckInApiTests(TestCase):
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_rejects_check_in_without_prescription(self):
+        response = self.client.post(
+            reverse("side-effect-check-in-me"),
+            {"side_effect": "fatigue", "experienced_on": "2026-06-15"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_requires_auth(self):
         client = APIClient()

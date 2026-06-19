@@ -1,13 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import {
-  fetchRefillRequests,
-  fetchSideEffectCheckIns,
-  submitRefillRequest,
-  submitSideEffectCheckIn,
-} from "@/lib/api/client";
+import { submitRefillRequest, submitSideEffectCheckIn } from "@/lib/api/client";
 import type {
   RefillRequest,
   SideEffectCheckIn,
@@ -23,39 +18,43 @@ const SIDE_EFFECTS: { value: SideEffectType; label: string }[] = [
   { value: "other", label: "Other" },
 ];
 
-export function RefillForm({ medicationLabel }: { medicationLabel: string }) {
+const REFILL_STATUS_LABELS: Record<RefillRequest["status"], string> = {
+  pending: "Pending review",
+  approved: "Approved",
+  denied: "Denied",
+};
+
+export function RefillForm({
+  medicationLabel,
+  canManageRefills,
+  initialCheckIns,
+  initialRefillRequests,
+}: {
+  medicationLabel: string;
+  canManageRefills: boolean;
+  initialCheckIns: SideEffectCheckIn[];
+  initialRefillRequests: RefillRequest[];
+}) {
   const [sideEffect, setSideEffect] = useState<SideEffectType>("none");
   const [experiencedOn, setExperiencedOn] = useState(() =>
     new Date().toISOString().slice(0, 10),
   );
   const [submitting, setSubmitting] = useState(false);
   const [requestingRefill, setRequestingRefill] = useState(false);
-  const [recent, setRecent] = useState<SideEffectCheckIn[]>([]);
-  const [refillRequests, setRefillRequests] = useState<RefillRequest[]>([]);
-
-  async function loadRecent() {
-    const [items, refills] = await Promise.all([
-      fetchSideEffectCheckIns(),
-      fetchRefillRequests(),
-    ]);
-    setRecent(items.slice(0, 5));
-    setRefillRequests(refills.slice(0, 5));
-  }
-
-  useEffect(() => {
-    void loadRecent();
-  }, []);
+  const [recent, setRecent] = useState(initialCheckIns);
+  const [refillRequests, setRefillRequests] = useState(initialRefillRequests);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!canManageRefills) return;
     setSubmitting(true);
     try {
-      await submitSideEffectCheckIn({
+      const created = await submitSideEffectCheckIn({
         side_effect: sideEffect,
         experienced_on: experiencedOn,
       });
       toast.success("Side effect check-in saved.");
-      await loadRecent();
+      setRecent((items) => [created, ...items].slice(0, 5));
     } catch (err) {
       toast.error(
         err instanceof Error ? err.message : "Could not save check-in.",
@@ -66,16 +65,17 @@ export function RefillForm({ medicationLabel }: { medicationLabel: string }) {
   }
 
   async function handleRequestRefill() {
+    if (!canManageRefills) return;
     setRequestingRefill(true);
     try {
       const latestCheckIn = recent[0];
-      await submitRefillRequest(
+      const created = await submitRefillRequest(
         latestCheckIn
           ? { side_effect_check_in_id: latestCheckIn.id }
           : undefined,
       );
       toast.success("Refill request submitted.");
-      await loadRecent();
+      setRefillRequests((items) => [created, ...items].slice(0, 5));
     } catch (err) {
       toast.error(
         err instanceof Error ? err.message : "Could not request refill.",
@@ -99,11 +99,25 @@ export function RefillForm({ medicationLabel }: { medicationLabel: string }) {
             {medicationLabel}
           </p>
           <p className="text-sm text-muted-foreground">
-            Log how you&apos;ve been feeling since your last dose, then request
-            a refill when you&apos;re ready.
+            {canManageRefills
+              ? "Log how you've been feeling since your last dose, then request a refill when you're ready."
+              : "Side-effect check-ins and refill requests open after your prescription is sent to the pharmacy."}
           </p>
         </div>
       </div>
+
+      {!canManageRefills && (
+        <div className="rounded-3xl border border-border bg-muted/40 p-5 text-sm text-muted-foreground">
+          <p className="font-medium text-foreground">
+            Prescription not active yet
+          </p>
+          <p className="mt-1">
+            Once your clinician sends your prescription, you can log side
+            effects and request refills here. Check your dashboard for status
+            updates.
+          </p>
+        </div>
+      )}
 
       <div className="rounded-3xl border border-border bg-card p-5 shadow-soft md:p-6">
         <h2 className="font-semibold text-foreground">Side effect check-in</h2>
@@ -114,9 +128,10 @@ export function RefillForm({ medicationLabel }: { medicationLabel: string }) {
           <label className="grid gap-1.5 text-sm">
             <span className="font-medium text-foreground">Side effect</span>
             <select
-              className="rounded-xl border border-input bg-background px-3 py-2.5"
+              className="rounded-xl border border-input bg-background px-3 py-2.5 disabled:cursor-not-allowed disabled:opacity-60"
               value={sideEffect}
               onChange={(e) => setSideEffect(e.target.value as SideEffectType)}
+              disabled={!canManageRefills}
             >
               {SIDE_EFFECTS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -131,11 +146,12 @@ export function RefillForm({ medicationLabel }: { medicationLabel: string }) {
             </span>
             <input
               type="date"
-              className="rounded-xl border border-input bg-background px-3 py-2.5"
+              className="rounded-xl border border-input bg-background px-3 py-2.5 disabled:cursor-not-allowed disabled:opacity-60"
               value={experiencedOn}
               max={new Date().toISOString().slice(0, 10)}
               onChange={(e) => setExperiencedOn(e.target.value)}
               required
+              disabled={!canManageRefills}
             />
           </label>
         </div>
@@ -170,7 +186,7 @@ export function RefillForm({ medicationLabel }: { medicationLabel: string }) {
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             {refillRequests.map((item) => (
               <li key={item.id} className="flex justify-between gap-3">
-                <span className="capitalize">{item.status}</span>
+                <span>{REFILL_STATUS_LABELS[item.status] ?? item.status}</span>
                 <span>{new Date(item.created_at).toLocaleDateString()}</span>
               </li>
             ))}
@@ -183,14 +199,14 @@ export function RefillForm({ medicationLabel }: { medicationLabel: string }) {
           type="submit"
           variant="outline"
           className="h-12 rounded-xl text-base"
-          disabled={submitting}
+          disabled={!canManageRefills || submitting}
         >
           {submitting ? "Saving…" : "Submit check-in"}
         </Button>
         <Button
           type="button"
           className="h-12 rounded-xl text-base"
-          disabled={requestingRefill}
+          disabled={!canManageRefills || requestingRefill}
           onClick={() => void handleRequestRefill()}
         >
           {requestingRefill ? "Submitting…" : "Request refill"}

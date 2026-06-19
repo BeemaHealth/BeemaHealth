@@ -5,7 +5,11 @@ from rest_framework.views import APIView
 from apps.accounts.permissions import IsPatient
 from apps.audit.services import log_audit_event
 from apps.intakes.models import MedicalIntake, RefillRequest, SideEffectCheckIn
-from apps.intakes.permissions import patient_can_edit_intake, patient_can_edit_intake_screening
+from apps.intakes.permissions import (
+    patient_can_edit_intake,
+    patient_can_edit_intake_screening,
+    patient_has_active_prescription,
+)
 from apps.intakes.screening import refresh_account_screening
 from apps.intakes.serializers import (
     IntakeSubmissionSerializer,
@@ -179,6 +183,13 @@ class SideEffectCheckInMeView(APIView):
         return Response(SideEffectCheckInSerializer(check_ins, many=True).data)
 
     def post(self, request):
+        if not patient_has_active_prescription(request.user):
+            return Response(
+                {
+                    "detail": "Side effect check-ins are available after your prescription is active."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
         serializer = SideEffectCheckInSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         check_in = serializer.save(user=request.user)
@@ -222,6 +233,11 @@ class RefillRequestMeView(APIView):
         return Response(RefillRequestSerializer(requests, many=True).data)
 
     def post(self, request):
+        if not patient_has_active_prescription(request.user):
+            return Response(
+                {"detail": "Refill requests are available after your prescription is active."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         check_in_id = request.data.get("side_effect_check_in_id")
         check_in = None
         if check_in_id:
