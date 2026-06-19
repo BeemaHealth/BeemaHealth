@@ -1,4 +1,5 @@
 import uuid
+from pathlib import Path
 
 from django.conf import settings
 
@@ -36,3 +37,17 @@ def generate_presigned_upload(user_id: str, document_type: str, filename: str, c
         ExpiresIn=900,
     )
     return {"upload_url": upload_url, "file_key": file_key, "method": "s3"}
+
+
+def save_local_upload(file_key: str, file_obj) -> None:
+    """Write uploaded bytes to MEDIA_ROOT under a sanitized relative key."""
+    if not file_key.startswith("local/"):
+        raise ValueError("Invalid local file key.")
+    relative = Path(file_key)
+    if ".." in relative.parts:
+        raise ValueError("Invalid local file key.")
+    dest = Path(settings.MEDIA_ROOT) / relative
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    with dest.open("wb") as handle:
+        for chunk in file_obj.chunks():
+            handle.write(chunk)

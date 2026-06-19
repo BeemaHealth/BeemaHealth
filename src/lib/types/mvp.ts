@@ -225,3 +225,30 @@ export interface DashboardData {
   treatment_interest: TreatmentInterest | null;
   patient_note: string;
 }
+
+export type DocumentType =
+  | "lab_results"
+  | "insurance_card"
+  | "photo_id"
+  | "other";
+
+export interface UploadedDocument {
+  id: string;
+  document_type: DocumentType;
+  file_key: string;
+  file_url: string | null;
+  original_filename: string;
+  content_type: string;
+  uploaded_at: string;
+}
+
+export interface DocumentUploadPresign {
+  upload_url: string | null;
+  file_key: string;
+  method: "s3" | "local";
+}
+
+export interface DocumentUploadResponse {
+  document: UploadedDocument;
+  upload: DocumentUploadPresign;
+}

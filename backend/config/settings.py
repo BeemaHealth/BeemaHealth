@@ -177,6 +177,9 @@ AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME", default="")
 AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME", default="us-west-2")
 USE_S3_STORAGE = bool(AWS_STORAGE_BUCKET_NAME)
 
+MEDIA_ROOT = BASE_DIR / "media"
+MAX_DOCUMENT_UPLOAD_BYTES = env.int("MAX_DOCUMENT_UPLOAD_BYTES", default=20 * 1024 * 1024)
+
 # Production security (enable when DEBUG=False)
 if not DEBUG:
     SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=True)

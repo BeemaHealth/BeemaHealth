@@ -15,10 +15,13 @@
 import type {
   ConsentRecord,
   DashboardData,
+  DocumentType,
+  DocumentUploadResponse,
   EligibilityResponses,
   MedicalIntake,
   ProviderReview,
   SessionUser,
+  UploadedDocument,
   User,
 } from "@/lib/types/mvp";
 import { applySession, clearSession } from "@/lib/session";
@@ -308,4 +311,87 @@ export async function patchAdminPatient(
 
 export function isApiEnabled() {
   return USE_API;
+}
+
+export function inferDocumentType(filename: string): DocumentType {
+  const lower = filename.toLowerCase();
+  if (/\b(lab|labs|a1c|blood|result|cholesterol|glucose)\b/.test(lower)) {
+    return "lab_results";
+  }
+  if (/\b(insurance|ins card|ins_card)\b/.test(lower)) {
+    return "insurance_card";
+  }
+  if (/\b(id|passport|license|driver|dl)\b/.test(lower)) {
+    return "photo_id";
+  }
+  return "other";
+}
+
+export async function fetchDocuments(): Promise<UploadedDocument[]> {
+  return apiFetch<UploadedDocument[]>("/documents/");
+}
+
+export async function createDocumentUpload(payload: {
+  document_type: DocumentType;
+  filename: string;
+  content_type: string;
+}): Promise<DocumentUploadResponse> {
+  return apiFetch<DocumentUploadResponse>("/documents/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function uploadDocumentFile(
+  file: File,
+  response: DocumentUploadResponse,
+): Promise<void> {
+  const { upload, document } = response;
+  if (upload.method === "s3" && upload.upload_url) {
+    let putRes: Response;
+    try {
+      putRes = await fetch(upload.upload_url, {
+        method: "PUT",
+        body: file,
+        headers: {
+          "Content-Type":
+            document.content_type || file.type || "application/octet-stream",
+        },
+      });
+    } catch {
+      throw new ApiError("Unable to upload file to storage.", 0);
+    }
+    if (!putRes.ok) {
+      throw new ApiError("File upload to storage failed.", putRes.status);
+    }
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  const session = store.getSession();
+  const headers: Record<string, string> = {};
+  if (session?.token) headers.Authorization = `Token ${session.token}`;
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/documents/${document.id}/upload/`, {
+      method: "POST",
+      headers,
+      body: formData,
+      credentials: "same-origin",
+    });
+  } catch {
+    throw new ApiError("Unable to upload file.", 0);
+  }
+  if (!res.ok) {
+    let message = await res.text();
+    try {
+      const parsed = JSON.parse(message) as { detail?: string };
+      if (parsed.detail) message = parsed.detail;
+    } catch {
+      // use raw text
+    }
+    throw new ApiError(message || "File upload failed.", res.status);
+  }
 }

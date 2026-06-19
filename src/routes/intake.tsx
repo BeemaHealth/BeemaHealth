@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { AddressFields } from "@/components/quiz/AddressFields";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
@@ -11,10 +11,14 @@ import {
   inputCls,
 } from "@/components/quiz/quiz-primitives";
 import {
+  createDocumentUpload,
+  fetchDocuments,
   fetchEligibilityMe,
   fetchIntakeMe,
+  inferDocumentType,
   isApiEnabled,
   syncIntake,
+  uploadDocumentFile,
 } from "@/lib/api/client";
 import { sanitizePreferredFirstName } from "@/lib/form-validation";
 import { requireAuth } from "@/lib/auth";
@@ -48,6 +52,7 @@ import { computeBmi } from "@/lib/safety-flags";
 import type {
   EligibilityResponses,
   MedicalIntake,
+  UploadedDocument,
   User,
 } from "@/lib/types/mvp";
 import { getIntake, saveIntake } from "@/lib/storage";
@@ -80,6 +85,9 @@ function IntakePage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [uploadedDocs, setUploadedDocs] = useState<UploadedDocument[]>([]);
+  const [uploadError, setUploadError] = useState("");
+  const [uploading, setUploading] = useState(false);
   const total = INTAKE_STEP_LABELS.length;
   const intakeEligibility = useMemo(
     () =>
@@ -145,6 +153,34 @@ function IntakePage() {
     if (!loading) saveIntake(data);
   }, [data, loading]);
 
+  useEffect(() => {
+    if (step !== 9 || !isApiEnabled()) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const docs = await fetchDocuments();
+        if (cancelled) return;
+        setUploadedDocs(docs);
+        if (docs.length > 0) {
+          setData((d) => {
+            const labsSection = d.labs as Record<string, string | boolean>;
+            if (labsSection.uploads_noted === true) return d;
+            return {
+              ...d,
+              labs: { ...labsSection, uploads_noted: true },
+              updated_at: new Date().toISOString(),
+            };
+          });
+        }
+      } catch {
+        // Non-blocking — user can still upload on this visit.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [step]);
+
   function patch<K extends keyof MedicalIntake>(
     section: K,
     value: MedicalIntake[K],
@@ -208,6 +244,39 @@ function IntakePage() {
       updated_at: new Date().toISOString(),
     };
     await syncIntake(updated);
+  }
+
+  async function handleDocumentFilesSelected(e: ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files?.length) return;
+    if (!isApiEnabled()) {
+      setUploadError("Document upload requires the backend API.");
+      e.target.value = "";
+      return;
+    }
+    setUploadError("");
+    setUploading(true);
+    try {
+      const newDocs: UploadedDocument[] = [];
+      for (const file of Array.from(files)) {
+        const response = await createDocumentUpload({
+          document_type: inferDocumentType(file.name),
+          filename: file.name,
+          content_type: file.type || "application/octet-stream",
+        });
+        await uploadDocumentFile(file, response);
+        newDocs.push(response.document);
+      }
+      setUploadedDocs((prev) => [...prev, ...newDocs]);
+      patch("labs", { ...labs, uploads_noted: true });
+    } catch (err) {
+      setUploadError(
+        err instanceof Error ? err.message : "Could not upload file(s).",
+      );
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
   }
 
   async function saveAndExit() {
@@ -863,9 +932,26 @@ function IntakePage() {
               <input
                 type="file"
                 multiple
+                accept=".pdf,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,image/*"
                 className="text-sm"
-                onChange={() => patch("labs", { ...labs, uploads_noted: true })}
+                disabled={uploading}
+                onChange={(e) => void handleDocumentFilesSelected(e)}
               />
+              {uploading && (
+                <p className="mt-2 text-sm text-muted-foreground">Uploading…</p>
+              )}
+              {uploadError && (
+                <p className="mt-2 text-sm text-destructive">{uploadError}</p>
+              )}
+              {uploadedDocs.length > 0 && (
+                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+                  {uploadedDocs.map((doc) => (
+                    <li key={doc.id}>
+                      {doc.original_filename || doc.document_type}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </Field>
           </div>
         )}

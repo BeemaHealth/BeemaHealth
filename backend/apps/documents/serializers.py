@@ -1,5 +1,10 @@
 from rest_framework import serializers
 
+from apps.common.validation.documents import (
+    normalize_document_filename,
+    validate_document_content_type,
+    validate_document_filename,
+)
 from apps.documents.models import UploadedDocument
 
 
@@ -7,6 +12,19 @@ class DocumentUploadRequestSerializer(serializers.Serializer):
     document_type = serializers.ChoiceField(choices=UploadedDocument.DOCUMENT_TYPES)
     filename = serializers.CharField(max_length=255)
     content_type = serializers.CharField(max_length=128, default="application/octet-stream")
+
+    def validate_filename(self, value: str) -> str:
+        normalized = normalize_document_filename(value)
+        err = validate_document_filename(normalized)
+        if err:
+            raise serializers.ValidationError(err)
+        return normalized
+
+    def validate_content_type(self, value: str) -> str:
+        err = validate_document_content_type(value)
+        if err:
+            raise serializers.ValidationError(err)
+        return value.strip().lower()
 
 
 class UploadedDocumentSerializer(serializers.ModelSerializer):

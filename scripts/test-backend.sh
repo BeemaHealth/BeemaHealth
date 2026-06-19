@@ -18,5 +18,6 @@ python manage.py test \
   apps.eligibility.tests \
   apps.intakes.tests \
   apps.consents.tests \
+  apps.documents.tests \
   --settings=config.settings_test \
   "$@"
