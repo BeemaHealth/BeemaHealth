@@ -96,8 +96,13 @@ Both frontend **and** backend must reject malicious input on strict fields.
 **After every code change**, before marking the task done:
 
 1. **Run the full suite** — `npm run test:all` (frontend Vitest + backend Django).
-2. **Run static checks on every changed `.ts` / `.tsx` file** — this clears IDE/source-control red diagnostics (TypeScript + ESLint):
-   - `npm run lint` — ESLint project-wide (required when any UI/TS changed).
+2. **Run static checks on changed `.ts` / `.tsx` files only** — fix TypeScript/ESLint diagnostics in files you touched:
+   - **ESLint (changed files only)** — do **not** run `npm run lint` project-wide (thousands of pre-existing issues). Lint your diff:
+     ```bash
+     FILES=$(git diff --name-only --diff-filter=ACMR HEAD -- '*.ts' '*.tsx')
+     [ -n "$FILES" ] && echo "$FILES" | xargs npx eslint
+     ```
+     Or pass explicit paths: `npx eslint src/lib/foo.ts src/routes/bar.tsx`
    - `npx tsc --noEmit` — TypeScript; fix errors in **files you touched** (imports, types, test helpers). Pre-existing errors elsewhere do not block your task, but new errors in your diff must be zero.
    - Optionally spot-check: `npx vitest run src/lib/__tests__/qualify-steps.test.ts` (or the specific test file you edited).
 3. **Report results in chat** — state explicitly that frontend and backend tests ran, plus lint/tsc outcome on changed files (e.g. “342 tests passed; lint clean; no TS errors in qualify-steps.test.ts”).
@@ -108,8 +113,8 @@ Both frontend **and** backend must reject malicious input on strict fields.
 ```bash
 npm run test:all     # frontend (Vitest) + backend (Django) — preferred
 npm test             # frontend only
-npm run test:backend # backend only (34 tests)
-npm run lint         # ESLint — run when any TS/TSX changed
+npm run test:backend # backend only
+# ESLint — changed TS/TSX only (see workflow §3); do not run npm run lint project-wide
 npx tsc --noEmit     # TypeScript — fix errors in files you edited
 npx vitest run path/to/changed.test.ts   # optional: single test file
 ```
@@ -236,7 +241,7 @@ Use shared fixtures — do not invent one-off strings:
 | `npm run dev` | Frontend → http://localhost:8080 |
 | `npm run dev:backend` | Backend + Postgres via Docker → http://localhost:8000 |
 | `npm run test:all` | Run all validation/regression tests |
-| `npm run lint` | ESLint |
+| ESLint on changed `.ts`/`.tsx` only | See workflow §3 — `npx eslint <paths>` or git-diff pipe; not `npm run lint` |
 | `docker compose -f backend/docker-compose.yml exec api python manage.py migrate` | Apply migrations |
 
 ---
