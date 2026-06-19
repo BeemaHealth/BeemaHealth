@@ -292,10 +292,20 @@ describe("form-validation", () => {
   describe("validateOptionalNumericLab", () => {
     it("allows empty optional labs", () => {
       expect(validateOptionalNumericLab("", "A1C")).toBeNull();
+      expect(validateOptionalNumericLab("", "glucose")).toBeNull();
+      expect(validateOptionalNumericLab("", "cholesterol")).toBeNull();
+    });
+
+    it("accepts numeric values for A1C, glucose, and cholesterol", () => {
+      expect(validateOptionalNumericLab("5.6", "A1C")).toBeNull();
+      expect(validateOptionalNumericLab("95", "glucose")).toBeNull();
+      expect(validateOptionalNumericLab("180", "cholesterol")).toBeNull();
     });
 
     it("rejects non-numeric lab values", () => {
       expect(validateOptionalNumericLab("not-a-number", "A1C")).not.toBeNull();
+      expect(validateOptionalNumericLab("abc", "glucose")).not.toBeNull();
+      expect(validateOptionalNumericLab("bad", "cholesterol")).not.toBeNull();
     });
 
     it.each(SQL_INJECTION)("rejects injection in lab field %j", (payload) => {

@@ -175,6 +175,37 @@ class IntakeApiValidationTests(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_patch_accepts_valid_lab_values(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {
+                "labs": {
+                    "bp": "120/80",
+                    "a1c": "5.6",
+                    "glucose": "95",
+                    "cholesterol": "180",
+                }
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_rejects_invalid_lab_field_values(self):
+        cases = (
+            ("bp", "IkjFHDaafslkjadslfkj"),
+            ("a1c", "abc"),
+            ("glucose", "xyz"),
+            ("cholesterol", "bad"),
+        )
+        for field, value in cases:
+            with self.subTest(field=field, value=value):
+                response = self.client.patch(
+                    reverse("intake-me"),
+                    {"labs": {field: value}},
+                    format="json",
+                )
+                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_patch_valid_lifestyle(self):
         response = self.client.patch(
             reverse("intake-me"),

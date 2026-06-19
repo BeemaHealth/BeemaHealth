@@ -227,6 +227,48 @@ export function isIntakeStepApplicable(
   return true;
 }
 
+export const INTAKE_LAB_FIELD_KEYS = [
+  "bp",
+  "a1c",
+  "glucose",
+  "cholesterol",
+] as const;
+
+export type IntakeLabFieldKey = (typeof INTAKE_LAB_FIELD_KEYS)[number];
+
+const INTAKE_LAB_NUMERIC_LABELS: Record<
+  Exclude<IntakeLabFieldKey, "bp">,
+  string
+> = {
+  a1c: "A1C",
+  glucose: "glucose",
+  cholesterol: "cholesterol",
+};
+
+export function getIntakeLabFieldError(
+  field: IntakeLabFieldKey,
+  labs: Record<string, string | boolean | undefined>,
+): string | null {
+  if (field === "bp") {
+    return validateOptionalBloodPressure(String(labs.bp ?? ""));
+  }
+  return validateOptionalNumericLab(
+    String(labs[field] ?? ""),
+    INTAKE_LAB_NUMERIC_LABELS[field],
+  );
+}
+
+export function hasIntakeLabFormatError(
+  step: number,
+  labs: Record<string, string | boolean | undefined>,
+  message: string | null,
+): boolean {
+  if (step !== 9 || !message) return false;
+  return INTAKE_LAB_FIELD_KEYS.some(
+    (field) => getIntakeLabFieldError(field, labs) === message,
+  );
+}
+
 /**
  * Step validation for intake footer + Continue gating.
  * Return `null` when complete, `""` when incomplete (no footer copy), or a message when input is invalid.
@@ -350,21 +392,12 @@ export function getIntakeStepError(
     case 8:
       return isLifestyleStepComplete(life) ? null : "";
     case 9: {
-      if (typeof labs.recent_labs !== "boolean") return "";
-      if (typeof labs.willing !== "boolean") return "";
-      const bpErr = validateOptionalBloodPressure(String(labs.bp ?? ""));
-      if (bpErr) return bpErr;
-      for (const [key, label] of [
-        ["a1c", "A1C"],
-        ["glucose", "glucose"],
-        ["cholesterol", "cholesterol"],
-      ] as const) {
-        const labErr = validateOptionalNumericLab(
-          String(labs[key] ?? ""),
-          label,
-        );
+      for (const key of INTAKE_LAB_FIELD_KEYS) {
+        const labErr = getIntakeLabFieldError(key, labs);
         if (labErr) return labErr;
       }
+      if (typeof labs.recent_labs !== "boolean") return "";
+      if (typeof labs.willing !== "boolean") return "";
       return null;
     }
     case 10: {

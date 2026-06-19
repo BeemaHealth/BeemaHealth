@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  getIntakeLabFieldError,
   getIntakeStepError,
+  INTAKE_LAB_FIELD_KEYS,
   isIntakeStepComplete,
   emptyIntakeData,
   normalizeIntake,
@@ -257,18 +259,6 @@ describe("intake-steps validation", () => {
         step: 9,
         data: validIntake({
           labs: { bp: "", a1c: "", glucose: "", cholesterol: "" },
-        }),
-      },
-      {
-        label: "step 9 invalid optional labs before yes/no answered",
-        step: 9,
-        data: validIntake({
-          labs: {
-            bp: "not-bp",
-            a1c: "abc",
-            glucose: "xyz",
-            cholesterol: "bad",
-          },
         }),
       },
       {
@@ -838,6 +828,62 @@ describe("intake-steps validation", () => {
       });
       expect(getIntakeStepError(9, data)).toBe("");
       expect(isIntakeStepComplete(9, data)).toBe(false);
+    });
+
+    it("shows blood pressure format error before yes/no questions are answered", () => {
+      const data = validIntake({
+        labs: { bp: "IkjFHDaafslkjadslfkj" },
+      });
+      expect(getIntakeStepError(9, data)).toMatch(/blood pressure/i);
+      expect(
+        getIntakeLabFieldError("bp", data.labs as Record<string, string>),
+      ).toMatch(/blood pressure/i);
+      expect(isIntakeStepComplete(9, data)).toBe(false);
+    });
+
+    it("shows numeric lab format errors before yes/no questions are answered", () => {
+      const data = validIntake({
+        labs: { a1c: "abc" },
+      });
+      expect(getIntakeStepError(9, data)).toMatch(/valid number for A1C/i);
+      expect(
+        getIntakeLabFieldError("a1c", data.labs as Record<string, string>),
+      ).toMatch(/valid number for A1C/i);
+    });
+
+    it.each([
+      ["glucose", "xyz", /valid number for glucose/i],
+      ["cholesterol", "bad", /valid number for cholesterol/i],
+    ] as const)(
+      "shows %s format error before yes/no questions are answered",
+      (field, value, pattern) => {
+        const data = validIntake({ labs: { [field]: value } });
+        expect(getIntakeStepError(9, data)).toMatch(pattern);
+        expect(
+          getIntakeLabFieldError(field, data.labs as Record<string, string>),
+        ).toMatch(pattern);
+        expect(isIntakeStepComplete(9, data)).toBe(false);
+      },
+    );
+
+    it("accepts valid values for all optional lab fields", () => {
+      const data = validIntake({
+        labs: {
+          bp: "120/80",
+          a1c: "5.6",
+          glucose: "95",
+          cholesterol: "180",
+          recent_labs: true,
+          willing: true,
+        },
+      });
+      for (const field of INTAKE_LAB_FIELD_KEYS) {
+        expect(
+          getIntakeLabFieldError(field, data.labs as Record<string, string>),
+        ).toBeNull();
+      }
+      expect(getIntakeStepError(9, data)).toBeNull();
+      expect(isIntakeStepComplete(9, data)).toBe(true);
     });
 
     it.each(SQL_INJECTION)(

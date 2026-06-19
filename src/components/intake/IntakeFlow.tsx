@@ -48,6 +48,9 @@ import {
   INTAKE_STEP_LABELS,
   isIntakeStepComplete,
   getIntakeStepError,
+  getIntakeLabFieldError,
+  hasIntakeLabFormatError,
+  INTAKE_LAB_FIELD_KEYS,
   MEDICAL_CONDITIONS,
   PRIOR_MEDS,
   WEIGHT_METHODS,
@@ -489,9 +492,12 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
         </div>
       )}
       {error && <p className="text-sm text-destructive">{error}</p>}
-      {!error && stepValidationError && !intakeLocked && (
-        <p className="text-sm text-destructive">{stepValidationError}</p>
-      )}
+      {!error &&
+        stepValidationError &&
+        !intakeLocked &&
+        !hasIntakeLabFormatError(step, labs, stepValidationError) && (
+          <p className="text-sm text-destructive">{stepValidationError}</p>
+        )}
       {showResubmit ? (
         <Button
           type="button"
@@ -980,33 +986,40 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
         <LifestyleStepFields
           life={life}
           onChange={(next) =>
-            patch(
-              "lifestyle",
-              next as Record<string, string | boolean>,
-            )
+            patch("lifestyle", next as Record<string, string | boolean>)
           }
         />
       )}
 
       {step === 9 && (
         <div className="grid gap-4">
-          {[
-            ["bp", "Most recent blood pressure"],
-            ["a1c", "Most recent A1C"],
-            ["glucose", "Most recent fasting glucose"],
-            ["cholesterol", "Most recent cholesterol"],
-          ].map(([k, label]) => (
-            <Field key={k} label={label}>
-              <input
-                className={inputCls}
-                value={(labs[k] as string) ?? ""}
-                placeholder={k === "bp" ? "e.g. 120/80" : undefined}
-                onChange={(e) =>
-                  patch("labs", { ...labs, [k]: e.target.value })
-                }
-              />
-            </Field>
-          ))}
+          {(
+            [
+              ["bp", "Most recent blood pressure"],
+              ["a1c", "Most recent A1C"],
+              ["glucose", "Most recent fasting glucose"],
+              ["cholesterol", "Most recent cholesterol"],
+            ] as const
+          ).map(([k, label]) => {
+            const fieldError = getIntakeLabFieldError(k, labs);
+            return (
+              <Field key={k} label={label}>
+                <input
+                  className={inputCls}
+                  value={(labs[k] as string) ?? ""}
+                  placeholder={k === "bp" ? "e.g. 120/80" : undefined}
+                  onChange={(e) =>
+                    patch("labs", { ...labs, [k]: e.target.value })
+                  }
+                />
+                {fieldError && (
+                  <p className="mt-1.5 text-sm text-destructive">
+                    {fieldError}
+                  </p>
+                )}
+              </Field>
+            );
+          })}
           <YesNoField
             label="Labs in last 12 months?"
             required
