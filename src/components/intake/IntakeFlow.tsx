@@ -6,6 +6,7 @@ import { LifestyleStepFields } from "@/components/intake/LifestyleStepFields";
 import { IntakeStepReadOnly } from "@/components/intake/IntakeStepReadOnly";
 import { IntakeSubmissionViewer } from "@/components/intake/IntakeSubmissionViewer";
 import { DocumentTypeUpload } from "@/components/portal/DocumentTypeUpload";
+import { UploadedDocumentsList } from "@/components/portal/UploadedDocumentsList";
 import { PortalPageHeader } from "@/components/portal/PortalPageHeader";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,11 +27,12 @@ import {
   inputCls,
 } from "@/components/quiz/quiz-primitives";
 import {
-  documentTypeLabel,
+  deleteDocument,
   fetchDocuments,
   fetchEligibilityMe,
   fetchIntakeMe,
   isApiEnabled,
+  patchDocumentType,
   resubmitIntake,
   syncIntake,
   uploadDocumentBatch,
@@ -99,6 +101,7 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
   const [uploadedDocs, setUploadedDocs] = useState<UploadedDocument[]>([]);
   const [uploadError, setUploadError] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [busyDocumentId, setBusyDocumentId] = useState<string | null>(null);
   const [canEdit, setCanEdit] = useState(true);
   const [activeSubmission, setActiveSubmission] =
     useState<IntakeSubmission | null>(null);
@@ -340,6 +343,57 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
       throw err;
     } finally {
       setUploading(false);
+    }
+  }
+
+  async function handleDocumentRemove(documentId: string) {
+    if (mode === "portal" && !canEdit) return;
+    if (!isApiEnabled()) {
+      setUploadError("Document upload requires the backend API.");
+      return;
+    }
+    setUploadError("");
+    setBusyDocumentId(documentId);
+    try {
+      await deleteDocument(documentId);
+      setUploadedDocs((prev) => {
+        const next = prev.filter((doc) => doc.id !== documentId);
+        if (next.length === 0) {
+          patch("labs", { ...labs, uploads_noted: false });
+        }
+        return next;
+      });
+    } catch (err) {
+      setUploadError(
+        err instanceof Error ? err.message : "Could not remove document.",
+      );
+    } finally {
+      setBusyDocumentId(null);
+    }
+  }
+
+  async function handleDocumentTypeChange(
+    documentId: string,
+    documentType: DocumentType,
+  ) {
+    if (mode === "portal" && !canEdit) return;
+    if (!isApiEnabled()) {
+      setUploadError("Document upload requires the backend API.");
+      return;
+    }
+    setUploadError("");
+    setBusyDocumentId(documentId);
+    try {
+      const updated = await patchDocumentType(documentId, documentType);
+      setUploadedDocs((prev) =>
+        prev.map((doc) => (doc.id === documentId ? updated : doc)),
+      );
+    } catch (err) {
+      setUploadError(
+        err instanceof Error ? err.message : "Could not update document.",
+      );
+    } finally {
+      setBusyDocumentId(null);
     }
   }
 
@@ -1039,18 +1093,18 @@ export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
             <DocumentTypeUpload
               uploading={uploading}
               error={uploadError}
+              disabled={mode === "portal" && !canEdit}
               onUpload={handleDocumentUpload}
             />
-            {uploadedDocs.length > 0 && (
-              <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-                {uploadedDocs.map((doc) => (
-                  <li key={doc.id}>
-                    {doc.original_filename || "Document"} —{" "}
-                    {documentTypeLabel(doc.document_type)}
-                  </li>
-                ))}
-              </ul>
-            )}
+            <UploadedDocumentsList
+              documents={uploadedDocs}
+              disabled={mode === "portal" && !canEdit}
+              busyDocumentId={busyDocumentId}
+              onTypeChange={(id, type) =>
+                void handleDocumentTypeChange(id, type)
+              }
+              onRemove={(id) => void handleDocumentRemove(id)}
+            />
           </Field>
         </div>
       )}

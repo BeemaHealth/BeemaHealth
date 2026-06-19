@@ -1,9 +1,8 @@
 import { useRef, useState, type ChangeEvent } from "react";
-import { CloudUpload, X } from "lucide-react";
+import { CloudUpload } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { UPLOAD_DOCUMENT_TYPES } from "@/lib/api/client";
+import { DocumentFileRow } from "@/components/portal/DocumentFileRow";
 import type { DocumentType } from "@/lib/types/mvp";
-import { inputCls } from "@/components/quiz/quiz-primitives";
 
 export type DocumentUploadItem = {
   file: File;
@@ -72,7 +71,7 @@ export function DocumentTypeUpload({
   }
 
   return (
-    <div className="grid gap-3">
+    <div className="grid min-w-0 gap-3">
       <input
         ref={fileInputRef}
         type="file"
@@ -94,48 +93,17 @@ export function DocumentTypeUpload({
       </Button>
 
       {pending.length > 0 && (
-        <ul className="grid gap-2">
+        <ul className="grid min-w-0 gap-2">
           {pending.map((item) => (
-            <li
+            <DocumentFileRow
               key={item.id}
-              className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-muted/30 px-3 py-2"
-            >
-              <span
-                className="min-w-0 flex-1 truncate text-sm text-foreground"
-                title={item.file.name}
-              >
-                {item.file.name}
-              </span>
-              <select
-                className={`${inputCls} w-auto min-w-[10rem]`}
-                value={item.documentType}
-                disabled={disabled || uploading}
-                onChange={(e) =>
-                  setPendingType(item.id, e.target.value as DocumentType)
-                }
-                aria-label={`Document type for ${item.file.name}`}
-              >
-                <option value="" disabled>
-                  Select type
-                </option>
-                {UPLOAD_DOCUMENT_TYPES.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="size-8 shrink-0 rounded-lg"
-                disabled={disabled || uploading}
-                onClick={() => removePending(item.id)}
-                aria-label={`Remove ${item.file.name}`}
-              >
-                <X className="size-4" />
-              </Button>
-            </li>
+              filename={item.file.name}
+              documentType={item.documentType}
+              disabled={disabled || uploading}
+              showPlaceholder
+              onTypeChange={(type) => setPendingType(item.id, type)}
+              onRemove={() => removePending(item.id)}
+            />
           ))}
         </ul>
       )}

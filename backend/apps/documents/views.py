@@ -7,8 +7,12 @@ from rest_framework.views import APIView
 from apps.accounts.permissions import IsPatient
 from apps.audit.services import log_audit_event
 from apps.documents.models import UploadedDocument
-from apps.documents.serializers import DocumentUploadRequestSerializer, UploadedDocumentSerializer
-from apps.documents.storage import generate_presigned_upload, save_local_upload
+from apps.documents.serializers import (
+    DocumentUpdateSerializer,
+    DocumentUploadRequestSerializer,
+    UploadedDocumentSerializer,
+)
+from apps.documents.storage import delete_stored_document, generate_presigned_upload, save_local_upload
 
 
 class DocumentListCreateView(APIView):
@@ -93,3 +97,52 @@ class DocumentFileUploadView(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         return Response(UploadedDocumentSerializer(doc).data)
+
+
+class DocumentDetailView(APIView):
+    permission_classes = [IsPatient]
+
+    def _get_document(self, request, document_id):
+        try:
+            return UploadedDocument.objects.get(id=document_id, user=request.user)
+        except UploadedDocument.DoesNotExist:
+            return None
+
+    def patch(self, request, document_id):
+        doc = self._get_document(request, document_id)
+        if not doc:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = DocumentUpdateSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        doc.document_type = serializer.validated_data["document_type"]
+        doc.save(update_fields=["document_type"])
+        log_audit_event(
+            user=request.user,
+            action="update",
+            resource_type="document",
+            resource_id=str(doc.id),
+            request=request,
+        )
+        return Response(UploadedDocumentSerializer(doc).data)
+
+    def delete(self, request, document_id):
+        doc = self._get_document(request, document_id)
+        if not doc:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        file_key = doc.file_key
+        doc_id = str(doc.id)
+        doc.delete()
+        try:
+            delete_stored_document(file_key)
+        except Exception:
+            pass
+        log_audit_event(
+            user=request.user,
+            action="delete",
+            resource_type="document",
+            resource_id=doc_id,
+            request=request,
+        )
+        return Response(status=status.HTTP_204_NO_CONTENT)

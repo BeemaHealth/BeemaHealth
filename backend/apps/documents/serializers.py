@@ -56,3 +56,12 @@ class UploadedDocumentSerializer(serializers.ModelSerializer):
             Params={"Bucket": settings.AWS_STORAGE_BUCKET_NAME, "Key": obj.file_key},
             ExpiresIn=3600,
         )
+
+
+PATIENT_EDITABLE_DOCUMENT_TYPES = [
+    choice for choice in UploadedDocument.DOCUMENT_TYPES if choice[0] != "other"
+]
+
+
+class DocumentUpdateSerializer(serializers.Serializer):
+    document_type = serializers.ChoiceField(choices=PATIENT_EDITABLE_DOCUMENT_TYPES)

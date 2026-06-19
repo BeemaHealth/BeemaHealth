@@ -191,3 +191,72 @@ class DocumentsApiTests(TestCase):
             format="multipart",
         )
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    @override_settings(USE_S3_STORAGE=False)
+    def test_delete_own_document_removes_db_and_local_file(self):
+        with tempfile.TemporaryDirectory() as media_root:
+            with self.settings(MEDIA_ROOT=media_root):
+                create = self.client.post(
+                    self.list_url,
+                    valid_document_payload(filename="remove-me.pdf"),
+                    format="json",
+                )
+                doc_id = create.data["document"]["id"]
+                file_key = create.data["document"]["file_key"]
+                upload_url = reverse("document-upload", kwargs={"document_id": doc_id})
+                file = SimpleUploadedFile(
+                    "remove-me.pdf",
+                    b"%PDF-1.4",
+                    content_type="application/pdf",
+                )
+                self.client.post(upload_url, {"file": file}, format="multipart")
+                saved = Path(media_root) / file_key
+                self.assertTrue(saved.is_file())
+
+                detail_url = reverse("document-detail", kwargs={"document_id": doc_id})
+                response = self.client.delete(detail_url)
+                self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+                self.assertFalse(UploadedDocument.objects.filter(id=doc_id).exists())
+                self.assertFalse(saved.is_file())
+
+    @override_settings(USE_S3_STORAGE=False, MEDIA_ROOT=tempfile.gettempdir())
+    def test_cannot_delete_other_users_document(self):
+        doc = UploadedDocument.objects.create(
+            user=self.other,
+            document_type="lab_results",
+            file_key=f"local/{self.other.id}/lab_results/abc-test.pdf",
+            original_filename="test.pdf",
+            content_type="application/pdf",
+        )
+        detail_url = reverse("document-detail", kwargs={"document_id": doc.id})
+        response = self.client.delete(detail_url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    @override_settings(USE_S3_STORAGE=False, MEDIA_ROOT=tempfile.gettempdir())
+    def test_patch_document_type(self):
+        create = self.client.post(
+            self.list_url,
+            valid_document_payload(document_type="lab_results"),
+            format="json",
+        )
+        doc_id = create.data["document"]["id"]
+        detail_url = reverse("document-detail", kwargs={"document_id": doc_id})
+        response = self.client.patch(
+            detail_url,
+            {"document_type": "photo_id"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["document_type"], "photo_id")
+
+    @override_settings(USE_S3_STORAGE=False, MEDIA_ROOT=tempfile.gettempdir())
+    def test_rejects_invalid_document_type_on_patch(self):
+        create = self.client.post(self.list_url, valid_document_payload(), format="json")
+        doc_id = create.data["document"]["id"]
+        detail_url = reverse("document-detail", kwargs={"document_id": doc_id})
+        response = self.client.patch(
+            detail_url,
+            {"document_type": "other"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

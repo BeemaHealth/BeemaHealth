@@ -2,6 +2,7 @@ import { useEffect, useRef, type ChangeEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { DocumentRow } from "@/components/portal/DocumentRow";
 import { DocumentTypeUpload } from "@/components/portal/DocumentTypeUpload";
+import { UploadedDocumentsList } from "@/components/portal/UploadedDocumentsList";
 import { PortalPageHeader } from "@/components/portal/PortalPageHeader";
 import { DOCUMENT_SLOTS } from "@/lib/portal-documents";
 import { fetchDocuments } from "@/lib/api/client";
@@ -64,6 +65,14 @@ function DashboardDocumentsPage() {
             uploading={upload.uploading}
             error={upload.uploadError}
             onUpload={upload.handleUploadBatch}
+          />
+          <UploadedDocumentsList
+            documents={upload.uploadedDocs}
+            busyDocumentId={upload.busyDocumentId}
+            onTypeChange={(id, type) =>
+              void upload.updateDocumentType(id, type)
+            }
+            onRemove={(id) => void upload.removeDocument(id)}
           />
         </div>
       </section>

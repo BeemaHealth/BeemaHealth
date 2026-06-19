@@ -51,3 +51,22 @@ def save_local_upload(file_key: str, file_obj) -> None:
     with dest.open("wb") as handle:
         for chunk in file_obj.chunks():
             handle.write(chunk)
+
+
+def delete_stored_document(file_key: str) -> None:
+    """Best-effort removal of stored bytes for a document file key."""
+    if file_key.startswith("local/"):
+        relative = Path(file_key)
+        if ".." in relative.parts:
+            return
+        dest = Path(settings.MEDIA_ROOT) / relative
+        if dest.is_file():
+            dest.unlink()
+        return
+
+    if settings.USE_S3_STORAGE and settings.AWS_STORAGE_BUCKET_NAME:
+        client = get_s3_client()
+        client.delete_object(
+            Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+            Key=file_key,
+        )

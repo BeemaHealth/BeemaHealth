@@ -538,6 +538,20 @@ export async function uploadDocumentBatch(
   return newDocs;
 }
 
+export async function deleteDocument(documentId: string): Promise<void> {
+  await apiFetch<void>(`/documents/${documentId}/`, { method: "DELETE" });
+}
+
+export async function patchDocumentType(
+  documentId: string,
+  documentType: DocumentType,
+): Promise<UploadedDocument> {
+  return apiFetch<UploadedDocument>(`/documents/${documentId}/`, {
+    method: "PATCH",
+    body: JSON.stringify({ document_type: documentType }),
+  });
+}
+
 export async function fetchSideEffectCheckIns(): Promise<SideEffectCheckIn[]> {
   if (!USE_API) return [];
   try {
