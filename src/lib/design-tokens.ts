@@ -128,6 +128,10 @@ export const SECTION_TONE_PALETTE = {
   consent: "success",
   /** Security — light red */
   security: "destructive",
+  /** Orders — blue */
+  orders: "secondary",
+  /** Refills — green */
+  refills: "success",
 } as const satisfies Record<string, SemanticPalette>;
 
 export type SectionTone = keyof typeof SECTION_TONE_PALETTE;

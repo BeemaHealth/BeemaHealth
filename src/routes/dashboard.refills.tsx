@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Pill } from "lucide-react";
+import { ClipboardList, Pill } from "lucide-react";
+import { AccountSectionCard } from "@/components/portal/AccountSectionCard";
 import { PortalPageHeader } from "@/components/portal/PortalPageHeader";
 import { RefillForm } from "@/components/portal/RefillForm";
 import {
@@ -26,17 +27,15 @@ function DashboardRefillsPage() {
   const canRefill = canManageRefills(prescription?.is_active === true);
 
   return (
-    <div className="space-y-6">
-      <div className="mx-auto max-w-2xl">
-        <PortalPageHeader
-          title="Request a refill"
-          subtitle={
-            canRefill
-              ? "A quick check-in keeps your care safe"
-              : "Available after your clinician prescribes medication"
-          }
-        />
-      </div>
+    <div className="mx-auto max-w-6xl space-y-6">
+      <PortalPageHeader
+        title="Request a refill"
+        subtitle={
+          canRefill
+            ? "A quick check-in keeps your care safe"
+            : "Available after your clinician prescribes medication"
+        }
+      />
 
       {canRefill && prescription ? (
         <RefillForm
@@ -45,36 +44,47 @@ function DashboardRefillsPage() {
           initialRefillRequests={refillRequests.slice(0, 5)}
         />
       ) : (
-        <div className="mx-auto max-w-2xl">
-          <section className="rounded-3xl border border-border bg-card p-6 shadow-soft md:p-8">
-            <div className="flex items-start gap-4">
-              <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
-                <Pill className="size-6" aria-hidden />
-              </div>
-              <div className="space-y-3">
-                <div>
-                  <h2 className="text-lg font-semibold text-foreground">
-                    No prescription yet
-                  </h2>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                    Your clinician has not prescribed medication yet.
-                    Side-effect check-ins and refill requests will open here
-                    once a prescription is on file.
-                  </p>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Check your{" "}
-                  <Link
-                    to="/dashboard"
-                    className="font-medium text-primary hover:underline"
-                  >
-                    dashboard
-                  </Link>{" "}
-                  for review status updates.
-                </p>
-              </div>
-            </div>
-          </section>
+        <div className="grid gap-6 md:grid-cols-2">
+          <AccountSectionCard
+            title="No prescription yet"
+            description="Refills open after your clinician prescribes medication"
+            icon={Pill}
+            tone="refills"
+          >
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Your clinician has not prescribed medication yet. Side-effect
+              check-ins and refill requests will open here once a prescription
+              is on file.
+            </p>
+          </AccountSectionCard>
+
+          <AccountSectionCard
+            title="What happens next"
+            description="How refill management works"
+            icon={ClipboardList}
+            tone="contact"
+          >
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>
+                Log side effects before each refill so your care team can review
+                your progress.
+              </li>
+              <li>
+                Submit a refill request when you are ready for your next
+                shipment.
+              </li>
+              <li>
+                Check your{" "}
+                <Link
+                  to="/dashboard"
+                  className="font-medium text-foreground hover:underline"
+                >
+                  dashboard
+                </Link>{" "}
+                for review status updates.
+              </li>
+            </ul>
+          </AccountSectionCard>
         </div>
       )}
     </div>

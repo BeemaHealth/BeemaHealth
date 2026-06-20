@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { RefreshCw } from "lucide-react";
+import { Activity, ClipboardList, Pill, RefreshCw } from "lucide-react";
+import { AccountSectionCard } from "@/components/portal/AccountSectionCard";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { submitRefillRequest, submitSideEffectCheckIn } from "@/lib/api/client";
@@ -30,47 +31,6 @@ const ROUTE_LABELS: Record<string, string> = {
   oral: "Oral",
   other: "Other",
 };
-
-function PrescriptionDetails({
-  prescription,
-}: {
-  prescription: PatientPrescription;
-}) {
-  return (
-    <div className="flex items-start gap-4 rounded-3xl border border-border bg-card p-5 shadow-soft">
-      <div className="flex size-12 items-center justify-center rounded-full bg-primary-soft text-primary">
-        <RefreshCw className="size-6" aria-hidden />
-      </div>
-      <div className="min-w-0 space-y-2">
-        <div>
-          <p className="text-lg font-semibold text-foreground">
-            {prescription.medication_name}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            {prescription.dosage} · {prescription.frequency}
-            {prescription.route
-              ? ` · ${ROUTE_LABELS[prescription.route] ?? prescription.route}`
-              : ""}
-          </p>
-        </div>
-        {prescription.pharmacy_name ? (
-          <p className="text-sm text-muted-foreground">
-            Pharmacy: {prescription.pharmacy_name}
-          </p>
-        ) : null}
-        {prescription.instructions ? (
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            {prescription.instructions}
-          </p>
-        ) : null}
-        <p className="text-sm text-muted-foreground">
-          Log how you&apos;ve been feeling since your last dose, then request a
-          refill when you&apos;re ready.
-        </p>
-      </div>
-    </div>
-  );
-}
 
 export function RefillForm({
   prescription,
@@ -130,18 +90,44 @@ export function RefillForm({
   }
 
   return (
-    <form
-      onSubmit={(e) => void handleSubmit(e)}
-      className="mx-auto max-w-2xl space-y-6"
-    >
-      <PrescriptionDetails prescription={prescription} />
+    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-6">
+      <AccountSectionCard
+        title={prescription.medication_name}
+        description="Your active prescription"
+        icon={Pill}
+        tone="refills"
+      >
+        <div className="space-y-2 text-sm text-muted-foreground">
+          <p>
+            <span className="font-medium text-foreground">Dosage:</span>{" "}
+            {prescription.dosage} · {prescription.frequency}
+            {prescription.route
+              ? ` · ${ROUTE_LABELS[prescription.route] ?? prescription.route}`
+              : ""}
+          </p>
+          {prescription.pharmacy_name ? (
+            <p>
+              <span className="font-medium text-foreground">Pharmacy:</span>{" "}
+              {prescription.pharmacy_name}
+            </p>
+          ) : null}
+          {prescription.instructions ? (
+            <p className="leading-relaxed">{prescription.instructions}</p>
+          ) : null}
+          <p>
+            Log how you&apos;ve been feeling since your last dose, then request
+            a refill when you&apos;re ready.
+          </p>
+        </div>
+      </AccountSectionCard>
 
-      <div className="rounded-3xl border border-border bg-card p-5 shadow-soft md:p-6">
-        <h2 className="font-semibold text-foreground">Side effect check-in</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Select a side effect and when you experienced it.
-        </p>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+      <AccountSectionCard
+        title="Side effect check-in"
+        description="Select a side effect and when you experienced it"
+        icon={Activity}
+        tone="security"
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-1.5 text-sm">
             <span className="font-medium text-foreground">Side effect</span>
             <select
@@ -170,43 +156,57 @@ export function RefillForm({
             />
           </label>
         </div>
-      </div>
+      </AccountSectionCard>
 
       {recent.length > 0 && (
-        <div className="rounded-3xl border border-border bg-card p-5 shadow-soft">
-          <h2 className="text-sm font-semibold text-foreground">
-            Recent check-ins
-          </h2>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+        <AccountSectionCard
+          title="Recent check-ins"
+          description="Your latest side-effect reports"
+          icon={RefreshCw}
+          tone="contact"
+        >
+          <ul className="divide-y divide-border/80 text-sm">
             {recent.map((item) => (
-              <li key={item.id} className="flex justify-between gap-3">
-                <span>
+              <li
+                key={item.id}
+                className="flex justify-between gap-3 py-2.5 first:pt-0 last:pb-0"
+              >
+                <span className="text-foreground">
                   {SIDE_EFFECTS.find((s) => s.value === item.side_effect)
                     ?.label ?? item.side_effect}
                 </span>
-                <span>
+                <span className="text-muted-foreground">
                   {new Date(item.experienced_on).toLocaleDateString()}
                 </span>
               </li>
             ))}
           </ul>
-        </div>
+        </AccountSectionCard>
       )}
 
       {refillRequests.length > 0 && (
-        <div className="rounded-3xl border border-border bg-card p-5 shadow-soft">
-          <h2 className="text-sm font-semibold text-foreground">
-            Refill requests
-          </h2>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+        <AccountSectionCard
+          title="Refill requests"
+          description="Status of your refill submissions"
+          icon={ClipboardList}
+          tone="orders"
+        >
+          <ul className="divide-y divide-border/80 text-sm">
             {refillRequests.map((item) => (
-              <li key={item.id} className="flex justify-between gap-3">
-                <span>{REFILL_STATUS_LABELS[item.status] ?? item.status}</span>
-                <span>{new Date(item.created_at).toLocaleDateString()}</span>
+              <li
+                key={item.id}
+                className="flex justify-between gap-3 py-2.5 first:pt-0 last:pb-0"
+              >
+                <span className="text-foreground">
+                  {REFILL_STATUS_LABELS[item.status] ?? item.status}
+                </span>
+                <span className="text-muted-foreground">
+                  {new Date(item.created_at).toLocaleDateString()}
+                </span>
               </li>
             ))}
           </ul>
-        </div>
+        </AccountSectionCard>
       )}
 
       <div className="grid gap-3 sm:grid-cols-2">
