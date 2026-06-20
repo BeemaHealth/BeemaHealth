@@ -31,6 +31,8 @@ Aretide/
 ├── src/                         ← React 19 + TanStack Start frontend
 │   ├── routes/                  ← File-based routes (/qualify, /intake, …)
 │   └── lib/                     ← API client, validators, types, step logic
+│       └── design-tokens.ts     ← Semantic color usage (portal UI) — see below
+├── src/styles.css               ← Raw brand oklch values (`:root`)
 ├── backend/                     ← Django 5 + DRF + PostgreSQL
 │   ├── apps/                    ← Domain apps (accounts, eligibility, intakes, …)
 │   └── apps/common/validation/  ← Shared backend input validators
@@ -72,6 +74,7 @@ Read the relevant doc(s):
 | Frontend routes | `src/routes/README.md` |
 | Input validation & security tests | `docs/INPUT_VALIDATION_TESTS.md` |
 | API types & client | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |
+| **Color scheme / portal UI** | **`src/lib/design-tokens.ts`**, `src/styles.css`, `src/components/portal/AccountSectionCard.tsx` |
 | Compliance / PHI / HIPAA | **`docs/HIPAA.md`**, `backend/HOSTING.md` |
 
 Match existing patterns in surrounding code. Prefer minimal, focused diffs. If discrepancies between the documentation and the code exist, then ask the user if they would like the documentation changed or the code changed and explain the differences and give a recommendation. 
@@ -223,6 +226,58 @@ Use shared fixtures — do not invent one-off strings:
 
 ---
 
+## Design system & color scheme
+
+Aretide uses a **centralized semantic color system**. Do not invent one-off hex/rgb/oklch values or duplicate Tailwind class strings in components.
+
+### Source-of-truth files
+
+| File | Role |
+|------|------|
+| **`src/styles.css`** | **Raw brand palette** — oklch values in `:root` / `.dark` (`primary`, `secondary`, `warning`, `success`, `destructive`, `accent`, `muted`, …). Change base hues **here only**. |
+| **`src/lib/design-tokens.ts`** | **Master usage file** — semantic surface treatments, section tone mappings, badge/timeline/summary styles, and helper functions. **Import from here** when building UI. |
+| **`src/components/portal/AccountSectionCard.tsx`** | Reusable **portal section card** (colored header band, icon, title, optional edit/save). Used on account, intake, orders, refills. |
+
+`styles.css` points to `design-tokens.ts`; keep both in sync when adding semantic colors.
+
+### Rules for agents
+
+1. **Never** hardcode ad hoc colors in routes or components.
+2. **Tune softness/contrast** in `SEMANTIC_PALETTE_SURFACES` inside `design-tokens.ts` — not per page.
+3. **New portal section?** Use `AccountSectionCard` with a `tone` from `SectionTone` / `SECTION_TONE_PALETTE`.
+4. **New section tone slug?** Add it to `SECTION_TONE_PALETTE` in `design-tokens.ts` (map to an existing semantic palette entry).
+5. **Section titles** use `text-foreground`; descriptions use `text-muted-foreground` (defined in `SECTION_CARD_BASE`).
+6. **Dashboard chips/badges/timeline** — use `DASHBOARD_SUMMARY_ICON_STYLES`, `STATUS_BADGE_STYLES`, `TIMELINE_TONE_STYLES`, `NOTICE_BANNER_STYLES` from `design-tokens.ts`.
+
+### Semantic palette (base colors)
+
+Defined in `styles.css`, referenced as Tailwind tokens: `primary`, `primary-soft`, `secondary`, `accent`, `accent-foreground`, `muted`, `foreground`, `success`, `warning`, `destructive`, `border`, `card`, `background`.
+
+### Section tones (`SECTION_TONE_PALETTE`)
+
+Portal sections map a **tone slug** → **semantic palette surface**:
+
+| Tone slug | Palette | Typical use |
+|-----------|---------|-------------|
+| `primary` | warning (yellow) | Account profile |
+| `contact` | neutral (gray) | Contact info, secondary info blocks |
+| `shipping` | secondary (blue) | Shipping address |
+| `communication` | accent (mint) | Notification preferences |
+| `consent` | success (green) | Consent records |
+| `security` | destructive (light red) | Security / side-effect check-ins |
+| `orders` | secondary (blue) | Orders, refill request history |
+| `refills` | success (green) | Prescription / refill content |
+
+Intake step colors/icons: `src/lib/intake-portal-ui.ts` (references `SectionTone` from `design-tokens.ts`).
+
+### Key exports from `design-tokens.ts`
+
+- `getSectionToneStyles(tone)` — full class set for a section card
+- `sectionDividerClass`, `sectionBadgeOnClass`, `sectionRowIconClass`, `sectionNavIconClass`, `sectionNavActiveClass`
+- `DASHBOARD_SUMMARY_ICON_STYLES`, `STATUS_BADGE_STYLES`, `TIMELINE_TONE_STYLES`, `NOTICE_BANNER_STYLES`
+
+---
+
 ## Code conventions
 
 - **Frontend routes:** file-based in `src/routes/` — see `src/routes/README.md`. Do not create `src/pages/`.
@@ -231,6 +286,7 @@ Use shared fixtures — do not invent one-off strings:
 - **Backend:** one Django app per domain under `backend/apps/`.
 - **Commits:** only when the user asks. No `--no-verify`, no force-push to main.
 - **Scope:** smallest correct diff. No drive-by refactors.
+- **Portal / dashboard UI colors:** use `src/lib/design-tokens.ts` and `AccountSectionCard` — see **Design system & color scheme** above.
 
 ---
 
@@ -279,4 +335,6 @@ Rules are **summaries**. This file and `docs/INPUT_VALIDATION_TESTS.md` are auth
 - [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md) — Docker setup
 - [backend/DATABASE.md](backend/DATABASE.md) — schema & data flow
 - [backend/README.md](backend/README.md) — API endpoints
+- [src/lib/design-tokens.ts](src/lib/design-tokens.ts) — semantic color scheme (portal UI)
+- [src/styles.css](src/styles.css) — raw brand oklch palette
 - [Starting Point/launchPlan.md](Starting%20Point/launchPlan.md) — product launch plan

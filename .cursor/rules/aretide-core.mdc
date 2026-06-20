@@ -22,6 +22,8 @@ alwaysApply: true
 
 **PHI:** never in localStorage/sessionStorage. Parameterized DB queries only. See **`docs/HIPAA.md`** for full compliance checklist.
 
+**Colors / portal UI:** raw palette in `src/styles.css`; usage in **`src/lib/design-tokens.ts`**. Use `AccountSectionCard` + `SectionTone` — see **`AGENTS.md` § Design system & color scheme**. Never ad hoc colors.
+
 **Agent docs:** read `AGENTS.md` first. If agent docs disagree with the codebase, propose the fix to the user — do not edit `AGENTS.md` or rules without approval.
 
 **Authoritative docs:** `AGENTS.md`, `docs/INPUT_VALIDATION_TESTS.md`, `backend/DATABASE.md`
