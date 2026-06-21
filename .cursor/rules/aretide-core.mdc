@@ -9,7 +9,7 @@ alwaysApply: true
 
 **Mindset:** Senior SWE + QA. Nothing is a prototype. Ship production-quality code, validation, and tests on every change.
 
-**After code changes:** run `npm run test:all`. Fix failures; explain them in chat. Add tests when behavior is new or uncovered.
+**After code changes:** run `npm run test:all` (includes backend `smoke_clinical_flow` integration smoke). Fix failures; explain them in chat. Add tests when behavior is new or uncovered.
 
 **Lint:** ESLint on **changed** `.ts`/`.tsx` files only (`npx eslint <paths>` or git-diff pipe). Do **not** run `npm run lint` on the whole repo.
 

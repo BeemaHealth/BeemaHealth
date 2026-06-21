@@ -98,7 +98,7 @@ Both frontend **and** backend must reject malicious input on strict fields.
 
 **After every code change**, before marking the task done:
 
-1. **Run the full suite** — `npm run test:all` (frontend Vitest + backend Django).
+1. **Run the full suite** — `npm run test:all` (frontend Vitest + backend Django unit tests + clinical integration smoke flow).
 2. **Run static checks on changed `.ts` / `.tsx` files** — both are required when you touch TypeScript; ESLint alone is **not** enough:
    - **ESLint (changed files only)** — do **not** run `npm run lint` project-wide (thousands of pre-existing issues). Lint your diff:
      ```bash
@@ -114,9 +114,9 @@ Both frontend **and** backend must reject malicious input on strict fields.
 6. **Decide if new tests are needed** — if behavior is new or the change could regress silently, add tests before finishing; if existing tests already cover it, say so in chat.
 
 ```bash
-npm run test:all     # frontend (Vitest) + backend (Django) — preferred
+npm run test:all     # frontend (Vitest) + backend (Django unit tests + smoke_clinical_flow) — preferred
 npm test             # frontend only
-npm run test:backend # backend only
+npm run test:backend # backend unit tests + smoke_clinical_flow
 # ESLint — changed TS/TSX only (see workflow §3); do not run npm run lint project-wide
 npx tsc --noEmit     # required when any TS/TSX changed — not optional
 npx vitest run path/to/changed.test.ts   # optional: single test file
@@ -151,8 +151,9 @@ Full guide: **`docs/INPUT_VALIDATION_TESTS.md`**
 | **Frontend fixtures** | Shared attack strings & valid test data | `src/lib/__tests/fixtures/`, `helpers/` | — |
 | **Backend unit** | Python validator functions | `backend/apps/common/tests/` | `npm run test:backend` |
 | **Backend API integration** | POST/PATCH returns 400 on attacks, 200/201 on valid | `backend/apps/*/tests/test_*_api.py` | `npm run test:backend` |
+| **Clinical integration smoke** | End-to-end mock flow: resubmit → doctor webhook → pharmacy order → LifeFile webhook | `backend/apps/integrations/management/commands/smoke_clinical_flow.py` | `npm run test:backend` (runs after unit tests) |
 
-There is **no separate E2E/browser test suite** today. API integration tests are our backend regression layer.
+There is **no separate E2E/browser test suite** today. API integration tests plus `smoke_clinical_flow` are our backend regression layer.
 
 ### Frontend test files
 
