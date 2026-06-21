@@ -72,6 +72,8 @@ Full local dev guide (identical setup on every machine): **[docs/LOCAL-DEV.md](d
 | Local dev setup (Docker, prerequisites) | [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md) |
 | HIPAA compliance (agents) | [docs/HIPAA.md](docs/HIPAA.md) |
 | Input validation & security tests | [docs/INPUT_VALIDATION_TESTS.md](docs/INPUT_VALIDATION_TESTS.md) |
+| LifeFile / MediVera pharmacy API (agents) | [docs/LIFEFILE_MEDIVERA_API.md](docs/LIFEFILE_MEDIVERA_API.md) → `docs/vendor/LIFEFILE_MEDIVERA_API.md` (local, gitignored) |
+| MediVera onboarding call prep | [docs/MEDIVERA_ONBOARDING_QUESTIONS.md](docs/MEDIVERA_ONBOARDING_QUESTIONS.md) |
 | First-time install (deps, env, DB) | [First-time setup](#first-time-setup) below |
 | Connect frontend to backend | `.env.dev` + [Frontend ↔ API](#frontend--api) below |
 | Understand database tables | [backend/DATABASE.md](backend/DATABASE.md) |

@@ -37,6 +37,7 @@ Aretide/
 │   ├── apps/                    ← Domain apps (accounts, eligibility, intakes, …)
 │   └── apps/common/validation/  ← Shared backend input validators
 ├── docs/                        ← Deep dives (LOCAL-DEV, INPUT_VALIDATION_TESTS, …)
+│   └── vendor/                  ← LifeFile API spec (gitignored; see LIFEFILE_MEDIVERA_API.md)
 └── scripts/                     ← dev-backend.sh, test-backend.sh
 ```
 
@@ -71,6 +72,7 @@ Read the relevant doc(s):
 |-------|-----|
 | Database / field ownership | `backend/DATABASE.md` |
 | Run backend, API list | `backend/README.md`, `docs/LOCAL-DEV.md` |
+| **LifeFile / MediVera pharmacy API** | **`docs/vendor/LIFEFILE_MEDIVERA_API.md`** (gitignored; pointer: `docs/LIFEFILE_MEDIVERA_API.md`) |
 | Frontend routes | `src/routes/README.md` |
 | Input validation & security tests | `docs/INPUT_VALIDATION_TESTS.md` |
 | API types & client | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |

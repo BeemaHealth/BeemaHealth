@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "apps.documents",
     "apps.reviews",
     "apps.prescriptions",
+    "apps.pharmacy",
+    "apps.integrations",
     "apps.audit",
     "apps.common",
 ]
@@ -233,3 +235,18 @@ FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:8080")
 
 # Patient portal intake editing (flip to True to allow broader post-submit edits).
 INTAKE_PORTAL_EDITING_ENABLED = env.bool("INTAKE_PORTAL_EDITING_ENABLED", default=False)
+
+# Partner integrations — defaults safe for local dev (mock adapters).
+PHARMACY_ADAPTER = env("PHARMACY_ADAPTER", default="mock")
+DOCTOR_WEBHOOK_SECRET = env("DOCTOR_WEBHOOK_SECRET", default="dev-doctor-webhook-secret")
+LIFEFILE_WEBHOOK_USER = env("LIFEFILE_WEBHOOK_USER", default="lifefile_webhook")
+LIFEFILE_WEBHOOK_PASSWORD = env("LIFEFILE_WEBHOOK_PASSWORD", default="dev-lifefile-webhook-pass")
+LIFEFILE_API_BASE_URL = env("LIFEFILE_API_BASE_URL", default="")
+LIFEFILE_BASIC_AUTH_USER = env("LIFEFILE_BASIC_AUTH_USER", default="")
+LIFEFILE_BASIC_AUTH_PASSWORD = env("LIFEFILE_BASIC_AUTH_PASSWORD", default="")
+LIFEFILE_VENDOR_ID = env.int("LIFEFILE_VENDOR_ID", default=0)
+LIFEFILE_LOCATION_ID = env.int("LIFEFILE_LOCATION_ID", default=0)
+LIFEFILE_API_NETWORK_ID = env.int("LIFEFILE_API_NETWORK_ID", default=0)
+LIFEFILE_SHIPPING_SERVICE = env.int("LIFEFILE_SHIPPING_SERVICE", default=0)
+LIFEFILE_HANDLING_SERVICE = env.int("LIFEFILE_HANDLING_SERVICE", default=0)
+LIFEFILE_PRACTICE_ID = env.int("LIFEFILE_PRACTICE_ID", default=0)

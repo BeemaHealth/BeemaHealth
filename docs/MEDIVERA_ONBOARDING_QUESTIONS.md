@@ -2,6 +2,8 @@
 
 Bring this doc to the call. Check items off and fill the notes table at the bottom.
 
+**Full API spec (local, gitignored):** [`docs/vendor/LIFEFILE_MEDIVERA_API.md`](vendor/LIFEFILE_MEDIVERA_API.md) — copy answers from the call into that doc's "Open questions" section when resolved.
+
 **Context:** Aretide is DTC (Direct-to-consumer) telehealth. Patients intake on our site → separate physician network prescribes → we send approved Rx to MediVera/LifeFile for mail-order fulfillment. Patients only see Aretide.
 
 **Already confirmed (email — do not re-ask):**
@@ -42,18 +44,17 @@ Bring this doc to the call. Check items off and fill the notes table at the bott
 5. **Provider / formulary alignment**
    - Do you maintain a prescriber-facing formulary aligned with what your API accepts?
    - Do you integrate with physician networks (e.g. OpenLoop, CareValidate, SteadyMD)? If so, is the same product list used end-to-end?
-   - We need the authoritative list our prescribing partners must use — not our planned patient-facing options.
 
 ---
 
 ## 4. Order payload gaps (~5 min)
 
 6. **Patient gender**
-   - Our UI collects male/female only (maps to LifeFile `f`/`m`). Should we add intersex/unknown options, and which LifeFile `gender` value for each?
+   - Our UI collects male/female only for sex assigned at birth and gender identity (maps to LifeFile `f`/`m`). Should we add intersex/unknown options, and which LifeFile `gender` value for each?
 
 7. **Clinical allergy codes**
    - We collect allergies as free text (name + reaction). Patients do **not** supply medical codes.
-   - If `clinical[]` codes are required: which coding system, and can you provide a **code list** we map patient-reported allergies to (not patient-entered codes)?
+   - If `clinical[]` codes are required: which coding system, and can you provide a **code list** we map patient-reported allergies to (not patient-entered codes)? or is this something we will get from the providers api? 
 
 8. **Billing / insurance**
    - Cash-pay orders: confirm we can omit insurance fields entirely and use `billing.payorType: "pat"`.

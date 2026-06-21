@@ -1,0 +1,23 @@
+---
+description: LifeFile / MediVera pharmacy API integration — read vendor spec before changing pharmacy or webhook code
+globs:
+  - backend/apps/pharmacy/**
+  - backend/apps/integrations/**
+  - docs/MEDIVERA_ONBOARDING_QUESTIONS.md
+  - docs/LIFEFILE_MEDIVERA_API.md
+---
+
+# LifeFile / MediVera pharmacy API
+
+Before changing pharmacy fulfillment, LifeFile adapters, mappers, webhooks, or `LIFEFILE_*` settings:
+
+1. **Read `docs/vendor/LIFEFILE_MEDIVERA_API.md`** — full vendor API spec (gitignored locally), partner scope Q&A, and Aretide field mapping.
+2. If that file is missing, read the pointer at `docs/LIFEFILE_MEDIVERA_API.md` and ask the user to restore it.
+
+## Key facts
+
+- MediVera = **pharmacy fulfillment only** (no clinician network). Provider approval happens elsewhere; we `POST /order` after Rx approval.
+- Outbound: `POST /order` with Basic Auth + `X-Vendor-ID`, `X-Location-ID`, `X-API-Network-ID`.
+- Inbound: webhooks for order/shipping/refill status (Basic Auth on our endpoint).
+- Mapper: `backend/apps/pharmacy/mappers/lifefile.py`. Adapter: `backend/apps/pharmacy/adapters/lifefile.py`.
+- Open onboarding gaps: `docs/MEDIVERA_ONBOARDING_QUESTIONS.md`.

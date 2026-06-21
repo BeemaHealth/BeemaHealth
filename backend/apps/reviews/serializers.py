@@ -29,6 +29,8 @@ class ProviderReviewSerializer(serializers.ModelSerializer):
             "id",
             "user_id",
             "reviewer_id",
+            "external_review_id",
+            "doctor_partner",
             "status",
             "internal_note",
             "patient_note",

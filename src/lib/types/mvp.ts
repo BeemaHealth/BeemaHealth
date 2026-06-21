@@ -271,6 +271,8 @@ export interface ProviderReview {
   id: string;
   user_id: string;
   reviewer_id: string;
+  external_review_id?: string;
+  doctor_partner?: string;
   status: IntakeStatus;
   internal_note: string;
   patient_note: string;
@@ -290,9 +292,48 @@ export interface DashboardData {
   treatment_interest: TreatmentInterest | null;
   patient_note: string;
   has_active_prescription: boolean;
+  pharmacy_order?: PharmacyOrder | null;
 }
 
 export type PrescriptionRoute = "injection" | "oral" | "other";
+
+export type PrescriptionFulfillmentStatus =
+  | "draft"
+  | "signed"
+  | "sent_to_pharmacy"
+  | "cancelled";
+
+export type PharmacyOrderStatus =
+  | "created"
+  | "submitted"
+  | "received"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "error"
+  | "on_hold";
+
+export interface PharmacyOrder {
+  id: string;
+  prescription_id: string;
+  user_id: string;
+  pharmacy_partner: string;
+  external_order_id: string;
+  external_reference_id: string;
+  status: PharmacyOrderStatus;
+  recipient_type: "patient" | "clinic";
+  ship_to_city: string;
+  ship_to_state: string;
+  ship_to_zip_code: string;
+  ship_to_country: string;
+  tracking_number: string;
+  carrier: string;
+  error_message: string;
+  submitted_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
 export interface PatientPrescription {
   id: string;
@@ -303,6 +344,15 @@ export interface PatientPrescription {
   route: PrescriptionRoute | "";
   instructions: string;
   pharmacy_name: string;
+  rx_type?: "new" | "refill" | "";
+  drug_strength?: string;
+  drug_form?: string;
+  quantity?: string;
+  quantity_units?: string;
+  refills?: number;
+  days_supply?: number | null;
+  lf_product_id?: number | null;
+  fulfillment_status?: PrescriptionFulfillmentStatus;
   is_active: boolean;
   prescribed_at: string;
   prescribed_by_id: string | null;

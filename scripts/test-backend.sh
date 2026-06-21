@@ -20,5 +20,10 @@ python manage.py test \
   apps.consents.tests \
   apps.documents.tests \
   apps.prescriptions.tests \
+  apps.reviews.tests \
+  apps.integrations.tests \
+  apps.pharmacy.tests \
   --settings=config.settings_test \
   "$@"
+
+python manage.py smoke_clinical_flow --settings=config.settings_test

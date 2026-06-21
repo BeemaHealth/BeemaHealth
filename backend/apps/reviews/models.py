@@ -6,6 +6,13 @@ from apps.accounts.models import User
 
 
 class ProviderReview(models.Model):
+    DOCTOR_PARTNER_CHOICES = [
+        ("manual", "Manual admin"),
+        ("mock", "Mock adapter"),
+        ("openloop", "OpenLoop"),
+        ("carevalidate", "CareValidate"),
+        ("steadymd", "SteadyMD"),
+    ]
     DECISION_CHOICES = [
         ("needs_more_info", "Needs more information"),
         ("not_appropriate", "Not appropriate"),
@@ -31,6 +38,10 @@ class ProviderReview(models.Model):
         null=True,
         blank=True,
         related_name="reviews_conducted",
+    )
+    external_review_id = models.CharField(max_length=128, blank=True, default="")
+    doctor_partner = models.CharField(
+        max_length=32, choices=DOCTOR_PARTNER_CHOICES, blank=True, default="manual"
     )
     status = models.CharField(max_length=32, choices=STATUS_CHOICES, default="submitted")
     internal_note = models.TextField(blank=True)

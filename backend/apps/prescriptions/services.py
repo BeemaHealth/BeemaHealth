@@ -11,3 +11,7 @@ def get_active_prescription(user):
 
 def patient_has_active_prescription(user) -> bool:
     return PatientPrescription.objects.filter(user=user, is_active=True).exists()
+
+
+def deactivate_prescriptions(user) -> None:
+    PatientPrescription.objects.filter(user=user, is_active=True).update(is_active=False)

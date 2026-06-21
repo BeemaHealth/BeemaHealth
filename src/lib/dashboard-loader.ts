@@ -26,6 +26,7 @@ export async function loadDashboardData(): Promise<DashboardData> {
     treatment_interest: eligibility?.treatment_interest || null,
     patient_note: review?.patient_note ?? "",
     has_active_prescription: false,
+    pharmacy_order: null,
   };
 }
 

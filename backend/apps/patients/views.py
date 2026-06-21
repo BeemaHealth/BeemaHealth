@@ -35,8 +35,18 @@ class DashboardView(APIView):
                 "treatment_interest": eligibility.treatment_interest if eligibility else None,
                 "patient_note": review.patient_note if review else "",
                 "has_active_prescription": patient_has_active_prescription(user),
+                "pharmacy_order": self._pharmacy_order_payload(user),
             }
         )
+
+    def _pharmacy_order_payload(self, user):
+        from apps.pharmacy.serializers import PharmacyOrderSerializer
+        from apps.pharmacy.services import get_latest_pharmacy_order_for_user
+
+        order = get_latest_pharmacy_order_for_user(user)
+        if order is None:
+            return None
+        return PharmacyOrderSerializer(order).data
 
 
 class PatientProfileMeView(APIView):

@@ -27,5 +27,7 @@ urlpatterns = [
     path("api/refill-requests/", include(refill_urlpatterns)),
     path("api/prescriptions/", include(prescription_urlpatterns)),
     path("api/admin/", include("apps.reviews.urls")),
+    path("api/pharmacy/", include("apps.pharmacy.urls")),
+    path("api/webhooks/", include("apps.integrations.urls")),
     path("api/provider-reviews/", ProviderReviewSyncView.as_view(), name="provider-reviews"),
 ]

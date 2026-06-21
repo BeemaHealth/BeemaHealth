@@ -22,6 +22,9 @@ deploy-frontend-prod.sh
 npm-debug.log*
 bugs.txt
 
+# Vendor API docs (proprietary — local copy only; agents: see docs/LIFEFILE_MEDIVERA_API.md)
+docs/vendor/
+
 # Python / Django
 backend/.venv/
 backend/**/__pycache__/
