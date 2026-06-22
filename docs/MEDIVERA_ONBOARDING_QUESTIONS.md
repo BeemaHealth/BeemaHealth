@@ -102,6 +102,9 @@ _Section for Charlie. MediVera already confirmed no minimum volume._
     - Any volume tiers or pricing changes as we scale?
     - Typical **processing and shipping timelines** once an order is submitted.
 
+
+18. **Metrics**
+    - what are your metrics? dashboard we can see your performance on a daily basis? 
 ---
 
 ## 7. Partnerships — discussion, not a formal question (~2 min)
