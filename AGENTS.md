@@ -79,8 +79,19 @@ Read the relevant doc(s):
 | API types & client | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |
 | **Color scheme / portal UI** | **`src/lib/design-tokens.ts`**, `src/styles.css`, `src/components/portal/AccountSectionCard.tsx` |
 | Compliance / PHI / HIPAA | **`docs/HIPAA.md`**, `backend/HOSTING.md` |
+| **Patient funnel (qualify flow, session/cookie)** | **`docs/features/patient-funnel.md`** |
+| **Medical intake (12-step questionnaire)** | **`docs/features/medical-intake.md`** |
+| **Analytics & event tracking** | **`docs/features/analytics.md`** |
+| **Landing pages** | **`docs/features/landing-pages.md`** |
+| **Staff CRM** | **`docs/features/staff-crm.md`** |
+| **Medications catalog** | **`docs/features/medications.md`** |
+| **Dynamic questionnaire system** | **`docs/features/dynamic-questionnaire.md`**, `docs/DYNAMIC_QUESTIONNAIRE_SYSTEM.md` |
 
-Match existing patterns in surrounding code. Prefer minimal, focused diffs. If discrepancies between the documentation and the code exist, then ask the user if they would like the documentation changed or the code changed and explain the differences and give a recommendation. 
+Match existing patterns in surrounding code. Prefer minimal, focused diffs. If discrepancies between the documentation and the code exist, then ask the user if they would like the documentation changed or the code changed and explain the differences and give a recommendation.
+
+### Feature docs
+
+`docs/features/` contains one doc per platform feature area. Before finishing any task that adds or significantly changes a feature area, check whether a `docs/features/` doc exists for it. If not, ask the user: **"Should I create a feature doc for [feature name] in `docs/features/`?"** Do not create it without asking first.
 
 ### 2. Implement with defense in depth
 

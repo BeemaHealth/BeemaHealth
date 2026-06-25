@@ -1,4 +1,5 @@
 import { trackFunnelEventApi } from "@/lib/api/client";
+import { capturePageUtms } from "@/lib/utm";
 
 export type FunnelEventPayload = {
   event_name: string;
@@ -12,6 +13,19 @@ export type FunnelEventPayload = {
 
 export function trackFunnelEvent(payload: FunnelEventPayload) {
   void trackFunnelEventApi(payload);
+}
+
+export function trackPageViewed(page: string, extra?: { landing_page_slug?: string }) {
+  capturePageUtms();
+  const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+  const eventName = navEntry?.type === "reload" ? "page_reloaded" : "page_viewed";
+  trackFunnelEvent({
+    event_name: eventName,
+    properties: {
+      page,
+      ...(extra?.landing_page_slug ? { landing_page_slug: extra.landing_page_slug } : {}),
+    },
+  });
 }
 
 export function trackStepViewed(

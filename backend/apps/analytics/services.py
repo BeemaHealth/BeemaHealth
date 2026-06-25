@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
 from apps.analytics.models import FunnelEvent
+from apps.eligibility.models import FunnelSession
 
 
 def _parse_range(start: str | None, end: str | None) -> tuple:
@@ -74,6 +75,95 @@ def dropoff_rates(
         dropoff = round(100.0 * (1 - completions / views), 2) if views else 0.0
         result.append({**row, "dropoff_percent": dropoff})
     return result
+
+
+def traffic_sources(
+    *,
+    start: str | None = None,
+    end: str | None = None,
+) -> list[dict]:
+    start_dt, end_dt = _parse_range(start, end)
+    rows = (
+        FunnelSession.objects.filter(created_at__gte=start_dt, created_at__lte=end_dt)
+        .values("utm_source", "utm_medium", "utm_campaign")
+        .annotate(
+            sessions=Count("id"),
+            accounts=Count("claimed_by_user", distinct=True),
+        )
+        .order_by("-sessions")
+    )
+    return [
+        {
+            "utm_source": r["utm_source"] or "(direct)",
+            "utm_medium": r["utm_medium"] or "",
+            "utm_campaign": r["utm_campaign"] or "",
+            "sessions": r["sessions"],
+            "accounts_created": r["accounts"],
+            "conversion_rate": round(100.0 * r["accounts"] / r["sessions"], 2) if r["sessions"] else 0.0,
+        }
+        for r in rows
+    ]
+
+
+def landing_page_performance(
+    *,
+    start: str | None = None,
+    end: str | None = None,
+) -> list[dict]:
+    start_dt, end_dt = _parse_range(start, end)
+    rows = (
+        FunnelSession.objects.filter(
+            created_at__gte=start_dt,
+            created_at__lte=end_dt,
+            landing_page_slug__gt="",
+        )
+        .values("landing_page_slug")
+        .annotate(
+            sessions=Count("id"),
+            accounts=Count("claimed_by_user", distinct=True),
+        )
+        .order_by("-sessions")
+    )
+    return [
+        {
+            "landing_page_slug": r["landing_page_slug"],
+            "sessions": r["sessions"],
+            "accounts_created": r["accounts"],
+            "conversion_rate": round(100.0 * r["accounts"] / r["sessions"], 2) if r["sessions"] else 0.0,
+        }
+        for r in rows
+    ]
+
+
+def page_views_by_day(
+    *,
+    start: str | None = None,
+    end: str | None = None,
+) -> list[dict]:
+    start_dt, end_dt = _parse_range(start, end)
+    rows = (
+        FunnelEvent.objects.filter(
+            event_name="page_viewed",
+            created_at__gte=start_dt,
+            created_at__lte=end_dt,
+        )
+        .annotate(day=TruncDate("created_at"))
+        .values("day", "properties")
+        .annotate(count=Count("id"))
+        .order_by("day")
+    )
+    # Group by day + page name extracted from properties
+    aggregated: dict[str, dict[str, int]] = {}
+    for row in rows:
+        day = row["day"].isoformat() if row["day"] else "unknown"
+        page = (row["properties"] or {}).get("page", "unknown")
+        aggregated.setdefault(day, {}).setdefault(page, 0)
+        aggregated[day][page] += row["count"]
+    return [
+        {"day": day, "page": page, "count": count}
+        for day, pages in sorted(aggregated.items())
+        for page, count in sorted(pages.items())
+    ]
 
 
 def events_by_day(

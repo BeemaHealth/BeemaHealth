@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CheckCircle2, Scale, Stethoscope, Syringe } from "lucide-react";
+import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { TreatmentLineup } from "@/components/site/TreatmentLineup";
 import { Section, SectionHeading, SurfaceCard } from "@/components/site/primitives";
@@ -44,6 +46,7 @@ const BENEFITS = [
 ];
 
 function WeightLossPage() {
+  useEffect(() => { trackPageViewed("weight_loss"); }, []);
   return (
     <MarketingLayout>
       <Section className="bg-grad-hero">

@@ -1,3 +1,4 @@
+import re
 import uuid
 
 from django.db import models
@@ -14,6 +15,8 @@ ALLOWED_EVENT_NAMES = frozenset(
         "intake_submitted",
         "consent_signed",
         "funnel_abandoned",
+        "page_viewed",
+        "page_reloaded",
     }
 )
 
@@ -23,8 +26,36 @@ ALLOWED_PROPERTY_KEYS = frozenset(
         "step_index",
         "total_steps",
         "error_code",
+        "page",
+        "landing_page_slug",
+        "referrer",
     }
 )
+
+_SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
+
+
+class LandingPage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    slug = models.SlugField(max_length=64, unique=True)
+    name = models.CharField(max_length=128)
+    headline = models.CharField(max_length=256, blank=True, default="")
+    subheadline = models.CharField(max_length=512, blank=True, default="")
+    utm_source = models.CharField(max_length=128, blank=True, default="")
+    utm_medium = models.CharField(max_length=128, blank=True, default="")
+    utm_campaign = models.CharField(max_length=128, blank=True, default="")
+    utm_content = models.CharField(max_length=128, blank=True, default="")
+    redirect_to_home = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "landing_pages"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.name} ({self.slug})"
 
 
 class FunnelEvent(models.Model):

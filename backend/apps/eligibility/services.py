@@ -24,7 +24,7 @@ def get_client_ip(request) -> str | None:
     return request.META.get("REMOTE_ADDR")
 
 
-def create_funnel_session(request, *, utm: dict | None = None) -> tuple[FunnelSession, str]:
+def create_funnel_session(request, *, utm: dict | None = None, landing_page_slug: str = "") -> tuple[FunnelSession, str]:
     from apps.questionnaires.services import assign_experiment_variant
 
     ip = get_client_ip(request)
@@ -65,6 +65,7 @@ def create_funnel_session(request, *, utm: dict | None = None) -> tuple[FunnelSe
         utm_medium=str(utm.get("utm_medium", ""))[:128],
         utm_campaign=str(utm.get("utm_campaign", ""))[:128],
         utm_content=str(utm.get("utm_content", ""))[:128],
+        landing_page_slug=str(landing_page_slug)[:64],
         experiment_id=experiment_id,
         variant_key=variant_key or "",
         qualify_questionnaire_version_id=version_id,

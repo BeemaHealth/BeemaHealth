@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { Section, SectionHeading } from "@/components/site/primitives";
 import { Button } from "@/components/ui/button";
@@ -45,6 +47,7 @@ export const Route = createFileRoute("/faq")({
 });
 
 function FaqPage() {
+  useEffect(() => { trackPageViewed("faq"); }, []);
   return (
     <MarketingLayout>
       <Section className="bg-grad-hero">

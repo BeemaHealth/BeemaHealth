@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { trackPageViewed } from "@/lib/analytics";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, X, ArrowRight, Info } from "lucide-react";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
@@ -39,6 +40,7 @@ const SHIPPING = [
 ] as const;
 
 function PricingPage() {
+  useEffect(() => { trackPageViewed("pricing"); }, []);
   const [path, setPath] = useState<(typeof MED_PATHS)[number]["id"]>("insurance");
   const [ship, setShip] = useState<(typeof SHIPPING)[number]["id"]>("standard");
   const [labs, setLabs] = useState(false);

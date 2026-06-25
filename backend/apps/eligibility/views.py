@@ -28,14 +28,16 @@ class FunnelSessionView(APIView):
             eligibility = get_or_create_eligibility_for_session(existing)
             return Response(EligibilitySerializer(eligibility).data)
 
+        data = request.data if isinstance(request.data, dict) else {}
         session, token = create_funnel_session(
             request,
             utm={
-                "utm_source": request.data.get("utm_source") if isinstance(request.data, dict) else None,
-                "utm_medium": request.data.get("utm_medium") if isinstance(request.data, dict) else None,
-                "utm_campaign": request.data.get("utm_campaign") if isinstance(request.data, dict) else None,
-                "utm_content": request.data.get("utm_content") if isinstance(request.data, dict) else None,
+                "utm_source": data.get("utm_source"),
+                "utm_medium": data.get("utm_medium"),
+                "utm_campaign": data.get("utm_campaign"),
+                "utm_content": data.get("utm_content"),
             },
+            landing_page_slug=str(data.get("landing_page_slug") or "")[:64],
         )
         eligibility = get_or_create_eligibility_for_session(session)
         response = Response(EligibilitySerializer(eligibility).data, status=status.HTTP_201_CREATED)

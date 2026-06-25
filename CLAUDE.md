@@ -47,8 +47,19 @@ Patient funnel: qualification → account → medical intake → consent → pro
 | API types & client | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |
 | Color scheme / portal UI | `src/lib/design-tokens.ts`, `src/styles.css` |
 | Compliance / PHI / HIPAA | `docs/HIPAA.md`, `backend/HOSTING.md` |
+| **Patient funnel** | `docs/features/patient-funnel.md` |
+| **Medical intake** | `docs/features/medical-intake.md` |
+| **Analytics & tracking** | `docs/features/analytics.md` |
+| **Landing pages** | `docs/features/landing-pages.md` |
+| **Staff CRM** | `docs/features/staff-crm.md` |
+| **Medications catalog** | `docs/features/medications.md` |
+| **Dynamic questionnaire system** | `docs/features/dynamic-questionnaire.md` |
 
 Match existing patterns. Prefer minimal, focused diffs. If docs and code disagree, tell the user — do not silently fix either side.
+
+### Feature docs
+
+`docs/features/` has one doc per platform feature area. Before finishing any task that adds or significantly changes a feature, check if a doc exists for it. If not, ask the user: **"Should I create a feature doc for [feature name] in `docs/features/`?"** Do not create it without asking first.
 
 ### 2. Implement with defense in depth
 

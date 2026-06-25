@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalDocument, LegalList, LegalP, type LegalSection } from "@/components/site/LegalDocument";
+import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { Section } from "@/components/site/primitives";
 
@@ -237,6 +239,7 @@ const SECTIONS: LegalSection[] = [
 ];
 
 function TelehealthConsentPage() {
+  useEffect(() => { trackPageViewed("telehealth_consent"); }, []);
   return (
     <MarketingLayout>
       <Section>

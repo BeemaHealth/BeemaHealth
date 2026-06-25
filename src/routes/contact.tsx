@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Clock, Mail, MessageCircle } from "lucide-react";
+import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { Section, SectionHeading, SurfaceCard } from "@/components/site/primitives";
 import { Button } from "@/components/ui/button";
@@ -47,6 +49,7 @@ const CONTACT_OPTIONS = [
 ];
 
 function ContactPage() {
+  useEffect(() => { trackPageViewed("contact"); }, []);
   return (
     <MarketingLayout>
       <Section className="bg-grad-hero">

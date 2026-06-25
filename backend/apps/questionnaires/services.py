@@ -42,6 +42,9 @@ def serialize_step(step: QuestionnaireStep) -> dict:
         "title": step.title,
         "subtitle": step.subtitle,
         "visibility_rule": step.visibility_rule,
+        "routing_rules": step.routing_rules,
+        "position_x": step.position_x,
+        "position_y": step.position_y,
         "fields": fields,
     }
 

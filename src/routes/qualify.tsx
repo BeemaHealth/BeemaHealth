@@ -232,7 +232,14 @@ function QualifyHardcodedPage() {
           draft = await fetchEligibilityMe();
         } else {
           draft = await fetchFunnelEligibility();
-          if (!draft) draft = await createFunnelSession();
+          if (!draft) {
+            const { getPendingUtms, clearPendingUtms } = await import("@/lib/utm");
+            const utms = getPendingUtms();
+            draft = await createFunnelSession(
+              Object.keys(utms).length > 0 ? utms : undefined,
+            );
+            clearPendingUtms();
+          }
         }
 
         if (!cancelled && draft) {

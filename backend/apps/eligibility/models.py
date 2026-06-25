@@ -31,6 +31,7 @@ class FunnelSession(models.Model):
     utm_medium = models.CharField(max_length=128, blank=True, default="")
     utm_campaign = models.CharField(max_length=128, blank=True, default="")
     utm_content = models.CharField(max_length=128, blank=True, default="")
+    landing_page_slug = models.CharField(max_length=64, blank=True, default="")
     experiment_id = models.UUIDField(null=True, blank=True)
     variant_key = models.CharField(max_length=32, blank=True, default="")
     qualify_questionnaire_version_id = models.UUIDField(null=True, blank=True)

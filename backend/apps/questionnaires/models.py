@@ -116,6 +116,9 @@ class QuestionnaireStep(models.Model):
     title = models.CharField(max_length=256)
     subtitle = models.TextField(blank=True, default="")
     visibility_rule = models.JSONField(null=True, blank=True)
+    routing_rules = models.JSONField(default=list, blank=True)
+    position_x = models.FloatField(null=True, blank=True)
+    position_y = models.FloatField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

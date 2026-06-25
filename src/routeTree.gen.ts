@@ -37,8 +37,10 @@ import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pe
 import { Route as StaffQuestionnairesRouteImport } from './routes/staff.questionnaires'
 import { Route as StaffPatientsRouteImport } from './routes/staff.patients'
 import { Route as StaffMedicationsRouteImport } from './routes/staff.medications'
+import { Route as StaffLandingPagesRouteImport } from './routes/staff.landing-pages'
 import { Route as StaffExperimentsRouteImport } from './routes/staff.experiments'
 import { Route as StaffAnalyticsRouteImport } from './routes/staff.analytics'
+import { Route as LpSlugRouteImport } from './routes/lp.$slug'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
@@ -193,6 +195,11 @@ const StaffMedicationsRoute = StaffMedicationsRouteImport.update({
   path: '/medications',
   getParentRoute: () => StaffRoute,
 } as any)
+const StaffLandingPagesRoute = StaffLandingPagesRouteImport.update({
+  id: '/landing-pages',
+  path: '/landing-pages',
+  getParentRoute: () => StaffRoute,
+} as any)
 const StaffExperimentsRoute = StaffExperimentsRouteImport.update({
   id: '/experiments',
   path: '/experiments',
@@ -202,6 +209,11 @@ const StaffAnalyticsRoute = StaffAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
   getParentRoute: () => StaffRoute,
+} as any)
+const LpSlugRoute = LpSlugRouteImport.update({
+  id: '/lp/$slug',
+  path: '/lp/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const LegalTermsRoute = LegalTermsRouteImport.update({
   id: '/legal/terms',
@@ -304,8 +316,10 @@ export interface FileRoutesByFullPath {
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/lp/$slug': typeof LpSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
   '/staff/experiments': typeof StaffExperimentsRoute
+  '/staff/landing-pages': typeof StaffLandingPagesRoute
   '/staff/medications': typeof StaffMedicationsRoute
   '/staff/patients': typeof StaffPatientsRoute
   '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
@@ -346,8 +360,10 @@ export interface FileRoutesByTo {
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/lp/$slug': typeof LpSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
   '/staff/experiments': typeof StaffExperimentsRoute
+  '/staff/landing-pages': typeof StaffLandingPagesRoute
   '/staff/medications': typeof StaffMedicationsRoute
   '/staff/patients': typeof StaffPatientsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
@@ -390,8 +406,10 @@ export interface FileRoutesById {
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/lp/$slug': typeof LpSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
   '/staff/experiments': typeof StaffExperimentsRoute
+  '/staff/landing-pages': typeof StaffLandingPagesRoute
   '/staff/medications': typeof StaffMedicationsRoute
   '/staff/patients': typeof StaffPatientsRoute
   '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
@@ -437,8 +455,10 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
+    | '/lp/$slug'
     | '/staff/analytics'
     | '/staff/experiments'
+    | '/staff/landing-pages'
     | '/staff/medications'
     | '/staff/patients'
     | '/staff/questionnaires'
@@ -479,8 +499,10 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
+    | '/lp/$slug'
     | '/staff/analytics'
     | '/staff/experiments'
+    | '/staff/landing-pages'
     | '/staff/medications'
     | '/staff/patients'
     | '/verify-email/pending'
@@ -522,8 +544,10 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
+    | '/lp/$slug'
     | '/staff/analytics'
     | '/staff/experiments'
+    | '/staff/landing-pages'
     | '/staff/medications'
     | '/staff/patients'
     | '/staff/questionnaires'
@@ -563,6 +587,7 @@ export interface RootRouteChildren {
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTelehealthConsentRoute: typeof LegalTelehealthConsentRoute
   LegalTermsRoute: typeof LegalTermsRoute
+  LpSlugRoute: typeof LpSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -763,6 +788,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaffMedicationsRouteImport
       parentRoute: typeof StaffRoute
     }
+    '/staff/landing-pages': {
+      id: '/staff/landing-pages'
+      path: '/landing-pages'
+      fullPath: '/staff/landing-pages'
+      preLoaderRoute: typeof StaffLandingPagesRouteImport
+      parentRoute: typeof StaffRoute
+    }
     '/staff/experiments': {
       id: '/staff/experiments'
       path: '/experiments'
@@ -776,6 +808,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/staff/analytics'
       preLoaderRoute: typeof StaffAnalyticsRouteImport
       parentRoute: typeof StaffRoute
+    }
+    '/lp/$slug': {
+      id: '/lp/$slug'
+      path: '/lp/$slug'
+      fullPath: '/lp/$slug'
+      preLoaderRoute: typeof LpSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/legal/terms': {
       id: '/legal/terms'
@@ -926,6 +965,7 @@ const StaffQuestionnairesRouteWithChildren =
 interface StaffRouteChildren {
   StaffAnalyticsRoute: typeof StaffAnalyticsRoute
   StaffExperimentsRoute: typeof StaffExperimentsRoute
+  StaffLandingPagesRoute: typeof StaffLandingPagesRoute
   StaffMedicationsRoute: typeof StaffMedicationsRoute
   StaffPatientsRoute: typeof StaffPatientsRoute
   StaffQuestionnairesRoute: typeof StaffQuestionnairesRouteWithChildren
@@ -935,6 +975,7 @@ interface StaffRouteChildren {
 const StaffRouteChildren: StaffRouteChildren = {
   StaffAnalyticsRoute: StaffAnalyticsRoute,
   StaffExperimentsRoute: StaffExperimentsRoute,
+  StaffLandingPagesRoute: StaffLandingPagesRoute,
   StaffMedicationsRoute: StaffMedicationsRoute,
   StaffPatientsRoute: StaffPatientsRoute,
   StaffQuestionnairesRoute: StaffQuestionnairesRouteWithChildren,
@@ -983,6 +1024,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTelehealthConsentRoute: LegalTelehealthConsentRoute,
   LegalTermsRoute: LegalTermsRoute,
+  LpSlugRoute: LpSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,4 +1,8 @@
+import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { trackPageViewed } from "@/lib/analytics";
+import { createFunnelSession } from "@/lib/api/client";
+import { getPendingUtms, clearPendingUtms } from "@/lib/utm";
 import {
   ArrowRight,
   CheckCircle2,
@@ -45,6 +49,24 @@ const STEPS = [
 ];
 
 function HomePage() {
+  useEffect(() => {
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      if (cancelled) return;
+      const utms = getPendingUtms();
+      const hasUtms = Object.keys(utms).length > 0;
+      createFunnelSession(hasUtms ? utms : undefined)
+        .then(() => {
+          if (hasUtms) clearPendingUtms();
+          trackPageViewed("home");
+        })
+        .catch((err: unknown) => {
+          console.error("[aretide] home session failed:", err);
+          trackPageViewed("home");
+        });
+    }, 0);
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, []);
   return (
     <MarketingLayout>
       <section className="bg-grad-hero">

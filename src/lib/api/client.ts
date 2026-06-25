@@ -142,9 +142,16 @@ function updateStoredUser(user: User) {
   }
 }
 
-export async function createFunnelSession(): Promise<EligibilityResponses> {
+export async function createFunnelSession(utmParams?: {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  landing_page_slug?: string;
+}): Promise<EligibilityResponses> {
   return apiFetch<EligibilityResponses>("/funnel/session/", {
     method: "POST",
+    body: utmParams ? JSON.stringify(utmParams) : undefined,
     withCredentials: true,
   });
 }
@@ -489,6 +496,109 @@ export async function fetchStaffDropoffAnalytics(
   );
 }
 
+export type LandingPageItem = {
+  id: string;
+  slug: string;
+  name: string;
+  headline: string;
+  subheadline: string;
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  utm_content: string;
+  redirect_to_home: boolean;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type TrafficSourceRow = {
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  sessions: number;
+  accounts_created: number;
+  conversion_rate: number;
+};
+
+export type LandingPagePerformanceRow = {
+  landing_page_slug: string;
+  sessions: number;
+  accounts_created: number;
+  conversion_rate: number;
+};
+
+export type PageViewRow = {
+  day: string;
+  page: string;
+  count: number;
+};
+
+export async function fetchLandingPage(slug: string): Promise<LandingPageItem> {
+  return apiFetch<LandingPageItem>(
+    `/analytics/lp/${encodeURIComponent(slug)}/`,
+  );
+}
+
+export async function fetchStaffLandingPages(): Promise<LandingPageItem[]> {
+  return apiFetch<LandingPageItem[]>("/staff/analytics/landing-pages/");
+}
+
+export async function createStaffLandingPage(
+  data: Omit<LandingPageItem, "id" | "created_at" | "updated_at">,
+): Promise<LandingPageItem> {
+  return apiFetch<LandingPageItem>("/staff/analytics/landing-pages/", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateStaffLandingPage(
+  id: string,
+  data: Partial<Omit<LandingPageItem, "id" | "created_at" | "updated_at">>,
+): Promise<LandingPageItem> {
+  return apiFetch<LandingPageItem>(`/staff/analytics/landing-pages/${id}/`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteStaffLandingPage(id: string): Promise<void> {
+  await apiFetch(`/staff/analytics/landing-pages/${id}/`, { method: "DELETE" });
+}
+
+export async function fetchStaffTrafficSources(params?: {
+  start?: string;
+  end?: string;
+}): Promise<{ sources: TrafficSourceRow[] }> {
+  const qs = new URLSearchParams(
+    Object.entries(params ?? {}).filter(([, v]) => v) as [string, string][],
+  ).toString();
+  return apiFetch(`/staff/analytics/traffic/${qs ? `?${qs}` : ""}`);
+}
+
+export async function fetchStaffLandingPagePerformance(params?: {
+  start?: string;
+  end?: string;
+}): Promise<{ landing_pages: LandingPagePerformanceRow[] }> {
+  const qs = new URLSearchParams(
+    Object.entries(params ?? {}).filter(([, v]) => v) as [string, string][],
+  ).toString();
+  return apiFetch(
+    `/staff/analytics/landing-pages-performance/${qs ? `?${qs}` : ""}`,
+  );
+}
+
+export async function fetchStaffPageViews(params?: {
+  start?: string;
+  end?: string;
+}): Promise<{ page_views: PageViewRow[] }> {
+  const qs = new URLSearchParams(
+    Object.entries(params ?? {}).filter(([, v]) => v) as [string, string][],
+  ).toString();
+  return apiFetch(`/staff/analytics/page-views/${qs ? `?${qs}` : ""}`);
+}
+
 export type StaffPatientRow = {
   id: string;
   email: string;
@@ -558,6 +668,12 @@ export type QuestionnaireFieldSchema = {
   required?: boolean;
 };
 
+export type RoutingRule = {
+  when_field: string;
+  when_value: string;
+  next_step_key: string;
+};
+
 export type QuestionnaireStepSchema = {
   id?: string;
   step_key: string;
@@ -565,6 +681,9 @@ export type QuestionnaireStepSchema = {
   title: string;
   subtitle?: string;
   visibility_rule?: Record<string, unknown> | null;
+  routing_rules?: RoutingRule[];
+  position_x?: number | null;
+  position_y?: number | null;
   fields: QuestionnaireFieldSchema[];
 };
 

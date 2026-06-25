@@ -14,8 +14,13 @@ from apps.questionnaires.models import (
 
 _KEY_RE = re.compile(r"^[a-z0-9][a-z0-9_]*$")
 _SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
 
 ALLOWED_RULE_KEYS = frozenset({"required", "min", "max", "min_length", "max_length", "pattern", "enum"})
+
+
+def _strip_html(value: str) -> str:
+    return _HTML_TAG_RE.sub("", str(value)).strip()
 
 
 def _validate_key(value: str, field_name: str) -> str:
@@ -163,6 +168,9 @@ class QuestionnaireStepSerializer(serializers.ModelSerializer):
             "title",
             "subtitle",
             "visibility_rule",
+            "routing_rules",
+            "position_x",
+            "position_y",
             "fields",
         ]
         read_only_fields = ["id", "fields"]
@@ -243,16 +251,25 @@ class QuestionnaireWriteSerializer(serializers.ModelSerializer):
 class QuestionnaireStepWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionnaireStep
-        fields = ["step_key", "sort_order", "title", "subtitle", "visibility_rule"]
+        fields = [
+            "step_key",
+            "sort_order",
+            "title",
+            "subtitle",
+            "visibility_rule",
+            "routing_rules",
+            "position_x",
+            "position_y",
+        ]
 
     def validate_step_key(self, value):
         return _validate_key(value, "step_key")
 
     def validate_title(self, value):
-        return str(value).strip()[:256]
+        return _strip_html(value)[:256]
 
     def validate_subtitle(self, value):
-        return str(value).strip()[:1024]
+        return _strip_html(value)[:1024]
 
     def validate_visibility_rule(self, value):
         if value is None:
@@ -268,6 +285,25 @@ class QuestionnaireStepWriteSerializer(serializers.ModelSerializer):
             if "field" in when:
                 when["field"] = str(when["field"]).strip()[:64]
         return value
+
+    def validate_routing_rules(self, value):
+        if not isinstance(value, list):
+            raise serializers.ValidationError("Must be a list.")
+        cleaned = []
+        for i, rule in enumerate(value):
+            if not isinstance(rule, dict):
+                raise serializers.ValidationError(f"Rule {i} must be an object.")
+            when_field = str(rule.get("when_field", "")).strip()[:64]
+            when_value = str(rule.get("when_value", "")).strip()[:256]
+            next_step_key = str(rule.get("next_step_key", "")).strip()[:64]
+            if not when_field or not next_step_key:
+                raise serializers.ValidationError(f"Rule {i} must have when_field and next_step_key.")
+            cleaned.append({
+                "when_field": when_field,
+                "when_value": when_value,
+                "next_step_key": next_step_key,
+            })
+        return cleaned
 
 
 class QuestionnaireFieldWriteSerializer(serializers.ModelSerializer):

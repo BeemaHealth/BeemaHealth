@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { capturePageUtms } from "@/lib/utm";
 
 import appCss from "../styles.css?url";
 import { AuthProvider } from "../context/AuthContext";
@@ -137,6 +138,12 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  // Capture UTMs from the URL on every page load so they're available
+  // when the funnel session is eventually created in qualify.tsx.
+  useEffect(() => {
+    capturePageUtms();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
