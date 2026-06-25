@@ -30,10 +30,15 @@ function StaffQuestionnaireVersionsPage() {
 
   async function handleCreate() {
     try {
-      await createStaffQuestionnaireVersion(slug, `draft-${versions.length + 1}`);
+      await createStaffQuestionnaireVersion(
+        slug,
+        `draft-${versions.length + 1}`,
+      );
       await reload();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create version.");
+      setError(
+        err instanceof Error ? err.message : "Failed to create version.",
+      );
     }
   }
 
@@ -65,7 +70,9 @@ function StaffQuestionnaireVersionsPage() {
           >
             ← Questionnaires
           </Link>
-          <h1 className="text-2xl font-bold text-foreground">{slug} versions</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            {slug} versions
+          </h1>
           <p className="text-sm text-muted-foreground">
             Draft, publish, and duplicate schemas.
           </p>

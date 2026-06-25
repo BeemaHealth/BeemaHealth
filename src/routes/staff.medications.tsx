@@ -230,7 +230,8 @@ function MedicationForm({
 
 function StaffMedicationsPage() {
   const [medications, setMedications] = useState<MedicationItem[]>([]);
-  const [drugTypes, setDrugTypes] = useState<{ value: string; label: string }[]>(BASE_DRUG_TYPES);
+  const [drugTypes, setDrugTypes] =
+    useState<{ value: string; label: string }[]>(BASE_DRUG_TYPES);
   const [showNew, setShowNew] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -322,7 +323,8 @@ function StaffMedicationsPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Medications</h1>
           <p className="text-sm text-muted-foreground">
-            Manage the medications your platform offers. Each medication can have its own qualify and intake questionnaire.
+            Manage the medications your platform offers. Each medication can
+            have its own qualify and intake questionnaire.
           </p>
         </div>
         <Button size="sm" onClick={() => setShowNew(true)} disabled={showNew}>
