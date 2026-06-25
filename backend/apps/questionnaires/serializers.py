@@ -296,8 +296,11 @@ class QuestionnaireStepWriteSerializer(serializers.ModelSerializer):
             when_field = str(rule.get("when_field", "")).strip()[:64]
             when_value = str(rule.get("when_value", "")).strip()[:256]
             next_step_key = str(rule.get("next_step_key", "")).strip()[:64]
-            if not when_field or not next_step_key:
-                raise serializers.ValidationError(f"Rule {i} must have when_field and next_step_key.")
+            if not when_field:
+                raise serializers.ValidationError(f"Rule {i} must have when_field.")
+            # __default__ with an empty next_step_key is the "no default flow" sentinel.
+            if not next_step_key and when_field != "__default__":
+                raise serializers.ValidationError(f"Rule {i} must have next_step_key.")
             cleaned.append({
                 "when_field": when_field,
                 "when_value": when_value,

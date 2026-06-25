@@ -12,6 +12,8 @@ from apps.analytics.services import (
     funnel_step_counts,
     landing_page_performance,
     page_views_by_day,
+    questionnaire_version_stats,
+    top_of_funnel_stats,
     traffic_sources,
 )
 
@@ -27,6 +29,7 @@ class StaffAnalyticsFunnelView(APIView):
             end=request.query_params.get("end"),
             experiment_id=request.query_params.get("experiment_id"),
             variant_key=request.query_params.get("variant_key"),
+            version_id=request.query_params.get("version_id"),
         )
         return Response({"questionnaire_slug": slug, "steps": data})
 
@@ -40,8 +43,22 @@ class StaffAnalyticsDropoffView(APIView):
             questionnaire_slug=slug,
             start=request.query_params.get("start"),
             end=request.query_params.get("end"),
+            version_id=request.query_params.get("version_id"),
         )
         return Response({"questionnaire_slug": slug, "steps": data})
+
+
+class StaffAnalyticsVersionsView(APIView):
+    permission_classes = [IsStaff]
+
+    def get(self, request):
+        slug = request.query_params.get("questionnaire_slug", "qualify")
+        data = questionnaire_version_stats(
+            questionnaire_slug=slug,
+            start=request.query_params.get("start"),
+            end=request.query_params.get("end"),
+        )
+        return Response({"questionnaire_slug": slug, "versions": data})
 
 
 class StaffAnalyticsTimelineView(APIView):
@@ -88,6 +105,17 @@ class StaffAnalyticsPageViewsView(APIView):
             end=request.query_params.get("end"),
         )
         return Response({"page_views": data})
+
+
+class StaffAnalyticsTopOfFunnelView(APIView):
+    permission_classes = [IsStaff]
+
+    def get(self, request):
+        data = top_of_funnel_stats(
+            start=request.query_params.get("start"),
+            end=request.query_params.get("end"),
+        )
+        return Response(data)
 
 
 class StaffLandingPageListView(APIView):

@@ -25,6 +25,17 @@ import {
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Field, inputCls } from "@/components/quiz/quiz-primitives";
 import {
@@ -770,28 +781,63 @@ function EdgePanel({
             </Button>
           )}
           {isDraft && (
-            <Button
-              size="sm"
-              variant="destructive"
-              disabled={saving}
-              className="w-full gap-1.5"
-              onClick={() =>
-                void run(async () => {
-                  const step = schema.steps.find(
-                    (s) => s.step_key === stepKey,
-                  )!;
-                  const newRules = (step.routing_rules ?? []).filter(
-                    (_, idx) => idx !== ruleIndex,
-                  );
-                  await updateStaffQuestionnaireStep(slug, versionId, stepKey, {
-                    routing_rules: newRules,
-                  });
-                })
-              }
-            >
-              <Trash2 className="size-3.5" />
-              {saving ? "Deleting…" : "Delete connection"}
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  disabled={saving}
+                  className="w-full gap-1.5"
+                >
+                  <Trash2 className="size-3.5" />
+                  {saving ? "Deleting…" : "Delete connection"}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete connection?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will remove the routing rule from{" "}
+                    <strong>{effFromStep}</strong> (when{" "}
+                    <strong>{effFromField}</strong> = &ldquo;
+                    {effFromValue}&rdquo;). You can recreate it by dragging from
+                    the option handle.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={() =>
+                      void run(async () => {
+                        const step = schema.steps.find(
+                          (s) => s.step_key === stepKey,
+                        )!;
+                        // Match by content, not array index — ruleIndex is from
+                        // the filtered (conditional-only) array and would be
+                        // misaligned if __default__ rules precede it.
+                        const newRules = (step.routing_rules ?? []).filter(
+                          (r) =>
+                            !(
+                              r.when_field === rule.when_field &&
+                              r.when_value === rule.when_value &&
+                              r.next_step_key === rule.next_step_key
+                            ),
+                        );
+                        await updateStaffQuestionnaireStep(
+                          slug,
+                          versionId,
+                          stepKey,
+                          { routing_rules: newRules },
+                        );
+                      })
+                    }
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           )}
         </div>
       </aside>
@@ -837,6 +883,7 @@ function EdgePanel({
               disabled={!isDraft || saving}
               onChange={(e) => setChangeTarget(e.target.value)}
             >
+              <option value="">None — no default flow</option>
               {naturalNext && (
                 <option value={naturalNext.step_key}>
                   {naturalNext.step_key} (automatic)
@@ -866,7 +913,7 @@ function EdgePanel({
           targetKey={changeTarget ?? targetStepKey}
           analyticsMap={analyticsMap}
         />
-        {isDraft && changeTarget && changeTarget !== targetStepKey && (
+        {isDraft && changeTarget !== null && changeTarget !== targetStepKey && (
           <Button
             size="sm"
             disabled={saving}
@@ -888,7 +935,7 @@ function EdgePanel({
                     : [
                         ...without,
                         {
-                          when_field: "__default__",
+                          when_field: "__default__" as const,
                           when_value: "",
                           next_step_key: changeTarget,
                         },
@@ -903,7 +950,7 @@ function EdgePanel({
         {isDraft && isOverride && (
           <Button
             size="sm"
-            variant="destructive"
+            variant="outline"
             disabled={saving}
             className="w-full gap-1.5"
             onClick={() =>
@@ -922,9 +969,70 @@ function EdgePanel({
               })
             }
           >
-            <Trash2 className="size-3.5" />
-            {saving ? "Removing…" : "Reset to automatic"}
+            {saving ? "Reverting…" : "Reset to automatic"}
           </Button>
+        )}
+        {isDraft && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                size="sm"
+                variant="destructive"
+                disabled={saving}
+                className="w-full gap-1.5"
+              >
+                <Trash2 className="size-3.5" />
+                {saving ? "Deleting…" : "Delete connection"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete default connection?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Patients who reach <strong>{stepKey}</strong> will not
+                  automatically advance to the next step. You can restore it by
+                  clicking the step and setting a default in the right panel.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  onClick={() =>
+                    void run(async () => {
+                      const step = schema.steps.find(
+                        (s) => s.step_key === stepKey,
+                      )!;
+                      const without = (step.routing_rules ?? []).filter(
+                        (r) =>
+                          !(
+                            r.when_field === "__default__" ||
+                            (!r.when_field && !r.when_value)
+                          ),
+                      );
+                      await updateStaffQuestionnaireStep(
+                        slug,
+                        versionId,
+                        stepKey,
+                        {
+                          routing_rules: [
+                            ...without,
+                            {
+                              when_field: "__default__" as const,
+                              when_value: "",
+                              next_step_key: "",
+                            },
+                          ],
+                        },
+                      );
+                    })
+                  }
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         )}
       </div>
     </aside>
@@ -949,7 +1057,9 @@ function computeNextStep(
   const defaultRule = rules.find(
     (r) => r.when_field === "__default__" || (!r.when_field && !r.when_value),
   );
-  if (defaultRule?.next_step_key) {
+  if (defaultRule) {
+    // Empty next_step_key is the "no default flow" sentinel — stop here.
+    if (!defaultRule.next_step_key) return null;
     return (
       allSteps.find((s) => s.step_key === defaultRule.next_step_key) ?? null
     );
@@ -1446,10 +1556,19 @@ function chooseHandles(
 ): { sourceHandle: string; targetHandle: string } {
   const dx = tx - sx;
   const dy = ty - sy;
-  // Use bottom→top when target is clearly below (dy positive and dominant)
+
+  // Target is clearly below (steeper vertical than horizontal): exit bottom, enter top
   if (dy > 0 && dy > Math.abs(dx) * 0.55) {
     return { sourceHandle: "out-bottom", targetHandle: "in-top" };
   }
+
+  // Target is to the left: exit bottom so the curve swoops down-then-left
+  // instead of the ugly backward S-curve produced by right→left
+  if (dx < 0) {
+    return { sourceHandle: "out-bottom", targetHandle: "in-left" };
+  }
+
+  // Target is to the right (or directly above): right→left
   return { sourceHandle: "out-right", targetHandle: "in-left" };
 }
 
@@ -1535,8 +1654,12 @@ function buildEdges(
           tp.x,
           tp.y,
         );
-        // Per-answer handles always exit from the right — pick target side based on relative Y
-        const answerTargetHandle = tp.y > sp.y + 60 ? "in-top" : "in-left";
+        // Per-answer handles exit from the right. Use the same relative-position
+        // logic as chooseHandles to pick the best target handle.
+        const adx = tp.x - sp.x;
+        const ady = tp.y - sp.y;
+        const answerTargetHandle =
+          ady > 0 && ady > Math.abs(adx) * 0.55 ? "in-top" : "in-left";
 
         const edgeId = `route-${step.step_key}-${ri}`;
         const isEdgeSel = edgeId === selectedEdgeId;
@@ -1856,16 +1979,20 @@ function StepEditorPanel({
     defaultOverrideRule?.next_step_key ?? naturalNext?.step_key ?? "";
 
   function setDefaultNext(nextKey: string) {
-    const isNatural = nextKey === (naturalNext?.step_key ?? "");
+    const isNatural = naturalNext != null && nextKey === naturalNext.step_key;
     setLocalRouting((prev) => {
       const without = prev.filter(
         (r) =>
           !(r.when_field === "__default__" || (!r.when_field && !r.when_value)),
       );
-      if (isNatural) return without;
+      if (isNatural) return without; // remove override, fall through to natural
       return [
         ...without,
-        { when_field: "__default__", when_value: "", next_step_key: nextKey },
+        {
+          when_field: "__default__" as const,
+          when_value: "",
+          next_step_key: nextKey, // "" = explicitly no default
+        },
       ];
     });
   }
@@ -2023,14 +2150,13 @@ function StepEditorPanel({
             disabled={!isDraft}
             onChange={(e) => setDefaultNext(e.target.value)}
           >
+            <option value="">None — no default flow</option>
             {naturalNext ? (
               <option value={naturalNext.step_key}>
                 {naturalNext.step_key} —{" "}
                 {stripHtml(naturalNext.title) || "(no title)"} (automatic)
               </option>
-            ) : (
-              <option value="">— end of questionnaire —</option>
-            )}
+            ) : null}
             {sortedSteps
               .filter(
                 (s) =>
@@ -2234,6 +2360,9 @@ export function FlowchartBuilder({
   const [addingStep, setAddingStep] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [showAddConnection, setShowAddConnection] = useState(false);
+  // Incremented on every drag-stop so the buildNodesAndEdges useEffect re-runs
+  // with the latest positions.current and recalculates handle pairs for all edges.
+  const [positionsVersion, setPositionsVersion] = useState(0);
 
   const positions = useRef<Map<string, { x: number; y: number }>>(new Map());
   const persistTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -2287,6 +2416,14 @@ export function FlowchartBuilder({
 
   useEffect(() => {
     if (!schema) return;
+    // Seed positions.current for any steps not yet dragged this session
+    // so buildEdges always has a concrete position for every node.
+    const ap = autoLayout(schema.steps);
+    schema.steps.forEach((step, i) => {
+      if (!positions.current.has(step.step_key)) {
+        positions.current.set(step.step_key, ap[i]);
+      }
+    });
     const { nodes: n, edges: e } = buildNodesAndEdges(
       schema,
       showAnalytics ? analyticsMap : new Map(),
@@ -2306,6 +2443,7 @@ export function FlowchartBuilder({
     showAnalytics,
     pendingSource,
     onAnswerClick,
+    positionsVersion,
     setNodes,
     setEdges,
   ]);
@@ -2324,9 +2462,9 @@ export function FlowchartBuilder({
     setShowAnalytics(next);
     if (next && analyticsMap.size === 0 && schema) {
       try {
-        const result = await fetchStaffDropoffAnalytics(
-          schema.questionnaire_slug,
-        );
+        const result = await fetchStaffDropoffAnalytics({
+          questionnaire_slug: schema.questionnaire_slug,
+        });
         const map = new Map<string, FunnelAnalyticsStep>();
         result.steps.forEach((s) => map.set(s.step_key, s));
         setAnalyticsMap(map);
@@ -2359,8 +2497,12 @@ export function FlowchartBuilder({
         setPendingSource(null);
         const step = schema?.steps.find((s) => s.step_key === src.stepKey);
         if (!step || schema?.status !== "draft") return;
+        // Upsert: replace existing rule for the same field+value, don't duplicate
+        const without = (step.routing_rules ?? []).filter(
+          (r) => !(r.when_field === src.fieldKey && r.when_value === src.value),
+        );
         const newRules: RoutingRule[] = [
-          ...(step.routing_rules ?? []),
+          ...without,
           {
             when_field: src.fieldKey,
             when_value: src.value,
@@ -2396,8 +2538,12 @@ export function FlowchartBuilder({
         const [, fieldKey, value] = srcHandle.split("|");
         const step = schema.steps.find((s) => s.step_key === connection.source);
         if (!step || !fieldKey) return;
+        // Upsert: replace any existing rule for this field+value, don't duplicate
+        const without = (step.routing_rules ?? []).filter(
+          (r) => !(r.when_field === fieldKey && r.when_value === (value ?? "")),
+        );
         const newRules: RoutingRule[] = [
-          ...(step.routing_rules ?? []),
+          ...without,
           {
             when_field: fieldKey,
             when_value: value ?? "",
@@ -2460,24 +2606,16 @@ export function FlowchartBuilder({
   function onNodeDragStop(_: MouseEvent | TouchEvent, node: Node) {
     if (!schema || schema.status !== "draft") return;
     const { x, y } = node.position;
+
+    // 1. Write to ref synchronously (refs never go stale in closures).
     positions.current.set(node.id, { x, y });
 
-    // Rebuild edges immediately using the current canvas positions so lines
-    // snap to the shortest handle pair without waiting for a schema reload.
-    const currentPositions = new Map<string, { x: number; y: number }>(
-      nodes.map((n) => [n.id, n.position]),
-    );
-    currentPositions.set(node.id, { x, y });
-    setEdges(
-      buildEdges(
-        schema.steps,
-        currentPositions,
-        autoLayout(schema.steps),
-        selectedEdgeInfo?.edgeId ?? null,
-      ),
-    );
+    // 2. Bump the counter so the buildNodesAndEdges useEffect re-runs and
+    //    recalculates chooseHandles for every edge — both seq and route —
+    //    using the updated positions.current.
+    setPositionsVersion((v) => v + 1);
 
-    // Debounced backend save
+    // 3. Debounced backend save
     if (persistTimer.current) clearTimeout(persistTimer.current);
     persistTimer.current = setTimeout(() => {
       void updateStaffQuestionnaireStep(slug, versionId, node.id, {

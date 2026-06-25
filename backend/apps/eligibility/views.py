@@ -32,10 +32,10 @@ class FunnelSessionView(APIView):
         session, token = create_funnel_session(
             request,
             utm={
-                "utm_source": data.get("utm_source"),
-                "utm_medium": data.get("utm_medium"),
-                "utm_campaign": data.get("utm_campaign"),
-                "utm_content": data.get("utm_content"),
+                "utm_source": data.get("utm_source") or "",
+                "utm_medium": data.get("utm_medium") or "",
+                "utm_campaign": data.get("utm_campaign") or "",
+                "utm_content": data.get("utm_content") or "",
             },
             landing_page_slug=str(data.get("landing_page_slug") or "")[:64],
         )

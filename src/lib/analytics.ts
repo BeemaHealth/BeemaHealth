@@ -15,15 +15,33 @@ export function trackFunnelEvent(payload: FunnelEventPayload) {
   void trackFunnelEventApi(payload);
 }
 
-export function trackPageViewed(page: string, extra?: { landing_page_slug?: string }) {
+// Captured once at module init — reflects whether the browser's *initial* hard
+// load (not a SPA route change) was triggered by a reload.
+const _initialLoadWasReload =
+  (
+    performance.getEntriesByType("navigation")[0] as
+      | PerformanceNavigationTiming
+      | undefined
+  )?.type === "reload";
+let _firstPageViewFired = false;
+
+export function trackPageViewed(
+  page: string,
+  extra?: { landing_page_slug?: string },
+) {
   capturePageUtms();
-  const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
-  const eventName = navEntry?.type === "reload" ? "page_reloaded" : "page_viewed";
+  // Only the very first call in this JS session can be a page_reloaded — and
+  // only if the browser's initial load was a hard reload.  All subsequent SPA
+  // route changes (useEffect fires on component mount) are always page_viewed.
+  const isReload = !_firstPageViewFired && _initialLoadWasReload;
+  _firstPageViewFired = true;
   trackFunnelEvent({
-    event_name: eventName,
+    event_name: isReload ? "page_reloaded" : "page_viewed",
     properties: {
       page,
-      ...(extra?.landing_page_slug ? { landing_page_slug: extra.landing_page_slug } : {}),
+      ...(extra?.landing_page_slug
+        ? { landing_page_slug: extra.landing_page_slug }
+        : {}),
     },
   });
 }

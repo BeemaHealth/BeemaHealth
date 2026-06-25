@@ -472,28 +472,82 @@ export type FunnelAnalyticsStep = {
   views: number;
   completions: number;
   dropoff_percent?: number;
+  stopped_sessions?: number;
 };
 
 export async function fetchStaffFunnelAnalytics(params: {
   questionnaire_slug?: string;
   experiment_id?: string;
   variant_key?: string;
+  version_id?: string;
+  start?: string;
+  end?: string;
 }): Promise<{ questionnaire_slug: string; steps: FunnelAnalyticsStep[] }> {
   const search = new URLSearchParams();
   if (params.questionnaire_slug)
     search.set("questionnaire_slug", params.questionnaire_slug);
   if (params.experiment_id) search.set("experiment_id", params.experiment_id);
   if (params.variant_key) search.set("variant_key", params.variant_key);
+  if (params.version_id) search.set("version_id", params.version_id);
+  if (params.start) search.set("start", params.start);
+  if (params.end) search.set("end", params.end);
   const qs = search.toString();
   return apiFetch(`/staff/analytics/funnel/${qs ? `?${qs}` : ""}`);
 }
 
-export async function fetchStaffDropoffAnalytics(
-  questionnaire_slug = "qualify",
-) {
+export async function fetchStaffDropoffAnalytics(params: {
+  questionnaire_slug?: string;
+  version_id?: string;
+  start?: string;
+  end?: string;
+}): Promise<{ questionnaire_slug: string; steps: FunnelAnalyticsStep[] }> {
+  const search = new URLSearchParams();
+  search.set("questionnaire_slug", params.questionnaire_slug ?? "qualify");
+  if (params.version_id) search.set("version_id", params.version_id);
+  if (params.start) search.set("start", params.start);
+  if (params.end) search.set("end", params.end);
   return apiFetch<{ questionnaire_slug: string; steps: FunnelAnalyticsStep[] }>(
-    `/staff/analytics/dropoff/?questionnaire_slug=${encodeURIComponent(questionnaire_slug)}`,
+    `/staff/analytics/dropoff/?${search.toString()}`,
   );
+}
+
+export type TopOfFunnelStats = {
+  home_sessions: number;
+  started_qualify: number;
+  accounts_created: number;
+  abandoned_at_home: number;
+  home_to_qualify_rate: number;
+  home_to_account_rate: number;
+};
+
+export async function fetchStaffTopOfFunnel(params?: {
+  start?: string;
+  end?: string;
+}): Promise<TopOfFunnelStats> {
+  const qs = new URLSearchParams(
+    Object.entries(params ?? {}).filter(([, v]) => v) as [string, string][],
+  ).toString();
+  return apiFetch<TopOfFunnelStats>(
+    `/staff/analytics/top-of-funnel/${qs ? `?${qs}` : ""}`,
+  );
+}
+
+export type VersionStatRow = {
+  version_id: string;
+  version_label: string;
+  status: string;
+  sessions: number;
+};
+
+export async function fetchStaffVersionStats(
+  questionnaire_slug: string,
+  params?: { start?: string; end?: string },
+): Promise<{ questionnaire_slug: string; versions: VersionStatRow[] }> {
+  const search = new URLSearchParams();
+  search.set("questionnaire_slug", questionnaire_slug);
+  if (params?.start) search.set("start", params.start);
+  if (params?.end) search.set("end", params.end);
+  return apiFetch(`/staff/analytics/versions/?${search.toString()}`);
 }
 
 export type LandingPageItem = {

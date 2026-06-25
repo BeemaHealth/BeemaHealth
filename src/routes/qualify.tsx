@@ -46,7 +46,11 @@ import { formatPhoneInput } from "@/lib/form-validation";
 import { computeBmi } from "@/lib/safety-flags";
 import { useAuth } from "@/context/AuthContext";
 import { US_STATES } from "@/lib/veya-data";
-import { trackStepCompleted, trackStepViewed } from "@/lib/analytics";
+import {
+  trackPageViewed,
+  trackStepCompleted,
+  trackStepViewed,
+} from "@/lib/analytics";
 import { QualifyDynamicFlow } from "@/components/questionnaire/QualifyDynamicFlow";
 import { DYNAMIC_QUESTIONNAIRES_ENABLED } from "@/lib/questionnaire/config";
 import type {
@@ -167,6 +171,9 @@ function formToPayload(data: FormState): Partial<EligibilityResponses> {
 }
 
 function EligibilityPage() {
+  useEffect(() => {
+    trackPageViewed("qualify");
+  }, []);
   if (DYNAMIC_QUESTIONNAIRES_ENABLED && isApiEnabled()) {
     return <QualifyDynamicFlow />;
   }
@@ -233,7 +240,8 @@ function QualifyHardcodedPage() {
         } else {
           draft = await fetchFunnelEligibility();
           if (!draft) {
-            const { getPendingUtms, clearPendingUtms } = await import("@/lib/utm");
+            const { getPendingUtms, clearPendingUtms } =
+              await import("@/lib/utm");
             const utms = getPendingUtms();
             draft = await createFunnelSession(
               Object.keys(utms).length > 0 ? utms : undefined,
