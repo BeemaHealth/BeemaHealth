@@ -33,6 +33,12 @@ Patient funnel: qualification → account → medical intake → consent → pro
 
 ---
 
+## New feature requests
+
+Before writing any code for a new feature, run `/start-feature`. That skill clones the repo from GitHub, creates and checks out the feature branch, and defines the testing gate. Full instructions live there. Never push — the user pushes when ready.
+
+---
+
 ## Workflow on every task
 
 ### 1. Orient — read before coding
@@ -59,7 +65,11 @@ Match existing patterns. Prefer minimal, focused diffs. If docs and code disagre
 
 ### Feature docs
 
-`docs/features/` has one doc per platform feature area. Before finishing any task that adds or significantly changes a feature, check if a doc exists for it. If not, ask the user: **"Should I create a feature doc for [feature name] in `docs/features/`?"** Do not create it without asking first.
+`docs/features/` has one doc per platform feature area.
+
+**Discrepancy check:** When working in a feature area that has a `docs/features/` doc, skim it against the actual code. If anything is wrong or out of date, tell the user what the doc says, what the code actually does, and your recommendation. Do not silently fix either side — wait for the user to decide.
+
+**Missing doc:** Before finishing any task that adds or significantly changes a feature, check if a doc exists. If not, ask: **"Should I create a feature doc for [feature name] in `docs/features/`?"** Do not create it without asking first.
 
 ### 2. Implement with defense in depth
 

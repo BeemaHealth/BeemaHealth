@@ -62,6 +62,12 @@ Pre-signup progress: `POST /api/funnel/session/` + `PATCH /api/funnel/eligibilit
 
 ---
 
+## New feature requests
+
+**Before writing any code for a new feature, run `/start-feature` (`.claude/commands/start-feature.md`).** That skill handles cloning from GitHub, naming and checking out the feature branch, and setting the testing gate. Full instructions are there — do not duplicate them here.
+
+---
+
 ## Your workflow on every task
 
 ### 1. Orient before coding
@@ -91,7 +97,16 @@ Match existing patterns in surrounding code. Prefer minimal, focused diffs. If d
 
 ### Feature docs
 
-`docs/features/` contains one doc per platform feature area. Before finishing any task that adds or significantly changes a feature area, check whether a `docs/features/` doc exists for it. If not, ask the user: **"Should I create a feature doc for [feature name] in `docs/features/`?"** Do not create it without asking first.
+`docs/features/` contains one doc per platform feature area.
+
+**Discrepancy check (required):** When working in a feature area that has a `docs/features/` doc, skim the doc against the actual code. If anything is out of date or wrong, stop and tell the user:
+- What the doc says
+- What the code actually does
+- Your recommendation (update the doc, or update the code)
+
+Do not silently fix either side. Wait for the user to decide.
+
+**Missing doc:** Before finishing any task that adds or significantly changes a feature area, check whether a `docs/features/` doc exists for it. If not, ask: **"Should I create a feature doc for [feature name] in `docs/features/`?"** Do not create it without asking first.
 
 ### 2. Implement with defense in depth
 

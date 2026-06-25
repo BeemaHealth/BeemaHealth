@@ -27,3 +27,12 @@ Read the relevant backend models, frontend routes, and services for the feature,
 - No code snippets unless a pattern is non-obvious
 - Save to `docs/features/<feature-name>.md` (kebab-case)
 - After creating the file, add a row to the Orient table in both `AGENTS.md` and `CLAUDE.md` pointing to the new doc
+
+## Keeping docs in sync
+
+If you are working in a feature area and the existing `docs/features/` doc disagrees with the code, **stop and report the discrepancy** before continuing:
+- State what the doc says
+- State what the code actually does
+- Give a recommendation (update the doc, or update the code)
+
+Wait for the user to decide. Do not silently fix either side.
