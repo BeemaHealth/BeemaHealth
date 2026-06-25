@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { AccountSectionCard } from "@/components/portal/AccountSectionCard";
 import { Button } from "@/components/ui/button";
@@ -16,11 +16,10 @@ export const Route = createFileRoute("/staff/medications")({
   component: StaffMedicationsPage,
 });
 
-const DRUG_TYPES = [
+const BASE_DRUG_TYPES = [
   { value: "semaglutide", label: "Semaglutide" },
   { value: "tirzepatide", label: "Tirzepatide" },
-  { value: "other", label: "Other" },
-] as const;
+];
 
 const DELIVERY_TYPES = [
   { value: "injection", label: "Injection" },
@@ -57,13 +56,20 @@ function MedicationForm({
   onSave,
   onCancel,
   saving,
+  drugTypes,
+  onAddDrugType,
 }: {
   initial: FormState;
   onSave: (data: FormState) => void;
   onCancel?: () => void;
   saving: boolean;
+  drugTypes: { value: string; label: string }[];
+  onAddDrugType: (type: { value: string; label: string }) => void;
 }) {
   const [form, setForm] = useState<FormState>(initial);
+  const [showCustomDrugType, setShowCustomDrugType] = useState(false);
+  const [customDrugTypeInput, setCustomDrugTypeInput] = useState("");
+  const customInputRef = useRef<HTMLInputElement>(null);
 
   function set(field: keyof FormState, value: string | boolean) {
     setForm((prev) => {
@@ -75,10 +81,37 @@ function MedicationForm({
     });
   }
 
+  function handleDrugTypeChange(value: string) {
+    if (value === "__other__") {
+      setShowCustomDrugType(true);
+      setTimeout(() => customInputRef.current?.focus(), 0);
+    } else {
+      setShowCustomDrugType(false);
+      set("drug_type", value);
+    }
+  }
+
+  function handleCustomDrugTypeConfirm() {
+    const raw = customDrugTypeInput.trim();
+    if (!raw) return;
+    const slug = raw
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_|_$/g, "");
+    const newType = { value: slug, label: raw };
+    onAddDrugType(newType);
+    set("drug_type", slug);
+    setShowCustomDrugType(false);
+    setCustomDrugTypeInput("");
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     onSave(form);
   }
+
+  const isKnownDrugType = drugTypes.some((t) => t.value === form.drug_type);
+  const selectValue = isKnownDrugType ? form.drug_type : "__other__";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
@@ -105,15 +138,42 @@ function MedicationForm({
       <Field label="Drug type" required>
         <select
           className={inputCls}
-          value={form.drug_type}
-          onChange={(e) => set("drug_type", e.target.value)}
+          value={selectValue}
+          onChange={(e) => handleDrugTypeChange(e.target.value)}
         >
-          {DRUG_TYPES.map((t) => (
+          {drugTypes.map((t) => (
             <option key={t.value} value={t.value}>
               {t.label}
             </option>
           ))}
+          <option value="__other__">Other…</option>
         </select>
+        {showCustomDrugType && (
+          <div className="mt-2 flex gap-2">
+            <input
+              ref={customInputRef}
+              className={inputCls}
+              placeholder="Enter drug type name"
+              value={customDrugTypeInput}
+              maxLength={64}
+              onChange={(e) => setCustomDrugTypeInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleCustomDrugTypeConfirm();
+                }
+              }}
+            />
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleCustomDrugTypeConfirm}
+              disabled={!customDrugTypeInput.trim()}
+            >
+              Add
+            </Button>
+          </div>
+        )}
       </Field>
       <Field label="Delivery type" required>
         <select
@@ -133,12 +193,14 @@ function MedicationForm({
           <span className="text-sm text-muted-foreground">$</span>
           <input
             className={inputCls}
-            type="number"
-            min="0"
-            step="0.01"
-            value={(Number(form.price_cents) / 100).toFixed(2)}
-            onChange={(e) => {
-              const dollars = parseFloat(e.target.value) || 0;
+            type="text"
+            inputMode="decimal"
+            placeholder="0.00"
+            defaultValue={(Number(form.price_cents) / 100).toFixed(2)}
+            onBlur={(e) => {
+              const raw = e.target.value.replace(/[^0-9.]/g, "");
+              const dollars = parseFloat(raw) || 0;
+              e.target.value = dollars.toFixed(2);
               set("price_cents", String(Math.round(dollars * 100)));
             }}
           />
@@ -168,6 +230,7 @@ function MedicationForm({
 
 function StaffMedicationsPage() {
   const [medications, setMedications] = useState<MedicationItem[]>([]);
+  const [drugTypes, setDrugTypes] = useState<{ value: string; label: string }[]>(BASE_DRUG_TYPES);
   const [showNew, setShowNew] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -176,6 +239,24 @@ function StaffMedicationsPage() {
   async function reload() {
     const data = await fetchStaffMedications();
     setMedications(data);
+    // Seed any custom drug types found in existing medications
+    setDrugTypes((prev) => {
+      const existing = new Set(prev.map((t) => t.value));
+      const extras: { value: string; label: string }[] = [];
+      for (const med of data) {
+        if (!existing.has(med.drug_type)) {
+          existing.add(med.drug_type);
+          extras.push({ value: med.drug_type, label: med.drug_type });
+        }
+      }
+      return extras.length > 0 ? [...prev, ...extras] : prev;
+    });
+  }
+
+  function handleAddDrugType(type: { value: string; label: string }) {
+    setDrugTypes((prev) =>
+      prev.some((t) => t.value === type.value) ? prev : [...prev, type],
+    );
   }
 
   useEffect(() => {
@@ -258,6 +339,8 @@ function StaffMedicationsPage() {
             onSave={handleCreate}
             onCancel={() => setShowNew(false)}
             saving={saving}
+            drugTypes={drugTypes}
+            onAddDrugType={handleAddDrugType}
           />
         </AccountSectionCard>
       )}
@@ -290,6 +373,8 @@ function StaffMedicationsPage() {
                 onSave={(form) => void handleUpdate(med.id, form)}
                 onCancel={() => setEditingId(null)}
                 saving={saving}
+                drugTypes={drugTypes}
+                onAddDrugType={handleAddDrugType}
               />
             ) : (
               <div className="flex gap-2">

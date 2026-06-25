@@ -1,54 +1,65 @@
 # Dynamic Questionnaire System — Design Document
 
-**Status:** Pre-implementation design. Resolve all open questions before writing more code.  
+**Status:** Decisions logged. Phase 1 bugs must be fixed before feature coding resumes.  
+**Branch:** `feature/dynamic-questionnaire-system`  
 **Last updated:** 2026-06-24
 
 ---
 
-## Why this document exists
+## Git branch strategy
 
-The staff CRM currently has partial scaffolding for a dynamic questionnaire builder. Before going further, several foundational design questions must be answered — some of them architectural, some regulatory (HIPAA + clinical), some business-model-level. Building on a wrong foundation will mean ripping it out again. This document names every question, proposes a recommended answer, and states what we need to decide before writing more code.
+| Branch | Purpose |
+|--------|---------|
+| `main` | Production. Hardcoded qualify/intake. Analytics only for hardcoded steps + page navigation. No dynamic questionnaire code. |
+| `feature/dynamic-questionnaire-system` | This branch. Everything dynamic: medications, questionnaire builder, provider mapping, analytics per version. **Work here, not on main.** |
+
+**Backwards compatibility requirement:** The dynamic system on the feature branch must degrade gracefully. If a questionnaire is not configured for a medication, the app falls back to the hardcoded questions on main. This is enforced with a feature flag (`VITE_DYNAMIC_QUESTIONNAIRES=true` frontend, `DYNAMIC_QUESTIONNAIRES=True` backend setting). Main never has this flag set.
 
 ---
 
-## The core vision (what we're building)
+## Known bugs — fix before any new feature work
 
-**Goal:** Replace every hardcoded qualify/intake question in the codebase with a database-driven, version-controlled questionnaire system that:
+1. **Drug type "Other" input** — selecting "Other" must show a text input; on save, creates a new `DrugType` row and appends it to the dropdown for all subsequent medications.
+2. **Price input** — replace the `<input type="number" step="0.01">` with a plain text input parsed as dollars. Arrow keys changing by $0.01 is unusable.
+3. **"Manage versions" navigation** — clicking "Manage versions" on the questionnaire list navigates nowhere. Debug TanStack Router `<Link>` params.
+
+---
+
+## The core vision
+
+Replace every hardcoded qualify/intake question with a database-driven, version-controlled questionnaire system that:
 
 1. Staff can edit in the CRM without a code deploy
 2. Supports different question sets per medication
-3. Maps patient answers to whatever provider API we're integrated with, without code changes when we switch providers
-4. Tracks every answer against the exact questionnaire version that was shown, forever
-5. Makes the patient portal medical intake display dynamic (not hardcoded 12 steps)
-6. Allows adding a payment step, consent step, or any other step by staff at any time
-
-Think of it as **Google Forms + an ETL mapping layer + clinical versioning** — all inside the staff CRM.
+3. Maps patient answers to whatever provider (doctor network) API we're integrated with — without code changes when we switch providers
+4. Records every answer against the exact questionnaire version that was shown, forever
+5. Makes the patient portal intake display fully dynamic
+6. Allows staff to add/remove/reorder steps (including a payment step) at any time
+7. Tracks user navigation across all pages of the site — not just funnel steps
 
 ---
 
 ## Part 1 — Data model
 
-### 1.1 Drug types (the managed list problem)
-
-**Problem today:** `drug_type` is hardcoded as `semaglutide | tirzepatide | other`. Staff can't add new drug types without a code deploy.
-
-**Proposed model:**
+### 1.1 Drug types (managed list, not hardcoded)
 
 ```
 DrugType
   id        UUID
-  name      string (e.g. "Semaglutide", "Tirzepatide", "Tadalafil")
-  slug      string unique (e.g. "semaglutide", "tirzepatide", "tadalafil")
-  notes     text (internal — e.g. "GLP-1/GIP dual agonist")
+  name      string    e.g. "Semaglutide", "Tirzepatide", "Tadalafil"
+  slug      string    unique, e.g. "semaglutide"
+  notes     text      internal — e.g. "GLP-1/GIP dual agonist"
   created_at
+  updated_at
 ```
 
-- Staff creates drug types in the CRM.  
-- The Medication form has a `drug_type` dropdown that is populated from this table.  
-- When "Other" is selected, a text input appears. On save, a new `DrugType` row is created and becomes immediately available in the dropdown for subsequent medications.  
-- Drug types can be edited and deleted (with a guard if any medication references them).
+**Staff workflow:**
+- CRM shows a drug type list under `/staff/drug-types`
+- Medication form has a `drug_type` dropdown populated from this table
+- When "Other" is selected, a text input appears; on save, a new `DrugType` row is created and immediately available in the dropdown
+- Drug types can be edited and deleted (guarded if any medication references them)
 
-**On the GLP-1 / GLP-2 debate for tirzepatide:** Tirzepatide is technically a dual GLP-1/GIP agonist, not GLP-2. For our purposes `drug_type` is a business/display classification, not a pharmacological one. Add whatever labels make sense for patients and staff. Don't couple this to scientific terminology.
+**On GLP-1 / GLP-2 for tirzepatide:** Tirzepatide is a dual GLP-1/GIP agonist — not GLP-2. For our purposes `drug_type` is a business/display label, not a pharmacological classification. Add whatever terms make sense for staff and patients.
 
 ---
 
@@ -57,24 +68,24 @@ DrugType
 ```
 Medication
   id              UUID
-  name            string        e.g. "Semaglutide 2.4mg Injection"
+  name            string        e.g. "Semaglutide 2.4mg Weekly Injection"
   slug            string unique e.g. "semaglutide-2-4mg"
   drug_type       FK → DrugType
   delivery_type   enum: injection | daily_pill | weekly_pill | patch | other
   price_cents     integer       monthly price in USD cents
   description     text          shown on /medications/[slug] marketing page
-  is_active       bool          controls visibility to patients
-  sort_order      integer       controls order in the drug-selection step
+  is_active       bool          controls visibility to patients in drug selection
+  sort_order      integer       order in drug selection screen
   created_at / updated_at
 ```
 
-Each medication gets a public marketing page at `/medications/[slug]` with name, description, price, how it works, etc. Staff edits this through the CRM. This is separate from the questionnaire system but uses the same medication record.
+Each medication gets a marketing page at `/medications/[slug]`. Staff edits description/price in the CRM. A medication is only shown to patients in the drug selection step if `is_active=true` AND it has an active qualify AND an active intake questionnaire assigned.
 
 ---
 
-### 1.3 Questionnaires and medications — the mapping
+### 1.3 Questionnaire ↔ medication assignment
 
-**Key design decision: one questionnaire can apply to multiple medications.**
+**A questionnaire can apply to multiple medications. A medication must have exactly one active qualify and one active intake questionnaire.**
 
 ```
 Questionnaire
@@ -85,82 +96,82 @@ Questionnaire
   description         text (internal notes)
   created_at / updated_at
 
-QuestionnaireMedication (join table)
-  questionnaire  FK → Questionnaire
-  medication     FK → Medication
-  PRIMARY KEY (questionnaire, medication)
+QuestionnaireMedication  (join table)
+  questionnaire   FK → Questionnaire
+  medication      FK → Medication
+  UNIQUE (questionnaire, medication)
 ```
 
-This means:
-- "Qualify GLP-1" can apply to both Semaglutide and Tirzepatide — one questionnaire, two medications
-- "Intake Semaglutide" can apply only to Semaglutide — one questionnaire, one medication
-- Every medication must have exactly one active qualify questionnaire and one active intake questionnaire (enforced at publish time)
-- Staff assigns medications to questionnaires, not the other way around
+**Examples:**
+- "Qualify GLP-1" → assigned to both Semaglutide and Tirzepatide (shared questions)
+- "Intake Semaglutide" → assigned only to Semaglutide
+- A future ED qualify → assigned only to Tadalafil
 
 **Patient funnel entry:**
-
 ```
-Patient arrives → drug selection screen → selects Drug A
-→ system looks up: active qualify questionnaire for Drug A
-→ runs that questionnaire
-→ intake: active intake questionnaire for Drug A
+Patient selects Drug A
+→ system finds: Questionnaire where type=qualify AND medication=Drug A AND published version exists
+→ runs that version's steps
 ```
 
-If no medication-specific questionnaire exists for a drug, it falls back to the default (slug="qualify" or "intake").
+If no medication-specific questionnaire exists: show a warning in the CRM on that medication's card. Do not show the medication to patients until it has questionnaires assigned.
 
 ---
 
-### 1.4 Versioning — how it works
+### 1.4 Versions
 
 ```
 QuestionnaireVersion
   id              UUID
   questionnaire   FK → Questionnaire
-  version_label   string     e.g. "1.0.0", "1.1.0"
+  version_label   string     e.g. "1.0.0"
   status          enum: draft | published | archived
   published_at    timestamp
-  changelog       text       (staff notes on what changed)
+  changelog       text       staff notes on what changed between versions
   created_by      FK → User
 ```
 
 **Rules:**
-- Only one `published` version per questionnaire at a time
-- Patients are **pinned to the version that was active when they started** their funnel session — mid-funnel version changes do not affect them
-- `IntakeSubmission` stores `questionnaire_version_id` so we know forever which version a patient answered
-- `EligibilityResponse` stores `qualify_questionnaire_version_id` for the same reason
-- Archiving a version does not affect past submissions — those records are immutable
+- One `published` version per questionnaire at a time
+- Patients are pinned to the version active when their session started — mid-funnel version changes don't affect them
+- `IntakeSubmission.questionnaire_version_id` is immutable once set
+- `EligibilityResponse.qualify_questionnaire_version_id` is immutable once set
+- Archiving a version has no effect on past submissions
 
 ---
 
-### 1.5 Steps and fields (the questionnaire content)
+### 1.5 Steps and fields
 
 ```
 QuestionnaireStep
   id              UUID
   version         FK → QuestionnaireVersion
-  step_key        string   e.g. "body_metrics"
+  step_key        string    e.g. "body_metrics" (lowercase alphanumeric + underscores)
   sort_order      integer
   title           string
   subtitle        text
-  visibility_rule JSON    (conditional step — show/hide based on prior answers)
+  visibility_rule JSON      step-level conditional show/hide
+  changelog       text      optional per-step change note
 
 QuestionnaireField
   id                  UUID
   step                FK → QuestionnaireStep
-  field_key           string   e.g. "current_weight_lbs"
-  field_type          enum (see §2.1)
-  label               string   patient-facing label
-  help_text           text     optional hint below the field
-  placeholder         string   optional input placeholder
-  options             JSON     [{value, label}] for choice types
-  validation_rules    JSON     [{type, value, message}]
-  canonical_key       string   maps to our internal canonical schema (see §3)
-  provider_path       string   JSON path in the provider's API payload (see §3)
+  field_key           string    e.g. "current_weight_lbs" (same format as step_key)
+  field_type          enum      (see §2.1)
+  label               string    patient-facing label
+  help_text           text      optional hint below the field
+  placeholder         string    optional input placeholder
+  options             JSON      [{value, label}] for choice fields
+  validation_rules    JSON      [{type, value, message}]
+  canonical_key       string    maps to our internal canonical schema (see §3)
   required            bool
   sort_order          integer
-  is_phi              bool     marks field as Protected Health Information
-  visibility_rule     JSON     field-level conditional show/hide
+  is_phi              bool      marks field as Protected Health Information
+  also_sets_user_field  string  if set, answer is also saved to User.[field] (e.g. "first_name")
+  visibility_rule     JSON      field-level conditional show/hide
 ```
+
+**`also_sets_user_field`:** For fields like legal first name and last name — the answer is saved to the user's account fields at intake time. If the user later changes their name in account settings, the intake record is NOT modified (intake is immutable). This is already the intended behavior; `also_sets_user_field` just makes the mapping explicit and configurable by staff.
 
 ---
 
@@ -168,120 +179,133 @@ QuestionnaireField
 
 ### 2.1 Supported field types
 
-| Type | Patient sees | Validation |
-|------|-------------|------------|
-| `text` | Single-line input | min/max length, pattern regex |
-| `textarea` | Multi-line input | min/max length |
-| `number` | Numeric input | min, max, integer_only |
-| `email` | Email input | RFC email format |
+| Type | Patient sees | Server-side validation |
+|------|-------------|----------------------|
+| `text` | Single-line input | min/max length, pattern regex, injection checks |
+| `textarea` | Multi-line input | min/max length, injection checks (XSS), React escapes output |
+| `number` | Numeric input | min, max, integer_only flag |
+| `email` | Email input | RFC format |
 | `phone` | Phone input | E.164 format |
 | `date` | Date picker | min_date, max_date, age check |
-| `yes_no` | Two buttons | — |
-| `single_choice` | Dropdown or radio | enum (value must be in options) |
-| `multi_choice` | Checkboxes | min/max selections |
-| `height` | ft + in compound | range check |
-| `weight` | lbs or kg | range check |
-| `address_group` | Address sub-fields | ZIP format, state enum |
-| `file_upload` | File picker | mime type, max size |
+| `yes_no` | Two buttons | value must be `true` or `false` |
+| `single_choice` | Dropdown or card | value must be in options list |
+| `multi_choice` | Checkboxes | each value must be in options list, min/max selections |
+| `height` | ft + in compound | range: 1ft–9ft |
+| `weight` | lbs input | range: 50–999 lbs |
+| `address_group` | Address sub-fields | ZIP format, US state enum |
+| `file_upload` | File picker | mime type allowlist, max size |
 | `signature` | Drawing pad | presence required |
-| `payment` | Stripe embed | plugin only — no staff config |
-| `plugin` | Custom component | declared by plugin_id |
+| `payment` | Stripe embed | plugin — card auth only, not charged until Rx approved |
+| `plugin` | Custom component | declared by `plugin_id`, not staff-configurable |
 
-**How "no hacking is possible":**
-
-The field type determines what the backend will accept for that field's answer, regardless of what the client sends. For every PATCH to eligibility/intake:
-
-1. Server looks up the active questionnaire version
-2. Finds the field definition by `field_key`
-3. Validates the submitted value against `field_type` + `validation_rules` + `is_phi` rules
-4. Rejects anything that doesn't pass — 400 with field-specific error
-
-Staff cannot create a field type that bypasses validation — the type must be in the allowlisted enum. Free-text fields (`text`, `textarea`) run injection checks (SQL, XSS, command injection patterns) server-side via `apps/common/validation/`. Answers to `single_choice`/`multi_choice` are validated against the options list — a value not in the options is rejected even if a patient crafts a raw API request.
+**"No hacking possible" enforcement:**
+The server validates every submitted answer against the field's `field_type` and `validation_rules` from the pinned questionnaire version. Client-side validation is UX only. Answers to `single_choice`/`multi_choice` fields are checked against the options list — a value not in the options is rejected even if a patient crafts a raw API request. Free-text fields run injection pattern checks.
 
 ---
 
-## Part 3 — Provider API mapping (the hard part)
+## Part 3 — Provider API mapping
 
-This is the most architecturally significant piece. Here is the proposed approach.
+### The key insight
 
-### 3.1 The problem
+Different drugs can use different provider (doctor network) APIs. The API may expect different field names for the same data (e.g. `drug_name` vs `name`, `legal_first_name` vs `first_name`).
 
-We have dynamic questionnaire answers keyed by `field_key` (e.g. `current_weight_lbs = 220`).  
-Provider APIs expect a fixed JSON shape (e.g. `{"patient": {"weight": {"value": 220, "unit": "lbs"}}}`).  
-When we switch providers, the shape changes. We don't want to change questionnaire definitions — only the mapping.
+**Solution: staff defines the provider's expected JSON schema in the CRM, then maps each questionnaire field's answer to a path in that schema. No code changes needed to add a provider or switch providers.**
 
-### 3.2 The two-layer approach
+> Note: LifeFile/MediVera is a **pharmacy** API — we are NOT sending clinical orders to them. This mapping is for **doctor network / provider APIs** that receive the clinical intake for physician review and prescription.
 
-**Layer 1 — Canonical schema (ours, stable)**
+---
 
-We define a canonical internal schema for clinical data. Every `QuestionnaireField` optionally has a `canonical_key` that maps it to this schema. The canonical schema never changes (we only add to it, never rename or delete):
+### 3.1 Provider models
 
 ```
-canonical_keys (examples):
+ProviderIntegration
+  id                UUID
+  name              string    e.g. "Cerebral Health Network"
+  slug              string    unique, e.g. "cerebral"
+  auth_type         enum: basic | bearer | api_key | oauth2
+  api_base_url      string
+  is_active         bool
+  notes             text      internal
+  created_at / updated_at
+
+ProviderApiSchema
+  id                UUID
+  provider          FK → ProviderIntegration
+  schema_type       enum: intake_submission | refill_request | patient_update
+  json_schema       JSON      the exact JSON shape the provider expects
+  version           string    e.g. "v2"
+  is_active         bool
+  created_at / updated_at
+
+ProviderMedication  (which drugs this provider handles)
+  provider          FK → ProviderIntegration
+  medication        FK → Medication
+  UNIQUE (provider, medication)
+```
+
+---
+
+### 3.2 The two-layer mapping
+
+**Layer 1 — Canonical schema (our stable internal keys)**
+
+Every `QuestionnaireField` has an optional `canonical_key`. This is our internal stable identifier for the data the field collects. The canonical key list is owned by the developer (Matt) and configured via the `/staff/canonical-keys` UI.
+
+```
+Canonical key examples:
+  patient.legal_first_name
+  patient.legal_last_name
   patient.dob
   patient.sex_assigned_at_birth
   patient.weight_lbs
   patient.height_inches
   patient.bmi
   patient.state
+  patient.phone
+  patient.email
   clinical.current_medications
-  clinical.conditions
+  clinical.known_conditions
   clinical.allergies
   clinical.pregnancy_status
   clinical.prior_glp1_use
   clinical.goal_weight_lbs
+  clinical.primary_care_physician
   treatment.drug_slug
   treatment.delivery_preference
+  treatment.primary_goal
+  payment.card_authorized
   consent.hipaa_acknowledged
   consent.telehealth_acknowledged
 ```
 
-When a patient submits, we build a canonical payload from their answers by walking every field's `canonical_key`.
+**Fields without a canonical key** are stored in our database only — they're used for internal analytics, research, or UX purposes but are never sent to any provider.
 
-**Layer 2 — Provider adapter (per-provider, replaceable)**
-
-Each provider has a JSON schema definition stored in the database:
+**Layer 2 — Provider field mapping (per-provider, staff-configurable)**
 
 ```
-ProviderIntegration
-  id                  UUID
-  name                string    e.g. "LifeFile / MediVera"
-  slug                string    e.g. "lifefile"
-  api_base_url        string
-  auth_type           enum: basic | bearer | api_key
-  is_active           bool
-  created_at / updated_at
-
-ProviderApiSchema
-  id                  UUID
-  provider            FK → ProviderIntegration
-  schema_type         enum: order | patient | prescription | refill
-  json_schema         JSON    (the exact JSON shape the provider expects)
-  version             string
-  is_active           bool
-
 ProviderFieldMapping
-  id                  UUID
-  provider            FK → ProviderIntegration
-  canonical_key       string    e.g. "patient.weight_lbs"
-  provider_path       string    JSONPath e.g. "$.patient.weight.value"
-  transform           string    optional — e.g. "lbs_to_kg", "date_to_iso"
+  id              UUID
+  provider        FK → ProviderIntegration
+  canonical_key   string    e.g. "patient.weight_lbs"
+  provider_path   string    JSONPath in provider schema e.g. "$.patient.weight.value"
+  transform       string    optional — e.g. "lbs_to_kg", "date_to_yyyymmdd", "bool_to_yn"
+  notes           text      e.g. "Provider expects metric units"
   created_at / updated_at
 ```
 
 **Staff workflow for a new provider:**
-
-1. Go to `/staff/providers` → "Add provider"
-2. Paste the provider's expected JSON schema for an order
-3. For each `canonical_key`, specify the JSONPath in the provider's schema
-4. Test with a synthetic patient record
-5. Save and mark active
+1. `/staff/providers` → "Add provider"
+2. Enter name, auth type, base URL
+3. Under "Intake schema": paste the provider's expected JSON for a full intake submission
+4. The UI shows a field-mapping table: for each canonical key, enter the JSONPath in the provider's schema
+5. Optionally select a transform (unit conversion, date format, etc.)
+6. Click "Test mapping" — runs against a synthetic patient record, shows the output JSON
+7. Save and mark active
 
 **At submission time:**
-
 ```python
 def build_provider_payload(submission, provider):
-    canonical = build_canonical_payload(submission)
+    canonical = build_canonical_payload(submission)  # keyed by canonical_key
     mappings = ProviderFieldMapping.objects.filter(provider=provider)
     payload = {}
     for mapping in mappings:
@@ -292,251 +316,258 @@ def build_provider_payload(submission, provider):
     return payload
 ```
 
-**When we switch providers:** Create a new `ProviderIntegration`, add field mappings for the new provider's schema, test, then flip `is_active`. No questionnaire changes needed. No code deploys needed.
-
-**What this means for the questionnaire builder:** Staff must set `canonical_key` on every field that needs to reach the provider. Fields without a canonical key are "analytics only" — they're stored in our DB but not sent to any provider. This lets staff add questions freely without breaking integrations.
+**Switching providers:** Create a new `ProviderIntegration`, add `ProviderMedication` rows for which drugs it handles, add field mappings, test, flip `is_active`. No questionnaire changes. No code deploys.
 
 ---
 
-## Part 4 — Patient funnel (end to end)
+### 3.3 What about different field names per provider?
+
+This is exactly why the canonical layer exists. If Provider A calls it `drug_name` and Provider B calls it `name`:
+
+- Questionnaire field has `canonical_key = "treatment.drug_slug"`
+- Provider A mapping: `canonical_key="treatment.drug_slug"` → `provider_path="$.drug_name"`
+- Provider B mapping: `canonical_key="treatment.drug_slug"` → `provider_path="$.name"`
+
+The questionnaire never changes. Only the mapping changes per provider.
+
+---
+
+## Part 4 — Patient funnel (complete, including page navigation tracking)
 
 ```
-1. Patient arrives at aretide.com (from ad, organic, etc.)
-   → FunnelSession created (UTM captured, version pinned)
+[User arrives at aretide.com]
+  → FunnelEvent: page_viewed { page: "home" }
 
-2. Drug selection step (first qualify step)
-   → Patient picks: "I'm interested in [Medication A]"
-   → Session.medication_id = A
+[User navigates to /weight-loss]
+  → FunnelEvent: page_viewed { page: "weight_loss" }
 
-3. Qualify questionnaire (medication A's active qualify version)
-   → Dynamic steps driven by questionnaire version
-   → Each PATCH to /funnel/eligibility/ validates against the version's field rules
-   → Answers stored in EligibilityResponse.questionnaire_responses JSONB
+[User navigates to /pricing]
+  → FunnelEvent: page_viewed { page: "pricing" }
 
-4. Eligibility decision
-   → Derived from canonical answers (BMI, age, safety screens)
-   → If disqualified → friendly message, no account created
-   → If eligible → proceed to account creation
+[User navigates to /faq]
+  → FunnelEvent: page_viewed { page: "faq" }
 
-5. Account creation step (last qualify step)
-   → Email, password, name, phone
-   → FunnelSession.claimed_by_user = new user
+[User navigates to /safety]
+  → FunnelEvent: page_viewed { page: "safety" }
 
-6. Email verification
+[User navigates to /contact]
+  → FunnelEvent: page_viewed { page: "contact" }
 
-7. Intake questionnaire (medication A's active intake version)
-   → Dynamic steps driven by questionnaire version
-   → Answers stored in MedicalIntake.questionnaire_responses JSONB
-   → Version pinned to intake: MedicalIntake.questionnaire_version_id
+[User navigates to /legal/privacy]
+  → FunnelEvent: page_viewed { page: "privacy" }
 
-8. Payment step (configured as a step in the intake questionnaire by staff)
-   → Plugin type: "payment" → Stripe integration
-   → Not staff-configurable beyond on/off placement
+[User navigates to /legal/terms]
+  → FunnelEvent: page_viewed { page: "terms" }
 
-9. Consent step
-   → Signatures stored separately (compliance requirement — not in questionnaire JSONB)
+[User navigates to /legal/telehealth-consent]
+  → FunnelEvent: page_viewed { page: "telehealth_consent" }
 
-10. Submission
-    → IntakeSubmission created with:
-       - questionnaire_version_id
-       - snapshot of all answers (JSONB)
-       - canonical payload built from answers
-    → Provider API payload built via ProviderFieldMapping
-    → Sent to provider
+[User clicks "Get started"]
+  → FunnelSession created (anonymous, HttpOnly cookie)
+  → UTM params captured
+  → FunnelEvent: funnel_started
 
-11. Provider review → Prescription → Pharmacy fulfillment
-    (unchanged from current flow)
+[Drug selection screen]
+  → FunnelEvent: page_viewed { page: "drug_selection" }
+  → User selects Drug A
+  → FunnelSession.medication_id = Drug A
+  → FunnelEvent: drug_selected { drug_slug: "semaglutide" }
+  → Active qualify questionnaire version for Drug A is pinned to FunnelSession
+
+[Qualify questionnaire — dynamic steps]
+  → For each step viewed: FunnelEvent: step_viewed { slug: "qualify", step_key: "...", step_index: N, total_steps: M }
+  → For each step completed: FunnelEvent: step_completed { same fields, duration_ms }
+  → Answers PATCH'd to /api/funnel/eligibility/ (validated against pinned version)
+  → Stored in EligibilityResponse.questionnaire_responses JSONB
+
+[Eligibility decision — what makes a user ineligible]
+  The following rules are evaluated server-side on submission of the final qualify step:
+  - BMI < 27 → "needs clinician review" (not auto-disqualified, flagged for provider)
+  - Age < 18 → disqualified (hard block)
+  - Safety screen: pregnant, breastfeeding, trying to conceive → disqualified
+  - Safety screen: prior severe GLP-1 reaction → disqualified
+  - Safety screen: certain medical conditions (configured per questionnaire version)
+  These rules are currently hardcoded in derive_eligibility_flags(). In the dynamic system,
+  disqualification rules will move to a per-version configuration table (future phase).
+
+[Account creation step — last qualify step]
+  → User enters email, password, name, phone
+  → Account created, FunnelSession claimed by user
+  → FunnelEvent: account_created { user_id: "..." }
+
+[Email verification]
+  → FunnelEvent: email_verified
+
+[Intake questionnaire — dynamic steps, same tracking pattern as qualify]
+  → Active intake questionnaire version for Drug A is pinned to MedicalIntake
+  → For each step: step_viewed / step_completed events
+  → Answers PATCH'd to /api/medical-intakes/me/
+
+[Payment step — configured as a step in intake by staff]
+  → Plugin type: "payment" renders Stripe card element
+  → Card is authorized (not charged) — amount = Medication.price_cents
+  → Charge fires after physician approves prescription
+  → FunnelEvent: payment_authorized
+
+[Consent step]
+  → Signature stored in consent_records (separate, compliance)
+  → FunnelEvent: consent_signed
+
+[Submission]
+  → IntakeSubmission created:
+      questionnaire_version_id   (immutable)
+      questionnaire_responses    (full JSONB snapshot of all answers)
+      canonical_payload          (built from field canonical_keys)
+  → Provider API payload built via ProviderFieldMapping for Drug A's provider
+  → Sent to provider for physician review
+  → FunnelEvent: intake_submitted
+
+[Provider review → Prescription → Pharmacy]
+  → Unchanged from current flow
 ```
 
----
-
-## Part 5 — Patient portal (medical intake display)
-
-**Problem today:** The patient portal intake display is hardcoded to 12 steps.
-
-**Solution:** The patient portal renders the intake from the `IntakeSubmission` record, which contains both:
-- `questionnaire_version_id` — so we can fetch the version's step/field schema
-- `questionnaire_responses` JSONB — the actual answers
-
-The portal fetches the version schema and renders each step/field with the patient's stored answer — exactly what they filled out, in the order they filled it out.
-
-**What this means:** The step count in the portal is always correct because it's driven by how many steps the version had, not a hardcoded number.
+**Staff analytics sees:** For any given FunnelSession, the full path from first page visited through every step they completed, which drug they selected, where they dropped off, how long since last activity.
 
 ---
 
-## Part 6 — What happens when we change a questionnaire?
+## Part 5 — Analytics (both branches)
 
-This is the most important clinical question. Here are the rules:
+### Main branch (hardcoded)
 
-### 6.1 Active patients (currently in the funnel)
-
-They are pinned to the version they started. They complete what they started. No impact.
-
-### 6.2 Submitted patients (awaiting provider review or already prescribed)
-
-Their `IntakeSubmission.questionnaire_version_id` is immutable. The provider received their answers mapped from whatever version they answered. No re-answering required. The provider's decision is based on their submitted record.
-
-### 6.3 Refill patients (returning for a refill)
-
-This is the hard question. Options:
-
-| Option | Description | Tradeoff |
-|--------|-------------|----------|
-| **A. Refill is always unconditional** | Patient just requests a refill; no re-answering | Simple, but clinically risky if we've added new safety screens |
-| **B. Re-answer if version changed** | Patient re-answers the full intake if current version ≠ their pinned version | Annoying for patients, but clinically complete |
-| **C. Re-answer only flagged questions** | Staff marks certain questions as "re-answer required at refill if this question was added after their version" | Complex to implement, best UX |
-| **D. Clinical review at refill** | Provider reviews prior record + new questions; no patient re-answering | Puts burden on provider, not patient |
-
-**Recommendation:** Start with Option A (unconditional refill) while the questionnaire is still being tuned. Add a staff-configurable flag `requires_refill_reconfirmation: bool` on `QuestionnaireVersion` that, when true, prompts refill patients to re-answer only the new steps (steps with sort_order ≥ their prior version's step count).
-
-Option C (flagging individual questions) should be a future enhancement once the questionnaire is stable.
-
-### 6.4 The "we changed questions and the provider API needs different fields" edge case
-
-If we add a new question that maps to a canonical key the provider requires for new prescriptions, we have two choices:
-
-1. Require all existing patients to re-answer before their next prescription renewal
-2. Provide a default value for the new field for existing patients and note it in the provider record
-
-This is a **clinical operations decision**, not a software decision. The clinical team and legal must own this answer. We should expose the mechanism (flagging fields as "required for prescriptions, must be answered") but not decide the clinical policy.
-
----
-
-## Part 7 — Analytics per questionnaire version
-
-For every question that has analytics enabled, we track:
+All page navigation and hardcoded qualify/intake steps are tracked:
 
 ```
-QuestionnaireAnswer (analytics, no PHI)
-  id                        UUID
-  questionnaire_version_id  UUID
-  step_key                  string
-  field_key                 string
-  answer_hash               string   SHA-256 of the answer (for counting, not reading)
-  answer_bucket             string   for numeric fields: bucketed range (e.g. "200-250 lbs")
-  funnel_session_id         UUID
-  created_at
-
-QuestionnaireDropOff (analytics)
-  questionnaire_version_id  UUID
-  step_key                  string   last step the patient was on before abandoning
-  count                     integer  aggregated daily
-  date                      date
+Pages tracked: home, weight_loss, pricing, faq, safety, contact,
+               privacy, terms, telehealth_consent, drug_selection
+Qualify steps: treatment_interest, primary_goal, body_metrics,
+               safety_screen, account (hardcoded keys)
+Intake steps:  identity_contact, medical_history, ... (hardcoded 12 steps)
 ```
 
-**PHI rule:** We never store raw free-text answers in analytics tables. Numeric answers are bucketed. Choice answers are stored as their option `value` (which is a machine key, not PHI). Staff can see aggregate distributions per question per version, not individual answers (those stay in `MedicalIntake.questionnaire_responses` which is behind audit logging).
+Staff analytics page on main shows:
+- Page-by-page navigation funnel (home → pricing → get_started → ...)
+- Qualify drop-off by step
+- Intake drop-off by step
+- Conversion rate from session start → account created → intake submitted
+
+### Feature branch (dynamic)
+
+All of the above, plus:
+- Drop-off is keyed by `(questionnaire_version_id, step_key)` — so you see drop-off per version, not just globally
+- When a new version is published, analytics show both old and new version conversion side by side
+- Staff can filter analytics by questionnaire version, drug, UTM source, date range
+
+**PHI rule (both branches):** FunnelEvents store no patient answers. Only step keys, step indices, durations, and page names. Individual answers stay in `EligibilityResponse`/`MedicalIntake` behind audit logging.
 
 ---
 
-## Part 8 — Known bugs to fix before next feature work
+## Part 6 — Patient portal (medical intake display)
 
-1. **Drug type "Other" input** — currently no text input appears; need to add a text input when "Other" is selected and save as a new `DrugType` row
-2. **Price input** — the number input uses `step="0.01"` which makes arrow keys change by 1 cent; should be a regular text input that parses dollars with a `$` prefix
-3. **"Manage versions" navigation** — clicking "Manage versions" in the questionnaire list does nothing; likely a TanStack Router `<Link>` rendering issue or missing route registration; needs debugging
+**Problem today:** Hardcoded 12-step display.
 
----
+**Solution:** Intake display renders from `IntakeSubmission`:
+- Fetch the pinned `questionnaire_version_id`'s schema (steps + fields)
+- Render each step with the patient's stored `questionnaire_responses[field_key]`
+- Step count = however many steps were in that version
 
-## Part 9 — Open design questions (must answer before coding)
-
-These require human decisions. The answers will shape the next 3–6 months of implementation.
-
-### Q1: Who owns the canonical schema?
-**Question:** The canonical key list (`patient.weight_lbs`, `clinical.conditions`, etc.) must be curated by someone. Every time we add a new questionnaire question that should reach the provider, it needs a canonical key. Who adds canonical keys, and what's the approval process?  
-**Recommended answer:** Canonical keys are defined in code (a Python Enum or JSON file in `apps/integrations/canonical_schema.py`). Staff can see the list in the CRM. Only engineering adds new keys via PR. This keeps the mapping layer auditable.
-
-### Q2: When a new provider integration is added, do we re-map from scratch or inherit?
-**Question:** If we switch from LifeFile/MediVera to a different provider, do we manually map all fields again, or do we inherit the canonical → LifeFile mappings?  
-**Recommended answer:** Map from scratch per provider. The canonical schema is the common language. Each provider gets its own complete `ProviderFieldMapping` set. This is a one-time staff task per provider, done in the CRM.
-
-### Q3: What is the drug selection UX?
-**Question:** Do patients see a grid of medication cards at the start of qualify ("Which medication are you interested in?") or does the current qualify flow remain ("Which delivery format interests you most?") and we derive the medication from their answers?  
-**Recommended answer:** Make drug selection explicit and first. Patient clicks "Get started" → sees medication cards (Semaglutide / Tirzepatide / future ED medications). This selection drives which questionnaire loads. The current "delivery format" step can become a step inside the medication-specific qualify questionnaire if needed.
-
-### Q4: How do we handle medications that share a questionnaire?
-**Question:** If Semaglutide and Tirzepatide both use "Qualify GLP-1", the patient still selected a specific medication. Where do we record their specific medication choice?  
-**Recommended answer:** Store `FunnelSession.medication_id` and `MedicalIntake.medication_id` from the drug selection step. Even if the questionnaire is shared, the medication is pinned. The provider receives the specific medication slug as a canonical field (`treatment.drug_slug`).
-
-### Q5: What happens if a medication has no questionnaire assigned?
-**Question:** Staff creates a new medication but hasn't created or assigned a questionnaire yet.  
-**Recommended answer:** That medication is not visible to patients (not shown in the drug selection step). The CRM shows a warning: "This medication has no active qualify questionnaire — patients cannot see it." A medication is only visible if it has an active qualify AND active intake questionnaire.
-
-### Q6: How do we handle the payment step?
-**Question:** Staff wants to add a payment step "at any point we choose" in the intake flow.  
-**Recommended answer:** Payment is a `plugin` type step with `plugin_id: "payment"`. Staff adds it to the intake questionnaire like any other step. The plugin renders the Stripe payment form. The step is considered "complete" when payment is confirmed. This means staff can put it before or after clinical questions as business needs change. Technically, the payment amount comes from `Medication.price_cents`, not from the questionnaire. Staff should be warned that moving the payment step affects conversion analytics.
-
-### Q7: What is "version 1.0.0" of the qualify/intake questionnaire?
-**Question:** The current seeded qualify has 3 steps (treatment interest, primary goal, account) and intake has 2 steps (identity/contact, review). These are placeholders. What are the actual clinical questions we want?  
-**Recommended answer:** This is a clinical + business decision. Before launching the dynamic system to patients, the full question set (with proper clinical validation) must be entered into the builder and published as the active version. The seeded v1.0.0 should not be presented to actual patients — it is a scaffolding example only.
-
-### Q8: How do we handle versioning of the provider schema?
-**Question:** If LifeFile/MediVera changes their API schema, do we need to update all past `IntakeSubmission` records?  
-**Recommended answer:** No. `IntakeSubmission` stores our canonical answers. The provider schema is only used at submission time (when we send the order). For re-submissions or refills, we re-run the mapping at that moment using the current active provider schema. Past submissions are not re-mapped retroactively.
+This means the portal always matches what the patient actually answered, regardless of how many steps the current published version has.
 
 ---
 
-## Part 10 — Implementation order (recommended)
+## Part 7 — Refill policy (decided)
 
-Do not begin Phase 2 until Phase 1 decisions are fully signed off.
+**Option A — Refill is unconditional (selected).** Patients request a refill without re-answering the intake. Provider reviews their prior submission. If the provider needs updated clinical information, they request it separately.
 
-### Phase 1 — Fix bugs and stabilize what's built (1 week)
-- [ ] Fix drug type "Other" input → create `DrugType` model and managed list
-- [ ] Fix price input (text input, not number stepper)
+**Future:** Add a staff-configurable flag `requires_refill_reconfirmation` on `QuestionnaireVersion` for when the clinical team decides certain version changes require patient re-confirmation.
+
+---
+
+## Part 8 — What happens to existing patients during migration
+
+When the dynamic system launches:
+
+1. Create questionnaire versions in the builder that mirror the current hardcoded questions exactly (matching `field_key` values)
+2. Write a data migration: set `questionnaire_version_id` on existing `EligibilityResponse` and `MedicalIntake` records
+3. Build `questionnaire_responses` JSONB from existing structured columns (`height_ft`, `weight_lbs`, etc.) for existing records
+4. Patient portal can then render legacy records from the JSONB snapshot using the legacy version schema
+5. Existing structured columns are kept in the DB as audit record but deprecated in code
+
+**Provider compatibility:** Existing `IntakeSubmission` records have a `canonical_payload` built at submission time (once we add canonical_key to fields). For records submitted before this system exists, the existing structured data is the canonical record — no retroactive mapping needed.
+
+---
+
+## Part 9 — Open question decisions (logged)
+
+| # | Question | Decision |
+|---|---------|---------|
+| Q1 | Who owns canonical schema? | Matt (developer) for now. Canonical keys are configurable via `/staff/canonical-keys` UI — add/edit/delete. Engineering owns the code; staff can see and map to existing keys. |
+| Q2 | New provider: map from scratch or inherit? | Map from scratch per provider. Each provider gets its own complete `ProviderFieldMapping` set. One-time staff task in CRM. |
+| Q3 | Drug selection UX? | Explicit first screen after "Get started". Patient sees medication cards. If multiple categories in future (weight loss + ED), show category first then drug within category. |
+| Q4 | Questionnaires shared across medications? | Yes — questionnaire can be assigned to multiple medications. `FunnelSession.medication_id` records the specific drug selected even when questionnaire is shared. |
+| Q5 | Medication with no questionnaire assigned? | Hidden from patients. CRM shows a warning badge. |
+| Q6 | Payment step placement? | Staff adds a `plugin` step with `plugin_id: "payment"` wherever they want in the intake. Card is authorized (not charged) at that step. Charged after Rx approval. |
+| Q7 | What is v1.0.0 of qualify/intake? | Placeholder scaffolding only — must not be shown to real patients. Full clinical question set must be entered in the builder and published before going live. |
+| Q8 | Provider schema versioning? | `IntakeSubmission` stores canonical answers. Provider mapping re-runs at submission time using the current active provider schema. Past submissions are not re-mapped. |
+| Refill | When do refill patients re-answer? | Option A — unconditional refill, no re-answering. Revisit when questionnaire is stable. |
+| Provider | LifeFile/MediVera role? | Pharmacy API only — no clinical intake sent there. Provider mapping is for the doctor network API only. |
+
+---
+
+## Part 10 — Implementation order (Phase 1 first — no exceptions)
+
+### Phase 1 — Bugs and foundation (must complete before any new feature coding)
+
+- [ ] Fix price input (text field, not number stepper)
 - [ ] Fix "Manage versions" navigation
-- [ ] Add `canonical_key` field to `QuestionnaireField` (no UI yet)
-- [ ] Write the canonical schema as a Python Enum in code
-- [ ] Answer all Q1–Q8 above
+- [ ] Add `DrugType` managed-list model with "Other" text input in medication form
+- [ ] Add `canonical_key` field to `QuestionnaireField` (DB + builder UI)
+- [ ] Create `/staff/canonical-keys` — add/edit/delete canonical keys with descriptions
+- [ ] Create `/staff/providers` — provider integrations with JSON schema paste + field mapping UI
+- [ ] Update analytics to track all page navigation (home, pricing, FAQ, safety, contact, legal pages)
+- [ ] Write the design decisions above into AGENTS.md as permanent architecture notes
 
-### Phase 2 — Drug selection + medication-specific questionnaire loading (2 weeks)
-- [ ] Drug selection as first step of patient funnel
+### Phase 2 — Drug selection + medication-specific questionnaire loading
+
+- [ ] Drug selection screen in patient funnel (after "Get started")
 - [ ] `FunnelSession.medication_id` and `MedicalIntake.medication_id`
-- [ ] Questionnaire lookup by medication
-- [ ] Qualify and intake renderer uses medication context
-- [ ] Patient portal intake display is fully dynamic
+- [ ] Questionnaire lookup by medication (with fallback to default)
+- [ ] `QuestionnaireMedication` join table + staff assignment UI
+- [ ] Patient portal intake display renders dynamically from submission snapshot
 
-### Phase 3 — Canonical mapping + provider adapter (2–3 weeks)
-- [ ] `ProviderIntegration`, `ProviderApiSchema`, `ProviderFieldMapping` models
-- [ ] Staff CRM: paste provider JSON schema, map canonical keys to JSONPaths
+### Phase 3 — Provider adapter
+
+- [ ] `ProviderIntegration`, `ProviderApiSchema`, `ProviderFieldMapping`, `ProviderMedication` models
+- [ ] Staff CRM: paste JSON schema, map canonical keys to JSONPaths, test mapping
 - [ ] `build_canonical_payload()` and `build_provider_payload()` at submission
-- [ ] Test with LifeFile/MediVera
+- [ ] Replace hardcoded LifeFile mapper with provider-agnostic adapter
 
-### Phase 4 — Analytics per version (1 week)
-- [ ] `QuestionnaireAnswer` and `QuestionnaireDropOff` tables
-- [ ] Staff analytics dashboard: answer distributions per question per version
-- [ ] Funnel drop-off by step
+### Phase 4 — Analytics per version
 
-### Phase 5 — Refill questionnaire policy (1 week, after clinical team input)
-- [ ] `requires_refill_reconfirmation` flag on `QuestionnaireVersion`
-- [ ] Refill path checks version delta and prompts re-answer if flagged
+- [ ] FunnelEvent tracks all page navigation (both branches)
+- [ ] Staff analytics: page funnel view, qualify/intake drop-off by step and version
+- [ ] Filter by drug, version, UTM, date range
+
+### Phase 5 — Clinical rules configuration (future)
+
+- [ ] Move disqualification rules out of hardcoded `derive_eligibility_flags()` into per-version config
+- [ ] Staff can mark which conditions trigger clinician review vs hard disqualification
 
 ---
 
-## Appendix A — What "completely dynamic" actually means
+## Appendix — What "completely dynamic" means and doesn't mean
 
-"Completely dynamic" means:
-- No question text is hardcoded in the frontend or backend
+**Means:**
+- No question text is hardcoded in frontend or backend
 - No step count is hardcoded anywhere
-- No field keys are hardcoded in validation logic (validation comes from the version schema)
-- The provider payload is built from a mapping table, not code
-- A non-technical staff member can add a question, add a step, change an option, reorder steps, publish a new version, and have it live for new patients — with zero code deploys
+- No field keys are hardcoded in validation logic
+- Provider payload is built from a mapping table
+- Staff can add a question, step, or option and publish — zero code deploys
 
-What it does NOT mean:
-- Staff can change the frontend UI components (those stay in code)
+**Does NOT mean:**
+- Staff can change frontend UI components (those stay in code)
 - Staff can bypass HIPAA compliance controls
-- Staff can arbitrarily inject HTML or scripts into question text (sanitized at save)
-- The patient funnel rendering logic is removed (it just becomes data-driven)
-
----
-
-## Appendix B — What existing data migration looks like
-
-When we switch from hardcoded questions to dynamic questions, existing patient records were answered against the hardcoded schema. We need to:
-
-1. Create a `Questionnaire` + `QuestionnaireVersion` that mirrors the old hardcoded questions exactly (with matching `field_key` values)
-2. Write a data migration that sets `questionnaire_version_id` on existing `EligibilityResponse` and `MedicalIntake` records to this "legacy v0" version
-3. Build a `questionnaire_responses` JSONB snapshot from the existing structured columns on those records
-4. The patient portal can then render legacy records from the `questionnaire_responses` snapshot using the legacy version schema
-
-Existing structured columns (`height_ft`, `weight_lbs`, `sex_assigned_at_birth`, etc.) can be kept in the database as a safety net but deprecated in code once the migration is verified. They are never deleted because they are part of the audit record.
+- Staff can inject HTML or scripts into question text (sanitized server-side)
+- Staff can reconfigure how Stripe, email verification, or consent signatures work (those are plugins, not schema-driven)
 
 ---
 

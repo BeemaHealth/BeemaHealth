@@ -48,7 +48,9 @@ import { Route as DashboardOrdersRouteImport } from './routes/dashboard.orders'
 import { Route as DashboardIntakeRouteImport } from './routes/dashboard.intake'
 import { Route as DashboardDocumentsRouteImport } from './routes/dashboard.documents'
 import { Route as DashboardAccountRouteImport } from './routes/dashboard.account'
+import { Route as StaffQuestionnairesIndexRouteImport } from './routes/staff.questionnaires.index'
 import { Route as StaffQuestionnairesSlugRouteImport } from './routes/staff.questionnaires.$slug'
+import { Route as StaffQuestionnairesSlugIndexRouteImport } from './routes/staff.questionnaires.$slug.index'
 import { Route as StaffQuestionnairesSlugVersionsVersionIdRouteImport } from './routes/staff.questionnaires.$slug.versions.$versionId'
 
 const WeightLossRoute = WeightLossRouteImport.update({
@@ -247,11 +249,23 @@ const DashboardAccountRoute = DashboardAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => DashboardRoute,
 } as any)
+const StaffQuestionnairesIndexRoute =
+  StaffQuestionnairesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => StaffQuestionnairesRoute,
+  } as any)
 const StaffQuestionnairesSlugRoute = StaffQuestionnairesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => StaffQuestionnairesRoute,
 } as any)
+const StaffQuestionnairesSlugIndexRoute =
+  StaffQuestionnairesSlugIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => StaffQuestionnairesSlugRoute,
+  } as any)
 const StaffQuestionnairesSlugVersionsVersionIdRoute =
   StaffQuestionnairesSlugVersionsVersionIdRouteImport.update({
     id: '/versions/$versionId',
@@ -300,6 +314,8 @@ export interface FileRoutesByFullPath {
   '/staff/': typeof StaffIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
   '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugRouteWithChildren
+  '/staff/questionnaires/': typeof StaffQuestionnairesIndexRoute
+  '/staff/questionnaires/$slug/': typeof StaffQuestionnairesSlugIndexRoute
   '/staff/questionnaires/$slug/versions/$versionId': typeof StaffQuestionnairesSlugVersionsVersionIdRoute
 }
 export interface FileRoutesByTo {
@@ -334,12 +350,12 @@ export interface FileRoutesByTo {
   '/staff/experiments': typeof StaffExperimentsRoute
   '/staff/medications': typeof StaffMedicationsRoute
   '/staff/patients': typeof StaffPatientsRoute
-  '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard': typeof DashboardIndexRoute
   '/staff': typeof StaffIndexRoute
   '/verify-email': typeof VerifyEmailIndexRoute
-  '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugRouteWithChildren
+  '/staff/questionnaires': typeof StaffQuestionnairesIndexRoute
+  '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugIndexRoute
   '/staff/questionnaires/$slug/versions/$versionId': typeof StaffQuestionnairesSlugVersionsVersionIdRoute
 }
 export interface FileRoutesById {
@@ -384,6 +400,8 @@ export interface FileRoutesById {
   '/staff/': typeof StaffIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
   '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugRouteWithChildren
+  '/staff/questionnaires/': typeof StaffQuestionnairesIndexRoute
+  '/staff/questionnaires/$slug/': typeof StaffQuestionnairesSlugIndexRoute
   '/staff/questionnaires/$slug/versions/$versionId': typeof StaffQuestionnairesSlugVersionsVersionIdRoute
 }
 export interface FileRouteTypes {
@@ -429,6 +447,8 @@ export interface FileRouteTypes {
     | '/staff/'
     | '/verify-email/'
     | '/staff/questionnaires/$slug'
+    | '/staff/questionnaires/'
+    | '/staff/questionnaires/$slug/'
     | '/staff/questionnaires/$slug/versions/$versionId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -463,11 +483,11 @@ export interface FileRouteTypes {
     | '/staff/experiments'
     | '/staff/medications'
     | '/staff/patients'
-    | '/staff/questionnaires'
     | '/verify-email/pending'
     | '/dashboard'
     | '/staff'
     | '/verify-email'
+    | '/staff/questionnaires'
     | '/staff/questionnaires/$slug'
     | '/staff/questionnaires/$slug/versions/$versionId'
   id:
@@ -512,6 +532,8 @@ export interface FileRouteTypes {
     | '/staff/'
     | '/verify-email/'
     | '/staff/questionnaires/$slug'
+    | '/staff/questionnaires/'
+    | '/staff/questionnaires/$slug/'
     | '/staff/questionnaires/$slug/versions/$versionId'
   fileRoutesById: FileRoutesById
 }
@@ -818,12 +840,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAccountRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/staff/questionnaires/': {
+      id: '/staff/questionnaires/'
+      path: '/'
+      fullPath: '/staff/questionnaires/'
+      preLoaderRoute: typeof StaffQuestionnairesIndexRouteImport
+      parentRoute: typeof StaffQuestionnairesRoute
+    }
     '/staff/questionnaires/$slug': {
       id: '/staff/questionnaires/$slug'
       path: '/$slug'
       fullPath: '/staff/questionnaires/$slug'
       preLoaderRoute: typeof StaffQuestionnairesSlugRouteImport
       parentRoute: typeof StaffQuestionnairesRoute
+    }
+    '/staff/questionnaires/$slug/': {
+      id: '/staff/questionnaires/$slug/'
+      path: '/'
+      fullPath: '/staff/questionnaires/$slug/'
+      preLoaderRoute: typeof StaffQuestionnairesSlugIndexRouteImport
+      parentRoute: typeof StaffQuestionnairesSlugRoute
     }
     '/staff/questionnaires/$slug/versions/$versionId': {
       id: '/staff/questionnaires/$slug/versions/$versionId'
@@ -858,11 +894,13 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 )
 
 interface StaffQuestionnairesSlugRouteChildren {
+  StaffQuestionnairesSlugIndexRoute: typeof StaffQuestionnairesSlugIndexRoute
   StaffQuestionnairesSlugVersionsVersionIdRoute: typeof StaffQuestionnairesSlugVersionsVersionIdRoute
 }
 
 const StaffQuestionnairesSlugRouteChildren: StaffQuestionnairesSlugRouteChildren =
   {
+    StaffQuestionnairesSlugIndexRoute: StaffQuestionnairesSlugIndexRoute,
     StaffQuestionnairesSlugVersionsVersionIdRoute:
       StaffQuestionnairesSlugVersionsVersionIdRoute,
   }
@@ -874,10 +912,12 @@ const StaffQuestionnairesSlugRouteWithChildren =
 
 interface StaffQuestionnairesRouteChildren {
   StaffQuestionnairesSlugRoute: typeof StaffQuestionnairesSlugRouteWithChildren
+  StaffQuestionnairesIndexRoute: typeof StaffQuestionnairesIndexRoute
 }
 
 const StaffQuestionnairesRouteChildren: StaffQuestionnairesRouteChildren = {
   StaffQuestionnairesSlugRoute: StaffQuestionnairesSlugRouteWithChildren,
+  StaffQuestionnairesIndexRoute: StaffQuestionnairesIndexRoute,
 }
 
 const StaffQuestionnairesRouteWithChildren =
