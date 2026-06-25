@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
@@ -46,6 +46,9 @@ import { formatPhoneInput } from "@/lib/form-validation";
 import { computeBmi } from "@/lib/safety-flags";
 import { useAuth } from "@/context/AuthContext";
 import { US_STATES } from "@/lib/veya-data";
+import { trackStepCompleted, trackStepViewed } from "@/lib/analytics";
+import { QualifyDynamicFlow } from "@/components/questionnaire/QualifyDynamicFlow";
+import { DYNAMIC_QUESTIONNAIRES_ENABLED } from "@/lib/questionnaire/config";
 import type {
   EligibilityResponses,
   EligibilitySafetyScreen,
@@ -164,6 +167,13 @@ function formToPayload(data: FormState): Partial<EligibilityResponses> {
 }
 
 function EligibilityPage() {
+  if (DYNAMIC_QUESTIONNAIRES_ENABLED && isApiEnabled()) {
+    return <QualifyDynamicFlow />;
+  }
+  return <QualifyHardcodedPage />;
+}
+
+function QualifyHardcodedPage() {
   const navigate = useNavigate();
   const { session: existingSession, isInitialized, setSession } = useAuth();
   const [stepIndex, setStepIndex] = useState(0);
@@ -178,6 +188,13 @@ function EligibilityPage() {
 
   const currentStep = steps[stepIndex];
   const progress = ((stepIndex + 1) / steps.length) * 100;
+  const stepStartedAt = useRef(Date.now());
+
+  useEffect(() => {
+    if (loading) return;
+    trackStepViewed("qualify", currentStep, { stepIndex });
+    stepStartedAt.current = Date.now();
+  }, [currentStep, loading, stepIndex]);
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setData((d) => ({ ...d, [key]: value }));
@@ -285,6 +302,12 @@ function EligibilityPage() {
     setSubmitting(true);
     try {
       await persistDraft();
+      trackStepCompleted(
+        "qualify",
+        currentStep,
+        Date.now() - stepStartedAt.current,
+        { stepIndex },
+      );
       setStepIndex((i) => i + 1);
     } catch (e) {
       setError(

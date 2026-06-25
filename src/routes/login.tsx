@@ -21,6 +21,11 @@ export const Route = createFileRoute("/login")({
 });
 
 function redirectAfterLogin(session: SessionUser, redirect: string) {
+  // Staff always land in the staff portal unless they explicitly requested elsewhere.
+  if (session.user.is_staff && redirect === "/dashboard") {
+    window.location.assign("/staff");
+    return;
+  }
   const target =
     !session.user.email_verified && redirect === "/intake"
       ? "/verify-email/pending"

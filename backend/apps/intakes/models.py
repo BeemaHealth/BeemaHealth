@@ -32,6 +32,8 @@ class MedicalIntake(models.Model):
     medication_preferences = models.JSONField(default=dict)
     safety_acknowledgments = models.JSONField(default=dict)
     account_screening = models.JSONField(default=dict)
+    questionnaire_responses = models.JSONField(default=dict, blank=True)
+    questionnaire_version_id = models.UUIDField(null=True, blank=True)
     submitted_at = models.DateTimeField(null=True, blank=True)
     active_submission_version = models.PositiveSmallIntegerField(null=True, blank=True)
     working_version = models.PositiveSmallIntegerField(default=1)
@@ -65,6 +67,7 @@ class IntakeSubmission(models.Model):
         max_length=32, choices=STATUS_AT_SUBMIT_CHOICES, default="submitted"
     )
     snapshot = models.JSONField(default=dict)
+    questionnaire_version_id = models.UUIDField(null=True, blank=True)
     submitted_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -89,8 +89,17 @@ import type {
 import { getIntake, saveIntake } from "@/lib/storage";
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
+import { IntakeDynamicFlow } from "@/components/questionnaire/IntakeDynamicFlow";
+import { DYNAMIC_QUESTIONNAIRES_ENABLED } from "@/lib/questionnaire/config";
 
 export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
+  if (DYNAMIC_QUESTIONNAIRES_ENABLED && isApiEnabled() && mode === "funnel") {
+    return <IntakeDynamicFlow />;
+  }
+  return <IntakeFlowInner mode={mode} />;
+}
+
+function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
   const navigate = useNavigate();
   const { session, setSession } = useAuth();
   const userId = session?.user.id ?? "";

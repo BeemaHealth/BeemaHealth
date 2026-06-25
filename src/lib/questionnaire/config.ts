@@ -1,0 +1,2 @@
+export const DYNAMIC_QUESTIONNAIRES_ENABLED =
+  import.meta.env.VITE_DYNAMIC_QUESTIONNAIRES === "true";

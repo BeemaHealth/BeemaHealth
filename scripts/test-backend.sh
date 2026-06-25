@@ -23,6 +23,9 @@ python manage.py test \
   apps.reviews.tests \
   apps.integrations.tests \
   apps.pharmacy.tests \
+  apps.analytics.tests \
+  apps.questionnaires.tests \
+  apps.staff.tests \
   --settings=config.settings_test \
   "$@"
 

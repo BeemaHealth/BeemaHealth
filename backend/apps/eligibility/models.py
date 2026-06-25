@@ -27,6 +27,13 @@ class FunnelSession(models.Model):
     expires_at = models.DateTimeField()
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     user_agent = models.TextField(blank=True, default="")
+    utm_source = models.CharField(max_length=128, blank=True, default="")
+    utm_medium = models.CharField(max_length=128, blank=True, default="")
+    utm_campaign = models.CharField(max_length=128, blank=True, default="")
+    utm_content = models.CharField(max_length=128, blank=True, default="")
+    experiment_id = models.UUIDField(null=True, blank=True)
+    variant_key = models.CharField(max_length=32, blank=True, default="")
+    qualify_questionnaire_version_id = models.UUIDField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -127,6 +134,8 @@ class EligibilityResponse(models.Model):
     disqualification_reason = models.CharField(max_length=64, blank=True, default="")
 
     pre_signup_consents = models.JSONField(default=dict, blank=True)
+    questionnaire_responses = models.JSONField(default=dict, blank=True)
+    questionnaire_version_id = models.UUIDField(null=True, blank=True)
     completed_at = models.DateTimeField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

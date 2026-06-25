@@ -12,7 +12,12 @@ import { redirect } from "@tanstack/react-router";
 
 let validationPromise: Promise<SessionUser | null> | null = null;
 
-export { applySession, clearSession, getCachedSession, subscribeSession } from "@/lib/session";
+export {
+  applySession,
+  clearSession,
+  getCachedSession,
+  subscribeSession,
+} from "@/lib/session";
 
 export async function validateSession(): Promise<SessionUser | null> {
   if (!isApiEnabled()) {
@@ -48,13 +53,28 @@ type RequireAuthOptions = {
   redirectPath?: string;
 };
 
-export async function requireAuth(options: RequireAuthOptions = {}): Promise<SessionUser> {
+export async function requireAuth(
+  options: RequireAuthOptions = {},
+): Promise<SessionUser> {
   const redirectTo = options.redirectTo ?? "/login";
   const redirectPath = options.redirectPath ?? "/dashboard";
 
   const session = await validateSession();
   if (!session) {
     throw redirect({ to: redirectTo, search: { redirect: redirectPath } });
+  }
+  return session;
+}
+
+export async function requireStaff(
+  options: RequireAuthOptions = {},
+): Promise<SessionUser> {
+  const session = await requireAuth({
+    redirectTo: options.redirectTo ?? "/login",
+    redirectPath: options.redirectPath ?? "/staff",
+  });
+  if (!session.user.is_staff) {
+    throw redirect({ to: "/dashboard" });
   }
   return session;
 }

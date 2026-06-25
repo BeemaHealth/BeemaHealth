@@ -24,16 +24,55 @@ def get_client_ip(request) -> str | None:
     return request.META.get("REMOTE_ADDR")
 
 
-def create_funnel_session(request) -> tuple[FunnelSession, str]:
+def create_funnel_session(request, *, utm: dict | None = None) -> tuple[FunnelSession, str]:
+    from apps.questionnaires.services import assign_experiment_variant
+
+    ip = get_client_ip(request)
+    ua = (request.META.get("HTTP_USER_AGENT") or "")[:512]
+
+    # Dedup: if the same browser (IP + user-agent) already has an active session
+    # within the last 2 hours, re-issue a fresh token tied to that session so we
+    # don't create duplicate funnel records per device.
+    if ip and ua:
+        dedup_cutoff = timezone.now() - timedelta(hours=2)
+        existing = (
+            FunnelSession.objects.filter(
+                ip_address=ip,
+                user_agent=ua,
+                status=FunnelSession.Status.ACTIVE,
+                expires_at__gt=timezone.now(),
+                created_at__gte=dedup_cutoff,
+            )
+            .order_by("-created_at")
+            .first()
+        )
+        if existing:
+            token = secrets.token_urlsafe(32)
+            existing.token_hash = hash_token(token)
+            existing.save(update_fields=["token_hash", "updated_at"])
+            return existing, token
+
     token = secrets.token_urlsafe(32)
     expires_at = timezone.now() + timedelta(days=30)
+    utm = utm or {}
+    experiment_id, variant_key, version_id = assign_experiment_variant("qualify")
     session = FunnelSession.objects.create(
         token_hash=hash_token(token),
         expires_at=expires_at,
-        ip_address=get_client_ip(request),
-        user_agent=(request.META.get("HTTP_USER_AGENT") or "")[:512],
+        ip_address=ip,
+        user_agent=ua,
+        utm_source=str(utm.get("utm_source", ""))[:128],
+        utm_medium=str(utm.get("utm_medium", ""))[:128],
+        utm_campaign=str(utm.get("utm_campaign", ""))[:128],
+        utm_content=str(utm.get("utm_content", ""))[:128],
+        experiment_id=experiment_id,
+        variant_key=variant_key or "",
+        qualify_questionnaire_version_id=version_id,
     )
-    EligibilityResponse.objects.create(funnel_session=session)
+    EligibilityResponse.objects.create(
+        funnel_session=session,
+        questionnaire_version_id=version_id,
+    )
     return session, token
 
 

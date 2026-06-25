@@ -65,6 +65,9 @@ export interface User {
   dob: string;
   state: string;
   email_verified: boolean;
+  is_staff: boolean;
+  is_provider: boolean;
+  is_patient: boolean;
   created_at: string;
 }
 
@@ -127,6 +130,8 @@ export interface EligibilityResponses {
   needs_clinician_review: boolean;
   disqualification_reason: string | null;
   pre_signup_consents: PreSignupConsents;
+  questionnaire_responses?: Record<string, unknown>;
+  questionnaire_version_id?: string | null;
   completed_at: string | null;
   created_at: string;
   updated_at?: string;
@@ -180,6 +185,8 @@ export interface MedicalIntake {
   active_submission_version?: number | null;
   working_version?: number;
   account_screening?: AccountScreening;
+  questionnaire_responses?: Record<string, unknown>;
+  questionnaire_version_id?: string | null;
   updated_at: string;
   can_edit?: boolean;
   active_submission?: IntakeSubmission | null;

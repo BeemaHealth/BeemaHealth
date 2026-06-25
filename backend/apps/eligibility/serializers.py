@@ -34,6 +34,8 @@ class EligibilitySerializer(serializers.ModelSerializer):
             "needs_clinician_review",
             "disqualification_reason",
             "pre_signup_consents",
+            "questionnaire_responses",
+            "questionnaire_version_id",
             "completed_at",
             "created_at",
             "updated_at",

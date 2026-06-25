@@ -195,6 +195,9 @@ export async function registerUser(payload: {
     dob: "",
     state: "",
     email_verified: true,
+    is_staff: false,
+    is_provider: false,
+    is_patient: true,
     created_at: new Date().toISOString(),
   };
   const session: SessionUser = { token: `local-${user.id}`, user };
@@ -443,6 +446,412 @@ export async function patchAdminPatient(
 
 export function isApiEnabled() {
   return USE_API;
+}
+
+// --- Staff CRM ---
+
+export type StaffSummary = {
+  total_patients: number;
+  active_funnel_sessions: number;
+  submitted_intakes: number;
+};
+
+export async function fetchStaffSummary(): Promise<StaffSummary> {
+  return apiFetch<StaffSummary>("/staff/summary/");
+}
+
+export type FunnelAnalyticsStep = {
+  step_key: string;
+  views: number;
+  completions: number;
+  dropoff_percent?: number;
+};
+
+export async function fetchStaffFunnelAnalytics(params: {
+  questionnaire_slug?: string;
+  experiment_id?: string;
+  variant_key?: string;
+}): Promise<{ questionnaire_slug: string; steps: FunnelAnalyticsStep[] }> {
+  const search = new URLSearchParams();
+  if (params.questionnaire_slug)
+    search.set("questionnaire_slug", params.questionnaire_slug);
+  if (params.experiment_id) search.set("experiment_id", params.experiment_id);
+  if (params.variant_key) search.set("variant_key", params.variant_key);
+  const qs = search.toString();
+  return apiFetch(`/staff/analytics/funnel/${qs ? `?${qs}` : ""}`);
+}
+
+export async function fetchStaffDropoffAnalytics(
+  questionnaire_slug = "qualify",
+) {
+  return apiFetch<{ questionnaire_slug: string; steps: FunnelAnalyticsStep[] }>(
+    `/staff/analytics/dropoff/?questionnaire_slug=${encodeURIComponent(questionnaire_slug)}`,
+  );
+}
+
+export type StaffPatientRow = {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  state: string;
+  stage: string;
+  last_event_name: string | null;
+  last_step_key: string | null;
+  utm_source: string;
+  variant_key: string;
+  created_at: string;
+};
+
+export async function fetchStaffPatients(stage?: string) {
+  const qs = stage ? `?stage=${encodeURIComponent(stage)}` : "";
+  return apiFetch<{ patients: StaffPatientRow[]; count: number }>(
+    `/staff/patients/${qs}`,
+  );
+}
+
+export type MedicationItem = {
+  id: string;
+  name: string;
+  slug: string;
+  drug_type: "semaglutide" | "tirzepatide" | "other";
+  delivery_type: "injection" | "daily_pill";
+  price_cents: number;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type MedicationWrite = {
+  name: string;
+  slug: string;
+  drug_type: string;
+  delivery_type: string;
+  price_cents: number;
+  active: boolean;
+};
+
+export type ValidationRule = {
+  type:
+    | "required"
+    | "min"
+    | "max"
+    | "min_length"
+    | "max_length"
+    | "pattern"
+    | "enum";
+  value?: unknown;
+  message?: string;
+};
+
+export type QuestionnaireFieldSchema = {
+  id?: string;
+  field_key: string;
+  field_type: string;
+  label: string;
+  help_text?: string;
+  options?: { value: string; label: string }[];
+  validation_rules?: ValidationRule[];
+  maps_to_section?: string;
+  plugin_id?: string;
+  sort_order?: number;
+  required?: boolean;
+};
+
+export type QuestionnaireStepSchema = {
+  id?: string;
+  step_key: string;
+  sort_order: number;
+  title: string;
+  subtitle?: string;
+  visibility_rule?: Record<string, unknown> | null;
+  fields: QuestionnaireFieldSchema[];
+};
+
+export type QuestionnaireVersionSchema = {
+  id: string;
+  questionnaire_slug: string;
+  questionnaire_type: "qualify" | "intake";
+  medication_id: string | null;
+  version_label: string;
+  status: "draft" | "published" | "archived";
+  published_at: string | null;
+  steps: QuestionnaireStepSchema[];
+};
+
+export type QuestionnaireListItem = {
+  id: string;
+  slug: string;
+  questionnaire_type: "qualify" | "intake";
+  title: string;
+  medication: MedicationItem | null;
+  published_version: { id: string; version_label: string } | null;
+};
+
+export async function fetchActiveQuestionnaire(
+  slug: string,
+  versionId?: string,
+) {
+  const qs = versionId ? `?version_id=${encodeURIComponent(versionId)}` : "";
+  return apiFetch<QuestionnaireVersionSchema>(
+    `/questionnaires/${slug}/active/${qs}`,
+  );
+}
+
+export async function fetchStaffMedications() {
+  return apiFetch<MedicationItem[]>("/staff/medications/");
+}
+
+export async function createStaffMedication(data: MedicationWrite) {
+  return apiFetch<MedicationItem>("/staff/medications/", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateStaffMedication(
+  id: string,
+  data: Partial<MedicationWrite>,
+) {
+  return apiFetch<MedicationItem>(`/staff/medications/${id}/`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteStaffMedication(id: string) {
+  return apiFetch<void>(`/staff/medications/${id}/`, { method: "DELETE" });
+}
+
+export async function fetchStaffQuestionnaires() {
+  return apiFetch<QuestionnaireListItem[]>("/staff/questionnaires/");
+}
+
+export async function createStaffQuestionnaire(data: {
+  slug: string;
+  questionnaire_type: string;
+  title: string;
+  medication_id?: string | null;
+}) {
+  return apiFetch<QuestionnaireListItem>("/staff/questionnaires/", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function fetchStaffQuestionnaireVersions(slug: string) {
+  return apiFetch<QuestionnaireVersionSchema[]>(
+    `/staff/questionnaires/${slug}/versions/`,
+  );
+}
+
+export async function fetchStaffQuestionnaireVersion(
+  slug: string,
+  versionId: string,
+) {
+  return apiFetch<QuestionnaireVersionSchema>(
+    `/staff/questionnaires/${slug}/versions/${versionId}/`,
+  );
+}
+
+export async function createStaffQuestionnaireVersion(
+  slug: string,
+  version_label: string,
+) {
+  return apiFetch<QuestionnaireVersionSchema>(
+    `/staff/questionnaires/${slug}/versions/`,
+    {
+      method: "POST",
+      body: JSON.stringify({ version_label }),
+    },
+  );
+}
+
+export async function publishStaffQuestionnaireVersion(
+  slug: string,
+  versionId: string,
+) {
+  return apiFetch<QuestionnaireVersionSchema>(
+    `/staff/questionnaires/${slug}/versions/${versionId}/publish/`,
+    { method: "POST" },
+  );
+}
+
+export async function duplicateStaffQuestionnaireVersion(
+  slug: string,
+  versionId: string,
+) {
+  return apiFetch<QuestionnaireVersionSchema>(
+    `/staff/questionnaires/${slug}/versions/${versionId}/duplicate/`,
+    { method: "POST" },
+  );
+}
+
+export async function createStaffQuestionnaireStep(
+  slug: string,
+  versionId: string,
+  data: Partial<QuestionnaireStepSchema>,
+) {
+  return apiFetch(
+    `/staff/questionnaires/${slug}/versions/${versionId}/steps/`,
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    },
+  );
+}
+
+export async function updateStaffQuestionnaireStep(
+  slug: string,
+  versionId: string,
+  stepKey: string,
+  data: Partial<QuestionnaireStepSchema>,
+) {
+  return apiFetch(
+    `/staff/questionnaires/${slug}/versions/${versionId}/steps/${stepKey}/`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    },
+  );
+}
+
+export async function deleteStaffQuestionnaireStep(
+  slug: string,
+  versionId: string,
+  stepKey: string,
+) {
+  return apiFetch(
+    `/staff/questionnaires/${slug}/versions/${versionId}/steps/${stepKey}/`,
+    {
+      method: "DELETE",
+    },
+  );
+}
+
+export async function createStaffQuestionnaireField(
+  slug: string,
+  versionId: string,
+  stepKey: string,
+  data: QuestionnaireFieldSchema,
+) {
+  return apiFetch(
+    `/staff/questionnaires/${slug}/versions/${versionId}/steps/${stepKey}/fields/`,
+    { method: "POST", body: JSON.stringify(data) },
+  );
+}
+
+export async function updateStaffQuestionnaireField(
+  slug: string,
+  versionId: string,
+  stepKey: string,
+  fieldKey: string,
+  data: Partial<QuestionnaireFieldSchema>,
+) {
+  return apiFetch(
+    `/staff/questionnaires/${slug}/versions/${versionId}/steps/${stepKey}/fields/${fieldKey}/`,
+    { method: "PATCH", body: JSON.stringify(data) },
+  );
+}
+
+export async function deleteStaffQuestionnaireField(
+  slug: string,
+  versionId: string,
+  stepKey: string,
+  fieldKey: string,
+) {
+  return apiFetch(
+    `/staff/questionnaires/${slug}/versions/${versionId}/steps/${stepKey}/fields/${fieldKey}/`,
+    { method: "DELETE" },
+  );
+}
+
+export type ExperimentSchema = {
+  id: string;
+  name: string;
+  questionnaire_slug: string;
+  status: string;
+  start_at: string | null;
+  end_at: string | null;
+  variants: {
+    id: string;
+    variant_key: string;
+    questionnaire_version_id: string;
+    version_label: string;
+    weight_percent: number;
+  }[];
+};
+
+export async function fetchStaffExperiments() {
+  return apiFetch<ExperimentSchema[]>("/staff/experiments/");
+}
+
+export async function createStaffExperiment(data: {
+  name: string;
+  questionnaire?: string;
+  questionnaire_slug?: string;
+  status?: string;
+}) {
+  return apiFetch<ExperimentSchema>("/staff/experiments/", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function patchStaffExperiment(
+  experimentId: string,
+  data: Partial<{
+    name: string;
+    status: string;
+    start_at: string;
+    end_at: string;
+  }>,
+) {
+  return apiFetch<ExperimentSchema>(`/staff/experiments/${experimentId}/`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function createStaffExperimentVariant(
+  experimentId: string,
+  data: {
+    variant_key: string;
+    questionnaire_version: string;
+    weight_percent: number;
+  },
+) {
+  return apiFetch(`/staff/experiments/${experimentId}/variants/`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function fetchStaffExperimentResults(experimentId: string) {
+  return apiFetch<{ experiment_id: string; variants: unknown[] }>(
+    `/staff/experiments/${experimentId}/results/`,
+  );
+}
+
+export async function trackFunnelEventApi(payload: {
+  event_name: string;
+  questionnaire_slug?: string;
+  questionnaire_version_id?: string;
+  step_key?: string;
+  experiment_id?: string;
+  variant_key?: string;
+  properties?: Record<string, unknown>;
+}) {
+  if (!USE_API) return;
+  try {
+    await apiFetch("/analytics/events/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      withCredentials: true,
+    });
+  } catch {
+    // Analytics must not block funnel UX.
+  }
 }
 
 export function inferDocumentType(filename: string): DocumentType {

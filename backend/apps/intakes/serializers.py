@@ -33,6 +33,8 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
             "medication_preferences",
             "safety_acknowledgments",
             "account_screening",
+            "questionnaire_responses",
+            "questionnaire_version_id",
             "submitted_at",
             "active_submission_version",
             "working_version",

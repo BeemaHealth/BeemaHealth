@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     "apps.integrations",
     "apps.audit",
     "apps.common",
+    "apps.analytics",
+    "apps.questionnaires",
+    "apps.staff",
 ]
 
 MIDDLEWARE = [
@@ -238,6 +241,7 @@ INTAKE_PORTAL_EDITING_ENABLED = env.bool("INTAKE_PORTAL_EDITING_ENABLED", defaul
 
 # Partner integrations — defaults safe for local dev (mock adapters).
 PHARMACY_ADAPTER = env("PHARMACY_ADAPTER", default="mock")
+DYNAMIC_QUESTIONNAIRES = env.bool("DYNAMIC_QUESTIONNAIRES", default=True)
 DOCTOR_WEBHOOK_SECRET = env("DOCTOR_WEBHOOK_SECRET", default="dev-doctor-webhook-secret")
 LIFEFILE_WEBHOOK_USER = env("LIFEFILE_WEBHOOK_USER", default="lifefile_webhook")
 LIFEFILE_WEBHOOK_PASSWORD = env("LIFEFILE_WEBHOOK_PASSWORD", default="dev-lifefile-webhook-pass")

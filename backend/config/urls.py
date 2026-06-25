@@ -30,4 +30,7 @@ urlpatterns = [
     path("api/pharmacy/", include("apps.pharmacy.urls")),
     path("api/webhooks/", include("apps.integrations.urls")),
     path("api/provider-reviews/", ProviderReviewSyncView.as_view(), name="provider-reviews"),
+    path("api/analytics/", include("apps.analytics.urls")),
+    path("api/questionnaires/", include("apps.questionnaires.urls")),
+    path("api/staff/", include("apps.staff.urls")),
 ]
