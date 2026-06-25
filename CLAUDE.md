@@ -42,6 +42,7 @@ Patient funnel: qualification → account → medical intake → consent → pro
 | Database / field ownership | `backend/DATABASE.md` |
 | Run backend, API list | `backend/README.md`, `docs/LOCAL-DEV.md` |
 | LifeFile / MediVera pharmacy API | `docs/vendor/LIFEFILE_MEDIVERA_API.md` (gitignored; pointer at `docs/LIFEFILE_MEDIVERA_API.md`) |
+| Beluga Health provider/pharmacy API | `docs/vendor/BELUGA_API.md` (gitignored; pointer at `docs/BELUGA_API.md`) |
 | Input validation & security tests | `docs/INPUT_VALIDATION_TESTS.md` |
 | API types & client | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |
 | Color scheme / portal UI | `src/lib/design-tokens.ts`, `src/styles.css` |
