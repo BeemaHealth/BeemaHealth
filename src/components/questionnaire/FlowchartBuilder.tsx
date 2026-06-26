@@ -434,6 +434,15 @@ function StepNode({ data, id }: NodeProps<Node<StepNodeData>>) {
         )}
       </div>
 
+      {/* Incoming handle — bottom (for backward upper-left loops) */}
+      <Handle
+        type="target"
+        position={Position.Bottom}
+        id="in-bottom"
+        style={{ left: "65%" }}
+        className="!size-2 !bg-muted-foreground/40 !border !border-card"
+      />
+
       {/* Outgoing handles — right and bottom */}
       <Handle
         type="source"
@@ -445,6 +454,7 @@ function StepNode({ data, id }: NodeProps<Node<StepNodeData>>) {
         type="source"
         position={Position.Bottom}
         id="out-bottom"
+        style={{ left: "35%" }}
         className="!size-2 !bg-primary/50 !border !border-card"
       />
     </div>
@@ -1562,8 +1572,15 @@ function chooseHandles(
     return { sourceHandle: "out-bottom", targetHandle: "in-top" };
   }
 
-  // Target is to the left: exit bottom so the curve swoops down-then-left
-  // instead of the ugly backward S-curve produced by right→left
+  // Target is a backward step sitting above-and-to-the-left: loop out the
+  // source's bottom and into the target's bottom from below. Entering in-left
+  // here would cut across the target node from the wrong side.
+  if (dx < 0 && dy < 0) {
+    return { sourceHandle: "out-bottom", targetHandle: "in-bottom" };
+  }
+
+  // Target is to the left (same row or below): exit bottom so the curve swoops
+  // down-then-left instead of the ugly backward S-curve produced by right→left
   if (dx < 0) {
     return { sourceHandle: "out-bottom", targetHandle: "in-left" };
   }
@@ -1659,7 +1676,11 @@ function buildEdges(
         const adx = tp.x - sp.x;
         const ady = tp.y - sp.y;
         const answerTargetHandle =
-          ady > 0 && ady > Math.abs(adx) * 0.55 ? "in-top" : "in-left";
+          ady > 0 && ady > Math.abs(adx) * 0.55
+            ? "in-top"
+            : adx < 0 && ady < 0
+              ? "in-bottom"
+              : "in-left";
 
         const edgeId = `route-${step.step_key}-${ri}`;
         const isEdgeSel = edgeId === selectedEdgeId;
