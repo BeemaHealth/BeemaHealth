@@ -788,6 +788,83 @@ function DropoffBetween({
   );
 }
 
+// Resolve the source/target step keys for any edge so we can look up analytics.
+// seq/route edges carry the precise target step in their data; intake edges
+// terminate on an intake node (no step analytics) so only the source is used.
+function resolveEdgeStepKeys(edge: Edge): {
+  sourceKey?: string;
+  targetKey?: string;
+} {
+  const data = edge.data as
+    | { type: "seq"; stepKey: string; targetStepKey: string }
+    | { type: "route"; stepKey: string; rule?: { next_step_key?: string } }
+    | { type: "intake" }
+    | undefined;
+  if (edge.id === "entry-edge") return { targetKey: edge.target };
+  if (data?.type === "seq")
+    return { sourceKey: data.stepKey, targetKey: data.targetStepKey };
+  if (data?.type === "route")
+    return { sourceKey: data.stepKey, targetKey: data.rule?.next_step_key };
+  return { sourceKey: edge.source, targetKey: edge.target };
+}
+
+function EdgeDropoffTooltip({
+  hovered,
+  analyticsMap,
+}: {
+  hovered: { edge: Edge; x: number; y: number };
+  analyticsMap: Map<string, FunnelAnalyticsStep>;
+}) {
+  const { sourceKey, targetKey } = resolveEdgeStepKeys(hovered.edge);
+  const src = sourceKey ? analyticsMap.get(sourceKey) : undefined;
+  const tgt = targetKey ? analyticsMap.get(targetKey) : undefined;
+  const srcCompletions = src?.completions ?? src?.views ?? 0;
+  const tgtViews = tgt?.views ?? 0;
+  const between =
+    src && tgt && srcCompletions > 0
+      ? Math.round(((srcCompletions - tgtViews) / srcCompletions) * 100)
+      : null;
+  return (
+    <div
+      className="pointer-events-none fixed z-50 rounded-lg border border-border bg-card px-3 py-2 text-[11px] shadow-soft"
+      style={{ left: hovered.x + 14, top: hovered.y + 14, maxWidth: 240 }}
+    >
+      {!src && !tgt ? (
+        <span className="text-muted-foreground">No drop-off data yet</span>
+      ) : (
+        <div className="space-y-1">
+          {src && (
+            <div className="flex justify-between gap-4">
+              <span className="text-muted-foreground">{sourceKey} done</span>
+              <span className="font-mono font-medium text-foreground">
+                {srcCompletions.toLocaleString()}
+              </span>
+            </div>
+          )}
+          {tgt && (
+            <div className="flex justify-between gap-4">
+              <span className="text-muted-foreground">{targetKey} reached</span>
+              <span className="font-mono font-medium text-foreground">
+                {tgtViews.toLocaleString()}
+              </span>
+            </div>
+          )}
+          {between !== null && (
+            <div className="flex justify-between gap-4 border-t border-border pt-1">
+              <span className="text-muted-foreground">Drop-off</span>
+              <span
+                className={`font-semibold ${between > 50 ? "text-destructive" : between > 25 ? "text-yellow-600" : "text-emerald-600"}`}
+              >
+                {between}%
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function EdgePanel({
   info,
   allSteps,
@@ -1976,23 +2053,26 @@ function buildEdges(
         tp.x,
         tp.y,
       );
+      const seqEdgeId = `seq-${step.step_key}`;
+      const isSeqSel = seqEdgeId === selectedEdgeId;
       edges.push({
-        id: `seq-${step.step_key}`,
+        id: seqEdgeId,
         source: step.step_key,
         sourceHandle,
         target: defaultTarget.step_key,
         targetHandle,
         animated: false,
-        zIndex: 10,
+        selected: isSeqSel,
+        zIndex: isSeqSel ? 21 : 10,
         style: {
-          stroke: "var(--muted-foreground)",
-          strokeWidth: 1.5,
-          opacity: 0.7,
+          stroke: isSeqSel ? "var(--destructive)" : "var(--muted-foreground)",
+          strokeWidth: isSeqSel ? 3 : 1.5,
+          opacity: isSeqSel ? 1 : 0.7,
         },
         type: "default",
         data: {
           type: "seq",
-          edgeId: `seq-${step.step_key}`,
+          edgeId: seqEdgeId,
           stepKey: step.step_key,
           targetStepKey: defaultTarget.step_key,
           isOverride: !!defaultRule,
@@ -2978,6 +3058,11 @@ export function FlowchartBuilder({
     Map<string, FunnelAnalyticsStep>
   >(new Map());
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [hoveredEdge, setHoveredEdge] = useState<{
+    edge: Edge;
+    x: number;
+    y: number;
+  } | null>(null);
   const [activeTool, setActiveTool] = useState<Tool>("select");
   const [pendingSource, setPendingSource] = useState<PendingSource | null>(
     null,
@@ -3057,6 +3142,27 @@ export function FlowchartBuilder({
     },
     [slug, versionId, selectedKey],
   );
+
+  // Load drop-off analytics as soon as the version loads so the edge side panel
+  // and hover tooltips can surface drop-off rates without toggling the overlay.
+  const analyticsSlug = schema?.questionnaire_slug;
+  useEffect(() => {
+    if (!analyticsSlug) return;
+    let cancelled = false;
+    fetchStaffDropoffAnalytics({ questionnaire_slug: analyticsSlug })
+      .then((result) => {
+        if (cancelled) return;
+        const map = new Map<string, FunnelAnalyticsStep>();
+        result.steps.forEach((s) => map.set(s.step_key, s));
+        setAnalyticsMap(map);
+      })
+      .catch(() => {
+        // analytics unavailable — edges simply won't show drop-off
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [analyticsSlug]);
 
   const bumpPositions = useCallback(() => {
     setPositionsVersion((v) => v + 1);
@@ -3392,6 +3498,16 @@ export function FlowchartBuilder({
         // analytics unavailable
       }
     }
+  }
+
+  function onEdgeMouseEnter(event: React.MouseEvent, edge: Edge) {
+    setHoveredEdge({ edge, x: event.clientX, y: event.clientY });
+  }
+  function onEdgeMouseMove(event: React.MouseEvent, edge: Edge) {
+    setHoveredEdge({ edge, x: event.clientX, y: event.clientY });
+  }
+  function onEdgeMouseLeave() {
+    setHoveredEdge(null);
   }
 
   function onEdgeClick(_: React.MouseEvent, edge: Edge) {
@@ -4010,6 +4126,9 @@ export function FlowchartBuilder({
             onEdgesChange={onEdgesChange}
             onNodeClick={onNodeClick}
             onEdgeClick={onEdgeClick}
+            onEdgeMouseEnter={onEdgeMouseEnter}
+            onEdgeMouseMove={onEdgeMouseMove}
+            onEdgeMouseLeave={onEdgeMouseLeave}
             onConnect={onConnect}
             onPaneClick={onPaneClick}
             onNodeDragStart={onNodeDragStart}
@@ -4043,6 +4162,12 @@ export function FlowchartBuilder({
               className="!bg-card !border-border rounded-xl"
             />
           </ReactFlow>
+          {hoveredEdge && (
+            <EdgeDropoffTooltip
+              hovered={hoveredEdge}
+              analyticsMap={analyticsMap}
+            />
+          )}
         </div>
 
         {selectedStep &&
