@@ -15,6 +15,7 @@ from apps.eligibility.services import (
     create_funnel_session,
     get_funnel_session,
     get_or_create_eligibility_for_session,
+    reconcile_funnel_version,
     set_funnel_cookie,
 )
 
@@ -26,6 +27,7 @@ class FunnelSessionView(APIView):
         existing = get_funnel_session(request)
         if existing:
             eligibility = get_or_create_eligibility_for_session(existing)
+            eligibility = reconcile_funnel_version(existing, eligibility)
             return Response(EligibilitySerializer(eligibility).data)
 
         data = request.data if isinstance(request.data, dict) else {}
@@ -38,11 +40,51 @@ class FunnelSessionView(APIView):
                 "utm_content": data.get("utm_content") or "",
             },
             landing_page_slug=str(data.get("landing_page_slug") or "")[:64],
+            cta_id=str(data.get("cta_id") or "")[:64],
         )
         eligibility = get_or_create_eligibility_for_session(session)
         response = Response(EligibilitySerializer(eligibility).data, status=status.HTTP_201_CREATED)
         set_funnel_cookie(response, token)
         return response
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class FunnelSessionPatchView(APIView):
+    """Update attribution fields on the active funnel session (e.g. cta_id)."""
+
+    permission_classes = [AllowAny]
+
+    def patch(self, request):
+        session = get_funnel_session(request)
+        if not session:
+            return Response(
+                {"detail": "No active funnel session."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        data = request.data if isinstance(request.data, dict) else {}
+        cta_id = str(data.get("cta_id") or "").strip()[:64]
+        eligibility = get_or_create_eligibility_for_session(session)
+        if cta_id:
+            session.cta_id = cta_id
+            update_fields = ["cta_id", "updated_at"]
+            # Re-route to the qualify version this CTA maps to, but only before
+            # the patient has answered anything — re-pinning after answers exist
+            # would invalidate responses captured against the prior version.
+            if not eligibility.questionnaire_responses:
+                from apps.questionnaires.services import get_qualify_version_for_cta
+
+                resolved = get_qualify_version_for_cta(cta_id)
+                if resolved and str(resolved.id) != str(
+                    session.qualify_questionnaire_version_id
+                ):
+                    session.qualify_questionnaire_version_id = resolved.id
+                    update_fields.append("qualify_questionnaire_version_id")
+                    eligibility.questionnaire_version_id = resolved.id
+                    eligibility.save(
+                        update_fields=["questionnaire_version_id", "updated_at"]
+                    )
+            session.save(update_fields=update_fields)
+        return Response(EligibilitySerializer(eligibility).data)
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -54,6 +96,7 @@ class FunnelEligibilityView(APIView):
         if not session:
             return Response(status=status.HTTP_404_NOT_FOUND)
         eligibility = get_or_create_eligibility_for_session(session)
+        eligibility = reconcile_funnel_version(session, eligibility)
         log_audit_event(
             user=None,
             action="read",

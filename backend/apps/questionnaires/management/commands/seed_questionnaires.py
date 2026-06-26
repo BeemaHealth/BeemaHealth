@@ -54,11 +54,19 @@ QUALIFY_STEPS = [
         "subtitle": "",
         "fields": [
             {
-                "field_key": "account_registration",
-                "field_type": "plugin",
-                "label": "Account registration",
-                "plugin_id": "account_registration",
+                "field_key": "account",
+                "field_type": "account",
+                "label": "Create your account",
+                "maps_to_section": "",
                 "required": True,
+                "options": [
+                    {"value": "first_name", "label": "Legal first name", "backend": "register.first_name", "beluga": "beluga:firstName"},
+                    {"value": "last_name", "label": "Legal last name", "backend": "register.last_name", "beluga": "beluga:lastName"},
+                    {"value": "phone", "label": "Phone", "backend": "register.phone", "beluga": "beluga:phone"},
+                    {"value": "email", "label": "Email", "backend": "register.email", "beluga": "beluga:email"},
+                    {"value": "password", "label": "Password", "backend": "register.password", "beluga": ""},
+                    {"value": "confirm_password", "label": "Re-enter password", "backend": "", "beluga": ""},
+                ],
             }
         ],
     },
@@ -115,6 +123,20 @@ class Command(BaseCommand):
                 questionnaire=questionnaire,
                 version_label="1.0.0",
                 status=QuestionnaireVersion.Status.PUBLISHED,
+                # Baseline qualify is the default entry and routes everyone to
+                # the baseline intake.
+                is_default_entry=(qtype == "qualify"),
+                intake_routing_rules=(
+                    [
+                        {
+                            "when_field": "__default__",
+                            "when_value": "",
+                            "intake_questionnaire_slug": "intake",
+                        }
+                    ]
+                    if qtype == "qualify"
+                    else []
+                ),
             )
             version.published_at = version.created_at
             version.save(update_fields=["published_at"])

@@ -51,6 +51,7 @@ import {
   FAMILY_HISTORY,
   GOAL_OPTIONS,
   IDENTITY_FIELDS,
+  INTAKE_ANALYTICS_STEP_KEYS,
   INTAKE_EXCLUDED_CONDITION_KEYS,
   INTAKE_STEP_LABELS,
   isIntakeStepComplete,
@@ -90,7 +91,9 @@ import { getIntake, saveIntake } from "@/lib/storage";
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import { IntakeDynamicFlow } from "@/components/questionnaire/IntakeDynamicFlow";
+import { DynamicIntakePortalView } from "@/components/questionnaire/DynamicIntakePortalView";
 import { DYNAMIC_QUESTIONNAIRES_ENABLED } from "@/lib/questionnaire/config";
+import { trackStepCompleted, trackStepViewed } from "@/lib/analytics";
 
 export function IntakeFlow({ mode }: { mode: "funnel" | "portal" }) {
   if (DYNAMIC_QUESTIONNAIRES_ENABLED && isApiEnabled() && mode === "funnel") {
@@ -121,6 +124,7 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
   const [activeSubmission, setActiveSubmission] =
     useState<IntakeSubmission | null>(null);
   const [viewingSubmission, setViewingSubmission] = useState(false);
+  const stepStartedAt = useRef(Date.now());
   const total = INTAKE_STEP_LABELS.length;
   const intakeEligibility = useMemo(
     () =>
@@ -183,6 +187,28 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
     if (loading || applicableSteps.includes(step)) return;
     setStep(resolveIntakeStepIndex(data, intakeEligibility));
   }, [loading, step, applicableSteps, data, intakeEligibility]);
+
+  useEffect(() => {
+    if (mode !== "funnel" || loading || !applicableSteps.includes(step)) return;
+    const stepKey = INTAKE_ANALYTICS_STEP_KEYS[step];
+    if (!stepKey) return;
+    stepStartedAt.current = Date.now();
+    trackStepViewed("intake", stepKey, {
+      versionId:
+        data.questionnaire_version_id ??
+        eligibility?.questionnaire_version_id ??
+        undefined,
+      stepIndex: applicableStepIndex >= 0 ? applicableStepIndex : step,
+    });
+  }, [
+    mode,
+    loading,
+    step,
+    applicableSteps,
+    applicableStepIndex,
+    data.questionnaire_version_id,
+    eligibility?.questionnaire_version_id,
+  ]);
 
   useEffect(() => {
     if (!loading) saveIntake(data);
@@ -472,6 +498,23 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
     setError("");
     setSubmitting(true);
     try {
+      if (mode === "funnel" && applicableSteps.includes(step)) {
+        const stepKey = INTAKE_ANALYTICS_STEP_KEYS[step];
+        if (stepKey) {
+          trackStepCompleted(
+            "intake",
+            stepKey,
+            Date.now() - stepStartedAt.current,
+            {
+              versionId:
+                data.questionnaire_version_id ??
+                eligibility?.questionnaire_version_id ??
+                undefined,
+              stepIndex: applicableStepIndex >= 0 ? applicableStepIndex : step,
+            },
+          );
+        }
+      }
       await persistDraft();
       if (!isLastApplicableStep) {
         setStep(nextApplicableIntakeStep(step, intakeEligibility, total));
@@ -640,17 +683,21 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
               value={{
                 address: id.address ?? "",
                 city: id.city ?? "",
+                state: session.user.state || eligibility?.state || "",
                 zip: id.zip ?? "",
                 county: id.county ?? "",
+                country: "US",
                 verified: id.address_verified === "true",
               }}
-              onSave={({ address, city, zip, county, verified }) =>
+              onSave={({ address, city, state, zip, county, country, verified }) =>
                 patchIdentity({
                   address,
                   city,
                   zip,
                   county,
                   address_verified: verified ? "true" : "",
+                  ...(state ? { state } : {}),
+                  ...(country ? { country } : {}),
                 })
               }
             />
@@ -1182,18 +1229,22 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
                 value={{
                   address: String(prefs.shipping_address ?? ""),
                   city: String(prefs.shipping_city ?? ""),
+                  state: String(prefs.shipping_state ?? ""),
                   zip: String(prefs.shipping_zip ?? ""),
                   county: String(prefs.shipping_county ?? ""),
+                  country: String(prefs.shipping_country ?? "US"),
                   verified: prefs.shipping_address_verified === "true",
                 }}
-                onChange={({ address, city, zip, county, verified }) =>
+                onChange={({ address, city, state, zip, county, country, verified }) =>
                   patch("medication_preferences", {
                     ...prefs,
                     use_different_shipping_address: true,
                     shipping_address: address,
                     shipping_city: city,
+                    shipping_state: state,
                     shipping_zip: zip,
                     shipping_county: county,
+                    shipping_country: country || "US",
                     shipping_address_verified: verified ? "true" : "",
                   })
                 }
@@ -1207,8 +1258,10 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
                     use_different_shipping_address: false,
                     shipping_address: "",
                     shipping_city: "",
+                    shipping_state: "",
                     shipping_zip: "",
                     shipping_county: "",
+                    shipping_country: "",
                     shipping_address_verified: "",
                   })
                 }
@@ -1339,6 +1392,42 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
     );
 
   if (mode === "portal") {
+    if (
+      DYNAMIC_QUESTIONNAIRES_ENABLED &&
+      isApiEnabled() &&
+      data.questionnaire_version_id &&
+      data.questionnaire_responses &&
+      Object.keys(data.questionnaire_responses).length > 0
+    ) {
+      return (
+        <DynamicIntakePortalView
+          intake={data}
+          submissionSnapshot={activeSubmission?.snapshot ?? null}
+          locked={intakeLocked}
+          headerExtra={
+            activeSubmission && intakeLocked ? (
+              <div
+                role="status"
+                className="rounded-2xl border-2 border-primary/25 bg-primary-soft px-5 py-4 shadow-sm"
+              >
+                <p className="text-base font-semibold text-foreground">
+                  Your intake is under clinician review. This copy is read only.
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mt-3 rounded-xl"
+                  onClick={() => setViewingSubmission(true)}
+                >
+                  View what your clinician sees
+                </Button>
+              </div>
+            ) : undefined
+          }
+        />
+      );
+    }
+
     const stepMeta = getIntakeStepMeta(step);
     const StepIcon = stepMeta.icon;
 

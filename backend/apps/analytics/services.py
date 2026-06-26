@@ -21,6 +21,10 @@ def _parse_range(start: str | None, end: str | None) -> tuple:
     return start_dt, end_dt
 
 
+def _is_valid_step_key(step_key: str | None) -> bool:
+    return bool(step_key and str(step_key).strip())
+
+
 def _distinct_participant_counts(qs, event_name: str) -> dict[str, int]:
     """
     Count unique participants per step_key for the given event_name.
@@ -95,7 +99,11 @@ def funnel_step_counts(
     order_map = _step_order(qs)
 
     all_steps = sorted(
-        set(viewed_map) | set(completed_map),
+        {
+            s
+            for s in (set(viewed_map) | set(completed_map))
+            if _is_valid_step_key(s)
+        },
         key=lambda s: (order_map.get(s, 9999.0), s),
     )
     return [
@@ -150,6 +158,7 @@ def session_last_steps(
             FROM last_per_participant
             WHERE rn = 1
               AND created_at <= %s
+              AND step_key <> ''
             GROUP BY step_key
             ORDER BY stopped_count DESC
             """,
@@ -343,19 +352,18 @@ def landing_page_performance(
     ]
 
 
-def page_views_by_day(
-    *,
-    start: str | None = None,
-    end: str | None = None,
-) -> list[dict]:
-    """Count page views (and reloads) per page per day.
+def _landing_page_name_by_slug() -> dict[str, str]:
+    from apps.analytics.models import LandingPage
 
-    page_reloaded events are included because a hard reload is still a page
-    view — the fix to only emit page_reloaded on actual browser reloads (not
-    SPA route changes) was applied in analytics.ts, but we want historical
-    page_reloaded events counted too.
-    """
-    start_dt, end_dt = _parse_range(start, end)
+    return {lp.slug: lp.name for lp in LandingPage.objects.all()}
+
+
+def _iter_page_view_event_rows(
+    *,
+    start_dt,
+    end_dt,
+):
+    """Yield (day_iso, page_key, landing_page_slug, count) per aggregated row."""
     rows = (
         FunnelEvent.objects.filter(
             event_name__in=["page_viewed", "page_reloaded"],
@@ -367,20 +375,72 @@ def page_views_by_day(
         .annotate(count=Count("id"))
         .order_by("day")
     )
-    aggregated: dict[str, dict[str, int]] = {}
     for row in rows:
         day = row["day"].isoformat() if row["day"] else "unknown"
         props = row["properties"] or {}
         page = props.get("page", "unknown")
-        # For landing pages, append the slug so each landing page gets its own row
-        if page == "landing_page" and props.get("landing_page_slug"):
-            page = f"lp:{props['landing_page_slug']}"
+        lp_slug = props.get("landing_page_slug") if page == "landing_page" else None
+        if not lp_slug and isinstance(page, str) and page.startswith("lp:"):
+            lp_slug = page[3:]
+        yield day, page, lp_slug, row["count"]
+
+
+def page_views_by_day(
+    *,
+    start: str | None = None,
+    end: str | None = None,
+) -> list[dict]:
+    """Count page views (and reloads) per page per day.
+
+    Landing page views (``landing_page`` events or ``lp:*`` page keys) are
+    excluded — use ``landing_page_views_by_day`` for those.
+
+    page_reloaded events are included because a hard reload is still a page
+    view — the fix to only emit page_reloaded on actual browser reloads (not
+    SPA route changes) was applied in analytics.ts, but we want historical
+    page_reloaded events counted too.
+    """
+    start_dt, end_dt = _parse_range(start, end)
+    aggregated: dict[str, dict[str, int]] = {}
+    for day, page, lp_slug, count in _iter_page_view_event_rows(
+        start_dt=start_dt, end_dt=end_dt
+    ):
+        if lp_slug:
+            continue
         aggregated.setdefault(day, {}).setdefault(page, 0)
-        aggregated[day][page] += row["count"]
+        aggregated[day][page] += count
     return [
         {"day": day, "page": page, "count": count}
         for day, pages in sorted(aggregated.items())
         for page, count in sorted(pages.items())
+    ]
+
+
+def landing_page_views_by_day(
+    *,
+    start: str | None = None,
+    end: str | None = None,
+) -> list[dict]:
+    """Count landing page views per slug per day, with internal name resolved."""
+    start_dt, end_dt = _parse_range(start, end)
+    name_by_slug = _landing_page_name_by_slug()
+    aggregated: dict[str, dict[str, int]] = {}
+    for day, _page, lp_slug, count in _iter_page_view_event_rows(
+        start_dt=start_dt, end_dt=end_dt
+    ):
+        if not lp_slug:
+            continue
+        aggregated.setdefault(day, {}).setdefault(lp_slug, 0)
+        aggregated[day][lp_slug] += count
+    return [
+        {
+            "day": day,
+            "slug": slug,
+            "name": name_by_slug.get(slug, slug),
+            "count": count,
+        }
+        for day, slugs in sorted(aggregated.items())
+        for slug, count in sorted(slugs.items())
     ]
 
 
@@ -392,8 +452,8 @@ def questionnaire_version_stats(
 ) -> list[dict]:
     """Return per-version session counts for a questionnaire.
 
-    Used by the staff analytics funnel section to show which questionnaire
-    versions are in active use and allow per-version filtering.
+    Includes CTA ids and intake routing info so the analytics UI can display
+    which qualify versions map to which CTAs and which intake questionnaires.
     """
     from apps.questionnaires.models import QuestionnaireVersion
 
@@ -424,23 +484,341 @@ def questionnaire_version_stats(
         counts[k] = counts.get(k, 0) + row["n"]
 
     version_meta = {
-        str(v["id"]): v
-        for v in QuestionnaireVersion.objects.filter(id__in=list(counts)).values(
-            "id", "version_label", "status"
-        )
+        str(v.id): v
+        for v in QuestionnaireVersion.objects.filter(id__in=list(counts))
     }
     return sorted(
         [
             {
                 "version_id": vid,
-                "version_label": version_meta.get(vid, {}).get("version_label", "unknown"),
-                "status": version_meta.get(vid, {}).get("status", "unknown"),
+                "version_label": version_meta[vid].version_label if vid in version_meta else "unknown",
+                "status": version_meta[vid].status if vid in version_meta else "unknown",
+                "cta_ids": list(version_meta[vid].cta_ids or []) if vid in version_meta else [],
+                "is_default_entry": version_meta[vid].is_default_entry if vid in version_meta else False,
+                "intake_routing_rules": list(version_meta[vid].intake_routing_rules or []) if vid in version_meta else [],
                 "sessions": cnt,
             }
             for vid, cnt in counts.items()
         ],
         key=lambda x: -x["sessions"],
     )
+
+
+def questionnaire_versions_list(
+    *,
+    questionnaire_type: str,
+    start: str | None = None,
+    end: str | None = None,
+) -> list[dict]:
+    """Return ALL versions for the given questionnaire type, with session counts.
+
+    Ordered newest-created-first. Includes versions with zero sessions so staff
+    can see the full history including drafts and archived versions.
+    """
+    from apps.questionnaires.models import QuestionnaireVersion
+
+    start_dt, end_dt = _parse_range(start, end)
+
+    versions = list(
+        QuestionnaireVersion.objects.filter(
+            questionnaire__questionnaire_type=questionnaire_type,
+        )
+        .select_related("questionnaire")
+        .order_by("-created_at")
+    )
+
+    version_ids = [v.id for v in versions]
+    qs_base = FunnelEvent.objects.filter(
+        event_name="step_viewed",
+        questionnaire_version_id__in=version_ids,
+        created_at__gte=start_dt,
+        created_at__lte=end_dt,
+    )
+    session_rows = (
+        qs_base.filter(funnel_session__isnull=False)
+        .values("questionnaire_version_id")
+        .annotate(n=Count("funnel_session", distinct=True))
+    )
+    user_rows = (
+        qs_base.filter(funnel_session__isnull=True, user__isnull=False)
+        .values("questionnaire_version_id")
+        .annotate(n=Count("user", distinct=True))
+    )
+    counts: dict[str, int] = {}
+    for row in session_rows:
+        k = str(row["questionnaire_version_id"])
+        counts[k] = counts.get(k, 0) + row["n"]
+    for row in user_rows:
+        k = str(row["questionnaire_version_id"])
+        counts[k] = counts.get(k, 0) + row["n"]
+
+    return [
+        {
+            "version_id": str(v.id),
+            "version_label": v.version_label,
+            "questionnaire_slug": v.questionnaire.slug,
+            "questionnaire_title": v.questionnaire.title,
+            "status": v.status,
+            "published_at": v.published_at.isoformat() if v.published_at else None,
+            "created_at": v.created_at.isoformat(),
+            "is_default_entry": v.is_default_entry,
+            "cta_ids": list(v.cta_ids or []),
+            "intake_routing_rules": list(v.intake_routing_rules or []),
+            "sessions": counts.get(str(v.id), 0),
+        }
+        for v in versions
+    ]
+
+
+def questionnaire_step_analytics(
+    *,
+    version_id: str,
+    start: str | None = None,
+    end: str | None = None,
+) -> dict | None:
+    """Per-step analytics for a specific questionnaire version.
+
+    Returns views, completions, dropoff, and answer-distribution for every
+    field in every step — combining FunnelEvent counts with stored
+    questionnaire_responses from EligibilityResponse / MedicalIntake.
+    """
+    import uuid as _uuid
+    from apps.questionnaires.models import Questionnaire
+    from apps.questionnaires.services import get_version_by_id
+
+    start_dt, end_dt = _parse_range(start, end)
+    cutoff = timezone.now() - timezone.timedelta(hours=2)
+
+    try:
+        parsed_id = _uuid.UUID(str(version_id))
+    except ValueError:
+        return None
+
+    version = get_version_by_id(parsed_id)
+    if not version:
+        return None
+
+    q_type = version.questionnaire.questionnaire_type
+    q_slug = version.questionnaire.slug
+
+    # ── Funnel event counts per step ──────────────────────────────────────────
+    funnel_qs = FunnelEvent.objects.filter(
+        questionnaire_version_id=parsed_id,
+        questionnaire_slug=q_slug,
+        created_at__gte=start_dt,
+        created_at__lte=end_dt,
+    )
+    viewed_map = _distinct_participant_counts(funnel_qs, "step_viewed")
+    completed_map = _distinct_participant_counts(funnel_qs, "step_completed")
+
+    # Stopped-here counts (same window, filtered by version)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            """
+            WITH last_per_participant AS (
+                SELECT
+                    COALESCE(funnel_session_id::text, user_id::text) AS pid,
+                    step_key,
+                    created_at,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY COALESCE(funnel_session_id::text, user_id::text)
+                        ORDER BY created_at DESC
+                    ) AS rn
+                FROM funnel_events
+                WHERE questionnaire_slug = %s
+                  AND questionnaire_version_id = %s
+                  AND event_name IN ('step_viewed', 'step_completed')
+                  AND created_at >= %s AND created_at <= %s
+                  AND (funnel_session_id IS NOT NULL OR user_id IS NOT NULL)
+            )
+            SELECT step_key, COUNT(*) FROM last_per_participant
+            WHERE rn = 1 AND created_at <= %s
+            GROUP BY step_key
+            """,
+            [q_slug, str(parsed_id), start_dt, end_dt, cutoff],
+        )
+        stopped_map = {row[0]: row[1] for row in cursor.fetchall()}
+
+    # ── Response distributions ────────────────────────────────────────────────
+    if q_type == Questionnaire.QuestionnaireType.QUALIFY:
+        from apps.eligibility.models import EligibilityResponse
+
+        recs = list(
+            EligibilityResponse.objects.filter(
+                questionnaire_version_id=parsed_id,
+                created_at__gte=start_dt,
+                created_at__lte=end_dt,
+            ).values_list("questionnaire_responses", flat=True)
+        )
+    else:
+        from apps.intakes.models import MedicalIntake
+
+        recs = list(
+            MedicalIntake.objects.filter(
+                questionnaire_version_id=parsed_id,
+                created_at__gte=start_dt,
+                created_at__lte=end_dt,
+            ).values_list("questionnaire_responses", flat=True)
+        )
+
+    all_responses = [r for r in recs if r and isinstance(r, dict)]
+    total_respondents = len(all_responses)
+
+    # ── Build output ──────────────────────────────────────────────────────────
+    steps_out = []
+    for step in version.steps.prefetch_related("fields").all():
+        views = viewed_map.get(step.step_key, 0)
+        completions = completed_map.get(step.step_key, 0)
+        stopped = stopped_map.get(step.step_key, 0)
+        dropoff_pct = round(100.0 * (1 - completions / views), 1) if views else 0.0
+
+        fields_out = []
+        for field in step.fields.all():
+            if field.field_type in ("password", "plugin"):
+                continue
+
+            # Tally actual responses for this field
+            value_counts: dict[str, int] = {}
+            for resp in all_responses:
+                raw = resp.get(field.field_key)
+                if raw is None or raw == "":
+                    continue
+                if isinstance(raw, list):
+                    for item in raw:
+                        k = str(item)
+                        value_counts[k] = value_counts.get(k, 0) + 1
+                else:
+                    k = str(raw)
+                    value_counts[k] = value_counts.get(k, 0) + 1
+
+            option_label_map = {
+                str(o.get("value", "")): str(o.get("label", o.get("value", "")))
+                for o in (field.options or [])
+                if isinstance(o, dict)
+            }
+            total_ans = sum(value_counts.values())
+
+            # Build distribution over all defined options (0-count entries included so
+            # staff can see the full answer set even before anyone has responded).
+            # Free-text fields only list options that have at least one response.
+            if option_label_map:
+                all_keys = list(option_label_map.keys())
+                for k in value_counts:
+                    if k not in all_keys:
+                        all_keys.append(k)
+                distribution = sorted(
+                    [
+                        {
+                            "value": v,
+                            "label": option_label_map.get(v, v),
+                            "count": value_counts.get(v, 0),
+                            "pct": round(100.0 * value_counts.get(v, 0) / total_ans, 1)
+                            if total_ans
+                            else 0.0,
+                        }
+                        for v in all_keys
+                    ],
+                    key=lambda x: -x["count"],
+                )
+            else:
+                distribution = sorted(
+                    [
+                        {
+                            "value": v,
+                            "label": v,
+                            "count": c,
+                            "pct": round(100.0 * c / total_ans, 1),
+                        }
+                        for v, c in value_counts.items()
+                    ],
+                    key=lambda x: -x["count"],
+                )
+
+            fields_out.append({
+                "field_key": field.field_key,
+                "label": field.label,
+                "field_type": field.field_type,
+                "answer_distribution": distribution,
+                "total_answers": total_ans,
+            })
+
+        steps_out.append({
+            "step_key": step.step_key,
+            "title": step.title,
+            "views": views,
+            "completions": completions,
+            "dropoff_percent": dropoff_pct,
+            "stopped_sessions": stopped,
+            "fields": fields_out,
+        })
+
+    return {
+        "version_id": str(version.id),
+        "version_label": version.version_label,
+        "questionnaire_slug": q_slug,
+        "questionnaire_type": q_type,
+        "questionnaire_title": version.questionnaire.title,
+        "is_default_entry": version.is_default_entry,
+        "status": version.status,
+        "cta_ids": list(version.cta_ids or []),
+        "intake_routing_rules": list(version.intake_routing_rules or []),
+        "total_respondents": total_respondents,
+        "steps": steps_out,
+    }
+
+
+def available_questionnaire_slugs(
+    *,
+    start: str | None = None,
+    end: str | None = None,
+) -> list[str]:
+    """Return questionnaire slugs that have recorded step events in the window."""
+    start_dt, end_dt = _parse_range(start, end)
+    return sorted(
+        FunnelEvent.objects.filter(
+            event_name__in=["step_viewed", "step_completed"],
+            questionnaire_slug__gt="",
+            created_at__gte=start_dt,
+            created_at__lte=end_dt,
+        )
+        .values_list("questionnaire_slug", flat=True)
+        .distinct()
+    )
+
+
+def cta_performance(
+    *,
+    start: str | None = None,
+    end: str | None = None,
+) -> list[dict]:
+    """Return per-CTA session and conversion counts.
+
+    Groups funnel sessions by cta_id. Sessions with no cta_id are grouped as
+    "(direct)" to represent users who arrived without a tracked CTA.
+    """
+    from apps.eligibility.models import FunnelSession
+
+    start_dt, end_dt = _parse_range(start, end)
+    rows = (
+        FunnelSession.objects.filter(created_at__gte=start_dt, created_at__lte=end_dt)
+        .values("cta_id")
+        .annotate(
+            sessions=Count("id"),
+            accounts=Count("claimed_by_user", distinct=True),
+        )
+        .order_by("-sessions")
+    )
+    result = []
+    for r in rows:
+        s = r["sessions"]
+        a = r["accounts"]
+        result.append({
+            "cta_id": r["cta_id"] or "(direct)",
+            "sessions": s,
+            "accounts_created": a,
+            "conversion_rate": round(100.0 * a / s, 2) if s else 0.0,
+        })
+    return result
 
 
 def events_by_day(

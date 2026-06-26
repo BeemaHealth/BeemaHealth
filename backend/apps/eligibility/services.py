@@ -24,8 +24,18 @@ def get_client_ip(request) -> str | None:
     return request.META.get("REMOTE_ADDR")
 
 
-def create_funnel_session(request, *, utm: dict | None = None, landing_page_slug: str = "") -> tuple[FunnelSession, str]:
-    from apps.questionnaires.services import assign_experiment_variant
+def create_funnel_session(
+    request,
+    *,
+    utm: dict | None = None,
+    landing_page_slug: str = "",
+    cta_id: str = "",
+) -> tuple[FunnelSession, str]:
+    from apps.questionnaires.services import (
+        assign_experiment_variant,
+        get_default_qualify_version,
+        get_qualify_version_for_cta,
+    )
 
     ip = get_client_ip(request)
     ua = (request.META.get("HTTP_USER_AGENT") or "")[:512]
@@ -49,13 +59,51 @@ def create_funnel_session(request, *, utm: dict | None = None, landing_page_slug
         if existing:
             token = secrets.token_urlsafe(32)
             existing.token_hash = hash_token(token)
-            existing.save(update_fields=["token_hash", "updated_at"])
+            update_fields = ["token_hash", "updated_at"]
+            if cta_id and not existing.cta_id:
+                existing.cta_id = str(cta_id)[:64]
+                update_fields.append("cta_id")
+            # Re-pin the deduped session to the currently-published qualify
+            # version, but only while no answers exist yet — this keeps repeat
+            # visits (and stale test sessions) pointed at the latest published
+            # qualify version instead of an older one captured earlier. A CTA
+            # resolves to its mapped version; otherwise the default entry is used.
+            eligibility = EligibilityResponse.objects.filter(
+                funnel_session=existing
+            ).first()
+            if eligibility is None or not eligibility.questionnaire_responses:
+                effective_cta = cta_id or existing.cta_id
+                resolved = (
+                    get_qualify_version_for_cta(effective_cta)
+                    if effective_cta
+                    else get_default_qualify_version()
+                )
+                if resolved is not None and (
+                    existing.qualify_questionnaire_version_id != resolved.id
+                ):
+                    existing.qualify_questionnaire_version_id = resolved.id
+                    update_fields.append("qualify_questionnaire_version_id")
+                    if eligibility is not None:
+                        eligibility.questionnaire_version_id = resolved.id
+                        eligibility.save(
+                            update_fields=[
+                                "questionnaire_version_id",
+                                "updated_at",
+                            ]
+                        )
+            existing.save(update_fields=update_fields)
             return existing, token
 
     token = secrets.token_urlsafe(32)
     expires_at = timezone.now() + timedelta(days=30)
     utm = utm or {}
-    experiment_id, variant_key, version_id = assign_experiment_variant("qualify")
+    # CTA-mapped qualify entry takes precedence; otherwise fall back to the
+    # experiment/default-qualify selection.
+    cta_version = get_qualify_version_for_cta(cta_id) if cta_id else None
+    if cta_version is not None:
+        experiment_id, variant_key, version_id = None, "", cta_version.id
+    else:
+        experiment_id, variant_key, version_id = assign_experiment_variant("qualify")
     session = FunnelSession.objects.create(
         token_hash=hash_token(token),
         expires_at=expires_at,
@@ -66,6 +114,7 @@ def create_funnel_session(request, *, utm: dict | None = None, landing_page_slug
         utm_campaign=str(utm.get("utm_campaign", ""))[:128],
         utm_content=str(utm.get("utm_content", ""))[:128],
         landing_page_slug=str(landing_page_slug)[:64],
+        cta_id=str(cta_id)[:64],
         experiment_id=experiment_id,
         variant_key=variant_key or "",
         qualify_questionnaire_version_id=version_id,
@@ -93,6 +142,59 @@ def get_funnel_session(request) -> FunnelSession | None:
 
 def get_or_create_eligibility_for_session(session: FunnelSession) -> EligibilityResponse:
     eligibility, _ = EligibilityResponse.objects.get_or_create(funnel_session=session)
+    return eligibility
+
+
+def reconcile_funnel_version(
+    session: FunnelSession, eligibility: EligibilityResponse
+) -> EligibilityResponse:
+    """Keep a funnel session pointed at the live qualify version.
+
+    If the session is pinned to a qualify version that is no longer published
+    (it was superseded/archived), re-pin to the current live version (the one
+    mapped to the session's CTA, else the default entry) and drop stale answers
+    captured against the now-dead schema. No-op while the pinned version is
+    still published.
+    """
+    from apps.questionnaires.models import QuestionnaireVersion
+    from apps.questionnaires.services import (
+        get_default_qualify_version,
+        get_qualify_version_for_cta,
+    )
+
+    pinned_id = session.qualify_questionnaire_version_id
+    if not pinned_id:
+        return eligibility
+    still_published = QuestionnaireVersion.objects.filter(
+        id=pinned_id,
+        status=QuestionnaireVersion.Status.PUBLISHED,
+    ).exists()
+    if still_published:
+        return eligibility
+
+    resolved = (
+        get_qualify_version_for_cta(session.cta_id)
+        if session.cta_id
+        else get_default_qualify_version()
+    )
+    if resolved is None or resolved.id == pinned_id:
+        return eligibility
+
+    session.qualify_questionnaire_version_id = resolved.id
+    session.save(
+        update_fields=["qualify_questionnaire_version_id", "updated_at"]
+    )
+    eligibility.questionnaire_version_id = resolved.id
+    eligibility.questionnaire_responses = {}
+    eligibility.selected_intake_questionnaire_slug = ""
+    eligibility.save(
+        update_fields=[
+            "questionnaire_version_id",
+            "questionnaire_responses",
+            "selected_intake_questionnaire_slug",
+            "updated_at",
+        ]
+    )
     return eligibility
 
 
@@ -200,6 +302,15 @@ def _merge_funnel_eligibility_into_existing(
         existing.safety_concern_flag = True
     if funnel.needs_clinician_review and not existing.needs_clinician_review:
         existing.needs_clinician_review = True
+
+    if funnel.questionnaire_responses:
+        merged_q = dict(existing.questionnaire_responses or {})
+        merged_q.update(funnel.questionnaire_responses)
+        existing.questionnaire_responses = merged_q
+    if funnel.questionnaire_version_id and not existing.questionnaire_version_id:
+        existing.questionnaire_version_id = funnel.questionnaire_version_id
+    if funnel.selected_intake_questionnaire_slug and not existing.selected_intake_questionnaire_slug:
+        existing.selected_intake_questionnaire_slug = funnel.selected_intake_questionnaire_slug
 
     existing.save()
 

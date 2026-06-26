@@ -3,44 +3,83 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import {
   QuestionnaireRenderer,
-  getStepValidationErrors,
-  getVisibleStepAt,
-  getVisibleStepCount,
+  getStepValidationErrorsByKey,
 } from "@/components/questionnaire/QuestionnaireRenderer";
+import {
+  countStepsForward,
+  getEntryStep,
+  progressPercentFromLevel,
+  resolveNextStep,
+} from "@/lib/questionnaire/step-routing";
 import { QuizNav } from "@/components/quiz/quiz-primitives";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
-import { trackStepCompleted, trackStepViewed } from "@/lib/analytics";
+import {
+  trackStepCompleted,
+  trackStepViewed,
+  trackCtaClicked,
+} from "@/lib/analytics";
 import {
   createFunnelSession,
   fetchActiveQuestionnaire,
+  fetchEligibilityMe,
   fetchFunnelEligibility,
   isApiEnabled,
   patchFunnelEligibility,
+  patchFunnelSessionAttribution,
   registerUser,
+  syncEligibility,
   type QuestionnaireVersionSchema,
 } from "@/lib/api/client";
+import {
+  emptyRegistrationFields,
+  isRegistrationStep,
+  validateRegistrationFields,
+} from "@/lib/questionnaire/registration";
 import { useAuth } from "@/context/AuthContext";
 
 export function QualifyDynamicFlow() {
   const navigate = useNavigate();
-  const { session } = useAuth();
+  const { session, setSession } = useAuth();
   const [schema, setSchema] = useState<QuestionnaireVersionSchema | null>(null);
   const [responses, setResponses] = useState<Record<string, unknown>>({});
-  const [stepIndex, setStepIndex] = useState(0);
+  const [history, setHistory] = useState<string[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
+  const [reg, setReg] = useState(emptyRegistrationFields());
   const stepStartedAt = useRef(Date.now());
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
+        const params = new URLSearchParams(window.location.search);
+        const ctaId = params.get("cta_id")?.trim();
+
         let versionId: string | undefined;
-        if (!session) {
-          const draft =
-            (await fetchFunnelEligibility()) ?? (await createFunnelSession());
+        if (session) {
+          const eligibility = await fetchEligibilityMe();
+          if (eligibility?.questionnaire_version_id) {
+            versionId = eligibility.questionnaire_version_id;
+          }
+          if (eligibility?.questionnaire_responses) {
+            setResponses(
+              eligibility.questionnaire_responses as Record<string, unknown>,
+            );
+          }
+        } else {
+          let draft =
+            (await fetchFunnelEligibility()) ??
+            (await createFunnelSession(ctaId ? { cta_id: ctaId } : undefined));
+          // Attribution may re-pin the qualify version to the one this CTA
+          // maps to (only before any answers exist) — use its fresh result.
+          if (ctaId) {
+            const attributed = await patchFunnelSessionAttribution({
+              cta_id: ctaId,
+            });
+            if (attributed) draft = attributed;
+          }
           if (draft?.questionnaire_version_id) {
             versionId = draft.questionnaire_version_id;
           }
@@ -50,6 +89,14 @@ export function QualifyDynamicFlow() {
             );
           }
         }
+
+        // Track the CTA click only after the funnel session (HttpOnly cookie)
+        // exists, so the event is attributed to the session rather than landing
+        // unlinked. Authenticated visitors attach it to their user instead.
+        if (ctaId) {
+          trackCtaClicked(ctaId, "qualify");
+        }
+
         const active = await fetchActiveQuestionnaire("qualify", versionId);
         if (!cancelled) setSchema(active);
       } catch {
@@ -64,9 +111,19 @@ export function QualifyDynamicFlow() {
     };
   }, [session]);
 
-  const currentStep = schema
-    ? getVisibleStepAt(schema, stepIndex, responses)
-    : undefined;
+  // Initialise the navigation history at the entry step once the schema loads.
+  useEffect(() => {
+    if (!schema || history.length > 0) return;
+    const entry = getEntryStep(schema.steps, responses);
+    if (entry) setHistory([entry.step_key]);
+  }, [schema, history.length, responses]);
+
+  const currentStepKey = history[history.length - 1];
+  const currentStep =
+    schema && currentStepKey
+      ? schema.steps.find((s) => s.step_key === currentStepKey)
+      : undefined;
+  const stepIndex = history.length - 1;
 
   useEffect(() => {
     if (!currentStep || !schema) return;
@@ -79,18 +136,36 @@ export function QualifyDynamicFlow() {
 
   async function persistResponses(next: Record<string, unknown>) {
     if (!isApiEnabled()) return;
-    await patchFunnelEligibility({
+    const payload = {
       questionnaire_responses: next,
       questionnaire_version_id: schema?.id,
-    } as never);
+    } as Partial<import("@/lib/types/mvp").EligibilityResponses>;
+    if (session) {
+      await syncEligibility(payload);
+    } else {
+      await patchFunnelEligibility(payload as never);
+    }
   }
 
   async function handleNext() {
     if (!schema || !currentStep) return;
-    const stepErrors = getStepValidationErrors(schema, stepIndex, responses);
+    const onRegistrationStep = isRegistrationStep(currentStep);
+
+    const stepErrors = getStepValidationErrorsByKey(
+      schema,
+      currentStep.step_key,
+      responses,
+    );
     if (Object.keys(stepErrors).length > 0) {
       setErrors(stepErrors);
       return;
+    }
+    if (onRegistrationStep && !session) {
+      const regError = validateRegistrationFields(reg);
+      if (regError) {
+        setFormError(regError);
+        return;
+      }
     }
     setErrors({});
     setSubmitting(true);
@@ -103,29 +178,45 @@ export function QualifyDynamicFlow() {
         { versionId: schema.id, stepIndex },
       );
 
-      if (currentStep.step_key === "account" && !session) {
-        const email = String(responses.email ?? "");
-        const password = String(responses.password ?? "");
-        await registerUser({
-          email,
-          password,
-          first_name: String(responses.first_name ?? ""),
-          last_name: String(responses.last_name ?? ""),
-          phone: String(responses.phone ?? ""),
+      // Persist answers + the resolved qualify version first so the intake step
+      // can resolve the routed intake from these responses.
+      await persistResponses(responses);
+
+      // Create the account when reaching the registration step (detected by the
+      // account_registration plugin, not a hardcoded step key) so custom
+      // flowcharts advance into the intake correctly.
+      let activeSession = session;
+      if (onRegistrationStep && !activeSession) {
+        const regError = validateRegistrationFields(reg);
+        if (regError) {
+          setFormError(regError);
+          setSubmitting(false);
+          return;
+        }
+        activeSession = await registerUser({
+          email: reg.email.trim(),
+          password: reg.password,
+          first_name: reg.firstName.trim(),
+          last_name: reg.lastName.trim(),
+          phone: reg.phone.trim(),
         });
+        setSession(activeSession);
         navigate({ to: "/intake" });
         return;
       }
 
-      await persistResponses(responses);
-      const total = getVisibleStepCount(schema, responses);
-      if (stepIndex + 1 >= total) {
-        if (session) {
+      const nextStep = resolveNextStep(currentStep, responses, schema.steps);
+      if (!nextStep) {
+        if (activeSession) {
           navigate({ to: "/intake" });
+        } else {
+          setFormError(
+            "Add an account step to this questionnaire so patients can continue to the medical intake.",
+          );
         }
         return;
       }
-      setStepIndex((i) => i + 1);
+      setHistory((h) => [...h, nextStep.step_key]);
     } catch (e) {
       setFormError(e instanceof Error ? e.message : "Could not save progress.");
     } finally {
@@ -153,21 +244,50 @@ export function QualifyDynamicFlow() {
     );
   }
 
-  const totalSteps = getVisibleStepCount(schema, responses);
+  const onRegistrationStep = isRegistrationStep(currentStep);
+  const stepsAhead = currentStep
+    ? countStepsForward(currentStep, responses, schema.steps)
+    : 0;
+  const levelProgress = progressPercentFromLevel(schema.steps, currentStep);
+  const routeProgress =
+    history.length + stepsAhead > 0
+      ? Math.round((history.length / (history.length + stepsAhead)) * 100)
+      : 0;
+  const progress = schema.steps.some((s) => (s.progress_level ?? 0) > 0)
+    ? levelProgress
+    : routeProgress;
+  const isLastStep = currentStep
+    ? !resolveNextStep(currentStep, responses, schema.steps)
+    : false;
+  const nextLabel =
+    onRegistrationStep && !session
+      ? "Create account"
+      : isLastStep
+        ? "Continue to intake"
+        : "Continue";
 
   return (
-    <FlowLayout progress={((stepIndex + 1) / totalSteps) * 100}>
-      <div className="mx-auto max-w-xl">
+    <FlowLayout progress={progress}>
+      <div className="mx-auto w-full max-w-xl">
         <QuestionnaireRenderer
           schema={schema}
           stepIndex={stepIndex}
+          stepKey={currentStepKey}
           responses={responses}
           errors={errors}
+          registration={{ value: reg, onChange: setReg }}
+          signedIn={!!session}
           onChange={(key, value) => {
             setResponses((prev) => {
               const next = { ...prev, [key]: value };
               void persistResponses(next);
               return next;
+            });
+            setErrors((prev) => {
+              if (!prev[key]) return prev;
+              const rest = { ...prev };
+              delete rest[key];
+              return rest;
             });
           }}
         />
@@ -175,14 +295,10 @@ export function QualifyDynamicFlow() {
           <p className="mt-4 text-sm text-destructive">{formError}</p>
         ) : null}
         <QuizNav
-          showBack={stepIndex > 0}
-          onBack={() => setStepIndex((i) => Math.max(0, i - 1))}
+          showBack={history.length > 1}
+          onBack={() => setHistory((h) => h.slice(0, -1))}
           onNext={() => void handleNext()}
-          nextLabel={
-            stepIndex + 1 >= totalSteps && session
-              ? "Continue to intake"
-              : "Continue"
-          }
+          nextLabel={nextLabel}
           nextLoading={submitting}
         />
         <p className="mt-6 text-center text-xs text-muted-foreground">

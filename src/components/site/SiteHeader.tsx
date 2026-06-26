@@ -10,6 +10,7 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { useAuth } from "@/context/AuthContext";
+import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 
 type NavItem = { label: string; to: string };
 
@@ -60,7 +61,7 @@ export function SiteHeader() {
             </Button>
           )}
           <Button asChild>
-            <Link to="/qualify">See if you qualify</Link>
+            <Link to={qualifyHref(CTA_IDS.nav_header)}>See if you qualify</Link>
           </Button>
         </div>
 
@@ -99,7 +100,9 @@ export function SiteHeader() {
               <div className="mt-6">
                 <SheetClose asChild>
                   <Button asChild size="lg" className="w-full">
-                    <Link to="/qualify">See if you qualify</Link>
+                    <Link to={qualifyHref(CTA_IDS.nav_mobile)}>
+                      See if you qualify
+                    </Link>
                   </Button>
                 </SheetClose>
               </div>

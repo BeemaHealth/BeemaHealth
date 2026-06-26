@@ -132,6 +132,7 @@ export interface EligibilityResponses {
   pre_signup_consents: PreSignupConsents;
   questionnaire_responses?: Record<string, unknown>;
   questionnaire_version_id?: string | null;
+  selected_intake_questionnaire_slug?: string | null;
   completed_at: string | null;
   created_at: string;
   updated_at?: string;
@@ -206,6 +207,44 @@ export interface AccountScreening {
   bmi: number | null;
 }
 
+export type BelugaVisitFieldSnapshot = {
+  beluga: string;
+  api_field_id: string;
+  label: string;
+  value: string | null;
+  status: "filled" | "missing_value" | "unmapped";
+  source?: string;
+  source_label?: string;
+};
+
+export type BelugaVisitPayloadSnapshot = {
+  ready: boolean;
+  ready_count: number;
+  required_count: number;
+  missing: string[];
+  fields: BelugaVisitFieldSnapshot[];
+  form_obj: Record<string, string | null>;
+};
+
+export type DynamicQuestionnaireSnapshotField = {
+  field_key: string;
+  label: string;
+  field_type: string;
+  display_value: string;
+  raw_value: unknown;
+};
+
+export type DynamicQuestionnaireSnapshot = {
+  questionnaire_version_id: string;
+  questionnaire_slug: string;
+  version_label: string;
+  steps: {
+    step_key: string;
+    title: string;
+    fields: DynamicQuestionnaireSnapshotField[];
+  }[];
+};
+
 export interface IntakeSubmissionSnapshot {
   meta: {
     version: number;
@@ -239,6 +278,8 @@ export interface IntakeSubmissionSnapshot {
   identity_contact: Record<string, string>;
   clinical: Record<string, unknown>;
   consent: Record<string, unknown> | null;
+  dynamic_questionnaire?: DynamicQuestionnaireSnapshot | null;
+  beluga_visit_payload?: BelugaVisitPayloadSnapshot | null;
 }
 
 export interface IntakeSubmission {

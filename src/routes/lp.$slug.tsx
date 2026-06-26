@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { createFunnelSession, fetchLandingPage, type LandingPageItem } from "@/lib/api/client";
+import {
+  createFunnelSession,
+  fetchLandingPage,
+  type LandingPageItem,
+} from "@/lib/api/client";
 import { storePendingUtms } from "@/lib/utm";
 import { trackPageViewed } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
+import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/lp/$slug")({
@@ -41,7 +46,9 @@ function LandingPageRoute() {
             .then(() => {
               console.log("[aretide] funnel session ready");
               if (!cancelled) {
-                trackPageViewed("landing_page", { landing_page_slug: data.slug });
+                trackPageViewed("landing_page", {
+                  landing_page_slug: data.slug,
+                });
                 console.log("[aretide] page_viewed event fired");
                 if (data.redirect_to_home) void navigate({ to: "/" });
               }
@@ -49,7 +56,9 @@ function LandingPageRoute() {
             .catch((err: unknown) => {
               console.error("[aretide] funnel session creation failed:", err);
               if (!cancelled) {
-                trackPageViewed("landing_page", { landing_page_slug: data.slug });
+                trackPageViewed("landing_page", {
+                  landing_page_slug: data.slug,
+                });
                 if (data.redirect_to_home) void navigate({ to: "/" });
               }
             });
@@ -116,7 +125,9 @@ function LandingPageRoute() {
         <Button
           size="lg"
           className="mt-10"
-          onClick={() => void navigate({ to: "/qualify" })}
+          onClick={() =>
+            void navigate({ to: qualifyHref(CTA_IDS.landing_page) })
+          }
         >
           Get started
         </Button>

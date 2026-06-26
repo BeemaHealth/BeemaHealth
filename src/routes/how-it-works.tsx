@@ -1,8 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ClipboardCheck, Stethoscope, Send } from "lucide-react";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
-import { Section, SectionHeading, SurfaceCard } from "@/components/site/primitives";
+import {
+  Section,
+  SectionHeading,
+  SurfaceCard,
+} from "@/components/site/primitives";
 import { Button } from "@/components/ui/button";
+import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/how-it-works")({
   component: HowItWorksPage,
@@ -46,9 +51,15 @@ function HowItWorksPage() {
                   <s.icon className="size-5" />
                 </span>
                 <div>
-                  <p className="text-sm font-semibold text-muted-foreground">Step {i + 1}</p>
-                  <h3 className="mt-1 text-lg font-semibold text-foreground">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+                  <p className="text-sm font-semibold text-muted-foreground">
+                    Step {i + 1}
+                  </p>
+                  <h3 className="mt-1 text-lg font-semibold text-foreground">
+                    {s.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {s.text}
+                  </p>
                 </div>
               </SurfaceCard>
             </li>
@@ -56,7 +67,7 @@ function HowItWorksPage() {
         </ol>
         <div className="mt-10 text-center">
           <Button asChild size="lg">
-            <Link to="/qualify">
+            <Link to={qualifyHref(CTA_IDS.how_it_works)}>
               See if you qualify <ArrowRight />
             </Link>
           </Button>

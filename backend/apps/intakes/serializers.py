@@ -7,8 +7,10 @@ from apps.eligibility.services import derive_eligibility_flags
 from apps.intakes.deduplication import dedupe_intake_payload
 from apps.intakes.models import IntakeSubmission, MedicalIntake, SideEffectCheckIn
 from apps.intakes.permissions import patient_can_edit_intake
+from apps.intakes.questionnaire_sync import sync_canonical_fields_from_questionnaire
 from apps.intakes.screening import ensure_account_screening
 from apps.patients.services import sync_patient_profile_from_intake
+from apps.questionnaires.validation import validate_responses_against_version
 
 
 class MedicalIntakeSerializer(serializers.ModelSerializer):
@@ -70,6 +72,35 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
         if intake_errors:
             raise serializers.ValidationError(intake_errors)
 
+        responses = attrs.get("questionnaire_responses")
+        version_id = attrs.get("questionnaire_version_id")
+        if self.instance:
+            if version_id is None:
+                version_id = self.instance.questionnaire_version_id
+            if "questionnaire_version_id" in attrs and self.instance.questionnaire_version_id:
+                if str(attrs["questionnaire_version_id"]) != str(
+                    self.instance.questionnaire_version_id
+                ):
+                    raise serializers.ValidationError(
+                        {"questionnaire_version_id": "Questionnaire version cannot be changed."}
+                    )
+        if responses is not None and version_id:
+            # Only enforce completeness (required fields) at final submission.
+            # Incremental/draft saves — including the one-time auto-sync that
+            # stamps questionnaire_version_id — validate the format of provided
+            # answers but must not reject unanswered required fields, otherwise
+            # loading a partially complete intake fails.
+            resulting_status = attrs.get(
+                "status", self.instance.status if self.instance else "draft"
+            )
+            q_errors = validate_responses_against_version(
+                version_id,
+                responses,
+                enforce_required=(resulting_status == "submitted"),
+            )
+            if q_errors:
+                raise serializers.ValidationError({"questionnaire_responses": q_errors})
+
         return super().validate(attrs)
 
     def to_representation(self, instance):
@@ -90,8 +121,11 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         intake = super().create(validated_data)
+        sync_canonical_fields_from_questionnaire(intake)
         if intake.status == "draft":
-            sync_patient_profile_from_intake(intake.user, intake.identity)
+            sync_patient_profile_from_intake(
+                intake.user, intake.identity, intake.medication_preferences
+            )
         return intake
 
     def update(self, instance, validated_data):
@@ -99,8 +133,11 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
         if status == "submitted" and not instance.submitted_at:
             validated_data["submitted_at"] = timezone.now()
         intake = super().update(instance, validated_data)
+        sync_canonical_fields_from_questionnaire(intake)
         if intake.status == "draft":
-            sync_patient_profile_from_intake(intake.user, intake.identity)
+            sync_patient_profile_from_intake(
+                intake.user, intake.identity, intake.medication_preferences
+            )
         return intake
 
 

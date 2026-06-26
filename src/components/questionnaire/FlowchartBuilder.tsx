@@ -18,9 +18,13 @@ import {
 } from "@xyflow/react";
 import {
   BarChart2,
+  ClipboardPaste,
+  Copy,
   MousePointer2,
   Plus,
+  Redo2,
   Trash2,
+  Undo2,
   Workflow,
   X,
 } from "lucide-react";
@@ -38,16 +42,45 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Field, inputCls } from "@/components/quiz/quiz-primitives";
+import { StepFieldsEditor } from "@/components/questionnaire/builder/StepFieldsEditor";
+import { sortQuestionnaireFields } from "@/lib/questionnaire/sort-fields";
+import { IntakeRoutingPanel } from "@/components/questionnaire/builder/IntakeRoutingPanel";
+import { EntryPointsPanel } from "@/components/questionnaire/builder/EntryPointsPanel";
+import { AddQuestionModal } from "@/components/questionnaire/builder/AddQuestionModal";
+import {
+  BELUGA_FIELD_OPTIONS,
+  QUESTION_FIELD_TYPES,
+  uniqueAmong,
+} from "@/components/questionnaire/builder/field-catalog";
+import { AccountRegistrationFields } from "@/components/questionnaire/AccountRegistrationFields";
+import { isTypingTarget } from "@/components/questionnaire/builder/flowchart-editor-history";
+import { useFlowchartEditorActions } from "@/components/questionnaire/builder/useFlowchartEditorActions";
+import {
+  QuestionnaireRenderer,
+  getStepValidationErrors,
+} from "@/components/questionnaire/QuestionnaireRenderer";
+import { getVisibleSteps } from "@/lib/questionnaire/validation";
+import { resolveNextStep } from "@/lib/questionnaire/step-routing";
+import {
+  emptyRegistrationFields,
+  isAccountField,
+  isRegistrationStep,
+  validateRegistrationFields,
+} from "@/lib/questionnaire/registration";
 import {
   createStaffQuestionnaireField,
   createStaffQuestionnaireStep,
   deleteStaffQuestionnaireField,
   deleteStaffQuestionnaireStep,
   fetchStaffDropoffAnalytics,
+  fetchStaffQuestionnaires,
   fetchStaffQuestionnaireVersion,
+  resolveIntakeQuestionnaire,
   updateStaffQuestionnaireField,
   updateStaffQuestionnaireStep,
+  updateStaffQuestionnaireVersion,
   type FunnelAnalyticsStep,
+  type IntakeRoutingRule,
   type QuestionnaireFieldSchema,
   type QuestionnaireStepSchema,
   type QuestionnaireVersionSchema,
@@ -79,6 +112,71 @@ type StepNodeData = {
   pendingSource: PendingSource | null;
   onAnswerClick: (src: PendingSource) => void;
 };
+
+type EntryNodeData = {
+  title: string;
+  ctaIds: string[];
+  isDefaultEntry: boolean;
+};
+
+type IntakeNodeData = {
+  slug: string;
+  isPublished: boolean;
+  isDraft: boolean;
+  isPendingTarget: boolean;
+  onRemove: (slug: string) => void;
+};
+
+type FlowNode =
+  | Node<StepNodeData, "step">
+  | Node<EntryNodeData, "entry">
+  | Node<IntakeNodeData, "intake">;
+
+const ENTRY_NODE_ID = "__entry__";
+const INTAKE_NODE_PREFIX = "intake:";
+
+function intakeRuleIdentity(rule: IntakeRoutingRule): string {
+  return [
+    rule.when_field,
+    rule.when_value,
+    rule.when_step ?? "",
+    rule.intake_questionnaire_slug,
+  ].join("\0");
+}
+
+/** Append an intake routing rule; skip only if an identical rule already exists. */
+function appendIntakeRule(
+  existing: IntakeRoutingRule[],
+  rule: IntakeRoutingRule,
+): IntakeRoutingRule[] {
+  const key = intakeRuleIdentity(rule);
+  if (existing.some((r) => intakeRuleIdentity(r) === key)) return existing;
+  return [...existing, rule];
+}
+
+/**
+ * The intake slug a step's default (fallback) route points to, if any. A step's
+ * default→intake rule is anchored to it via `when_step`; default rules with no
+ * `when_step` fall back to the last step.
+ */
+function defaultIntakeSlugForStep(
+  schema: QuestionnaireVersionSchema,
+  stepKey: string,
+): string | undefined {
+  if (schema.questionnaire_type !== "qualify") return undefined;
+  const sorted = [...schema.steps].sort((a, b) => a.sort_order - b.sort_order);
+  const lastStepKey = sorted[sorted.length - 1]?.step_key;
+  const match = (schema.intake_routing_rules ?? []).find((r) => {
+    if (r.when_field && r.when_field !== "__default__") return false;
+    if (!r.intake_questionnaire_slug) return false;
+    const anchor =
+      r.when_step && schema.steps.some((s) => s.step_key === r.when_step)
+        ? r.when_step
+        : lastStepKey;
+    return anchor === stepKey;
+  });
+  return match?.intake_questionnaire_slug;
+}
 
 type Tool = "select" | "connect";
 
@@ -120,6 +218,23 @@ function autoLayout(
 
 // ── Field preview (inside node) ───────────────────────────────────────────────
 
+function NodeFieldLabel({ field }: { field: QuestionnaireFieldSchema }) {
+  return (
+    <p className="text-[11px] font-medium text-foreground leading-tight">
+      {stripHtml(field.label)}
+      {field.required && <span className="text-destructive ml-0.5">*</span>}
+      {field.help_text ? (
+        <span
+          title={stripHtml(field.help_text)}
+          className="ml-1 inline-grid size-3.5 place-items-center rounded-full border border-border text-[8px] font-semibold leading-none text-muted-foreground align-middle"
+        >
+          ?
+        </span>
+      ) : null}
+    </p>
+  );
+}
+
 function FieldPreview({
   field,
   isConnectMode,
@@ -131,16 +246,12 @@ function FieldPreview({
   isPendingField: boolean;
   onAnswerClick: (value: string, valueLabel: string) => void;
 }) {
-  const safeLabel = stripHtml(field.label);
   const clickable = isConnectMode;
 
   if (field.field_type === "yes_no") {
     return (
       <div className="space-y-1.5">
-        <p className="text-[11px] font-medium text-foreground leading-tight">
-          {safeLabel}
-          {field.required && <span className="text-destructive ml-0.5">*</span>}
-        </p>
+        <NodeFieldLabel field={field} />
         <div className="grid grid-cols-2 gap-1.5">
           {[
             { value: "yes", label: "Yes" },
@@ -192,10 +303,7 @@ function FieldPreview({
     const options = (field.options ?? []) as { value: string; label: string }[];
     return (
       <div className="space-y-1.5">
-        <p className="text-[11px] font-medium text-foreground leading-tight">
-          {safeLabel}
-          {field.required && <span className="text-destructive ml-0.5">*</span>}
-        </p>
+        <NodeFieldLabel field={field} />
         <div className="space-y-1">
           {options.map((opt) => (
             <div key={opt.value} className="relative">
@@ -240,10 +348,7 @@ function FieldPreview({
     const options = (field.options ?? []) as { value: string; label: string }[];
     return (
       <div className="space-y-1.5">
-        <p className="text-[11px] font-medium text-foreground leading-tight">
-          {safeLabel}
-          {field.required && <span className="text-destructive ml-0.5">*</span>}
-        </p>
+        <NodeFieldLabel field={field} />
         <div className="space-y-1">
           {options.map((opt) => (
             <div
@@ -264,10 +369,7 @@ function FieldPreview({
   if (field.field_type === "textarea") {
     return (
       <div className="space-y-1">
-        <p className="text-[11px] font-medium text-foreground">
-          {safeLabel}
-          {field.required && <span className="text-destructive ml-0.5">*</span>}
-        </p>
+        <NodeFieldLabel field={field} />
         <div className="rounded-xl border border-input bg-background px-3 py-2 min-h-[40px] text-xs text-muted-foreground/60">
           {field.help_text || "Long answer…"}
         </div>
@@ -277,8 +379,68 @@ function FieldPreview({
 
   if (field.field_type === "address_group") {
     return (
-      <div className="rounded-xl border border-dashed border-border bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
-        📍 Address fields
+      <div className="space-y-1">
+        <NodeFieldLabel field={field} />
+        <div className="rounded-xl border border-input bg-background px-3 py-2 text-xs text-muted-foreground">
+          Start typing your full address…
+        </div>
+        <p className="text-[10px] text-muted-foreground">
+          Nominatim autocomplete · verifies street, city, ZIP, and county
+        </p>
+      </div>
+    );
+  }
+
+  if (field.field_type === "review") {
+    return (
+      <div className="space-y-1">
+        <NodeFieldLabel field={field} />
+        <div className="rounded-xl border border-dashed border-border bg-muted/30 px-3 py-2 text-[10px] text-muted-foreground">
+          Patients confirm their answers before continuing
+        </div>
+      </div>
+    );
+  }
+
+  if (field.field_type === "legal_consent") {
+    return (
+      <div className="space-y-1">
+        <NodeFieldLabel field={field} />
+        <div className="rounded-xl border border-dashed border-border bg-muted/30 px-3 py-2 text-[10px] text-muted-foreground">
+          Terms of Service, Privacy Policy, and Telehealth Consent agreement
+        </div>
+      </div>
+    );
+  }
+
+  if (field.field_type === "dob") {
+    return (
+      <div className="space-y-1">
+        <NodeFieldLabel field={field} />
+        <div className="grid grid-cols-3 gap-1">
+          {["MM", "DD", "YYYY"].map((placeholder) => (
+            <div
+              key={placeholder}
+              className="rounded-xl border border-input bg-background px-2 py-1.5 text-[10px] text-muted-foreground/60 text-center"
+            >
+              {placeholder}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (isAccountField(field)) {
+    return (
+      <div className="space-y-1.5">
+        {field.label ? <NodeFieldLabel field={field} /> : null}
+        <AccountRegistrationFields
+          value={emptyRegistrationFields()}
+          onChange={() => {}}
+          readOnly
+          embedded
+        />
       </div>
     );
   }
@@ -304,10 +466,7 @@ function FieldPreview({
 
   return (
     <div className="space-y-1">
-      <p className="text-[11px] font-medium text-foreground">
-        {safeLabel}
-        {field.required && <span className="text-destructive ml-0.5">*</span>}
-      </p>
+      <NodeFieldLabel field={field} />
       <div className="rounded-xl border border-input bg-background px-3 py-1.5 text-xs text-muted-foreground/60">
         {placeholder}
       </div>
@@ -395,7 +554,7 @@ function StepNode({ data, id }: NodeProps<Node<StepNodeData>>) {
       {/* Fields */}
       {step.fields.length > 0 && (
         <div className="px-3 py-2.5 space-y-3">
-          {step.fields.map((field) => (
+          {sortQuestionnaireFields(step.fields).map((field) => (
             <FieldPreview
               key={field.field_key}
               field={field}
@@ -461,7 +620,116 @@ function StepNode({ data, id }: NodeProps<Node<StepNodeData>>) {
   );
 }
 
-const nodeTypes = { step: StepNode };
+// ── Entry node ────────────────────────────────────────────────────────────────
+
+function EntryNode({ data }: NodeProps<Node<EntryNodeData>>) {
+  const { title, ctaIds, isDefaultEntry } = data;
+  return (
+    <div
+      style={{ width: 220 }}
+      className="rounded-2xl border-2 border-secondary bg-secondary/5 shadow-soft select-none cursor-pointer"
+    >
+      <div className="px-3 pt-3 pb-2 border-b border-secondary/30">
+        <p className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground">
+          Entry point
+        </p>
+        <p className="text-sm font-bold text-foreground leading-tight line-clamp-2">
+          {title}
+        </p>
+        {isDefaultEntry && (
+          <span className="mt-1 inline-block rounded-full bg-secondary/20 px-2 py-0.5 text-[9px] font-semibold text-secondary-foreground">
+            Default entry
+          </span>
+        )}
+      </div>
+      <div className="px-3 py-2 flex flex-wrap gap-1">
+        {ctaIds.length === 0 ? (
+          <p className="text-[11px] italic text-muted-foreground">
+            No CTAs assigned — click to edit
+          </p>
+        ) : (
+          ctaIds.map((c) => (
+            <span
+              key={c}
+              className="rounded-full bg-secondary/15 px-2 py-0.5 text-[9px] font-medium text-foreground"
+            >
+              {c}
+            </span>
+          ))
+        )}
+      </div>
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="entry-out"
+        isConnectable={false}
+        className="!size-2.5 !bg-secondary !border-2 !border-card"
+      />
+    </div>
+  );
+}
+
+// ── Intake destination node ───────────────────────────────────────────────────
+
+function IntakeNode({ data }: NodeProps<Node<IntakeNodeData>>) {
+  const { slug, isPublished, isDraft, isPendingTarget, onRemove } = data;
+  return (
+    <div
+      style={{ width: 200 }}
+      className={[
+        "rounded-2xl border-2 bg-emerald-50 shadow-soft select-none transition-all",
+        isPendingTarget
+          ? "border-primary ring-2 ring-primary/30 cursor-pointer"
+          : "border-emerald-400 cursor-pointer",
+      ].join(" ")}
+    >
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="in-left"
+        className="!size-2.5 !bg-emerald-500 !border-2 !border-card"
+      />
+      <Handle
+        type="target"
+        position={Position.Top}
+        id="in-top"
+        className="!size-2.5 !bg-emerald-500 !border-2 !border-card"
+      />
+      <div className="px-3 py-2.5">
+        <p className="text-[10px] font-mono uppercase tracking-wide text-emerald-700">
+          Intake →
+        </p>
+        <p className="text-sm font-bold text-foreground leading-tight break-all">
+          {slug}
+        </p>
+        {!isPublished && (
+          <p className="mt-1 text-[10px] font-medium text-destructive">
+            No published version
+          </p>
+        )}
+        {isPendingTarget && (
+          <p className="mt-1 text-[10px] font-semibold text-primary animate-pulse">
+            Click to route here →
+          </p>
+        )}
+      </div>
+      {isDraft && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(slug);
+          }}
+          className="w-full border-t border-emerald-200 px-3 py-1.5 text-left text-[10px] font-medium text-destructive hover:bg-destructive/5"
+        >
+          Remove intake
+        </button>
+      )}
+    </div>
+  );
+}
+
+const nodeTypes = { step: StepNode, entry: EntryNode, intake: IntakeNode };
 
 // ── Edge panel (route and seq edges) ─────────────────────────────────────────
 
@@ -1051,33 +1319,6 @@ function EdgePanel({
 
 // ── Questionnaire preview modal ───────────────────────────────────────────────
 
-function computeNextStep(
-  step: QuestionnaireStepSchema,
-  answers: Record<string, string>,
-  allSteps: QuestionnaireStepSchema[],
-): QuestionnaireStepSchema | null {
-  const sorted = [...allSteps].sort((a, b) => a.sort_order - b.sort_order);
-  const rules = step.routing_rules ?? [];
-  for (const rule of rules) {
-    if (!rule.when_field || rule.when_field === "__default__") continue;
-    if (answers[rule.when_field] === rule.when_value) {
-      return allSteps.find((s) => s.step_key === rule.next_step_key) ?? null;
-    }
-  }
-  const defaultRule = rules.find(
-    (r) => r.when_field === "__default__" || (!r.when_field && !r.when_value),
-  );
-  if (defaultRule) {
-    // Empty next_step_key is the "no default flow" sentinel — stop here.
-    if (!defaultRule.next_step_key) return null;
-    return (
-      allSteps.find((s) => s.step_key === defaultRule.next_step_key) ?? null
-    );
-  }
-  const idx = sorted.findIndex((s) => s.step_key === step.step_key);
-  return sorted[idx + 1] ?? null;
-}
-
 function PreviewField({
   field,
   value,
@@ -1429,32 +1670,124 @@ function PreviewModal({
   schema: QuestionnaireVersionSchema;
   onClose: () => void;
 }) {
-  const sorted = useMemo(
-    () => [...schema.steps].sort((a, b) => a.sort_order - b.sort_order),
-    [schema.steps],
+  // The preview walks the qualify steps, then continues into whichever intake
+  // questionnaire the routing rules resolve to (the same logic used at runtime),
+  // so staff see the full patient journey including the linked intake questions.
+  const [intakeSchema, setIntakeSchema] =
+    useState<QuestionnaireVersionSchema | null>(null);
+  const [phase, setPhase] = useState<"qualify" | "intake">("qualify");
+  const [stepKey, setStepKey] = useState(
+    () =>
+      [...schema.steps].sort((a, b) => a.sort_order - b.sort_order)[0]
+        ?.step_key ?? "",
   );
-  const [stepKey, setStepKey] = useState(sorted[0]?.step_key ?? "");
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [history, setHistory] = useState<string[]>([]);
+  const [responses, setResponses] = useState<Record<string, unknown>>({});
+  const [history, setHistory] = useState<
+    { phase: "qualify" | "intake"; stepKey: string }[]
+  >([]);
+  const [resolving, setResolving] = useState(false);
+  const [resolveError, setResolveError] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [reg, setReg] = useState(() => emptyRegistrationFields());
 
-  const step = sorted.find((s) => s.step_key === stepKey) ?? sorted[0];
-  if (!step) return null;
+  const activeSchema =
+    phase === "intake" && intakeSchema ? intakeSchema : schema;
 
-  const stepIndex = sorted.findIndex((s) => s.step_key === stepKey);
-  const nextStep = computeNextStep(step, answers, schema.steps);
+  const sorted = useMemo(
+    () => [...activeSchema.steps].sort((a, b) => a.sort_order - b.sort_order),
+    [activeSchema.steps],
+  );
+  const visibleSteps = useMemo(
+    () => getVisibleSteps(activeSchema.steps, responses),
+    [activeSchema.steps, responses],
+  );
+  const step =
+    activeSchema.steps.find((s) => s.step_key === stepKey) ?? sorted[0];
 
-  function goNext() {
-    if (!nextStep) return;
-    setHistory((h) => [...h, stepKey]);
-    setStepKey(nextStep.step_key);
+  const stepIndex = step
+    ? Math.max(
+        0,
+        visibleSteps.findIndex((s) => s.step_key === step.step_key),
+      )
+    : 0;
+  const nextStep = step
+    ? resolveNextStep(step, responses, activeSchema.steps)
+    : null;
+
+  // At the end of a qualify flow, the patient continues into the routed intake.
+  const canContinueToIntake =
+    phase === "qualify" && !nextStep && schema.questionnaire_type === "qualify";
+
+  async function goNext() {
+    if (!step) return;
+    const stepErrors = getStepValidationErrors(
+      activeSchema,
+      stepIndex,
+      responses,
+    );
+    if (Object.keys(stepErrors).length > 0) {
+      setErrors(stepErrors);
+      setResolveError("");
+      return;
+    }
+    if (phase === "qualify" && isRegistrationStep(step)) {
+      const regError = validateRegistrationFields(reg);
+      if (regError) {
+        setResolveError(regError);
+        return;
+      }
+    }
+    setErrors({});
+    setResolveError("");
+
+    if (nextStep) {
+      setHistory((h) => [...h, { phase, stepKey }]);
+      setStepKey(nextStep.step_key);
+      return;
+    }
+    if (!canContinueToIntake) return;
+    setResolving(true);
+    setResolveError("");
+    try {
+      const result = await resolveIntakeQuestionnaire({
+        qualify_version_id: schema.id,
+        questionnaire_responses: responses,
+      });
+      const first = [...result.version.steps].sort(
+        (a, b) => a.sort_order - b.sort_order,
+      )[0];
+      if (!first) {
+        setResolveError(
+          `Routed intake “${result.intake_questionnaire_slug}” has no steps.`,
+        );
+        return;
+      }
+      setIntakeSchema(result.version);
+      setHistory((h) => [...h, { phase, stepKey }]);
+      setPhase("intake");
+      setStepKey(first.step_key);
+    } catch (e) {
+      setResolveError(
+        e instanceof Error
+          ? e.message
+          : "Could not resolve the intake for these answers.",
+      );
+    } finally {
+      setResolving(false);
+    }
   }
 
   function goBack() {
     const prev = history[history.length - 1];
     if (!prev) return;
     setHistory((h) => h.slice(0, -1));
-    setStepKey(prev);
+    setPhase(prev.phase);
+    setStepKey(prev.stepKey);
   }
+
+  if (!step) return null;
+
+  const totalVisible = visibleSteps.length || sorted.length;
 
   return (
     <div
@@ -1465,14 +1798,22 @@ function PreviewModal({
         className="relative bg-card rounded-3xl shadow-xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
           <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground font-mono">
-              {schema.questionnaire_slug}
+              {activeSchema.questionnaire_slug}
+            </span>
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                phase === "intake"
+                  ? "bg-success/15 text-success"
+                  : "bg-secondary/20 text-secondary-foreground"
+              }`}
+            >
+              {phase === "intake" ? "Intake" : "Qualify"}
             </span>
             <span className="text-xs text-muted-foreground">
-              Step {stepIndex + 1} / {sorted.length}
+              step {stepIndex + 1} / {totalVisible}
             </span>
           </div>
           <button
@@ -1484,39 +1825,48 @@ function PreviewModal({
           </button>
         </div>
 
-        {/* Progress bar */}
-        <div className="h-1 bg-muted shrink-0">
-          <div
-            className="h-full bg-primary transition-all duration-300 rounded-r-full"
-            style={{ width: `${((stepIndex + 1) / sorted.length) * 100}%` }}
+        <div className="flex-1 overflow-y-auto px-2 py-4">
+          <QuestionnaireRenderer
+            schema={activeSchema}
+            stepIndex={stepIndex}
+            responses={responses}
+            errors={errors}
+            registration={{ value: reg, onChange: setReg }}
+            qualifySchema={
+              schema.questionnaire_type === "qualify" ? schema : null
+            }
+            qualifyResponses={
+              schema.questionnaire_type === "qualify" ? responses : {}
+            }
+            intakeSchema={
+              phase === "intake" && intakeSchema
+                ? intakeSchema
+                : schema.questionnaire_type === "intake"
+                  ? schema
+                  : intakeSchema
+            }
+            accountExtras={{
+              firstName: reg.firstName.trim() || undefined,
+              lastName: reg.lastName.trim() || undefined,
+              email: reg.email.trim() || undefined,
+              phone: reg.phone.trim() || undefined,
+            }}
+            reviewVariant="preview"
+            onChange={(key, value) => {
+              setResponses((prev) => ({ ...prev, [key]: value }));
+              setErrors((prev) => {
+                if (!prev[key]) return prev;
+                const next = { ...prev };
+                delete next[key];
+                return next;
+              });
+            }}
           />
+          {resolveError && (
+            <p className="mt-3 px-6 text-xs text-destructive">{resolveError}</p>
+          )}
         </div>
 
-        {/* Step content */}
-        <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
-          {step.title && (
-            <h2 className="text-xl font-bold text-foreground">
-              {stripHtml(step.title)}
-            </h2>
-          )}
-          {step.subtitle && (
-            <p className="text-sm text-muted-foreground -mt-4">
-              {stripHtml(step.subtitle)}
-            </p>
-          )}
-          {step.fields.map((field) => (
-            <PreviewField
-              key={field.field_key}
-              field={field}
-              value={answers[field.field_key] ?? ""}
-              onChange={(v) =>
-                setAnswers((a) => ({ ...a, [field.field_key]: v }))
-              }
-            />
-          ))}
-        </div>
-
-        {/* Footer nav */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-border shrink-0 gap-3">
           <Button
             variant="outline"
@@ -1526,17 +1876,17 @@ function PreviewModal({
           >
             ← Back
           </Button>
-          <div className="flex items-center gap-1.5">
-            {sorted.map((s, i) => (
-              <span
-                key={s.step_key}
-                className={`size-1.5 rounded-full transition-colors ${s.step_key === stepKey ? "bg-primary" : i < stepIndex ? "bg-primary/40" : "bg-muted-foreground/20"}`}
-              />
-            ))}
-          </div>
           {nextStep ? (
-            <Button size="sm" onClick={goNext}>
+            <Button size="sm" onClick={() => void goNext()}>
               Continue →
+            </Button>
+          ) : canContinueToIntake ? (
+            <Button
+              size="sm"
+              disabled={resolving}
+              onClick={() => void goNext()}
+            >
+              {resolving ? "Loading intake…" : "Continue to intake →"}
             </Button>
           ) : (
             <Button
@@ -1545,7 +1895,7 @@ function PreviewModal({
               onClick={onClose}
               className="text-muted-foreground"
             >
-              End of flow
+              {phase === "intake" ? "End of intake" : "End of flow"}
             </Button>
           )}
         </div>
@@ -1594,6 +1944,7 @@ function buildEdges(
   positions: Map<string, { x: number; y: number }>,
   autoPos: { x: number; y: number }[],
   selectedEdgeId: string | null,
+  defaultIntakeStepKeys: Set<string> = new Set(),
 ): Edge[] {
   const edges: Edge[] = [];
 
@@ -1613,7 +1964,10 @@ function buildEdges(
       ? steps.find((s) => s.step_key === defaultRule.next_step_key)
       : nextStep;
 
-    if (defaultTarget) {
+    // A step has exactly one default destination. When its default routes to an
+    // intake (drawn separately as a green dashed edge), suppress the gray
+    // automatic step→step edge so it never shows two competing defaults.
+    if (defaultTarget && !defaultIntakeStepKeys.has(step.step_key)) {
       const ti = steps.findIndex((s) => s.step_key === defaultTarget.step_key);
       const tp = posOf(defaultTarget.step_key, ti);
       const { sourceHandle, targetHandle } = chooseHandles(
@@ -1731,10 +2085,18 @@ function buildNodesAndEdges(
   positions: Map<string, { x: number; y: number }>,
   pendingSource: PendingSource | null,
   onAnswerClick: StepNodeData["onAnswerClick"],
-): { nodes: Node<StepNodeData>[]; edges: Edge[] } {
+  extraIntakeSlugs: string[],
+  publishedIntakeSlugs: Set<string>,
+  onRemoveIntake: (slug: string) => void,
+  auxPositions: Map<string, { x: number; y: number }>,
+  auxDraggable: boolean,
+): { nodes: FlowNode[]; edges: Edge[] } {
   const steps = schema.steps;
   const isDraft = schema.status === "draft";
+  const isQualify = schema.questionnaire_type === "qualify";
   const autoPos = autoLayout(steps);
+  const posOf = (key: string, idx: number) =>
+    positions.get(key) ?? autoPos[idx] ?? { x: 0, y: 0 };
 
   // Which steps are valid targets for the pending connection
   const pendingTargetKeys = pendingSource
@@ -1743,10 +2105,10 @@ function buildNodesAndEdges(
       )
     : new Set<string>();
 
-  const nodes: Node<StepNodeData>[] = steps.map((step, i) => ({
+  const nodes: FlowNode[] = steps.map((step, i) => ({
     id: step.step_key,
     type: "step",
-    position: positions.get(step.step_key) ?? autoPos[i],
+    position: posOf(step.step_key, i),
     data: {
       step,
       analytics: analyticsMap.get(step.step_key),
@@ -1758,45 +2120,171 @@ function buildNodesAndEdges(
     },
   }));
 
-  const edges = buildEdges(steps, positions, autoPos, selectedEdgeId);
+  // Steps whose default (fallback) destination is an intake. Their gray
+  // automatic step→step edge is suppressed so each step shows one default only.
+  const sortedForAnchor = [...steps].sort(
+    (a, b) => a.sort_order - b.sort_order,
+  );
+  const lastStepKey = sortedForAnchor[sortedForAnchor.length - 1]?.step_key;
+  const defaultIntakeStepKeys = new Set<string>();
+  if (isQualify) {
+    (schema.intake_routing_rules ?? []).forEach((r) => {
+      if (r.when_field && r.when_field !== "__default__") return;
+      if (!r.intake_questionnaire_slug) return;
+      const anchor =
+        r.when_step && steps.some((s) => s.step_key === r.when_step)
+          ? r.when_step
+          : lastStepKey;
+      if (anchor) defaultIntakeStepKeys.add(anchor);
+    });
+  }
+
+  const edges = buildEdges(
+    steps,
+    positions,
+    autoPos,
+    selectedEdgeId,
+    defaultIntakeStepKeys,
+  );
+
+  if (isQualify && steps.length > 0) {
+    const sorted = [...steps].sort((a, b) => a.sort_order - b.sort_order);
+    const firstStep = sorted[0];
+    const lastStep = sorted[sorted.length - 1];
+
+    // ── Entry node (source → first step) ──
+    const fi = steps.findIndex((s) => s.step_key === firstStep.step_key);
+    const fp = posOf(firstStep.step_key, fi);
+    nodes.push({
+      id: ENTRY_NODE_ID,
+      type: "entry",
+      position: auxPositions.get(ENTRY_NODE_ID) ?? { x: fp.x - 280, y: fp.y },
+      draggable: auxDraggable,
+      connectable: false,
+      data: {
+        title: schema.questionnaire_slug,
+        ctaIds: schema.cta_ids ?? [],
+        isDefaultEntry: !!schema.is_default_entry,
+      },
+    });
+    edges.push({
+      id: "entry-edge",
+      source: ENTRY_NODE_ID,
+      sourceHandle: "entry-out",
+      target: firstStep.step_key,
+      targetHandle: "in-left",
+      type: "default",
+      zIndex: 5,
+      style: {
+        stroke: "var(--secondary)",
+        strokeWidth: 2,
+        strokeDasharray: "4 3",
+      },
+      label: "entry",
+      labelStyle: { fontSize: 10, fill: "var(--secondary-foreground)" },
+      labelBgStyle: { fill: "var(--card)", fillOpacity: 0.9 },
+    });
+
+    // ── Intake destination nodes (terminal targets) ──
+    const rules = schema.intake_routing_rules ?? [];
+    const intakeSlugs = Array.from(
+      new Set([
+        ...rules.map((r) => r.intake_questionnaire_slug).filter(Boolean),
+        ...extraIntakeSlugs,
+      ]),
+    );
+    const maxX = Math.max(...steps.map((s, i) => posOf(s.step_key, i).x), 0);
+    const minY = Math.min(...steps.map((s, i) => posOf(s.step_key, i).y), 0);
+    const intakeX = maxX + NODE_WIDTH + H_GAP + 80;
+    intakeSlugs.forEach((s, idx) => {
+      const intakeId = `${INTAKE_NODE_PREFIX}${s}`;
+      nodes.push({
+        id: intakeId,
+        type: "intake",
+        position: auxPositions.get(intakeId) ?? {
+          x: intakeX,
+          y: minY + idx * 150,
+        },
+        draggable: auxDraggable,
+        data: {
+          slug: s,
+          isPublished: publishedIntakeSlugs.has(s),
+          isDraft,
+          isPendingTarget: pendingSource !== null,
+          onRemove: onRemoveIntake,
+        },
+      });
+    });
+
+    // ── Intake routing edges (step/answer → intake node) ──
+    rules.forEach((rule, i) => {
+      const slug = rule.intake_questionnaire_slug;
+      if (!slug) return;
+      let sourceKey: string | undefined;
+      let sourceHandle: string;
+      if (rule.when_field && rule.when_field !== "__default__") {
+        const step = steps.find((s) =>
+          s.fields.some((f) => f.field_key === rule.when_field),
+        );
+        if (!step) return;
+        sourceKey = step.step_key;
+        const fieldDef = step.fields.find(
+          (f) => f.field_key === rule.when_field,
+        );
+        const hasAnswerHandle =
+          fieldDef?.field_type === "yes_no" ||
+          (fieldDef?.field_type === "single_choice" &&
+            (fieldDef.options ?? []).length > 0);
+        sourceHandle = hasAnswerHandle
+          ? `answer|${rule.when_field}|${rule.when_value}`
+          : "out-right";
+      } else {
+        // Default route: anchor to its recorded source step when set, else the
+        // last step. This is why a step-body drag stays on the chosen step
+        // instead of snapping to the last step.
+        const anchorStep =
+          (rule.when_step &&
+            steps.find((s) => s.step_key === rule.when_step)) ||
+          lastStep;
+        if (!anchorStep) return;
+        sourceKey = anchorStep.step_key;
+        sourceHandle = "out-right";
+      }
+      const edgeId = `intake-${i}`;
+      const sel = edgeId === selectedEdgeId;
+      edges.push({
+        id: edgeId,
+        source: sourceKey,
+        sourceHandle,
+        target: `${INTAKE_NODE_PREFIX}${slug}`,
+        targetHandle: "in-left",
+        type: "default",
+        zIndex: 15,
+        selected: sel,
+        style: {
+          stroke: sel ? "var(--destructive)" : "var(--success)",
+          strokeWidth: sel ? 3 : 2,
+          strokeDasharray: "5 3",
+        },
+        label: rule.when_value ? `→ if "${rule.when_value}"` : "→ all",
+        labelStyle: {
+          fontSize: 10,
+          fill: sel ? "var(--destructive)" : "var(--success)",
+          fontWeight: 600,
+        },
+        labelBgStyle: { fill: "var(--card)", fillOpacity: 0.92 },
+        data: { type: "intake", edgeId, ruleIndex: i, rule },
+      });
+    });
+  }
+
   return { nodes, edges };
 }
 
-// ── Beluga API field mapping ──────────────────────────────────────────────────
+// ── Beluga API field mapping & field types (see field-catalog.ts) ─────────────
 
-const BELUGA_FIELDS = [
-  { value: "", label: "— none —" },
-  { value: "beluga:firstName", label: "First name" },
-  { value: "beluga:lastName", label: "Last name" },
-  { value: "beluga:dob", label: "Date of birth" },
-  { value: "beluga:phone", label: "Phone" },
-  { value: "beluga:email", label: "Email" },
-  { value: "beluga:address", label: "Street address" },
-  { value: "beluga:city", label: "City" },
-  { value: "beluga:state", label: "State" },
-  { value: "beluga:zip", label: "ZIP" },
-  { value: "beluga:sex", label: "Sex (Male/Female/Other)" },
-  { value: "beluga:selfReportedMeds", label: "Self-reported medications" },
-  { value: "beluga:allergies", label: "Allergies" },
-  { value: "beluga:medicalConditions", label: "Medical conditions" },
-  { value: "beluga:consentsSigned", label: "Consents signed" },
-];
-
-// ── Field types ───────────────────────────────────────────────────────────────
-
-const FIELD_TYPES = [
-  { value: "text", label: "Text" },
-  { value: "textarea", label: "Textarea" },
-  { value: "number", label: "Number" },
-  { value: "email", label: "Email" },
-  { value: "phone", label: "Phone" },
-  { value: "date", label: "Date" },
-  { value: "yes_no", label: "Yes / No" },
-  { value: "single_choice", label: "Single choice" },
-  { value: "multi_choice", label: "Multi choice" },
-  { value: "address_group", label: "Address group" },
-  { value: "plugin", label: "Plugin" },
-] as const;
+const BELUGA_FIELDS = BELUGA_FIELD_OPTIONS;
+const FIELD_TYPES = QUESTION_FIELD_TYPES;
 
 // ── Routing rules editor ──────────────────────────────────────────────────────
 
@@ -1963,6 +2451,8 @@ function StepEditorPanel({
   isDraft,
   slug,
   versionId,
+  defaultIntakeSlug,
+  onClearDefaultIntake,
   onClose,
   onReload,
   onDelete,
@@ -1972,18 +2462,23 @@ function StepEditorPanel({
   isDraft: boolean;
   slug: string;
   versionId: string;
+  defaultIntakeSlug?: string;
+  onClearDefaultIntake?: () => Promise<void>;
   onClose: () => void;
   onReload: () => Promise<void>;
   onDelete: () => Promise<void>;
 }) {
   const [localTitle, setLocalTitle] = useState(step.title);
   const [localSubtitle, setLocalSubtitle] = useState(step.subtitle ?? "");
+  const [localProgressLevel, setLocalProgressLevel] = useState(
+    step.progress_level ?? 0,
+  );
   const [localRouting, setLocalRouting] = useState<RoutingRule[]>(
     step.routing_rules ?? [],
   );
-  const [newFieldKey, setNewFieldKey] = useState("");
-  const [newFieldType, setNewFieldType] = useState("text");
+  const [showAddQuestion, setShowAddQuestion] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [duplicatingKey, setDuplicatingKey] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   // Derive natural next step (by sort_order) and current default override
@@ -2021,8 +2516,15 @@ function StepEditorPanel({
   useEffect(() => {
     setLocalTitle(step.title);
     setLocalSubtitle(step.subtitle ?? "");
+    setLocalProgressLevel(step.progress_level ?? 0);
     setLocalRouting(step.routing_rules ?? []);
-  }, [step.step_key, step.title, step.subtitle, step.routing_rules]);
+  }, [
+    step.step_key,
+    step.title,
+    step.subtitle,
+    step.progress_level,
+    step.routing_rules,
+  ]);
 
   async function saveStep() {
     setSaving(true);
@@ -2031,9 +2533,24 @@ function StepEditorPanel({
       await updateStaffQuestionnaireStep(slug, versionId, step.step_key, {
         title: localTitle,
         subtitle: localSubtitle,
+        progress_level: localProgressLevel,
         routing_rules: localRouting,
       });
-      await onReload();
+      // If this step had a default→intake but the user picked a step default
+      // here, clear the intake default so the step keeps exactly one default.
+      const overridesIntake =
+        !!defaultIntakeSlug &&
+        !!localRouting.find(
+          (r) =>
+            (r.when_field === "__default__" ||
+              (!r.when_field && !r.when_value)) &&
+            !!r.next_step_key,
+        );
+      if (overridesIntake && onClearDefaultIntake) {
+        await onClearDefaultIntake();
+      } else {
+        await onReload();
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Save failed.");
     } finally {
@@ -2041,23 +2558,56 @@ function StepEditorPanel({
     }
   }
 
-  async function addField() {
-    if (!newFieldKey.trim()) return;
+  async function addField(payload: {
+    field_key: string;
+    field_type: string;
+    label: string;
+    maps_to_section: string;
+    required: boolean;
+    account_mappings?: import("@/lib/questionnaire/account-mappings").AccountSubFieldMapping[];
+    address_mappings?: import("@/lib/questionnaire/address-mappings").AddressSubFieldMapping[];
+    choice_options?: import("@/lib/questionnaire/choice-options").ChoiceOptionDraft[];
+  }) {
     setError("");
-    try {
-      await createStaffQuestionnaireField(slug, versionId, step.step_key, {
-        field_key: newFieldKey.trim(),
-        field_type: newFieldType,
-        label: newFieldKey.trim().replace(/_/g, " "),
-        required: false,
-        options: [],
-        validation_rules: [],
-      });
-      setNewFieldKey("");
-      await onReload();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to add field.");
-    }
+    await createStaffQuestionnaireField(slug, versionId, step.step_key, {
+      field_key: payload.field_key,
+      field_type: payload.field_type,
+      label: payload.label,
+      maps_to_section: payload.maps_to_section,
+      required: payload.required,
+      options:
+        payload.field_type === "account" && payload.account_mappings
+          ? payload.account_mappings.map((row) => ({
+              value: row.key,
+              label: row.label,
+              backend: row.backend,
+              beluga: row.beluga,
+            }))
+          : payload.field_type === "address_group" && payload.address_mappings
+            ? payload.address_mappings.map((row) => ({
+                value: row.key,
+                label: row.label,
+                backend: row.backend,
+                beluga: row.beluga,
+              }))
+            : (payload.field_type === "single_choice" ||
+                  payload.field_type === "multi_choice") &&
+                payload.choice_options
+              ? payload.choice_options.map((row) => ({
+                  value: row.value,
+                  label: row.label,
+                  beluga: row.beluga,
+                }))
+              : payload.field_type === "yes_no"
+                ? [
+                    { value: "yes", label: "Yes" },
+                    { value: "no", label: "No" },
+                  ]
+                : [],
+      validation_rules: [],
+      sort_order: step.fields.length,
+    });
+    await onReload();
   }
 
   async function removeField(fieldKey: string) {
@@ -2081,22 +2631,127 @@ function StepEditorPanel({
   ) {
     setError("");
     try {
-      await updateStaffQuestionnaireField(
-        slug,
-        versionId,
-        step.step_key,
-        fieldKey,
-        patch,
-      );
+      const nextKey = patch.field_key?.trim();
+      if (nextKey && nextKey !== fieldKey) {
+        const usedKeys = new Set(
+          allSteps.flatMap((s) => s.fields.map((f) => f.field_key)),
+        );
+        usedKeys.delete(fieldKey);
+        if (usedKeys.has(nextKey)) {
+          setError("Another question already uses that field ID.");
+          return;
+        }
+        const { field_key: _ignored, ...rest } = patch;
+        await updateStaffQuestionnaireField(
+          slug,
+          versionId,
+          step.step_key,
+          fieldKey,
+          { field_key: nextKey, ...rest },
+        );
+        const stepsReferencingField = allSteps.filter((s) =>
+          (s.routing_rules ?? []).some((r) => r.when_field === fieldKey),
+        );
+        await Promise.all(
+          stepsReferencingField.map((s) =>
+            updateStaffQuestionnaireStep(slug, versionId, s.step_key, {
+              routing_rules: (s.routing_rules ?? []).map((r) =>
+                r.when_field === fieldKey ? { ...r, when_field: nextKey } : r,
+              ),
+            }),
+          ),
+        );
+        if (localRouting.some((r) => r.when_field === fieldKey)) {
+          setLocalRouting((prev) =>
+            prev.map((r) =>
+              r.when_field === fieldKey ? { ...r, when_field: nextKey } : r,
+            ),
+          );
+        }
+      } else {
+        await updateStaffQuestionnaireField(
+          slug,
+          versionId,
+          step.step_key,
+          fieldKey,
+          patch,
+        );
+      }
       await onReload();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to update field.");
     }
   }
 
+  async function duplicateField(fieldKey: string) {
+    const source = step.fields.find((f) => f.field_key === fieldKey);
+    if (!source) return;
+    if (isAccountField(source)) {
+      setError("Account fields cannot be duplicated — each step allows one.");
+      return;
+    }
+    setError("");
+    setDuplicatingKey(fieldKey);
+    try {
+      const usedKeys = new Set(
+        allSteps.flatMap((s) => s.fields.map((f) => f.field_key)),
+      );
+      const newKey = uniqueAmong(source.field_key, usedKeys);
+      const sorted = sortQuestionnaireFields(step.fields);
+      const sourceIndex = sorted.findIndex((f) => f.field_key === fieldKey);
+
+      await createStaffQuestionnaireField(slug, versionId, step.step_key, {
+        field_key: newKey,
+        field_type: source.field_type,
+        label: source.label?.trim()
+          ? `${source.label.trim()} (copy)`
+          : newKey.replace(/_/g, " "),
+        help_text: source.help_text ?? "",
+        maps_to_section: source.maps_to_section ?? "",
+        plugin_id: source.plugin_id ?? "",
+        required: source.required ?? false,
+        options: source.options ?? [],
+        validation_rules: source.validation_rules ?? [],
+        sort_order: step.fields.length,
+      });
+
+      const orderedKeys = sorted.map((f) => f.field_key);
+      orderedKeys.splice(sourceIndex + 1, 0, newKey);
+      await Promise.all(
+        orderedKeys.map((key, index) =>
+          updateStaffQuestionnaireField(slug, versionId, step.step_key, key, {
+            sort_order: index,
+          }),
+        ),
+      );
+      await onReload();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to duplicate field.");
+    } finally {
+      setDuplicatingKey(null);
+    }
+  }
+
+  async function reorderFields(orderedKeys: string[]) {
+    setError("");
+    try {
+      await Promise.all(
+        orderedKeys.map((key, index) =>
+          updateStaffQuestionnaireField(slug, versionId, step.step_key, key, {
+            sort_order: index,
+          }),
+        ),
+      );
+      await onReload();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to reorder fields.");
+    }
+  }
+
   const hasChanges =
     localTitle !== step.title ||
     localSubtitle !== (step.subtitle ?? "") ||
+    localProgressLevel !== (step.progress_level ?? 0) ||
     JSON.stringify(localRouting) !== JSON.stringify(step.routing_rules ?? []);
 
   return (
@@ -2156,22 +2811,57 @@ function StepEditorPanel({
               onChange={(e) => setLocalSubtitle(e.target.value)}
             />
           </Field>
+          <Field
+            label="Progress level"
+            help="Tier for the patient progress bar (0 = first). Branching alternatives at the same depth share a level — e.g. pill / injection / compounding = level 1, account = level 2."
+          >
+            <input
+              type="number"
+              min={0}
+              max={20}
+              className={inputCls}
+              value={localProgressLevel}
+              disabled={!isDraft}
+              onChange={(e) =>
+                setLocalProgressLevel(
+                  Math.max(0, Math.min(20, Number(e.target.value) || 0)),
+                )
+              }
+            />
+          </Field>
         </div>
 
         <div className="space-y-1.5">
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
             Default connection
           </p>
-          <p className="text-[11px] text-muted-foreground">
-            The gray line — where patients go when no routing rule matches.
-          </p>
+          {defaultIntakeSlug ? (
+            <p className="text-[11px] text-success">
+              This step’s default routes to intake “{defaultIntakeSlug}”. A step
+              has one default — change it in the Intake routing panel, or set a
+              step below to override it.
+            </p>
+          ) : (
+            <p className="text-[11px] text-muted-foreground">
+              The gray line — where patients go when no routing rule matches.
+            </p>
+          )}
           <select
             className={`${inputCls} text-xs`}
-            value={defaultNextKey}
+            value={defaultIntakeSlug ? "" : defaultNextKey}
             disabled={!isDraft}
-            onChange={(e) => setDefaultNext(e.target.value)}
+            onChange={(e) => {
+              // Keeping the intake default (the "" option) is a no-op; picking a
+              // step overrides it (intake default cleared on save).
+              if (defaultIntakeSlug && e.target.value === "") return;
+              setDefaultNext(e.target.value);
+            }}
           >
-            <option value="">None — no default flow</option>
+            <option value="">
+              {defaultIntakeSlug
+                ? `Intake: ${defaultIntakeSlug} (current)`
+                : "None — no default flow"}
+            </option>
             {naturalNext ? (
               <option value={naturalNext.step_key}>
                 {naturalNext.step_key} —{" "}
@@ -2231,126 +2921,41 @@ function StepEditorPanel({
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
             Fields
           </p>
-          {step.fields.map((field) => {
-            const belugaValue = field.maps_to_section?.startsWith("beluga:")
-              ? field.maps_to_section
-              : "";
-            return (
-              <div
-                key={field.field_key}
-                className="rounded-xl border border-border p-2.5 space-y-2"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-mono text-foreground truncate">
-                      {field.field_key}
-                    </p>
-                    <p className="text-[11px] text-muted-foreground truncate">
-                      {field.label}
-                    </p>
-                  </div>
-                  {isDraft && (
-                    <button
-                      type="button"
-                      className="rounded p-1 text-destructive hover:bg-destructive/10 shrink-0"
-                      onClick={() => void removeField(field.field_key)}
-                    >
-                      <Trash2 className="size-3" />
-                    </button>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <select
-                    className="text-xs border border-input rounded-lg px-1.5 py-0.5 bg-background text-foreground flex-1"
-                    value={field.field_type}
-                    disabled={!isDraft}
-                    onChange={(e) =>
-                      void updateField(field.field_key, {
-                        field_type: e.target.value,
-                      })
-                    }
-                  >
-                    {FIELD_TYPES.map((t) => (
-                      <option key={t.value} value={t.value}>
-                        {t.label}
-                      </option>
-                    ))}
-                  </select>
-                  <label className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
-                    <input
-                      type="checkbox"
-                      checked={field.required ?? false}
-                      disabled={!isDraft}
-                      onChange={(e) =>
-                        void updateField(field.field_key, {
-                          required: e.target.checked,
-                        })
-                      }
-                    />
-                    req
-                  </label>
-                </div>
-                <div className="space-y-0.5">
-                  <p className="text-[10px] text-muted-foreground font-medium">
-                    Maps to Beluga API field
-                  </p>
-                  <select
-                    className="w-full text-xs border border-input rounded-lg px-1.5 py-0.5 bg-background text-foreground"
-                    value={belugaValue}
-                    disabled={!isDraft}
-                    onChange={(e) =>
-                      void updateField(field.field_key, {
-                        maps_to_section:
-                          e.target.value || field.maps_to_section,
-                      })
-                    }
-                  >
-                    {BELUGA_FIELDS.map((f) => (
-                      <option key={f.value} value={f.value}>
-                        {f.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            );
-          })}
+          <StepFieldsEditor
+            fields={step.fields}
+            isDraft={isDraft}
+            fieldTypes={FIELD_TYPES}
+            belugaFields={BELUGA_FIELDS}
+            onUpdate={(fieldKey, patch) => void updateField(fieldKey, patch)}
+            onRemove={(fieldKey) => void removeField(fieldKey)}
+            onReorder={(orderedKeys) => void reorderFields(orderedKeys)}
+            onDuplicate={(fieldKey) => void duplicateField(fieldKey)}
+            duplicatingKey={duplicatingKey}
+          />
 
           {isDraft && (
-            <div className="flex gap-1.5 pt-1">
-              <input
-                className={`${inputCls} text-xs flex-1`}
-                placeholder="field_key"
-                value={newFieldKey}
-                maxLength={64}
-                onChange={(e) =>
-                  setNewFieldKey(
-                    e.target.value.toLowerCase().replace(/\s+/g, "_"),
-                  )
-                }
-                onKeyDown={(e) => e.key === "Enter" && void addField()}
-              />
-              <select
-                className="text-xs border border-input rounded-xl px-2 py-2 bg-background text-foreground shrink-0"
-                value={newFieldType}
-                onChange={(e) => setNewFieldType(e.target.value)}
-              >
-                {FIELD_TYPES.map((t) => (
-                  <option key={t.value} value={t.value}>
-                    {t.label}
-                  </option>
-                ))}
-              </select>
-              <Button
-                size="sm"
-                onClick={() => void addField()}
-                className="shrink-0"
-              >
-                <Plus className="size-3" />
-              </Button>
-            </div>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="w-full"
+              onClick={() => setShowAddQuestion(true)}
+            >
+              <Plus className="size-3 mr-1.5" />
+              Add question to step
+            </Button>
           )}
         </div>
+
+        <AddQuestionModal
+          open={showAddQuestion}
+          onOpenChange={setShowAddQuestion}
+          existingFieldKeys={allSteps.flatMap((s) =>
+            s.fields.map((f) => f.field_key),
+          )}
+          stepHasAccountField={step.fields.some((f) => isAccountField(f))}
+          onAdd={addField}
+        />
       </div>
     </aside>
   );
@@ -2381,13 +2986,41 @@ export function FlowchartBuilder({
   const [addingStep, setAddingStep] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [showAddConnection, setShowAddConnection] = useState(false);
+  const [showIntakeRouting, setShowIntakeRouting] = useState(false);
+  const [showEntryPoints, setShowEntryPoints] = useState(false);
   // Incremented on every drag-stop so the buildNodesAndEdges useEffect re-runs
   // with the latest positions.current and recalculates handle pairs for all edges.
   const [positionsVersion, setPositionsVersion] = useState(0);
 
   const positions = useRef<Map<string, { x: number; y: number }>>(new Map());
-  const persistTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const viewportKey = `flowchart_vp_${versionId}`;
+  // Layout-only positions for the virtual entry/intake nodes. These have no
+  // backend step rows, so we persist their canvas placement locally per version.
+  const auxPositionsKey = `flowchart_aux_${versionId}`;
+  const auxPositions = useRef<Map<string, { x: number; y: number }>>(
+    (() => {
+      try {
+        const raw = localStorage.getItem(`flowchart_aux_${versionId}`);
+        const parsed = raw
+          ? (JSON.parse(raw) as Record<string, { x: number; y: number }>)
+          : {};
+        return new Map(Object.entries(parsed));
+      } catch {
+        return new Map();
+      }
+    })(),
+  );
+  const saveAuxPositions = useCallback(() => {
+    try {
+      localStorage.setItem(
+        auxPositionsKey,
+        JSON.stringify(Object.fromEntries(auxPositions.current)),
+      );
+    } catch {
+      // localStorage may be unavailable (private mode / quota) — layout is
+      // non-critical, so fall back to in-memory only.
+    }
+  }, [auxPositionsKey]);
   const savedVp = (() => {
     try {
       const raw = localStorage.getItem(viewportKey);
@@ -2399,10 +3032,13 @@ export function FlowchartBuilder({
     }
   })();
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node<StepNodeData>>(
-    [],
-  );
+  const [nodes, setNodes, onNodesChange] = useNodesState<FlowNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [extraIntakeSlugs, setExtraIntakeSlugs] = useState<string[]>([]);
+  const [publishedIntakes, setPublishedIntakes] = useState<
+    { slug: string; title: string }[]
+  >([]);
+  const [showAddIntake, setShowAddIntake] = useState(false);
 
   const reload = useCallback(
     async (keepSelected = true) => {
@@ -2422,6 +3058,58 @@ export function FlowchartBuilder({
     [slug, versionId, selectedKey],
   );
 
+  const bumpPositions = useCallback(() => {
+    setPositionsVersion((v) => v + 1);
+  }, []);
+
+  const isDraft = schema?.status === "draft";
+
+  const editorActions = useFlowchartEditorActions({
+    slug,
+    versionId,
+    schema,
+    isDraft: !!isDraft,
+    selectedKey,
+    positions,
+    onReload: () => reload(),
+    onSelectStep: setSelectedKey,
+    onPositionsChange: bumpPositions,
+    onError: setError,
+  });
+
+  const {
+    canCopy,
+    canPaste,
+    canUndo,
+    canRedo,
+    recordStepCreation,
+    recordIntakeRulesChange,
+    copySelectedStep,
+    pasteClipboardStep,
+    undo,
+    redo,
+    onNodeDragStart,
+    onNodeDragStop,
+  } = editorActions;
+
+  // Entry/intake nodes are virtual (no backend step row). Persist their layout
+  // locally instead of routing through the step-position persistence in the hook.
+  const handleNodeDragStop = useCallback<typeof onNodeDragStop>(
+    (event, node) => {
+      if (node.id === ENTRY_NODE_ID || node.id.startsWith(INTAKE_NODE_PREFIX)) {
+        auxPositions.current.set(node.id, {
+          x: node.position.x,
+          y: node.position.y,
+        });
+        saveAuxPositions();
+        bumpPositions();
+        return Promise.resolve();
+      }
+      return onNodeDragStop(event, node);
+    },
+    [onNodeDragStop, saveAuxPositions, bumpPositions],
+  );
+
   useEffect(() => {
     void reload(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -2433,6 +3121,172 @@ export function FlowchartBuilder({
       setPendingSource(src);
     },
     [activeTool],
+  );
+
+  // Published intake questionnaires available as routing destinations.
+  useEffect(() => {
+    if (schema?.questionnaire_type !== "qualify") return;
+    void (async () => {
+      try {
+        const items = await fetchStaffQuestionnaires();
+        setPublishedIntakes(
+          items
+            .filter(
+              (q) => q.questionnaire_type === "intake" && q.published_version,
+            )
+            .map((q) => ({ slug: q.slug, title: q.title })),
+        );
+      } catch {
+        // intake list unavailable
+      }
+    })();
+  }, [schema?.questionnaire_type]);
+
+  const publishedIntakeSlugs = useMemo(
+    () => new Set(publishedIntakes.map((q) => q.slug)),
+    [publishedIntakes],
+  );
+
+  const saveIntakeRules = useCallback(
+    async (rules: IntakeRoutingRule[]) => {
+      const from = schema?.intake_routing_rules ?? [];
+      try {
+        await updateStaffQuestionnaireVersion(slug, versionId, {
+          intake_routing_rules: rules,
+        });
+        recordIntakeRulesChange(from, rules);
+        await reload();
+      } catch (e) {
+        setError(
+          e instanceof Error ? e.message : "Failed to save intake route.",
+        );
+      }
+    },
+    [slug, versionId, reload, schema, recordIntakeRulesChange],
+  );
+
+  // A step has exactly one default (fallback) destination. Its default→step
+  // route lives in step.routing_rules; its default→intake route lives in
+  // intake_routing_rules. Setting one must clear the other so a step can never
+  // hold two competing defaults. This applies both updates with one reload.
+  const setStepDefaultDestination = useCallback(
+    async (
+      stepKey: string,
+      destination:
+        | { kind: "step"; nextStepKey: string }
+        | { kind: "intake"; intakeSlug: string },
+    ) => {
+      if (!schema) return;
+      const step = schema.steps.find((s) => s.step_key === stepKey);
+      const isDefaultRule = (r: RoutingRule) =>
+        r.when_field === "__default__" || (!r.when_field && !r.when_value);
+      const isDefaultIntake = (r: IntakeRoutingRule) =>
+        r.when_field === "__default__" && (r.when_step ?? "") === stepKey;
+
+      const stepRulesWithoutDefault = (step?.routing_rules ?? []).filter(
+        (r) => !isDefaultRule(r),
+      );
+      const intakeWithoutStepDefault = (
+        schema.intake_routing_rules ?? []
+      ).filter((r) => !isDefaultIntake(r));
+
+      let nextStepRules: RoutingRule[];
+      let nextIntakeRules: IntakeRoutingRule[];
+      if (destination.kind === "intake") {
+        // Default now goes to an intake → drop step default, set intake default.
+        nextStepRules = stepRulesWithoutDefault;
+        nextIntakeRules = [
+          ...intakeWithoutStepDefault,
+          {
+            when_field: "__default__",
+            when_value: "",
+            intake_questionnaire_slug: destination.intakeSlug,
+            when_step: stepKey,
+          },
+        ];
+      } else {
+        // Default now goes to a step → drop intake default, set step default.
+        nextStepRules = [
+          ...stepRulesWithoutDefault,
+          {
+            when_field: "__default__",
+            when_value: "",
+            next_step_key: destination.nextStepKey,
+          },
+        ];
+        nextIntakeRules = intakeWithoutStepDefault;
+      }
+
+      const stepChanged =
+        !!step &&
+        JSON.stringify(nextStepRules) !==
+          JSON.stringify(step.routing_rules ?? []);
+      const intakeChanged =
+        JSON.stringify(nextIntakeRules) !==
+        JSON.stringify(schema.intake_routing_rules ?? []);
+      const fromIntake = schema.intake_routing_rules ?? [];
+
+      try {
+        if (stepChanged) {
+          await updateStaffQuestionnaireStep(slug, versionId, stepKey, {
+            routing_rules: nextStepRules,
+          });
+        }
+        if (intakeChanged) {
+          await updateStaffQuestionnaireVersion(slug, versionId, {
+            intake_routing_rules: nextIntakeRules,
+          });
+          recordIntakeRulesChange(fromIntake, nextIntakeRules);
+        }
+        if (stepChanged || intakeChanged) await reload();
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Failed to save rule.");
+      }
+    },
+    [slug, versionId, reload, schema, recordIntakeRulesChange],
+  );
+
+  // Remove a step's default→intake route(s) so it can fall back to a step
+  // default instead. Used when overriding the default from the step panel.
+  const clearStepDefaultIntake = useCallback(
+    async (stepKey: string) => {
+      if (!schema) return;
+      const sorted = [...schema.steps].sort(
+        (a, b) => a.sort_order - b.sort_order,
+      );
+      const lastStepKey = sorted[sorted.length - 1]?.step_key;
+      const remaining = (schema.intake_routing_rules ?? []).filter((r) => {
+        const isDefault = !r.when_field || r.when_field === "__default__";
+        if (!isDefault) return true;
+        const anchor =
+          r.when_step && schema.steps.some((s) => s.step_key === r.when_step)
+            ? r.when_step
+            : lastStepKey;
+        return anchor !== stepKey;
+      });
+      if (remaining.length !== (schema.intake_routing_rules ?? []).length) {
+        await saveIntakeRules(remaining);
+      } else {
+        await reload();
+      }
+    },
+    [schema, saveIntakeRules, reload],
+  );
+
+  const removeIntakeNode = useCallback(
+    (intakeSlug: string) => {
+      setExtraIntakeSlugs((prev) => prev.filter((s) => s !== intakeSlug));
+      const remaining = (schema?.intake_routing_rules ?? []).filter(
+        (r) => r.intake_questionnaire_slug !== intakeSlug,
+      );
+      if (
+        remaining.length !== (schema?.intake_routing_rules ?? []).length &&
+        schema?.status === "draft"
+      ) {
+        void saveIntakeRules(remaining);
+      }
+    },
+    [schema, saveIntakeRules],
   );
 
   useEffect(() => {
@@ -2453,6 +3307,11 @@ export function FlowchartBuilder({
       positions.current,
       pendingSource,
       onAnswerClick,
+      extraIntakeSlugs,
+      publishedIntakeSlugs,
+      removeIntakeNode,
+      auxPositions.current,
+      activeTool === "select",
     );
     setNodes(n);
     setEdges(e);
@@ -2465,18 +3324,58 @@ export function FlowchartBuilder({
     pendingSource,
     onAnswerClick,
     positionsVersion,
+    extraIntakeSlugs,
+    publishedIntakeSlugs,
+    removeIntakeNode,
+    activeTool,
     setNodes,
     setEdges,
   ]);
 
-  // ESC to cancel pending connection
+  // ESC / copy / paste / undo / redo
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setPendingSource(null);
+      if (e.key === "Escape") {
+        setPendingSource(null);
+        return;
+      }
+      if (isTypingTarget(e.target)) return;
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+
+      const key = e.key.toLowerCase();
+      if (key === "c" && canCopy) {
+        e.preventDefault();
+        copySelectedStep();
+        return;
+      }
+      if (key === "v" && canPaste) {
+        e.preventDefault();
+        void pasteClipboardStep();
+        return;
+      }
+      if (key === "z" && !e.shiftKey && canUndo) {
+        e.preventDefault();
+        void undo();
+        return;
+      }
+      if ((key === "z" && e.shiftKey && canRedo) || (key === "y" && canRedo)) {
+        e.preventDefault();
+        void redo();
+      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [
+    canCopy,
+    canPaste,
+    canUndo,
+    canRedo,
+    copySelectedStep,
+    pasteClipboardStep,
+    undo,
+    redo,
+  ]);
 
   async function toggleAnalytics() {
     const next = !showAnalytics;
@@ -2496,6 +3395,15 @@ export function FlowchartBuilder({
   }
 
   function onEdgeClick(_: React.MouseEvent, edge: Edge) {
+    if (edge.id.startsWith("intake-")) {
+      // Intake routes are edited/removed in the Intake routing panel.
+      setSelectedKey(null);
+      setSelectedEdgeInfo(null);
+      setShowAddConnection(false);
+      setShowEntryPoints(false);
+      setShowIntakeRouting(true);
+      return;
+    }
     if (
       (edge.id.startsWith("route-") || edge.id.startsWith("seq-")) &&
       edge.data
@@ -2511,13 +3419,68 @@ export function FlowchartBuilder({
   function onNodeClick(_: React.MouseEvent, node: Node) {
     setSelectedEdgeInfo(null);
     setShowAddConnection(false);
+
+    // Entry node → open Entry points panel
+    if (node.id === ENTRY_NODE_ID) {
+      setPendingSource(null);
+      setSelectedKey(null);
+      setShowIntakeRouting(false);
+      setShowEntryPoints(true);
+      return;
+    }
+
+    const isIntakeNode = node.id.startsWith(INTAKE_NODE_PREFIX);
+
+    // Complete a click-based connection into an intake node
+    if (pendingSource && isIntakeNode) {
+      const intakeSlug = node.id.slice(INTAKE_NODE_PREFIX.length);
+      const src = pendingSource;
+      setPendingSource(null);
+      if (schema?.status !== "draft") return;
+      const isDefaultRoute = src.fieldKey === "__default__";
+      if (isDefaultRoute) {
+        // A step has one default → setting default→intake clears default→step.
+        void setStepDefaultDestination(src.stepKey, {
+          kind: "intake",
+          intakeSlug,
+        });
+      } else {
+        void saveIntakeRules(
+          appendIntakeRule(schema.intake_routing_rules ?? [], {
+            when_field: src.fieldKey,
+            when_value: src.value,
+            intake_questionnaire_slug: intakeSlug,
+          }),
+        );
+      }
+      return;
+    }
+
+    // Intake node (no pending source) → open Intake routing panel
+    if (isIntakeNode) {
+      setSelectedKey(null);
+      setShowEntryPoints(false);
+      setShowIntakeRouting(true);
+      return;
+    }
+
     if (pendingSource && pendingSource.stepKey !== node.id) {
-      // Complete the connection — create routing rule
+      const src = pendingSource;
+      setPendingSource(null);
+      if (schema?.status !== "draft") return;
+      // Default route → step. A step has one default, so this also clears any
+      // default→intake route anchored to this step.
+      if (src.fieldKey === "__default__") {
+        void setStepDefaultDestination(src.stepKey, {
+          kind: "step",
+          nextStepKey: node.id,
+        });
+        return;
+      }
+      // Answer-based route → create/replace the conditional routing rule.
       void (async () => {
-        const src = pendingSource;
-        setPendingSource(null);
         const step = schema?.steps.find((s) => s.step_key === src.stepKey);
-        if (!step || schema?.status !== "draft") return;
+        if (!step) return;
         // Upsert: replace existing rule for the same field+value, don't duplicate
         const without = (step.routing_rules ?? []).filter(
           (r) => !(r.when_field === src.fieldKey && r.when_value === src.value),
@@ -2541,6 +3504,26 @@ export function FlowchartBuilder({
       })();
       return;
     }
+
+    // Connect mode: clicking a step toggles it as the pending source. This lets
+    // steps without answer options (e.g. account signup) start a default route
+    // to an intake or another step — same click flow as answer-based routing.
+    if (activeTool === "connect") {
+      if (schema?.status !== "draft") return;
+      if (pendingSource?.stepKey === node.id) {
+        setPendingSource(null);
+        return;
+      }
+      setPendingSource({
+        stepKey: node.id,
+        fieldKey: "__default__",
+        fieldLabel: "Default route",
+        value: "",
+        valueLabel: "all answers",
+      });
+      return;
+    }
+
     if (activeTool === "select") setSelectedKey(node.id);
   }
 
@@ -2554,6 +3537,30 @@ export function FlowchartBuilder({
       )
         return;
       const srcHandle = connection.sourceHandle ?? "";
+
+      // Drag into an intake destination node → intake routing rule
+      if (connection.target.startsWith(INTAKE_NODE_PREFIX)) {
+        const intakeSlug = connection.target.slice(INTAKE_NODE_PREFIX.length);
+        if (srcHandle.startsWith("answer|")) {
+          const [, fieldKey, value] = srcHandle.split("|");
+          void saveIntakeRules(
+            appendIntakeRule(schema.intake_routing_rules ?? [], {
+              when_field: fieldKey ?? "",
+              when_value: value ?? "",
+              intake_questionnaire_slug: intakeSlug,
+            }),
+          );
+        } else {
+          // Step-body drag → default route anchored to that step. A step has one
+          // default, so this replaces any default→step route from that step.
+          void setStepDefaultDestination(connection.source, {
+            kind: "intake",
+            intakeSlug,
+          });
+        }
+        return;
+      }
+
       if (srcHandle.startsWith("answer|")) {
         // Per-answer handle drag → conditional routing rule
         const [, fieldKey, value] = srcHandle.split("|");
@@ -2587,34 +3594,63 @@ export function FlowchartBuilder({
         );
         const naturalNext =
           sorted[sorted.findIndex((s) => s.step_key === connection.source) + 1];
-        const withoutDefault = (step.routing_rules ?? []).filter(
-          (r) =>
-            !(
-              r.when_field === "__default__" ||
-              (!r.when_field && !r.when_value)
-            ),
-        );
-        const newRules =
-          connection.target === naturalNext?.step_key
-            ? withoutDefault
-            : [
-                ...withoutDefault,
-                {
-                  when_field: "__default__" as const,
-                  when_value: "",
-                  next_step_key: connection.target,
-                },
-              ];
-        void updateStaffQuestionnaireStep(slug, versionId, connection.source, {
-          routing_rules: newRules,
-        })
-          .then(() => reload())
-          .catch((e: unknown) =>
-            setError(e instanceof Error ? e.message : "Failed to save rule."),
+        if (connection.target === naturalNext?.step_key) {
+          // Reverting to the natural next step → just drop the explicit default
+          // step rule. (Also clear any default→intake from this step.)
+          const withoutDefault = (step.routing_rules ?? []).filter(
+            (r) =>
+              !(
+                r.when_field === "__default__" ||
+                (!r.when_field && !r.when_value)
+              ),
           );
+          const intakeWithout = (schema.intake_routing_rules ?? []).filter(
+            (r) =>
+              !(
+                r.when_field === "__default__" &&
+                (r.when_step ?? "") === connection.source
+              ),
+          );
+          const fromIntake = schema.intake_routing_rules ?? [];
+          void updateStaffQuestionnaireStep(
+            slug,
+            versionId,
+            connection.source,
+            {
+              routing_rules: withoutDefault,
+            },
+          )
+            .then(async () => {
+              if (intakeWithout.length !== fromIntake.length) {
+                await updateStaffQuestionnaireVersion(slug, versionId, {
+                  intake_routing_rules: intakeWithout,
+                });
+                recordIntakeRulesChange(fromIntake, intakeWithout);
+              }
+              await reload();
+            })
+            .catch((e: unknown) =>
+              setError(e instanceof Error ? e.message : "Failed to save rule."),
+            );
+        } else {
+          // New default → step. A step has one default, so this also clears any
+          // default→intake route anchored to this step.
+          void setStepDefaultDestination(connection.source, {
+            kind: "step",
+            nextStepKey: connection.target,
+          });
+        }
       }
     },
-    [schema, slug, versionId, reload],
+    [
+      schema,
+      slug,
+      versionId,
+      reload,
+      saveIntakeRules,
+      setStepDefaultDestination,
+      recordIntakeRulesChange,
+    ],
   );
 
   function onPaneClick() {
@@ -2622,30 +3658,6 @@ export function FlowchartBuilder({
     setSelectedKey(null);
     setSelectedEdgeInfo(null);
     setShowAddConnection(false);
-  }
-
-  function onNodeDragStop(_: MouseEvent | TouchEvent, node: Node) {
-    if (!schema || schema.status !== "draft") return;
-    const { x, y } = node.position;
-
-    // 1. Write to ref synchronously (refs never go stale in closures).
-    positions.current.set(node.id, { x, y });
-
-    // 2. Bump the counter so the buildNodesAndEdges useEffect re-runs and
-    //    recalculates chooseHandles for every edge — both seq and route —
-    //    using the updated positions.current.
-    setPositionsVersion((v) => v + 1);
-
-    // 3. Debounced backend save
-    if (persistTimer.current) clearTimeout(persistTimer.current);
-    persistTimer.current = setTimeout(() => {
-      void updateStaffQuestionnaireStep(slug, versionId, node.id, {
-        position_x: x,
-        position_y: y,
-      }).catch(() => {
-        /* silent — positions are best-effort */
-      });
-    }, 300);
   }
 
   async function addStep() {
@@ -2669,15 +3681,27 @@ export function FlowchartBuilder({
         : { x: 0, y: 0 };
       const newX = lastPos.x + NODE_WIDTH + H_GAP;
       const newY = lastPos.y;
+      const title = key.replace(/_/g, " ");
       await createStaffQuestionnaireStep(slug, versionId, {
         step_key: key,
         sort_order: schema.steps.length,
-        title: key.replace(/_/g, " "),
+        title,
         subtitle: "",
         position_x: newX,
         position_y: newY,
       });
       positions.current.set(key, { x: newX, y: newY });
+      recordStepCreation(
+        key,
+        {
+          title,
+          subtitle: "",
+          visibility_rule: null,
+          routing_rules: [],
+          fields: [],
+        },
+        { x: newX, y: newY },
+      );
       await reload();
       setSelectedKey(key);
     } catch (e) {
@@ -2703,8 +3727,6 @@ export function FlowchartBuilder({
     () => schema?.steps.find((s) => s.step_key === selectedKey) ?? null,
     [schema, selectedKey],
   );
-
-  const isDraft = schema?.status === "draft";
 
   if (!schema) {
     return (
@@ -2767,6 +3789,48 @@ export function FlowchartBuilder({
           </button>
         </div>
 
+        {isDraft && (
+          <div className="flex items-center gap-0.5 bg-muted rounded-xl p-0.5">
+            <button
+              type="button"
+              title="Copy step (⌘C)"
+              disabled={!canCopy}
+              onClick={() => copySelectedStep()}
+              className="flex items-center justify-center rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
+            >
+              <Copy className="size-3.5" />
+            </button>
+            <button
+              type="button"
+              title="Paste step (⌘V)"
+              disabled={!canPaste}
+              onClick={() => void pasteClipboardStep()}
+              className="flex items-center justify-center rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
+            >
+              <ClipboardPaste className="size-3.5" />
+            </button>
+            <span className="w-px h-4 bg-border mx-0.5" />
+            <button
+              type="button"
+              title="Undo (⌘Z)"
+              disabled={!canUndo}
+              onClick={() => void undo()}
+              className="flex items-center justify-center rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
+            >
+              <Undo2 className="size-3.5" />
+            </button>
+            <button
+              type="button"
+              title="Redo (⌘⇧Z)"
+              disabled={!canRedo}
+              onClick={() => void redo()}
+              className="flex items-center justify-center rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
+            >
+              <Redo2 className="size-3.5" />
+            </button>
+          </div>
+        )}
+
         <div className="flex items-center gap-1.5 ml-auto shrink-0">
           {error && (
             <p className="text-xs text-destructive max-w-[160px] truncate">
@@ -2781,6 +3845,38 @@ export function FlowchartBuilder({
           >
             Preview
           </Button>
+          {schema.questionnaire_type === "qualify" && (
+            <Button
+              size="sm"
+              variant={showIntakeRouting ? "default" : "outline"}
+              onClick={() => {
+                setShowIntakeRouting((v) => !v);
+                setSelectedKey(null);
+                setSelectedEdgeInfo(null);
+                setShowAddConnection(false);
+                setShowEntryPoints(false);
+              }}
+              className="gap-1.5"
+            >
+              Routing rules
+            </Button>
+          )}
+          {schema.questionnaire_type === "qualify" && (
+            <Button
+              size="sm"
+              variant={showEntryPoints ? "default" : "outline"}
+              onClick={() => {
+                setShowEntryPoints((v) => !v);
+                setSelectedKey(null);
+                setSelectedEdgeInfo(null);
+                setShowAddConnection(false);
+                setShowIntakeRouting(false);
+              }}
+              className="gap-1.5"
+            >
+              Entry points
+            </Button>
+          )}
           <Button
             size="sm"
             variant={showAnalytics ? "default" : "outline"}
@@ -2790,6 +3886,17 @@ export function FlowchartBuilder({
             <BarChart2 className="size-3.5" />
             Analytics
           </Button>
+          {isDraft && schema.questionnaire_type === "qualify" && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowAddIntake(true)}
+              className="gap-1.5"
+            >
+              <Plus className="size-3.5" />
+              Intake routing
+            </Button>
+          )}
           {isDraft && (
             <>
               <Button
@@ -2819,6 +3926,48 @@ export function FlowchartBuilder({
         </div>
       </div>
 
+      {!isDraft && (
+        <div
+          role="status"
+          className="mb-2 rounded-xl border border-border bg-muted/50 px-4 py-3 text-xs text-muted-foreground shrink-0"
+        >
+          <strong className="text-foreground">Read-only version.</strong>{" "}
+          Published and archived versions cannot be edited. Use{" "}
+          <strong>Duplicate</strong> from Manage versions to create a draft
+          copy. Select tool still lets you inspect steps; Connect, Add step, and
+          field edits require a draft.
+        </div>
+      )}
+
+      {isDraft && activeTool !== "connect" && (
+        <div className="mb-2 rounded-xl border border-border bg-card px-4 py-2 text-xs text-muted-foreground shrink-0">
+          <strong className="text-foreground">Draft editing:</strong> use{" "}
+          <strong>Select</strong> to drag steps and edit fields ·{" "}
+          <strong>Connect</strong> or <strong>Add connection</strong> for
+          routing · <strong>⌘C / ⌘V</strong> copy &amp; paste steps ·{" "}
+          <strong>⌘Z / ⌘⇧Z</strong> undo &amp; redo moves
+        </div>
+      )}
+
+      {/* ── Analytics banner ───────────────────────────────────────────── */}
+      {showAnalytics && (
+        <div className="mb-2 rounded-xl border border-border bg-muted/50 px-4 py-2 text-xs text-muted-foreground shrink-0">
+          {analyticsMap.size === 0 ? (
+            <>
+              <strong className="text-foreground">No funnel data yet.</strong>{" "}
+              Drop-off rates appear as colored badges on each step once patients
+              start moving through this questionnaire in the live funnel.
+            </>
+          ) : (
+            <>
+              <strong className="text-foreground">Drop-off view:</strong> each
+              step shows the share of patients who left at that step (green =
+              low, yellow = medium, red = high).
+            </>
+          )}
+        </div>
+      )}
+
       {/* ── Connect mode banner ─────────────────────────────────────────── */}
       {activeTool === "connect" && (
         <div
@@ -2831,8 +3980,8 @@ export function FlowchartBuilder({
           {pendingSource ? (
             <>
               <strong>"{pendingSource.valueLabel}"</strong> on{" "}
-              <strong>{pendingSource.stepKey}</strong> → now click the step to
-              route to.{" "}
+              <strong>{pendingSource.stepKey}</strong> → now click a step or
+              intake node to route to.{" "}
               <button
                 type="button"
                 className="underline opacity-75 ml-1"
@@ -2842,7 +3991,7 @@ export function FlowchartBuilder({
               </button>
             </>
           ) : (
-            "Connect mode: click any answer option (Yes/No/A/B/C…) on a step to start routing it."
+            "Connect mode: click an answer option (Yes/No/A/B/C…) to route that answer, or click a step to route it by default — then click a step or intake to connect."
           )}
         </div>
       )}
@@ -2860,7 +4009,8 @@ export function FlowchartBuilder({
             onEdgeClick={onEdgeClick}
             onConnect={onConnect}
             onPaneClick={onPaneClick}
-            onNodeDragStop={onNodeDragStop}
+            onNodeDragStart={onNodeDragStart}
+            onNodeDragStop={handleNodeDragStop}
             nodesDraggable={isDraft && activeTool === "select"}
             nodesConnectable={isDraft && activeTool === "connect"}
             {...(savedVp
@@ -2892,18 +4042,28 @@ export function FlowchartBuilder({
           </ReactFlow>
         </div>
 
-        {selectedStep && activeTool === "select" && (
-          <StepEditorPanel
-            step={selectedStep}
-            allSteps={schema.steps}
-            isDraft={!!isDraft}
-            slug={slug}
-            versionId={versionId}
-            onClose={() => setSelectedKey(null)}
-            onReload={() => reload()}
-            onDelete={() => removeStep(selectedStep.step_key)}
-          />
-        )}
+        {selectedStep &&
+          activeTool === "select" &&
+          !showIntakeRouting &&
+          !showEntryPoints && (
+            <StepEditorPanel
+              step={selectedStep}
+              allSteps={schema.steps}
+              isDraft={!!isDraft}
+              slug={slug}
+              versionId={versionId}
+              defaultIntakeSlug={defaultIntakeSlugForStep(
+                schema,
+                selectedStep.step_key,
+              )}
+              onClearDefaultIntake={() =>
+                clearStepDefaultIntake(selectedStep.step_key)
+              }
+              onClose={() => setSelectedKey(null)}
+              onReload={() => reload()}
+              onDelete={() => removeStep(selectedStep.step_key)}
+            />
+          )}
         {selectedEdgeInfo && !selectedStep && (
           <EdgePanel
             info={selectedEdgeInfo}
@@ -2917,15 +4077,41 @@ export function FlowchartBuilder({
             onReload={() => reload()}
           />
         )}
-        {showAddConnection && !selectedStep && !selectedEdgeInfo && (
-          <AddConnectionPanel
-            allSteps={schema.steps}
+        {showAddConnection &&
+          !selectedStep &&
+          !selectedEdgeInfo &&
+          !showIntakeRouting &&
+          !showEntryPoints && (
+            <AddConnectionPanel
+              allSteps={schema.steps}
+              slug={slug}
+              versionId={versionId}
+              schema={schema}
+              analyticsMap={analyticsMap}
+              onClose={() => setShowAddConnection(false)}
+              onReload={() => reload()}
+            />
+          )}
+        {showIntakeRouting && schema.questionnaire_type === "qualify" && (
+          <IntakeRoutingPanel
             slug={slug}
             versionId={versionId}
-            schema={schema}
-            analyticsMap={analyticsMap}
-            onClose={() => setShowAddConnection(false)}
+            rules={schema.intake_routing_rules ?? []}
+            steps={schema.steps}
+            isDraft={!!isDraft}
             onReload={() => reload()}
+            onClose={() => setShowIntakeRouting(false)}
+          />
+        )}
+        {showEntryPoints && schema.questionnaire_type === "qualify" && (
+          <EntryPointsPanel
+            slug={slug}
+            versionId={versionId}
+            ctaIds={schema.cta_ids ?? []}
+            isDefaultEntry={!!schema.is_default_entry}
+            isDraft={!!isDraft}
+            onReload={() => reload()}
+            onClose={() => setShowEntryPoints(false)}
           />
         )}
       </div>
@@ -2933,6 +4119,96 @@ export function FlowchartBuilder({
       {showPreview && (
         <PreviewModal schema={schema} onClose={() => setShowPreview(false)} />
       )}
+
+      {showAddIntake && (
+        <AddIntakeModal
+          publishedIntakes={publishedIntakes}
+          existingSlugs={[
+            ...(schema.intake_routing_rules ?? []).map(
+              (r) => r.intake_questionnaire_slug,
+            ),
+            ...extraIntakeSlugs,
+          ]}
+          onAdd={(intakeSlug) => {
+            setExtraIntakeSlugs((prev) =>
+              prev.includes(intakeSlug) ? prev : [...prev, intakeSlug],
+            );
+            setShowAddIntake(false);
+          }}
+          onClose={() => setShowAddIntake(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+function AddIntakeModal({
+  publishedIntakes,
+  existingSlugs,
+  onAdd,
+  onClose,
+}: {
+  publishedIntakes: { slug: string; title: string }[];
+  existingSlugs: string[];
+  onAdd: (slug: string) => void;
+  onClose: () => void;
+}) {
+  const available = publishedIntakes.filter(
+    (q) => !existingSlugs.includes(q.slug),
+  );
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="relative bg-card rounded-3xl shadow-xl w-full max-w-md flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <div>
+            <p className="text-sm font-semibold text-foreground">
+              Add intake destination
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              Pick a published intake, then drag from a step or answer to it.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl p-2 text-muted-foreground hover:bg-muted"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+        <div className="p-4 space-y-2 max-h-[60vh] overflow-y-auto">
+          {publishedIntakes.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No published intake questionnaires yet. Publish an intake
+              questionnaire first.
+            </p>
+          ) : available.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              All published intakes are already on the canvas.
+            </p>
+          ) : (
+            available.map((q) => (
+              <button
+                key={q.slug}
+                type="button"
+                onClick={() => onAdd(q.slug)}
+                className="w-full rounded-xl border border-border px-4 py-3 text-left transition-colors hover:border-primary hover:bg-primary/5"
+              >
+                <p className="text-sm font-medium text-foreground">{q.title}</p>
+                <p className="text-[11px] font-mono text-muted-foreground">
+                  {q.slug}
+                </p>
+              </button>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 }

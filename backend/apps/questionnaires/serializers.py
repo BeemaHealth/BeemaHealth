@@ -48,8 +48,111 @@ def _validate_options(options) -> list:
             raise serializers.ValidationError({"options": f"Item {i} missing 'label'."})
         if value in seen:
             raise serializers.ValidationError({"options": f"Duplicate value '{value}'."})
+        beluga = str(opt.get("beluga", "")).strip()[:64]
+        if beluga and not _BELUGA_MAPPING_RE.match(beluga):
+            raise serializers.ValidationError(
+                {"options": f"Item {i} has invalid beluga mapping '{beluga}'."}
+            )
         seen.add(value)
-        cleaned.append({"value": value, "label": label})
+        row = {"value": value, "label": label}
+        if beluga:
+            row["beluga"] = beluga
+        cleaned.append(row)
+    return cleaned
+
+
+_ACCOUNT_SUB_FIELD_KEYS = frozenset(
+    {"first_name", "last_name", "phone", "email", "password", "confirm_password"}
+)
+_ADDRESS_SUB_FIELD_KEYS = frozenset(
+    {"address", "city", "state", "zip", "county", "country", "verified"}
+)
+_BACKEND_MAPPING_RE = re.compile(
+    r"^(register\.(first_name|last_name|email|phone|password)|user\.(first_name|last_name|email|phone|state))$"
+)
+_ADDRESS_BACKEND_MAPPING_RE = re.compile(
+    r"^(intake\.identity\.(address|city|state|zip|county|country|address_verified)|"
+    r"intake\.medication_preferences\.(shipping_address|shipping_city|shipping_state|"
+    r"shipping_zip|shipping_county|shipping_country|shipping_address_verified|"
+    r"use_different_shipping_address)|user\.state)$"
+)
+_BELUGA_MAPPING_RE = re.compile(
+    r"^beluga:(firstName|lastName|dob|phone|email|address|city|state|zip|sex|"
+    r"selfReportedMeds|allergies|medicalConditions|consentsSigned)$"
+)
+
+
+def _validate_account_options(options) -> list:
+    if not isinstance(options, list):
+        raise serializers.ValidationError({"options": "Must be a list."})
+    seen = set()
+    cleaned = []
+    for i, opt in enumerate(options):
+        if not isinstance(opt, dict):
+            raise serializers.ValidationError({"options": f"Item {i} must be an object."})
+        value = str(opt.get("value", "")).strip()[:128]
+        label = str(opt.get("label", "")).strip()[:256]
+        backend = str(opt.get("backend", "")).strip()[:64]
+        beluga = str(opt.get("beluga", "")).strip()[:64]
+        if not value:
+            raise serializers.ValidationError({"options": f"Item {i} missing 'value'."})
+        if value not in _ACCOUNT_SUB_FIELD_KEYS:
+            raise serializers.ValidationError(
+                {"options": f"Item {i} has unknown account sub-field '{value}'."}
+            )
+        if not label:
+            raise serializers.ValidationError({"options": f"Item {i} missing 'label'."})
+        if value in seen:
+            raise serializers.ValidationError({"options": f"Duplicate value '{value}'."})
+        if backend and not _BACKEND_MAPPING_RE.match(backend):
+            raise serializers.ValidationError(
+                {"options": f"Item {i} has invalid backend mapping '{backend}'."}
+            )
+        if beluga and not _BELUGA_MAPPING_RE.match(beluga):
+            raise serializers.ValidationError(
+                {"options": f"Item {i} has invalid beluga mapping '{beluga}'."}
+            )
+        seen.add(value)
+        cleaned.append(
+            {"value": value, "label": label, "backend": backend, "beluga": beluga}
+        )
+    return cleaned
+
+
+def _validate_address_options(options) -> list:
+    if not isinstance(options, list):
+        raise serializers.ValidationError({"options": "Must be a list."})
+    seen = set()
+    cleaned = []
+    for i, opt in enumerate(options):
+        if not isinstance(opt, dict):
+            raise serializers.ValidationError({"options": f"Item {i} must be an object."})
+        value = str(opt.get("value", "")).strip()[:128]
+        label = str(opt.get("label", "")).strip()[:256]
+        backend = str(opt.get("backend", "")).strip()[:64]
+        beluga = str(opt.get("beluga", "")).strip()[:64]
+        if not value:
+            raise serializers.ValidationError({"options": f"Item {i} missing 'value'."})
+        if value not in _ADDRESS_SUB_FIELD_KEYS:
+            raise serializers.ValidationError(
+                {"options": f"Item {i} has unknown address sub-field '{value}'."}
+            )
+        if not label:
+            raise serializers.ValidationError({"options": f"Item {i} missing 'label'."})
+        if value in seen:
+            raise serializers.ValidationError({"options": f"Duplicate value '{value}'."})
+        if backend and not _ADDRESS_BACKEND_MAPPING_RE.match(backend):
+            raise serializers.ValidationError(
+                {"options": f"Item {i} has invalid backend mapping '{backend}'."}
+            )
+        if beluga and not _BELUGA_MAPPING_RE.match(beluga):
+            raise serializers.ValidationError(
+                {"options": f"Item {i} has invalid beluga mapping '{beluga}'."}
+            )
+        seen.add(value)
+        cleaned.append(
+            {"value": value, "label": label, "backend": backend, "beluga": beluga}
+        )
     return cleaned
 
 
@@ -165,6 +268,7 @@ class QuestionnaireStepSerializer(serializers.ModelSerializer):
             "id",
             "step_key",
             "sort_order",
+            "progress_level",
             "title",
             "subtitle",
             "visibility_rule",
@@ -181,6 +285,7 @@ class QuestionnaireVersionSerializer(serializers.ModelSerializer):
     questionnaire_type = serializers.CharField(source="questionnaire.questionnaire_type", read_only=True)
     medication_id = serializers.SerializerMethodField()
     steps = QuestionnaireStepSerializer(many=True, read_only=True)
+    is_in_use = serializers.SerializerMethodField()
 
     class Meta:
         model = QuestionnaireVersion
@@ -193,14 +298,20 @@ class QuestionnaireVersionSerializer(serializers.ModelSerializer):
             "status",
             "published_at",
             "steps",
+            "is_in_use",
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "status", "published_at", "created_at", "updated_at", "steps"]
+        read_only_fields = ["id", "status", "published_at", "created_at", "updated_at", "steps", "is_in_use"]
 
     def get_medication_id(self, obj):
         mid = obj.questionnaire.medication_id
         return str(mid) if mid else None
+
+    def get_is_in_use(self, obj):
+        from apps.questionnaires.services import questionnaire_version_is_in_use
+
+        return questionnaire_version_is_in_use(obj.id)
 
 
 class QuestionnaireListSerializer(serializers.ModelSerializer):
@@ -212,7 +323,11 @@ class QuestionnaireListSerializer(serializers.ModelSerializer):
         fields = ["id", "slug", "questionnaire_type", "title", "medication", "published_version", "updated_at"]
 
     def get_published_version(self, obj):
-        version = obj.versions.filter(status=QuestionnaireVersion.Status.PUBLISHED).first()
+        version = (
+            obj.versions.filter(status=QuestionnaireVersion.Status.PUBLISHED)
+            .order_by("-published_at")
+            .first()
+        )
         if not version:
             return None
         return {"id": str(version.id), "version_label": version.version_label}
@@ -231,6 +346,13 @@ class QuestionnaireWriteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Must be lowercase alphanumeric, hyphens, or underscores."
             )
+        qs = Questionnaire.objects.filter(slug=value)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError(
+                "A questionnaire with this slug already exists."
+            )
         return value
 
     def validate_title(self, value):
@@ -248,12 +370,66 @@ class QuestionnaireWriteSerializer(serializers.ModelSerializer):
         return attrs
 
 
+class QuestionnaireUpdateSerializer(serializers.ModelSerializer):
+    """Partial update for an existing questionnaire (slug and title only)."""
+
+    class Meta:
+        model = Questionnaire
+        fields = ["slug", "title"]
+
+    def validate_slug(self, value):
+        value = str(value).strip().lower()
+        if not _SLUG_RE.match(value):
+            raise serializers.ValidationError(
+                "Must be lowercase alphanumeric, hyphens, or underscores."
+            )
+        qs = Questionnaire.objects.filter(slug=value)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError(
+                "A questionnaire with this slug already exists."
+            )
+        return value
+
+    def validate_title(self, value):
+        cleaned = str(value).strip()[:128]
+        if not cleaned:
+            raise serializers.ValidationError("Title cannot be empty.")
+        return cleaned
+
+
+class QuestionnaireDuplicateSerializer(serializers.Serializer):
+    slug = serializers.CharField(required=False, allow_blank=True, max_length=64)
+    title = serializers.CharField(required=False, allow_blank=True, max_length=128)
+
+    def validate_slug(self, value):
+        if not value or not str(value).strip():
+            return ""
+        value = str(value).strip().lower()
+        if not _SLUG_RE.match(value):
+            raise serializers.ValidationError(
+                "Must be lowercase alphanumeric, hyphens, or underscores."
+            )
+        if Questionnaire.objects.filter(slug=value).exists():
+            raise serializers.ValidationError(
+                "A questionnaire with this slug already exists."
+            )
+        return value
+
+    def validate_title(self, value):
+        if not value or not str(value).strip():
+            return ""
+        return str(value).strip()[:128]
+
+
 class QuestionnaireStepWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionnaireStep
         fields = [
             "step_key",
             "sort_order",
+            "progress_level",
             "title",
             "subtitle",
             "visibility_rule",
@@ -335,7 +511,21 @@ class QuestionnaireFieldWriteSerializer(serializers.ModelSerializer):
         return str(value).strip()[:1024]
 
     def validate_options(self, value):
-        return _validate_options(value)
+        return value
+
+    def validate(self, attrs):
+        field_type = attrs.get("field_type")
+        if field_type is None and self.instance is not None:
+            field_type = self.instance.field_type
+        options = attrs.get("options")
+        if options is not None:
+            if field_type == QuestionnaireField.FieldType.ACCOUNT:
+                attrs["options"] = _validate_account_options(options)
+            elif field_type == QuestionnaireField.FieldType.ADDRESS_GROUP:
+                attrs["options"] = _validate_address_options(options)
+            else:
+                attrs["options"] = _validate_options(options)
+        return attrs
 
     def validate_validation_rules(self, value):
         return _validate_rules(value)

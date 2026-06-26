@@ -7,12 +7,17 @@ from apps.accounts.permissions import IsStaff
 from apps.analytics.models import LandingPage
 from apps.analytics.serializers import LandingPageSerializer
 from apps.analytics.services import (
+    available_questionnaire_slugs,
+    cta_performance,
     dropoff_rates,
     events_by_day,
     funnel_step_counts,
     landing_page_performance,
+    landing_page_views_by_day,
     page_views_by_day,
+    questionnaire_step_analytics,
     questionnaire_version_stats,
+    questionnaire_versions_list,
     top_of_funnel_stats,
     traffic_sources,
 )
@@ -100,11 +105,14 @@ class StaffAnalyticsPageViewsView(APIView):
     permission_classes = [IsStaff]
 
     def get(self, request):
-        data = page_views_by_day(
-            start=request.query_params.get("start"),
-            end=request.query_params.get("end"),
+        start = request.query_params.get("start")
+        end = request.query_params.get("end")
+        return Response(
+            {
+                "page_views": page_views_by_day(start=start, end=end),
+                "landing_page_views": landing_page_views_by_day(start=start, end=end),
+            }
         )
-        return Response({"page_views": data})
 
 
 class StaffAnalyticsTopOfFunnelView(APIView):
@@ -116,6 +124,69 @@ class StaffAnalyticsTopOfFunnelView(APIView):
             end=request.query_params.get("end"),
         )
         return Response(data)
+
+
+class StaffAnalyticsStepAnalyticsView(APIView):
+    """Per-step analytics (views, completions, dropoff, answer distributions)
+    for a single questionnaire version."""
+
+    permission_classes = [IsStaff]
+
+    def get(self, request):
+        version_id = request.query_params.get("version_id")
+        if not version_id:
+            return Response(
+                {"detail": "version_id is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        data = questionnaire_step_analytics(
+            version_id=version_id,
+            start=request.query_params.get("start"),
+            end=request.query_params.get("end"),
+        )
+        if data is None:
+            return Response(
+                {"detail": "Version not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        return Response(data)
+
+
+class StaffAnalyticsVersionsListView(APIView):
+    """All versions for a questionnaire type, with session counts."""
+
+    permission_classes = [IsStaff]
+
+    def get(self, request):
+        q_type = request.query_params.get("questionnaire_type", "qualify")
+        data = questionnaire_versions_list(
+            questionnaire_type=q_type,
+            start=request.query_params.get("start"),
+            end=request.query_params.get("end"),
+        )
+        return Response({"questionnaire_type": q_type, "versions": data})
+
+
+class StaffAnalyticsSlugsView(APIView):
+    permission_classes = [IsStaff]
+
+    def get(self, request):
+        slugs = available_questionnaire_slugs(
+            start=request.query_params.get("start"),
+            end=request.query_params.get("end"),
+        )
+        return Response({"slugs": slugs})
+
+
+class StaffAnalyticsCtaView(APIView):
+    permission_classes = [IsStaff]
+
+    def get(self, request):
+        data = cta_performance(
+            start=request.query_params.get("start"),
+            end=request.query_params.get("end"),
+        )
+        return Response({"ctas": data})
 
 
 class StaffLandingPageListView(APIView):

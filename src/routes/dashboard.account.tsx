@@ -28,9 +28,12 @@ import {
   ShippingAddressSection,
   type ShippingAddressValue,
 } from "@/components/portal/ShippingAddressSection";
+import { emptyShippingAddressValue } from "@/lib/shipping-address";
 import { Switch } from "@/components/ui/switch";
 import {
   confirmTwoFactor,
+  fetchActiveQuestionnaire,
+  fetchAuthMe,
   fetchConsentMe,
   fetchEligibilityMe,
   fetchIntakeMe,
@@ -43,6 +46,11 @@ import {
   sendTwoFactorSetupCode,
   syncEligibility,
 } from "@/lib/api/client";
+import {
+  allQuestionnaireFields,
+  resolveAccountDemographics,
+  resolveShippingAddress,
+} from "@/lib/account-profile-fields";
 import { getIntake } from "@/lib/storage";
 import { US_STATE_ENTRIES } from "@/lib/us-states";
 import type {
@@ -51,7 +59,7 @@ import type {
   MedicalIntake,
   PatientProfile,
   PatientSettings,
-  SexAssignedAtBirth,
+  User,
 } from "@/lib/types/mvp";
 import { useAuth } from "@/context/AuthContext";
 import { inputCls } from "@/components/quiz/quiz-primitives";
@@ -66,6 +74,7 @@ const SEX_AT_BIRTH_OPTIONS: { value: "male" | "female"; label: string }[] = [
   { value: "male", label: "Male" },
 ];
 
+/* Gender identity is not collected in the funnel right now.
 const GENDER_IDENTITY_OPTIONS: { value: SexAssignedAtBirth; label: string }[] =
   [
     { value: "female", label: "Female" },
@@ -73,6 +82,7 @@ const GENDER_IDENTITY_OPTIONS: { value: SexAssignedAtBirth; label: string }[] =
     { value: "intersex", label: "Intersex" },
     { value: "unknown", label: "Prefer not to say" },
   ];
+*/
 
 type EditingSection =
   | "profile"
@@ -128,15 +138,9 @@ function DashboardAccountPage() {
   const [dob, setDob] = useState(user.dob ?? "");
   const [state, setState] = useState(user.state ?? "");
   const [sexAtBirth, setSexAtBirth] = useState<"male" | "female" | "">("");
-  const [genderIdentity, setGenderIdentity] = useState<SexAssignedAtBirth | "">(
-    "",
-  );
+  // const [genderIdentity, setGenderIdentity] = useState<SexAssignedAtBirth | "">("");
   const [address, setAddress] = useState<ShippingAddressValue>({
-    address: "",
-    city: "",
-    zip: "",
-    county: "",
-    verified: false,
+    ...emptyShippingAddressValue(),
   });
   const [addressDraft, setAddressDraft] = useState(address);
 
@@ -149,6 +153,9 @@ function DashboardAccountPage() {
     code: string;
   } | null>(null);
   const [twoFactorBusy, setTwoFactorBusy] = useState(false);
+  const [questionnaireFields, setQuestionnaireFields] = useState<
+    ReturnType<typeof allQuestionnaireFields>
+  >([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -159,55 +166,85 @@ function DashboardAccountPage() {
         loadedConsent,
         loadedProfile,
         loadedSettings,
+        refreshedUser,
       ] = await Promise.all([
         fetchIntakeMe(),
         fetchEligibilityMe(),
         fetchConsentMe(),
         fetchPatientProfile(),
         fetchPatientSettings(),
+        isApiEnabled() ? fetchAuthMe() : Promise.resolve(null),
       ]);
       if (cancelled) return;
-      setIntake(
+      const intakeData =
         loadedIntake ??
-          (session && !isApiEnabled() ? getIntake(session.user.id) : null),
-      );
+        (session && !isApiEnabled() ? getIntake(session.user.id) : null);
+      let fields: ReturnType<typeof allQuestionnaireFields> = [];
+      if (intakeData?.questionnaire_version_id) {
+        try {
+          const schema = await fetchActiveQuestionnaire(
+            "intake",
+            intakeData.questionnaire_version_id,
+          );
+          fields = allQuestionnaireFields(schema.steps);
+        } catch {
+          fields = [];
+        }
+      }
+      if (refreshedUser) {
+        const refreshed =
+          "user" in refreshedUser && refreshedUser.user
+            ? refreshedUser
+            : {
+                user: refreshedUser as unknown as User,
+                token: session?.token ?? "",
+              };
+        // Only push to context when the user actually changed. fetchAuthMe
+        // returns a fresh object each call, so an unconditional setSession here
+        // would loop this effect forever (and trip the auth rate limiter).
+        if (JSON.stringify(refreshed.user) !== JSON.stringify(user)) {
+          setSession(refreshed);
+        }
+      }
+      setIntake(intakeData);
       setEligibility(loadedEligibility);
       setConsent(loadedConsent);
       setProfile(loadedProfile);
       setSettings(loadedSettings);
+      setQuestionnaireFields(fields);
       setLoading(false);
     })();
     return () => {
       cancelled = true;
     };
-  }, [session]);
+    // Keyed on the session token (login identity) rather than the whole session
+    // object so refreshing user data via setSession does not re-run this loader.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.token]);
 
   useEffect(() => {
     setFirstName(user.first_name);
     setLastName(user.last_name);
     setEmail(user.email);
     setPhone(user.phone ?? "");
-    setDob(user.dob ?? eligibility?.dob ?? "");
-    setState(user.state ?? eligibility?.state ?? "");
-    setSexAtBirth(
-      (profile?.sex_assigned_at_birth === "male" ||
-      profile?.sex_assigned_at_birth === "female"
-        ? profile.sex_assigned_at_birth
-        : eligibility?.sex_assigned_at_birth === "male" ||
-            eligibility?.sex_assigned_at_birth === "female"
-          ? eligibility.sex_assigned_at_birth
-          : "") as "male" | "female" | "",
-    );
-    setGenderIdentity(
-      profile?.gender_identity ?? eligibility?.gender_identity ?? "",
-    );
-    const nextAddress = {
-      address: profile?.address || "",
-      city: profile?.city || "",
-      zip: profile?.zip || "",
-      county: profile?.county || "",
-      verified: false,
-    };
+
+    const resolved = resolveAccountDemographics({
+      user,
+      profile,
+      eligibility,
+      intake,
+      questionnaireFields,
+    });
+    setDob(resolved.dob);
+    setState(resolved.state);
+    setSexAtBirth(resolved.sexAtBirth);
+
+    const nextAddress = resolveShippingAddress({
+      profile,
+      intake,
+      questionnaireFields,
+      fallbackState: resolved.state,
+    });
     setAddress(nextAddress);
     if (editingSection !== "shipping") {
       setAddressDraft(nextAddress);
@@ -218,7 +255,15 @@ function DashboardAccountPage() {
       setProductEmails(settings.product_emails);
       setTwoFactorEnabled(settings.two_factor_enabled);
     }
-  }, [user, eligibility, profile, intake, settings, editingSection]);
+  }, [
+    user,
+    eligibility,
+    profile,
+    intake,
+    settings,
+    editingSection,
+    questionnaireFields,
+  ]);
 
   function startEditing(section: EditingSection) {
     if (editingSection && editingSection !== section) {
@@ -234,20 +279,16 @@ function DashboardAccountPage() {
     if (section === "profile") {
       setFirstName(user.first_name);
       setLastName(user.last_name);
-      setDob(user.dob ?? eligibility?.dob ?? "");
-      setState(user.state ?? eligibility?.state ?? "");
-      setSexAtBirth(
-        (profile?.sex_assigned_at_birth === "male" ||
-        profile?.sex_assigned_at_birth === "female"
-          ? profile.sex_assigned_at_birth
-          : eligibility?.sex_assigned_at_birth === "male" ||
-              eligibility?.sex_assigned_at_birth === "female"
-            ? eligibility.sex_assigned_at_birth
-            : "") as "male" | "female" | "",
-      );
-      setGenderIdentity(
-        profile?.gender_identity ?? eligibility?.gender_identity ?? "",
-      );
+      const resolved = resolveAccountDemographics({
+        user,
+        profile,
+        eligibility,
+        intake,
+        questionnaireFields,
+      });
+      setDob(resolved.dob);
+      setState(resolved.state);
+      setSexAtBirth(resolved.sexAtBirth);
     }
     if (section === "contact") {
       setEmail(user.email);
@@ -277,13 +318,11 @@ function DashboardAccountPage() {
 
       const updatedEligibility = await syncEligibility({
         sex_assigned_at_birth: sexAtBirth || undefined,
-        gender_identity: genderIdentity || undefined,
       });
       if (updatedEligibility) setEligibility(updatedEligibility);
 
       const updatedProfile = await patchPatientProfile({
         sex_assigned_at_birth: sexAtBirth || undefined,
-        gender_identity: genderIdentity || undefined,
       });
       setProfile(updatedProfile);
 
@@ -326,8 +365,10 @@ function DashboardAccountPage() {
       setAddress({
         address: updatedProfile.address ?? addressDraft.address,
         city: updatedProfile.city ?? addressDraft.city,
+        state: addressDraft.state || user.state || "",
         zip: updatedProfile.zip ?? addressDraft.zip,
         county: updatedProfile.county ?? addressDraft.county,
+        country: addressDraft.country || "US",
         verified: addressDraft.verified,
       });
       setEditingSection(null);
@@ -521,22 +562,11 @@ function DashboardAccountPage() {
                   ))}
                 </select>
               </EditableField>
+              {/* Gender identity is not collected in the funnel right now.
               <EditableField label="Gender identity">
-                <select
-                  className={inputCls}
-                  value={genderIdentity}
-                  onChange={(e) =>
-                    setGenderIdentity(e.target.value as SexAssignedAtBirth)
-                  }
-                >
-                  <option value="">Select</option>
-                  {GENDER_IDENTITY_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
+                ...
               </EditableField>
+              */}
             </div>
           ) : (
             <dl className="grid gap-4 sm:grid-cols-2">
@@ -550,10 +580,6 @@ function DashboardAccountPage() {
               <DisplayField
                 label="Sex at birth"
                 value={labelForOption(sexAtBirth, SEX_AT_BIRTH_OPTIONS)}
-              />
-              <DisplayField
-                label="Gender identity"
-                value={labelForOption(genderIdentity, GENDER_IDENTITY_OPTIONS)}
               />
             </dl>
           )}

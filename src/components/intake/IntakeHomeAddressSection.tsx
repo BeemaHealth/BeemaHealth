@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AddressFields } from "@/components/quiz/AddressFields";
 import { Button } from "@/components/ui/button";
 import {
+  emptyShippingAddressValue,
   formatShippingAddressLines,
   type ShippingAddressValue,
 } from "@/lib/shipping-address";
@@ -24,25 +25,13 @@ export function IntakeHomeAddressSection({
 
   function openAdd() {
     setChangeFlow(false);
-    setDraft({
-      address: "",
-      city: "",
-      zip: "",
-      county: "",
-      verified: false,
-    });
+    setDraft(emptyShippingAddressValue());
     setEditing(true);
   }
 
   function openChange() {
     setChangeFlow(true);
-    setDraft({
-      address: "",
-      city: "",
-      zip: "",
-      county: "",
-      verified: false,
-    });
+    setDraft(emptyShippingAddressValue());
     setEditing(true);
   }
 

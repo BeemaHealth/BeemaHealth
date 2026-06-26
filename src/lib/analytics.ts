@@ -56,6 +56,7 @@ export function trackStepViewed(
     stepIndex?: number;
   },
 ) {
+  if (!stepKey?.trim()) return;
   trackFunnelEvent({
     event_name: "step_viewed",
     questionnaire_slug: slug,
@@ -79,8 +80,10 @@ export function trackStepCompleted(
     experimentId?: string;
     variantKey?: string;
     stepIndex?: number;
+    ctaId?: string;
   },
 ) {
+  if (!stepKey?.trim()) return;
   trackFunnelEvent({
     event_name: "step_completed",
     questionnaire_slug: slug,
@@ -91,6 +94,17 @@ export function trackStepCompleted(
     properties: {
       ...(durationMs !== undefined ? { duration_ms: durationMs } : {}),
       ...(meta?.stepIndex !== undefined ? { step_index: meta.stepIndex } : {}),
+      ...(meta?.ctaId ? { cta_id: meta.ctaId } : {}),
+    },
+  });
+}
+
+export function trackCtaClicked(ctaId: string, page?: string) {
+  trackFunnelEvent({
+    event_name: "cta_clicked",
+    properties: {
+      cta_id: ctaId,
+      ...(page ? { page } : {}),
     },
   });
 }

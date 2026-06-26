@@ -2,6 +2,8 @@ import type {
   QuestionnaireFieldSchema,
   QuestionnaireStepSchema,
 } from "@/lib/api/client";
+import { validateAddressGroupValue } from "@/lib/questionnaire/address-group";
+import { validateIsoDateOfBirth } from "@/lib/questionnaire/dob-field";
 
 export type { QuestionnaireFieldSchema, QuestionnaireStepSchema };
 
@@ -35,16 +37,58 @@ export function getVisibleSteps(
   );
 }
 
+function isEmptyValue(value: unknown): boolean {
+  if (value === null || value === undefined || value === "") return true;
+  if (Array.isArray(value) && value.length === 0) return true;
+  return false;
+}
+
+/** Whether a field must be answered before advancing (checkbox or validation rule). */
+export function fieldIsRequired(field: QuestionnaireFieldSchema): boolean {
+  if (field.required) return true;
+  for (const rule of field.validation_rules ?? []) {
+    if (typeof rule === "object" && rule && rule.type === "required") {
+      return true;
+    }
+  }
+  return false;
+}
+
 export function validateFieldValue(
   field: QuestionnaireFieldSchema,
   value: unknown,
   allResponses: Record<string, unknown>,
 ): string | null {
-  const required = field.required ?? false;
-  if ((value === null || value === undefined || value === "") && !required) {
+  const required = fieldIsRequired(field);
+  if (field.field_type === "account") {
     return null;
   }
-  if (required && (value === null || value === undefined || value === "")) {
+  const isReviewField =
+    field.field_type === "review" ||
+    (field.field_type === "plugin" && field.plugin_id === "intake_review");
+  if (isReviewField) {
+    if (required && value !== true) {
+      return "Please confirm your answers are correct to continue.";
+    }
+    return null;
+  }
+  if (field.field_type === "legal_consent") {
+    if (required && value !== true) {
+      return "Please agree to the Terms of Service, Privacy Policy, and Telehealth Consent to continue.";
+    }
+    return null;
+  }
+  if (field.field_type === "dob") {
+    if (!required && isEmptyValue(value)) return null;
+    return validateIsoDateOfBirth(String(value ?? ""), {
+      requireAdult: true,
+      label: field.label || "Date of birth",
+    });
+  }
+  if (isEmptyValue(value) && !required) {
+    return null;
+  }
+  if (required && isEmptyValue(value)) {
     return `${field.label} is required.`;
   }
   if (field.field_type === "email" && typeof value === "string") {
@@ -52,11 +96,21 @@ export function validateFieldValue(
       return "Enter a valid email address.";
     }
   }
+  if (field.field_type === "address_group") {
+    return validateAddressGroupValue(field.label, value, required);
+  }
   for (const rule of field.validation_rules ?? []) {
     if (typeof rule !== "object" || !rule) continue;
     const rtype = rule.type as string;
-    if (rtype === "enum" && Array.isArray(rule.values)) {
-      if (!rule.values.includes(value)) {
+    if (rtype === "enum") {
+      const allowed = Array.isArray(rule.values)
+        ? rule.values
+        : Array.isArray(rule.value)
+          ? rule.value
+          : rule.value != null
+            ? [rule.value]
+            : [];
+      if (allowed.length && !allowed.includes(value)) {
         return `Select a valid option for ${field.label}.`;
       }
     }

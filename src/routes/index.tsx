@@ -12,8 +12,14 @@ import {
 } from "lucide-react";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { TreatmentLineup } from "@/components/site/TreatmentLineup";
-import { Eyebrow, Section, SectionHeading, SurfaceCard } from "@/components/site/primitives";
+import {
+  Eyebrow,
+  Section,
+  SectionHeading,
+  SurfaceCard,
+} from "@/components/site/primitives";
 import { Button } from "@/components/ui/button";
+import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 import heroImg from "@/assets/hero.jpg";
 
 export const Route = createFileRoute("/")({
@@ -65,7 +71,10 @@ function HomePage() {
           trackPageViewed("home");
         });
     }, 0);
-    return () => { cancelled = true; clearTimeout(timer); };
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, []);
   return (
     <MarketingLayout>
@@ -75,16 +84,17 @@ function HomePage() {
             <Eyebrow>Telehealth weight care</Eyebrow>
             <h1 className="mt-5 text-balance text-4xl font-bold leading-[1.05] text-foreground md:text-6xl">
               Weight-loss care that's{" "}
-              <span className="text-grad-brand">clear, human,</span> and built around
-              follow-through.
+              <span className="text-grad-brand">clear, human,</span> and built
+              around follow-through.
             </h1>
             <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-              Real clinicians, pricing you can actually understand, and refill help that
-              follows through. No hype, no fake urgency. Just calm, trustworthy care.
+              Real clinicians, pricing you can actually understand, and refill
+              help that follows through. No hype, no fake urgency. Just calm,
+              trustworthy care.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="xl">
-                <Link to="/qualify">
+                <Link to={qualifyHref(CTA_IDS.home_hero)}>
                   See if you qualify <ArrowRight />
                 </Link>
               </Button>
@@ -132,10 +142,16 @@ function HomePage() {
                 <span className="grid size-10 place-items-center rounded-xl bg-primary-soft text-primary">
                   <s.icon className="size-5" />
                 </span>
-                <span className="text-sm font-semibold text-muted-foreground">Step {i + 1}</span>
+                <span className="text-sm font-semibold text-muted-foreground">
+                  Step {i + 1}
+                </span>
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-foreground">{s.title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+              <h3 className="mt-4 text-lg font-semibold text-foreground">
+                {s.title}
+              </h3>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
+                {s.text}
+              </p>
             </SurfaceCard>
           ))}
         </div>
@@ -154,7 +170,7 @@ function HomePage() {
             size="xl"
             className="mt-8 bg-primary-foreground text-primary hover:bg-primary-foreground/90"
           >
-            <Link to="/qualify">
+            <Link to={qualifyHref(CTA_IDS.home_mid)}>
               See if you qualify <ArrowRight />
             </Link>
           </Button>

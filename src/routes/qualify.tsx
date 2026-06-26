@@ -197,8 +197,16 @@ function QualifyHardcodedPage() {
   const progress = ((stepIndex + 1) / steps.length) * 100;
   const stepStartedAt = useRef(Date.now());
 
+  // After account creation, `existingSession` flips true and the step list drops
+  // the account step — clamp index so we never render/track an undefined step.
   useEffect(() => {
     if (loading) return;
+    if (stepIndex < steps.length) return;
+    setStepIndex(Math.max(0, steps.length - 1));
+  }, [existingSession, loading, stepIndex, steps.length]);
+
+  useEffect(() => {
+    if (loading || !currentStep) return;
     trackStepViewed("qualify", currentStep, { stepIndex });
     stepStartedAt.current = Date.now();
   }, [currentStep, loading, stepIndex]);
@@ -339,6 +347,12 @@ function QualifyHardcodedPage() {
     try {
       if (existingSession) {
         await persistDraft();
+        trackStepCompleted(
+          "qualify",
+          currentStep,
+          Date.now() - stepStartedAt.current,
+          { stepIndex },
+        );
         if (existingSession.user.email_verified) {
           navigate({ to: "/intake" });
         } else {
@@ -359,6 +373,12 @@ function QualifyHardcodedPage() {
         phone: data.phone.trim(),
       });
       setSession(session);
+      trackStepCompleted(
+        "qualify",
+        "account",
+        Date.now() - stepStartedAt.current,
+        { stepIndex },
+      );
       navigate({ to: "/verify-email/pending" });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");

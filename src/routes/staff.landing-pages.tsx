@@ -10,7 +10,8 @@ import {
   updateStaffLandingPage,
   type LandingPageItem,
 } from "@/lib/api/client";
-import { Link2 } from "lucide-react";
+import { landingPageDisplayUrl, landingPageUrl } from "@/lib/site-url";
+import { Check, Copy, Link2 } from "lucide-react";
 
 export const Route = createFileRoute("/staff/landing-pages")({
   component: StaffLandingPagesPage,
@@ -43,7 +44,54 @@ const EMPTY: FormState = {
 };
 
 function slugify(name: string) {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function CopyLinkButton({
+  url,
+  label = "Copy link",
+}: {
+  url: string;
+  label?: string;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for environments where Clipboard API is unavailable.
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "absolute";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    }
+  }
+
+  return (
+    <Button
+      type="button"
+      size="sm"
+      variant="outline"
+      onClick={() => void handleCopy()}
+      aria-label={copied ? "Link copied" : label}
+    >
+      {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+      {copied ? "Copied" : label}
+    </Button>
+  );
 }
 
 function LandingPageForm({
@@ -69,11 +117,14 @@ function LandingPageForm({
     });
   }
 
-  const adUrl = form.slug ? `https://aretide.com/lp/${form.slug}` : "";
+  const adUrl = form.slug ? landingPageUrl(form.slug) : "";
 
   return (
     <form
-      onSubmit={(e) => { e.preventDefault(); onSave(form); }}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSave(form);
+      }}
       className="space-y-3"
     >
       <Field label="Internal name" required>
@@ -98,9 +149,12 @@ function LandingPageForm({
           onChange={(e) => set("slug", e.target.value.toLowerCase())}
         />
         {adUrl && (
-          <p className="mt-1 text-xs text-muted-foreground">
-            Ad URL: <span className="font-mono">{adUrl}</span>
-          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <p className="text-xs text-muted-foreground">
+              Ad URL: <span className="font-mono">{adUrl}</span>
+            </p>
+            <CopyLinkButton url={adUrl} label="Copy" />
+          </div>
         )}
       </Field>
       <Field label="Page headline (shown to visitor)">
@@ -172,7 +226,8 @@ function LandingPageForm({
           checked={form.redirect_to_home}
           onChange={(e) => set("redirect_to_home", e.target.checked)}
         />
-        Redirect to home page (captures UTMs then sends visitor to <span className="font-mono">/</span>)
+        Redirect to home page (captures UTMs then sends visitor to{" "}
+        <span className="font-mono">/</span>)
       </label>
       <label className="flex items-center gap-2 text-sm">
         <input
@@ -257,7 +312,8 @@ function StaffLandingPagesPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Landing pages</h1>
           <p className="text-sm text-muted-foreground">
-            Create trackable URLs for ads. Each page captures UTMs and attributes sessions to the ad that sent them.
+            Create trackable URLs for ads. Each page captures UTMs and
+            attributes sessions to the ad that sent them.
           </p>
         </div>
         <Button size="sm" onClick={() => setShowNew(true)} disabled={showNew}>
@@ -268,7 +324,11 @@ function StaffLandingPagesPage() {
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       {showNew && (
-        <AccountSectionCard tone="contact" title="New landing page" icon={Link2}>
+        <AccountSectionCard
+          tone="contact"
+          title="New landing page"
+          icon={Link2}
+        >
           <LandingPageForm
             initial={EMPTY}
             onSave={handleCreate}
@@ -290,7 +350,7 @@ function StaffLandingPagesPage() {
             title={p.name}
             icon={Link2}
             description={[
-              `aretide.com/lp/${p.slug}`,
+              landingPageDisplayUrl(p.slug),
               p.utm_source && `src: ${p.utm_source}`,
               p.utm_campaign && `campaign: ${p.utm_campaign}`,
               !p.active && "Inactive",
@@ -317,7 +377,8 @@ function StaffLandingPagesPage() {
                 saving={saving}
               />
             ) : (
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
+                <CopyLinkButton url={landingPageUrl(p.slug)} />
                 <Button
                   size="sm"
                   variant="outline"
@@ -325,11 +386,7 @@ function StaffLandingPagesPage() {
                 >
                   Edit
                 </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  asChild
-                >
+                <Button size="sm" variant="ghost" asChild>
                   <a
                     href={`/lp/${p.slug}`}
                     target="_blank"

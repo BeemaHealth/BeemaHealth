@@ -7,23 +7,37 @@ import {
   verifyParsedUsAddress,
   type AddressSuggestion,
 } from "@/lib/address-search";
+import {
+  emptyShippingAddressValue,
+  type ShippingAddressValue,
+} from "@/lib/shipping-address";
 import { Field, inputCls } from "./quiz-primitives";
 
-type AddressValue = {
-  address: string;
-  city: string;
-  zip: string;
-  county: string;
-  verified: boolean;
-};
-
-function toParsed(value: AddressValue, state?: string | null): ParsedUsAddress {
+function toParsed(
+  value: ShippingAddressValue,
+  stateOverride?: string | null,
+): ParsedUsAddress {
   return {
     address: value.address,
     city: value.city,
     zip: value.zip,
-    state: state ?? "",
+    state: stateOverride ?? value.state ?? "",
     county: value.county,
+  };
+}
+
+function parsedToValue(
+  parsed: ParsedUsAddress,
+  verified: boolean,
+): ShippingAddressValue {
+  return {
+    address: parsed.address,
+    city: parsed.city,
+    state: parsed.state,
+    zip: parsed.zip,
+    county: parsed.county,
+    country: "US",
+    verified,
   };
 }
 
@@ -34,15 +48,18 @@ export function AddressFields({
   label = "Home address",
   lockWhenVerified = true,
   hideVerifiedActions = false,
+  hideLabel = false,
 }: {
-  value: AddressValue;
+  value: ShippingAddressValue;
   expectedState?: string | null;
-  onChange: (next: AddressValue) => void;
+  onChange: (next: ShippingAddressValue) => void;
   label?: string;
   /** When false, verified addresses stay editable (e.g. account shipping). */
   lockWhenVerified?: boolean;
   /** Hide verified-state link and message when a parent manages display/save. */
   hideVerifiedActions?: boolean;
+  /** Suppress the internal field label when a parent already renders one. */
+  hideLabel?: boolean;
 }) {
   const onChangeRef = useRef(onChange);
   const expectedStateRef = useRef(expectedState);
@@ -74,7 +91,14 @@ export function AddressFields({
     }
     // Keep summary in sync when a saved draft is loaded.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- value fields listed above
-  }, [value.verified, value.address, value.city, value.zip, expectedState]);
+  }, [
+    value.verified,
+    value.address,
+    value.city,
+    value.state,
+    value.zip,
+    expectedState,
+  ]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -131,13 +155,7 @@ export function AddressFields({
     setSuggestions([]);
     setDropdownOpen(false);
     setLookupError("");
-    onChangeRef.current({
-      address: "",
-      city: "",
-      zip: "",
-      county: "",
-      verified: false,
-    });
+    onChangeRef.current(emptyShippingAddressValue());
   }
 
   async function selectSuggestion(suggestion: AddressSuggestion) {
@@ -154,104 +172,96 @@ export function AddressFields({
 
     if (!result.ok) {
       setLookupError(result.message);
-      onChangeRef.current({
-        address: suggestion.parsed.address,
-        city: suggestion.parsed.city,
-        zip: suggestion.parsed.zip,
-        county: suggestion.parsed.county,
-        verified: false,
-      });
+      onChangeRef.current(parsedToValue(suggestion.parsed, false));
       setQuery(suggestion.label.split(",").slice(0, 2).join(",").trim());
       return;
     }
 
     setQuery(formatVerifiedAddress(suggestion.parsed));
-    onChangeRef.current({
-      address: suggestion.parsed.address,
-      city: suggestion.parsed.city,
-      zip: suggestion.parsed.zip,
-      county: suggestion.parsed.county,
-      verified: true,
-    });
+    onChangeRef.current(parsedToValue(suggestion.parsed, true));
   }
+
+  const inputBlock = (
+    <>
+      <div className="relative">
+        <input
+          className={inputCls}
+          value={query}
+          autoComplete="off"
+          placeholder="Start typing your full address…"
+          readOnly={lockWhenVerified && value.verified}
+          onChange={(e) => {
+            if (lockWhenVerified && value.verified) return;
+            setQuery(e.target.value);
+            setLookupError("");
+            onChangeRef.current(emptyShippingAddressValue());
+          }}
+          onFocus={() => {
+            if (
+              !value.verified &&
+              query.trim().length >= 4 &&
+              (searching || suggestions.length > 0)
+            ) {
+              setDropdownOpen(true);
+            }
+          }}
+        />
+        {dropdownOpen &&
+          !value.verified &&
+          query.trim().length >= 4 &&
+          (searching || suggestions.length > 0) && (
+            <ul
+              className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-2xl border border-border bg-background py-1 shadow-lg"
+              role="listbox"
+            >
+              {searching ? (
+                <li
+                  className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <Loader2
+                    className="size-4 shrink-0 animate-spin"
+                    aria-hidden="true"
+                  />
+                  Searching addresses…
+                </li>
+              ) : (
+                suggestions.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      role="option"
+                      className="w-full px-4 py-2.5 text-left text-sm text-foreground hover:bg-muted/60"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => void selectSuggestion(item)}
+                    >
+                      {item.label}
+                    </button>
+                  </li>
+                ))
+              )}
+            </ul>
+          )}
+      </div>
+      {!value.verified && (
+        <p className="mt-1.5 text-xs text-muted-foreground">
+          Type your street address, city, or ZIP — then choose your address from
+          the list.
+        </p>
+      )}
+    </>
+  );
 
   return (
     <div ref={containerRef} className="grid gap-2 sm:col-span-2">
-      <Field label={label} required>
-        <div className="relative">
-          <input
-            className={inputCls}
-            value={query}
-            autoComplete="off"
-            placeholder="Start typing your full address…"
-            readOnly={lockWhenVerified && value.verified}
-            onChange={(e) => {
-              if (lockWhenVerified && value.verified) return;
-              setQuery(e.target.value);
-              setLookupError("");
-              onChangeRef.current({
-                address: "",
-                city: "",
-                zip: "",
-                county: "",
-                verified: false,
-              });
-            }}
-            onFocus={() => {
-              if (
-                !value.verified &&
-                query.trim().length >= 4 &&
-                (searching || suggestions.length > 0)
-              ) {
-                setDropdownOpen(true);
-              }
-            }}
-          />
-          {dropdownOpen &&
-            !value.verified &&
-            query.trim().length >= 4 &&
-            (searching || suggestions.length > 0) && (
-              <ul
-                className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-2xl border border-border bg-background py-1 shadow-lg"
-                role="listbox"
-              >
-                {searching ? (
-                  <li
-                    className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground"
-                    role="status"
-                    aria-live="polite"
-                  >
-                    <Loader2
-                      className="size-4 shrink-0 animate-spin"
-                      aria-hidden="true"
-                    />
-                    Searching addresses…
-                  </li>
-                ) : (
-                  suggestions.map((item) => (
-                    <li key={item.id}>
-                      <button
-                        type="button"
-                        role="option"
-                        className="w-full px-4 py-2.5 text-left text-sm text-foreground hover:bg-muted/60"
-                        onMouseDown={(e) => e.preventDefault()}
-                        onClick={() => void selectSuggestion(item)}
-                      >
-                        {item.label}
-                      </button>
-                    </li>
-                  ))
-                )}
-              </ul>
-            )}
-        </div>
-        {!value.verified && (
-          <p className="mt-1.5 text-xs text-muted-foreground">
-            Type your street address, city, or ZIP — then choose your home
-            address from the list.
-          </p>
-        )}
-      </Field>
+      {hideLabel ? (
+        <div>{inputBlock}</div>
+      ) : (
+        <Field label={label} required>
+          {inputBlock}
+        </Field>
+      )}
 
       {value.verified && !hideVerifiedActions && (
         <button

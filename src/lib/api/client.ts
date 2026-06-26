@@ -41,11 +41,13 @@ type ApiOptions = RequestInit & { withCredentials?: boolean };
 
 export class ApiError extends Error {
   status: number;
+  body?: Record<string, unknown>;
 
-  constructor(message: string, status: number) {
+  constructor(message: string, status: number, body?: Record<string, unknown>) {
     super(message);
     this.name = "ApiError";
     this.status = status;
+    this.body = body;
   }
 }
 
@@ -121,10 +123,16 @@ async function apiFetch<T>(path: string, options: ApiOptions = {}): Promise<T> {
   if (!res.ok) {
     const body = await res.text();
     const message = await parseApiErrorMessage(res, body);
+    let parsedBody: Record<string, unknown> | undefined;
+    try {
+      parsedBody = JSON.parse(body) as Record<string, unknown>;
+    } catch {
+      parsedBody = undefined;
+    }
     if (res.status === 401 && !path.startsWith("/auth/login")) {
       clearSession();
     }
-    throw new ApiError(message, res.status);
+    throw new ApiError(message, res.status, parsedBody);
   }
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
@@ -148,10 +156,21 @@ export async function createFunnelSession(utmParams?: {
   utm_campaign?: string;
   utm_content?: string;
   landing_page_slug?: string;
+  cta_id?: string;
 }): Promise<EligibilityResponses> {
   return apiFetch<EligibilityResponses>("/funnel/session/", {
     method: "POST",
     body: utmParams ? JSON.stringify(utmParams) : undefined,
+    withCredentials: true,
+  });
+}
+
+export async function patchFunnelSessionAttribution(data: {
+  cta_id?: string;
+}): Promise<EligibilityResponses> {
+  return apiFetch<EligibilityResponses>("/funnel/session/attribution/", {
+    method: "PATCH",
+    body: JSON.stringify(data),
     withCredentials: true,
   });
 }
@@ -537,6 +556,16 @@ export type VersionStatRow = {
   version_label: string;
   status: string;
   sessions: number;
+  cta_ids: string[];
+  is_default_entry: boolean;
+  intake_routing_rules: IntakeRoutingRule[];
+};
+
+export type CtaPerformanceRow = {
+  cta_id: string;
+  sessions: number;
+  accounts_created: number;
+  conversion_rate: number;
 };
 
 export async function fetchStaffVersionStats(
@@ -548,6 +577,103 @@ export async function fetchStaffVersionStats(
   if (params?.start) search.set("start", params.start);
   if (params?.end) search.set("end", params.end);
   return apiFetch(`/staff/analytics/versions/?${search.toString()}`);
+}
+
+export async function fetchStaffQuestionnaireSlugs(params?: {
+  start?: string;
+  end?: string;
+}): Promise<{ slugs: string[] }> {
+  const qs = new URLSearchParams(
+    Object.entries(params ?? {}).filter(([, v]) => v) as [string, string][],
+  ).toString();
+  return apiFetch(`/staff/analytics/slugs/${qs ? `?${qs}` : ""}`);
+}
+
+export async function fetchStaffCtaPerformance(params?: {
+  start?: string;
+  end?: string;
+}): Promise<{ ctas: CtaPerformanceRow[] }> {
+  const qs = new URLSearchParams(
+    Object.entries(params ?? {}).filter(([, v]) => v) as [string, string][],
+  ).toString();
+  return apiFetch(`/staff/analytics/cta-performance/${qs ? `?${qs}` : ""}`);
+}
+
+export type VersionListRow = {
+  version_id: string;
+  version_label: string;
+  questionnaire_slug: string;
+  questionnaire_title: string;
+  status: "draft" | "published" | "archived";
+  published_at: string | null;
+  created_at: string;
+  is_default_entry: boolean;
+  cta_ids: string[];
+  intake_routing_rules: IntakeRoutingRule[];
+  sessions: number;
+};
+
+export async function fetchStaffVersionsList(
+  questionnaire_type: "qualify" | "intake",
+  params?: { start?: string; end?: string },
+): Promise<{ questionnaire_type: string; versions: VersionListRow[] }> {
+  const search = new URLSearchParams();
+  search.set("questionnaire_type", questionnaire_type);
+  if (params?.start) search.set("start", params.start);
+  if (params?.end) search.set("end", params.end);
+  return apiFetch(`/staff/analytics/versions-list/?${search.toString()}`);
+}
+
+export type AnswerDistributionItem = {
+  value: string;
+  label: string;
+  count: number;
+  pct: number;
+};
+
+export type StepFieldAnalytics = {
+  field_key: string;
+  label: string;
+  field_type: string;
+  answer_distribution: AnswerDistributionItem[];
+  total_answers: number;
+};
+
+export type StepAnalyticsRow = {
+  step_key: string;
+  title: string;
+  views: number;
+  completions: number;
+  dropoff_percent: number;
+  stopped_sessions: number;
+  fields: StepFieldAnalytics[];
+};
+
+export type VersionStepAnalytics = {
+  version_id: string;
+  version_label: string;
+  questionnaire_slug: string;
+  questionnaire_type: string;
+  questionnaire_title: string;
+  is_default_entry: boolean;
+  status: string;
+  cta_ids: string[];
+  intake_routing_rules: IntakeRoutingRule[];
+  total_respondents: number;
+  steps: StepAnalyticsRow[];
+};
+
+export async function fetchStaffStepAnalytics(
+  version_id: string,
+  params?: { start?: string; end?: string },
+): Promise<VersionStepAnalytics> {
+  const search = new URLSearchParams();
+  search.set("version_id", version_id);
+  if (params?.start) search.set("start", params.start);
+  if (params?.end) search.set("end", params.end);
+  return apiFetch<VersionStepAnalytics>(
+    `/staff/analytics/step-analytics/?${search.toString()}`,
+  );
 }
 
 export type LandingPageItem = {
@@ -585,6 +711,13 @@ export type LandingPagePerformanceRow = {
 export type PageViewRow = {
   day: string;
   page: string;
+  count: number;
+};
+
+export type LandingPageViewRow = {
+  day: string;
+  slug: string;
+  name: string;
   count: number;
 };
 
@@ -646,7 +779,10 @@ export async function fetchStaffLandingPagePerformance(params?: {
 export async function fetchStaffPageViews(params?: {
   start?: string;
   end?: string;
-}): Promise<{ page_views: PageViewRow[] }> {
+}): Promise<{
+  page_views: PageViewRow[];
+  landing_page_views: LandingPageViewRow[];
+}> {
   const qs = new URLSearchParams(
     Object.entries(params ?? {}).filter(([, v]) => v) as [string, string][],
   ).toString();
@@ -703,9 +839,20 @@ export type ValidationRule = {
     | "min_length"
     | "max_length"
     | "pattern"
-    | "enum";
+    | "enum"
+    | "cross_field";
   value?: unknown;
+  values?: unknown[];
+  field?: string;
+  op?: string;
   message?: string;
+};
+
+export type QuestionnaireFieldOptionSchema = {
+  value: string;
+  label: string;
+  backend?: string;
+  beluga?: string;
 };
 
 export type QuestionnaireFieldSchema = {
@@ -714,7 +861,7 @@ export type QuestionnaireFieldSchema = {
   field_type: string;
   label: string;
   help_text?: string;
-  options?: { value: string; label: string }[];
+  options?: QuestionnaireFieldOptionSchema[];
   validation_rules?: ValidationRule[];
   maps_to_section?: string;
   plugin_id?: string;
@@ -728,10 +875,25 @@ export type RoutingRule = {
   next_step_key: string;
 };
 
+export type IntakeRoutingRule = {
+  when_field: string;
+  when_value: string;
+  intake_questionnaire_slug: string;
+  /**
+   * Optional source step this route originates from. Visual-only: a rule with
+   * a `when_step` but no answer condition (when_field "__default__") still acts
+   * as a fallback, but the builder draws its edge from this step instead of the
+   * last step. Lets staff attach a default route to any chosen step.
+   */
+  when_step?: string;
+};
+
 export type QuestionnaireStepSchema = {
   id?: string;
   step_key: string;
   sort_order: number;
+  /** Progress tier (0 = first). Branching alternatives share a level. */
+  progress_level?: number;
   title: string;
   subtitle?: string;
   visibility_rule?: Record<string, unknown> | null;
@@ -749,6 +911,10 @@ export type QuestionnaireVersionSchema = {
   version_label: string;
   status: "draft" | "published" | "archived";
   published_at: string | null;
+  intake_routing_rules?: IntakeRoutingRule[];
+  cta_ids?: string[];
+  is_default_entry?: boolean;
+  is_in_use?: boolean;
   steps: QuestionnaireStepSchema[];
 };
 
@@ -769,6 +935,19 @@ export async function fetchActiveQuestionnaire(
   return apiFetch<QuestionnaireVersionSchema>(
     `/questionnaires/${slug}/active/${qs}`,
   );
+}
+
+export async function resolveIntakeQuestionnaire(payload: {
+  qualify_version_id: string;
+  questionnaire_responses: Record<string, unknown>;
+}) {
+  return apiFetch<{
+    intake_questionnaire_slug: string;
+    version: QuestionnaireVersionSchema;
+  }>("/questionnaires/resolve-intake/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
 export async function fetchStaffMedications() {
@@ -812,6 +991,44 @@ export async function createStaffQuestionnaire(data: {
   });
 }
 
+export async function fetchStaffQuestionnaire(slug: string) {
+  return apiFetch<QuestionnaireListItem>(
+    `/staff/questionnaires/${encodeURIComponent(slug)}/`,
+  );
+}
+
+export async function updateStaffQuestionnaire(
+  slug: string,
+  data: { slug?: string; title?: string },
+) {
+  return apiFetch<QuestionnaireListItem>(
+    `/staff/questionnaires/${encodeURIComponent(slug)}/`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    },
+  );
+}
+
+export async function deleteStaffQuestionnaire(slug: string) {
+  await apiFetch(`/staff/questionnaires/${encodeURIComponent(slug)}/`, {
+    method: "DELETE",
+  });
+}
+
+export async function duplicateStaffQuestionnaire(
+  slug: string,
+  data?: { slug?: string; title?: string },
+) {
+  return apiFetch<QuestionnaireListItem>(
+    `/staff/questionnaires/${encodeURIComponent(slug)}/duplicate/`,
+    {
+      method: "POST",
+      body: JSON.stringify(data ?? {}),
+    },
+  );
+}
+
 export async function fetchStaffQuestionnaireVersions(slug: string) {
   return apiFetch<QuestionnaireVersionSchema[]>(
     `/staff/questionnaires/${slug}/versions/`,
@@ -850,6 +1067,16 @@ export async function publishStaffQuestionnaireVersion(
   );
 }
 
+export async function archiveStaffQuestionnaireVersion(
+  slug: string,
+  versionId: string,
+) {
+  return apiFetch<QuestionnaireVersionSchema>(
+    `/staff/questionnaires/${slug}/versions/${versionId}/archive/`,
+    { method: "POST" },
+  );
+}
+
 export async function duplicateStaffQuestionnaireVersion(
   slug: string,
   versionId: string,
@@ -857,6 +1084,50 @@ export async function duplicateStaffQuestionnaireVersion(
   return apiFetch<QuestionnaireVersionSchema>(
     `/staff/questionnaires/${slug}/versions/${versionId}/duplicate/`,
     { method: "POST" },
+  );
+}
+
+export async function deleteStaffQuestionnaireVersion(
+  slug: string,
+  versionId: string,
+): Promise<void> {
+  await apiFetch(`/staff/questionnaires/${slug}/versions/${versionId}/`, {
+    method: "DELETE",
+  });
+}
+
+export type QualifyCtaOwnership = {
+  cta_id: string;
+  version_id: string;
+  questionnaire_slug: string;
+  version_label: string;
+  is_default_entry: boolean;
+  cta_ids: string[];
+  will_archive_on_claim: boolean;
+};
+
+export async function fetchStaffQualifyCtaOwnership() {
+  return apiFetch<{ ownership: QualifyCtaOwnership[] }>(
+    "/staff/questionnaires/qualify-cta-ownership/",
+  );
+}
+
+export async function updateStaffQuestionnaireVersion(
+  slug: string,
+  versionId: string,
+  data: {
+    version_label?: string;
+    intake_routing_rules?: IntakeRoutingRule[];
+    cta_ids?: string[];
+    is_default_entry?: boolean;
+  },
+) {
+  return apiFetch<QuestionnaireVersionSchema>(
+    `/staff/questionnaires/${slug}/versions/${versionId}/`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    },
   );
 }
 

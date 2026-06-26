@@ -17,6 +17,7 @@ ALLOWED_EVENT_NAMES = frozenset(
         "funnel_abandoned",
         "page_viewed",
         "page_reloaded",
+        "cta_clicked",
     }
 )
 
@@ -29,6 +30,7 @@ ALLOWED_PROPERTY_KEYS = frozenset(
         "page",
         "landing_page_slug",
         "referrer",
+        "cta_id",
     }
 )
 

@@ -3,8 +3,14 @@ import { trackPageViewed } from "@/lib/analytics";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, X, ArrowRight, Info } from "lucide-react";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
-import { Section, SectionHeading, Eyebrow, SurfaceCard } from "@/components/site/primitives";
+import {
+  Section,
+  SectionHeading,
+  Eyebrow,
+  SurfaceCard,
+} from "@/components/site/primitives";
 import { Button } from "@/components/ui/button";
+import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/pricing")({
@@ -19,7 +25,8 @@ export const Route = createFileRoute("/pricing")({
       { property: "og:title", content: "Pricing — Aretide" },
       {
         property: "og:description",
-        content: "No platform membership fee. Estimate your monthly medication cost.",
+        content:
+          "No platform membership fee. Estimate your monthly medication cost.",
       },
     ],
     links: [{ rel: "canonical", href: "/pricing" }],
@@ -28,9 +35,27 @@ export const Route = createFileRoute("/pricing")({
 });
 
 const MED_PATHS = [
-  { id: "insurance", label: "Insurance (if covered)", low: 25, high: 75, note: "Copay varies by plan; PA may be required." },
-  { id: "cash", label: "Cash-pay option", low: 199, high: 349, note: "When clinically appropriate and permitted." },
-  { id: "local", label: "Local pharmacy pickup", low: 60, high: 320, note: "Depends on stock and your plan." },
+  {
+    id: "insurance",
+    label: "Insurance (if covered)",
+    low: 25,
+    high: 75,
+    note: "Copay varies by plan; PA may be required.",
+  },
+  {
+    id: "cash",
+    label: "Cash-pay option",
+    low: 199,
+    high: 349,
+    note: "When clinically appropriate and permitted.",
+  },
+  {
+    id: "local",
+    label: "Local pharmacy pickup",
+    low: 60,
+    high: 320,
+    note: "Depends on stock and your plan.",
+  },
 ] as const;
 
 const SHIPPING = [
@@ -40,8 +65,11 @@ const SHIPPING = [
 ] as const;
 
 function PricingPage() {
-  useEffect(() => { trackPageViewed("pricing"); }, []);
-  const [path, setPath] = useState<(typeof MED_PATHS)[number]["id"]>("insurance");
+  useEffect(() => {
+    trackPageViewed("pricing");
+  }, []);
+  const [path, setPath] =
+    useState<(typeof MED_PATHS)[number]["id"]>("insurance");
   const [ship, setShip] = useState<(typeof SHIPPING)[number]["id"]>("standard");
   const [labs, setLabs] = useState(false);
 
@@ -70,27 +98,35 @@ function PricingPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           <SurfaceCard>
             <Eyebrow>Medication-only pricing</Eyebrow>
-            <p className="mt-5 text-2xl font-bold text-foreground">Pay for your medication. That's it.</p>
+            <p className="mt-5 text-2xl font-bold text-foreground">
+              Pay for your medication. That's it.
+            </p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Aretide does not charge a separate monthly membership or subscription fee.
-              Your cost is the medication your clinician prescribes, if appropriate.
+              Aretide does not charge a separate monthly membership or
+              subscription fee. Your cost is the medication your clinician
+              prescribes, if appropriate.
             </p>
             <div className="mt-6 grid gap-6 sm:grid-cols-2">
               <div>
-                <p className="text-sm font-semibold text-foreground">What you pay for</p>
+                <p className="text-sm font-semibold text-foreground">
+                  What you pay for
+                </p>
                 <ul className="mt-3 space-y-2 text-sm text-foreground">
                   {[
                     "Prescribed medication (per fill or month)",
                     "Cash-pay, insurance copay, or pharmacy pricing — your path",
                   ].map((t) => (
                     <li key={t} className="flex items-start gap-2">
-                      <Check className="mt-0.5 size-4 shrink-0 text-success" /> {t}
+                      <Check className="mt-0.5 size-4 shrink-0 text-success" />{" "}
+                      {t}
                     </li>
                   ))}
                 </ul>
               </div>
               <div>
-                <p className="text-sm font-semibold text-foreground">May be billed separately</p>
+                <p className="text-sm font-semibold text-foreground">
+                  May be billed separately
+                </p>
                 <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
                   {[
                     "Shipping (if home delivery)",
@@ -98,7 +134,8 @@ function PricingPage() {
                     "Insurance deductibles or uncovered costs",
                   ].map((t) => (
                     <li key={t} className="flex items-start gap-2">
-                      <X className="mt-0.5 size-4 shrink-0 text-muted-foreground" /> {t}
+                      <X className="mt-0.5 size-4 shrink-0 text-muted-foreground" />{" "}
+                      {t}
                     </li>
                   ))}
                 </ul>
@@ -108,7 +145,9 @@ function PricingPage() {
 
           <SurfaceCard className="bg-card">
             <Eyebrow>Estimate your monthly cost</Eyebrow>
-            <p className="mt-4 text-sm font-semibold text-foreground">Medication path</p>
+            <p className="mt-4 text-sm font-semibold text-foreground">
+              Medication path
+            </p>
             <div className="mt-2 grid gap-2">
               {MED_PATHS.map((m) => (
                 <button
@@ -122,12 +161,16 @@ function PricingPage() {
                   )}
                 >
                   <span className="font-medium text-foreground">{m.label}</span>
-                  <span>${m.low}–${m.high}</span>
+                  <span>
+                    ${m.low}–${m.high}
+                  </span>
                 </button>
               ))}
             </div>
 
-            <p className="mt-5 text-sm font-semibold text-foreground">Delivery</p>
+            <p className="mt-5 text-sm font-semibold text-foreground">
+              Delivery
+            </p>
             <div className="mt-2 grid grid-cols-3 gap-2">
               {SHIPPING.map((s) => (
                 <button
@@ -149,7 +192,9 @@ function PricingPage() {
             </div>
 
             <label className="mt-5 flex items-center justify-between rounded-2xl border border-border bg-background px-4 py-3">
-              <span className="text-sm text-foreground">Add lab work (if needed)</span>
+              <span className="text-sm text-foreground">
+                Add lab work (if needed)
+              </span>
               <input
                 type="checkbox"
                 checked={labs}
@@ -165,12 +210,15 @@ function PricingPage() {
               <p className="mt-1 text-3xl font-bold">
                 ${estimate.low}–${estimate.high}
               </p>
-              <p className="mt-2 text-xs text-primary-foreground/85">{estimate.note}</p>
+              <p className="mt-2 text-xs text-primary-foreground/85">
+                {estimate.note}
+              </p>
             </div>
             <p className="mt-3 flex items-start gap-2 text-xs text-muted-foreground">
               <Info className="mt-0.5 size-3.5 shrink-0" />
-              Estimates only. No platform membership fee. Your exact medication charge is
-              always shown before you pay. Prescribing is never guaranteed.
+              Estimates only. No platform membership fee. Your exact medication
+              charge is always shown before you pay. Prescribing is never
+              guaranteed.
             </p>
           </SurfaceCard>
         </div>
@@ -179,18 +227,31 @@ function PricingPage() {
       <Section className="bg-muted/40 pt-0">
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { t: "Transparent pricing", d: "Medication, shipping, and labs are listed separately. You see the full breakdown before confirming any charge." },
-            { t: "Refill billing", d: "Each refill is billed at the medication price shown for your plan and pharmacy path — no hidden platform fees on top." },
-            { t: "Pre-charge reminders", d: "We remind you before every medication charge and send a receipt for every payment." },
+            {
+              t: "Transparent pricing",
+              d: "Medication, shipping, and labs are listed separately. You see the full breakdown before confirming any charge.",
+            },
+            {
+              t: "Refill billing",
+              d: "Each refill is billed at the medication price shown for your plan and pharmacy path — no hidden platform fees on top.",
+            },
+            {
+              t: "Pre-charge reminders",
+              d: "We remind you before every medication charge and send a receipt for every payment.",
+            },
           ].map((c) => (
             <SurfaceCard key={c.t}>
               <h3 className="text-lg font-semibold text-foreground">{c.t}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{c.d}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {c.d}
+              </p>
             </SurfaceCard>
           ))}
         </div>
         <SurfaceCard className="mt-6">
-          <h3 className="text-base font-semibold text-foreground">Shipping, labs & insurance caveats</h3>
+          <h3 className="text-base font-semibold text-foreground">
+            Shipping, labs & insurance caveats
+          </h3>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             Shipping costs depend on your delivery choice and location. Labs are
             only billed when clinically needed, and the cost is shown before you
@@ -203,13 +264,15 @@ function PricingPage() {
 
       <Section className="pt-0">
         <div className="rounded-4xl bg-primary px-6 py-12 text-center text-primary-foreground">
-          <h2 className="text-2xl font-bold md:text-3xl">No surprises. Ever.</h2>
+          <h2 className="text-2xl font-bold md:text-3xl">
+            No surprises. Ever.
+          </h2>
           <p className="mx-auto mt-2 max-w-lg text-primary-foreground/85">
             Start with a quick eligibility check — you'll see medication pricing
             before paying anything.
           </p>
           <Button asChild size="xl" variant="soft" className="mt-6">
-            <Link to="/qualify">
+            <Link to={qualifyHref(CTA_IDS.pricing_footer)}>
               See if you qualify <ArrowRight />
             </Link>
           </Button>

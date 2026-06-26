@@ -14,7 +14,7 @@ All user behaviour across the site — page views, funnel steps, and conversion 
 - `user` FK — present for authenticated users (set on the backend from the token)
 - `questionnaire_slug` + `questionnaire_version_id` + `step_key` — for step-level events
 - `experiment_id` + `variant_key` — for A/B test attribution
-- `properties` JSON — only keys in `ALLOWED_PROPERTY_KEYS` are accepted: `duration_ms`, `step_index`, `total_steps`, `error_code`, `page`, `landing_page_slug`, `referrer`
+- `properties` JSON — only keys in `ALLOWED_PROPERTY_KEYS` are accepted: `duration_ms`, `step_index`, `total_steps`, `error_code`, `page`, `landing_page_slug`, `referrer`, `cta_id`
 
 ## Frontend tracking
 
@@ -30,6 +30,17 @@ trackFunnelEvent(payload)                        // raw — used by the above
 `trackPageViewed` also calls `capturePageUtms()` (from `src/lib/utm.ts`) to store UTM params from the current URL into the funnel session on the backend.
 
 Events are sent via `POST /api/analytics/events/` — public endpoint, rate-limited by `AnalyticsEventThrottle`.
+
+## CTA attribution
+
+Marketing CTAs use stable ids (`src/lib/cta-ids.ts`), passed as `?cta_id=` on links to `/qualify`.
+
+| Storage | Field |
+|---------|--------|
+| `FunnelSession` | `cta_id` — set when user enters qualify |
+| `FunnelEvent.properties` | `cta_id` — on `page_viewed`, `step_viewed`, etc. when known |
+
+Staff analytics can compare conversion by CTA placement (home hero vs nav vs pricing footer). CTAs do **not** change which qualify version runs — only one qualify version is published globally.
 
 ## Staff analytics views
 

@@ -1,8 +1,24 @@
 # Dynamic Questionnaire System — Design Document
 
-**Status:** Decisions logged. Phase 1 bugs must be fixed before feature coding resumes.  
-**Branch:** `feature/dynamic-questionnaire-system`  
-**Last updated:** 2026-06-24
+**Status:** Active development on `feature/dynamic-questionnaire-system`.  
+**Last updated:** 2026-06-25
+
+> **Read `docs/features/dynamic-questionnaire.md` first** for what is **implemented today**.  
+> Sections below marked **(PLANNED)** are design targets not yet in code.  
+> Field mapping in code uses **`maps_to_section`**, not `canonical_key`.
+
+---
+
+## Implemented today (summary)
+
+- Questionnaire → Version → Step → Field hierarchy with flowchart positions and step `routing_rules`
+- Staff builder (`FlowchartBuilder.tsx`), publish/archive/duplicate, draft-only edits
+- One globally published qualify version; many published intake questionnaire slugs
+- Qualify `intake_routing_rules` → resolves intake questionnaire at `/intake`
+- Version pinning on funnel session, eligibility, medical intake, intake submission
+- Dynamic funnel qualify/intake (feature flag); dynamic portal read-only display
+- CTA `cta_id` attribution on funnel session + analytics properties
+- **No version deletion** — duplicate or archive instead
 
 ---
 
@@ -17,11 +33,11 @@
 
 ---
 
-## Known bugs — fix before any new feature work
+## Known bugs / remaining Phase 1 items
 
-1. **Drug type "Other" input** — selecting "Other" must show a text input; on save, creates a new `DrugType` row and appends it to the dropdown for all subsequent medications.
-2. **Price input** — replace the `<input type="number" step="0.01">` with a plain text input parsed as dollars. Arrow keys changing by $0.01 is unusable.
-3. **"Manage versions" navigation** — clicking "Manage versions" on the questionnaire list navigates nowhere. Debug TanStack Router `<Link>` params.
+1. **(PLANNED) Drug type "Other" input** — managed `DrugType` table not built; `drug_type` is an enum on `Medication`.
+2. **Price input** — medication price UX may still need plain-text dollars input in staff CRM.
+3. ~~**"Manage versions" navigation**~~ — fixed (`staff.questionnaires.$slug` + index route).
 
 ---
 

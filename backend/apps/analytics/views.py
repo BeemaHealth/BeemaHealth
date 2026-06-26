@@ -58,6 +58,12 @@ class FunnelEventCreateView(APIView):
 
         step_key = str(data.get("step_key", ""))[:64]
 
+        if event_name in ("step_viewed", "step_completed") and not step_key.strip():
+            return Response(
+                {"detail": "step_key is required for step events."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         # Dedup: reject identical events submitted within 1 second of each other
         # from the same client (handles React StrictMode double-fire and accidental retries).
         dedup_cutoff = timezone.now() - timedelta(seconds=1)

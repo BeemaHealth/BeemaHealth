@@ -81,6 +81,9 @@ class QuestionnaireVersion(models.Model):
     version_label = models.CharField(max_length=32)
     status = models.CharField(max_length=16, choices=Status.choices, default=Status.DRAFT)
     published_at = models.DateTimeField(null=True, blank=True)
+    intake_routing_rules = models.JSONField(default=list, blank=True)
+    cta_ids = models.JSONField(default=list, blank=True)
+    is_default_entry = models.BooleanField(default=False)
     created_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -113,6 +116,13 @@ class QuestionnaireStep(models.Model):
     )
     step_key = models.CharField(max_length=64)
     sort_order = models.PositiveSmallIntegerField(default=0)
+    progress_level = models.PositiveSmallIntegerField(
+        default=0,
+        help_text=(
+            "Progress tier for the patient bar (0 = first). Branching steps "
+            "at the same depth share a level."
+        ),
+    )
     title = models.CharField(max_length=256)
     subtitle = models.TextField(blank=True, default="")
     visibility_rule = models.JSONField(null=True, blank=True)
@@ -146,9 +156,13 @@ class QuestionnaireField(models.Model):
         PHONE = "phone", "Phone"
         PASSWORD = "password", "Password"
         DATE = "date", "Date"
+        DOB = "dob", "Date of birth"
         NUMBER = "number", "Number"
         TEXTAREA = "textarea", "Textarea"
         ADDRESS_GROUP = "address_group", "Address group"
+        ACCOUNT = "account", "Account"
+        REVIEW = "review", "Review & confirm"
+        LEGAL_CONSENT = "legal_consent", "Legal consent"
         PLUGIN = "plugin", "Plugin"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

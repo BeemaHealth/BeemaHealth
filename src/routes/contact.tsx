@@ -3,8 +3,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Clock, Mail, MessageCircle } from "lucide-react";
 import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
-import { Section, SectionHeading, SurfaceCard } from "@/components/site/primitives";
+import {
+  Section,
+  SectionHeading,
+  SurfaceCard,
+} from "@/components/site/primitives";
 import { Button } from "@/components/ui/button";
+import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -16,7 +21,10 @@ export const Route = createFileRoute("/contact")({
           "Questions about eligibility, pricing, or your care? Reach the Aretide support team. For emergencies, call 911.",
       },
       { property: "og:title", content: "Contact — Aretide" },
-      { property: "og:description", content: "Get in touch with the Aretide care team." },
+      {
+        property: "og:description",
+        content: "Get in touch with the Aretide care team.",
+      },
     ],
     links: [{ rel: "canonical", href: "/contact" }],
   }),
@@ -49,7 +57,9 @@ const CONTACT_OPTIONS = [
 ];
 
 function ContactPage() {
-  useEffect(() => { trackPageViewed("contact"); }, []);
+  useEffect(() => {
+    trackPageViewed("contact");
+  }, []);
   return (
     <MarketingLayout>
       <Section className="bg-grad-hero">
@@ -65,8 +75,12 @@ function ContactPage() {
           {CONTACT_OPTIONS.map((c) => (
             <SurfaceCard key={c.title} className="flex h-full flex-col">
               <c.icon className="size-6 text-primary" />
-              <h3 className="mt-4 text-lg font-semibold text-foreground">{c.title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{c.text}</p>
+              <h3 className="mt-4 text-lg font-semibold text-foreground">
+                {c.title}
+              </h3>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
+                {c.text}
+              </p>
               {c.action && c.href && (
                 <div className="mt-4">
                   {c.internal ? (
@@ -88,11 +102,14 @@ function ContactPage() {
         </div>
 
         <SurfaceCard className="mt-6 border-destructive/30 bg-destructive/5">
-          <h3 className="text-base font-semibold text-foreground">Medical emergencies</h3>
+          <h3 className="text-base font-semibold text-foreground">
+            Medical emergencies
+          </h3>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             Aretide does not provide emergency care. If you are experiencing a
-            medical emergency, call <strong className="text-foreground">911</strong> or
-            go to your nearest emergency room.
+            medical emergency, call{" "}
+            <strong className="text-foreground">911</strong> or go to your
+            nearest emergency room.
           </p>
         </SurfaceCard>
 
@@ -105,7 +122,7 @@ function ContactPage() {
               <Link to="/faq">Read FAQ</Link>
             </Button>
             <Button asChild size="xl">
-              <Link to="/qualify">
+              <Link to={qualifyHref(CTA_IDS.contact)}>
                 See if you qualify <ArrowRight />
               </Link>
             </Button>

@@ -3,6 +3,10 @@ from django.urls import path
 from apps.questionnaires.staff_views import (
     StaffMedicationDetailView,
     StaffMedicationListView,
+    StaffQualifyCtaOwnershipView,
+    StaffQuestionnaireArchiveView,
+    StaffQuestionnaireDetailView,
+    StaffQuestionnaireDuplicateQuestionnaireView,
     StaffQuestionnaireDuplicateView,
     StaffQuestionnaireFieldDetailView,
     StaffQuestionnaireFieldListView,
@@ -26,6 +30,21 @@ medication_urlpatterns = [
 urlpatterns = [
     path("", StaffQuestionnaireListView.as_view(), name="staff-questionnaire-list"),
     path(
+        "qualify-cta-ownership/",
+        StaffQualifyCtaOwnershipView.as_view(),
+        name="staff-qualify-cta-ownership",
+    ),
+    path(
+        "<slug:slug>/",
+        StaffQuestionnaireDetailView.as_view(),
+        name="staff-questionnaire-detail",
+    ),
+    path(
+        "<slug:slug>/duplicate/",
+        StaffQuestionnaireDuplicateQuestionnaireView.as_view(),
+        name="staff-questionnaire-duplicate-questionnaire",
+    ),
+    path(
         "<slug:slug>/versions/",
         StaffQuestionnaireVersionListView.as_view(),
         name="staff-questionnaire-versions",
@@ -39,6 +58,11 @@ urlpatterns = [
         "<slug:slug>/versions/<uuid:version_id>/publish/",
         StaffQuestionnairePublishView.as_view(),
         name="staff-questionnaire-publish",
+    ),
+    path(
+        "<slug:slug>/versions/<uuid:version_id>/archive/",
+        StaffQuestionnaireArchiveView.as_view(),
+        name="staff-questionnaire-archive",
     ),
     path(
         "<slug:slug>/versions/<uuid:version_id>/duplicate/",

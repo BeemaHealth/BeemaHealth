@@ -11,6 +11,7 @@ from apps.intakes.permissions import (
     patient_has_active_prescription,
 )
 from apps.intakes.screening import refresh_account_screening
+from apps.intakes.questionnaire_sync import sync_canonical_fields_from_questionnaire
 from apps.intakes.serializers import (
     IntakeSubmissionSerializer,
     MedicalIntakeSerializer,
@@ -38,6 +39,7 @@ class MedicalIntakeMeView(APIView):
 
     def get(self, request):
         intake = self.get_object(request.user)
+        sync_canonical_fields_from_questionnaire(intake)
         log_audit_event(
             user=request.user,
             action="read",

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AccountSectionCard } from "@/components/portal/AccountSectionCard";
 import { Button } from "@/components/ui/button";
 import { Field, inputCls } from "@/components/quiz/quiz-primitives";
 import {
   createStaffQuestionnaire,
+  deleteStaffQuestionnaire,
+  duplicateStaffQuestionnaire,
   fetchStaffMedications,
   fetchStaffQuestionnaires,
   type MedicationItem,
@@ -17,6 +19,7 @@ export const Route = createFileRoute("/staff/questionnaires/")({
 });
 
 function StaffQuestionnairesPage() {
+  const navigate = useNavigate();
   const [items, setItems] = useState<QuestionnaireListItem[]>([]);
   const [medications, setMedications] = useState<MedicationItem[]>([]);
   const [showNew, setShowNew] = useState(false);
@@ -25,6 +28,7 @@ function StaffQuestionnairesPage() {
   const [newTitle, setNewTitle] = useState("");
   const [newMedId, setNewMedId] = useState("");
   const [creating, setCreating] = useState(false);
+  const [busySlug, setBusySlug] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   async function reload() {
@@ -62,6 +66,49 @@ function StaffQuestionnairesPage() {
       );
     } finally {
       setCreating(false);
+    }
+  }
+
+  async function handleDuplicate(item: QuestionnaireListItem) {
+    setError("");
+    setBusySlug(item.slug);
+    try {
+      const clone = await duplicateStaffQuestionnaire(item.slug);
+      await reload();
+      void navigate({
+        to: "/staff/questionnaires/$slug",
+        params: { slug: clone.slug },
+      });
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to duplicate questionnaire.",
+      );
+    } finally {
+      setBusySlug(null);
+    }
+  }
+
+  async function handleDelete(item: QuestionnaireListItem) {
+    if (
+      !window.confirm(
+        `Delete questionnaire “${item.title}” (${item.slug}) and all versions? This cannot be undone.`,
+      )
+    ) {
+      return;
+    }
+    setError("");
+    setBusySlug(item.slug);
+    try {
+      await deleteStaffQuestionnaire(item.slug);
+      await reload();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to delete questionnaire.",
+      );
+    } finally {
+      setBusySlug(null);
     }
   }
 
@@ -183,14 +230,33 @@ function StaffQuestionnairesPage() {
                     : " · No published version")
                 }
               >
-                <Button asChild size="sm">
-                  <Link
-                    to="/staff/questionnaires/$slug"
-                    params={{ slug: item.slug }}
+                <div className="flex flex-wrap gap-2">
+                  <Button asChild size="sm">
+                    <Link
+                      to="/staff/questionnaires/$slug"
+                      params={{ slug: item.slug }}
+                    >
+                      Manage versions
+                    </Link>
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    disabled={busySlug === item.slug}
+                    onClick={() => void handleDuplicate(item)}
                   >
-                    Manage versions
-                  </Link>
-                </Button>
+                    {busySlug === item.slug ? "Working…" : "Duplicate"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-destructive"
+                    disabled={busySlug === item.slug}
+                    onClick={() => void handleDelete(item)}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </AccountSectionCard>
             ))
           )}
