@@ -128,11 +128,16 @@ export function QualifyDynamicFlow() {
   useEffect(() => {
     if (!currentStep || !schema) return;
     stepStartedAt.current = Date.now();
-    trackStepViewed("qualify", currentStep.step_key, {
+    trackStepViewed(schema.questionnaire_slug, currentStep.step_key, {
       versionId: schema.id,
       stepIndex,
     });
-  }, [currentStep?.step_key, schema?.id, stepIndex]);
+  }, [
+    currentStep?.step_key,
+    schema?.id,
+    schema?.questionnaire_slug,
+    stepIndex,
+  ]);
 
   async function persistResponses(next: Record<string, unknown>) {
     if (!isApiEnabled()) return;
@@ -172,7 +177,7 @@ export function QualifyDynamicFlow() {
     setFormError("");
     try {
       trackStepCompleted(
-        "qualify",
+        schema.questionnaire_slug,
         currentStep.step_key,
         Date.now() - stepStartedAt.current,
         { versionId: schema.id, stepIndex },

@@ -237,11 +237,16 @@ export function IntakeDynamicFlow() {
   useEffect(() => {
     if (!currentStep || !schema) return;
     stepStartedAt.current = Date.now();
-    trackStepViewed("intake", currentStep.step_key, {
+    trackStepViewed(schema.questionnaire_slug, currentStep.step_key, {
       versionId: schema.id,
       stepIndex,
     });
-  }, [currentStep?.step_key, schema?.id, stepIndex]);
+  }, [
+    currentStep?.step_key,
+    schema?.id,
+    schema?.questionnaire_slug,
+    stepIndex,
+  ]);
 
   async function persist(nextResponses: Record<string, unknown>) {
     if (!isApiEnabled() || !intake || !schema || !currentStep) return;
@@ -271,7 +276,7 @@ export function IntakeDynamicFlow() {
     setSubmitting(true);
     try {
       trackStepCompleted(
-        "intake",
+        schema.questionnaire_slug,
         currentStep.step_key,
         Date.now() - stepStartedAt.current,
         { versionId: schema.id, stepIndex },

@@ -80,19 +80,23 @@ def funnel_step_counts(
 
     start_dt, end_dt = _parse_range(start, end)
     qs = FunnelEvent.objects.filter(
-        questionnaire_slug=questionnaire_slug,
         created_at__gte=start_dt,
         created_at__lte=end_dt,
     )
-    if experiment_id:
-        qs = qs.filter(experiment_id=experiment_id)
-    if variant_key:
-        qs = qs.filter(variant_key=variant_key)
+    # Pin to a specific published version when provided. Events may still carry
+    # the legacy questionnaire_type slug ("qualify"/"intake") rather than the
+    # questionnaire's canonical slug, so version_id is authoritative.
     if version_id:
         try:
             qs = qs.filter(questionnaire_version_id=_uuid.UUID(version_id))
         except ValueError:
-            pass
+            qs = qs.filter(questionnaire_slug=questionnaire_slug)
+    else:
+        qs = qs.filter(questionnaire_slug=questionnaire_slug)
+    if experiment_id:
+        qs = qs.filter(experiment_id=experiment_id)
+    if variant_key:
+        qs = qs.filter(variant_key=variant_key)
 
     viewed_map = _distinct_participant_counts(qs, "step_viewed")
     completed_map = _distinct_participant_counts(qs, "step_completed")
@@ -122,6 +126,7 @@ def session_last_steps(
     start: str | None = None,
     end: str | None = None,
     inactivity_hours: int = 2,
+    version_id: str | None = None,
 ) -> dict[str, int]:
     """
     Return {step_key: count} of participants whose last recorded step event
@@ -132,27 +137,47 @@ def session_last_steps(
     step event was recorded before the inactivity cutoff are counted — this
     distinguishes genuine abandonment from sessions still in progress.
     """
+    import uuid as _uuid
+
     start_dt, end_dt = _parse_range(start, end)
     cutoff = timezone.now() - timezone.timedelta(hours=inactivity_hours)
 
+    version_filter_sql = ""
+    params: list = []
+    if version_id:
+        try:
+            parsed_version = _uuid.UUID(version_id)
+            version_filter_sql = "AND questionnaire_version_id = %s"
+            params.append(str(parsed_version))
+        except ValueError:
+            pass
+    if not version_filter_sql:
+        version_filter_sql = "AND questionnaire_slug = %s"
+        params.append(questionnaire_slug)
+
+    if connection.vendor == "postgresql":
+        participant_id = "COALESCE(funnel_session_id::text, user_id::text)"
+    else:
+        participant_id = "COALESCE(CAST(funnel_session_id AS TEXT), CAST(user_id AS TEXT))"
+
     with connection.cursor() as cursor:
         cursor.execute(
-            """
+            f"""
             WITH last_per_participant AS (
                 SELECT
-                    COALESCE(funnel_session_id::text, user_id::text) AS participant_id,
+                    {participant_id} AS participant_id,
                     step_key,
                     created_at,
                     ROW_NUMBER() OVER (
-                        PARTITION BY COALESCE(funnel_session_id::text, user_id::text)
+                        PARTITION BY {participant_id}
                         ORDER BY created_at DESC
                     ) AS rn
                 FROM funnel_events
-                WHERE questionnaire_slug = %s
-                  AND event_name IN ('step_viewed', 'step_completed')
+                WHERE event_name IN ('step_viewed', 'step_completed')
                   AND created_at >= %s
                   AND created_at <= %s
                   AND (funnel_session_id IS NOT NULL OR user_id IS NOT NULL)
+                  {version_filter_sql}
             )
             SELECT step_key, COUNT(*) AS stopped_count
             FROM last_per_participant
@@ -162,7 +187,7 @@ def session_last_steps(
             GROUP BY step_key
             ORDER BY stopped_count DESC
             """,
-            [questionnaire_slug, start_dt, end_dt, cutoff],
+            [start_dt, end_dt, *params, cutoff],
         )
         return {row[0]: row[1] for row in cursor.fetchall()}
 
@@ -177,7 +202,12 @@ def dropoff_rates(
     steps = funnel_step_counts(
         questionnaire_slug=questionnaire_slug, start=start, end=end, version_id=version_id
     )
-    stopped_map = session_last_steps(questionnaire_slug=questionnaire_slug, start=start, end=end)
+    stopped_map = session_last_steps(
+        questionnaire_slug=questionnaire_slug,
+        start=start,
+        end=end,
+        version_id=version_id,
+    )
     result = []
     for row in steps:
         views = row["views"] or 0
@@ -604,29 +634,60 @@ def questionnaire_step_analytics(
     # ── Funnel event counts per step ──────────────────────────────────────────
     funnel_qs = FunnelEvent.objects.filter(
         questionnaire_version_id=parsed_id,
-        questionnaire_slug=q_slug,
         created_at__gte=start_dt,
         created_at__lte=end_dt,
     )
     viewed_map = _distinct_participant_counts(funnel_qs, "step_viewed")
     completed_map = _distinct_participant_counts(funnel_qs, "step_completed")
 
+    # Actual edge traversal counts. These are participant-level transitions
+    # between adjacent distinct step_viewed events, so a node with multiple
+    # upstream routes does not inflate every inbound edge's target count.
+    edge_transition_map: dict[tuple[str, str], int] = {}
+    viewed_rows = (
+        funnel_qs.filter(event_name="step_viewed")
+        .exclude(step_key="")
+        .values("funnel_session_id", "user_id", "step_key", "created_at")
+        .order_by("funnel_session_id", "user_id", "created_at", "id")
+    )
+    sequences: dict[str, list[str]] = {}
+    for row in viewed_rows:
+        participant = row["funnel_session_id"] or row["user_id"]
+        if not participant:
+            continue
+        key = str(participant)
+        step_key = row["step_key"]
+        seq = sequences.setdefault(key, [])
+        if not seq or seq[-1] != step_key:
+            seq.append(step_key)
+    for seq in sequences.values():
+        for source_step, target_step in zip(seq, seq[1:]):
+            edge_transition_map[(source_step, target_step)] = (
+                edge_transition_map.get((source_step, target_step), 0) + 1
+            )
+
     # Stopped-here counts (same window, filtered by version)
+    if connection.vendor == "postgresql":
+        participant_id = "COALESCE(funnel_session_id::text, user_id::text)"
+    else:
+        participant_id = (
+            "COALESCE(CAST(funnel_session_id AS TEXT), CAST(user_id AS TEXT))"
+        )
+
     with connection.cursor() as cursor:
         cursor.execute(
-            """
+            f"""
             WITH last_per_participant AS (
                 SELECT
-                    COALESCE(funnel_session_id::text, user_id::text) AS pid,
+                    {participant_id} AS pid,
                     step_key,
                     created_at,
                     ROW_NUMBER() OVER (
-                        PARTITION BY COALESCE(funnel_session_id::text, user_id::text)
+                        PARTITION BY {participant_id}
                         ORDER BY created_at DESC
                     ) AS rn
                 FROM funnel_events
-                WHERE questionnaire_slug = %s
-                  AND questionnaire_version_id = %s
+                WHERE questionnaire_version_id = %s
                   AND event_name IN ('step_viewed', 'step_completed')
                   AND created_at >= %s AND created_at <= %s
                   AND (funnel_session_id IS NOT NULL OR user_id IS NOT NULL)
@@ -635,7 +696,7 @@ def questionnaire_step_analytics(
             WHERE rn = 1 AND created_at <= %s
             GROUP BY step_key
             """,
-            [q_slug, str(parsed_id), start_dt, end_dt, cutoff],
+            [str(parsed_id), start_dt, end_dt, cutoff],
         )
         stopped_map = {row[0]: row[1] for row in cursor.fetchall()}
 
@@ -763,6 +824,14 @@ def questionnaire_step_analytics(
         "cta_ids": list(version.cta_ids or []),
         "intake_routing_rules": list(version.intake_routing_rules or []),
         "total_respondents": total_respondents,
+        "edge_transitions": [
+            {
+                "source_step_key": source_step,
+                "target_step_key": target_step,
+                "count": count,
+            }
+            for (source_step, target_step), count in sorted(edge_transition_map.items())
+        ],
         "steps": steps_out,
     }
 

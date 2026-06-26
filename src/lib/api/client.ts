@@ -649,6 +649,12 @@ export type StepAnalyticsRow = {
   fields: StepFieldAnalytics[];
 };
 
+export type EdgeTransitionAnalytics = {
+  source_step_key: string;
+  target_step_key: string;
+  count: number;
+};
+
 export type VersionStepAnalytics = {
   version_id: string;
   version_label: string;
@@ -660,6 +666,7 @@ export type VersionStepAnalytics = {
   cta_ids: string[];
   intake_routing_rules: IntakeRoutingRule[];
   total_respondents: number;
+  edge_transitions: EdgeTransitionAnalytics[];
   steps: StepAnalyticsRow[];
 };
 

@@ -4,15 +4,19 @@ from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
+import uuid
 
 from apps.analytics.models import FunnelEvent, LandingPage
 from apps.analytics.services import (
+    dropoff_rates,
     funnel_step_counts,
+    questionnaire_step_analytics,
     landing_page_views_by_day,
     page_views_by_day,
 )
 from apps.analytics.validation import sanitize_event_properties, validate_event_name
 from apps.eligibility.services import create_funnel_session
+from apps.questionnaires.models import Questionnaire, QuestionnaireStep, QuestionnaireVersion
 
 User = get_user_model()
 
@@ -72,6 +76,117 @@ class AnalyticsServicesTests(TestCase):
         step_keys = [row["step_key"] for row in steps]
         self.assertEqual(step_keys, ["review"])
         self.assertNotIn("", step_keys)
+
+    def test_funnel_step_counts_by_version_id_ignores_slug_mismatch(self):
+        """Dynamic flows may log legacy type slugs while staff views use canonical slug."""
+        session, _token = create_funnel_session(
+            type("R", (), {"META": {}})(),
+        )
+        version_id = uuid.uuid4()
+        now = timezone.now()
+        FunnelEvent.objects.create(
+            event_name="step_viewed",
+            funnel_session=session,
+            questionnaire_slug="qualify",
+            questionnaire_version_id=version_id,
+            step_key="drugs",
+            properties={"step_index": 0},
+            created_at=now,
+        )
+        FunnelEvent.objects.create(
+            event_name="step_completed",
+            funnel_session=session,
+            questionnaire_slug="qualify",
+            questionnaire_version_id=version_id,
+            step_key="drugs",
+            properties={"step_index": 0},
+            created_at=now,
+        )
+        steps = funnel_step_counts(
+            questionnaire_slug="default_weight_loss_mvp_questionnaire",
+            version_id=str(version_id),
+        )
+        self.assertEqual(len(steps), 1)
+        self.assertEqual(steps[0]["step_key"], "drugs")
+        self.assertEqual(steps[0]["views"], 1)
+        self.assertEqual(steps[0]["completions"], 1)
+
+        dropoff = dropoff_rates(
+            questionnaire_slug="default_weight_loss_mvp_questionnaire",
+            version_id=str(version_id),
+        )
+        self.assertEqual(dropoff[0]["dropoff_percent"], 0.0)
+
+    def test_questionnaire_step_analytics_counts_actual_edge_transitions(self):
+        questionnaire = Questionnaire.objects.create(
+            slug="default_weight_loss_mvp_questionnaire",
+            title="Weight loss",
+        )
+        version = QuestionnaireVersion.objects.create(
+            questionnaire=questionnaire,
+            version_label="v1.0.1",
+            status=QuestionnaireVersion.Status.PUBLISHED,
+        )
+        QuestionnaireStep.objects.create(
+            version=version,
+            step_key="step_3",
+            title="Injection type",
+            sort_order=0,
+        )
+        QuestionnaireStep.objects.create(
+            version=version,
+            step_key="step_5",
+            title="Compounding type",
+            sort_order=1,
+        )
+        QuestionnaireStep.objects.create(
+            version=version,
+            step_key="step_4",
+            title="Account",
+            sort_order=2,
+        )
+
+        session_a, _ = create_funnel_session(type("R", (), {"META": {}})())
+        session_b, _ = create_funnel_session(type("R", (), {"META": {}})())
+
+        # Both participants reached step_4, but only one arrived from step_5.
+        FunnelEvent.objects.create(
+            event_name="step_viewed",
+            funnel_session=session_a,
+            questionnaire_slug="qualify",
+            questionnaire_version_id=version.id,
+            step_key="step_5",
+        )
+        FunnelEvent.objects.create(
+            event_name="step_viewed",
+            funnel_session=session_a,
+            questionnaire_slug="qualify",
+            questionnaire_version_id=version.id,
+            step_key="step_4",
+        )
+        FunnelEvent.objects.create(
+            event_name="step_viewed",
+            funnel_session=session_b,
+            questionnaire_slug="qualify",
+            questionnaire_version_id=version.id,
+            step_key="step_3",
+        )
+        FunnelEvent.objects.create(
+            event_name="step_viewed",
+            funnel_session=session_b,
+            questionnaire_slug="qualify",
+            questionnaire_version_id=version.id,
+            step_key="step_4",
+        )
+
+        data = questionnaire_step_analytics(version_id=str(version.id))
+        self.assertIsNotNone(data)
+        transitions = {
+            (row["source_step_key"], row["target_step_key"]): row["count"]
+            for row in data["edge_transitions"]
+        }
+        self.assertEqual(transitions[("step_5", "step_4")], 1)
+        self.assertEqual(transitions[("step_3", "step_4")], 1)
 
 
 class PageViewsAggregationTests(TestCase):

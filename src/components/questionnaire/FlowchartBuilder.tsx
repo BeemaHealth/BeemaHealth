@@ -72,9 +72,9 @@ import {
   createStaffQuestionnaireStep,
   deleteStaffQuestionnaireField,
   deleteStaffQuestionnaireStep,
-  fetchStaffDropoffAnalytics,
   fetchStaffQuestionnaires,
   fetchStaffQuestionnaireVersion,
+  fetchStaffStepAnalytics,
   resolveIntakeQuestionnaire,
   updateStaffQuestionnaireField,
   updateStaffQuestionnaireStep,
@@ -85,7 +85,13 @@ import {
   type QuestionnaireStepSchema,
   type QuestionnaireVersionSchema,
   type RoutingRule,
+  type StepAnalyticsRow,
 } from "@/lib/api/client";
+import {
+  computeEdgeDropoff,
+  edgeDropoffFromReactFlowEdge,
+  type EdgeDropoffInput,
+} from "@/lib/questionnaire/edge-analytics";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -733,54 +739,40 @@ const nodeTypes = { step: StepNode, entry: EntryNode, intake: IntakeNode };
 
 // ── Edge panel (route and seq edges) ─────────────────────────────────────────
 
-function DropoffBetween({
-  sourceKey,
-  targetKey,
-  analyticsMap,
+function dropoffToneClass(percent: number) {
+  return percent > 50
+    ? "text-destructive"
+    : percent > 25
+      ? "text-yellow-600"
+      : "text-emerald-600";
+}
+
+function EdgeDropoffCard({
+  result,
 }: {
-  sourceKey: string;
-  targetKey: string;
-  analyticsMap: Map<string, FunnelAnalyticsStep>;
+  result: NonNullable<ReturnType<typeof computeEdgeDropoff>>;
 }) {
-  const src = analyticsMap.get(sourceKey);
-  const tgt = analyticsMap.get(targetKey);
-  if (!src && !tgt) return null;
-  const srcCompletions = src?.completions ?? src?.views ?? 0;
-  const tgtViews = tgt?.views ?? 0;
-  const between =
-    srcCompletions > 0
-      ? Math.round(((srcCompletions - tgtViews) / srcCompletions) * 100)
-      : null;
   return (
-    <div className="rounded-xl border border-border bg-muted/20 px-3 py-2.5 space-y-1.5 text-[11px]">
-      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-        Analytics
-      </p>
-      {src && (
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">
-            {sourceKey} views / completions
-          </span>
-          <span className="font-mono font-medium text-foreground">
-            {src.views.toLocaleString()} / {src.completions.toLocaleString()}
-          </span>
-        </div>
-      )}
-      {tgt && (
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">{targetKey} views</span>
-          <span className="font-mono font-medium text-foreground">
-            {tgt.views.toLocaleString()}
-          </span>
-        </div>
-      )}
-      {between !== null && (
-        <div className="flex justify-between border-t border-border pt-1.5 mt-1.5">
-          <span className="text-muted-foreground">Drop between steps</span>
+    <div className="space-y-1">
+      <div className="flex justify-between gap-4">
+        <span className="text-muted-foreground">{result.sourceLabel}</span>
+        <span className="font-mono font-medium text-foreground">
+          {result.sourceCount.toLocaleString()}
+        </span>
+      </div>
+      <div className="flex justify-between gap-4">
+        <span className="text-muted-foreground">{result.targetLabel}</span>
+        <span className="font-mono font-medium text-foreground">
+          {result.targetReached.toLocaleString()}
+        </span>
+      </div>
+      {result.dropoffPercent !== null && (
+        <div className="flex justify-between gap-4 border-t border-border pt-1">
+          <span className="text-muted-foreground">Drop-off</span>
           <span
-            className={`font-semibold ${between > 50 ? "text-destructive" : between > 25 ? "text-yellow-600" : "text-emerald-600"}`}
+            className={`font-semibold ${dropoffToneClass(result.dropoffPercent)}`}
           >
-            {between}%
+            {result.dropoffPercent}%
           </span>
         </div>
       )}
@@ -788,78 +780,51 @@ function DropoffBetween({
   );
 }
 
-// Resolve the source/target step keys for any edge so we can look up analytics.
-// seq/route edges carry the precise target step in their data; intake edges
-// terminate on an intake node (no step analytics) so only the source is used.
-function resolveEdgeStepKeys(edge: Edge): {
-  sourceKey?: string;
-  targetKey?: string;
-} {
-  const data = edge.data as
-    | { type: "seq"; stepKey: string; targetStepKey: string }
-    | { type: "route"; stepKey: string; rule?: { next_step_key?: string } }
-    | { type: "intake" }
-    | undefined;
-  if (edge.id === "entry-edge") return { targetKey: edge.target };
-  if (data?.type === "seq")
-    return { sourceKey: data.stepKey, targetKey: data.targetStepKey };
-  if (data?.type === "route")
-    return { sourceKey: data.stepKey, targetKey: data.rule?.next_step_key };
-  return { sourceKey: edge.source, targetKey: edge.target };
+function DropoffBetween({
+  input,
+  stepAnalyticsMap,
+  edgeTransitionMap,
+}: {
+  input: EdgeDropoffInput;
+  stepAnalyticsMap: Map<string, StepAnalyticsRow>;
+  edgeTransitionMap: Map<string, number>;
+}) {
+  const result = computeEdgeDropoff(input, stepAnalyticsMap, edgeTransitionMap);
+  if (!result) return null;
+  return (
+    <div className="rounded-xl border border-border bg-muted/20 px-3 py-2.5 space-y-1.5 text-[11px]">
+      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+        Analytics
+      </p>
+      <EdgeDropoffCard result={result} />
+    </div>
+  );
 }
 
 function EdgeDropoffTooltip({
   hovered,
-  analyticsMap,
+  steps,
+  stepAnalyticsMap,
+  edgeTransitionMap,
 }: {
   hovered: { edge: Edge; x: number; y: number };
-  analyticsMap: Map<string, FunnelAnalyticsStep>;
+  steps: QuestionnaireStepSchema[];
+  stepAnalyticsMap: Map<string, StepAnalyticsRow>;
+  edgeTransitionMap: Map<string, number>;
 }) {
-  const { sourceKey, targetKey } = resolveEdgeStepKeys(hovered.edge);
-  const src = sourceKey ? analyticsMap.get(sourceKey) : undefined;
-  const tgt = targetKey ? analyticsMap.get(targetKey) : undefined;
-  const srcCompletions = src?.completions ?? src?.views ?? 0;
-  const tgtViews = tgt?.views ?? 0;
-  const between =
-    src && tgt && srcCompletions > 0
-      ? Math.round(((srcCompletions - tgtViews) / srcCompletions) * 100)
-      : null;
+  const input = edgeDropoffFromReactFlowEdge(hovered.edge, steps);
+  const result = input
+    ? computeEdgeDropoff(input, stepAnalyticsMap, edgeTransitionMap)
+    : null;
   return (
     <div
       className="pointer-events-none fixed z-50 rounded-lg border border-border bg-card px-3 py-2 text-[11px] shadow-soft"
-      style={{ left: hovered.x + 14, top: hovered.y + 14, maxWidth: 240 }}
+      style={{ left: hovered.x + 14, top: hovered.y + 14, maxWidth: 260 }}
     >
-      {!src && !tgt ? (
+      {!result ? (
         <span className="text-muted-foreground">No drop-off data yet</span>
       ) : (
-        <div className="space-y-1">
-          {src && (
-            <div className="flex justify-between gap-4">
-              <span className="text-muted-foreground">{sourceKey} done</span>
-              <span className="font-mono font-medium text-foreground">
-                {srcCompletions.toLocaleString()}
-              </span>
-            </div>
-          )}
-          {tgt && (
-            <div className="flex justify-between gap-4">
-              <span className="text-muted-foreground">{targetKey} reached</span>
-              <span className="font-mono font-medium text-foreground">
-                {tgtViews.toLocaleString()}
-              </span>
-            </div>
-          )}
-          {between !== null && (
-            <div className="flex justify-between gap-4 border-t border-border pt-1">
-              <span className="text-muted-foreground">Drop-off</span>
-              <span
-                className={`font-semibold ${between > 50 ? "text-destructive" : between > 25 ? "text-yellow-600" : "text-emerald-600"}`}
-              >
-                {between}%
-              </span>
-            </div>
-          )}
-        </div>
+        <EdgeDropoffCard result={result} />
       )}
     </div>
   );
@@ -872,7 +837,8 @@ function EdgePanel({
   slug,
   versionId,
   schema,
-  analyticsMap,
+  stepAnalyticsMap,
+  edgeTransitionMap,
   onClose,
   onReload,
 }: {
@@ -882,7 +848,8 @@ function EdgePanel({
   slug: string;
   versionId: string;
   schema: QuestionnaireVersionSchema;
-  analyticsMap: Map<string, FunnelAnalyticsStep>;
+  stepAnalyticsMap: Map<string, StepAnalyticsRow>;
+  edgeTransitionMap: Map<string, number>;
   onClose: () => void;
   onReload: () => Promise<void>;
 }) {
@@ -1064,11 +1031,22 @@ function EdgePanel({
             </div>
           </div>
 
-          <DropoffBetween
-            sourceKey={effFromStep}
-            targetKey={effTarget}
-            analyticsMap={analyticsMap}
-          />
+          {effFromStepObj && effFromField && effFromValue && effTarget ? (
+            <DropoffBetween
+              input={{
+                kind: "route",
+                sourceStep: effFromStepObj,
+                targetStepKey: effTarget,
+                whenField: effFromField,
+                whenValue: effFromValue,
+                whenLabel:
+                  fieldOptions.find((o) => o.value === effFromValue)?.label ??
+                  effFromValue,
+              }}
+              stepAnalyticsMap={stepAnalyticsMap}
+              edgeTransitionMap={edgeTransitionMap}
+            />
+          ) : null}
 
           {isDraft && isDirty && (
             <Button
@@ -1263,11 +1241,22 @@ function EdgePanel({
             </p>
           )}
         </div>
-        <DropoffBetween
-          sourceKey={stepKey}
-          targetKey={changeTarget ?? targetStepKey}
-          analyticsMap={analyticsMap}
-        />
+        {(() => {
+          const sourceStep = schema.steps.find((s) => s.step_key === stepKey);
+          const target = changeTarget ?? targetStepKey;
+          if (!sourceStep || !target) return null;
+          return (
+            <DropoffBetween
+              input={{
+                kind: "seq",
+                sourceStep,
+                targetStepKey: target,
+              }}
+              stepAnalyticsMap={stepAnalyticsMap}
+              edgeTransitionMap={edgeTransitionMap}
+            />
+          );
+        })()}
         {isDraft && changeTarget !== null && changeTarget !== targetStepKey && (
           <Button
             size="sm"
@@ -1550,7 +1539,8 @@ function AddConnectionPanel({
   slug,
   versionId,
   schema,
-  analyticsMap,
+  stepAnalyticsMap,
+  edgeTransitionMap,
   onClose,
   onReload,
 }: {
@@ -1558,7 +1548,8 @@ function AddConnectionPanel({
   slug: string;
   versionId: string;
   schema: QuestionnaireVersionSchema;
-  analyticsMap: Map<string, FunnelAnalyticsStep>;
+  stepAnalyticsMap: Map<string, StepAnalyticsRow>;
+  edgeTransitionMap: Map<string, number>;
   onClose: () => void;
   onReload: () => Promise<void>;
 }) {
@@ -1719,13 +1710,22 @@ function AddConnectionPanel({
             </select>
           </div>
         </div>
-        {fromStep && toStep && (
+        {fromStep && toStep && fromStepObj && fromField && fromValue ? (
           <DropoffBetween
-            sourceKey={fromStep}
-            targetKey={toStep}
-            analyticsMap={analyticsMap}
+            input={{
+              kind: "route",
+              sourceStep: fromStepObj,
+              targetStepKey: toStep,
+              whenField: fromField,
+              whenValue: fromValue,
+              whenLabel:
+                fieldOptions.find((o) => o.value === fromValue)?.label ??
+                fromValue,
+            }}
+            stepAnalyticsMap={stepAnalyticsMap}
+            edgeTransitionMap={edgeTransitionMap}
           />
-        )}
+        ) : null}
         <Button
           size="sm"
           disabled={!canSave || saving}
@@ -3057,6 +3057,12 @@ export function FlowchartBuilder({
   const [analyticsMap, setAnalyticsMap] = useState<
     Map<string, FunnelAnalyticsStep>
   >(new Map());
+  const [stepAnalyticsMap, setStepAnalyticsMap] = useState<
+    Map<string, StepAnalyticsRow>
+  >(new Map());
+  const [edgeTransitionMap, setEdgeTransitionMap] = useState<
+    Map<string, number>
+  >(new Map());
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [hoveredEdge, setHoveredEdge] = useState<{
     edge: Edge;
@@ -3143,18 +3149,35 @@ export function FlowchartBuilder({
     [slug, versionId, selectedKey],
   );
 
-  // Load drop-off analytics as soon as the version loads so the edge side panel
-  // and hover tooltips can surface drop-off rates without toggling the overlay.
-  const analyticsSlug = schema?.questionnaire_slug;
+  // Load per-step analytics (views + answer distributions) for edge drop-off.
   useEffect(() => {
-    if (!analyticsSlug) return;
+    if (!versionId) return;
     let cancelled = false;
-    fetchStaffDropoffAnalytics({ questionnaire_slug: analyticsSlug })
+    fetchStaffStepAnalytics(versionId)
       .then((result) => {
         if (cancelled) return;
-        const map = new Map<string, FunnelAnalyticsStep>();
-        result.steps.forEach((s) => map.set(s.step_key, s));
-        setAnalyticsMap(map);
+        const stepsMap = new Map<string, StepAnalyticsRow>();
+        const dropMap = new Map<string, FunnelAnalyticsStep>();
+        result.steps.forEach((s) => {
+          stepsMap.set(s.step_key, s);
+          dropMap.set(s.step_key, {
+            step_key: s.step_key,
+            views: s.views,
+            completions: s.completions,
+            dropoff_percent: s.dropoff_percent,
+            stopped_sessions: s.stopped_sessions,
+          });
+        });
+        const transitionMap = new Map<string, number>();
+        result.edge_transitions.forEach((edge) => {
+          transitionMap.set(
+            `${edge.source_step_key}\0${edge.target_step_key}`,
+            edge.count,
+          );
+        });
+        setStepAnalyticsMap(stepsMap);
+        setEdgeTransitionMap(transitionMap);
+        setAnalyticsMap(dropMap);
       })
       .catch(() => {
         // analytics unavailable — edges simply won't show drop-off
@@ -3162,7 +3185,7 @@ export function FlowchartBuilder({
     return () => {
       cancelled = true;
     };
-  }, [analyticsSlug]);
+  }, [versionId]);
 
   const bumpPositions = useCallback(() => {
     setPositionsVersion((v) => v + 1);
@@ -3486,14 +3509,31 @@ export function FlowchartBuilder({
   async function toggleAnalytics() {
     const next = !showAnalytics;
     setShowAnalytics(next);
-    if (next && analyticsMap.size === 0 && schema) {
+    if (next && analyticsMap.size === 0 && versionId) {
       try {
-        const result = await fetchStaffDropoffAnalytics({
-          questionnaire_slug: schema.questionnaire_slug,
+        const result = await fetchStaffStepAnalytics(versionId);
+        const stepsMap = new Map<string, StepAnalyticsRow>();
+        const dropMap = new Map<string, FunnelAnalyticsStep>();
+        result.steps.forEach((s) => {
+          stepsMap.set(s.step_key, s);
+          dropMap.set(s.step_key, {
+            step_key: s.step_key,
+            views: s.views,
+            completions: s.completions,
+            dropoff_percent: s.dropoff_percent,
+            stopped_sessions: s.stopped_sessions,
+          });
         });
-        const map = new Map<string, FunnelAnalyticsStep>();
-        result.steps.forEach((s) => map.set(s.step_key, s));
-        setAnalyticsMap(map);
+        const transitionMap = new Map<string, number>();
+        result.edge_transitions.forEach((edge) => {
+          transitionMap.set(
+            `${edge.source_step_key}\0${edge.target_step_key}`,
+            edge.count,
+          );
+        });
+        setEdgeTransitionMap(transitionMap);
+        setStepAnalyticsMap(stepsMap);
+        setAnalyticsMap(dropMap);
       } catch {
         // analytics unavailable
       }
@@ -4162,10 +4202,12 @@ export function FlowchartBuilder({
               className="!bg-card !border-border rounded-xl"
             />
           </ReactFlow>
-          {hoveredEdge && (
+          {hoveredEdge && schema && (
             <EdgeDropoffTooltip
               hovered={hoveredEdge}
-              analyticsMap={analyticsMap}
+              steps={schema.steps}
+              stepAnalyticsMap={stepAnalyticsMap}
+              edgeTransitionMap={edgeTransitionMap}
             />
           )}
         </div>
@@ -4200,7 +4242,8 @@ export function FlowchartBuilder({
             slug={slug}
             versionId={versionId}
             schema={schema}
-            analyticsMap={analyticsMap}
+            stepAnalyticsMap={stepAnalyticsMap}
+            edgeTransitionMap={edgeTransitionMap}
             onClose={() => setSelectedEdgeInfo(null)}
             onReload={() => reload()}
           />
@@ -4215,7 +4258,8 @@ export function FlowchartBuilder({
               slug={slug}
               versionId={versionId}
               schema={schema}
-              analyticsMap={analyticsMap}
+              stepAnalyticsMap={stepAnalyticsMap}
+              edgeTransitionMap={edgeTransitionMap}
               onClose={() => setShowAddConnection(false)}
               onReload={() => reload()}
             />
