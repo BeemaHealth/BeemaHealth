@@ -7,6 +7,7 @@ from copy import deepcopy
 
 from django.db import transaction
 from django.utils import timezone
+from rest_framework import serializers
 
 from apps.questionnaires.models import (
     Experiment,
@@ -77,6 +78,181 @@ def serialize_version(version: QuestionnaireVersion, *, include_ids: bool = True
             for field in step["fields"]:
                 field.pop("id", None)
     return payload
+
+
+QUESTIONNAIRE_EXPORT_SCHEMA_VERSION = 1
+
+
+def export_questionnaire_version_bundle(version: QuestionnaireVersion) -> dict:
+    """Portable, ID-free questionnaire version bundle for environment promotion."""
+    payload = serialize_version(version, include_ids=False)
+    payload["status"] = QuestionnaireVersion.Status.DRAFT
+    payload["published_at"] = None
+    return {
+        "schema_version": QUESTIONNAIRE_EXPORT_SCHEMA_VERSION,
+        "questionnaire": {
+            "slug": version.questionnaire.slug,
+            "title": version.questionnaire.title,
+            "questionnaire_type": version.questionnaire.questionnaire_type,
+            "medication_id": (
+                str(version.questionnaire.medication_id)
+                if version.questionnaire.medication_id
+                else None
+            ),
+            "medication_slug": (
+                version.questionnaire.medication.slug
+                if version.questionnaire.medication_id
+                else ""
+            ),
+        },
+        "version": payload,
+    }
+
+
+def _bundle_version_payload(bundle: dict) -> dict:
+    if not isinstance(bundle, dict):
+        raise serializers.ValidationError("Import payload must be a JSON object.")
+    schema_version = bundle.get("schema_version")
+    if schema_version != QUESTIONNAIRE_EXPORT_SCHEMA_VERSION:
+        raise serializers.ValidationError(
+            {
+                "schema_version": (
+                    f"Unsupported schema_version {schema_version!r}. "
+                    f"Expected {QUESTIONNAIRE_EXPORT_SCHEMA_VERSION}."
+                )
+            }
+        )
+    version_payload = bundle.get("version")
+    if not isinstance(version_payload, dict):
+        raise serializers.ValidationError({"version": "Missing version payload."})
+    return version_payload
+
+
+@transaction.atomic
+def import_questionnaire_version_bundle(
+    questionnaire: Questionnaire,
+    bundle: dict,
+    *,
+    created_by,
+    version_label: str | None = None,
+) -> QuestionnaireVersion:
+    """Import an exported version bundle as a new draft on ``questionnaire``."""
+    from apps.questionnaires.serializers import (
+        QuestionnaireFieldWriteSerializer,
+        QuestionnaireStepWriteSerializer,
+    )
+
+    version_payload = _bundle_version_payload(bundle)
+    questionnaire_payload = bundle.get("questionnaire") or {}
+    bundle_type = str(questionnaire_payload.get("questionnaire_type") or "").strip()
+    version_type = str(version_payload.get("questionnaire_type") or "").strip()
+    for source_type in (bundle_type, version_type):
+        if source_type and source_type != questionnaire.questionnaire_type:
+            raise serializers.ValidationError(
+                {
+                    "questionnaire_type": (
+                        f"Cannot import {source_type!r} into "
+                        f"{questionnaire.questionnaire_type!r} questionnaire."
+                    )
+                }
+            )
+    label = str(version_label or version_payload.get("version_label") or "").strip()
+    if not label:
+        raise serializers.ValidationError({"version_label": "Version label is required."})
+    label = label[:VERSION_LABEL_MAX]
+    if QuestionnaireVersion.objects.filter(
+        questionnaire=questionnaire,
+        version_label=label,
+    ).exists():
+        label = _unique_version_label(questionnaire, label)
+
+    intake_routing_rules = deepcopy(version_payload.get("intake_routing_rules") or [])
+    if not isinstance(intake_routing_rules, list):
+        raise serializers.ValidationError(
+            {"intake_routing_rules": "Must be a list."}
+        )
+    cta_ids = [
+        str(cta).strip()[:64]
+        for cta in (version_payload.get("cta_ids") or [])
+        if str(cta).strip()
+    ]
+    # Preserve order while de-duping CTA ids.
+    cta_ids = list(dict.fromkeys(cta_ids))
+    steps = version_payload.get("steps")
+    if not isinstance(steps, list) or not steps:
+        raise serializers.ValidationError({"steps": "Import must include at least one step."})
+
+    imported = QuestionnaireVersion.objects.create(
+        questionnaire=questionnaire,
+        version_label=label,
+        status=QuestionnaireVersion.Status.DRAFT,
+        intake_routing_rules=intake_routing_rules,
+        cta_ids=cta_ids,
+        is_default_entry=bool(version_payload.get("is_default_entry", False)),
+        created_by=created_by,
+    )
+
+    seen_steps: set[str] = set()
+    for i, step_payload in enumerate(steps):
+        if not isinstance(step_payload, dict):
+            raise serializers.ValidationError({"steps": f"Step {i} must be an object."})
+        step_data = {
+            "step_key": step_payload.get("step_key"),
+            "sort_order": step_payload.get("sort_order", i),
+            "progress_level": step_payload.get("progress_level", 0),
+            "title": step_payload.get("title", ""),
+            "subtitle": step_payload.get("subtitle", ""),
+            "visibility_rule": deepcopy(step_payload.get("visibility_rule")),
+            "routing_rules": deepcopy(step_payload.get("routing_rules") or []),
+            "position_x": step_payload.get("position_x"),
+            "position_y": step_payload.get("position_y"),
+        }
+        step_serializer = QuestionnaireStepWriteSerializer(data=step_data)
+        step_serializer.is_valid(raise_exception=True)
+        clean_step = step_serializer.validated_data
+        step_key = clean_step["step_key"]
+        if step_key in seen_steps:
+            raise serializers.ValidationError(
+                {"steps": f"Duplicate step_key '{step_key}'."}
+            )
+        seen_steps.add(step_key)
+        step = QuestionnaireStep.objects.create(version=imported, **clean_step)
+
+        fields = step_payload.get("fields") or []
+        if not isinstance(fields, list):
+            raise serializers.ValidationError(
+                {"steps": f"Step '{step_key}' fields must be a list."}
+            )
+        seen_fields: set[str] = set()
+        for j, field_payload in enumerate(fields):
+            if not isinstance(field_payload, dict):
+                raise serializers.ValidationError(
+                    {"fields": f"Field {j} on step '{step_key}' must be an object."}
+                )
+            field_data = {
+                "field_key": field_payload.get("field_key"),
+                "field_type": field_payload.get("field_type"),
+                "label": field_payload.get("label", ""),
+                "help_text": field_payload.get("help_text", ""),
+                "options": deepcopy(field_payload.get("options") or []),
+                "validation_rules": deepcopy(field_payload.get("validation_rules") or []),
+                "maps_to_section": field_payload.get("maps_to_section", ""),
+                "plugin_id": field_payload.get("plugin_id", ""),
+                "sort_order": field_payload.get("sort_order", j),
+                "required": bool(field_payload.get("required", False)),
+            }
+            field_serializer = QuestionnaireFieldWriteSerializer(data=field_data)
+            field_serializer.is_valid(raise_exception=True)
+            clean_field = field_serializer.validated_data
+            field_key = clean_field["field_key"]
+            if field_key in seen_fields:
+                raise serializers.ValidationError(
+                    {"fields": f"Duplicate field_key '{field_key}' on step '{step_key}'."}
+                )
+            seen_fields.add(field_key)
+            QuestionnaireField.objects.create(step=step, **clean_field)
+
+    return imported
 
 
 def get_published_version(slug: str) -> QuestionnaireVersion | None:

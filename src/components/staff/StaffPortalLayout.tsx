@@ -152,9 +152,11 @@ export function StaffPortalLayout({
   return (
     <SidebarProvider className="min-h-svh w-full">
       <StaffSidebar user={user} />
-      <SidebarInset className="min-h-svh flex-1 bg-background">
+      <SidebarInset className="min-h-svh min-w-0 flex-1 bg-background">
         <MobileStaffHeader />
-        <div className="flex-1 px-4 py-6 md:px-8 md:py-8">{children}</div>
+        <div className="min-w-0 flex-1 px-4 py-6 md:px-8 md:py-8">
+          {children}
+        </div>
       </SidebarInset>
       <Toaster />
     </SidebarProvider>

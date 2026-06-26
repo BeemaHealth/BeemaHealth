@@ -5,6 +5,7 @@ import uuid
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -30,7 +31,9 @@ from apps.questionnaires.serializers import (
 from apps.questionnaires.services import (
     duplicate_questionnaire,
     duplicate_version,
+    export_questionnaire_version_bundle,
     get_published_qualify_cta_ownership,
+    import_questionnaire_version_bundle,
     publish_version,
     questionnaire_delete_blocked_reason,
     questionnaire_slug_rename_blocked_reason,
@@ -190,6 +193,32 @@ class StaffQuestionnaireVersionListView(APIView):
         )
 
 
+class StaffQuestionnaireVersionImportView(APIView):
+    permission_classes = [IsStaff]
+
+    def post(self, request, slug: str):
+        questionnaire = get_object_or_404(Questionnaire, slug=slug)
+        bundle = request.data.get("bundle", request.data)
+        version_label = request.data.get("version_label")
+        try:
+            version = import_questionnaire_version_bundle(
+                questionnaire,
+                bundle,
+                created_by=request.user,
+                version_label=version_label,
+            )
+        except (ValidationError, ValueError) as exc:
+            detail = getattr(exc, "detail", None)
+            return Response(
+                detail if detail is not None else {"detail": str(exc)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return Response(
+            QuestionnaireVersionSerializer(version).data,
+            status=status.HTTP_201_CREATED,
+        )
+
+
 class StaffQuestionnaireVersionDetailView(APIView):
     permission_classes = [IsStaff]
 
@@ -333,6 +362,18 @@ class StaffQuestionnaireVersionDetailView(APIView):
             )
         version.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class StaffQuestionnaireVersionExportView(APIView):
+    permission_classes = [IsStaff]
+
+    def get(self, request, slug: str, version_id: uuid.UUID):
+        version = get_object_or_404(
+            QuestionnaireVersion,
+            id=version_id,
+            questionnaire__slug=slug,
+        )
+        return Response(export_questionnaire_version_bundle(version))
 
 
 class StaffQuestionnairePublishView(APIView):

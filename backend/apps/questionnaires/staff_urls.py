@@ -8,6 +8,8 @@ from apps.questionnaires.staff_views import (
     StaffQuestionnaireDetailView,
     StaffQuestionnaireDuplicateQuestionnaireView,
     StaffQuestionnaireDuplicateView,
+    StaffQuestionnaireVersionExportView,
+    StaffQuestionnaireVersionImportView,
     StaffQuestionnaireFieldDetailView,
     StaffQuestionnaireFieldListView,
     StaffQuestionnaireListView,
@@ -50,9 +52,19 @@ urlpatterns = [
         name="staff-questionnaire-versions",
     ),
     path(
+        "<slug:slug>/versions/import/",
+        StaffQuestionnaireVersionImportView.as_view(),
+        name="staff-questionnaire-version-import",
+    ),
+    path(
         "<slug:slug>/versions/<uuid:version_id>/",
         StaffQuestionnaireVersionDetailView.as_view(),
         name="staff-questionnaire-version-detail",
+    ),
+    path(
+        "<slug:slug>/versions/<uuid:version_id>/export/",
+        StaffQuestionnaireVersionExportView.as_view(),
+        name="staff-questionnaire-version-export",
     ),
     path(
         "<slug:slug>/versions/<uuid:version_id>/publish/",

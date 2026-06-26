@@ -1445,7 +1445,11 @@ class StaffQuestionnaireCrudTests(TestCase):
             is_staff=True,
             is_patient=False,
         )
-        self.intake = Questionnaire.objects.create(slug="intake", title="Intake")
+        self.intake = Questionnaire.objects.create(
+            slug="intake",
+            title="Intake",
+            questionnaire_type=Questionnaire.QuestionnaireType.INTAKE,
+        )
         self.qualify = Questionnaire.objects.create(slug="qualify", title="Qualify")
         self.version = QuestionnaireVersion.objects.create(
             questionnaire=self.qualify,
@@ -1643,6 +1647,82 @@ class StaffQuestionnaireCrudTests(TestCase):
         response = self.client.post(
             f"/api/staff/questionnaires/{self.qualify.slug}/duplicate/",
             {"slug": "../../etc/passwd"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 400, response.content)
+
+    def test_staff_can_export_questionnaire_version_bundle(self):
+        self.client.force_authenticate(user=self.staff)
+        response = self.client.get(
+            f"/api/staff/questionnaires/{self.qualify.slug}/versions/{self.version.id}/export/"
+        )
+        self.assertEqual(response.status_code, 200, response.content)
+        body = response.json()
+        self.assertEqual(body["schema_version"], 1)
+        self.assertEqual(body["questionnaire"]["slug"], "qualify")
+        self.assertEqual(body["questionnaire"]["questionnaire_type"], "qualify")
+        self.assertEqual(body["version"]["version_label"], "1.0.0")
+        self.assertEqual(body["version"]["status"], "draft")
+        self.assertEqual(body["version"]["steps"][0]["step_key"], "goals")
+        self.assertNotIn("id", body["version"])
+        self.assertNotIn("id", body["version"]["steps"][0])
+        self.assertNotIn("id", body["version"]["steps"][0]["fields"][0])
+
+    def test_staff_can_import_exported_bundle_as_draft(self):
+        self.client.force_authenticate(user=self.staff)
+        exported = self.client.get(
+            f"/api/staff/questionnaires/{self.qualify.slug}/versions/{self.version.id}/export/"
+        ).json()
+
+        response = self.client.post(
+            f"/api/staff/questionnaires/{self.qualify.slug}/versions/import/",
+            exported,
+            format="json",
+        )
+        self.assertEqual(response.status_code, 201, response.content)
+        body = response.json()
+        self.assertEqual(body["status"], QuestionnaireVersion.Status.DRAFT)
+        self.assertNotEqual(body["id"], str(self.version.id))
+        imported = QuestionnaireVersion.objects.get(id=body["id"])
+        self.assertEqual(imported.version_label, "1.0.0-copy-1")
+        self.assertEqual(imported.steps.count(), 1)
+        self.assertEqual(imported.steps.get().fields.get().field_key, "goal")
+
+    def test_import_accepts_version_label_override(self):
+        self.client.force_authenticate(user=self.staff)
+        exported = self.client.get(
+            f"/api/staff/questionnaires/{self.qualify.slug}/versions/{self.version.id}/export/"
+        ).json()
+        response = self.client.post(
+            f"/api/staff/questionnaires/{self.qualify.slug}/versions/import/",
+            {"bundle": exported, "version_label": "prod-import"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 201, response.content)
+        self.assertEqual(response.json()["version_label"], "prod-import")
+
+    def test_import_rejects_wrong_questionnaire_type(self):
+        self.client.force_authenticate(user=self.staff)
+        exported = self.client.get(
+            f"/api/staff/questionnaires/{self.qualify.slug}/versions/{self.version.id}/export/"
+        ).json()
+        response = self.client.post(
+            f"/api/staff/questionnaires/{self.intake.slug}/versions/import/",
+            exported,
+            format="json",
+        )
+        self.assertEqual(response.status_code, 400, response.content)
+        self.assertIn("questionnaire_type", response.json())
+
+    def test_import_rejects_malicious_field_key(self):
+        self.client.force_authenticate(user=self.staff)
+        exported = self.client.get(
+            f"/api/staff/questionnaires/{self.qualify.slug}/versions/{self.version.id}/export/"
+        ).json()
+        exported["version"]["steps"][0]["fields"][0]["field_key"] = "../../etc/passwd"
+        response = self.client.post(
+            f"/api/staff/questionnaires/{self.qualify.slug}/versions/import/",
+            exported,
             format="json",
         )
         self.assertEqual(response.status_code, 400, response.content)

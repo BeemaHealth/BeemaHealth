@@ -11,8 +11,10 @@ import {
   deleteStaffQuestionnaireVersion,
   duplicateStaffQuestionnaire,
   duplicateStaffQuestionnaireVersion,
+  exportStaffQuestionnaireVersion,
   fetchStaffQuestionnaire,
   fetchStaffQuestionnaireVersions,
+  importStaffQuestionnaireVersion,
   publishStaffQuestionnaireVersion,
   updateStaffQuestionnaire,
   updateStaffQuestionnaireVersion,
@@ -326,6 +328,12 @@ function StaffQuestionnaireVersionsPage() {
   const [versions, setVersions] = useState<QuestionnaireVersionSchema[]>([]);
   const [error, setError] = useState("");
   const [duplicating, setDuplicating] = useState(false);
+  const [exportingVersionId, setExportingVersionId] = useState<string | null>(
+    null,
+  );
+  const [importText, setImportText] = useState("");
+  const [importVersionLabel, setImportVersionLabel] = useState("");
+  const [importing, setImporting] = useState(false);
 
   async function reload() {
     const [meta, data] = await Promise.all([
@@ -379,6 +387,65 @@ function StaffQuestionnaireVersionsPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to duplicate.");
     }
+  }
+
+  async function handleExport(version: QuestionnaireVersionSchema) {
+    setError("");
+    setExportingVersionId(version.id);
+    try {
+      const bundle = await exportStaffQuestionnaireVersion(slug, version.id);
+      const fileSlug = bundle.questionnaire.slug || slug;
+      const fileLabel = version.version_label.replace(/[^a-z0-9_.-]+/gi, "-");
+      const blob = new Blob([JSON.stringify(bundle, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${fileSlug}-v${fileLabel}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to export JSON.");
+    } finally {
+      setExportingVersionId(null);
+    }
+  }
+
+  async function handleImport() {
+    setError("");
+    let bundle: Record<string, unknown>;
+    try {
+      bundle = JSON.parse(importText) as Record<string, unknown>;
+    } catch {
+      setError("Import JSON is not valid.");
+      return;
+    }
+    setImporting(true);
+    try {
+      await importStaffQuestionnaireVersion(
+        slug,
+        bundle,
+        importVersionLabel || undefined,
+      );
+      setImportText("");
+      setImportVersionLabel("");
+      await reload();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to import JSON.");
+    } finally {
+      setImporting(false);
+    }
+  }
+
+  async function handleImportFile(file: File | null) {
+    if (!file) return;
+    if (file.type && file.type !== "application/json") {
+      setError("Choose a JSON file exported from Aretide.");
+      return;
+    }
+    setError("");
+    setImportText(await file.text());
   }
 
   async function handleArchive(versionId: string) {
@@ -528,6 +595,58 @@ function StaffQuestionnaireVersionsPage() {
         </AccountSectionCard>
       ) : null}
 
+      <AccountSectionCard
+        tone="contact"
+        title="Export / import JSON"
+        description="Move a tested questionnaire version between environments. Imports always create a new draft."
+      >
+        <div className="space-y-3">
+          <p className="text-sm text-muted-foreground">
+            Export the version you tested locally, then import that JSON on
+            production as a draft. Publishing remains a separate step so CTA
+            ownership changes are explicit.
+          </p>
+          <Field label="Import JSON file">
+            <input
+              className={inputCls}
+              type="file"
+              accept="application/json,.json"
+              disabled={importing}
+              onChange={(e) => {
+                void handleImportFile(e.target.files?.[0] ?? null);
+                e.currentTarget.value = "";
+              }}
+            />
+          </Field>
+          <Field label="Or paste export JSON">
+            <textarea
+              className={`${inputCls} min-h-32 font-mono text-xs`}
+              value={importText}
+              disabled={importing}
+              placeholder='{"schema_version":1,"questionnaire":{...},"version":{...}}'
+              onChange={(e) => setImportText(e.target.value)}
+            />
+          </Field>
+          <Field label="Version label override (optional)">
+            <input
+              className={inputCls}
+              value={importVersionLabel}
+              maxLength={32}
+              disabled={importing}
+              placeholder="e.g. prod-facebook-test"
+              onChange={(e) => setImportVersionLabel(e.target.value)}
+            />
+          </Field>
+          <Button
+            size="sm"
+            disabled={importing || !importText.trim()}
+            onClick={() => void handleImport()}
+          >
+            {importing ? "Importing…" : "Import as draft"}
+          </Button>
+        </div>
+      </AccountSectionCard>
+
       {publishedCount > 1 ? (
         <p className="rounded-lg bg-warning/10 px-3 py-2 text-sm text-foreground">
           {publishedCount} versions are published at once. Patients enter the
@@ -598,6 +717,14 @@ function StaffQuestionnaireVersionsPage() {
                 onClick={() => void handleDuplicate(v.id)}
               >
                 Duplicate
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={exportingVersionId === v.id}
+                onClick={() => void handleExport(v)}
+              >
+                {exportingVersionId === v.id ? "Exporting…" : "Export JSON"}
               </Button>
             </div>
           </AccountSectionCard>

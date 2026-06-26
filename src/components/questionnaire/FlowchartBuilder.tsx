@@ -3737,9 +3737,12 @@ export function FlowchartBuilder({
   }
 
   return (
-    <div className="flex flex-col" style={{ height: "calc(100svh - 160px)" }}>
+    <div
+      className="flex w-full min-w-0 flex-col"
+      style={{ height: "calc(100svh - 160px)" }}
+    >
       {/* ── Toolbar ────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-3 px-3 py-2 mb-2 bg-card border border-border rounded-2xl shrink-0 shadow-soft">
+      <div className="flex flex-wrap items-center gap-3 px-3 py-2 mb-2 bg-card border border-border rounded-2xl shrink-0 shadow-soft">
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-sm font-bold text-foreground truncate">
             {schema.questionnaire_slug}

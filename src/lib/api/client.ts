@@ -918,6 +918,26 @@ export type QuestionnaireVersionSchema = {
   steps: QuestionnaireStepSchema[];
 };
 
+export type QuestionnaireExportBundle = {
+  schema_version: 1;
+  questionnaire: {
+    slug: string;
+    title: string;
+    questionnaire_type: "qualify" | "intake";
+    medication_id: string | null;
+    medication_slug: string;
+  };
+  version: Omit<QuestionnaireVersionSchema, "id" | "steps"> & {
+    id?: never;
+    steps: Array<
+      Omit<QuestionnaireStepSchema, "id" | "fields"> & {
+        id?: never;
+        fields: Array<QuestionnaireFieldSchema & { id?: never }>;
+      }
+    >;
+  };
+};
+
 export type QuestionnaireListItem = {
   id: string;
   slug: string;
@@ -1041,6 +1061,33 @@ export async function fetchStaffQuestionnaireVersion(
 ) {
   return apiFetch<QuestionnaireVersionSchema>(
     `/staff/questionnaires/${slug}/versions/${versionId}/`,
+  );
+}
+
+export async function exportStaffQuestionnaireVersion(
+  slug: string,
+  versionId: string,
+) {
+  return apiFetch<QuestionnaireExportBundle>(
+    `/staff/questionnaires/${encodeURIComponent(slug)}/versions/${versionId}/export/`,
+  );
+}
+
+export async function importStaffQuestionnaireVersion(
+  slug: string,
+  bundle: QuestionnaireExportBundle | Record<string, unknown>,
+  versionLabel?: string,
+) {
+  const body =
+    versionLabel && versionLabel.trim()
+      ? { bundle, version_label: versionLabel.trim() }
+      : bundle;
+  return apiFetch<QuestionnaireVersionSchema>(
+    `/staff/questionnaires/${encodeURIComponent(slug)}/versions/import/`,
+    {
+      method: "POST",
+      body: JSON.stringify(body),
+    },
   );
 }
 
