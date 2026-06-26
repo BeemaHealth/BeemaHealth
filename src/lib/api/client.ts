@@ -646,6 +646,7 @@ export type StepAnalyticsRow = {
   completions: number;
   dropoff_percent: number;
   stopped_sessions: number;
+  progress_level?: number;
   fields: StepFieldAnalytics[];
 };
 

@@ -16,7 +16,7 @@ from apps.analytics.services import (
 )
 from apps.analytics.validation import sanitize_event_properties, validate_event_name
 from apps.eligibility.services import create_funnel_session
-from apps.questionnaires.models import Questionnaire, QuestionnaireStep, QuestionnaireVersion
+from apps.questionnaires.models import Questionnaire, QuestionnaireField, QuestionnaireStep, QuestionnaireVersion
 
 User = get_user_model()
 
@@ -49,6 +49,34 @@ class AnalyticsEventApiTests(TestCase):
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_anonymous_same_client_dedups_double_fire(self):
+        """Same anonymous client double-firing within 1s collapses to one event."""
+        payload = {"event_name": "page_viewed", "properties": {"page": "home"}}
+        first = self.client.post(
+            reverse("analytics-events"), payload, format="json", REMOTE_ADDR="203.0.113.1"
+        )
+        second = self.client.post(
+            reverse("analytics-events"), payload, format="json", REMOTE_ADDR="203.0.113.1"
+        )
+        self.assertEqual(first.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(second.status_code, status.HTTP_200_OK)
+        self.assertEqual(first.json()["id"], second.json()["id"])
+        self.assertEqual(FunnelEvent.objects.count(), 1)
+
+    def test_anonymous_different_clients_not_deduped(self):
+        """Two different anonymous clients firing the same event must NOT collapse."""
+        payload = {"event_name": "page_viewed", "properties": {"page": "home"}}
+        first = self.client.post(
+            reverse("analytics-events"), payload, format="json", REMOTE_ADDR="203.0.113.1"
+        )
+        second = self.client.post(
+            reverse("analytics-events"), payload, format="json", REMOTE_ADDR="203.0.113.2"
+        )
+        self.assertEqual(first.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(second.status_code, status.HTTP_201_CREATED)
+        self.assertNotEqual(first.json()["id"], second.json()["id"])
+        self.assertEqual(FunnelEvent.objects.count(), 2)
 
 
 class AnalyticsServicesTests(TestCase):
@@ -187,6 +215,92 @@ class AnalyticsServicesTests(TestCase):
         }
         self.assertEqual(transitions[("step_5", "step_4")], 1)
         self.assertEqual(transitions[("step_3", "step_4")], 1)
+
+
+class StepAnalyticsPHITests(TestCase):
+    """PHI field types must never expose individual response values in distributions."""
+
+    def setUp(self):
+        questionnaire = Questionnaire.objects.create(
+            slug="qualify",
+            title="Qualify",
+        )
+        self.version = QuestionnaireVersion.objects.create(
+            questionnaire=questionnaire,
+            version_label="v1",
+            status=QuestionnaireVersion.Status.PUBLISHED,
+        )
+        self.step = QuestionnaireStep.objects.create(
+            version=self.version,
+            step_key="personal_info",
+            title="Personal info",
+            sort_order=0,
+        )
+
+    def _add_field(self, field_key, field_type):
+        return QuestionnaireField.objects.create(
+            step=self.step,
+            field_key=field_key,
+            field_type=field_type,
+            label=field_key,
+            sort_order=0,
+        )
+
+    def _responses_with(self, **kwargs):
+        from apps.eligibility.models import EligibilityResponse
+        EligibilityResponse.objects.create(
+            questionnaire_version_id=self.version.id,
+            questionnaire_responses=kwargs,
+        )
+
+    def test_email_field_distribution_is_blank(self):
+        self._add_field("email_address", "email")
+        self._responses_with(email_address="patient@example.com")
+        data = questionnaire_step_analytics(version_id=str(self.version.id))
+        field = next(f for f in data["steps"][0]["fields"] if f["field_key"] == "email_address")
+        self.assertEqual(field["total_answers"], 1)
+        self.assertEqual(field["answer_distribution"], [])
+
+    def test_phone_field_distribution_is_blank(self):
+        self._add_field("phone_number", "phone")
+        self._responses_with(phone_number="5551234567")
+        data = questionnaire_step_analytics(version_id=str(self.version.id))
+        field = next(f for f in data["steps"][0]["fields"] if f["field_key"] == "phone_number")
+        self.assertEqual(field["total_answers"], 1)
+        self.assertEqual(field["answer_distribution"], [])
+
+    def test_dob_field_distribution_is_blank(self):
+        self._add_field("date_of_birth", "dob")
+        self._responses_with(date_of_birth="1985-04-12")
+        data = questionnaire_step_analytics(version_id=str(self.version.id))
+        field = next(f for f in data["steps"][0]["fields"] if f["field_key"] == "date_of_birth")
+        self.assertEqual(field["total_answers"], 1)
+        self.assertEqual(field["answer_distribution"], [])
+
+    def test_review_field_excluded_entirely(self):
+        self._add_field("confirm", "review")
+        self._add_field("goal", "yes_no")
+        self._responses_with(confirm="reviewed", goal="yes")
+        data = questionnaire_step_analytics(version_id=str(self.version.id))
+        field_keys = [f["field_key"] for f in data["steps"][0]["fields"]]
+        self.assertNotIn("confirm", field_keys)
+        self.assertIn("goal", field_keys)
+
+    def test_choice_field_distribution_is_preserved(self):
+        field = self._add_field("treatment", "single_choice")
+        field.options = [
+            {"value": "glp1", "label": "GLP-1"},
+            {"value": "other", "label": "Other"},
+        ]
+        field.save()
+        self._responses_with(treatment="glp1")
+        self._responses_with(treatment="glp1")
+        data = questionnaire_step_analytics(version_id=str(self.version.id))
+        f = next(f for f in data["steps"][0]["fields"] if f["field_key"] == "treatment")
+        self.assertEqual(f["total_answers"], 2)
+        self.assertTrue(len(f["answer_distribution"]) > 0)
+        glp1 = next(d for d in f["answer_distribution"] if d["value"] == "glp1")
+        self.assertEqual(glp1["count"], 2)
 
 
 class PageViewsAggregationTests(TestCase):

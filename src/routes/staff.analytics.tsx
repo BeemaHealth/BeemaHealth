@@ -14,6 +14,8 @@ import {
   type LandingPagePerformanceRow,
   type LandingPageViewRow,
   type PageViewRow,
+  type StepAnalyticsRow,
+  type StepFieldAnalytics,
   type TopOfFunnelStats,
   type TrafficSourceRow,
   type VersionListRow,
@@ -241,58 +243,208 @@ function VersionTable({
   );
 }
 
-function StepAnalyticsDetail({ data }: { data: VersionStepAnalytics }) {
+function FieldDistribution({
+  field,
+  stepMetrics,
+}: {
+  field: StepFieldAnalytics;
+  stepMetrics?: Pick<
+    StepAnalyticsRow,
+    "views" | "completions" | "dropoff_percent" | "stopped_sessions"
+  >;
+}) {
   return (
-    <div className="space-y-5">
-      {/* Summary row */}
-      <div className="flex flex-wrap items-center gap-4 rounded-lg bg-muted/30 px-4 py-2.5 text-sm">
-        <div>
-          <span className="text-muted-foreground">Total respondents</span>
-          <span className="ml-2 font-semibold tabular-nums">
-            {data.total_respondents.toLocaleString()}
+    <div className="py-3">
+      <div className="mb-2 flex items-baseline justify-between gap-2">
+        <span className="text-sm font-medium">
+          {field.label || field.field_key}
+        </span>
+        <div className="flex shrink-0 items-center gap-2 text-xs">
+          {stepMetrics && stepMetrics.views > 0 && (
+            <>
+              <span className="text-muted-foreground">
+                <span className="font-medium text-foreground">
+                  {stepMetrics.views.toLocaleString()}
+                </span>{" "}
+                reached
+              </span>
+              {stepMetrics.dropoff_percent > 0 && (
+                <span className="rounded bg-destructive/10 px-1.5 py-0.5 text-destructive/80">
+                  {stepMetrics.dropoff_percent.toFixed(1)}% drop-off
+                </span>
+              )}
+              {stepMetrics.stopped_sessions > 0 && (
+                <span className="rounded bg-orange-500/10 px-1.5 py-0.5 text-orange-600 dark:text-orange-400">
+                  {stepMetrics.stopped_sessions} stopped
+                </span>
+              )}
+            </>
+          )}
+          <span className="text-muted-foreground">
+            {field.total_answers > 0
+              ? `${field.total_answers.toLocaleString()} responses`
+              : "No responses yet"}
           </span>
         </div>
-        {data.questionnaire_type === "qualify" && (
-          <div>
-            <span className="text-muted-foreground">Entry routing</span>
-            {data.is_default_entry ? (
-              <span className="ml-2 rounded bg-primary/10 px-1.5 py-0.5 text-[11px] font-medium text-primary">
-                Default — handles all unrouted CTAs
-              </span>
-            ) : (
-              <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
-                Not default — reached via specific CTA only
-              </span>
-            )}
-          </div>
-        )}
-        {data.cta_ids.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1">
-            <span className="text-muted-foreground">CTAs</span>
-            {data.cta_ids.map((c) => (
-              <span
-                key={c}
-                className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]"
-              >
-                {c}
-              </span>
-            ))}
-          </div>
-        )}
       </div>
-
-      {data.steps.length === 0 && (
-        <p className="text-sm text-muted-foreground">
-          No step data yet for this version.
+      {field.answer_distribution.length === 0 ? (
+        <p className="text-xs text-muted-foreground italic">
+          {field.total_answers > 0
+            ? "Individual values not shown — field contains patient identifiers."
+            : "No responses yet."}
         </p>
+      ) : (
+        <div className="space-y-2">
+          {field.answer_distribution.map((ans) => (
+            <div key={ans.value}>
+              <div className="mb-0.5 flex justify-between text-xs">
+                <span className="mr-2 truncate text-foreground/80">
+                  {ans.label || ans.value}
+                </span>
+                <span className="shrink-0 tabular-nums text-muted-foreground">
+                  {ans.count.toLocaleString()}{" "}
+                  {field.total_answers > 0 && `(${ans.pct.toFixed(1)}%)`}
+                </span>
+              </div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                {ans.count > 0 && (
+                  <div
+                    className="h-full bg-primary"
+                    style={{ width: `${Math.min(100, ans.pct)}%` }}
+                  />
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       )}
+    </div>
+  );
+}
 
+function StepAnalyticsDetail({ data }: { data: VersionStepAnalytics }) {
+  const hasLevels = data.steps.some((s) => (s.progress_level ?? 0) > 0);
+
+  const summary = (
+    <div className="flex flex-wrap items-center gap-4 rounded-lg bg-muted/30 px-4 py-2.5 text-sm">
+      <div>
+        <span className="text-muted-foreground">Total respondents</span>
+        <span className="ml-2 font-semibold tabular-nums">
+          {data.total_respondents.toLocaleString()}
+        </span>
+      </div>
+      {data.questionnaire_type === "qualify" && (
+        <div>
+          <span className="text-muted-foreground">Entry routing</span>
+          {data.is_default_entry ? (
+            <span className="ml-2 rounded bg-primary/10 px-1.5 py-0.5 text-[11px] font-medium text-primary">
+              Default — handles all unrouted CTAs
+            </span>
+          ) : (
+            <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
+              Not default — reached via specific CTA only
+            </span>
+          )}
+        </div>
+      )}
+      {data.cta_ids.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1">
+          <span className="text-muted-foreground">CTAs</span>
+          {data.cta_ids.map((c) => (
+            <span
+              key={c}
+              className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]"
+            >
+              {c}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  const noData = data.steps.length === 0 && (
+    <p className="text-sm text-muted-foreground">
+      No step data yet for this version.
+    </p>
+  );
+
+  // ── Level-grouped view ────────────────────────────────────────────────────
+  if (hasLevels) {
+    const levelGroups = new Map<number, StepAnalyticsRow[]>();
+    for (const step of data.steps) {
+      const level = step.progress_level ?? 0;
+      if (!levelGroups.has(level)) levelGroups.set(level, []);
+      levelGroups.get(level)!.push(step);
+    }
+    const sortedLevels = [...levelGroups.keys()].sort((a, b) => a - b);
+
+    return (
+      <div className="space-y-5">
+        {summary}
+        {noData}
+        {sortedLevels.map((level) => {
+          const steps = levelGroups.get(level)!;
+          const stepFields = steps.flatMap((s) =>
+            s.fields.map((f) => ({ field: f, step: s })),
+          );
+
+          return (
+            <div
+              key={level}
+              className="overflow-hidden rounded-lg border border-border"
+            >
+              {/* Level header */}
+              <div className="flex flex-wrap items-center gap-3 border-b border-border bg-muted/30 px-4 py-2.5">
+                <span className="font-semibold text-sm">
+                  {level === 0 ? "Unleveled" : `Level ${level}`}
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {steps.map((s) => (
+                    <span
+                      key={s.step_key}
+                      className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
+                      title={s.step_key}
+                    >
+                      {s.title || s.step_key}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Fields */}
+              {stepFields.length > 0 ? (
+                <div className="divide-y divide-border/60 px-4 py-1">
+                  {stepFields.map(({ field, step }) => (
+                    <FieldDistribution
+                      key={field.field_key}
+                      field={field}
+                      stepMetrics={step}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="px-4 py-2.5 text-xs text-muted-foreground">
+                  No question fields at this level.
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // ── Step-by-step view (no levels assigned) ───────────────────────────────
+  return (
+    <div className="space-y-5">
+      {summary}
+      {noData}
       {data.steps.map((step) => (
         <div
           key={step.step_key}
           className="overflow-hidden rounded-lg border border-border"
         >
-          {/* Step header */}
           <div className="flex flex-wrap items-center gap-3 border-b border-border bg-muted/30 px-4 py-2.5">
             <span className="font-semibold">{step.title || step.step_key}</span>
             <span className="font-mono text-xs text-muted-foreground">
@@ -324,7 +476,6 @@ function StepAnalyticsDetail({ data }: { data: VersionStepAnalytics }) {
             </div>
           </div>
 
-          {/* Drop-off progress bar */}
           {step.dropoff_percent > 0 && (
             <div className="h-1 overflow-hidden bg-muted">
               <div
@@ -334,52 +485,10 @@ function StepAnalyticsDetail({ data }: { data: VersionStepAnalytics }) {
             </div>
           )}
 
-          {/* Fields */}
           {step.fields.length > 0 ? (
             <div className="divide-y divide-border/60 px-4 py-1">
               {step.fields.map((field) => (
-                <div key={field.field_key} className="py-3">
-                  <div className="mb-2 flex items-baseline justify-between gap-2">
-                    <span className="text-sm font-medium">
-                      {field.label || field.field_key}
-                    </span>
-                    <span className="shrink-0 text-xs text-muted-foreground">
-                      {field.total_answers > 0
-                        ? `${field.total_answers.toLocaleString()} responses`
-                        : "No responses yet"}
-                    </span>
-                  </div>
-                  {field.answer_distribution.length === 0 ? (
-                    <p className="text-xs text-muted-foreground italic">
-                      Free-text field — no responses recorded yet.
-                    </p>
-                  ) : (
-                    <div className="space-y-2">
-                      {field.answer_distribution.map((ans) => (
-                        <div key={ans.value}>
-                          <div className="mb-0.5 flex justify-between text-xs">
-                            <span className="mr-2 truncate text-foreground/80">
-                              {ans.label || ans.value}
-                            </span>
-                            <span className="shrink-0 tabular-nums text-muted-foreground">
-                              {ans.count.toLocaleString()}{" "}
-                              {field.total_answers > 0 &&
-                                `(${ans.pct.toFixed(1)}%)`}
-                            </span>
-                          </div>
-                          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                            {ans.count > 0 && (
-                              <div
-                                className="h-full bg-primary"
-                                style={{ width: `${Math.min(100, ans.pct)}%` }}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <FieldDistribution key={field.field_key} field={field} />
               ))}
             </div>
           ) : (

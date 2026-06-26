@@ -83,6 +83,10 @@ class FunnelEvent(models.Model):
     experiment_id = models.UUIDField(null=True, blank=True)
     variant_key = models.CharField(max_length=32, blank=True, default="")
     properties = models.JSONField(default=dict, blank=True)
+    # Captured only for anonymous (no session/user) events so React StrictMode
+    # double-fires from the same client can be deduplicated. Never used to scope
+    # dedup for session/user-bound events.
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:

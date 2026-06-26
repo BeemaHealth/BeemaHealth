@@ -725,6 +725,16 @@ def questionnaire_step_analytics(
     all_responses = [r for r in recs if r and isinstance(r, dict)]
     total_respondents = len(all_responses)
 
+    # Field types that carry HIPAA-identified data. We still report total_answers
+    # (a bare count is not PHI) but never expose individual response values in the
+    # distribution — doing so would surface emails, phone numbers, DOBs, etc.
+    _PHI_FIELD_TYPES = frozenset({
+        "email", "phone", "dob", "text", "textarea",
+        "date", "address_group", "account", "legal_consent",
+    })
+    # Field types with no meaningful analytics data to show at all.
+    _SKIP_FIELD_TYPES = frozenset({"password", "plugin", "review"})
+
     # ── Build output ──────────────────────────────────────────────────────────
     steps_out = []
     for step in version.steps.prefetch_related("fields").all():
@@ -735,10 +745,25 @@ def questionnaire_step_analytics(
 
         fields_out = []
         for field in step.fields.all():
-            if field.field_type in ("password", "plugin"):
+            if field.field_type in _SKIP_FIELD_TYPES:
                 continue
 
-            # Tally actual responses for this field
+            # PHI-bearing field types: count responses but never expose individual values.
+            if field.field_type in _PHI_FIELD_TYPES:
+                total_ans = sum(
+                    1 for resp in all_responses
+                    if resp.get(field.field_key) not in (None, "")
+                )
+                fields_out.append({
+                    "field_key": field.field_key,
+                    "label": field.label,
+                    "field_type": field.field_type,
+                    "answer_distribution": [],
+                    "total_answers": total_ans,
+                })
+                continue
+
+            # Safe field types (choice, numeric): build full distribution.
             value_counts: dict[str, int] = {}
             for resp in all_responses:
                 raw = resp.get(field.field_key)
@@ -761,7 +786,7 @@ def questionnaire_step_analytics(
 
             # Build distribution over all defined options (0-count entries included so
             # staff can see the full answer set even before anyone has responded).
-            # Free-text fields only list options that have at least one response.
+            # Numeric fields without options list only observed values.
             if option_label_map:
                 all_keys = list(option_label_map.keys())
                 for k in value_counts:
@@ -810,6 +835,7 @@ def questionnaire_step_analytics(
             "completions": completions,
             "dropoff_percent": dropoff_pct,
             "stopped_sessions": stopped,
+            "progress_level": step.progress_level,
             "fields": fields_out,
         })
 

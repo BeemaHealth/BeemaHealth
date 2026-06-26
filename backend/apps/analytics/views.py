@@ -66,6 +66,7 @@ class FunnelEventCreateView(APIView):
 
         # Dedup: reject identical events submitted within 1 second of each other
         # from the same client (handles React StrictMode double-fire and accidental retries).
+        client_ip = None
         dedup_cutoff = timezone.now() - timedelta(seconds=1)
         dedup_qs = FunnelEvent.objects.filter(
             event_name=event_name,
@@ -77,15 +78,20 @@ class FunnelEventCreateView(APIView):
         elif user:
             dedup_qs = dedup_qs.filter(user=user)
         else:
-            # No session/user — dedup by IP
+            # No session/user — dedup by client IP so we only collapse repeat
+            # fires from the *same* client, not events from different anonymous
+            # visitors. Without an IP we cannot identify the client, so we skip
+            # dedup entirely rather than collapse unrelated visitors' events.
             client_ip = get_client_ip(request)
             if client_ip:
-                dedup_qs = dedup_qs.filter(funnel_session__isnull=True, user__isnull=True)
+                dedup_qs = dedup_qs.filter(
+                    funnel_session__isnull=True,
+                    user__isnull=True,
+                    ip_address=client_ip,
+                )
                 page = (properties or {}).get("page", "")
                 if page:
                     dedup_qs = dedup_qs.filter(properties__page=page)
-                else:
-                    dedup_qs = dedup_qs.none()
             else:
                 dedup_qs = dedup_qs.none()
 
@@ -103,6 +109,7 @@ class FunnelEventCreateView(APIView):
             experiment_id=parsed_experiment,
             variant_key=str(data.get("variant_key", ""))[:32],
             properties=properties,
+            ip_address=client_ip if (funnel_session is None and user is None) else None,
         )
         return Response({"id": str(event.id)}, status=status.HTTP_201_CREATED)
 
