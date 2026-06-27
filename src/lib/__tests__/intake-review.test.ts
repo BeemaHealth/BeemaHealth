@@ -108,7 +108,9 @@ describe("buildIntakeReviewSections", () => {
     const reviewSchema: QuestionnaireVersionSchema = {
       ...schema,
       steps: [
-        step("s1", 0, [field("notes", "textarea", { label: "Anything else?" })]),
+        step("s1", 0, [
+          field("notes", "textarea", { label: "Anything else?" }),
+        ]),
         step("review", 1, [
           field("account", "account", { label: "Create account" }),
           field("review_confirm", "review", { label: "Review your answers" }),

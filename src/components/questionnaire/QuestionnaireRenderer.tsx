@@ -34,6 +34,8 @@ type QuestionnaireRendererProps = {
   signedIn?: boolean;
   qualifySchema?: QuestionnaireVersionSchema | null;
   qualifyResponses?: Record<string, unknown>;
+  /** Explicit intake schema for review fields — used by the builder preview when rendering a qualify step that references intake answers. */
+  intakeSchema?: QuestionnaireVersionSchema | null;
   accountExtras?: BelugaAccountExtras;
   reviewVariant?: QuestionnaireReviewVariant;
 };
@@ -52,6 +54,7 @@ export function QuestionnaireRenderer({
   signedIn,
   qualifySchema,
   qualifyResponses,
+  intakeSchema,
   accountExtras,
   reviewVariant,
 }: QuestionnaireRendererProps) {
@@ -95,6 +98,7 @@ export function QuestionnaireRenderer({
               allResponses: responses,
               qualifySchema,
               qualifyResponses,
+              intakeSchema,
               accountExtras,
               reviewVariant,
             })}

@@ -8,10 +8,7 @@ function shouldUseSubmittedReviewView(
   fieldType: string,
 ): boolean {
   return (
-    locked &&
-    hasSnapshot &&
-    (fieldType === "review" ||
-      (fieldType === "plugin"))
+    locked && hasSnapshot && (fieldType === "review" || fieldType === "plugin")
   );
 }
 

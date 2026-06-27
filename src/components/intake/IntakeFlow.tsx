@@ -689,7 +689,15 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
                 country: "US",
                 verified: id.address_verified === "true",
               }}
-              onSave={({ address, city, state, zip, county, country, verified }) =>
+              onSave={({
+                address,
+                city,
+                state,
+                zip,
+                county,
+                country,
+                verified,
+              }) =>
                 patchIdentity({
                   address,
                   city,
@@ -1235,7 +1243,15 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
                   country: String(prefs.shipping_country ?? "US"),
                   verified: prefs.shipping_address_verified === "true",
                 }}
-                onChange={({ address, city, state, zip, county, country, verified }) =>
+                onChange={({
+                  address,
+                  city,
+                  state,
+                  zip,
+                  county,
+                  country,
+                  verified,
+                }) =>
                   patch("medication_preferences", {
                     ...prefs,
                     use_different_shipping_address: true,

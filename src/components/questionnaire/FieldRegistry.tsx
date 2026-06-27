@@ -65,6 +65,8 @@ export type FieldRenderContext = {
   allResponses?: Record<string, unknown>;
   qualifySchema?: QuestionnaireVersionSchema | null;
   qualifyResponses?: Record<string, unknown>;
+  /** Explicit intake schema for review fields (builder preview passes this separately from schema). */
+  intakeSchema?: QuestionnaireVersionSchema | null;
   accountExtras?: BelugaAccountExtras;
   /** Patient live flow vs staff builder preview. */
   reviewVariant?: QuestionnaireReviewVariant;
@@ -86,6 +88,7 @@ export function renderQuestionnaireField(
     allResponses,
     qualifySchema,
     qualifyResponses,
+    intakeSchema,
     accountExtras,
     reviewVariant,
   } = ctx;
@@ -102,7 +105,7 @@ export function renderQuestionnaireField(
           variant={reviewVariant ?? "patient"}
           qualifySchema={qualifySchema}
           qualifyResponses={qualifyResponses}
-          intakeSchema={schema}
+          intakeSchema={intakeSchema ?? schema}
           intakeResponses={allResponses ?? {}}
           registration={registration?.value}
           accountExtras={accountExtras}

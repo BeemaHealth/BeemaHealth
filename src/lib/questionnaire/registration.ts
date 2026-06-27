@@ -1,4 +1,7 @@
-import type { QuestionnaireFieldSchema, QuestionnaireStepSchema } from "@/lib/api/client";
+import type {
+  QuestionnaireFieldSchema,
+  QuestionnaireStepSchema,
+} from "@/lib/api/client";
 
 /** Plugin id for legacy account steps (prefer field_type `account`). */
 export const ACCOUNT_REGISTRATION_PLUGIN = "account_registration";

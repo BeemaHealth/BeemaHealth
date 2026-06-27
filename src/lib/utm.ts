@@ -8,10 +8,17 @@ export type UtmParams = {
   landing_page_slug: string;
 };
 
-export function readUtmsFromUrl(search: string = window.location.search): Partial<UtmParams> {
+export function readUtmsFromUrl(
+  search: string = window.location.search,
+): Partial<UtmParams> {
   const params = new URLSearchParams(search);
   const result: Partial<UtmParams> = {};
-  for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content"] as const) {
+  for (const key of [
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_content",
+  ] as const) {
     const val = params.get(key);
     if (val) result[key] = val.slice(0, 128);
   }
