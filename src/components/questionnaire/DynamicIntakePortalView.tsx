@@ -104,7 +104,7 @@ export function DynamicIntakePortalView({
     <div className="mx-auto max-w-6xl space-y-6">
       <PortalPageHeader
         title="Medical intake"
-        subtitle={`Dynamic questionnaire · version ${versionLabel}${locked ? " · read only" : ""}`}
+        subtitle={`Intake Questionnaire · Version ${versionLabel}${locked ? " · Read Only" : ""}`}
       />
       {headerExtra}
       <div className="space-y-4">

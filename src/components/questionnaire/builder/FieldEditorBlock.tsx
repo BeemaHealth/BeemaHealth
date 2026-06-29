@@ -53,6 +53,7 @@ type FieldEditorBlockProps = {
   isDraft: boolean;
   fieldTypes: ReadonlyArray<{ value: string; label: string }>;
   belugaFields: ReadonlyArray<{ value: string; label: string }>;
+  vendorLabel?: string;
   /** When true, omit outer card chrome (used inside StepFieldsEditor). */
   embedded?: boolean;
   onUpdate: (patch: Partial<QuestionnaireFieldSchema>) => void;
@@ -64,6 +65,7 @@ export function FieldEditorBlock({
   isDraft,
   fieldTypes,
   belugaFields,
+  vendorLabel = "API Mapping",
   embedded = false,
   onUpdate,
   onRemove,
@@ -100,9 +102,11 @@ export function FieldEditorBlock({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [field.field_key, field.field_type]);
 
-  const belugaValue = field.maps_to_section?.startsWith("beluga:")
-    ? field.maps_to_section
-    : "";
+  const belugaValue =
+    field.maps_to_section &&
+    belugaFields.some((f) => f.value === field.maps_to_section)
+      ? field.maps_to_section
+      : "";
   const showOptions = CHOICE_TYPES.has(field.field_type);
   const showConfigurableChoiceOptions = CONFIGURABLE_CHOICE_TYPES.has(
     field.field_type,
@@ -307,6 +311,8 @@ export function FieldEditorBlock({
             disabled={!isDraft}
             backendReadOnly
             compact
+            belugaFields={belugaFields}
+            vendorLabel={vendorLabel}
             onChange={(next) =>
               onUpdate({ options: serializeAccountMappings(next) })
             }
@@ -331,6 +337,8 @@ export function FieldEditorBlock({
           disabled={!isDraft}
           compact
           showBelugaColumn={field.field_type === "multi_choice"}
+          belugaFields={belugaFields}
+          vendorLabel={vendorLabel}
           onChange={(next) => {
             setChoiceOptions(next);
             onUpdate({
@@ -394,25 +402,28 @@ export function FieldEditorBlock({
         </div>
       )}
 
-      {!isAccount && !isAddress && !CHOICE_TYPES.has(field.field_type) && (
-        <div className="space-y-0.5">
-          <p className="text-[10px] text-muted-foreground font-medium">
-            Maps to section
-          </p>
-          <input
-            className={`${inputCls} text-xs`}
-            value={mapsToSection}
-            disabled={!isDraft}
-            maxLength={64}
-            placeholder="identity, body_metrics, …"
-            onChange={(e) => setMapsToSection(e.target.value)}
-            onBlur={() =>
-              mapsToSection !== (field.maps_to_section ?? "") &&
-              onUpdate({ maps_to_section: mapsToSection })
-            }
-          />
-        </div>
-      )}
+      {!isAccount &&
+        !isAddress &&
+        !isDob &&
+        !CHOICE_TYPES.has(field.field_type) && (
+          <div className="space-y-0.5">
+            <p className="text-[10px] text-muted-foreground font-medium">
+              Maps to section
+            </p>
+            <input
+              className={`${inputCls} text-xs`}
+              value={mapsToSection}
+              disabled={!isDraft}
+              maxLength={64}
+              placeholder="identity, body_metrics, …"
+              onChange={(e) => setMapsToSection(e.target.value)}
+              onBlur={() =>
+                mapsToSection !== (field.maps_to_section ?? "") &&
+                onUpdate({ maps_to_section: mapsToSection })
+              }
+            />
+          </div>
+        )}
 
       {isAddress && (
         <>
@@ -446,6 +457,8 @@ export function FieldEditorBlock({
             disabled={!isDraft}
             backendReadOnly
             compact
+            belugaFields={belugaFields}
+            vendorLabel={vendorLabel}
             onChange={(next) =>
               onUpdate({ options: serializeAddressMappings(next) })
             }
@@ -472,20 +485,17 @@ export function FieldEditorBlock({
         </div>
       )}
 
-      {isDob ? (
-        <p className="text-[10px] text-muted-foreground rounded-lg bg-muted/40 px-2 py-1.5">
-          Maps to Beluga <span className="font-mono">dob</span> (
-          <span className="font-mono">MM/DD/YYYY</span>). Patients enter month,
-          day, and year as separate fields.
-        </p>
-      ) : null}
-
-      {!isAccount && !isAddress && !isDob && (
+      {!isAccount && !isAddress && (
         <div className="space-y-0.5">
           <p className="text-[10px] text-muted-foreground font-medium">
-            Maps to Beluga API field
+            {vendorLabel} field
           </p>
-          {isSingleChoice ? (
+          {isDob ? (
+            <p className="text-[10px] text-muted-foreground mb-1">
+              Patients enter month, day, and year as separate inputs (
+              <span className="font-mono">MM/DD/YYYY</span>).
+            </p>
+          ) : isSingleChoice ? (
             <p className="text-[10px] text-muted-foreground mb-1">
               The patient's selected answer is sent to this field.
             </p>
@@ -494,11 +504,7 @@ export function FieldEditorBlock({
             className="w-full text-xs border border-input rounded-lg px-1.5 py-0.5 bg-background text-foreground"
             value={belugaValue}
             disabled={!isDraft}
-            onChange={(e) =>
-              onUpdate({
-                maps_to_section: e.target.value || field.maps_to_section,
-              })
-            }
+            onChange={(e) => onUpdate({ maps_to_section: e.target.value })}
           >
             {belugaFields.map((f) => (
               <option key={f.value} value={f.value}>

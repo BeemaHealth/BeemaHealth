@@ -17,9 +17,13 @@ import {
   type NodeProps,
 } from "@xyflow/react";
 import {
+  AlertTriangle,
   BarChart2,
   ClipboardPaste,
   Copy,
+  Eye,
+  GitBranch,
+  Link2,
   MousePointer2,
   Plus,
   Redo2,
@@ -27,6 +31,7 @@ import {
   Undo2,
   Workflow,
   X,
+  Zap,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -75,10 +80,12 @@ import {
   fetchStaffQuestionnaires,
   fetchStaffQuestionnaireVersion,
   fetchStaffStepAnalytics,
+  fetchStaffVendors,
   resolveIntakeQuestionnaire,
   updateStaffQuestionnaireField,
   updateStaffQuestionnaireStep,
   updateStaffQuestionnaireVersion,
+  type ApiVendorSchema,
   type FunnelAnalyticsStep,
   type IntakeRoutingRule,
   type QuestionnaireFieldSchema,
@@ -87,6 +94,12 @@ import {
   type RoutingRule,
   type StepAnalyticsRow,
 } from "@/lib/api/client";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   computeEdgeDropoff,
   edgeDropoffFromReactFlowEdge,
@@ -2363,7 +2376,23 @@ function buildNodesAndEdges(
 
 // ── Beluga API field mapping & field types (see field-catalog.ts) ─────────────
 
-const BELUGA_FIELDS = BELUGA_FIELD_OPTIONS;
+const NO_VENDOR_FIELDS: ReadonlyArray<{ value: string; label: string }> = [
+  { value: "", label: "— no vendor assigned —" },
+];
+
+function buildBelugaFields(
+  vendorInfo: QuestionnaireVersionSchema["vendor_version_info"],
+): ReadonlyArray<{ value: string; label: string }> {
+  if (!vendorInfo?.schema?.fields?.length) return NO_VENDOR_FIELDS;
+  const prefix = `${vendorInfo.vendor_slug}:`;
+  return [
+    { value: "", label: "— none —" },
+    ...vendorInfo.schema.fields.map((f) => ({
+      value: `${prefix}${f.id}`,
+      label: f.label,
+    })),
+  ];
+}
 const FIELD_TYPES = QUESTION_FIELD_TYPES;
 
 // ── Routing rules editor ──────────────────────────────────────────────────────
@@ -2536,6 +2565,9 @@ function StepEditorPanel({
   onClose,
   onReload,
   onDelete,
+  vendorVersionInfo,
+  belugaFields,
+  vendorLabel,
 }: {
   step: QuestionnaireStepSchema;
   allSteps: QuestionnaireStepSchema[];
@@ -2547,6 +2579,9 @@ function StepEditorPanel({
   onClose: () => void;
   onReload: () => Promise<void>;
   onDelete: () => Promise<void>;
+  vendorVersionInfo?: QuestionnaireVersionSchema["vendor_version_info"];
+  belugaFields: ReadonlyArray<{ value: string; label: string }>;
+  vendorLabel?: string;
 }) {
   const [localTitle, setLocalTitle] = useState(step.title);
   const [localSubtitle, setLocalSubtitle] = useState(step.subtitle ?? "");
@@ -3005,7 +3040,8 @@ function StepEditorPanel({
             fields={step.fields}
             isDraft={isDraft}
             fieldTypes={FIELD_TYPES}
-            belugaFields={BELUGA_FIELDS}
+            belugaFields={buildBelugaFields(vendorVersionInfo)}
+            vendorLabel={vendorLabel}
             onUpdate={(fieldKey, patch) => void updateField(fieldKey, patch)}
             onRemove={(fieldKey) => void removeField(fieldKey)}
             onReorder={(orderedKeys) => void reorderFields(orderedKeys)}
@@ -3035,6 +3071,8 @@ function StepEditorPanel({
           )}
           stepHasAccountField={step.fields.some((f) => isAccountField(f))}
           onAdd={addField}
+          belugaFields={belugaFields}
+          vendorLabel={vendorLabel}
         />
       </div>
     </aside>
@@ -3130,6 +3168,12 @@ export function FlowchartBuilder({
     { slug: string; title: string }[]
   >([]);
   const [showAddIntake, setShowAddIntake] = useState(false);
+  const [vendors, setVendors] = useState<ApiVendorSchema[]>([]);
+  const [vendorPickerOpen, setVendorPickerOpen] = useState(false);
+  const [savingVendor, setSavingVendor] = useState(false);
+  const [vendorMismatchSlugs, setVendorMismatchSlugs] = useState<string[]>([]);
+  const [showVendorMismatchDialog, setShowVendorMismatchDialog] =
+    useState(false);
 
   const reload = useCallback(
     async (keepSelected = true) => {
@@ -3244,6 +3288,14 @@ export function FlowchartBuilder({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, versionId]);
 
+  useEffect(() => {
+    fetchStaffVendors()
+      .then(setVendors)
+      .catch(() => {
+        // vendors unavailable
+      });
+  }, []);
+
   const onAnswerClick = useCallback<StepNodeData["onAnswerClick"]>(
     (src) => {
       if (activeTool !== "connect") return;
@@ -3275,6 +3327,77 @@ export function FlowchartBuilder({
     () => new Set(publishedIntakes.map((q) => q.slug)),
     [publishedIntakes],
   );
+
+  // Warn when this version's vendor doesn't match linked qualify/intake versions.
+  useEffect(() => {
+    if (!schema) return;
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const thisVendorSlug = schema.vendor_version_info?.vendor_slug ?? null;
+        const all = await fetchStaffQuestionnaires();
+        let mismatches: string[] = [];
+
+        if (schema.questionnaire_type === "qualify") {
+          const linkedSlugs = new Set(
+            (schema.intake_routing_rules ?? []).map(
+              (r) => r.intake_questionnaire_slug,
+            ),
+          );
+          if (linkedSlugs.size === 0) return;
+          const toFetch = all.filter(
+            (q) =>
+              q.questionnaire_type === "intake" &&
+              linkedSlugs.has(q.slug) &&
+              q.published_version,
+          );
+          const versions = await Promise.all(
+            toFetch.map((q) =>
+              fetchStaffQuestionnaireVersion(q.slug, q.published_version!.id),
+            ),
+          );
+          mismatches = toFetch
+            .filter(
+              (_, i) =>
+                (versions[i].vendor_version_info?.vendor_slug ?? null) !==
+                thisVendorSlug,
+            )
+            .map((q) => q.slug);
+        } else {
+          const qualifyList = all.filter(
+            (q) => q.questionnaire_type === "qualify" && q.published_version,
+          );
+          const versions = await Promise.all(
+            qualifyList.map((q) =>
+              fetchStaffQuestionnaireVersion(q.slug, q.published_version!.id),
+            ),
+          );
+          mismatches = qualifyList
+            .filter(
+              (q, i) =>
+                (versions[i].intake_routing_rules ?? []).some(
+                  (r) =>
+                    r.intake_questionnaire_slug === schema.questionnaire_slug,
+                ) &&
+                (versions[i].vendor_version_info?.vendor_slug ?? null) !==
+                  thisVendorSlug,
+            )
+            .map((q) => q.slug);
+        }
+
+        if (cancelled) return;
+        setVendorMismatchSlugs(mismatches);
+        if (mismatches.length > 0) setShowVendorMismatchDialog(true);
+      } catch {
+        // informational only — ignore errors
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [schema]);
 
   const saveIntakeRules = useCallback(
     async (rules: IntakeRoutingRule[]) => {
@@ -3915,6 +4038,67 @@ export function FlowchartBuilder({
           >
             {schema.status}
           </span>
+          {/* Vendor picker */}
+          <div className="flex items-center gap-1.5 ml-1 pl-2 border-l">
+            <span className="text-[10px] text-muted-foreground font-medium whitespace-nowrap">
+              API vendor:
+            </span>
+            {isDraft ? (
+              <select
+                className="text-xs h-6 rounded border bg-background px-1.5 text-foreground cursor-pointer max-w-[160px]"
+                value={schema.vendor_version_id ?? ""}
+                disabled={savingVendor}
+                onChange={async (e) => {
+                  const val = e.target.value;
+                  if (
+                    schema.vendor_version_id &&
+                    val !== schema.vendor_version_id &&
+                    !confirm(
+                      "Switching vendors will not remap existing field mappings.\n\nTo switch safely: duplicate this version first, then select the new vendor and remap each field.\n\nSwitch vendor now anyway?",
+                    )
+                  )
+                    return;
+                  setSavingVendor(true);
+                  try {
+                    await updateStaffQuestionnaireVersion(slug, versionId, {
+                      vendor_version_id: val || null,
+                    });
+                    await reload();
+                  } finally {
+                    setSavingVendor(false);
+                  }
+                }}
+              >
+                <option value="">— none —</option>
+                {vendors.flatMap((v) =>
+                  v.versions
+                    .filter((ver) => ver.status === "published")
+                    .map((ver) => (
+                      <option key={ver.id} value={ver.id}>
+                        {v.name} · {ver.display_label}
+                      </option>
+                    )),
+                )}
+              </select>
+            ) : (
+              <span className="text-xs font-medium">
+                {schema.vendor_version_info
+                  ? `${schema.vendor_version_info.vendor_name} · ${schema.vendor_version_info.display_label}`
+                  : "none"}
+              </span>
+            )}
+            {vendorMismatchSlugs.length > 0 && (
+              <button
+                type="button"
+                title="Vendor mismatch — click for details"
+                onClick={() => setShowVendorMismatchDialog(true)}
+                className="ml-1 flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 bg-amber-100 hover:bg-amber-200 transition-colors"
+              >
+                <AlertTriangle className="size-3 shrink-0" />
+                vendor mismatch
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Tool selector */}
@@ -3990,98 +4174,137 @@ export function FlowchartBuilder({
           </div>
         )}
 
-        <div className="flex items-center gap-1.5 ml-auto shrink-0">
+        <div className="flex items-center gap-1 ml-auto shrink-0">
           {error && (
             <p className="text-xs text-destructive max-w-[160px] truncate">
               {error}
             </p>
           )}
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => setShowPreview(true)}
-            className="gap-1.5"
-          >
-            Preview
-          </Button>
-          {schema.questionnaire_type === "qualify" && (
-            <Button
-              size="sm"
-              variant={showIntakeRouting ? "default" : "outline"}
-              onClick={() => {
-                setShowIntakeRouting((v) => !v);
-                setSelectedKey(null);
-                setSelectedEdgeInfo(null);
-                setShowAddConnection(false);
-                setShowEntryPoints(false);
-              }}
-              className="gap-1.5"
-            >
-              Routing rules
-            </Button>
-          )}
-          {schema.questionnaire_type === "qualify" && (
-            <Button
-              size="sm"
-              variant={showEntryPoints ? "default" : "outline"}
-              onClick={() => {
-                setShowEntryPoints((v) => !v);
-                setSelectedKey(null);
-                setSelectedEdgeInfo(null);
-                setShowAddConnection(false);
-                setShowIntakeRouting(false);
-              }}
-              className="gap-1.5"
-            >
-              Entry points
-            </Button>
-          )}
-          <Button
-            size="sm"
-            variant={showAnalytics ? "default" : "outline"}
-            onClick={() => void toggleAnalytics()}
-            className="gap-1.5"
-          >
-            <BarChart2 className="size-3.5" />
-            Analytics
-          </Button>
-          {isDraft && schema.questionnaire_type === "qualify" && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setShowAddIntake(true)}
-              className="gap-1.5"
-            >
-              <Plus className="size-3.5" />
-              Intake routing
-            </Button>
-          )}
-          {isDraft && (
-            <>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  setShowAddConnection(true);
-                  setSelectedEdgeInfo(null);
-                  setSelectedKey(null);
-                }}
-                className="gap-1.5"
-              >
-                <Plus className="size-3.5" />
-                Add connection
-              </Button>
-              <Button
-                size="sm"
-                disabled={addingStep}
-                onClick={() => void addStep()}
-                className="gap-1.5"
-              >
-                <Plus className="size-3.5" />
-                Add step
-              </Button>
-            </>
-          )}
+          <TooltipProvider delayDuration={300}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="size-7"
+                  onClick={() => setShowPreview(true)}
+                >
+                  <Eye className="size-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Preview</TooltipContent>
+            </Tooltip>
+
+            {schema.questionnaire_type === "qualify" && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant={showIntakeRouting ? "default" : "outline"}
+                    className="size-7"
+                    onClick={() => {
+                      setShowIntakeRouting((v) => !v);
+                      setSelectedKey(null);
+                      setSelectedEdgeInfo(null);
+                      setShowAddConnection(false);
+                      setShowEntryPoints(false);
+                    }}
+                  >
+                    <GitBranch className="size-3.5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Routing rules</TooltipContent>
+              </Tooltip>
+            )}
+
+            {schema.questionnaire_type === "qualify" && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant={showEntryPoints ? "default" : "outline"}
+                    className="size-7"
+                    onClick={() => {
+                      setShowEntryPoints((v) => !v);
+                      setSelectedKey(null);
+                      setSelectedEdgeInfo(null);
+                      setShowAddConnection(false);
+                      setShowIntakeRouting(false);
+                    }}
+                  >
+                    <Zap className="size-3.5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Entry points</TooltipContent>
+              </Tooltip>
+            )}
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="icon"
+                  variant={showAnalytics ? "default" : "outline"}
+                  className="size-7"
+                  onClick={() => void toggleAnalytics()}
+                >
+                  <BarChart2 className="size-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Analytics</TooltipContent>
+            </Tooltip>
+
+            {isDraft && schema.questionnaire_type === "qualify" && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className="size-7"
+                    onClick={() => setShowAddIntake(true)}
+                  >
+                    <Workflow className="size-3.5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Intake routing</TooltipContent>
+              </Tooltip>
+            )}
+
+            {isDraft && (
+              <>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="size-7"
+                      onClick={() => {
+                        setShowAddConnection(true);
+                        setSelectedEdgeInfo(null);
+                        setSelectedKey(null);
+                      }}
+                    >
+                      <Link2 className="size-3.5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Add connection</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="icon"
+                      disabled={addingStep}
+                      className="size-7"
+                      onClick={() => void addStep()}
+                    >
+                      <Plus className="size-3.5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Add step</TooltipContent>
+                </Tooltip>
+              </>
+            )}
+          </TooltipProvider>
         </div>
       </div>
 
@@ -4232,6 +4455,9 @@ export function FlowchartBuilder({
               onClose={() => setSelectedKey(null)}
               onReload={() => reload()}
               onDelete={() => removeStep(selectedStep.step_key)}
+              vendorVersionInfo={schema.vendor_version_info}
+              belugaFields={buildBelugaFields(schema.vendor_version_info)}
+              vendorLabel={schema.vendor_version_info?.vendor_name ?? undefined}
             />
           )}
         {selectedEdgeInfo && !selectedStep && (
@@ -4310,6 +4536,60 @@ export function FlowchartBuilder({
           onClose={() => setShowAddIntake(false)}
         />
       )}
+
+      {/* Vendor mismatch warning dialog */}
+      <AlertDialog
+        open={showVendorMismatchDialog}
+        onOpenChange={setShowVendorMismatchDialog}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-amber-700">
+              <AlertTriangle className="size-5 shrink-0" />
+              API vendor mismatch
+            </AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-3 text-sm text-foreground">
+                <p>
+                  {schema.questionnaire_type === "qualify"
+                    ? "The intake questionnaire(s) this qualify routes to are using a different API vendor."
+                    : "The qualify questionnaire(s) that route to this intake are using a different API vendor."}
+                </p>
+                <p className="text-muted-foreground">
+                  Qualify and intake questionnaires in the same flow must use
+                  the same API vendor so patient data maps correctly to the
+                  provider. Update the vendor on the linked questionnaire(s) to
+                  match before publishing.
+                </p>
+                {vendorMismatchSlugs.length > 0 && (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2">
+                    <p className="text-xs font-semibold text-amber-800 mb-1">
+                      Mismatched questionnaire(s):
+                    </p>
+                    <ul className="space-y-0.5">
+                      {vendorMismatchSlugs.map((s) => (
+                        <li
+                          key={s}
+                          className="font-mono text-xs text-amber-900"
+                        >
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => setShowVendorMismatchDialog(false)}
+            >
+              Got it
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

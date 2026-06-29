@@ -45,21 +45,24 @@ Attack payloads: `backend/apps/common/validation/payloads.py` (keep in sync with
 
 ---
 
-## LifeFile / MediVera pharmacy API
+## External API — Beluga Health only (NO LifeFile outbound)
 
-Before changing pharmacy fulfillment, LifeFile adapters, mappers, webhooks, or `LIFEFILE_*` settings:
+**Aretide makes outbound calls to Beluga Health only. Do not wire LifeFile/MediVera to any live outbound flow.**
 
-1. **Read `docs/vendor/LIFEFILE_MEDIVERA_API.md`** — full vendor API spec (gitignored locally), partner scope Q&A, and Aretide field mapping.
-2. If that file is missing, read the pointer at `docs/LIFEFILE_MEDIVERA_API.md` and ask the user to restore it.
+- Beluga handles both clinical review (provider network) and prescription fulfillment.
+- On provider approval a `POST` to the Beluga visit API is made using the frozen `beluga_visit_payload` from `IntakeSubmission.snapshot`.
+- Beluga sends inbound webhooks back (RX_WRITTEN, CONSULT_CONCLUDED, shipping/tracking).
+- Beluga API docs: `docs/vendor/BELUGA_API.md` (gitignored).
 
-### Key facts
+LifeFile/MediVera adapter code (`pharmacy/adapters/lifefile.py`, `pharmacy/services.py`) is retained for reference but **must not be called in production**. The mock adapter handles local dev.
 
-- MediVera = **pharmacy fulfillment only** (no clinician network). Provider approval happens elsewhere; `POST /order` fires after Rx approval.
-- Outbound: `POST /order` with Basic Auth + `X-Vendor-ID`, `X-Location-ID`, `X-API-Network-ID`.
-- Inbound: webhooks for order/shipping/refill status (Basic Auth on our endpoint).
+## LifeFile / MediVera pharmacy API (INACTIVE — reference only)
+
+The LifeFile adapter and mapper exist but are not used. Do not call `create_and_submit_pharmacy_order` in any live flow — Beluga handles fulfillment.
+
 - Mapper: `backend/apps/pharmacy/mappers/lifefile.py`
 - Adapter: `backend/apps/pharmacy/adapters/lifefile.py`
-- Open onboarding gaps: `docs/MEDIVERA_ONBOARDING_QUESTIONS.md`
+- Vendor docs: `docs/vendor/LIFEFILE_MEDIVERA_API.md` (gitignored)
 
 ---
 

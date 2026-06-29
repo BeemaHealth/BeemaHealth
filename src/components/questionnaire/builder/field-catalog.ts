@@ -1,3 +1,6 @@
+export const NO_VENDOR_FIELDS: ReadonlyArray<{ value: string; label: string }> =
+  [{ value: "", label: "— no vendor assigned —" }];
+
 /** Beluga Health API field mappings for intake questionnaire fields. */
 export const BELUGA_FIELD_OPTIONS = [
   { value: "", label: "— none —" },

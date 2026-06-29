@@ -172,10 +172,37 @@ class IntakeSubmissionSerializer(serializers.ModelSerializer):
 
 class SideEffectCheckInSerializer(serializers.ModelSerializer):
     user_id = serializers.UUIDField(read_only=True)
+    side_effect_detail = serializers.CharField(
+        required=False, allow_blank=True, max_length=200
+    )
+    titration_direction = serializers.ChoiceField(
+        choices=SideEffectCheckIn.TITRATION_DIRECTION_CHOICES,
+        required=False,
+        allow_null=True,
+        allow_blank=True,
+    )
+    weight_lbs = serializers.DecimalField(
+        max_digits=5, decimal_places=1, required=False, allow_null=True
+    )
+    bmi = serializers.DecimalField(
+        max_digits=4, decimal_places=1, required=False, allow_null=True
+    )
+    notes = serializers.CharField(required=False, allow_blank=True, default="")
 
     class Meta:
         model = SideEffectCheckIn
-        fields = ["id", "user_id", "side_effect", "experienced_on", "created_at"]
+        fields = [
+            "id",
+            "user_id",
+            "side_effect",
+            "side_effect_detail",
+            "experienced_on",
+            "titration_direction",
+            "weight_lbs",
+            "bmi",
+            "notes",
+            "created_at",
+        ]
         read_only_fields = ["id", "user_id", "created_at"]
 
     def validate_side_effect(self, value):
@@ -183,6 +210,20 @@ class SideEffectCheckInSerializer(serializers.ModelSerializer):
         if value not in allowed:
             raise serializers.ValidationError("Invalid side effect.")
         return value
+
+    def validate(self, attrs):
+        side_effect = attrs.get("side_effect")
+        detail = (attrs.get("side_effect_detail") or "").strip()
+        if side_effect == "other":
+            from apps.common.validation.refill import validate_side_effect_detail
+
+            err = validate_side_effect_detail(detail)
+            if err:
+                raise serializers.ValidationError({"side_effect_detail": err})
+            attrs["side_effect_detail"] = detail
+        else:
+            attrs["side_effect_detail"] = ""
+        return attrs
 
     def validate_experienced_on(self, value):
         if value > timezone.now().date():
@@ -195,4 +236,8 @@ class SideEffectCheckInSerializer(serializers.ModelSerializer):
         data["experienced_on"] = instance.experienced_on.isoformat()
         if instance.created_at:
             data["created_at"] = instance.created_at.isoformat()
+        if instance.weight_lbs is not None:
+            data["weight_lbs"] = str(instance.weight_lbs)
+        if instance.bmi is not None:
+            data["bmi"] = str(instance.bmi)
         return data

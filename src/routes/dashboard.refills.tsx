@@ -1,30 +1,52 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, getRouteApi } from "@tanstack/react-router";
 import { ClipboardList, Pill } from "lucide-react";
 import { AccountSectionCard } from "@/components/portal/AccountSectionCard";
 import { PortalPageHeader } from "@/components/portal/PortalPageHeader";
 import { RefillForm } from "@/components/portal/RefillForm";
 import {
   fetchPatientPrescription,
+  fetchRefillConfig,
   fetchRefillRequests,
   fetchSideEffectCheckIns,
 } from "@/lib/api/client";
-import { canManageRefills } from "@/lib/dashboard-status";
+import {
+  canManageRefills,
+  hasUnresolvedDeliveryIssue,
+} from "@/lib/dashboard-status";
+
+const dashboardRoute = getRouteApi("/dashboard");
 
 export const Route = createFileRoute("/dashboard/refills")({
   loader: async () => {
-    const [prescription, checkIns, refillRequests] = await Promise.all([
-      fetchPatientPrescription(),
-      fetchSideEffectCheckIns(),
-      fetchRefillRequests(),
-    ]);
-    return { prescription, checkIns, refillRequests };
+    const [prescription, checkIns, refillData, refillConfig] =
+      await Promise.all([
+        fetchPatientPrescription(),
+        fetchSideEffectCheckIns(),
+        fetchRefillRequests(),
+        fetchRefillConfig(),
+      ]);
+    return {
+      prescription,
+      checkIns,
+      refillRequests: refillData.refill_requests,
+      refillCooldown: refillData.cooldown,
+      refillConfig,
+    };
   },
   component: DashboardRefillsPage,
 });
 
 function DashboardRefillsPage() {
-  const { prescription, checkIns, refillRequests } = Route.useLoaderData();
+  const {
+    prescription,
+    checkIns,
+    refillRequests,
+    refillCooldown,
+    refillConfig,
+  } = Route.useLoaderData();
+  const { care_events } = dashboardRoute.useLoaderData();
   const canRefill = canManageRefills(prescription?.is_active === true);
+  const deliveryIssue = hasUnresolvedDeliveryIssue(care_events ?? []);
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -40,8 +62,11 @@ function DashboardRefillsPage() {
       {canRefill && prescription ? (
         <RefillForm
           prescription={prescription}
+          drugConfig={refillConfig}
           initialCheckIns={checkIns.slice(0, 5)}
           initialRefillRequests={refillRequests.slice(0, 5)}
+          initialCooldown={refillCooldown}
+          hasDeliveryIssue={deliveryIssue}
         />
       ) : (
         <div className="grid gap-6 md:grid-cols-2">

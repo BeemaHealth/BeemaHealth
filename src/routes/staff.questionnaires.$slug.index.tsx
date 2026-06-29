@@ -663,6 +663,10 @@ function StaffQuestionnaireVersionsPage() {
             title={`v${v.version_label}`}
             description={`Status: ${v.status} · ${v.steps.length} steps${
               v.is_in_use ? " · in use" : ""
+            }${
+              v.vendor_version_info
+                ? ` · ${v.vendor_version_info.vendor_name} · ${v.vendor_version_info.display_label}`
+                : ""
             }`}
           >
             <VersionLabelEditor

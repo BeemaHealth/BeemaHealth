@@ -56,9 +56,9 @@ class FunnelEventCreateView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        step_key = str(data.get("step_key", ""))[:64]
+        step_key = str(data.get("step_key", "")).strip()[:64]
 
-        if event_name in ("step_viewed", "step_completed") and not step_key.strip():
+        if event_name in ("step_viewed", "step_completed") and not step_key:
             return Response(
                 {"detail": "step_key is required for step events."},
                 status=status.HTTP_400_BAD_REQUEST,

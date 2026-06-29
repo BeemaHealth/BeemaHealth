@@ -56,10 +56,17 @@ def send_verification_email(user: User, token: str) -> None:
     )
 
 
+def _send_and_log_errors(user: User, token: str) -> None:
+    try:
+        send_verification_email(user, token)
+    except Exception:
+        logger.exception("Failed to send verification email to %s", user.email)
+
+
 def queue_verification_email(user: User, token: str) -> None:
     """Send verification email without blocking the HTTP response (SMTP can be slow)."""
     threading.Thread(
-        target=send_verification_email,
+        target=_send_and_log_errors,
         args=(user, token),
         daemon=True,
     ).start()
@@ -118,9 +125,16 @@ def send_login_mfa_email(user: User, code: str) -> None:
     )
 
 
+def _send_mfa_and_log_errors(user: User, code: str) -> None:
+    try:
+        send_login_mfa_email(user, code)
+    except Exception:
+        logger.exception("Failed to send MFA email to %s", user.email)
+
+
 def queue_login_mfa_email(user: User, code: str) -> None:
     threading.Thread(
-        target=send_login_mfa_email,
+        target=_send_mfa_and_log_errors,
         args=(user, code),
         daemon=True,
     ).start()

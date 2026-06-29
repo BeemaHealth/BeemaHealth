@@ -11,6 +11,7 @@ DATABASES = {
 
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+SMS_BACKEND = "console"
 DEFAULT_THROTTLE_RATES = {
     "anon": "10000/minute",
     "user": "10000/minute",

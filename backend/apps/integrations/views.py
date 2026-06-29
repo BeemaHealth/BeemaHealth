@@ -5,8 +5,28 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.integrations.adapters.doctor import get_doctor_adapter
-from apps.integrations.permissions import DoctorWebhookPermission
-from apps.integrations.services import apply_doctor_webhook
+from apps.integrations.adapters.beluga import parse_beluga_webhook
+from apps.integrations.permissions import BelugaWebhookPermission, DoctorWebhookPermission
+from apps.integrations.services import apply_beluga_webhook, apply_doctor_webhook
+
+
+class BelugaWebhookView(APIView):
+    permission_classes = [BelugaWebhookPermission]
+    authentication_classes = []
+
+    def post(self, request):
+        try:
+            payload = request.data if isinstance(request.data, dict) else json.loads(request.body)
+        except (json.JSONDecodeError, TypeError, ValueError):
+            return Response({"detail": "Invalid JSON payload."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            event = parse_beluga_webhook(payload)
+            result = apply_beluga_webhook(event)
+        except (KeyError, ValueError) as exc:
+            return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(result, status=status.HTTP_200_OK)
 
 
 class DoctorWebhookView(APIView):

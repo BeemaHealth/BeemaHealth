@@ -1,5 +1,10 @@
 import { inputCls } from "@/components/quiz/quiz-primitives";
-import { BELUGA_FIELD_OPTIONS } from "@/components/questionnaire/builder/field-catalog";
+import {
+  BELUGA_FIELD_OPTIONS,
+  NO_VENDOR_FIELDS,
+} from "@/components/questionnaire/builder/field-catalog";
+
+type BelugaFieldOption = { value: string; label: string };
 import {
   BACKEND_FIELD_OPTIONS,
   backendLabelForValue,
@@ -11,8 +16,9 @@ type AccountFieldMappingsEditorProps = {
   disabled?: boolean;
   onChange: (next: AccountSubFieldMapping[]) => void;
   compact?: boolean;
-  /** When true, backend targets are fixed (register API) and shown read-only. */
   backendReadOnly?: boolean;
+  belugaFields?: ReadonlyArray<BelugaFieldOption>;
+  vendorLabel?: string;
 };
 
 export function AccountFieldMappingsEditor({
@@ -21,6 +27,8 @@ export function AccountFieldMappingsEditor({
   onChange,
   compact = false,
   backendReadOnly = false,
+  belugaFields = NO_VENDOR_FIELDS,
+  vendorLabel = "API Mapping",
 }: AccountFieldMappingsEditorProps) {
   function updateRow(
     key: AccountSubFieldMapping["key"],
@@ -38,8 +46,8 @@ export function AccountFieldMappingsEditor({
       </p>
       <p className="text-[10px] text-muted-foreground">
         {backendReadOnly
-          ? "Registration fields map to the Django register API automatically. Beluga mappings can be adjusted per input."
-          : "Map each account input to an Aretide backend target and a Beluga Health API field."}
+          ? `Registration fields map to the Django register API automatically. ${vendorLabel} mappings can be adjusted per input.`
+          : `Map each account input to an Aretide backend target and a ${vendorLabel} field.`}
       </p>
       <div
         className={`rounded-xl border border-border overflow-hidden ${
@@ -55,7 +63,7 @@ export function AccountFieldMappingsEditor({
         >
           <span>Input</span>
           <span>Backend</span>
-          <span>Beluga API</span>
+          <span>{vendorLabel}</span>
         </div>
         {mappings.map((row) => (
           <div
@@ -95,7 +103,7 @@ export function AccountFieldMappingsEditor({
               }
               onChange={(e) => updateRow(row.key, { beluga: e.target.value })}
             >
-              {BELUGA_FIELD_OPTIONS.map((opt) => (
+              {belugaFields.map((opt) => (
                 <option key={opt.value || "none"} value={opt.value}>
                   {opt.label}
                 </option>
@@ -105,8 +113,8 @@ export function AccountFieldMappingsEditor({
         ))}
       </div>
       <p className="text-[10px] text-muted-foreground">
-        Password fields are registration-only and are not sent to Beluga.
-        Re-enter password is used for client-side confirmation only.
+        Password fields are registration-only and are not sent to the vendor
+        API. Re-enter password is used for client-side confirmation only.
       </p>
     </div>
   );

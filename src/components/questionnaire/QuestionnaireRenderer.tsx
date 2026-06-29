@@ -74,8 +74,19 @@ export function QuestionnaireRenderer({
     );
   }
 
-  const navLabel =
-    stepLabels?.[currentStep.step_key] ?? currentStep.title.slice(0, 24);
+  const navLabel = (() => {
+    if (stepLabels?.[currentStep.step_key]) {
+      return stepLabels[currentStep.step_key];
+    }
+    if (currentStep.progress_level != null) {
+      const maxLevel = Math.max(
+        ...schema.steps.map((s) => s.progress_level ?? 0),
+        0,
+      );
+      return `Step ${currentStep.progress_level + 1} of ${maxLevel + 1}`;
+    }
+    return undefined;
+  })();
 
   return (
     <QuizShell

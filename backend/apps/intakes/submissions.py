@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+import json
+import logging
+
 from django.db import transaction
 from django.db.models import Max
 from django.utils import timezone
+
+logger = logging.getLogger(__name__)
 
 from apps.consents.models import ConsentRecord
 from apps.eligibility.models import EligibilityResponse
@@ -242,6 +247,24 @@ def create_intake_submission(
     intake.active_submission_version = version
     intake.working_version = version
     intake.save(update_fields=["active_submission_version", "working_version", "updated_at"])
+
+    beluga_payload = snapshot.get("beluga_visit_payload")
+    if beluga_payload:
+        logger.info(
+            "[INTAKE SUBMISSION] Beluga visit payload built for user=%s submission_version=%s "
+            "(would be sent to Beluga on provider approval):\n%s",
+            user.id,
+            version,
+            json.dumps(beluga_payload, indent=2, default=str),
+        )
+    else:
+        logger.info(
+            "[INTAKE SUBMISSION] Snapshot saved for user=%s submission_version=%s "
+            "(no dynamic questionnaire version — classic intake path, no Beluga payload built).",
+            user.id,
+            version,
+        )
+
     return submission
 
 

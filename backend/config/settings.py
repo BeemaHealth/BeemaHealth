@@ -19,11 +19,13 @@ env = environ.Env(
     ALLOWED_HOSTS=(list, ["localhost", "127.0.0.1"]),
     CORS_ALLOWED_ORIGINS=(list, ["http://localhost:8080"]),
     CSRF_TRUSTED_ORIGINS=(list, []),
+    REQUIRE_EMAIL_VERIFICATION=(bool, True),
 )
 
 SECRET_KEY = env("SECRET_KEY", default="dev-insecure-change-me-in-production")
 DEBUG = env("DEBUG")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+REQUIRE_EMAIL_VERIFICATION = env("REQUIRE_EMAIL_VERIFICATION")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -236,6 +238,12 @@ EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@aretide.com")
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:8080")
 
+# SMS — console backend logs delivery in dev; set SMS_BACKEND=twilio with Twilio creds for production.
+SMS_BACKEND = env("SMS_BACKEND", default="console")
+TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID", default="")
+TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN", default="")
+TWILIO_FROM_NUMBER = env("TWILIO_FROM_NUMBER", default="")
+
 # Patient portal intake editing (flip to True to allow broader post-submit edits).
 INTAKE_PORTAL_EDITING_ENABLED = env.bool("INTAKE_PORTAL_EDITING_ENABLED", default=False)
 
@@ -243,6 +251,47 @@ INTAKE_PORTAL_EDITING_ENABLED = env.bool("INTAKE_PORTAL_EDITING_ENABLED", defaul
 PHARMACY_ADAPTER = env("PHARMACY_ADAPTER", default="mock")
 DYNAMIC_QUESTIONNAIRES = env.bool("DYNAMIC_QUESTIONNAIRES", default=True)
 DOCTOR_WEBHOOK_SECRET = env("DOCTOR_WEBHOOK_SECRET", default="dev-doctor-webhook-secret")
+BELUGA_WEBHOOK_SECRET = env("BELUGA_WEBHOOK_SECRET", default="dev-beluga-webhook-secret")
+# Beluga outbound API
+BELUGA_API_KEY = env("BELUGA_API_KEY", default="")
+BELUGA_BASE_URL = env("BELUGA_BASE_URL", default="https://api-staging.belugahealth.com")
+BELUGA_COMPANY = env("BELUGA_COMPANY", default="")
+BELUGA_DEFAULT_PHARMACY_ID = env("BELUGA_DEFAULT_PHARMACY_ID", default="")
+# Endpoint paths (trailing paths, appended to BELUGA_BASE_URL)
+BELUGA_REFILL_ENDPOINT = env("BELUGA_REFILL_ENDPOINT", default="")
+BELUGA_AUTORX_ENDPOINT = env("BELUGA_AUTORX_ENDPOINT", default="")
+BELUGA_PHOTO_ENDPOINT = env("BELUGA_PHOTO_ENDPOINT", default="")
+BELUGA_CREATION_PATH = env("BELUGA_CREATION_PATH", default="")
+# Visit type strings per drug category (ask Beluga for actual values)
+BELUGA_VISITTYPE_GLP1_CHECKIN = env("BELUGA_VISITTYPE_GLP1_CHECKIN", default="")
+BELUGA_VISITTYPE_ED_CHECKIN = env("BELUGA_VISITTYPE_ED_CHECKIN", default="")
+# Per-drug config (drives what check-in fields to collect)
+BELUGA_DRUG_CONFIGS = {
+    "glp1": {
+        "visitType": BELUGA_VISITTYPE_GLP1_CHECKIN,
+        "titrationField": True,
+        "collectsWeight": True,
+        "collectsPhoto": True,
+        "collectsBMI": True,
+        "collectsNotes": True,
+    },
+    "ed": {
+        "visitType": BELUGA_VISITTYPE_ED_CHECKIN,
+        "titrationField": True,
+        "collectsWeight": False,
+        "collectsPhoto": False,
+        "collectsBMI": False,
+        "collectsNotes": True,
+    },
+    "other": {
+        "visitType": "",
+        "titrationField": False,
+        "collectsWeight": False,
+        "collectsPhoto": False,
+        "collectsBMI": False,
+        "collectsNotes": True,
+    },
+}
 LIFEFILE_WEBHOOK_USER = env("LIFEFILE_WEBHOOK_USER", default="lifefile_webhook")
 LIFEFILE_WEBHOOK_PASSWORD = env("LIFEFILE_WEBHOOK_PASSWORD", default="dev-lifefile-webhook-pass")
 LIFEFILE_API_BASE_URL = env("LIFEFILE_API_BASE_URL", default="")

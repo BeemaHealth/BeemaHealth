@@ -9,6 +9,7 @@ type StepFieldsEditorProps = {
   isDraft: boolean;
   fieldTypes: ReadonlyArray<{ value: string; label: string }>;
   belugaFields: ReadonlyArray<{ value: string; label: string }>;
+  vendorLabel?: string;
   onUpdate: (
     fieldKey: string,
     patch: Partial<QuestionnaireFieldSchema>,
@@ -37,6 +38,7 @@ export function StepFieldsEditor({
   isDraft,
   fieldTypes,
   belugaFields,
+  vendorLabel = "API Mapping",
   onUpdate,
   onRemove,
   onReorder,
@@ -161,6 +163,7 @@ export function StepFieldsEditor({
                   isDraft={isDraft}
                   fieldTypes={fieldTypes}
                   belugaFields={belugaFields}
+                  vendorLabel={vendorLabel}
                   embedded
                   onUpdate={(patch) => onUpdate(field.field_key, patch)}
                   onRemove={() => onRemove(field.field_key)}

@@ -1,6 +1,11 @@
 from __future__ import annotations
 
+import json
+import logging
+
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 from django.db import transaction
 from django.utils import timezone
 
@@ -10,6 +15,7 @@ from apps.pharmacy.adapters import get_pharmacy_adapter
 from apps.pharmacy.models import PharmacyOrder, PharmacyOrderEvent
 from apps.pharmacy.preflight import PreflightError, run_preflight
 from apps.integrations.services import resolve_lf_product_id
+from apps.patients.care_events import record_pharmacy_fulfillment_event
 
 
 STATUS_MAP = {
@@ -68,6 +74,15 @@ def create_and_submit_pharmacy_order(
     )
     order.submitted_payload = payload
     order.save(update_fields=["submitted_payload", "updated_at"])
+
+    logger.info(
+        "[PHARMACY ORDER] Submitting order via adapter=%s for user=%s "
+        "(payload that would be sent to %s):\n%s",
+        partner_slug,
+        prescription.user_id,
+        partner_slug.upper() if partner_slug != "mock" else "MOCK (no real call)",
+        json.dumps(payload, indent=2, default=str),
+    )
 
     try:
         result = adapter.submit_order(payload)
@@ -159,6 +174,16 @@ def process_pharmacy_webhook(*, partner: str, payload: dict, request=None) -> Ph
         if parsed.carrier:
             order.carrier = parsed.carrier
         order.save()
+
+        record_pharmacy_fulfillment_event(
+            order.user,
+            status=mapped,
+            external_order_id=parsed.external_order_id,
+            event_type=parsed.event_type,
+            carrier=parsed.carrier or "",
+            tracking_number=parsed.tracking_number or "",
+            idempotency_key=parsed.idempotency_key or "",
+        )
 
     log_audit_event(
         user=None,

@@ -49,6 +49,13 @@ class PatientSettings(models.Model):
     sms_notifications = models.BooleanField(default=True)
     product_emails = models.BooleanField(default=False)
     two_factor_enabled = models.BooleanField(default=False)
+    # Per-category notification toggles (which events notify; channels above decide how).
+    notify_messages = models.BooleanField(default=True)
+    notify_review = models.BooleanField(default=True)
+    notify_prescription = models.BooleanField(default=True)
+    notify_shipping = models.BooleanField(default=True)
+    notify_labs = models.BooleanField(default=True)
+    notify_appointments = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -57,3 +64,39 @@ class PatientSettings(models.Model):
 
     def __str__(self):
         return f"Settings for {self.user.email}"
+
+
+class PatientCareEvent(models.Model):
+    """Persisted patient-visible care milestones (fulfillment, shipping, etc.)."""
+
+    SOURCE_CHOICES = [
+        ("beluga_webhook", "Beluga webhook"),
+        ("pharmacy_webhook", "Pharmacy webhook"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="care_events"
+    )
+    milestone = models.CharField(max_length=64, db_index=True)
+    source = models.CharField(max_length=32, choices=SOURCE_CHOICES)
+    source_event = models.CharField(max_length=64, blank=True, default="")
+    title = models.CharField(max_length=128)
+    description = models.TextField(blank=True, default="")
+    occurred_at = models.DateTimeField()
+    metadata = models.JSONField(default=dict, blank=True)
+    idempotency_key = models.CharField(
+        max_length=255, blank=True, null=True, unique=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "patient_care_events"
+        ordering = ["occurred_at", "created_at"]
+        indexes = [
+            models.Index(fields=["user", "milestone"]),
+            models.Index(fields=["user", "occurred_at"]),
+        ]
+
+    def __str__(self):
+        return f"{self.milestone} for {self.user_id}"

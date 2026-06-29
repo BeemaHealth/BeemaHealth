@@ -341,6 +341,16 @@ export interface DashboardData {
   patient_note: string;
   has_active_prescription: boolean;
   pharmacy_order?: PharmacyOrder | null;
+  care_events?: PersistedCareEvent[];
+}
+
+export interface PersistedCareEvent {
+  id: string;
+  milestone: string;
+  title: string;
+  description: string;
+  occurred_at: string;
+  order_id: string;
 }
 
 export type PrescriptionRoute = "injection" | "oral" | "other";
@@ -447,6 +457,7 @@ export interface SideEffectCheckIn {
   id: string;
   user_id: string;
   side_effect: SideEffectType;
+  side_effect_detail?: string;
   experienced_on: string;
   created_at: string;
 }
@@ -456,6 +467,12 @@ export interface PatientSettings {
   sms_notifications: boolean;
   product_emails: boolean;
   two_factor_enabled: boolean;
+  notify_messages: boolean;
+  notify_review: boolean;
+  notify_prescription: boolean;
+  notify_shipping: boolean;
+  notify_labs: boolean;
+  notify_appointments: boolean;
   updated_at?: string;
 }
 
@@ -467,8 +484,56 @@ export interface RefillRequest {
   created_at: string;
 }
 
+export interface RefillCooldown {
+  active: boolean;
+  retry_after: string | null;
+  hours_remaining: number | null;
+}
+
+export interface RefillRequestsResponse {
+  refill_requests: RefillRequest[];
+  cooldown: RefillCooldown;
+}
+
 export interface LoginMfaChallenge {
   mfa_required: true;
   mfa_challenge_id: string;
   detail: string;
+}
+
+// ---------------------------------------------------------------------------
+// Refill / titration system
+// ---------------------------------------------------------------------------
+
+export type DrugCategory = "glp1" | "ed" | "other";
+
+export type TitrationDirection = "increase" | "decrease" | "same";
+
+export type RefillRequestType = "same_dose" | "titration";
+
+export interface DrugRefillConfig {
+  drug_category: DrugCategory;
+  titration_field: boolean;
+  collects_weight: boolean;
+  collects_photo: boolean;
+  collects_bmi: boolean;
+  collects_notes: boolean;
+}
+
+export interface SameDoseRefillResponse {
+  id: string;
+  request_type: "same_dose";
+  beluga_status: string;
+  message: string;
+  created_at: string;
+}
+
+export interface TitrationRefillResponse {
+  id: string;
+  request_type: "titration";
+  titration_direction: TitrationDirection;
+  beluga_status: string;
+  beluga_visit_id: string;
+  message: string;
+  created_at: string;
 }

@@ -226,7 +226,10 @@ function StaffQuestionnairesPage() {
                     ? ` · ${item.medication.name}`
                     : " · Default") +
                   (item.published_version
-                    ? ` · v${item.published_version.version_label} published`
+                    ? ` · v${item.published_version.version_label} published` +
+                      (item.published_version.vendor_name
+                        ? ` · ${item.published_version.vendor_name} · ${item.published_version.vendor_display_label}`
+                        : "")
                     : " · No published version")
                 }
               >

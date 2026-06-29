@@ -12,6 +12,10 @@ from apps.intakes.permissions import (
 )
 from apps.intakes.screening import refresh_account_screening
 from apps.intakes.questionnaire_sync import sync_canonical_fields_from_questionnaire
+from apps.common.validation.refill import (
+    get_refill_cooldown,
+    validate_refill_request_allowed,
+)
 from apps.intakes.serializers import (
     IntakeSubmissionSerializer,
     MedicalIntakeSerializer,
@@ -227,18 +231,50 @@ class RefillRequestSerializer(serializers.ModelSerializer):
         return data
 
 
+def _refill_cooldown_payload(user) -> dict:
+    last_refill = RefillRequest.objects.filter(user=user).order_by("-created_at").first()
+    cooldown = get_refill_cooldown(last_refill)
+    payload = {
+        "active": cooldown.active,
+        "retry_after": cooldown.retry_after.isoformat() if cooldown.retry_after else None,
+        "hours_remaining": cooldown.hours_remaining,
+    }
+    return payload
+
+
 class RefillRequestMeView(APIView):
     permission_classes = [IsPatient]
 
     def get(self, request):
         requests = RefillRequest.objects.filter(user=request.user)
-        return Response(RefillRequestSerializer(requests, many=True).data)
+        return Response(
+            {
+                "refill_requests": RefillRequestSerializer(requests, many=True).data,
+                "cooldown": _refill_cooldown_payload(request.user),
+            }
+        )
 
     def post(self, request):
         if not patient_has_active_prescription(request.user):
             return Response(
                 {"detail": "Refill requests are available after your prescription is active."},
                 status=status.HTTP_403_FORBIDDEN,
+            )
+        last_refill = (
+            RefillRequest.objects.filter(user=request.user).order_by("-created_at").first()
+        )
+        cooldown_error = validate_refill_request_allowed(last_refill)
+        if cooldown_error:
+            cooldown = get_refill_cooldown(last_refill)
+            return Response(
+                {
+                    "detail": cooldown_error,
+                    "retry_after": (
+                        cooldown.retry_after.isoformat() if cooldown.retry_after else None
+                    ),
+                    "hours_remaining": cooldown.hours_remaining,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
             )
         check_in_id = request.data.get("side_effect_check_in_id")
         check_in = None

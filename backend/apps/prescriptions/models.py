@@ -23,6 +23,11 @@ class PatientPrescription(models.Model):
         ("sent_to_pharmacy", "Sent to pharmacy"),
         ("cancelled", "Cancelled"),
     ]
+    DRUG_CATEGORY_CHOICES = [
+        ("glp1", "GLP-1 / Weight loss"),
+        ("ed", "ED"),
+        ("other", "Other"),
+    ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
@@ -75,6 +80,11 @@ class PatientPrescription(models.Model):
     external_prescriber_id = models.CharField(max_length=128, blank=True, default="")
     fulfillment_status = models.CharField(
         max_length=32, choices=STATUS_CHOICES, default="draft"
+    )
+    beluga_med_id = models.CharField(max_length=128, blank=True, default="")
+    beluga_pharmacy_id = models.CharField(max_length=128, blank=True, default="")
+    drug_category = models.CharField(
+        max_length=16, choices=DRUG_CATEGORY_CHOICES, blank=True, default="other"
     )
     is_active = models.BooleanField(default=True)
     prescribed_at = models.DateTimeField(default=timezone.now)

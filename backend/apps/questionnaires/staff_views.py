@@ -11,6 +11,8 @@ from rest_framework.views import APIView
 
 from apps.accounts.permissions import IsStaff
 from apps.questionnaires.models import (
+    ApiVendor,
+    ApiVendorVersion,
     Medication,
     Questionnaire,
     QuestionnaireField,
@@ -18,6 +20,10 @@ from apps.questionnaires.models import (
     QuestionnaireVersion,
 )
 from apps.questionnaires.serializers import (
+    ApiVendorSerializer,
+    ApiVendorVersionSerializer,
+    ApiVendorVersionWriteSerializer,
+    ApiVendorWriteSerializer,
     MedicationSerializer,
     MedicationWriteSerializer,
     QuestionnaireDuplicateSerializer,
@@ -163,7 +169,7 @@ class StaffQuestionnaireVersionListView(APIView):
 
     def get(self, request, slug: str):
         questionnaire = get_object_or_404(Questionnaire, slug=slug)
-        versions = questionnaire.versions.prefetch_related("steps__fields").order_by("-created_at")
+        versions = questionnaire.versions.select_related("vendor_version__vendor").prefetch_related("steps__fields").order_by("-created_at")
         return Response(QuestionnaireVersionSerializer(versions, many=True).data)
 
     def post(self, request, slug: str):
@@ -222,20 +228,21 @@ class StaffQuestionnaireVersionImportView(APIView):
 class StaffQuestionnaireVersionDetailView(APIView):
     permission_classes = [IsStaff]
 
-    def get(self, request, slug: str, version_id: uuid.UUID):
-        version = get_object_or_404(
-            QuestionnaireVersion,
+    def _get_version(self, slug: str, version_id: uuid.UUID) -> QuestionnaireVersion:
+        return get_object_or_404(
+            QuestionnaireVersion.objects.select_related(
+                "questionnaire", "vendor_version__vendor"
+            ),
             id=version_id,
             questionnaire__slug=slug,
         )
+
+    def get(self, request, slug: str, version_id: uuid.UUID):
+        version = self._get_version(slug, version_id)
         return Response(serialize_version(version))
 
     def patch(self, request, slug: str, version_id: uuid.UUID):
-        version = get_object_or_404(
-            QuestionnaireVersion,
-            id=version_id,
-            questionnaire__slug=slug,
-        )
+        version = self._get_version(slug, version_id)
         # Renaming is cosmetic metadata, allowed in any status. Schema/routing
         # edits below remain restricted to drafts.
         label = request.data.get("version_label")
@@ -330,14 +337,28 @@ class StaffQuestionnaireVersionDetailView(APIView):
             version.is_default_entry = bool(is_default)
             version.save(update_fields=["is_default_entry", "updated_at"])
 
+        if "vendor_version_id" in request.data:
+            from apps.questionnaires.models import ApiVendorVersion
+            raw = request.data["vendor_version_id"]
+            if raw is None or raw == "":
+                version.vendor_version = None
+                version.save(update_fields=["vendor_version", "updated_at"])
+            else:
+                try:
+                    vv = ApiVendorVersion.objects.get(id=raw, status=ApiVendorVersion.Status.PUBLISHED)
+                except (ApiVendorVersion.DoesNotExist, Exception):
+                    return Response(
+                        {"detail": "Vendor version not found or not published."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                version.vendor_version = vv
+                version.save(update_fields=["vendor_version", "updated_at"])
+
         return Response(serialize_version(version))
 
 
     def delete(self, request, slug: str, version_id: uuid.UUID):
-        version = get_object_or_404(
-            QuestionnaireVersion,
-            id=version_id,
-            questionnaire__slug=slug,
+        version = self._get_version(slug, version_id
         )
         if version.status == QuestionnaireVersion.Status.PUBLISHED:
             return Response(
@@ -561,3 +582,144 @@ class StaffQuestionnaireFieldDetailView(APIView):
         )
         field.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# ---------------------------------------------------------------------------
+# API Vendor views
+# ---------------------------------------------------------------------------
+
+
+class StaffApiVendorListView(APIView):
+    permission_classes = [IsStaff]
+
+    def get(self, request):
+        vendors = ApiVendor.objects.prefetch_related("versions").all()
+        return Response(ApiVendorSerializer(vendors, many=True).data)
+
+    def post(self, request):
+        ser = ApiVendorWriteSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        vendor = ser.save()
+        return Response(ApiVendorSerializer(vendor).data, status=status.HTTP_201_CREATED)
+
+
+class StaffApiVendorDetailView(APIView):
+    permission_classes = [IsStaff]
+
+    def _get_vendor(self, vendor_id: uuid.UUID) -> ApiVendor:
+        return get_object_or_404(ApiVendor, id=vendor_id)
+
+    def get(self, request, vendor_id: uuid.UUID):
+        vendor = self._get_vendor(vendor_id)
+        return Response(ApiVendorSerializer(vendor).data)
+
+    def patch(self, request, vendor_id: uuid.UUID):
+        vendor = self._get_vendor(vendor_id)
+        ser = ApiVendorWriteSerializer(vendor, data=request.data, partial=True)
+        ser.is_valid(raise_exception=True)
+        vendor = ser.save()
+        return Response(ApiVendorSerializer(vendor).data)
+
+    def delete(self, request, vendor_id: uuid.UUID):
+        vendor = self._get_vendor(vendor_id)
+        vendor.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class StaffApiVendorVersionListView(APIView):
+    permission_classes = [IsStaff]
+
+    def get(self, request, vendor_id: uuid.UUID):
+        vendor = get_object_or_404(ApiVendor, id=vendor_id)
+        versions = vendor.versions.all()
+        return Response(ApiVendorVersionSerializer(versions, many=True).data)
+
+    def post(self, request, vendor_id: uuid.UUID):
+        vendor = get_object_or_404(ApiVendor, id=vendor_id)
+        # Auto-assign the next version_number
+        last = vendor.versions.order_by("-version_number").first()
+        next_number = (last.version_number + 1) if last else 1
+        data = {**request.data, "vendor": str(vendor.id), "version_number": next_number}
+        ser = ApiVendorVersionWriteSerializer(data=data)
+        ser.is_valid(raise_exception=True)
+        version = ser.save(vendor=vendor, version_number=next_number)
+        return Response(ApiVendorVersionSerializer(version).data, status=status.HTTP_201_CREATED)
+
+
+class StaffApiVendorVersionDetailView(APIView):
+    permission_classes = [IsStaff]
+
+    def _get_version(self, vendor_id: uuid.UUID, version_id: uuid.UUID) -> ApiVendorVersion:
+        return get_object_or_404(ApiVendorVersion, id=version_id, vendor_id=vendor_id)
+
+    def get(self, request, vendor_id: uuid.UUID, version_id: uuid.UUID):
+        version = self._get_version(vendor_id, version_id)
+        return Response(ApiVendorVersionSerializer(version).data)
+
+    def patch(self, request, vendor_id: uuid.UUID, version_id: uuid.UUID):
+        version = self._get_version(vendor_id, version_id)
+        if version.status != ApiVendorVersion.Status.DRAFT:
+            return Response(
+                {"detail": "Only draft versions can be edited."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        ser = ApiVendorVersionWriteSerializer(version, data=request.data, partial=True)
+        ser.is_valid(raise_exception=True)
+        version = ser.save()
+        return Response(ApiVendorVersionSerializer(version).data)
+
+    def delete(self, request, vendor_id: uuid.UUID, version_id: uuid.UUID):
+        version = self._get_version(vendor_id, version_id)
+        if version.status == ApiVendorVersion.Status.PUBLISHED:
+            return Response(
+                {"detail": "Published versions cannot be deleted. Archive them instead."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        version.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class StaffApiVendorVersionPublishView(APIView):
+    permission_classes = [IsStaff]
+
+    def post(self, request, vendor_id: uuid.UUID, version_id: uuid.UUID):
+        version = get_object_or_404(ApiVendorVersion, id=version_id, vendor_id=vendor_id)
+        if version.status == ApiVendorVersion.Status.PUBLISHED:
+            return Response(
+                {"detail": "Version is already published."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        version.status = ApiVendorVersion.Status.PUBLISHED
+        version.published_at = timezone.now()
+        version.save(update_fields=["status", "published_at", "updated_at"])
+        return Response(ApiVendorVersionSerializer(version).data)
+
+
+class StaffApiVendorVersionArchiveView(APIView):
+    permission_classes = [IsStaff]
+
+    def post(self, request, vendor_id: uuid.UUID, version_id: uuid.UUID):
+        version = get_object_or_404(ApiVendorVersion, id=version_id, vendor_id=vendor_id)
+        if version.status == ApiVendorVersion.Status.ARCHIVED:
+            return Response(
+                {"detail": "Version is already archived."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        version.status = ApiVendorVersion.Status.ARCHIVED
+        version.save(update_fields=["status", "updated_at"])
+        return Response(ApiVendorVersionSerializer(version).data)
+
+
+class StaffApiVendorVersionUnarchiveView(APIView):
+    permission_classes = [IsStaff]
+
+    def post(self, request, vendor_id: uuid.UUID, version_id: uuid.UUID):
+        version = get_object_or_404(ApiVendorVersion, id=version_id, vendor_id=vendor_id)
+        if version.status != ApiVendorVersion.Status.ARCHIVED:
+            return Response(
+                {"detail": "Only archived versions can be unarchived."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        version.status = ApiVendorVersion.Status.PUBLISHED
+        version.save(update_fields=["status", "updated_at"])
+        return Response(ApiVendorVersionSerializer(version).data)

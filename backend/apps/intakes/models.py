@@ -115,13 +115,25 @@ class SideEffectCheckIn(models.Model):
         ("fatigue", "Fatigue"),
         ("other", "Other"),
     ]
+    TITRATION_DIRECTION_CHOICES = [
+        ("increase", "Increase"),
+        ("decrease", "Decrease"),
+        ("same", "Stay the same"),
+    ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="side_effect_check_ins"
     )
     side_effect = models.CharField(max_length=32, choices=SIDE_EFFECT_CHOICES)
+    side_effect_detail = models.CharField(max_length=200, blank=True, default="")
     experienced_on = models.DateField()
+    titration_direction = models.CharField(
+        max_length=16, choices=TITRATION_DIRECTION_CHOICES, null=True, blank=True
+    )
+    weight_lbs = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True)
+    bmi = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    notes = models.TextField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -138,6 +150,10 @@ class RefillRequest(models.Model):
         ("approved", "Approved"),
         ("denied", "Denied"),
     ]
+    REQUEST_TYPE_CHOICES = [
+        ("same_dose", "Same dose"),
+        ("titration", "Titration (dose change)"),
+    ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
@@ -151,8 +167,33 @@ class RefillRequest(models.Model):
         related_name="refill_requests",
     )
     status = models.CharField(max_length=16, choices=STATUS_CHOICES, default="pending")
+    request_type = models.CharField(
+        max_length=16, choices=REQUEST_TYPE_CHOICES, default="same_dose"
+    )
+    titration_direction = models.CharField(max_length=16, null=True, blank=True)
+    beluga_response_status = models.CharField(max_length=64, blank=True, default="not_sent")
+    beluga_visit_id = models.CharField(max_length=128, blank=True, default="")
+    beluga_master_id = models.CharField(max_length=128, blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "refill_requests"
         ordering = ["-created_at"]
+
+
+class WeightCheckinPhoto(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    check_in = models.ForeignKey(
+        SideEffectCheckIn,
+        on_delete=models.CASCADE,
+        related_name="photos",
+    )
+    storage_key = models.CharField(max_length=512)
+    content_type = models.CharField(max_length=64, default="image/jpeg")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "weight_checkin_photos"
+
+    def __str__(self):
+        return f"Photo for check-in {self.check_in_id}"

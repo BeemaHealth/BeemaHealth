@@ -52,6 +52,24 @@ def serialize_step(step: QuestionnaireStep) -> dict:
     }
 
 
+def _vendor_version_info(version: QuestionnaireVersion) -> dict | None:
+    if not version.vendor_version_id:
+        return None
+    from apps.questionnaires.models import ApiVendorVersion
+
+    try:
+        vv = ApiVendorVersion.objects.select_related("vendor").get(id=version.vendor_version_id)
+    except ApiVendorVersion.DoesNotExist:
+        return None
+    return {
+        "id": str(vv.id),
+        "vendor_slug": vv.vendor.slug,
+        "vendor_name": vv.vendor.name,
+        "display_label": vv.display_label,
+        "schema": vv.schema,
+    }
+
+
 def serialize_version(version: QuestionnaireVersion, *, include_ids: bool = True) -> dict:
     steps = [serialize_step(s) for s in version.steps.prefetch_related("fields").all()]
     payload = {
@@ -69,6 +87,8 @@ def serialize_version(version: QuestionnaireVersion, *, include_ids: bool = True
         "intake_routing_rules": version.intake_routing_rules or [],
         "cta_ids": version.cta_ids or [],
         "is_default_entry": version.is_default_entry,
+        "vendor_version_id": str(version.vendor_version_id) if version.vendor_version_id else None,
+        "vendor_version_info": _vendor_version_info(version),
         "steps": steps,
     }
     if not include_ids:
@@ -511,6 +531,7 @@ def duplicate_version(
         intake_routing_rules=deepcopy(version.intake_routing_rules or []),
         cta_ids=deepcopy(version.cta_ids or []),
         is_default_entry=version.is_default_entry,
+        vendor_version=version.vendor_version,
         created_by=created_by,
     )
     for step in version.steps.prefetch_related("fields").all():

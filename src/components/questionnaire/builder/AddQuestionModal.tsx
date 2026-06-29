@@ -11,6 +11,7 @@ import {
 import { Field, inputCls } from "@/components/quiz/quiz-primitives";
 import {
   BELUGA_FIELD_OPTIONS,
+  NO_VENDOR_FIELDS,
   QUESTION_FIELD_TYPES,
   belugaMappingToFieldKey,
   defaultFieldKeyForType,
@@ -54,6 +55,8 @@ type AddQuestionModalProps = {
   existingFieldKeys: string[];
   stepHasAccountField: boolean;
   onAdd: (payload: NewQuestionPayload) => Promise<void>;
+  belugaFields?: ReadonlyArray<{ value: string; label: string }>;
+  vendorLabel?: string;
 };
 
 const CHOICE_TYPES = new Set<QuestionFieldType>([
@@ -75,6 +78,8 @@ export function AddQuestionModal({
   existingFieldKeys,
   stepHasAccountField,
   onAdd,
+  belugaFields = NO_VENDOR_FIELDS,
+  vendorLabel = "API Mapping",
 }: AddQuestionModalProps) {
   const existing = useMemo(
     () => new Set(existingFieldKeys),
@@ -314,11 +319,13 @@ export function AddQuestionModal({
                 onChange={setAccountMappings}
                 backendReadOnly
                 compact
+                belugaFields={belugaFields}
+                vendorLabel={vendorLabel}
               />
               <p className="text-xs text-muted-foreground rounded-lg bg-muted/50 px-3 py-2">
                 Account fields call the existing register API (email +
-                password). Backend targets are fixed; adjust Beluga mappings if
-                needed.
+                password). Backend targets are fixed; adjust vendor API mappings
+                if needed.
               </p>
             </>
           ) : isAddressType ? (
@@ -366,11 +373,13 @@ export function AddQuestionModal({
                 onChange={setAddressMappings}
                 backendReadOnly
                 compact
+                belugaFields={belugaFields}
+                vendorLabel={vendorLabel}
               />
               <p className="text-xs text-muted-foreground rounded-lg bg-muted/50 px-3 py-2">
                 Patients type an address and pick a Nominatim suggestion.
                 Street, city, state, ZIP, county, and country are filled
-                automatically and mapped to Aretide intake and Beluga as
+                automatically and mapped to Aretide intake and vendor API as
                 configured above.
               </p>
             </>
@@ -416,7 +425,7 @@ export function AddQuestionModal({
                     value={mapsTo}
                     onChange={(e) => onMapsToChange(e.target.value)}
                   >
-                    {BELUGA_FIELD_OPTIONS.map((f) => (
+                    {belugaFields.map((f) => (
                       <option key={f.value || "none"} value={f.value}>
                         {f.label}
                       </option>
@@ -429,6 +438,8 @@ export function AddQuestionModal({
                 onChange={setChoiceOptions}
                 compact
                 showBelugaColumn={isMultiChoice}
+                belugaFields={belugaFields}
+                vendorLabel={vendorLabel}
               />
               <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
                 <input
@@ -611,7 +622,7 @@ export function AddQuestionModal({
                     value={mapsTo}
                     onChange={(e) => onMapsToChange(e.target.value)}
                   >
-                    {BELUGA_FIELD_OPTIONS.map((f) => (
+                    {belugaFields.map((f) => (
                       <option key={f.value || "none"} value={f.value}>
                         {f.label}
                       </option>

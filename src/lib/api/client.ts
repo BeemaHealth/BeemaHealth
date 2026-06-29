@@ -18,6 +18,7 @@ import type {
   PatientPrescription,
   DocumentType,
   DocumentUploadResponse,
+  DrugRefillConfig,
   EligibilityResponses,
   LoginMfaChallenge,
   MedicalIntake,
@@ -26,7 +27,10 @@ import type {
   PatientSettings,
   ProviderReview,
   RefillRequest,
+  RefillRequestsResponse,
+  SameDoseRefillResponse,
   SessionUser,
+  TitrationRefillResponse,
   UploadedDocument,
   User,
   SideEffectCheckIn,
@@ -911,6 +915,146 @@ export type QuestionnaireStepSchema = {
   fields: QuestionnaireFieldSchema[];
 };
 
+export type ApiVendorVersionField = {
+  id: string;
+  label: string;
+  required: boolean;
+};
+
+export type ApiVendorVersionSchema = {
+  id: string;
+  vendor_id: string;
+  vendor_slug: string;
+  vendor_name: string;
+  version_number: number;
+  label: string;
+  display_label: string;
+  schema: { fields: ApiVendorVersionField[] };
+  status: "draft" | "published" | "archived";
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ApiVendorSchema = {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  active: boolean;
+  versions: ApiVendorVersionSchema[];
+  latest_published_version: ApiVendorVersionSchema | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export async function fetchStaffVendors(): Promise<ApiVendorSchema[]> {
+  return apiFetch<ApiVendorSchema[]>("/staff/vendors/");
+}
+
+export async function fetchStaffVendor(
+  vendorId: string,
+): Promise<ApiVendorSchema> {
+  return apiFetch<ApiVendorSchema>(`/staff/vendors/${vendorId}/`);
+}
+
+export async function createStaffVendor(data: {
+  slug: string;
+  name: string;
+  description?: string;
+  active?: boolean;
+}): Promise<ApiVendorSchema> {
+  return apiFetch<ApiVendorSchema>("/staff/vendors/", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function patchStaffVendor(
+  vendorId: string,
+  data: Partial<{ name: string; description: string; active: boolean }>,
+): Promise<ApiVendorSchema> {
+  return apiFetch<ApiVendorSchema>(`/staff/vendors/${vendorId}/`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteStaffVendor(vendorId: string): Promise<void> {
+  await apiFetch<void>(`/staff/vendors/${vendorId}/`, { method: "DELETE" });
+}
+
+export async function fetchStaffVendorVersions(
+  vendorId: string,
+): Promise<ApiVendorVersionSchema[]> {
+  return apiFetch<ApiVendorVersionSchema[]>(
+    `/staff/vendors/${vendorId}/versions/`,
+  );
+}
+
+export async function createStaffVendorVersion(
+  vendorId: string,
+  data: { label?: string; schema: { fields: ApiVendorVersionField[] } },
+): Promise<ApiVendorVersionSchema> {
+  return apiFetch<ApiVendorVersionSchema>(
+    `/staff/vendors/${vendorId}/versions/`,
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    },
+  );
+}
+
+export async function patchStaffVendorVersion(
+  vendorId: string,
+  versionId: string,
+  data: Partial<{ label: string; schema: { fields: ApiVendorVersionField[] } }>,
+): Promise<ApiVendorVersionSchema> {
+  return apiFetch<ApiVendorVersionSchema>(
+    `/staff/vendors/${vendorId}/versions/${versionId}/`,
+    { method: "PATCH", body: JSON.stringify(data) },
+  );
+}
+
+export async function deleteStaffVendorVersion(
+  vendorId: string,
+  versionId: string,
+): Promise<void> {
+  await apiFetch<void>(`/staff/vendors/${vendorId}/versions/${versionId}/`, {
+    method: "DELETE",
+  });
+}
+
+export async function publishStaffVendorVersion(
+  vendorId: string,
+  versionId: string,
+): Promise<ApiVendorVersionSchema> {
+  return apiFetch<ApiVendorVersionSchema>(
+    `/staff/vendors/${vendorId}/versions/${versionId}/publish/`,
+    { method: "POST" },
+  );
+}
+
+export async function archiveStaffVendorVersion(
+  vendorId: string,
+  versionId: string,
+): Promise<ApiVendorVersionSchema> {
+  return apiFetch<ApiVendorVersionSchema>(
+    `/staff/vendors/${vendorId}/versions/${versionId}/archive/`,
+    { method: "POST" },
+  );
+}
+
+export async function unarchiveStaffVendorVersion(
+  vendorId: string,
+  versionId: string,
+): Promise<ApiVendorVersionSchema> {
+  return apiFetch<ApiVendorVersionSchema>(
+    `/staff/vendors/${vendorId}/versions/${versionId}/unarchive/`,
+    { method: "POST" },
+  );
+}
+
 export type QuestionnaireVersionSchema = {
   id: string;
   questionnaire_slug: string;
@@ -923,6 +1067,14 @@ export type QuestionnaireVersionSchema = {
   cta_ids?: string[];
   is_default_entry?: boolean;
   is_in_use?: boolean;
+  vendor_version_id?: string | null;
+  vendor_version_info?: {
+    id: string;
+    vendor_slug: string;
+    vendor_name: string;
+    display_label: string;
+    schema: { fields: ApiVendorVersionField[] };
+  } | null;
   steps: QuestionnaireStepSchema[];
 };
 
@@ -952,7 +1104,12 @@ export type QuestionnaireListItem = {
   questionnaire_type: "qualify" | "intake";
   title: string;
   medication: MedicationItem | null;
-  published_version: { id: string; version_label: string } | null;
+  published_version: {
+    id: string;
+    version_label: string;
+    vendor_name: string | null;
+    vendor_display_label: string | null;
+  } | null;
 };
 
 export async function fetchActiveQuestionnaire(
@@ -1175,6 +1332,7 @@ export async function updateStaffQuestionnaireVersion(
     intake_routing_rules?: IntakeRoutingRule[];
     cta_ids?: string[];
     is_default_entry?: boolean;
+    vendor_version_id?: string | null;
   },
 ) {
   return apiFetch<QuestionnaireVersionSchema>(
@@ -1519,6 +1677,7 @@ export async function fetchSideEffectCheckIns(): Promise<SideEffectCheckIn[]> {
 
 export async function submitSideEffectCheckIn(payload: {
   side_effect: SideEffectCheckIn["side_effect"];
+  side_effect_detail?: string;
   experienced_on: string;
 }): Promise<SideEffectCheckIn> {
   return apiFetch<SideEffectCheckIn>("/side-effect-check-ins/me/", {
@@ -1600,12 +1759,28 @@ export async function fetchPatientPrescription(): Promise<PatientPrescription | 
   }
 }
 
-export async function fetchRefillRequests(): Promise<RefillRequest[]> {
-  if (!USE_API) return [];
+export async function fetchRefillRequests(): Promise<RefillRequestsResponse> {
+  if (!USE_API) {
+    return {
+      refill_requests: [],
+      cooldown: {
+        active: false,
+        retry_after: null,
+        hours_remaining: null,
+      },
+    };
+  }
   try {
-    return await apiFetch<RefillRequest[]>("/refill-requests/me/");
+    return await apiFetch<RefillRequestsResponse>("/refill-requests/me/");
   } catch {
-    return [];
+    return {
+      refill_requests: [],
+      cooldown: {
+        active: false,
+        retry_after: null,
+        hours_remaining: null,
+      },
+    };
   }
 }
 
@@ -1619,4 +1794,127 @@ export function documentTypeLabel(type: DocumentType): string {
   return (
     UPLOAD_DOCUMENT_TYPES.find((option) => option.value === type)?.label ?? type
   );
+}
+
+// ── Dev settings (DEBUG mode only) ───────────────────────────────────────────
+
+export type DevSettings = {
+  debug: boolean;
+  require_email_verification: boolean;
+};
+
+export async function fetchDevSettings(): Promise<DevSettings | null> {
+  try {
+    return await apiFetch<DevSettings>("/staff/dev/");
+  } catch {
+    return null;
+  }
+}
+
+export async function patchDevSettings(
+  patch: Partial<Pick<DevSettings, "require_email_verification">>,
+): Promise<DevSettings> {
+  return apiFetch<DevSettings>("/staff/dev/", {
+    method: "PATCH",
+    body: JSON.stringify(patch),
+  });
+}
+
+export type BelugaMockEventType =
+  | "CONSULT_CONCLUDED"
+  | "CONSULT_CANCELED"
+  | "RX_WRITTEN"
+  | "DOCTOR_CHAT"
+  | "CS_MESSAGE"
+  | "PHARMACY_ORDER_IN_FULFILLMENT"
+  | "PHARMACY_ORDER_SHIPPED"
+  | "PHARMACY_ORDER_DELIVERED"
+  | "PACKAGE_IN_TRANSIT"
+  | "PACKAGE_OUT_FOR_DELIVERY"
+  | "PACKAGE_DELIVERED"
+  | "PACKAGE_DELIVERY_FAILED"
+  | "LAB_ORDER_RESULTS"
+  | "BOOKING_CREATED";
+
+export interface BelugaMockMed {
+  name: string;
+  strength: string;
+  refills?: string;
+  quantity?: string;
+  pharmacyNotes?: string;
+  rxId?: string;
+}
+
+export async function fireMockBelugaWebhook(payload: {
+  patient_email: string;
+  event: BelugaMockEventType;
+  visitOutcome?: "prescribed" | "referred";
+  content?: string;
+  docName?: string;
+  medsPrescribed?: BelugaMockMed[];
+}): Promise<Record<string, unknown>> {
+  return apiFetch<Record<string, unknown>>("/staff/dev/beluga-webhook/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+// ── Refill / titration ────────────────────────────────────────────────────────
+
+export async function fetchRefillConfig(): Promise<DrugRefillConfig> {
+  if (!USE_API) {
+    return {
+      drug_category: "other",
+      titration_field: false,
+      collects_weight: false,
+      collects_photo: false,
+      collects_bmi: false,
+      collects_notes: true,
+    };
+  }
+  try {
+    return await apiFetch<DrugRefillConfig>("/prescriptions/me/refill-config/");
+  } catch {
+    return {
+      drug_category: "other",
+      titration_field: false,
+      collects_weight: false,
+      collects_photo: false,
+      collects_bmi: false,
+      collects_notes: true,
+    };
+  }
+}
+
+export async function submitSameDoseRefill(): Promise<SameDoseRefillResponse> {
+  return apiFetch<SameDoseRefillResponse>("/refills/same-dose/", {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+}
+
+export async function submitTitrationRefill(
+  data: FormData,
+): Promise<TitrationRefillResponse> {
+  const session = store.getSession();
+  const headers: Record<string, string> = {};
+  if (session?.token) headers["Authorization"] = `Token ${session.token}`;
+  const url = `${API_BASE}/api/refills/titration/`;
+  const resp = await fetch(url, {
+    method: "POST",
+    headers,
+    body: data,
+    credentials: "same-origin",
+  });
+  if (!resp.ok) {
+    let detail = "Refill request failed.";
+    try {
+      const json = (await resp.json()) as { detail?: string };
+      if (json.detail) detail = json.detail;
+    } catch {
+      /* ignore */
+    }
+    throw new Error(detail);
+  }
+  return resp.json() as Promise<TitrationRefillResponse>;
 }

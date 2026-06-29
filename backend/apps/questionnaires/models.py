@@ -66,6 +66,59 @@ class Questionnaire(models.Model):
         return self.title
 
 
+class ApiVendor(models.Model):
+    """External clinical/pharmacy API vendor (e.g. Beluga Health)."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    slug = models.SlugField(max_length=32, unique=True)
+    name = models.CharField(max_length=128)
+    description = models.TextField(blank=True, default="")
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "api_vendors"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class ApiVendorVersion(models.Model):
+    """Versioned schema for an ApiVendor's expected payload fields."""
+
+    class Status(models.TextChoices):
+        DRAFT = "draft", "Draft"
+        PUBLISHED = "published", "Published"
+        ARCHIVED = "archived", "Archived"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    vendor = models.ForeignKey(ApiVendor, on_delete=models.CASCADE, related_name="versions")
+    version_number = models.PositiveSmallIntegerField()
+    label = models.CharField(max_length=32, blank=True, default="")
+    schema = models.JSONField(
+        default=dict,
+        help_text='{"fields": [{"id": "firstName", "label": "First name", "required": true}]}',
+    )
+    status = models.CharField(max_length=16, choices=Status.choices, default=Status.DRAFT)
+    published_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "api_vendor_versions"
+        unique_together = [["vendor", "version_number"]]
+        ordering = ["-version_number"]
+
+    def __str__(self):
+        return f"{self.vendor.slug} {self.display_label} ({self.status})"
+
+    @property
+    def display_label(self):
+        return self.label or f"v{self.version_number}"
+
+
 class QuestionnaireVersion(models.Model):
     class Status(models.TextChoices):
         DRAFT = "draft", "Draft"
@@ -84,6 +137,13 @@ class QuestionnaireVersion(models.Model):
     intake_routing_rules = models.JSONField(default=list, blank=True)
     cta_ids = models.JSONField(default=list, blank=True)
     is_default_entry = models.BooleanField(default=False)
+    vendor_version = models.ForeignKey(
+        ApiVendorVersion,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="questionnaire_versions",
+    )
     created_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,

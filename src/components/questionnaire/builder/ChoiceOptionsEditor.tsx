@@ -3,9 +3,12 @@ import { Button } from "@/components/ui/button";
 import { inputCls } from "@/components/quiz/quiz-primitives";
 import {
   BELUGA_FIELD_OPTIONS,
+  NO_VENDOR_FIELDS,
   belugaMappingToApiFieldId,
   uniqueAmong,
 } from "@/components/questionnaire/builder/field-catalog";
+
+type BelugaFieldOption = { value: string; label: string };
 import {
   nextChoiceOptionValue,
   type ChoiceOptionDraft,
@@ -16,8 +19,10 @@ type ChoiceOptionsEditorProps = {
   disabled?: boolean;
   compact?: boolean;
   minOptions?: number;
-  /** When false, Beluga is mapped on the question (single choice), not per option. */
+  /** When false, vendor API is mapped on the question (single choice), not per option. */
   showBelugaColumn?: boolean;
+  belugaFields?: ReadonlyArray<BelugaFieldOption>;
+  vendorLabel?: string;
   onChange: (next: ChoiceOptionDraft[]) => void;
 };
 
@@ -27,6 +32,8 @@ export function ChoiceOptionsEditor({
   compact = false,
   minOptions = 1,
   showBelugaColumn = true,
+  belugaFields = NO_VENDOR_FIELDS,
+  vendorLabel = "API Mapping",
   onChange,
 }: ChoiceOptionsEditorProps) {
   function updateOption(index: number, patch: Partial<ChoiceOptionDraft>) {
@@ -69,8 +76,8 @@ export function ChoiceOptionsEditor({
       <p className="text-[10px] text-muted-foreground">
         Each option needs a mapping ID (used for routing).
         {showBelugaColumn
-          ? " Selecting a Beluga field auto-fills the mapping ID to match the API property name."
-          : " The patient's selected answer is sent to the Beluga field mapped on this question."}
+          ? " Selecting a vendor field auto-fills the mapping ID to match the API property name."
+          : " The patient's selected answer is sent to the vendor field mapped on this question."}
       </p>
       <div
         className={`rounded-xl border border-border overflow-hidden ${
@@ -86,7 +93,7 @@ export function ChoiceOptionsEditor({
         >
           <span>Mapping ID</span>
           <span>Option label</span>
-          {showBelugaColumn ? <span>Beluga API</span> : null}
+          {showBelugaColumn ? <span>{vendorLabel}</span> : null}
           <span className="w-8 text-center"> </span>
         </div>
         {options.map((opt, i) => (
@@ -123,7 +130,7 @@ export function ChoiceOptionsEditor({
                 disabled={disabled}
                 onChange={(e) => onBelugaChange(i, e.target.value)}
               >
-                {BELUGA_FIELD_OPTIONS.map((field) => (
+                {belugaFields.map((field) => (
                   <option key={field.value || "none"} value={field.value}>
                     {field.label}
                   </option>

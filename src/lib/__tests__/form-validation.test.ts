@@ -13,6 +13,7 @@ import {
   parsePositiveNumber,
   validateAdultWeightHistory,
   validateAllergyRow,
+  validateSideEffectDetail,
   validateGoalWeightLbs,
   validateHeightFt,
   validateHeightIn,
@@ -286,6 +287,17 @@ describe("form-validation", () => {
       expect(
         validateAllergyRow({ allergy: "", reaction: "Hives" }),
       ).not.toBeNull();
+    });
+  });
+
+  describe("validateSideEffectDetail", () => {
+    it("requires a description", () => {
+      expect(validateSideEffectDetail("")).not.toBeNull();
+      expect(validateSideEffectDetail("Mild headache")).toBeNull();
+    });
+
+    it.each(XSS_PAYLOADS)("rejects unsafe detail %j", (payload) => {
+      expect(validateSideEffectDetail(payload)).not.toBeNull();
     });
   });
 

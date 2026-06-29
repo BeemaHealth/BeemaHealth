@@ -1,5 +1,10 @@
 import { inputCls } from "@/components/quiz/quiz-primitives";
-import { BELUGA_FIELD_OPTIONS } from "@/components/questionnaire/builder/field-catalog";
+import {
+  BELUGA_FIELD_OPTIONS,
+  NO_VENDOR_FIELDS,
+} from "@/components/questionnaire/builder/field-catalog";
+
+type BelugaFieldOption = { value: string; label: string };
 import {
   ADDRESS_BACKEND_FIELD_OPTIONS,
   addressBackendLabelForValue,
@@ -11,8 +16,9 @@ type AddressFieldMappingsEditorProps = {
   disabled?: boolean;
   onChange: (next: AddressSubFieldMapping[]) => void;
   compact?: boolean;
-  /** When true, Aretide intake targets are fixed for the selected section. */
   backendReadOnly?: boolean;
+  belugaFields?: ReadonlyArray<BelugaFieldOption>;
+  vendorLabel?: string;
 };
 
 export function AddressFieldMappingsEditor({
@@ -21,6 +27,8 @@ export function AddressFieldMappingsEditor({
   onChange,
   compact = false,
   backendReadOnly = false,
+  belugaFields = NO_VENDOR_FIELDS,
+  vendorLabel = "API Mapping",
 }: AddressFieldMappingsEditorProps) {
   function updateRow(
     key: AddressSubFieldMapping["key"],
@@ -38,8 +46,8 @@ export function AddressFieldMappingsEditor({
       </p>
       <p className="text-[10px] text-muted-foreground">
         {backendReadOnly
-          ? "Nominatim fills each part when a patient picks a suggestion. Aretide intake targets are fixed for the section you chose; adjust Beluga mappings as needed."
-          : "Map each address part to an Aretide intake target and a Beluga Health API field."}
+          ? `Nominatim fills each part when a patient picks a suggestion. Aretide intake targets are fixed for the section you chose; adjust ${vendorLabel} mappings as needed.`
+          : `Map each address part to an Aretide intake target and a ${vendorLabel} field.`}
       </p>
       <div
         className={`rounded-xl border border-border overflow-hidden ${
@@ -49,7 +57,7 @@ export function AddressFieldMappingsEditor({
         <div className="grid grid-cols-[1.1fr_1fr_1fr] gap-2 bg-muted/40 px-2.5 py-1.5 font-medium text-muted-foreground">
           <span>Nominatim part</span>
           <span>Aretide backend</span>
-          <span>Beluga API</span>
+          <span>{vendorLabel}</span>
         </div>
         {mappings.map((row) => (
           <div
@@ -87,7 +95,7 @@ export function AddressFieldMappingsEditor({
               }
               onChange={(e) => updateRow(row.key, { beluga: e.target.value })}
             >
-              {BELUGA_FIELD_OPTIONS.map((opt) => (
+              {belugaFields.map((opt) => (
                 <option key={opt.value || "none"} value={opt.value}>
                   {opt.label}
                 </option>
@@ -98,7 +106,8 @@ export function AddressFieldMappingsEditor({
       </div>
       <p className="text-[10px] text-muted-foreground">
         County and country are stored for Aretide intake and pharmacy routing.
-        Beluga visit payloads only include street, city, state, and ZIP.
+        Vendor visit payloads typically only include street, city, state, and
+        ZIP.
       </p>
     </div>
   );

@@ -50,6 +50,45 @@ class AnalyticsEventApiTests(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_step_viewed_whitespace_only_step_key_rejected(self):
+        response = self.client.post(
+            reverse("analytics-events"),
+            {"event_name": "step_viewed", "questionnaire_slug": "qualify", "step_key": "   "},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_step_key_stored_stripped(self):
+        """Whitespace-padded step_key is normalized before storage."""
+        response = self.client.post(
+            reverse("analytics-events"),
+            {"event_name": "step_viewed", "questionnaire_slug": "qualify", "step_key": "  review  "},
+            format="json",
+            REMOTE_ADDR="203.0.113.1",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        event = FunnelEvent.objects.get(id=response.json()["id"])
+        self.assertEqual(event.step_key, "review")
+
+    def test_step_key_whitespace_variants_dedup(self):
+        """Same step with different whitespace padding collapses to one event."""
+        first = self.client.post(
+            reverse("analytics-events"),
+            {"event_name": "step_viewed", "questionnaire_slug": "qualify", "step_key": "review"},
+            format="json",
+            REMOTE_ADDR="203.0.113.1",
+        )
+        second = self.client.post(
+            reverse("analytics-events"),
+            {"event_name": "step_viewed", "questionnaire_slug": "qualify", "step_key": "  review  "},
+            format="json",
+            REMOTE_ADDR="203.0.113.1",
+        )
+        self.assertEqual(first.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(second.status_code, status.HTTP_200_OK)
+        self.assertEqual(first.json()["id"], second.json()["id"])
+        self.assertEqual(FunnelEvent.objects.count(), 1)
+
     def test_anonymous_same_client_dedups_double_fire(self):
         """Same anonymous client double-firing within 1s collapses to one event."""
         payload = {"event_name": "page_viewed", "properties": {"page": "home"}}

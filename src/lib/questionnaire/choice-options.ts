@@ -17,7 +17,7 @@ export function defaultChoiceOptions(count = 2): ChoiceOptionDraft[] {
 export function serializeChoiceOptions(
   options: ChoiceOptionDraft[],
   fieldType?: string,
-): QuestionnaireFieldOptionSchema[] {
+): ChoiceOptionDraft[] {
   const stripOptionBeluga = fieldType === "single_choice";
   return options.map((opt) => ({
     value: opt.value.trim(),

@@ -3,6 +3,8 @@ import re
 from rest_framework import serializers
 
 from apps.questionnaires.models import (
+    ApiVendor,
+    ApiVendorVersion,
     Experiment,
     ExperimentVariant,
     Medication,
@@ -201,6 +203,75 @@ def _validate_rules(rules) -> list:
     return cleaned
 
 
+class ApiVendorVersionSerializer(serializers.ModelSerializer):
+    vendor_slug = serializers.CharField(source="vendor.slug", read_only=True)
+    vendor_name = serializers.CharField(source="vendor.name", read_only=True)
+    display_label = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = ApiVendorVersion
+        fields = [
+            "id",
+            "vendor_slug",
+            "vendor_name",
+            "version_number",
+            "label",
+            "display_label",
+            "schema",
+            "status",
+            "published_at",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "vendor_slug", "vendor_name", "display_label", "version_number", "published_at", "created_at", "updated_at"]
+
+
+class ApiVendorVersionWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApiVendorVersion
+        fields = ["label", "schema"]
+
+    def validate_schema(self, value):
+        if not isinstance(value, dict):
+            raise serializers.ValidationError("Schema must be an object.")
+        fields = value.get("fields")
+        if not isinstance(fields, list):
+            raise serializers.ValidationError('Schema must have a "fields" array.')
+        for i, f in enumerate(fields):
+            if not isinstance(f, dict) or not f.get("id") or not f.get("label"):
+                raise serializers.ValidationError(
+                    f'Field at index {i} must have "id" and "label".'
+                )
+        return value
+
+
+class ApiVendorSerializer(serializers.ModelSerializer):
+    versions = ApiVendorVersionSerializer(many=True, read_only=True)
+    latest_published_version = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ApiVendor
+        fields = ["id", "slug", "name", "description", "active", "latest_published_version", "versions", "created_at", "updated_at"]
+        read_only_fields = ["id", "created_at", "updated_at"]
+
+    def get_latest_published_version(self, obj):
+        v = obj.versions.filter(status=ApiVendorVersion.Status.PUBLISHED).order_by("-version_number").first()
+        if not v:
+            return None
+        return {"id": str(v.id), "version_number": v.version_number, "display_label": v.display_label}
+
+
+class ApiVendorWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApiVendor
+        fields = ["slug", "name", "description", "active"]
+
+    def validate_slug(self, value):
+        if not _SLUG_RE.match(value):
+            raise serializers.ValidationError("Slug must be lowercase alphanumeric with hyphens/underscores.")
+        return value
+
+
 class MedicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medication
@@ -286,6 +357,8 @@ class QuestionnaireVersionSerializer(serializers.ModelSerializer):
     medication_id = serializers.SerializerMethodField()
     steps = QuestionnaireStepSerializer(many=True, read_only=True)
     is_in_use = serializers.SerializerMethodField()
+    vendor_version_id = serializers.UUIDField(source="vendor_version.id", read_only=True, allow_null=True, default=None)
+    vendor_version_info = serializers.SerializerMethodField()
 
     class Meta:
         model = QuestionnaireVersion
@@ -299,10 +372,12 @@ class QuestionnaireVersionSerializer(serializers.ModelSerializer):
             "published_at",
             "steps",
             "is_in_use",
+            "vendor_version_id",
+            "vendor_version_info",
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "status", "published_at", "created_at", "updated_at", "steps", "is_in_use"]
+        read_only_fields = ["id", "status", "published_at", "created_at", "updated_at", "steps", "is_in_use", "vendor_version_id", "vendor_version_info"]
 
     def get_medication_id(self, obj):
         mid = obj.questionnaire.medication_id
@@ -312,6 +387,18 @@ class QuestionnaireVersionSerializer(serializers.ModelSerializer):
         from apps.questionnaires.services import questionnaire_version_is_in_use
 
         return questionnaire_version_is_in_use(obj.id)
+
+    def get_vendor_version_info(self, obj):
+        vv = obj.vendor_version
+        if not vv:
+            return None
+        return {
+            "id": str(vv.id),
+            "vendor_slug": vv.vendor.slug,
+            "vendor_name": vv.vendor.name,
+            "display_label": vv.display_label,
+            "schema": vv.schema,
+        }
 
 
 class QuestionnaireListSerializer(serializers.ModelSerializer):
@@ -325,12 +412,19 @@ class QuestionnaireListSerializer(serializers.ModelSerializer):
     def get_published_version(self, obj):
         version = (
             obj.versions.filter(status=QuestionnaireVersion.Status.PUBLISHED)
+            .select_related("vendor_version__vendor")
             .order_by("-published_at")
             .first()
         )
         if not version:
             return None
-        return {"id": str(version.id), "version_label": version.version_label}
+        vv = version.vendor_version
+        return {
+            "id": str(version.id),
+            "version_label": version.version_label,
+            "vendor_name": vv.vendor.name if vv else None,
+            "vendor_display_label": vv.display_label if vv else None,
+        }
 
 
 class QuestionnaireWriteSerializer(serializers.ModelSerializer):

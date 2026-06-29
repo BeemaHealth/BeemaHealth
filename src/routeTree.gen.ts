@@ -34,11 +34,13 @@ import { Route as VerifyEmailIndexRouteImport } from './routes/verify-email.inde
 import { Route as StaffIndexRouteImport } from './routes/staff.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pending'
+import { Route as StaffVendorsRouteImport } from './routes/staff.vendors'
 import { Route as StaffQuestionnairesRouteImport } from './routes/staff.questionnaires'
 import { Route as StaffPatientsRouteImport } from './routes/staff.patients'
 import { Route as StaffMedicationsRouteImport } from './routes/staff.medications'
 import { Route as StaffLandingPagesRouteImport } from './routes/staff.landing-pages'
 import { Route as StaffExperimentsRouteImport } from './routes/staff.experiments'
+import { Route as StaffDevRouteImport } from './routes/staff.dev'
 import { Route as StaffAnalyticsRouteImport } from './routes/staff.analytics'
 import { Route as LpSlugRouteImport } from './routes/lp.$slug'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
@@ -180,6 +182,11 @@ const VerifyEmailPendingRoute = VerifyEmailPendingRouteImport.update({
   path: '/pending',
   getParentRoute: () => VerifyEmailRoute,
 } as any)
+const StaffVendorsRoute = StaffVendorsRouteImport.update({
+  id: '/vendors',
+  path: '/vendors',
+  getParentRoute: () => StaffRoute,
+} as any)
 const StaffQuestionnairesRoute = StaffQuestionnairesRouteImport.update({
   id: '/questionnaires',
   path: '/questionnaires',
@@ -203,6 +210,11 @@ const StaffLandingPagesRoute = StaffLandingPagesRouteImport.update({
 const StaffExperimentsRoute = StaffExperimentsRouteImport.update({
   id: '/experiments',
   path: '/experiments',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffDevRoute = StaffDevRouteImport.update({
+  id: '/dev',
+  path: '/dev',
   getParentRoute: () => StaffRoute,
 } as any)
 const StaffAnalyticsRoute = StaffAnalyticsRouteImport.update({
@@ -318,11 +330,13 @@ export interface FileRoutesByFullPath {
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
+  '/staff/dev': typeof StaffDevRoute
   '/staff/experiments': typeof StaffExperimentsRoute
   '/staff/landing-pages': typeof StaffLandingPagesRoute
   '/staff/medications': typeof StaffMedicationsRoute
   '/staff/patients': typeof StaffPatientsRoute
   '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
+  '/staff/vendors': typeof StaffVendorsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/staff/': typeof StaffIndexRoute
@@ -362,10 +376,12 @@ export interface FileRoutesByTo {
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
+  '/staff/dev': typeof StaffDevRoute
   '/staff/experiments': typeof StaffExperimentsRoute
   '/staff/landing-pages': typeof StaffLandingPagesRoute
   '/staff/medications': typeof StaffMedicationsRoute
   '/staff/patients': typeof StaffPatientsRoute
+  '/staff/vendors': typeof StaffVendorsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard': typeof DashboardIndexRoute
   '/staff': typeof StaffIndexRoute
@@ -408,11 +424,13 @@ export interface FileRoutesById {
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
+  '/staff/dev': typeof StaffDevRoute
   '/staff/experiments': typeof StaffExperimentsRoute
   '/staff/landing-pages': typeof StaffLandingPagesRoute
   '/staff/medications': typeof StaffMedicationsRoute
   '/staff/patients': typeof StaffPatientsRoute
   '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
+  '/staff/vendors': typeof StaffVendorsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/staff/': typeof StaffIndexRoute
@@ -457,11 +475,13 @@ export interface FileRouteTypes {
     | '/legal/terms'
     | '/lp/$slug'
     | '/staff/analytics'
+    | '/staff/dev'
     | '/staff/experiments'
     | '/staff/landing-pages'
     | '/staff/medications'
     | '/staff/patients'
     | '/staff/questionnaires'
+    | '/staff/vendors'
     | '/verify-email/pending'
     | '/dashboard/'
     | '/staff/'
@@ -501,10 +521,12 @@ export interface FileRouteTypes {
     | '/legal/terms'
     | '/lp/$slug'
     | '/staff/analytics'
+    | '/staff/dev'
     | '/staff/experiments'
     | '/staff/landing-pages'
     | '/staff/medications'
     | '/staff/patients'
+    | '/staff/vendors'
     | '/verify-email/pending'
     | '/dashboard'
     | '/staff'
@@ -546,11 +568,13 @@ export interface FileRouteTypes {
     | '/legal/terms'
     | '/lp/$slug'
     | '/staff/analytics'
+    | '/staff/dev'
     | '/staff/experiments'
     | '/staff/landing-pages'
     | '/staff/medications'
     | '/staff/patients'
     | '/staff/questionnaires'
+    | '/staff/vendors'
     | '/verify-email/pending'
     | '/dashboard/'
     | '/staff/'
@@ -767,6 +791,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerifyEmailPendingRouteImport
       parentRoute: typeof VerifyEmailRoute
     }
+    '/staff/vendors': {
+      id: '/staff/vendors'
+      path: '/vendors'
+      fullPath: '/staff/vendors'
+      preLoaderRoute: typeof StaffVendorsRouteImport
+      parentRoute: typeof StaffRoute
+    }
     '/staff/questionnaires': {
       id: '/staff/questionnaires'
       path: '/questionnaires'
@@ -800,6 +831,13 @@ declare module '@tanstack/react-router' {
       path: '/experiments'
       fullPath: '/staff/experiments'
       preLoaderRoute: typeof StaffExperimentsRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/dev': {
+      id: '/staff/dev'
+      path: '/dev'
+      fullPath: '/staff/dev'
+      preLoaderRoute: typeof StaffDevRouteImport
       parentRoute: typeof StaffRoute
     }
     '/staff/analytics': {
@@ -964,21 +1002,25 @@ const StaffQuestionnairesRouteWithChildren =
 
 interface StaffRouteChildren {
   StaffAnalyticsRoute: typeof StaffAnalyticsRoute
+  StaffDevRoute: typeof StaffDevRoute
   StaffExperimentsRoute: typeof StaffExperimentsRoute
   StaffLandingPagesRoute: typeof StaffLandingPagesRoute
   StaffMedicationsRoute: typeof StaffMedicationsRoute
   StaffPatientsRoute: typeof StaffPatientsRoute
   StaffQuestionnairesRoute: typeof StaffQuestionnairesRouteWithChildren
+  StaffVendorsRoute: typeof StaffVendorsRoute
   StaffIndexRoute: typeof StaffIndexRoute
 }
 
 const StaffRouteChildren: StaffRouteChildren = {
   StaffAnalyticsRoute: StaffAnalyticsRoute,
+  StaffDevRoute: StaffDevRoute,
   StaffExperimentsRoute: StaffExperimentsRoute,
   StaffLandingPagesRoute: StaffLandingPagesRoute,
   StaffMedicationsRoute: StaffMedicationsRoute,
   StaffPatientsRoute: StaffPatientsRoute,
   StaffQuestionnairesRoute: StaffQuestionnairesRouteWithChildren,
+  StaffVendorsRoute: StaffVendorsRoute,
   StaffIndexRoute: StaffIndexRoute,
 }
 

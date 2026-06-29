@@ -1,6 +1,13 @@
 from django.urls import path
 
 from apps.questionnaires.staff_views import (
+    StaffApiVendorDetailView,
+    StaffApiVendorListView,
+    StaffApiVendorVersionArchiveView,
+    StaffApiVendorVersionDetailView,
+    StaffApiVendorVersionListView,
+    StaffApiVendorVersionPublishView,
+    StaffApiVendorVersionUnarchiveView,
     StaffMedicationDetailView,
     StaffMedicationListView,
     StaffQualifyCtaOwnershipView,
@@ -19,6 +26,40 @@ from apps.questionnaires.staff_views import (
     StaffQuestionnaireVersionDetailView,
     StaffQuestionnaireVersionListView,
 )
+
+vendor_urlpatterns = [
+    path("", StaffApiVendorListView.as_view(), name="staff-vendor-list"),
+    path(
+        "<uuid:vendor_id>/",
+        StaffApiVendorDetailView.as_view(),
+        name="staff-vendor-detail",
+    ),
+    path(
+        "<uuid:vendor_id>/versions/",
+        StaffApiVendorVersionListView.as_view(),
+        name="staff-vendor-version-list",
+    ),
+    path(
+        "<uuid:vendor_id>/versions/<uuid:version_id>/",
+        StaffApiVendorVersionDetailView.as_view(),
+        name="staff-vendor-version-detail",
+    ),
+    path(
+        "<uuid:vendor_id>/versions/<uuid:version_id>/publish/",
+        StaffApiVendorVersionPublishView.as_view(),
+        name="staff-vendor-version-publish",
+    ),
+    path(
+        "<uuid:vendor_id>/versions/<uuid:version_id>/archive/",
+        StaffApiVendorVersionArchiveView.as_view(),
+        name="staff-vendor-version-archive",
+    ),
+    path(
+        "<uuid:vendor_id>/versions/<uuid:version_id>/unarchive/",
+        StaffApiVendorVersionUnarchiveView.as_view(),
+        name="staff-vendor-version-unarchive",
+    ),
+]
 
 medication_urlpatterns = [
     path("", StaffMedicationListView.as_view(), name="staff-medication-list"),

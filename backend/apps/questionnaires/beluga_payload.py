@@ -320,6 +320,36 @@ def _resolve_binding(
     )
 
 
+def _required_mappings_from_vendor_version(vendor_version) -> tuple[tuple[str, ...], dict[str, str]]:
+    """Derive required mappings + labels from a vendor version schema.
+
+    Falls back to the hardcoded Beluga constants when no schema is available.
+    """
+    if vendor_version is None:
+        return BELUGA_VISIT_REQUIRED_MAPPINGS, BELUGA_LABELS
+
+    vendor_slug = vendor_version.vendor.slug
+    prefix = f"{vendor_slug}:"
+    fields = (vendor_version.schema or {}).get("fields", [])
+    if not fields:
+        return BELUGA_VISIT_REQUIRED_MAPPINGS, BELUGA_LABELS
+
+    required: list[str] = []
+    labels: dict[str, str] = {}
+    for f in fields:
+        if not isinstance(f, dict):
+            continue
+        field_id = str(f.get("id") or "").strip()
+        if not field_id:
+            continue
+        mapping = f"{prefix}{field_id}"
+        labels[mapping] = str(f.get("label") or field_id)
+        if f.get("required", False):
+            required.append(mapping)
+
+    return tuple(required), labels
+
+
 def build_beluga_visit_payload(
     *,
     intake_version: QuestionnaireVersion | None,
@@ -336,6 +366,10 @@ def build_beluga_visit_payload(
     if sex:
         extras["sex"] = _format_sex(sex)
 
+    vendor_version = getattr(intake_version, "vendor_version", None)
+    required_mappings, label_map = _required_mappings_from_vendor_version(vendor_version)
+    vendor_version_id = str(vendor_version.id) if vendor_version else None
+
     all_bindings: list[dict] = []
     if qualify_version:
         all_bindings.extend(_collect_bindings(qualify_version, "qualify"))
@@ -343,7 +377,7 @@ def build_beluga_visit_payload(
         all_bindings.extend(_collect_bindings(intake_version, "intake"))
 
     beluga_keys = {b["beluga"] for b in all_bindings}
-    beluga_keys.update(BELUGA_VISIT_REQUIRED_MAPPINGS)
+    beluga_keys.update(required_mappings)
 
     fields_out: list[dict] = []
     form_obj: dict[str, str | None] = {}
@@ -353,13 +387,13 @@ def build_beluga_visit_payload(
         if not beluga.startswith(BELUGA_PREFIX):
             continue
         api_id = beluga_mapping_to_api_field_id(beluga)
-        label = BELUGA_LABELS.get(beluga, api_id)
+        label = label_map.get(beluga, api_id)
         bindings = [b for b in all_bindings if b["beluga"] == beluga]
 
         value: str | None = None
         source: str | None = None
         source_label: str | None = None
-        status = "unmapped"
+        field_status = "unmapped"
 
         if bindings:
             ordered = sorted(
@@ -377,7 +411,7 @@ def build_beluga_visit_payload(
                     value = resolved
                     source = src
                     source_label = src_label
-                    status = "filled"
+                    field_status = "filled"
                     break
             if not value:
                 extra = _extra_value_for_beluga(beluga, extras)
@@ -385,18 +419,18 @@ def build_beluga_visit_payload(
                     value = extra
                     source = "account"
                     source_label = "Account on file"
-                    status = "filled"
+                    field_status = "filled"
                 elif bindings:
-                    status = "missing_value"
+                    field_status = "missing_value"
         else:
             extra = _extra_value_for_beluga(beluga, extras)
             if extra:
                 value = extra
                 source = "account"
                 source_label = "Account on file"
-                status = "filled"
-            elif beluga in BELUGA_VISIT_REQUIRED_MAPPINGS:
-                status = "unmapped"
+                field_status = "filled"
+            elif beluga in required_mappings:
+                field_status = "unmapped"
 
         if api_id:
             form_obj[api_id] = value
@@ -406,20 +440,20 @@ def build_beluga_visit_payload(
             "api_field_id": api_id,
             "label": label,
             "value": value,
-            "status": status,
+            "status": field_status,
             "source": source,
             "source_label": source_label,
         }
         fields_out.append(row)
 
-        if beluga in BELUGA_VISIT_REQUIRED_MAPPINGS and status != "filled":
+        if beluga in required_mappings and field_status != "filled":
             missing.append(api_id)
 
-    required_count = len(BELUGA_VISIT_REQUIRED_MAPPINGS)
+    required_count = len(required_mappings)
     ready_count = sum(
         1
         for f in fields_out
-        if f["beluga"] in BELUGA_VISIT_REQUIRED_MAPPINGS and f["status"] == "filled"
+        if f["beluga"] in required_mappings and f["status"] == "filled"
     )
 
     return {
@@ -429,6 +463,9 @@ def build_beluga_visit_payload(
         "missing": missing,
         "fields": fields_out,
         "form_obj": form_obj,
+        "meta": {
+            "vendor_version_id": vendor_version_id,
+        },
     }
 
 

@@ -3,21 +3,26 @@ import { createFileRoute, getRouteApi } from "@tanstack/react-router";
 import {
   Bell,
   BookOpen,
+  CalendarClock,
   CheckCircle2,
+  ChevronDown,
   Clock,
   FileCheck2,
+  FlaskConical,
   LockKeyhole,
   Mail,
+  MessageSquare,
   Phone,
+  Pill,
   ShieldCheck,
   Smartphone,
+  Stethoscope,
   Truck,
   UserRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   AccountSectionCard,
-  accountSectionBadgeOnClass,
   accountSectionDividerClass,
   accountSectionRowIconClass,
   DisplayField,
@@ -84,12 +89,88 @@ const GENDER_IDENTITY_OPTIONS: { value: SexAssignedAtBirth; label: string }[] =
   ];
 */
 
-type EditingSection =
-  | "profile"
-  | "contact"
-  | "shipping"
-  | "communication"
-  | null;
+type EditingSection = "profile" | "contact" | "shipping" | null;
+
+type CommunicationPreference = "email" | "sms" | "product";
+
+type NotificationCategoryKey =
+  | "notify_messages"
+  | "notify_review"
+  | "notify_prescription"
+  | "notify_shipping"
+  | "notify_labs"
+  | "notify_appointments";
+
+const NOTIFICATION_CATEGORIES: {
+  key: NotificationCategoryKey;
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+}[] = [
+  {
+    key: "notify_messages",
+    title: "Care team messages",
+    description: "Messages from your provider or support team",
+    icon: MessageSquare,
+  },
+  {
+    key: "notify_review",
+    title: "Visit decisions",
+    description: "When a provider completes or cancels your visit",
+    icon: Stethoscope,
+  },
+  {
+    key: "notify_prescription",
+    title: "Prescription updates",
+    description: "When a prescription is written for you",
+    icon: Pill,
+  },
+  {
+    key: "notify_shipping",
+    title: "Order & shipping",
+    description: "Pharmacy fulfillment and delivery tracking",
+    icon: Truck,
+  },
+  {
+    key: "notify_labs",
+    title: "Lab updates",
+    description: "Lab kits, samples, and results",
+    icon: FlaskConical,
+  },
+  {
+    key: "notify_appointments",
+    title: "Appointment updates",
+    description: "Scheduling, reschedules, and reminders",
+    icon: CalendarClock,
+  },
+];
+
+const DEFAULT_NOTIFICATION_CATEGORIES: Record<
+  NotificationCategoryKey,
+  boolean
+> = {
+  notify_messages: true,
+  notify_review: true,
+  notify_prescription: true,
+  notify_shipping: true,
+  notify_labs: true,
+  notify_appointments: true,
+};
+
+type PreferenceBusyKey = CommunicationPreference | NotificationCategoryKey;
+
+function notificationCategoriesFromSettings(
+  settings: PatientSettings,
+): Record<NotificationCategoryKey, boolean> {
+  return {
+    notify_messages: settings.notify_messages,
+    notify_review: settings.notify_review,
+    notify_prescription: settings.notify_prescription,
+    notify_shipping: settings.notify_shipping,
+    notify_labs: settings.notify_labs,
+    notify_appointments: settings.notify_appointments,
+  };
+}
 
 function labelForOption<T extends string>(
   value: T | "",
@@ -147,6 +228,13 @@ function DashboardAccountPage() {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsNotifications, setSmsNotifications] = useState(true);
   const [productEmails, setProductEmails] = useState(false);
+  const [notifyCategories, setNotifyCategories] = useState<
+    Record<NotificationCategoryKey, boolean>
+  >(DEFAULT_NOTIFICATION_CATEGORIES);
+  const [advancedNotificationsOpen, setAdvancedNotificationsOpen] =
+    useState(false);
+  const [preferenceBusy, setPreferenceBusy] =
+    useState<PreferenceBusyKey | null>(null);
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
   const [twoFactorSetup, setTwoFactorSetup] = useState<{
     challengeId: string;
@@ -254,6 +342,7 @@ function DashboardAccountPage() {
       setSmsNotifications(settings.sms_notifications);
       setProductEmails(settings.product_emails);
       setTwoFactorEnabled(settings.two_factor_enabled);
+      setNotifyCategories(notificationCategoriesFromSettings(settings));
     }
   }, [
     user,
@@ -296,11 +385,6 @@ function DashboardAccountPage() {
     }
     if (section === "shipping") {
       setAddressDraft(address);
-    }
-    if (section === "communication" && settings) {
-      setEmailNotifications(settings.email_notifications);
-      setSmsNotifications(settings.sms_notifications);
-      setProductEmails(settings.product_emails);
     }
     setEditingSection(null);
   }
@@ -380,21 +464,60 @@ function DashboardAccountPage() {
     }
   }
 
-  async function handleSaveCommunication() {
-    setSavingSection("communication");
+  async function handleCommunicationToggle(
+    field: CommunicationPreference,
+    enabled: boolean,
+  ) {
+    const labels: Record<CommunicationPreference, string> = {
+      email: "Email notifications",
+      sms: "SMS notifications",
+      product: "Product & education emails",
+    };
+    const payload =
+      field === "email"
+        ? { email_notifications: enabled }
+        : field === "sms"
+          ? { sms_notifications: enabled }
+          : { product_emails: enabled };
+
+    setPreferenceBusy(field);
     try {
-      const updatedSettings = await patchPatientSettings({
-        email_notifications: emailNotifications,
-        sms_notifications: smsNotifications,
-        product_emails: productEmails,
-      });
-      setSettings(updatedSettings);
-      setEditingSection(null);
-      toast.success("Communication preferences updated.");
+      const updated = await patchPatientSettings(payload);
+      setSettings(updated);
+      setEmailNotifications(updated.email_notifications);
+      setSmsNotifications(updated.sms_notifications);
+      setProductEmails(updated.product_emails);
+      setNotifyCategories(notificationCategoriesFromSettings(updated));
+      toast.success(`${labels[field]} ${enabled ? "enabled" : "disabled"}.`);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not save.");
+      toast.error(
+        err instanceof Error ? err.message : "Could not update preference.",
+      );
     } finally {
-      setSavingSection(null);
+      setPreferenceBusy(null);
+    }
+  }
+
+  async function handleNotificationCategoryToggle(
+    key: NotificationCategoryKey,
+    enabled: boolean,
+  ) {
+    const label =
+      NOTIFICATION_CATEGORIES.find((category) => category.key === key)?.title ??
+      "Notification";
+
+    setPreferenceBusy(key);
+    try {
+      const updated = await patchPatientSettings({ [key]: enabled });
+      setSettings(updated);
+      setNotifyCategories(notificationCategoriesFromSettings(updated));
+      toast.success(`${label} ${enabled ? "enabled" : "disabled"}.`);
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Could not update preference.",
+      );
+    } finally {
+      setPreferenceBusy(null);
     }
   }
 
@@ -654,75 +777,99 @@ function DashboardAccountPage() {
           description="Choose how you'd like to hear from us"
           icon={Bell}
           tone="communication"
-          editable
-          editing={editingSection === "communication"}
-          saving={savingSection === "communication"}
-          onEdit={() => startEditing("communication")}
-          onSave={() => void handleSaveCommunication()}
-          onCancel={() => cancelEditing("communication")}
         >
-          {editingSection === "communication" ? (
-            <div
-              className={cn(
-                "divide-y",
-                accountSectionDividerClass("communication"),
-              )}
-            >
-              <PreferenceRow
-                icon={Mail}
-                iconClassName={accountSectionRowIconClass("communication")}
-                title="Email notifications"
-                description="Care updates and reminders"
-                checked={emailNotifications}
-                onCheckedChange={setEmailNotifications}
-              />
-              <PreferenceRow
-                icon={Smartphone}
-                iconClassName={accountSectionRowIconClass("communication")}
-                title="SMS notifications"
-                description="Time-sensitive alerts"
-                checked={smsNotifications}
-                onCheckedChange={setSmsNotifications}
-              />
-              <PreferenceRow
-                icon={BookOpen}
-                iconClassName={accountSectionRowIconClass("communication")}
-                title="Product & education emails"
-                description="Tips and program news"
-                checked={productEmails}
-                onCheckedChange={setProductEmails}
-              />
+          <div
+            className={cn(
+              "divide-y",
+              accountSectionDividerClass("communication"),
+            )}
+          >
+            <PreferenceRow
+              icon={Mail}
+              iconClassName={accountSectionRowIconClass("communication")}
+              title="Email notifications"
+              description="Care updates and reminders"
+              checked={emailNotifications}
+              disabled={preferenceBusy !== null}
+              onCheckedChange={(checked) =>
+                void handleCommunicationToggle("email", checked)
+              }
+            />
+            <PreferenceRow
+              icon={Smartphone}
+              iconClassName={accountSectionRowIconClass("communication")}
+              title="SMS notifications"
+              description="Time-sensitive alerts"
+              checked={smsNotifications}
+              disabled={preferenceBusy !== null}
+              onCheckedChange={(checked) =>
+                void handleCommunicationToggle("sms", checked)
+              }
+            />
+            <PreferenceRow
+              icon={BookOpen}
+              iconClassName={accountSectionRowIconClass("communication")}
+              title="Product & education emails"
+              description="Tips and program news"
+              checked={productEmails}
+              disabled={preferenceBusy !== null}
+              onCheckedChange={(checked) =>
+                void handleCommunicationToggle("product", checked)
+              }
+            />
+            <div className="pt-2">
+              <button
+                type="button"
+                className="flex w-full items-center justify-between gap-3 rounded-lg px-1 py-2 text-left transition-colors hover:bg-muted/50"
+                aria-expanded={advancedNotificationsOpen}
+                onClick={() => setAdvancedNotificationsOpen((open) => !open)}
+              >
+                <div>
+                  <p className="text-sm font-medium text-foreground">
+                    Advanced notifications
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Choose which care events can reach you
+                  </p>
+                </div>
+                <ChevronDown
+                  className={cn(
+                    "size-4 shrink-0 text-muted-foreground transition-transform",
+                    advancedNotificationsOpen && "rotate-180",
+                  )}
+                  aria-hidden
+                />
+              </button>
+              {advancedNotificationsOpen ? (
+                <div
+                  className={cn(
+                    "mt-1 divide-y",
+                    accountSectionDividerClass("communication"),
+                  )}
+                >
+                  {NOTIFICATION_CATEGORIES.map((category) => (
+                    <PreferenceRow
+                      key={category.key}
+                      icon={category.icon}
+                      iconClassName={accountSectionRowIconClass(
+                        "communication",
+                      )}
+                      title={category.title}
+                      description={category.description}
+                      checked={notifyCategories[category.key]}
+                      disabled={preferenceBusy !== null}
+                      onCheckedChange={(checked) =>
+                        void handleNotificationCategoryToggle(
+                          category.key,
+                          checked,
+                        )
+                      }
+                    />
+                  ))}
+                </div>
+              ) : null}
             </div>
-          ) : (
-            <dl
-              className={cn(
-                "divide-y",
-                accountSectionDividerClass("communication"),
-              )}
-            >
-              <PreferenceDisplay
-                icon={Mail}
-                iconClassName={accountSectionRowIconClass("communication")}
-                title="Email notifications"
-                description="Care updates and reminders"
-                enabled={emailNotifications}
-              />
-              <PreferenceDisplay
-                icon={Smartphone}
-                iconClassName={accountSectionRowIconClass("communication")}
-                title="SMS notifications"
-                description="Time-sensitive alerts"
-                enabled={smsNotifications}
-              />
-              <PreferenceDisplay
-                icon={BookOpen}
-                iconClassName={accountSectionRowIconClass("communication")}
-                title="Product & education emails"
-                description="Tips and program news"
-                enabled={productEmails}
-              />
-            </dl>
-          )}
+          </div>
         </AccountSectionCard>
 
         <AccountSectionCard
@@ -890,51 +1037,6 @@ function PreferenceRow({
         disabled={disabled}
         onCheckedChange={onCheckedChange}
       />
-    </div>
-  );
-}
-
-function PreferenceDisplay({
-  icon: Icon,
-  iconClassName = accountSectionRowIconClass("communication"),
-  title,
-  description,
-  enabled,
-}: {
-  icon?: React.ComponentType<{ className?: string }>;
-  iconClassName?: string;
-  title: string;
-  description: string;
-  enabled: boolean;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
-      <div className="flex min-w-0 items-start gap-3">
-        {Icon && (
-          <span
-            className={cn(
-              "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full",
-              iconClassName,
-            )}
-          >
-            <Icon className="size-4" aria-hidden />
-          </span>
-        )}
-        <div>
-          <p className="text-sm font-medium text-foreground">{title}</p>
-          <p className="text-xs text-muted-foreground">{description}</p>
-        </div>
-      </div>
-      <span
-        className={cn(
-          "rounded-full px-2.5 py-0.5 text-xs font-medium",
-          enabled
-            ? accountSectionBadgeOnClass("communication")
-            : "bg-muted text-muted-foreground",
-        )}
-      >
-        {enabled ? "On" : "Off"}
-      </span>
     </div>
   );
 }

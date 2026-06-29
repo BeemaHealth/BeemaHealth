@@ -49,6 +49,20 @@ When `questionnaire_version_id` and `questionnaire_responses` are present:
 
 Legacy patients without dynamic data keep the hardcoded `IntakeSubmissionViewer` / step read-only views.
 
+## External API integration — Beluga Health only
+
+**Aretide calls Beluga Health exclusively. No outbound calls are made to LifeFile/MediVera.**
+
+| Stage | What happens |
+|-------|-------------|
+| Consent signed | `build_beluga_visit_payload` assembles the Beluga `formObj` from questionnaire field mappings and freezes it in `IntakeSubmission.snapshot["beluga_visit_payload"]` |
+| Provider approves | A Beluga visit creation call (`POST` to Beluga API) is made using the frozen payload |
+| Status updates | Beluga sends webhook events back (RX_WRITTEN, CONSULT_CONCLUDED, shipping, etc.) |
+
+LifeFile/MediVera adapters exist in `backend/apps/pharmacy/adapters/lifefile.py` and `pharmacy/services.py` but **must not be wired to any live outbound flow**. The mock adapter is used locally; production uses Beluga only.
+
+The Beluga visit payload is built from `beluga:fieldName` annotations (`maps_to_section`) on each questionnaire field. The full field list lives in `backend/apps/questionnaires/beluga_payload.py` (`BELUGA_VISIT_REQUIRED_MAPPINGS`) and mirrored in `src/components/questionnaire/builder/field-catalog.ts` (`BELUGA_FIELD_OPTIONS`). Both must stay in sync.
+
 ## Key files
 
 | File | Role |
@@ -61,3 +75,5 @@ Legacy patients without dynamic data keep the hardcoded `IntakeSubmissionViewer`
 | `backend/apps/intakes/submissions.py` | Snapshot builder + version pinning |
 | `backend/apps/intakes/models.py` | MedicalIntake, IntakeSubmission |
 | `backend/apps/questionnaires/services.py` | Resolve intake slug from qualify rules |
+| `backend/apps/questionnaires/beluga_payload.py` | Beluga `formObj` builder |
+| `src/components/questionnaire/builder/field-catalog.ts` | Frontend Beluga field option list |

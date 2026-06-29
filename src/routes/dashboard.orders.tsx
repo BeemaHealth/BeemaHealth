@@ -101,7 +101,7 @@ function DashboardOrdersPage() {
         >
           <p className="text-sm leading-relaxed text-muted-foreground">
             Aretide coordinates fulfillment with licensed pharmacies.
-            You&apos;ll receive your medication in Aretide packaging with
+            You&apos;ll receive your medication in packaging with
             tracking details posted here when available.
           </p>
         </AccountSectionCard>
