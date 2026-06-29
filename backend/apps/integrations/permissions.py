@@ -14,6 +14,19 @@ class DoctorWebhookPermission(permissions.BasePermission):
         return request.headers.get("X-Webhook-Secret", "") == secret
 
 
+class BelugaWebhookPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        from django.conf import settings
+
+        secret = getattr(settings, "BELUGA_WEBHOOK_SECRET", "")
+        if not secret:
+            return False
+        auth = request.headers.get("Authorization", "")
+        if auth.startswith("Bearer "):
+            return auth[7:].strip() == secret
+        return request.headers.get("X-Webhook-Secret", "") == secret
+
+
 class LifeFileWebhookPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         import base64

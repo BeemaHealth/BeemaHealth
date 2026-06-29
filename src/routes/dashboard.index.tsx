@@ -1,15 +1,13 @@
 import { Link, createFileRoute, getRouteApi } from "@tanstack/react-router";
 import { Bell, MessageSquare, Pill, Stethoscope, Truck } from "lucide-react";
+import { CareTeamMessageThread } from "@/components/portal/CareTeamMessageThread";
 import { CaseTimeline } from "@/components/portal/CaseTimeline";
 import { PortalPageHeader } from "@/components/portal/PortalPageHeader";
 import { StatusBadge } from "@/components/portal/StatusBadge";
 import { Button } from "@/components/ui/button";
+import { careTeamMessageCount } from "@/lib/care-team-messages";
 import { STATUS_LABELS } from "@/lib/dashboard-loader";
-import {
-  buildCareTimeline,
-  canManageRefills,
-  getStatusSummary,
-} from "@/lib/dashboard-status";
+import { canManageRefills, getStatusSummary } from "@/lib/dashboard-status";
 import {
   DASHBOARD_SUMMARY_ICON_STYLES,
   type DashboardSummaryIconTone,
@@ -71,10 +69,40 @@ function SummaryCard({
 
 function DashboardHomePage() {
   const data = dashboardRoute.useLoaderData();
-  const summary = getStatusSummary(data.intake_status);
-  const timeline = buildCareTimeline(data.intake_status, data.submitted_at);
+  const careEvents = data.care_events ?? [];
+  const summary = getStatusSummary(data.intake_status, careEvents);
   const statusLabel = STATUS_LABELS[data.intake_status] ?? data.intake_status;
   const refillsAvailable = canManageRefills(data.has_active_prescription);
+  const messageCount = careTeamMessageCount(data.patient_note);
+  const hasCareTeamMessages = messageCount > 0;
+
+  if (data.intake_status === "draft") {
+    return (
+      <div className="mx-auto max-w-6xl space-y-6">
+        <PortalPageHeader
+          title={`Welcome, ${data.user.first_name}`}
+          subtitle="Complete your medical intake to get started."
+        />
+        <div className="rounded-3xl border border-primary/15 bg-primary-soft/70 p-8 md:p-10">
+          <p className="text-sm font-medium text-primary">
+            No intake submitted yet
+          </p>
+          <h2 className="mt-1 text-2xl font-bold text-primary md:text-3xl">
+            Finish your intake to continue
+          </h2>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Your medical intake is saved as a draft. Pick up where you left off
+            to complete your evaluation and connect with a provider.
+          </p>
+          <div className="mt-6">
+            <Button asChild className="rounded-xl">
+              <Link to="/intake">Continue draft →</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -97,7 +125,7 @@ function DashboardHomePage() {
           />
         </div>
 
-        {data.intake_status === "more_info_needed" && data.patient_note && (
+        {data.intake_status === "more_info_needed" && hasCareTeamMessages && (
           <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-primary/10 bg-card p-4 shadow-soft sm:flex-row sm:items-center sm:justify-between md:p-5">
             <div className="flex gap-3">
               <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full bg-warning/25 text-warning-foreground">
@@ -108,20 +136,16 @@ function DashboardHomePage() {
                   Next action needed
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {data.patient_note}
+                  Your care team left{" "}
+                  {messageCount === 1
+                    ? "a message"
+                    : `${messageCount} messages`}{" "}
+                  below. Review them and update your intake when you are ready.
                 </p>
               </div>
             </div>
             <Button asChild className="shrink-0 rounded-xl">
               <Link to="/dashboard/intake">Update intake →</Link>
-            </Button>
-          </div>
-        )}
-
-        {data.intake_status === "draft" && (
-          <div className="mt-6">
-            <Button asChild className="rounded-xl">
-              <Link to="/intake">Continue intake →</Link>
             </Button>
           </div>
         )}
@@ -152,14 +176,22 @@ function DashboardHomePage() {
         <SummaryCard
           icon={MessageSquare}
           title="Messages"
-          status="Coming soon"
-          sub="Secure messaging"
+          status={
+            hasCareTeamMessages
+              ? `${messageCount} message${messageCount === 1 ? "" : "s"}`
+              : "No messages yet"
+          }
+          sub={
+            hasCareTeamMessages
+              ? "From your care team"
+              : "We will notify you when your team reaches out"
+          }
           iconTone="messages"
         />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <section className="rounded-3xl border border-border bg-card p-5 shadow-soft lg:col-span-2 md:p-6">
+        <section className="flex flex-col rounded-3xl border border-border bg-card p-5 shadow-soft lg:col-span-2 md:p-6">
           <div className="mb-5 flex items-center justify-between gap-3">
             <h2 className="text-lg font-semibold text-foreground">
               Case timeline
@@ -168,42 +200,41 @@ function DashboardHomePage() {
               <Link to="/dashboard/intake">
                 {data.intake_status === "more_info_needed"
                   ? "Update intake"
-                  : data.intake_status === "draft"
-                    ? "Continue intake"
-                    : "View intake (read-only)"}
+                  : "View intake (read-only)"}
               </Link>
             </Button>
           </div>
-          <CaseTimeline events={timeline} />
+          <div className="relative lg:flex-1">
+            <CaseTimeline
+              intakeStatus={data.intake_status}
+              submittedAt={data.submitted_at}
+              careEvents={careEvents}
+              className="max-h-80 lg:absolute lg:inset-0 lg:max-h-none"
+            />
+          </div>
         </section>
 
         <div className="space-y-4">
           <section className="rounded-3xl border border-border bg-card p-5 shadow-soft">
-            <h2 className="text-sm font-semibold text-foreground">Messages</h2>
-            <div className="mt-3 rounded-2xl border border-border/80 bg-muted/60 p-3">
-              <p className="text-xs font-medium text-muted-foreground">
-                Secure messaging
-              </p>
-              <p className="mt-1 text-sm leading-relaxed text-foreground/90">
-                Coming soon. We will notify you when you can message your care
-                team from your dashboard.
-              </p>
-            </div>
-            <p className="mt-3 text-sm font-medium text-muted-foreground">
-              Coming soon
-            </p>
-          </section>
-
-          {data.patient_note && data.intake_status !== "more_info_needed" && (
-            <section className="rounded-3xl border border-border bg-card p-5 shadow-soft">
+            <div className="flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold text-foreground">
-                Care team note
+                Care team messages
               </h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {data.patient_note}
-              </p>
-            </section>
-          )}
+              {hasCareTeamMessages && (
+                <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+                  {messageCount}
+                </span>
+              )}
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Updates from your provider and support team appear here. Reply is
+              not available yet — we will email or text you based on your
+              notification settings.
+            </p>
+            <div className="mt-4">
+              <CareTeamMessageThread patientNote={data.patient_note} />
+            </div>
+          </section>
 
           <section className="rounded-3xl border border-border bg-card p-5 shadow-soft">
             <h2 className="text-sm font-semibold text-foreground">

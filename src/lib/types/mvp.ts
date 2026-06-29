@@ -65,6 +65,9 @@ export interface User {
   dob: string;
   state: string;
   email_verified: boolean;
+  is_staff: boolean;
+  is_provider: boolean;
+  is_patient: boolean;
   created_at: string;
 }
 
@@ -127,6 +130,9 @@ export interface EligibilityResponses {
   needs_clinician_review: boolean;
   disqualification_reason: string | null;
   pre_signup_consents: PreSignupConsents;
+  questionnaire_responses?: Record<string, unknown>;
+  questionnaire_version_id?: string | null;
+  selected_intake_questionnaire_slug?: string | null;
   completed_at: string | null;
   created_at: string;
   updated_at?: string;
@@ -180,6 +186,8 @@ export interface MedicalIntake {
   active_submission_version?: number | null;
   working_version?: number;
   account_screening?: AccountScreening;
+  questionnaire_responses?: Record<string, unknown>;
+  questionnaire_version_id?: string | null;
   updated_at: string;
   can_edit?: boolean;
   active_submission?: IntakeSubmission | null;
@@ -198,6 +206,44 @@ export interface AccountScreening {
   goal_weight_lbs: string | null;
   bmi: number | null;
 }
+
+export type BelugaVisitFieldSnapshot = {
+  beluga: string;
+  api_field_id: string;
+  label: string;
+  value: string | null;
+  status: "filled" | "missing_value" | "unmapped";
+  source?: string;
+  source_label?: string;
+};
+
+export type BelugaVisitPayloadSnapshot = {
+  ready: boolean;
+  ready_count: number;
+  required_count: number;
+  missing: string[];
+  fields: BelugaVisitFieldSnapshot[];
+  form_obj: Record<string, string | null>;
+};
+
+export type DynamicQuestionnaireSnapshotField = {
+  field_key: string;
+  label: string;
+  field_type: string;
+  display_value: string;
+  raw_value: unknown;
+};
+
+export type DynamicQuestionnaireSnapshot = {
+  questionnaire_version_id: string;
+  questionnaire_slug: string;
+  version_label: string;
+  steps: {
+    step_key: string;
+    title: string;
+    fields: DynamicQuestionnaireSnapshotField[];
+  }[];
+};
 
 export interface IntakeSubmissionSnapshot {
   meta: {
@@ -232,6 +278,8 @@ export interface IntakeSubmissionSnapshot {
   identity_contact: Record<string, string>;
   clinical: Record<string, unknown>;
   consent: Record<string, unknown> | null;
+  dynamic_questionnaire?: DynamicQuestionnaireSnapshot | null;
+  beluga_visit_payload?: BelugaVisitPayloadSnapshot | null;
 }
 
 export interface IntakeSubmission {
@@ -293,6 +341,16 @@ export interface DashboardData {
   patient_note: string;
   has_active_prescription: boolean;
   pharmacy_order?: PharmacyOrder | null;
+  care_events?: PersistedCareEvent[];
+}
+
+export interface PersistedCareEvent {
+  id: string;
+  milestone: string;
+  title: string;
+  description: string;
+  occurred_at: string;
+  order_id: string;
 }
 
 export type PrescriptionRoute = "injection" | "oral" | "other";
@@ -399,6 +457,7 @@ export interface SideEffectCheckIn {
   id: string;
   user_id: string;
   side_effect: SideEffectType;
+  side_effect_detail?: string;
   experienced_on: string;
   created_at: string;
 }
@@ -408,6 +467,12 @@ export interface PatientSettings {
   sms_notifications: boolean;
   product_emails: boolean;
   two_factor_enabled: boolean;
+  notify_messages: boolean;
+  notify_review: boolean;
+  notify_prescription: boolean;
+  notify_shipping: boolean;
+  notify_labs: boolean;
+  notify_appointments: boolean;
   updated_at?: string;
 }
 
@@ -419,8 +484,56 @@ export interface RefillRequest {
   created_at: string;
 }
 
+export interface RefillCooldown {
+  active: boolean;
+  retry_after: string | null;
+  hours_remaining: number | null;
+}
+
+export interface RefillRequestsResponse {
+  refill_requests: RefillRequest[];
+  cooldown: RefillCooldown;
+}
+
 export interface LoginMfaChallenge {
   mfa_required: true;
   mfa_challenge_id: string;
   detail: string;
+}
+
+// ---------------------------------------------------------------------------
+// Refill / titration system
+// ---------------------------------------------------------------------------
+
+export type DrugCategory = "glp1" | "ed" | "other";
+
+export type TitrationDirection = "increase" | "decrease" | "same";
+
+export type RefillRequestType = "same_dose" | "titration";
+
+export interface DrugRefillConfig {
+  drug_category: DrugCategory;
+  titration_field: boolean;
+  collects_weight: boolean;
+  collects_photo: boolean;
+  collects_bmi: boolean;
+  collects_notes: boolean;
+}
+
+export interface SameDoseRefillResponse {
+  id: string;
+  request_type: "same_dose";
+  beluga_status: string;
+  message: string;
+  created_at: string;
+}
+
+export interface TitrationRefillResponse {
+  id: string;
+  request_type: "titration";
+  titration_direction: TitrationDirection;
+  beluga_status: string;
+  beluga_visit_id: string;
+  message: string;
+  created_at: string;
 }

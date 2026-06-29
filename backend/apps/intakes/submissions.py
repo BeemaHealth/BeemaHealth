@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+import json
+import logging
+
 from django.db import transaction
 from django.db.models import Max
 from django.utils import timezone
+
+logger = logging.getLogger(__name__)
 
 from apps.consents.models import ConsentRecord
 from apps.eligibility.models import EligibilityResponse
@@ -146,6 +151,37 @@ def build_submission_snapshot(
             "privacy_acknowledgment": consent.privacy_acknowledgment,
         }
 
+    dynamic_questionnaire = None
+    beluga_visit_payload = None
+    if intake.questionnaire_version_id and intake.questionnaire_responses:
+        from apps.questionnaires.beluga_payload import build_beluga_visit_payload
+        from apps.questionnaires.services import build_dynamic_questionnaire_display, get_version_by_id
+
+        dynamic_questionnaire = build_dynamic_questionnaire_display(
+            intake.questionnaire_version_id,
+            intake.questionnaire_responses or {},
+        )
+        intake_version = get_version_by_id(intake.questionnaire_version_id)
+        qualify_version = None
+        qualify_responses: dict = {}
+        if eligibility and eligibility.questionnaire_version_id:
+            qualify_version = get_version_by_id(eligibility.questionnaire_version_id)
+            qualify_responses = dict(eligibility.questionnaire_responses or {})
+        sex = ""
+        if eligibility and eligibility.sex_assigned_at_birth:
+            sex = eligibility.sex_assigned_at_birth
+        elif profile and profile.sex_assigned_at_birth:
+            sex = profile.sex_assigned_at_birth
+        beluga_visit_payload = build_beluga_visit_payload(
+            intake_version=intake_version,
+            intake_responses=intake.questionnaire_responses or {},
+            qualify_version=qualify_version,
+            qualify_responses=qualify_responses,
+            account=account,
+            identity_contact=identity_contact,
+            sex=sex or None,
+        )
+
     return {
         "meta": {
             "version": version,
@@ -172,6 +208,8 @@ def build_submission_snapshot(
             "safety_acknowledgments": intake.safety_acknowledgments or {},
         },
         "consent": consent_data,
+        "dynamic_questionnaire": dynamic_questionnaire,
+        "beluga_visit_payload": beluga_visit_payload,
     }
 
 
@@ -204,10 +242,29 @@ def create_intake_submission(
         status_at_submit=status_at_submit,
         snapshot=snapshot,
         submitted_at=submitted_at,
+        questionnaire_version_id=intake.questionnaire_version_id,
     )
     intake.active_submission_version = version
     intake.working_version = version
     intake.save(update_fields=["active_submission_version", "working_version", "updated_at"])
+
+    beluga_payload = snapshot.get("beluga_visit_payload")
+    if beluga_payload:
+        logger.info(
+            "[INTAKE SUBMISSION] Beluga visit payload built for user=%s submission_version=%s "
+            "(would be sent to Beluga on provider approval):\n%s",
+            user.id,
+            version,
+            json.dumps(beluga_payload, indent=2, default=str),
+        )
+    else:
+        logger.info(
+            "[INTAKE SUBMISSION] Snapshot saved for user=%s submission_version=%s "
+            "(no dynamic questionnaire version — classic intake path, no Beluga payload built).",
+            user.id,
+            version,
+        )
+
     return submission
 
 

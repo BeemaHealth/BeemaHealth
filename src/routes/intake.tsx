@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { IntakeFlow } from "@/components/intake/IntakeFlow";
 import { requireAuth } from "@/lib/auth";
+import { trackPageViewed } from "@/lib/analytics";
 
 export const Route = createFileRoute("/intake")({
   ssr: false,
@@ -16,5 +18,8 @@ export const Route = createFileRoute("/intake")({
 });
 
 function IntakeFunnelPage() {
+  useEffect(() => {
+    trackPageViewed("intake");
+  }, []);
   return <IntakeFlow mode="funnel" />;
 }

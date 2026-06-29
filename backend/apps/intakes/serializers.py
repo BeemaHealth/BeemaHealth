@@ -7,8 +7,10 @@ from apps.eligibility.services import derive_eligibility_flags
 from apps.intakes.deduplication import dedupe_intake_payload
 from apps.intakes.models import IntakeSubmission, MedicalIntake, SideEffectCheckIn
 from apps.intakes.permissions import patient_can_edit_intake
+from apps.intakes.questionnaire_sync import sync_canonical_fields_from_questionnaire
 from apps.intakes.screening import ensure_account_screening
 from apps.patients.services import sync_patient_profile_from_intake
+from apps.questionnaires.validation import validate_responses_against_version
 
 
 class MedicalIntakeSerializer(serializers.ModelSerializer):
@@ -33,6 +35,8 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
             "medication_preferences",
             "safety_acknowledgments",
             "account_screening",
+            "questionnaire_responses",
+            "questionnaire_version_id",
             "submitted_at",
             "active_submission_version",
             "working_version",
@@ -68,6 +72,35 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
         if intake_errors:
             raise serializers.ValidationError(intake_errors)
 
+        responses = attrs.get("questionnaire_responses")
+        version_id = attrs.get("questionnaire_version_id")
+        if self.instance:
+            if version_id is None:
+                version_id = self.instance.questionnaire_version_id
+            if "questionnaire_version_id" in attrs and self.instance.questionnaire_version_id:
+                if str(attrs["questionnaire_version_id"]) != str(
+                    self.instance.questionnaire_version_id
+                ):
+                    raise serializers.ValidationError(
+                        {"questionnaire_version_id": "Questionnaire version cannot be changed."}
+                    )
+        if responses is not None and version_id:
+            # Only enforce completeness (required fields) at final submission.
+            # Incremental/draft saves — including the one-time auto-sync that
+            # stamps questionnaire_version_id — validate the format of provided
+            # answers but must not reject unanswered required fields, otherwise
+            # loading a partially complete intake fails.
+            resulting_status = attrs.get(
+                "status", self.instance.status if self.instance else "draft"
+            )
+            q_errors = validate_responses_against_version(
+                version_id,
+                responses,
+                enforce_required=(resulting_status == "submitted"),
+            )
+            if q_errors:
+                raise serializers.ValidationError({"questionnaire_responses": q_errors})
+
         return super().validate(attrs)
 
     def to_representation(self, instance):
@@ -88,8 +121,11 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         intake = super().create(validated_data)
+        sync_canonical_fields_from_questionnaire(intake)
         if intake.status == "draft":
-            sync_patient_profile_from_intake(intake.user, intake.identity)
+            sync_patient_profile_from_intake(
+                intake.user, intake.identity, intake.medication_preferences
+            )
         return intake
 
     def update(self, instance, validated_data):
@@ -97,8 +133,11 @@ class MedicalIntakeSerializer(serializers.ModelSerializer):
         if status == "submitted" and not instance.submitted_at:
             validated_data["submitted_at"] = timezone.now()
         intake = super().update(instance, validated_data)
+        sync_canonical_fields_from_questionnaire(intake)
         if intake.status == "draft":
-            sync_patient_profile_from_intake(intake.user, intake.identity)
+            sync_patient_profile_from_intake(
+                intake.user, intake.identity, intake.medication_preferences
+            )
         return intake
 
 
@@ -133,10 +172,37 @@ class IntakeSubmissionSerializer(serializers.ModelSerializer):
 
 class SideEffectCheckInSerializer(serializers.ModelSerializer):
     user_id = serializers.UUIDField(read_only=True)
+    side_effect_detail = serializers.CharField(
+        required=False, allow_blank=True, max_length=200
+    )
+    titration_direction = serializers.ChoiceField(
+        choices=SideEffectCheckIn.TITRATION_DIRECTION_CHOICES,
+        required=False,
+        allow_null=True,
+        allow_blank=True,
+    )
+    weight_lbs = serializers.DecimalField(
+        max_digits=5, decimal_places=1, required=False, allow_null=True
+    )
+    bmi = serializers.DecimalField(
+        max_digits=4, decimal_places=1, required=False, allow_null=True
+    )
+    notes = serializers.CharField(required=False, allow_blank=True, default="")
 
     class Meta:
         model = SideEffectCheckIn
-        fields = ["id", "user_id", "side_effect", "experienced_on", "created_at"]
+        fields = [
+            "id",
+            "user_id",
+            "side_effect",
+            "side_effect_detail",
+            "experienced_on",
+            "titration_direction",
+            "weight_lbs",
+            "bmi",
+            "notes",
+            "created_at",
+        ]
         read_only_fields = ["id", "user_id", "created_at"]
 
     def validate_side_effect(self, value):
@@ -144,6 +210,20 @@ class SideEffectCheckInSerializer(serializers.ModelSerializer):
         if value not in allowed:
             raise serializers.ValidationError("Invalid side effect.")
         return value
+
+    def validate(self, attrs):
+        side_effect = attrs.get("side_effect")
+        detail = (attrs.get("side_effect_detail") or "").strip()
+        if side_effect == "other":
+            from apps.common.validation.refill import validate_side_effect_detail
+
+            err = validate_side_effect_detail(detail)
+            if err:
+                raise serializers.ValidationError({"side_effect_detail": err})
+            attrs["side_effect_detail"] = detail
+        else:
+            attrs["side_effect_detail"] = ""
+        return attrs
 
     def validate_experienced_on(self, value):
         if value > timezone.now().date():
@@ -156,4 +236,8 @@ class SideEffectCheckInSerializer(serializers.ModelSerializer):
         data["experienced_on"] = instance.experienced_on.isoformat()
         if instance.created_at:
             data["created_at"] = instance.created_at.isoformat()
+        if instance.weight_lbs is not None:
+            data["weight_lbs"] = str(instance.weight_lbs)
+        if instance.bmi is not None:
+            data["bmi"] = str(instance.bmi)
         return data

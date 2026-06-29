@@ -37,7 +37,7 @@ Aretide/
 │   ├── apps/                    ← Domain apps (accounts, eligibility, intakes, …)
 │   └── apps/common/validation/  ← Shared backend input validators
 ├── docs/                        ← Deep dives (LOCAL-DEV, INPUT_VALIDATION_TESTS, …)
-│   └── vendor/                  ← LifeFile API spec (gitignored; see LIFEFILE_MEDIVERA_API.md)
+│   └── vendor/                  ← Vendor API specs (gitignored; see pointer files in docs/)
 └── scripts/                     ← dev-backend.sh, test-backend.sh
 ```
 
@@ -62,6 +62,12 @@ Pre-signup progress: `POST /api/funnel/session/` + `PATCH /api/funnel/eligibilit
 
 ---
 
+## New feature requests
+
+**Before writing any code for a new feature, run `/start-feature` (`.claude/commands/start-feature.md`).** That skill handles cloning from GitHub, naming and checking out the feature branch, and setting the testing gate. Full instructions are there — do not duplicate them here.
+
+---
+
 ## Your workflow on every task
 
 ### 1. Orient before coding
@@ -73,13 +79,34 @@ Read the relevant doc(s):
 | Database / field ownership | `backend/DATABASE.md` |
 | Run backend, API list | `backend/README.md`, `docs/LOCAL-DEV.md` |
 | **LifeFile / MediVera pharmacy API** | **`docs/vendor/LIFEFILE_MEDIVERA_API.md`** (gitignored; pointer: `docs/LIFEFILE_MEDIVERA_API.md`) |
+| **Beluga Health provider/pharmacy API** | **`docs/vendor/BELUGA_API.md`** (gitignored; pointer: `docs/BELUGA_API.md`) |
 | Frontend routes | `src/routes/README.md` |
 | Input validation & security tests | `docs/INPUT_VALIDATION_TESTS.md` |
 | API types & client | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |
 | **Color scheme / portal UI** | **`src/lib/design-tokens.ts`**, `src/styles.css`, `src/components/portal/AccountSectionCard.tsx` |
 | Compliance / PHI / HIPAA | **`docs/HIPAA.md`**, `backend/HOSTING.md` |
+| **Patient funnel (qualify flow, session/cookie)** | **`docs/features/patient-funnel.md`** |
+| **Medical intake (12-step questionnaire)** | **`docs/features/medical-intake.md`** |
+| **Analytics & event tracking** | **`docs/features/analytics.md`** |
+| **Landing pages** | **`docs/features/landing-pages.md`** |
+| **Staff CRM** | **`docs/features/staff-crm.md`** |
+| **Medications catalog** | **`docs/features/medications.md`** |
+| **Dynamic questionnaire system** | **`docs/features/dynamic-questionnaire.md`**, `docs/DYNAMIC_QUESTIONNAIRE_SYSTEM.md` |
 
-Match existing patterns in surrounding code. Prefer minimal, focused diffs. If discrepancies between the documentation and the code exist, then ask the user if they would like the documentation changed or the code changed and explain the differences and give a recommendation. 
+Match existing patterns in surrounding code. Prefer minimal, focused diffs. If discrepancies between the documentation and the code exist, then ask the user if they would like the documentation changed or the code changed and explain the differences and give a recommendation.
+
+### Feature docs
+
+`docs/features/` contains one doc per platform feature area.
+
+**Discrepancy check (required):** When working in a feature area that has a `docs/features/` doc, skim the doc against the actual code. If anything is out of date or wrong, stop and tell the user:
+- What the doc says
+- What the code actually does
+- Your recommendation (update the doc, or update the code)
+
+Do not silently fix either side. Wait for the user to decide.
+
+**Missing doc:** Before finishing any task that adds or significantly changes a feature area, check whether a `docs/features/` doc exists for it. If not, ask: **"Should I create a feature doc for [feature name] in `docs/features/`?"** Do not create it without asking first.
 
 ### 2. Implement with defense in depth
 

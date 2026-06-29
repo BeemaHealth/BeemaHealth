@@ -29,7 +29,7 @@ export const PORTAL_NAV: PortalNavItem[] = [
     icon: MessageSquare,
     enabled: PORTAL_FEATURES.messages,
   },
-  { to: "/dashboard/orders", label: "Orders", icon: Package },
+  // { to: "/dashboard/orders", label: "Orders", icon: Package },
   { to: "/dashboard/refills", label: "Refills", icon: RefreshCw },
   { to: "/dashboard/documents", label: "Documents", icon: FolderOpen },
   { to: "/dashboard/account", label: "Account", icon: User },

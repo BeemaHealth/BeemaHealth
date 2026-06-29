@@ -13,6 +13,7 @@ import { Route as WeightLossRouteImport } from './routes/weight-loss'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as SwitchRouteImport } from './routes/switch'
 import { Route as SubmittedRouteImport } from './routes/submitted'
+import { Route as StaffRouteImport } from './routes/staff'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SafetyRouteImport } from './routes/safety'
 import { Route as QualifyRouteImport } from './routes/qualify'
@@ -30,8 +31,18 @@ import { Route as ConsentRouteImport } from './routes/consent'
 import { Route as CliniciansRouteImport } from './routes/clinicians'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerifyEmailIndexRouteImport } from './routes/verify-email.index'
+import { Route as StaffIndexRouteImport } from './routes/staff.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pending'
+import { Route as StaffVendorsRouteImport } from './routes/staff.vendors'
+import { Route as StaffQuestionnairesRouteImport } from './routes/staff.questionnaires'
+import { Route as StaffPatientsRouteImport } from './routes/staff.patients'
+import { Route as StaffMedicationsRouteImport } from './routes/staff.medications'
+import { Route as StaffLandingPagesRouteImport } from './routes/staff.landing-pages'
+import { Route as StaffExperimentsRouteImport } from './routes/staff.experiments'
+import { Route as StaffDevRouteImport } from './routes/staff.dev'
+import { Route as StaffAnalyticsRouteImport } from './routes/staff.analytics'
+import { Route as LpSlugRouteImport } from './routes/lp.$slug'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
@@ -41,6 +52,10 @@ import { Route as DashboardOrdersRouteImport } from './routes/dashboard.orders'
 import { Route as DashboardIntakeRouteImport } from './routes/dashboard.intake'
 import { Route as DashboardDocumentsRouteImport } from './routes/dashboard.documents'
 import { Route as DashboardAccountRouteImport } from './routes/dashboard.account'
+import { Route as StaffQuestionnairesIndexRouteImport } from './routes/staff.questionnaires.index'
+import { Route as StaffQuestionnairesSlugRouteImport } from './routes/staff.questionnaires.$slug'
+import { Route as StaffQuestionnairesSlugIndexRouteImport } from './routes/staff.questionnaires.$slug.index'
+import { Route as StaffQuestionnairesSlugVersionsVersionIdRouteImport } from './routes/staff.questionnaires.$slug.versions.$versionId'
 
 const WeightLossRoute = WeightLossRouteImport.update({
   id: '/weight-loss',
@@ -60,6 +75,11 @@ const SwitchRoute = SwitchRouteImport.update({
 const SubmittedRoute = SubmittedRouteImport.update({
   id: '/submitted',
   path: '/submitted',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StaffRoute = StaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -147,6 +167,11 @@ const VerifyEmailIndexRoute = VerifyEmailIndexRouteImport.update({
   path: '/',
   getParentRoute: () => VerifyEmailRoute,
 } as any)
+const StaffIndexRoute = StaffIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StaffRoute,
+} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -156,6 +181,51 @@ const VerifyEmailPendingRoute = VerifyEmailPendingRouteImport.update({
   id: '/pending',
   path: '/pending',
   getParentRoute: () => VerifyEmailRoute,
+} as any)
+const StaffVendorsRoute = StaffVendorsRouteImport.update({
+  id: '/vendors',
+  path: '/vendors',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffQuestionnairesRoute = StaffQuestionnairesRouteImport.update({
+  id: '/questionnaires',
+  path: '/questionnaires',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffPatientsRoute = StaffPatientsRouteImport.update({
+  id: '/patients',
+  path: '/patients',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffMedicationsRoute = StaffMedicationsRouteImport.update({
+  id: '/medications',
+  path: '/medications',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffLandingPagesRoute = StaffLandingPagesRouteImport.update({
+  id: '/landing-pages',
+  path: '/landing-pages',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffExperimentsRoute = StaffExperimentsRouteImport.update({
+  id: '/experiments',
+  path: '/experiments',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffDevRoute = StaffDevRouteImport.update({
+  id: '/dev',
+  path: '/dev',
+  getParentRoute: () => StaffRoute,
+} as any)
+const StaffAnalyticsRoute = StaffAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => StaffRoute,
+} as any)
+const LpSlugRoute = LpSlugRouteImport.update({
+  id: '/lp/$slug',
+  path: '/lp/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const LegalTermsRoute = LegalTermsRouteImport.update({
   id: '/legal/terms',
@@ -203,6 +273,29 @@ const DashboardAccountRoute = DashboardAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => DashboardRoute,
 } as any)
+const StaffQuestionnairesIndexRoute =
+  StaffQuestionnairesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => StaffQuestionnairesRoute,
+  } as any)
+const StaffQuestionnairesSlugRoute = StaffQuestionnairesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => StaffQuestionnairesRoute,
+} as any)
+const StaffQuestionnairesSlugIndexRoute =
+  StaffQuestionnairesSlugIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => StaffQuestionnairesSlugRoute,
+  } as any)
+const StaffQuestionnairesSlugVersionsVersionIdRoute =
+  StaffQuestionnairesSlugVersionsVersionIdRouteImport.update({
+    id: '/versions/$versionId',
+    path: '/versions/$versionId',
+    getParentRoute: () => StaffQuestionnairesSlugRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -221,6 +314,7 @@ export interface FileRoutesByFullPath {
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/staff': typeof StaffRouteWithChildren
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
@@ -234,9 +328,23 @@ export interface FileRoutesByFullPath {
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/lp/$slug': typeof LpSlugRoute
+  '/staff/analytics': typeof StaffAnalyticsRoute
+  '/staff/dev': typeof StaffDevRoute
+  '/staff/experiments': typeof StaffExperimentsRoute
+  '/staff/landing-pages': typeof StaffLandingPagesRoute
+  '/staff/medications': typeof StaffMedicationsRoute
+  '/staff/patients': typeof StaffPatientsRoute
+  '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
+  '/staff/vendors': typeof StaffVendorsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/staff/': typeof StaffIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
+  '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugRouteWithChildren
+  '/staff/questionnaires/': typeof StaffQuestionnairesIndexRoute
+  '/staff/questionnaires/$slug/': typeof StaffQuestionnairesSlugIndexRoute
+  '/staff/questionnaires/$slug/versions/$versionId': typeof StaffQuestionnairesSlugVersionsVersionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -266,9 +374,21 @@ export interface FileRoutesByTo {
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/lp/$slug': typeof LpSlugRoute
+  '/staff/analytics': typeof StaffAnalyticsRoute
+  '/staff/dev': typeof StaffDevRoute
+  '/staff/experiments': typeof StaffExperimentsRoute
+  '/staff/landing-pages': typeof StaffLandingPagesRoute
+  '/staff/medications': typeof StaffMedicationsRoute
+  '/staff/patients': typeof StaffPatientsRoute
+  '/staff/vendors': typeof StaffVendorsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/staff': typeof StaffIndexRoute
   '/verify-email': typeof VerifyEmailIndexRoute
+  '/staff/questionnaires': typeof StaffQuestionnairesIndexRoute
+  '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugIndexRoute
+  '/staff/questionnaires/$slug/versions/$versionId': typeof StaffQuestionnairesSlugVersionsVersionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -288,6 +408,7 @@ export interface FileRoutesById {
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/staff': typeof StaffRouteWithChildren
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
@@ -301,9 +422,23 @@ export interface FileRoutesById {
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
+  '/lp/$slug': typeof LpSlugRoute
+  '/staff/analytics': typeof StaffAnalyticsRoute
+  '/staff/dev': typeof StaffDevRoute
+  '/staff/experiments': typeof StaffExperimentsRoute
+  '/staff/landing-pages': typeof StaffLandingPagesRoute
+  '/staff/medications': typeof StaffMedicationsRoute
+  '/staff/patients': typeof StaffPatientsRoute
+  '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
+  '/staff/vendors': typeof StaffVendorsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/staff/': typeof StaffIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
+  '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugRouteWithChildren
+  '/staff/questionnaires/': typeof StaffQuestionnairesIndexRoute
+  '/staff/questionnaires/$slug/': typeof StaffQuestionnairesSlugIndexRoute
+  '/staff/questionnaires/$slug/versions/$versionId': typeof StaffQuestionnairesSlugVersionsVersionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -324,6 +459,7 @@ export interface FileRouteTypes {
     | '/qualify'
     | '/safety'
     | '/sitemap.xml'
+    | '/staff'
     | '/submitted'
     | '/switch'
     | '/verify-email'
@@ -337,9 +473,23 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
+    | '/lp/$slug'
+    | '/staff/analytics'
+    | '/staff/dev'
+    | '/staff/experiments'
+    | '/staff/landing-pages'
+    | '/staff/medications'
+    | '/staff/patients'
+    | '/staff/questionnaires'
+    | '/staff/vendors'
     | '/verify-email/pending'
     | '/dashboard/'
+    | '/staff/'
     | '/verify-email/'
+    | '/staff/questionnaires/$slug'
+    | '/staff/questionnaires/'
+    | '/staff/questionnaires/$slug/'
+    | '/staff/questionnaires/$slug/versions/$versionId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -369,9 +519,21 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
+    | '/lp/$slug'
+    | '/staff/analytics'
+    | '/staff/dev'
+    | '/staff/experiments'
+    | '/staff/landing-pages'
+    | '/staff/medications'
+    | '/staff/patients'
+    | '/staff/vendors'
     | '/verify-email/pending'
     | '/dashboard'
+    | '/staff'
     | '/verify-email'
+    | '/staff/questionnaires'
+    | '/staff/questionnaires/$slug'
+    | '/staff/questionnaires/$slug/versions/$versionId'
   id:
     | '__root__'
     | '/'
@@ -390,6 +552,7 @@ export interface FileRouteTypes {
     | '/qualify'
     | '/safety'
     | '/sitemap.xml'
+    | '/staff'
     | '/submitted'
     | '/switch'
     | '/verify-email'
@@ -403,9 +566,23 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/telehealth-consent'
     | '/legal/terms'
+    | '/lp/$slug'
+    | '/staff/analytics'
+    | '/staff/dev'
+    | '/staff/experiments'
+    | '/staff/landing-pages'
+    | '/staff/medications'
+    | '/staff/patients'
+    | '/staff/questionnaires'
+    | '/staff/vendors'
     | '/verify-email/pending'
     | '/dashboard/'
+    | '/staff/'
     | '/verify-email/'
+    | '/staff/questionnaires/$slug'
+    | '/staff/questionnaires/'
+    | '/staff/questionnaires/$slug/'
+    | '/staff/questionnaires/$slug/versions/$versionId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -425,6 +602,7 @@ export interface RootRouteChildren {
   QualifyRoute: typeof QualifyRoute
   SafetyRoute: typeof SafetyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  StaffRoute: typeof StaffRouteWithChildren
   SubmittedRoute: typeof SubmittedRoute
   SwitchRoute: typeof SwitchRoute
   VerifyEmailRoute: typeof VerifyEmailRouteWithChildren
@@ -433,6 +611,7 @@ export interface RootRouteChildren {
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTelehealthConsentRoute: typeof LegalTelehealthConsentRoute
   LegalTermsRoute: typeof LegalTermsRoute
+  LpSlugRoute: typeof LpSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -463,6 +642,13 @@ declare module '@tanstack/react-router' {
       path: '/submitted'
       fullPath: '/submitted'
       preLoaderRoute: typeof SubmittedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/staff': {
+      id: '/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof StaffRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -584,6 +770,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerifyEmailIndexRouteImport
       parentRoute: typeof VerifyEmailRoute
     }
+    '/staff/': {
+      id: '/staff/'
+      path: '/'
+      fullPath: '/staff/'
+      preLoaderRoute: typeof StaffIndexRouteImport
+      parentRoute: typeof StaffRoute
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/'
@@ -597,6 +790,69 @@ declare module '@tanstack/react-router' {
       fullPath: '/verify-email/pending'
       preLoaderRoute: typeof VerifyEmailPendingRouteImport
       parentRoute: typeof VerifyEmailRoute
+    }
+    '/staff/vendors': {
+      id: '/staff/vendors'
+      path: '/vendors'
+      fullPath: '/staff/vendors'
+      preLoaderRoute: typeof StaffVendorsRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/questionnaires': {
+      id: '/staff/questionnaires'
+      path: '/questionnaires'
+      fullPath: '/staff/questionnaires'
+      preLoaderRoute: typeof StaffQuestionnairesRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/patients': {
+      id: '/staff/patients'
+      path: '/patients'
+      fullPath: '/staff/patients'
+      preLoaderRoute: typeof StaffPatientsRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/medications': {
+      id: '/staff/medications'
+      path: '/medications'
+      fullPath: '/staff/medications'
+      preLoaderRoute: typeof StaffMedicationsRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/landing-pages': {
+      id: '/staff/landing-pages'
+      path: '/landing-pages'
+      fullPath: '/staff/landing-pages'
+      preLoaderRoute: typeof StaffLandingPagesRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/experiments': {
+      id: '/staff/experiments'
+      path: '/experiments'
+      fullPath: '/staff/experiments'
+      preLoaderRoute: typeof StaffExperimentsRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/dev': {
+      id: '/staff/dev'
+      path: '/dev'
+      fullPath: '/staff/dev'
+      preLoaderRoute: typeof StaffDevRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/staff/analytics': {
+      id: '/staff/analytics'
+      path: '/analytics'
+      fullPath: '/staff/analytics'
+      preLoaderRoute: typeof StaffAnalyticsRouteImport
+      parentRoute: typeof StaffRoute
+    }
+    '/lp/$slug': {
+      id: '/lp/$slug'
+      path: '/lp/$slug'
+      fullPath: '/lp/$slug'
+      preLoaderRoute: typeof LpSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/legal/terms': {
       id: '/legal/terms'
@@ -661,6 +917,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAccountRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/staff/questionnaires/': {
+      id: '/staff/questionnaires/'
+      path: '/'
+      fullPath: '/staff/questionnaires/'
+      preLoaderRoute: typeof StaffQuestionnairesIndexRouteImport
+      parentRoute: typeof StaffQuestionnairesRoute
+    }
+    '/staff/questionnaires/$slug': {
+      id: '/staff/questionnaires/$slug'
+      path: '/$slug'
+      fullPath: '/staff/questionnaires/$slug'
+      preLoaderRoute: typeof StaffQuestionnairesSlugRouteImport
+      parentRoute: typeof StaffQuestionnairesRoute
+    }
+    '/staff/questionnaires/$slug/': {
+      id: '/staff/questionnaires/$slug/'
+      path: '/'
+      fullPath: '/staff/questionnaires/$slug/'
+      preLoaderRoute: typeof StaffQuestionnairesSlugIndexRouteImport
+      parentRoute: typeof StaffQuestionnairesSlugRoute
+    }
+    '/staff/questionnaires/$slug/versions/$versionId': {
+      id: '/staff/questionnaires/$slug/versions/$versionId'
+      path: '/versions/$versionId'
+      fullPath: '/staff/questionnaires/$slug/versions/$versionId'
+      preLoaderRoute: typeof StaffQuestionnairesSlugVersionsVersionIdRouteImport
+      parentRoute: typeof StaffQuestionnairesSlugRoute
+    }
   }
 }
 
@@ -685,6 +969,62 @@ const DashboardRouteChildren: DashboardRouteChildren = {
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
   DashboardRouteChildren,
 )
+
+interface StaffQuestionnairesSlugRouteChildren {
+  StaffQuestionnairesSlugIndexRoute: typeof StaffQuestionnairesSlugIndexRoute
+  StaffQuestionnairesSlugVersionsVersionIdRoute: typeof StaffQuestionnairesSlugVersionsVersionIdRoute
+}
+
+const StaffQuestionnairesSlugRouteChildren: StaffQuestionnairesSlugRouteChildren =
+  {
+    StaffQuestionnairesSlugIndexRoute: StaffQuestionnairesSlugIndexRoute,
+    StaffQuestionnairesSlugVersionsVersionIdRoute:
+      StaffQuestionnairesSlugVersionsVersionIdRoute,
+  }
+
+const StaffQuestionnairesSlugRouteWithChildren =
+  StaffQuestionnairesSlugRoute._addFileChildren(
+    StaffQuestionnairesSlugRouteChildren,
+  )
+
+interface StaffQuestionnairesRouteChildren {
+  StaffQuestionnairesSlugRoute: typeof StaffQuestionnairesSlugRouteWithChildren
+  StaffQuestionnairesIndexRoute: typeof StaffQuestionnairesIndexRoute
+}
+
+const StaffQuestionnairesRouteChildren: StaffQuestionnairesRouteChildren = {
+  StaffQuestionnairesSlugRoute: StaffQuestionnairesSlugRouteWithChildren,
+  StaffQuestionnairesIndexRoute: StaffQuestionnairesIndexRoute,
+}
+
+const StaffQuestionnairesRouteWithChildren =
+  StaffQuestionnairesRoute._addFileChildren(StaffQuestionnairesRouteChildren)
+
+interface StaffRouteChildren {
+  StaffAnalyticsRoute: typeof StaffAnalyticsRoute
+  StaffDevRoute: typeof StaffDevRoute
+  StaffExperimentsRoute: typeof StaffExperimentsRoute
+  StaffLandingPagesRoute: typeof StaffLandingPagesRoute
+  StaffMedicationsRoute: typeof StaffMedicationsRoute
+  StaffPatientsRoute: typeof StaffPatientsRoute
+  StaffQuestionnairesRoute: typeof StaffQuestionnairesRouteWithChildren
+  StaffVendorsRoute: typeof StaffVendorsRoute
+  StaffIndexRoute: typeof StaffIndexRoute
+}
+
+const StaffRouteChildren: StaffRouteChildren = {
+  StaffAnalyticsRoute: StaffAnalyticsRoute,
+  StaffDevRoute: StaffDevRoute,
+  StaffExperimentsRoute: StaffExperimentsRoute,
+  StaffLandingPagesRoute: StaffLandingPagesRoute,
+  StaffMedicationsRoute: StaffMedicationsRoute,
+  StaffPatientsRoute: StaffPatientsRoute,
+  StaffQuestionnairesRoute: StaffQuestionnairesRouteWithChildren,
+  StaffVendorsRoute: StaffVendorsRoute,
+  StaffIndexRoute: StaffIndexRoute,
+}
+
+const StaffRouteWithChildren = StaffRoute._addFileChildren(StaffRouteChildren)
 
 interface VerifyEmailRouteChildren {
   VerifyEmailPendingRoute: typeof VerifyEmailPendingRoute
@@ -717,6 +1057,7 @@ const rootRouteChildren: RootRouteChildren = {
   QualifyRoute: QualifyRoute,
   SafetyRoute: SafetyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  StaffRoute: StaffRouteWithChildren,
   SubmittedRoute: SubmittedRoute,
   SwitchRoute: SwitchRoute,
   VerifyEmailRoute: VerifyEmailRouteWithChildren,
@@ -725,6 +1066,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTelehealthConsentRoute: LegalTelehealthConsentRoute,
   LegalTermsRoute: LegalTermsRoute,
+  LpSlugRoute: LpSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

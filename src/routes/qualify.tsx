@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
@@ -46,6 +46,13 @@ import { formatPhoneInput } from "@/lib/form-validation";
 import { computeBmi } from "@/lib/safety-flags";
 import { useAuth } from "@/context/AuthContext";
 import { US_STATES } from "@/lib/veya-data";
+import {
+  trackPageViewed,
+  trackStepCompleted,
+  trackStepViewed,
+} from "@/lib/analytics";
+import { QualifyDynamicFlow } from "@/components/questionnaire/QualifyDynamicFlow";
+import { DYNAMIC_QUESTIONNAIRES_ENABLED } from "@/lib/questionnaire/config";
 import type {
   EligibilityResponses,
   EligibilitySafetyScreen,
@@ -164,6 +171,16 @@ function formToPayload(data: FormState): Partial<EligibilityResponses> {
 }
 
 function EligibilityPage() {
+  useEffect(() => {
+    trackPageViewed("qualify");
+  }, []);
+  if (DYNAMIC_QUESTIONNAIRES_ENABLED && isApiEnabled()) {
+    return <QualifyDynamicFlow />;
+  }
+  return <QualifyHardcodedPage />;
+}
+
+function QualifyHardcodedPage() {
   const navigate = useNavigate();
   const { session: existingSession, isInitialized, setSession } = useAuth();
   const [stepIndex, setStepIndex] = useState(0);
@@ -178,6 +195,21 @@ function EligibilityPage() {
 
   const currentStep = steps[stepIndex];
   const progress = ((stepIndex + 1) / steps.length) * 100;
+  const stepStartedAt = useRef(Date.now());
+
+  // After account creation, `existingSession` flips true and the step list drops
+  // the account step — clamp index so we never render/track an undefined step.
+  useEffect(() => {
+    if (loading) return;
+    if (stepIndex < steps.length) return;
+    setStepIndex(Math.max(0, steps.length - 1));
+  }, [existingSession, loading, stepIndex, steps.length]);
+
+  useEffect(() => {
+    if (loading || !currentStep) return;
+    trackStepViewed("qualify", currentStep, { stepIndex });
+    stepStartedAt.current = Date.now();
+  }, [currentStep, loading, stepIndex]);
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setData((d) => ({ ...d, [key]: value }));
@@ -215,7 +247,15 @@ function EligibilityPage() {
           draft = await fetchEligibilityMe();
         } else {
           draft = await fetchFunnelEligibility();
-          if (!draft) draft = await createFunnelSession();
+          if (!draft) {
+            const { getPendingUtms, clearPendingUtms } =
+              await import("@/lib/utm");
+            const utms = getPendingUtms();
+            draft = await createFunnelSession(
+              Object.keys(utms).length > 0 ? utms : undefined,
+            );
+            clearPendingUtms();
+          }
         }
 
         if (!cancelled && draft) {
@@ -285,6 +325,12 @@ function EligibilityPage() {
     setSubmitting(true);
     try {
       await persistDraft();
+      trackStepCompleted(
+        "qualify",
+        currentStep,
+        Date.now() - stepStartedAt.current,
+        { stepIndex },
+      );
       setStepIndex((i) => i + 1);
     } catch (e) {
       setError(
@@ -301,6 +347,12 @@ function EligibilityPage() {
     try {
       if (existingSession) {
         await persistDraft();
+        trackStepCompleted(
+          "qualify",
+          currentStep,
+          Date.now() - stepStartedAt.current,
+          { stepIndex },
+        );
         if (existingSession.user.email_verified) {
           navigate({ to: "/intake" });
         } else {
@@ -321,6 +373,12 @@ function EligibilityPage() {
         phone: data.phone.trim(),
       });
       setSession(session);
+      trackStepCompleted(
+        "qualify",
+        "account",
+        Date.now() - stepStartedAt.current,
+        { stepIndex },
+      );
       navigate({ to: "/verify-email/pending" });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");

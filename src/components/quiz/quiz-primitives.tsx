@@ -71,22 +71,55 @@ export function QuizProgressBar({ progress }: { progress: number }) {
   );
 }
 
+export function HelpHint({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <span className="relative inline-block align-middle">
+      <button
+        type="button"
+        aria-label="More information"
+        aria-expanded={open}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen((o) => !o);
+        }}
+        onBlur={() => setOpen(false)}
+        className="ml-1.5 inline-grid size-4 place-items-center rounded-full border border-border text-[10px] font-semibold leading-none text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+      >
+        ?
+      </button>
+      {open && (
+        <span
+          role="tooltip"
+          className="absolute left-0 top-6 z-20 w-60 rounded-lg border border-border bg-card p-2.5 text-xs font-normal leading-relaxed text-muted-foreground shadow-soft"
+        >
+          {text}
+        </span>
+      )}
+    </span>
+  );
+}
+
 export function Field({
   label,
   children,
   className,
   required,
+  help,
 }: {
   label: string;
   children: ReactNode;
   className?: string;
   required?: boolean;
+  help?: string;
 }) {
   return (
     <label className={cn("block", className)}>
       <span className="mb-1.5 block text-sm font-medium text-foreground">
         {label}
         {required && <span className="text-destructive"> *</span>}
+        {help ? <HelpHint text={help} /> : null}
       </span>
       {children}
     </label>

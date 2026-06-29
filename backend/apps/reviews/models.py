@@ -12,6 +12,7 @@ class ProviderReview(models.Model):
         ("openloop", "OpenLoop"),
         ("carevalidate", "CareValidate"),
         ("steadymd", "SteadyMD"),
+        ("beluga", "Beluga Health"),
     ]
     DECISION_CHOICES = [
         ("needs_more_info", "Needs more information"),

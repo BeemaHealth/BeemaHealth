@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import uuid
 from datetime import date
 
@@ -13,6 +14,14 @@ from apps.prescriptions.models import PatientPrescription
 from apps.prescriptions.services import deactivate_prescriptions
 from apps.reviews.models import ProviderReview
 from apps.integrations.adapters.base import DoctorWebhookResult
+from apps.integrations.adapters.beluga import BelugaWebhookEvent
+from apps.patients.notifications import (
+    queue_care_team_message_notification,
+    queue_status_notification,
+)
+from apps.patients.care_events import record_beluga_fulfillment_event
+
+logger = logging.getLogger(__name__)
 
 
 def _parse_date(value) -> date | None:
@@ -66,10 +75,15 @@ def _upsert_prescription_from_webhook(
     except ValueError:
         parsed_uuid = uuid.uuid4()
 
+    from apps.integrations.drug_categories import infer_drug_category
+
+    medication_name = str(
+        prescription_data.get("drug_name") or prescription_data.get("medication_name") or ""
+    )
     prescription = PatientPrescription.objects.create(
         user=user,
         provider_review=review,
-        medication_name=str(prescription_data.get("drug_name") or prescription_data.get("medication_name") or ""),
+        medication_name=medication_name,
         dosage=str(prescription_data.get("dosage") or prescription_data.get("drug_strength") or ""),
         frequency=str(prescription_data.get("frequency") or ""),
         route=str(prescription_data.get("route") or ""),
@@ -102,11 +116,248 @@ def _upsert_prescription_from_webhook(
         prescriber_email=str(prescriber_data.get("email") or ""),
         practice_id=prescriber_data.get("practice_id"),
         external_prescriber_id=str(prescriber_data.get("external_prescriber_id") or ""),
+        beluga_med_id=str(prescription_data.get("medId", "")),
+        drug_category=infer_drug_category(medication_name),
         fulfillment_status="signed",
         is_active=True,
         signed_at=timezone.now(),
     )
     return prescription
+
+
+_CONSULT_OUTCOME_MAP = {
+    "prescribed": ("prescription_sent", "approved"),
+    "referred": ("not_approved", "not_appropriate"),
+}
+
+_SHIPPING_EVENT_SUMMARIES = {
+    "PHARMACY_ORDER_IN_FULFILLMENT": "The pharmacy is preparing your order.",
+    "PHARMACY_ORDER_SHIPPED": "Your order has shipped.",
+    "PHARMACY_ORDER_DELIVERED": "Your order has been delivered.",
+    "PACKAGE_IN_TRANSIT": "Your package is on its way.",
+    "PACKAGE_OUT_FOR_DELIVERY": "Your package is out for delivery.",
+    "PACKAGE_DELIVERED": "Your package has been delivered.",
+    "PACKAGE_DELIVERY_FAILED": (
+        "We weren't able to deliver your package. "
+        "Please contact our support team at support@aretide.com — "
+        "do not submit a refill request for a delivery issue."
+    ),
+}
+
+_SHIPPING_EVENT_SUBJECTS = {
+    "PACKAGE_DELIVERY_FAILED": "Delivery issue with your Aretide order",
+}
+
+_LAB_EVENT_SUMMARIES = {
+    "LAB_ORDER_REQUISITION_CREATED": "Your lab requisition is ready.",
+    "LAB_ORDER_SHIPPED_TO_PATIENT": "Your lab kit has shipped.",
+    "LAB_ORDER_DELIVERED_TO_PATIENT": "Your lab kit has been delivered.",
+    "LAB_ORDER_SHIPPED_TO_LAB": "Your sample is on its way to the lab.",
+    "LAB_ORDER_RECEIVED_BY_LAB": "The lab has received your sample.",
+    "LAB_ORDER_RESULTS": "Your lab results are ready.",
+}
+
+_BOOKING_EVENT_SUMMARIES = {
+    "BOOKING_CREATED": "Your appointment has been scheduled.",
+    "BOOKING_RESCHEDULED": "Your appointment has been rescheduled.",
+    "BOOKING_CANCELLED": "Your appointment has been canceled.",
+    "NO_SHOW": "You missed your scheduled appointment. Please rebook if needed.",
+}
+
+
+@transaction.atomic
+def apply_beluga_webhook(event: BelugaWebhookEvent, *, patient=None) -> dict:
+    """
+    Apply a Beluga webhook event to our data models.
+
+    patient: if provided (dev mock path), skip masterId lookup and use this User directly.
+    Otherwise looks up by ProviderReview.external_review_id == event.master_id.
+    """
+    if patient is None:
+        try:
+            review = ProviderReview.objects.select_related("user").get(
+                external_review_id=event.master_id
+            )
+            user = review.user
+        except ProviderReview.DoesNotExist:
+            raise ValueError(
+                f"No ProviderReview with external_review_id={event.master_id!r}"
+            )
+    else:
+        user = patient
+        review, _ = ProviderReview.objects.get_or_create(user=user)
+
+    review.doctor_partner = "beluga"
+    result: dict = {"event": event.event, "master_id": event.master_id}
+
+    if event.event == "CONSULT_CONCLUDED":
+        outcome = (event.visit_outcome or "").lower()
+        new_status, new_decision = _CONSULT_OUTCOME_MAP.get(
+            outcome, ("not_approved", "not_appropriate")
+        )
+        review.status = new_status
+        review.decision = new_decision
+        review.reviewed_at = timezone.now()
+        review.save()
+        _sync_intake_status(user, new_status)
+        if new_status == "prescription_sent":
+            summary = "Your provider has completed your visit and approved treatment."
+        else:
+            summary = "Your provider has completed your visit. Treatment was not approved at this time."
+        queue_status_notification(
+            user,
+            category="review",
+            subject="Update on your Aretide visit",
+            summary=summary,
+        )
+        result.update({"status": new_status, "decision": new_decision})
+
+    elif event.event == "CONSULT_CANCELED":
+        review.status = "not_approved"
+        review.reviewed_at = timezone.now()
+        review.save()
+        _sync_intake_status(user, "not_approved")
+        queue_status_notification(
+            user,
+            category="review",
+            subject="Your Aretide visit was canceled",
+            summary="Your visit has been canceled. Please start a new visit if you would still like to be seen.",
+        )
+        result["status"] = "not_approved"
+
+    elif event.event == "RX_WRITTEN":
+        review.status = "prescription_sent"
+        review.decision = "approved"
+        review.reviewed_at = timezone.now()
+        review.save()
+        _sync_intake_status(user, "prescription_sent")
+        rxs = _upsert_beluga_prescriptions(user, review, event)
+        queue_status_notification(
+            user,
+            category="prescription",
+            subject="Your Aretide prescription has been written and is on its way to the pharmacy.",
+            summary="Your provider has written your prescription and it's on its way to the pharmacy.",
+        )
+        result["prescriptions_created"] = len(rxs)
+
+    elif event.event in ("DOCTOR_CHAT", "CS_MESSAGE"):
+        prefix = "[Provider]" if event.event == "DOCTOR_CHAT" else "[Support]"
+        msg = f"{prefix} {(event.content or '').strip()}".strip()
+        if msg:
+            existing = review.patient_note or ""
+            review.patient_note = (existing + "\n\n" + msg).strip() if existing else msg
+            review.save(update_fields=["patient_note"])
+            queue_care_team_message_notification(
+                user,
+                sender_label="your provider"
+                if event.event == "DOCTOR_CHAT"
+                else "support",
+                message_preview=(event.content or "").strip(),
+            )
+        result["appended_message"] = bool(msg)
+
+    elif event.event in _SHIPPING_EVENT_SUMMARIES:
+        logger.info(
+            "[BELUGA WEBHOOK] %s masterId=%s orderId=%s info=%s",
+            event.event, event.master_id, event.order_id, event.info,
+        )
+        record_beluga_fulfillment_event(
+            user,
+            event_type=event.event,
+            master_id=event.master_id,
+            order_id=event.order_id,
+            info=event.info,
+        )
+        queue_status_notification(
+            user,
+            category="shipping",
+            subject=_SHIPPING_EVENT_SUBJECTS.get(event.event, "Your Aretide order update"),
+            summary=_SHIPPING_EVENT_SUMMARIES[event.event],
+        )
+        result["logged"] = True
+
+    elif event.event.startswith("LAB_ORDER_"):
+        logger.info(
+            "[BELUGA WEBHOOK] %s masterId=%s orderId=%s",
+            event.event, event.master_id, event.order_id,
+        )
+        queue_status_notification(
+            user,
+            category="labs",
+            subject="Your Aretide lab update",
+            summary=_LAB_EVENT_SUMMARIES.get(
+                event.event, "There's an update on your lab order."
+            ),
+        )
+        result["logged"] = True
+
+    elif event.event in ("BOOKING_CREATED", "BOOKING_RESCHEDULED", "BOOKING_CANCELLED", "NO_SHOW"):
+        logger.info("[BELUGA WEBHOOK] %s masterId=%s", event.event, event.master_id)
+        queue_status_notification(
+            user,
+            category="appointments",
+            subject="Your Aretide appointment update",
+            summary=_BOOKING_EVENT_SUMMARIES.get(
+                event.event, "There's an update on your appointment."
+            ),
+        )
+        result["logged"] = True
+
+    else:
+        logger.warning("[BELUGA WEBHOOK] Unknown event %s masterId=%s", event.event, event.master_id)
+        result["unhandled"] = True
+
+    return result
+
+
+def _sync_intake_status(user: User, status: str) -> None:
+    intake = MedicalIntake.objects.filter(user=user).first()
+    if intake:
+        intake.status = status
+        intake.save(update_fields=["status", "updated_at"])
+
+
+def _upsert_beluga_prescriptions(
+    user: User, review: ProviderReview, event: BelugaWebhookEvent
+) -> list[PatientPrescription]:
+    from apps.integrations.drug_categories import infer_drug_category
+
+    deactivate_prescriptions(user)
+    doc_name = event.doc_name or ""
+    doc_first, _, doc_last = doc_name.partition(" ")
+    created = []
+    for med in event.meds_prescribed:
+        strength = str(med.get("strength", ""))
+        medication_name = str(med.get("name", ""))
+        rx = PatientPrescription.objects.create(
+            user=user,
+            provider_review=review,
+            medication_name=medication_name,
+            dosage=strength,
+            drug_strength=strength,
+            frequency="",
+            refills=_safe_int(med.get("refills")),
+            quantity=str(med.get("quantity", "")),
+            instructions=str(med.get("pharmacyNotes", "")),
+            external_prescriber_id=str(med.get("rxId", "")),
+            prescriber_first_name=doc_first[:30],
+            prescriber_last_name=doc_last[:30],
+            fulfillment_status="signed",
+            is_active=True,
+            signed_at=timezone.now(),
+        )
+        rx.beluga_med_id = str(med.get("medId", ""))
+        rx.drug_category = infer_drug_category(rx.medication_name)
+        rx.save(update_fields=["beluga_med_id", "drug_category"])
+        created.append(rx)
+    return created
+
+
+def _safe_int(value, default: int = 0) -> int:
+    try:
+        return int(value or default)
+    except (ValueError, TypeError):
+        return default
 
 
 def resolve_lf_product_id(prescription: PatientPrescription, snapshot: dict) -> int | None:

@@ -214,6 +214,16 @@ export function validateAllergyRow(row: {
   return null;
 }
 
+const SIDE_EFFECT_DETAIL_MAX_LENGTH = 200;
+
+export function validateSideEffectDetail(detail: string): string | null {
+  if (!isFilled(detail)) return "Describe the side effect.";
+  if (!isValidOptionalFreeText(detail, SIDE_EFFECT_DETAIL_MAX_LENGTH)) {
+    return "Enter a valid side effect description.";
+  }
+  return null;
+}
+
 export function validateOptionalNumericLab(
   value: string,
   label: string,

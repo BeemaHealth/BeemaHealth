@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from apps.common.validation.form import is_valid_person_name, is_valid_phone
-from apps.patients.models import PatientProfile, PatientSettings
+from apps.patients.models import PatientCareEvent, PatientProfile, PatientSettings
 
 
 class PatientProfileSerializer(serializers.ModelSerializer):
@@ -69,6 +69,12 @@ class PatientSettingsSerializer(serializers.ModelSerializer):
             "sms_notifications",
             "product_emails",
             "two_factor_enabled",
+            "notify_messages",
+            "notify_review",
+            "notify_prescription",
+            "notify_shipping",
+            "notify_labs",
+            "notify_appointments",
             "updated_at",
         ]
         read_only_fields = ["updated_at"]
@@ -77,4 +83,30 @@ class PatientSettingsSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         if instance.updated_at:
             data["updated_at"] = instance.updated_at.isoformat()
+        return data
+
+
+class PatientCareEventSerializer(serializers.ModelSerializer):
+    order_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PatientCareEvent
+        fields = [
+            "id",
+            "milestone",
+            "title",
+            "description",
+            "occurred_at",
+            "order_id",
+        ]
+        read_only_fields = fields
+
+    def get_order_id(self, instance) -> str:
+        return str(instance.metadata.get("order_id") or "")
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["id"] = str(instance.id)
+        if instance.occurred_at:
+            data["occurred_at"] = instance.occurred_at.isoformat()
         return data

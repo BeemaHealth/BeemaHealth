@@ -1,8 +1,11 @@
+import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { Section, SectionHeading } from "@/components/site/primitives";
 import { Button } from "@/components/ui/button";
+import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 import {
   Accordion,
   AccordionContent,
@@ -21,7 +24,10 @@ export const Route = createFileRoute("/faq")({
           "Answers about pricing, insurance, medication, shipping, refills, cancellation, eligibility, labs, and privacy.",
       },
       { property: "og:title", content: "Frequently asked questions — Aretide" },
-      { property: "og:description", content: "Clear answers about how Aretide works." },
+      {
+        property: "og:description",
+        content: "Clear answers about how Aretide works.",
+      },
     ],
     links: [{ rel: "canonical", href: "/faq" }],
     scripts: [
@@ -45,6 +51,9 @@ export const Route = createFileRoute("/faq")({
 });
 
 function FaqPage() {
+  useEffect(() => {
+    trackPageViewed("faq");
+  }, []);
   return (
     <MarketingLayout>
       <Section className="bg-grad-hero">
@@ -59,7 +68,9 @@ function FaqPage() {
         <div className="mx-auto max-w-3xl space-y-10">
           {FAQ_GROUPS.map((g) => (
             <div key={g.category}>
-              <h2 className="text-xl font-semibold text-foreground">{g.category}</h2>
+              <h2 className="text-xl font-semibold text-foreground">
+                {g.category}
+              </h2>
               <Accordion type="single" collapsible className="mt-3">
                 {g.items.map((item, i) => (
                   <AccordionItem
@@ -82,7 +93,7 @@ function FaqPage() {
 
         <div className="mt-12 text-center">
           <Button asChild size="xl">
-            <Link to="/qualify">
+            <Link to={qualifyHref(CTA_IDS.faq)}>
               See if you qualify <ArrowRight />
             </Link>
           </Button>

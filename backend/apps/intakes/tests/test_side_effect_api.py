@@ -61,6 +61,43 @@ class SideEffectCheckInApiTests(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_other_requires_detail(self):
+        self._mark_prescription_sent()
+        response = self.client.post(
+            reverse("side-effect-check-in-me"),
+            {"side_effect": "other", "experienced_on": "2026-06-15"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("side_effect_detail", response.data)
+
+    def test_other_accepts_detail(self):
+        self._mark_prescription_sent()
+        response = self.client.post(
+            reverse("side-effect-check-in-me"),
+            {
+                "side_effect": "other",
+                "side_effect_detail": "Mild headache after injection",
+                "experienced_on": "2026-06-15",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["side_effect_detail"], "Mild headache after injection")
+
+    def test_other_rejects_malicious_detail(self):
+        self._mark_prescription_sent()
+        response = self.client.post(
+            reverse("side-effect-check-in-me"),
+            {
+                "side_effect": "other",
+                "side_effect_detail": "<script>alert(1)</script>",
+                "experienced_on": "2026-06-15",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_rejects_check_in_without_prescription(self):
         MedicalIntake.objects.create(user=self.user, status="prescription_sent")
         ProviderReview.objects.create(user=self.user, status="prescription_sent")

@@ -12,6 +12,7 @@ import {
   inputCls,
 } from "@/components/quiz/quiz-primitives";
 import { Button } from "@/components/ui/button";
+import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -21,6 +22,11 @@ export const Route = createFileRoute("/login")({
 });
 
 function redirectAfterLogin(session: SessionUser, redirect: string) {
+  // Staff always land in the staff portal unless they explicitly requested elsewhere.
+  if (session.user.is_staff && redirect === "/dashboard") {
+    window.location.assign("/staff");
+    return;
+  }
   const target =
     !session.user.email_verified && redirect === "/intake"
       ? "/verify-email/pending"
@@ -197,7 +203,10 @@ function LoginPage() {
         </form>
         <p className="mt-4 text-center text-sm text-muted-foreground">
           New patient?{" "}
-          <Link to="/qualify" className="text-primary underline">
+          <Link
+            to={qualifyHref(CTA_IDS.login_prompt)}
+            className="text-primary underline"
+          >
             Start eligibility check
           </Link>
         </p>

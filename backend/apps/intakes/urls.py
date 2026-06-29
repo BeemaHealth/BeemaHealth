@@ -1,5 +1,6 @@
 from django.urls import path
 
+from apps.intakes.refill_views import RefillConfigView, SameDoseRefillView, TitrationRefillView
 from apps.intakes.views import (
     IntakeRefreshAccountScreeningView,
     IntakeResubmitMeView,
@@ -27,4 +28,16 @@ side_effect_urlpatterns = [
 
 refill_urlpatterns = [
     path("me/", RefillRequestMeView.as_view(), name="refill-request-me"),
+]
+
+same_dose_refill_urlpatterns = [
+    path("", SameDoseRefillView.as_view(), name="refill-same-dose"),
+]
+
+titration_refill_urlpatterns = [
+    path("", TitrationRefillView.as_view(), name="refill-titration"),
+]
+
+refill_config_urlpatterns = [
+    path("", RefillConfigView.as_view(), name="refill-config"),
 ]

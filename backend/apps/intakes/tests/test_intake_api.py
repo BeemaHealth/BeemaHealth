@@ -7,6 +7,12 @@ from apps.accounts.models import User
 from apps.common.validation.payloads import SQL_INJECTION, STRICT_FIELD_ATTACKS, XSS_PAYLOADS
 from apps.eligibility.models import EligibilityResponse
 from apps.intakes.models import MedicalIntake
+from apps.questionnaires.models import (
+    Questionnaire,
+    QuestionnaireField,
+    QuestionnaireStep,
+    QuestionnaireVersion,
+)
 
 
 class IntakeApiValidationTests(TestCase):
@@ -267,6 +273,79 @@ class IntakeApiValidationTests(TestCase):
                     "drugs": "yes",
                     "drugs_detail": XSS_PAYLOADS[0],
                 }
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class IntakeQuestionnaireResponseValidationTests(TestCase):
+    """Required questionnaire fields are enforced only at submission, so a draft
+    save (incl. the one-time version_id auto-sync) never rejects unanswered
+    required fields. See IntakeDynamicFlow load + sync."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email="patient2@example.com",
+            password="secure-pass-1",
+            first_name="Jane",
+            last_name="Doe",
+            phone="3035550100",
+        )
+        self.intake = MedicalIntake.objects.create(user=self.user)
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+        questionnaire = Questionnaire.objects.create(
+            slug="intake", title="Intake", questionnaire_type="intake"
+        )
+        self.version = QuestionnaireVersion.objects.create(
+            questionnaire=questionnaire,
+            version_label="1.0.0",
+            status="published",
+        )
+        step = QuestionnaireStep.objects.create(
+            version=self.version, step_key="dob_step", sort_order=0, title="DOB"
+        )
+        QuestionnaireField.objects.create(
+            step=step,
+            field_key="dob",
+            field_type="dob",
+            label="Date of birth",
+            maps_to_section="beluga:dob",
+            required=True,
+            sort_order=0,
+        )
+
+    def test_draft_autosync_with_unanswered_required_field_succeeds(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {
+                "questionnaire_version_id": str(self.version.id),
+                "questionnaire_responses": {},
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_submission_enforces_required_questionnaire_field(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {
+                "questionnaire_version_id": str(self.version.id),
+                "questionnaire_responses": {},
+                "status": "submitted",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_draft_still_validates_provided_answer_format(self):
+        response = self.client.patch(
+            reverse("intake-me"),
+            {
+                "questionnaire_version_id": str(self.version.id),
+                "questionnaire_responses": {"dob": "2015-01-01"},
             },
             format="json",
         )

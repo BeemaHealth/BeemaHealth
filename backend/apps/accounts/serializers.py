@@ -17,9 +17,19 @@ class UserSerializer(serializers.ModelSerializer):
             "dob",
             "state",
             "email_verified",
+            "is_staff",
+            "is_provider",
+            "is_patient",
             "created_at",
         ]
-        read_only_fields = ["id", "created_at", "email_verified"]
+        read_only_fields = [
+            "id",
+            "created_at",
+            "email_verified",
+            "is_staff",
+            "is_provider",
+            "is_patient",
+        ]
 
 
 class RegisterSerializer(serializers.ModelSerializer):

@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { capturePageUtms } from "@/lib/utm";
 
 import appCss from "../styles.css?url";
 import { AuthProvider } from "../context/AuthContext";
@@ -18,7 +19,9 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">
+          Page not found
+        </h2>
         <p className="mt-2 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
@@ -49,7 +52,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           This page didn't load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Something went wrong on our end. You can try refreshing or head back
+          home.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -73,53 +77,77 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Aretide — Clear, human weight-loss care" },
-      {
-        name: "description",
-        content:
-          "Aretide is telehealth weight-management care with real clinicians, clear pricing, and reliable refill help.",
-      },
-      { name: "author", content: "Aretide" },
-      { property: "og:title", content: "Aretide — Clear, human weight-loss care" },
-      {
-        property: "og:description",
-        content:
-          "Real clinicians, clear pricing, and reliable refills. Telehealth weight care built around trust.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Aretide" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Aretide — Clear, human weight-loss care" },
-      { name: "description", content: "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills." },
-      { property: "og:description", content: "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills." },
-      { name: "twitter:description", content: "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills." },
-      { property: "og:image", content: "/aretide-logo.png" },
-      { name: "twitter:image", content: "/aretide-logo.png" },
-    ],
-    links: [
-      { rel: "icon", href: "/aretide-logo.png", type: "image/png" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap",
-      },
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-    ],
-  }),
-  shellComponent: RootShell,
-  component: RootComponent,
-  notFoundComponent: NotFoundComponent,
-  errorComponent: ErrorComponent,
-});
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
+  {
+    head: () => ({
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { title: "Aretide — Clear, human weight-loss care" },
+        {
+          name: "description",
+          content:
+            "Aretide is telehealth weight-management care with real clinicians, clear pricing, and reliable refill help.",
+        },
+        { name: "author", content: "Aretide" },
+        {
+          property: "og:title",
+          content: "Aretide — Clear, human weight-loss care",
+        },
+        {
+          property: "og:description",
+          content:
+            "Real clinicians, clear pricing, and reliable refills. Telehealth weight care built around trust.",
+        },
+        { property: "og:type", content: "website" },
+        { property: "og:site_name", content: "Aretide" },
+        { name: "twitter:card", content: "summary" },
+        {
+          name: "twitter:title",
+          content: "Aretide — Clear, human weight-loss care",
+        },
+        {
+          name: "description",
+          content:
+            "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills.",
+        },
+        {
+          property: "og:description",
+          content:
+            "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills.",
+        },
+        {
+          name: "twitter:description",
+          content:
+            "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills.",
+        },
+        { property: "og:image", content: "/aretide-logo.png" },
+        { name: "twitter:image", content: "/aretide-logo.png" },
+      ],
+      links: [
+        { rel: "icon", href: "/aretide-logo.png", type: "image/png" },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap",
+        },
+        {
+          rel: "stylesheet",
+          href: appCss,
+        },
+      ],
+    }),
+    shellComponent: RootShell,
+    component: RootComponent,
+    notFoundComponent: NotFoundComponent,
+    errorComponent: ErrorComponent,
+  },
+);
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
@@ -137,6 +165,12 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  // Capture UTMs from the URL on every page load so they're available
+  // when the funnel session is eventually created in qualify.tsx.
+  useEffect(() => {
+    capturePageUtms();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

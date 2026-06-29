@@ -9,7 +9,11 @@ from apps.consents.models import ConsentRecord
 from apps.eligibility.models import EligibilityResponse
 from apps.intakes.models import MedicalIntake
 from apps.patients.models import PatientProfile, PatientSettings
-from apps.patients.serializers import PatientProfileSerializer, PatientSettingsSerializer
+from apps.patients.serializers import (
+    PatientCareEventSerializer,
+    PatientProfileSerializer,
+    PatientSettingsSerializer,
+)
 from apps.prescriptions.services import patient_has_active_prescription
 from apps.reviews.models import ProviderReview
 
@@ -36,6 +40,7 @@ class DashboardView(APIView):
                 "patient_note": review.patient_note if review else "",
                 "has_active_prescription": patient_has_active_prescription(user),
                 "pharmacy_order": self._pharmacy_order_payload(user),
+                "care_events": self._care_events_payload(user),
             }
         )
 
@@ -47,6 +52,12 @@ class DashboardView(APIView):
         if order is None:
             return None
         return PharmacyOrderSerializer(order).data
+
+    def _care_events_payload(self, user):
+        from apps.patients.care_events import get_user_care_events
+
+        events = get_user_care_events(user)
+        return PatientCareEventSerializer(events, many=True).data
 
 
 class PatientProfileMeView(APIView):

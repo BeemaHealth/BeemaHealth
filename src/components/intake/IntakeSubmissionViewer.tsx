@@ -14,6 +14,7 @@ import {
   snapshotStepTitle,
 } from "@/lib/intake-submission-display";
 import type { IntakeSubmissionSnapshot } from "@/lib/types/mvp";
+import { BelugaVisitPayloadPanel } from "@/components/questionnaire/BelugaVisitPayloadPanel";
 
 const ALL_INTAKE_STEPS = INTAKE_STEP_LABELS.map((_, index) => index);
 
@@ -54,6 +55,13 @@ export function IntakeSubmissionViewer({
   return (
     <div className="space-y-4 pb-1">
       {versionBanner}
+
+      {snapshot.beluga_visit_payload ? (
+        <BelugaVisitPayloadPanel
+          payload={snapshot.beluga_visit_payload}
+          variant="staff"
+        />
+      ) : null}
 
       <div className="gap-4 lg:grid lg:grid-cols-[minmax(0,14rem)_1fr] lg:gap-4">
         <IntakePortalStepNav

@@ -63,6 +63,7 @@ export function AccountSectionCard({
   onEdit,
   onSave,
   onCancel,
+  headerAction,
   children,
   className,
 }: {
@@ -76,6 +77,7 @@ export function AccountSectionCard({
   onEdit?: () => void;
   onSave?: () => void;
   onCancel?: () => void;
+  headerAction?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
 }) {
@@ -118,16 +120,21 @@ export function AccountSectionCard({
             )}
           </div>
         </div>
-        {editable && !editing && onEdit && (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="shrink-0 rounded-xl border-border/80 bg-card/90"
-            onClick={onEdit}
-          >
-            Edit
-          </Button>
+        {(headerAction || (editable && !editing && onEdit)) && (
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+            {headerAction}
+            {editable && !editing && onEdit && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="rounded-xl border-border/80 bg-card/90"
+                onClick={onEdit}
+              >
+                Edit
+              </Button>
+            )}
+          </div>
         )}
       </div>
 

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   createFileRoute,
   Link,
   redirect,
   useNavigate,
 } from "@tanstack/react-router";
+import { trackPageViewed } from "@/lib/analytics";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import { Field, QuizShell, inputCls } from "@/components/quiz/quiz-primitives";
 import {
@@ -41,6 +42,9 @@ function ConsentPage() {
   const navigate = useNavigate();
   const { session } = useAuth();
   const [signature, setSignature] = useState("");
+  useEffect(() => {
+    trackPageViewed("consent");
+  }, []);
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);

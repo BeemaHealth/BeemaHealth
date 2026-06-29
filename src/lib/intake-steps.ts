@@ -41,6 +41,22 @@ export const INTAKE_STEP_LABELS = [
   "Review & agree",
 ] as const;
 
+/** Stable analytics `step_key` values for hardcoded intake (index-aligned). */
+export const INTAKE_ANALYTICS_STEP_KEYS = [
+  "identity_contact",
+  "weight_history_goals",
+  "weight_loss_history",
+  "medical_conditions",
+  "family_history",
+  "current_medications",
+  "allergies",
+  "pregnancy_reproductive",
+  "lifestyle",
+  "labs_vitals",
+  "medication_preferences",
+  "review_agree",
+] as const;
+
 export const MEDICAL_CONDITIONS = [
   ["type1_diabetes", "Type 1 diabetes"],
   ["type2_diabetes", "Type 2 diabetes"],

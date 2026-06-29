@@ -8,8 +8,14 @@ from apps.accounts.models import User
 from apps.consents.models import ConsentRecord
 from apps.eligibility.models import EligibilityResponse
 from apps.intakes.models import IntakeSubmission, MedicalIntake
-from apps.intakes.submissions import create_intake_submission, resubmit_intake
+from apps.intakes.submissions import build_submission_snapshot, create_intake_submission, resubmit_intake
 from apps.patients.models import PatientProfile
+from apps.questionnaires.models import (
+    Questionnaire,
+    QuestionnaireField,
+    QuestionnaireStep,
+    QuestionnaireVersion,
+)
 
 
 class IntakeSubmissionTests(TestCase):
@@ -67,6 +73,116 @@ class IntakeSubmissionTests(TestCase):
         self.assertEqual(submission.snapshot["account"]["first_name"], "Jane")
         self.intake.refresh_from_db()
         self.assertEqual(self.intake.active_submission_version, 1)
+
+    def test_dynamic_submission_snapshot_includes_beluga_visit_payload(self):
+        questionnaire = Questionnaire.objects.create(
+            slug="intake-dynamic",
+            title="Intake",
+            questionnaire_type=Questionnaire.QuestionnaireType.INTAKE,
+        )
+        version = QuestionnaireVersion.objects.create(
+            questionnaire=questionnaire,
+            version_label="1.0.0",
+        )
+        step = QuestionnaireStep.objects.create(
+            version=version,
+            step_key="meds",
+            sort_order=0,
+            title="Meds",
+        )
+        QuestionnaireField.objects.create(
+            step=step,
+            field_key="meds",
+            field_type=QuestionnaireField.FieldType.TEXTAREA,
+            label="Medications",
+            maps_to_section="beluga:selfReportedMeds",
+            sort_order=0,
+        )
+        QuestionnaireField.objects.create(
+            step=step,
+            field_key="allergies",
+            field_type=QuestionnaireField.FieldType.TEXTAREA,
+            label="Allergies",
+            maps_to_section="beluga:allergies",
+            sort_order=1,
+        )
+        QuestionnaireField.objects.create(
+            step=step,
+            field_key="conditions",
+            field_type=QuestionnaireField.FieldType.TEXTAREA,
+            label="Conditions",
+            maps_to_section="beluga:medicalConditions",
+            sort_order=2,
+        )
+        QuestionnaireField.objects.create(
+            step=step,
+            field_key="sex",
+            field_type=QuestionnaireField.FieldType.SINGLE_CHOICE,
+            label="Sex",
+            maps_to_section="beluga:sex",
+            options=[{"value": "female", "label": "Female"}],
+            sort_order=3,
+        )
+        QuestionnaireField.objects.create(
+            step=step,
+            field_key="dob",
+            field_type=QuestionnaireField.FieldType.DOB,
+            label="DOB",
+            maps_to_section="beluga:dob",
+            sort_order=4,
+        )
+        QuestionnaireField.objects.create(
+            step=step,
+            field_key="ship",
+            field_type=QuestionnaireField.FieldType.ADDRESS_GROUP,
+            label="Address",
+            options=[
+                {"value": "address", "label": "Street", "beluga": "beluga:address"},
+                {"value": "city", "label": "City", "beluga": "beluga:city"},
+                {"value": "state", "label": "State", "beluga": "beluga:state"},
+                {"value": "zip", "label": "ZIP", "beluga": "beluga:zip"},
+            ],
+            sort_order=5,
+        )
+        QuestionnaireField.objects.create(
+            step=step,
+            field_key="review_confirm",
+            field_type=QuestionnaireField.FieldType.REVIEW,
+            label="Review",
+            sort_order=6,
+        )
+        self.intake.questionnaire_version_id = version.id
+        self.intake.questionnaire_responses = {
+            "meds": "None",
+            "allergies": "None",
+            "conditions": "None",
+            "sex": "female",
+            "dob": "1990-01-15",
+            "ship": {
+                "address": "123 Main St",
+                "city": "Denver",
+                "state": "CO",
+                "zip": "80202",
+                "verified": True,
+            },
+            "review_confirm": True,
+        }
+        self.intake.save()
+        self.user.dob = timezone.datetime(1990, 1, 15).date()
+        self.user.save(update_fields=["dob"])
+        self.eligibility.sex_assigned_at_birth = "female"
+        self.eligibility.save(update_fields=["sex_assigned_at_birth"])
+
+        snapshot = build_submission_snapshot(
+            self.user,
+            self.intake,
+            version=1,
+            submitted_at=timezone.now(),
+        )
+        beluga = snapshot.get("beluga_visit_payload")
+        self.assertIsNotNone(beluga)
+        self.assertTrue(beluga["ready"])
+        self.assertEqual(beluga["form_obj"]["selfReportedMeds"], "None")
 
     def test_snapshot_frozen_after_account_rename(self):
         consent = ConsentRecord.objects.create(

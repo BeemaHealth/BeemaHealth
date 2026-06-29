@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -54,8 +55,12 @@ class RegisterView(APIView):
         user.refresh_from_db()
 
         token, _ = Token.objects.get_or_create(user=user)
-        verification_token = create_email_verification_token(user)
-        queue_verification_email(user, verification_token)
+        if getattr(settings, "REQUIRE_EMAIL_VERIFICATION", True):
+            verification_token = create_email_verification_token(user)
+            queue_verification_email(user, verification_token)
+        else:
+            user.email_verified = True
+            user.save(update_fields=["email_verified", "updated_at"])
 
         log_audit_event(
             user=user,

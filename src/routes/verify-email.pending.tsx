@@ -1,6 +1,6 @@
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { MailWarning } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import { Field, QuizShell, inputCls } from "@/components/quiz/quiz-primitives";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,15 @@ function VerifyEmailPendingPage() {
   const [error, setError] = useState("");
   const [verifyInput, setVerifyInput] = useState("");
   const [verifying, setVerifying] = useState(false);
+
+  // Always send a fresh verification email on mount so the subtitle copy is
+  // accurate for both fresh registrations and existing-but-unverified users
+  // navigating here from elsewhere (e.g. going back from intake).
+  useEffect(() => {
+    void resendVerificationEmail().catch(() => {
+      // fail silently — user can click the resend button if needed
+    });
+  }, []);
 
   if (!session) return null;
 
