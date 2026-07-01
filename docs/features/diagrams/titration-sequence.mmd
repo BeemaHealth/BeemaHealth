@@ -1,0 +1,17 @@
+sequenceDiagram
+  participant P as Patient
+  participant A as Aretide
+  participant B as Beluga
+
+  P->>A: POST /api/refills/titration/
+  A->>B: POST CREATION_PATH new masterId
+  B-->>A: sync visitId
+  opt Photo attached
+    A->>B: POST PHOTO_ENDPOINT
+  end
+  A->>A: RefillRequest pending
+  B->>A: webhook DOCTOR_CHAT
+  B->>A: webhook RX_WRITTEN
+  B->>A: webhook CONSULT_CONCLUDED
+  B->>A: webhook PHARMACY_ORDER_SHIPPED
+  B->>A: webhook PACKAGE_DELIVERED

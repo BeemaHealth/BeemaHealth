@@ -1,0 +1,19 @@
+sequenceDiagram
+  participant P as Patient
+  participant A as Aretide
+  participant B as Beluga
+
+  P->>A: qualify account intake consent
+  A->>A: build and freeze beluga_visit_payload
+  A->>A: create ProviderReview masterId
+  Note over A: Visit payment planned not wired
+  A->>B: POST CREATION_PATH
+  B-->>A: sync visitId
+  opt Photo required
+    A->>B: POST PHOTO_ENDPOINT
+  end
+  B->>A: webhook DOCTOR_CHAT
+  B->>A: webhook RX_WRITTEN
+  B->>A: webhook CONSULT_CONCLUDED
+  B->>A: webhook PHARMACY_ORDER_SHIPPED
+  B->>A: webhook PACKAGE_DELIVERED

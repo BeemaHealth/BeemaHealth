@@ -1,0 +1,28 @@
+flowchart TB
+  subgraph patient [Patient actions]
+    NewFlow[Intake + consent]
+    RefillFlow["POST /api/refills/same-dose/"]
+    TitrationFlow["POST /api/refills/titration/"]
+  end
+
+  subgraph aretide [Aretide backend]
+    Payload["beluga_payload.py + refill_views.py"]
+    WebhookRx["POST /api/webhooks/beluga/"]
+  end
+
+  subgraph beluga [Beluga Health]
+    VisitAPI["Visit creation API CREATION_PATH"]
+    RefillAPI["Refill trigger API REFILL_ENDPOINT"]
+    Review[Provider and pharmacy routing]
+    WH[Webhook dispatcher]
+  end
+
+  NewFlow --> Payload
+  RefillFlow --> Payload
+  TitrationFlow --> Payload
+  Payload -->|"POST CREATION_PATH"| VisitAPI
+  Payload -->|"POST REFILL_ENDPOINT"| RefillAPI
+  VisitAPI --> Review
+  RefillAPI --> Review
+  Review --> WH
+  WH -->|"clinical + shipping webhooks"| WebhookRx

@@ -80,6 +80,7 @@ Read the relevant doc(s):
 | Run backend, API list | `backend/README.md`, `docs/LOCAL-DEV.md` |
 | **LifeFile / MediVera pharmacy API** | **`docs/vendor/LIFEFILE_MEDIVERA_API.md`** (gitignored; pointer: `docs/LIFEFILE_MEDIVERA_API.md`) |
 | **Beluga Health provider/pharmacy API** | **`docs/vendor/BELUGA_API.md`** (gitignored; pointer: `docs/BELUGA_API.md`) |
+| **Beluga integration (consults, refills, webhooks)** | **`docs/features/beluga-integration.md`** |
 | Frontend routes | `src/routes/README.md` |
 | Input validation & security tests | `docs/INPUT_VALIDATION_TESTS.md` |
 | API types & client | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |

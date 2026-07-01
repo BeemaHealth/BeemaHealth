@@ -1,0 +1,28 @@
+flowchart TB
+  subgraph patient [Patient]
+    P1["POST /api/refills/titration/"]
+  end
+
+  subgraph aretide [Aretide backend]
+    A1[refill_views.py]
+    WebhookRx["POST /api/webhooks/beluga/"]
+  end
+
+  subgraph outbound [Aretide POST to Beluga]
+    O1[POST CREATION_PATH new masterId]
+    O2[POST PHOTO_ENDPOINT]
+  end
+
+  subgraph beluga [Beluga Health]
+    B1[Provider review]
+    B2[Route Rx to pharmacy]
+    WH[Webhook dispatcher]
+  end
+
+  P1 --> A1 --> O1
+  O1 -->|photo| O2 --> B1
+  O1 -->|no photo| B1
+  B1 --> WH
+  WH -->|DOCTOR_CHAT RX_WRITTEN CONSULT_*| WebhookRx
+  B1 --> B2 --> WH
+  WH -->|PHARMACY_ORDER_* PACKAGE_*| WebhookRx

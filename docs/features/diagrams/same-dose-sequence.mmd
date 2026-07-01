@@ -1,0 +1,19 @@
+sequenceDiagram
+  participant P as Patient
+  participant A as Aretide
+  participant B as Beluga
+
+  P->>A: POST /api/refills/same-dose/
+  A->>B: POST REFILL_ENDPOINT masterId medId
+  alt NEW_RX_SENT
+    B-->>A: sync NEW_RX_SENT
+    A->>A: RefillRequest approved
+    B->>A: webhook PHARMACY_ORDER_SHIPPED
+    B->>A: webhook PACKAGE_DELIVERED
+  else NEEDS_CHECKIN
+    B-->>A: sync pending
+    A->>A: RefillRequest pending
+  else denied
+    B-->>A: sync denied
+    A->>A: RefillRequest denied
+  end

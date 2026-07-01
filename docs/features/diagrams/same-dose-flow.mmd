@@ -1,0 +1,25 @@
+flowchart TB
+  subgraph patient [Patient]
+    P1["POST /api/refills/same-dose/"]
+  end
+
+  subgraph aretide [Aretide backend]
+    A1[refill_views.py]
+    WebhookRx["POST /api/webhooks/beluga/"]
+  end
+
+  subgraph outbound [Aretide POST to Beluga]
+    O1[POST REFILL_ENDPOINT]
+  end
+
+  subgraph beluga [Beluga Health]
+    B1[Sync response NEW_RX_SENT etc]
+    B2[Route refill to pharmacy]
+    WH[Webhook dispatcher]
+  end
+
+  P1 --> A1 --> O1 --> B1
+  B1 -->|NEW_RX_SENT| B2 --> WH
+  WH -->|PHARMACY_ORDER_* PACKAGE_*| WebhookRx
+  B1 -->|NEEDS_CHECKIN pending| PEND[RefillRequest pending]
+  B1 -->|RX_ERROR denied| DENY[RefillRequest denied]
