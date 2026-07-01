@@ -1845,13 +1845,35 @@ export interface BelugaMockMed {
   rxId?: string;
 }
 
+export interface BelugaMockTarget {
+  kind: "initial_consult" | "refill";
+  id?: string;
+  label: string;
+  master_id: string;
+  request_type?: "same_dose" | "titration";
+  status?: "pending" | "approved" | "denied" | "more_info_needed";
+  beluga_order_id?: string;
+}
+
+export async function fetchBelugaMockTargets(
+  patientEmail: string,
+): Promise<{ patient_id: string; targets: BelugaMockTarget[] }> {
+  return apiFetch<{ patient_id: string; targets: BelugaMockTarget[] }>(
+    `/staff/dev/beluga-mock-targets/?patient_email=${encodeURIComponent(patientEmail)}`,
+  );
+}
+
 export async function fireMockBelugaWebhook(payload: {
   patient_email: string;
+  target_kind: "initial_consult" | "refill";
+  master_id?: string;
   event: BelugaMockEventType;
   visitOutcome?: "prescribed" | "referred";
   content?: string;
   docName?: string;
   medsPrescribed?: BelugaMockMed[];
+  orderId?: string;
+  info?: Record<string, string>;
 }): Promise<Record<string, unknown>> {
   return apiFetch<Record<string, unknown>>("/staff/dev/beluga-webhook/", {
     method: "POST",

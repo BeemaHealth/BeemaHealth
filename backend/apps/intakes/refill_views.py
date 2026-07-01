@@ -70,6 +70,26 @@ _DEFAULT_BELUGA_MESSAGE = (
     "Your refill request has been received. Your care team will follow up."
 )
 
+# Same-dose refills resolve synchronously (Beluga's Trigger Refill endpoint
+# returns the outcome directly, no async doctor-review webhook follows) — so
+# RefillRequest.status can be set immediately from the response status.
+_SAME_DOSE_APPROVED_STATUSES = {"NEW_RX_SENT"}
+_SAME_DOSE_DENIED_STATUSES = {
+    "NO_MORE_REFILLS",
+    "RX_ERROR",
+    "RX_MISMATCH",
+    "INCORRECT_PHARMACY_INTEGRATION",
+    "GENERIC",
+}
+
+
+def _same_dose_refill_status(beluga_status: str) -> str:
+    if beluga_status in _SAME_DOSE_APPROVED_STATUSES:
+        return "approved"
+    if beluga_status in _SAME_DOSE_DENIED_STATUSES:
+        return "denied"
+    return "pending"
+
 # ---------------------------------------------------------------------------
 # User-facing messages for titration check-in
 # ---------------------------------------------------------------------------
@@ -199,6 +219,7 @@ class SameDoseRefillView(APIView):
         refill = RefillRequest.objects.create(
             user=user,
             request_type="same_dose",
+            status=_same_dose_refill_status(beluga_status),
             beluga_response_status=beluga_status,
             beluga_master_id=master_id,
         )
@@ -217,6 +238,7 @@ class SameDoseRefillView(APIView):
             {
                 "id": str(refill.id),
                 "request_type": "same_dose",
+                "status": refill.status,
                 "beluga_status": beluga_status,
                 "message": message,
                 "created_at": refill.created_at.isoformat(),
@@ -503,6 +525,7 @@ class TitrationRefillView(APIView):
             {
                 "id": str(refill.id),
                 "request_type": "titration",
+                "status": refill.status,
                 "titration_direction": titration_direction,
                 "beluga_status": beluga_status,
                 "beluga_visit_id": visit_id,

@@ -342,6 +342,7 @@ export interface DashboardData {
   has_active_prescription: boolean;
   pharmacy_order?: PharmacyOrder | null;
   care_events?: PersistedCareEvent[];
+  refill_requests?: RefillRequest[];
 }
 
 export interface PersistedCareEvent {
@@ -476,11 +477,21 @@ export interface PatientSettings {
   updated_at?: string;
 }
 
+export type RefillRequestStatus =
+  | "pending"
+  | "approved"
+  | "denied"
+  | "more_info_needed";
+
 export interface RefillRequest {
   id: string;
   user_id: string;
   side_effect_check_in_id: string | null;
-  status: "pending" | "approved" | "denied";
+  status: RefillRequestStatus;
+  request_type?: "same_dose" | "titration";
+  titration_direction?: string | null;
+  beluga_response_status?: string;
+  beluga_order_id?: string;
   created_at: string;
 }
 
@@ -523,6 +534,7 @@ export interface DrugRefillConfig {
 export interface SameDoseRefillResponse {
   id: string;
   request_type: "same_dose";
+  status: RefillRequestStatus;
   beluga_status: string;
   message: string;
   created_at: string;
@@ -531,6 +543,7 @@ export interface SameDoseRefillResponse {
 export interface TitrationRefillResponse {
   id: string;
   request_type: "titration";
+  status: RefillRequestStatus;
   titration_direction: TitrationDirection;
   beluga_status: string;
   beluga_visit_id: string;

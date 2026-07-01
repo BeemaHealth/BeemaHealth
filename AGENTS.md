@@ -314,6 +314,7 @@ Intake step colors/icons: `src/lib/intake-portal-ui.ts` (references `SectionTone
 - **API client:** `src/lib/api/client.ts` — extend here for new endpoints.
 - **Types:** update `src/lib/types/mvp.ts` when API shapes change.
 - **Backend:** one Django app per domain under `backend/apps/`.
+- **Dev-only logging:** diagnostic log lines that should only ever appear locally (mock payload previews, debug-path visibility, etc.) must go through `apps.common.dev_logging.dev_log()` instead of a raw `logger.info(...)` call — it's a no-op unless `DEBUG=True`, so it's silent in staging/production by construction. Use the standard logger directly for anything that should be observable in production (real errors/warnings).
 - **Commits:** only when the user asks. No `--no-verify`, no force-push to main.
 - **Scope:** smallest correct diff. No drive-by refactors.
 - **Portal / dashboard UI colors:** use `src/lib/design-tokens.ts` and `AccountSectionCard` — see **Design system & color scheme** above.

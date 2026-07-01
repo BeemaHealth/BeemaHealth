@@ -7,7 +7,7 @@ from django.utils import timezone
 from apps.accounts.models import User
 from apps.integrations.adapters.beluga import BelugaWebhookEvent
 from apps.integrations.services import apply_beluga_webhook
-from apps.intakes.models import MedicalIntake
+from apps.intakes.models import MedicalIntake, RefillRequest
 from apps.patients import notifications as notif_module
 from apps.patients.models import PatientCareEvent, PatientSettings
 from apps.patients.notifications import notify_care_team_message, notify_patient_event
@@ -145,3 +145,173 @@ class BelugaWebhookNotificationTests(TestCase):
 
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn("prescription", mail.outbox[0].subject.lower())
+
+
+@override_settings(
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    SMS_BACKEND="console",
+    FRONTEND_URL="http://localhost:8080",
+)
+class BelugaWebhookRoutingAndRefillStatusTests(TestCase):
+    """Covers the masterId-routing fix and RefillRequest.status/order_id wiring."""
+
+    def setUp(self):
+        self.patient = User.objects.create_user(
+            email="refill-patient@example.com",
+            password="secure-pass-1",
+            first_name="Sam",
+            last_name="Rivera",
+            phone="3035550101",
+        )
+        PatientSettings.objects.create(
+            user=self.patient, email_notifications=True, sms_notifications=False
+        )
+        MedicalIntake.objects.create(
+            user=self.patient, status="prescription_sent", submitted_at=timezone.now()
+        )
+        ProviderReview.objects.create(
+            user=self.patient,
+            status="prescription_sent",
+            external_review_id="original-consult-001",
+        )
+        mail.outbox.clear()
+
+    def test_titration_master_id_resolves_user_and_sets_refill_status(self):
+        refill = RefillRequest.objects.create(
+            user=self.patient,
+            request_type="titration",
+            beluga_master_id="titration-visit-001",
+        )
+
+        event = BelugaWebhookEvent(
+            master_id="titration-visit-001",
+            event="RX_WRITTEN",
+            meds_prescribed=[],
+        )
+        apply_beluga_webhook(event)
+
+        refill.refresh_from_db()
+        self.assertEqual(refill.status, "approved")
+
+    def test_titration_consult_concluded_referred_denies_refill(self):
+        refill = RefillRequest.objects.create(
+            user=self.patient,
+            request_type="titration",
+            beluga_master_id="titration-visit-002",
+        )
+
+        event = BelugaWebhookEvent(
+            master_id="titration-visit-002",
+            event="CONSULT_CONCLUDED",
+            visit_outcome="referred",
+        )
+        apply_beluga_webhook(event)
+
+        refill.refresh_from_db()
+        self.assertEqual(refill.status, "denied")
+
+    def test_doctor_chat_on_pending_titration_sets_more_info_needed(self):
+        refill = RefillRequest.objects.create(
+            user=self.patient,
+            request_type="titration",
+            beluga_master_id="titration-visit-more-info",
+        )
+
+        event = BelugaWebhookEvent(
+            master_id="titration-visit-more-info",
+            event="DOCTOR_CHAT",
+            content="Can you confirm your current weight before we approve the increase?",
+        )
+        apply_beluga_webhook(event)
+
+        refill.refresh_from_db()
+        self.assertEqual(refill.status, "more_info_needed")
+
+    def test_doctor_chat_does_not_downgrade_an_already_decided_refill(self):
+        refill = RefillRequest.objects.create(
+            user=self.patient,
+            request_type="titration",
+            beluga_master_id="titration-visit-decided",
+            status="approved",
+        )
+
+        event = BelugaWebhookEvent(
+            master_id="titration-visit-decided",
+            event="DOCTOR_CHAT",
+            content="Just checking in on how you're feeling.",
+        )
+        apply_beluga_webhook(event)
+
+        refill.refresh_from_db()
+        self.assertEqual(refill.status, "approved")
+
+    def test_replayed_consult_event_does_not_touch_unrelated_same_dose_refill(self):
+        """Regression: same-dose refills share the original consult's masterId —
+        a CONSULT_CONCLUDED for that masterId must not flip an unrelated
+        same-dose refill's status, since same-dose refills never go through
+        doctor review in real Beluga."""
+        same_dose = RefillRequest.objects.create(
+            user=self.patient,
+            request_type="same_dose",
+            beluga_master_id="original-consult-001",
+            status="approved",
+        )
+
+        event = BelugaWebhookEvent(
+            master_id="original-consult-001",
+            event="CONSULT_CONCLUDED",
+            visit_outcome="prescribed",
+        )
+        apply_beluga_webhook(event)
+
+        same_dose.refresh_from_db()
+        self.assertEqual(same_dose.status, "approved")
+
+    def test_unmatched_master_id_raises(self):
+        event = BelugaWebhookEvent(master_id="no-such-visit", event="RX_WRITTEN")
+        with self.assertRaises(ValueError):
+            apply_beluga_webhook(event)
+
+    def test_titration_order_id_attaches_on_first_shipping_event(self):
+        refill = RefillRequest.objects.create(
+            user=self.patient,
+            request_type="titration",
+            beluga_master_id="titration-visit-003",
+            status="approved",
+        )
+
+        event = BelugaWebhookEvent(
+            master_id="titration-visit-003",
+            event="PHARMACY_ORDER_IN_FULFILLMENT",
+            order_id="order-titration-1",
+        )
+        apply_beluga_webhook(event)
+
+        refill.refresh_from_db()
+        self.assertEqual(refill.beluga_order_id, "order-titration-1")
+
+    def test_same_dose_order_id_attaches_to_most_recently_unlinked_refill(self):
+        older = RefillRequest.objects.create(
+            user=self.patient,
+            request_type="same_dose",
+            beluga_master_id="original-consult-001",
+            status="approved",
+        )
+        newer = RefillRequest.objects.create(
+            user=self.patient,
+            request_type="same_dose",
+            beluga_master_id="original-consult-001",
+            status="approved",
+        )
+
+        event = BelugaWebhookEvent(
+            master_id="original-consult-001",
+            event="PHARMACY_ORDER_SHIPPED",
+            order_id="order-same-dose-1",
+        )
+        apply_beluga_webhook(event)
+
+        older.refresh_from_db()
+        newer.refresh_from_db()
+        self.assertEqual(newer.beluga_order_id, "order-same-dose-1")
+        self.assertEqual(older.beluga_order_id, "")

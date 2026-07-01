@@ -4,6 +4,12 @@ Loaded when working in `backend/`. See root `CLAUDE.md` and `AGENTS.md` for full
 
 ---
 
+## Dev-only logging
+
+Use `apps.common.dev_logging.dev_log(logger, message, *args, **kwargs)` for any log line meant purely for local diagnostic visibility (e.g. previewing an outbound payload that would be sent to a vendor API, tracing a mock/debug code path). It gates on `settings.DEBUG` and is a no-op otherwise, so it never fires in staging/production regardless of log-level config. Do not use it for real errors/warnings that should be observable in production — use the standard `logger` directly for those.
+
+---
+
 ## Backend input validation
 
 When adding or changing any user input in `backend/`:

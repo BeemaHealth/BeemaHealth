@@ -41,6 +41,7 @@ class DashboardView(APIView):
                 "has_active_prescription": patient_has_active_prescription(user),
                 "pharmacy_order": self._pharmacy_order_payload(user),
                 "care_events": self._care_events_payload(user),
+                "refill_requests": self._refill_requests_payload(user),
             }
         )
 
@@ -58,6 +59,13 @@ class DashboardView(APIView):
 
         events = get_user_care_events(user)
         return PatientCareEventSerializer(events, many=True).data
+
+    def _refill_requests_payload(self, user):
+        from apps.intakes.models import RefillRequest
+        from apps.intakes.views import RefillRequestSerializer
+
+        requests = RefillRequest.objects.filter(user=user)
+        return RefillRequestSerializer(requests, many=True).data
 
 
 class PatientProfileMeView(APIView):

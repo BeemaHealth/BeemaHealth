@@ -209,6 +209,7 @@ function DashboardHomePage() {
               intakeStatus={data.intake_status}
               submittedAt={data.submitted_at}
               careEvents={careEvents}
+              refillRequests={data.refill_requests ?? []}
               className="max-h-80 lg:absolute lg:inset-0 lg:max-h-none"
             />
           </div>

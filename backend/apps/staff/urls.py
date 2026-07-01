@@ -1,12 +1,22 @@
 from django.urls import include, path
 
 from apps.questionnaires.staff_urls import medication_urlpatterns, vendor_urlpatterns
-from apps.staff.views import StaffDevBelugaMockView, StaffDevSettingsView, StaffSummaryView
+from apps.staff.views import (
+    StaffDevBelugaMockTargetsView,
+    StaffDevBelugaMockView,
+    StaffDevSettingsView,
+    StaffSummaryView,
+)
 
 urlpatterns = [
     path("summary/", StaffSummaryView.as_view(), name="staff-summary"),
     path("dev/", StaffDevSettingsView.as_view(), name="staff-dev-settings"),
     path("dev/beluga-webhook/", StaffDevBelugaMockView.as_view(), name="staff-dev-beluga-mock"),
+    path(
+        "dev/beluga-mock-targets/",
+        StaffDevBelugaMockTargetsView.as_view(),
+        name="staff-dev-beluga-mock-targets",
+    ),
     path("analytics/", include("apps.analytics.staff_urls")),
     path("questionnaires/", include("apps.questionnaires.staff_urls")),
     path("medications/", include(medication_urlpatterns)),

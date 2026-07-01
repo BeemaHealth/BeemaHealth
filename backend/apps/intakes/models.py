@@ -149,6 +149,7 @@ class RefillRequest(models.Model):
         ("pending", "Pending"),
         ("approved", "Approved"),
         ("denied", "Denied"),
+        ("more_info_needed", "More information needed"),
     ]
     REQUEST_TYPE_CHOICES = [
         ("same_dose", "Same dose"),

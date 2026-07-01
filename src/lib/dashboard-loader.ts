@@ -28,6 +28,7 @@ export async function loadDashboardData(): Promise<DashboardData> {
     has_active_prescription: false,
     pharmacy_order: null,
     care_events: [],
+    refill_requests: [],
   };
 }
 

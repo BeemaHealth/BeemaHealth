@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.utils.dateparse import parse_date
 
 from apps.accounts.models import User
-from apps.intakes.models import MedicalIntake
+from apps.intakes.models import MedicalIntake, RefillRequest
 from apps.prescriptions.models import PatientPrescription
 from apps.prescriptions.services import deactivate_prescriptions
 from apps.reviews.models import ProviderReview
@@ -166,14 +166,27 @@ _BOOKING_EVENT_SUMMARIES = {
 
 
 @transaction.atomic
-def apply_beluga_webhook(event: BelugaWebhookEvent, *, patient=None) -> dict:
+def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
     """
     Apply a Beluga webhook event to our data models.
 
-    patient: if provided (dev mock path), skip masterId lookup and use this User directly.
-    Otherwise looks up by ProviderReview.external_review_id == event.master_id.
+    Resolves the patient from event.master_id in two steps:
+      1. A titration RefillRequest whose beluga_master_id matches (each titration
+         visit gets a freshly generated masterId, so this match is unambiguous).
+      2. Otherwise, the ProviderReview whose external_review_id matches — covers
+         the initial consult and same-dose refills, which share that masterId.
+    Raises ValueError (-> 400 at the view layer) if neither resolves.
     """
-    if patient is None:
+    refill = (
+        RefillRequest.objects.select_related("user")
+        .filter(beluga_master_id=event.master_id, request_type="titration")
+        .exclude(beluga_master_id="")
+        .first()
+    )
+    if refill is not None:
+        user = refill.user
+        review, _ = ProviderReview.objects.get_or_create(user=user)
+    else:
         try:
             review = ProviderReview.objects.select_related("user").get(
                 external_review_id=event.master_id
@@ -181,11 +194,8 @@ def apply_beluga_webhook(event: BelugaWebhookEvent, *, patient=None) -> dict:
             user = review.user
         except ProviderReview.DoesNotExist:
             raise ValueError(
-                f"No ProviderReview with external_review_id={event.master_id!r}"
+                f"No visit found for masterId={event.master_id!r}"
             )
-    else:
-        user = patient
-        review, _ = ProviderReview.objects.get_or_create(user=user)
 
     review.doctor_partner = "beluga"
     result: dict = {"event": event.event, "master_id": event.master_id}
@@ -200,6 +210,9 @@ def apply_beluga_webhook(event: BelugaWebhookEvent, *, patient=None) -> dict:
         review.reviewed_at = timezone.now()
         review.save()
         _sync_intake_status(user, new_status)
+        if refill is not None:
+            refill.status = "approved" if outcome == "prescribed" else "denied"
+            refill.save(update_fields=["status"])
         if new_status == "prescription_sent":
             summary = "Your provider has completed your visit and approved treatment."
         else:
@@ -217,6 +230,9 @@ def apply_beluga_webhook(event: BelugaWebhookEvent, *, patient=None) -> dict:
         review.reviewed_at = timezone.now()
         review.save()
         _sync_intake_status(user, "not_approved")
+        if refill is not None:
+            refill.status = "denied"
+            refill.save(update_fields=["status"])
         queue_status_notification(
             user,
             category="review",
@@ -231,6 +247,9 @@ def apply_beluga_webhook(event: BelugaWebhookEvent, *, patient=None) -> dict:
         review.reviewed_at = timezone.now()
         review.save()
         _sync_intake_status(user, "prescription_sent")
+        if refill is not None:
+            refill.status = "approved"
+            refill.save(update_fields=["status"])
         rxs = _upsert_beluga_prescriptions(user, review, event)
         queue_status_notification(
             user,
@@ -254,6 +273,16 @@ def apply_beluga_webhook(event: BelugaWebhookEvent, *, patient=None) -> dict:
                 else "support",
                 message_preview=(event.content or "").strip(),
             )
+            # A doctor chat message on a titration (dose-change) visit still
+            # awaiting a decision means the provider needs something from the
+            # patient before the review can conclude.
+            if (
+                event.event == "DOCTOR_CHAT"
+                and refill is not None
+                and refill.status == "pending"
+            ):
+                refill.status = "more_info_needed"
+                refill.save(update_fields=["status"])
         result["appended_message"] = bool(msg)
 
     elif event.event in _SHIPPING_EVENT_SUMMARIES:
@@ -261,6 +290,7 @@ def apply_beluga_webhook(event: BelugaWebhookEvent, *, patient=None) -> dict:
             "[BELUGA WEBHOOK] %s masterId=%s orderId=%s info=%s",
             event.event, event.master_id, event.order_id, event.info,
         )
+        _attach_order_id(user=user, refill=refill, master_id=event.master_id, order_id=event.order_id)
         record_beluga_fulfillment_event(
             user,
             event_type=event.event,
@@ -315,6 +345,40 @@ def _sync_intake_status(user: User, status: str) -> None:
     if intake:
         intake.status = status
         intake.save(update_fields=["status", "updated_at"])
+
+
+def _attach_order_id(*, user: User, refill: RefillRequest | None, master_id: str, order_id: str) -> None:
+    """
+    Link a fulfillment webhook's orderId to the RefillRequest it belongs to,
+    so the patient-facing timeline can group shipping events with the refill
+    that triggered them (see PatientCareEvent grouping by order_id).
+
+    - Titration: `refill` is already resolved via its unique masterId (see
+      apply_beluga_webhook) — attach directly, once.
+    - Same-dose / initial consult: masterId is shared across requests, so the
+      best match is the most recently created RefillRequest for that masterId
+      that hasn't been attached to an order yet. If none exists (e.g. this is
+      the initial consult's own first shipment), no RefillRequest is touched —
+      it belongs to the "Initial consultation" timeline group instead.
+    """
+    if not order_id:
+        return
+    if refill is not None:
+        if not refill.beluga_order_id:
+            refill.beluga_order_id = order_id
+            refill.save(update_fields=["beluga_order_id"])
+        return
+
+    candidate = (
+        RefillRequest.objects.filter(
+            user=user, beluga_master_id=master_id, beluga_order_id=""
+        )
+        .order_by("-created_at")
+        .first()
+    )
+    if candidate is not None:
+        candidate.beluga_order_id = order_id
+        candidate.save(update_fields=["beluga_order_id"])
 
 
 def _upsert_beluga_prescriptions(

@@ -1,4 +1,8 @@
-import type { IntakeStatus, PersistedCareEvent } from "@/lib/types/mvp";
+import type {
+  IntakeStatus,
+  PersistedCareEvent,
+  RefillRequest,
+} from "@/lib/types/mvp";
 
 export type CareTimelineEvent = {
   id: string;
@@ -279,15 +283,54 @@ function _formatGroupDate(timestamp: string): string {
   });
 }
 
+const REFILL_STATUS_TONE: Record<
+  RefillRequest["status"],
+  CareTimelineEvent["tone"]
+> = {
+  pending: "blue",
+  approved: "green",
+  denied: "gray",
+  more_info_needed: "orange",
+};
+
+const REFILL_STATUS_TITLE: Record<RefillRequest["status"], string> = {
+  pending: "Refill requested",
+  approved: "Refill approved",
+  denied: "Refill denied",
+  more_info_needed: "More information needed",
+};
+
+function refillLeadingEvent(refill: RefillRequest): CareTimelineEvent {
+  return {
+    id: `refill-request-${refill.id}`,
+    milestone: "refill-requested",
+    title: REFILL_STATUS_TITLE[refill.status] ?? "Refill requested",
+    description:
+      refill.status === "more_info_needed"
+        ? "Your provider needs more information before deciding on this dose change — check your care team messages."
+        : refill.request_type === "titration"
+          ? "Dose change request submitted for provider review."
+          : "Refill request submitted.",
+    timestamp: refill.created_at,
+    tone: REFILL_STATUS_TONE[refill.status] ?? "blue",
+  };
+}
+
 /**
  * Groups the care timeline into directory-style sections: one "Initial
- * consultation" section (intake events + first order cycle) and one "Refill"
- * section per subsequent order_id. Latest section is marked as open by default.
+ * consultation" section (intake events + the earliest fulfillment cycle) and
+ * one "Refill" section per subsequent order_id / refill request. A refill
+ * gets its own section immediately on submission (before any fulfillment
+ * webhook has fired) via a synthetic leading entry, keyed by the refill's id;
+ * once a fulfillment event arrives with a matching order_id (see
+ * beluga_order_id on RefillRequest), it's merged into that same section.
+ * Latest section is marked as open by default.
  */
 export function buildGroupedCareTimeline(
   status: IntakeStatus,
   submittedAt: string | null,
   careEvents: PersistedCareEvent[] = [],
+  refillRequests: RefillRequest[] = [],
 ): CareTimelineGroup[] {
   if (!submittedAt) return [];
 
@@ -313,9 +356,24 @@ export function buildGroupedCareTimeline(
     });
   }
 
-  // Sort order groups by their earliest event timestamp
-  const sortedOrders = [...orderMap.entries()]
-    .map(([orderId, events]) => ({ orderId, events }))
+  // Attach each refill request's leading entry to its group: keyed by
+  // beluga_order_id once a fulfillment event has linked them (merging with
+  // real events already in orderMap), or a synthetic per-refill key so it
+  // renders immediately, before any fulfillment webhook has fired. Track
+  // every key touched by a refill request — whether synthetic or a real,
+  // now-linked order_id — so it's never mistaken for the account's original
+  // (non-refill) fulfillment cycle below, even if it happens to sort first.
+  const refillKeys = new Set<string>();
+  for (const refill of refillRequests) {
+    const key = refill.beluga_order_id || `refill:${refill.id}`;
+    refillKeys.add(key);
+    const existing = orderMap.get(key) ?? [];
+    orderMap.set(key, [refillLeadingEvent(refill), ...existing]);
+  }
+
+  // Sort all groups by their earliest event timestamp.
+  const sortedGroups = [...orderMap.entries()]
+    .map(([key, events]) => ({ key, events }))
     .sort((a, b) =>
       (a.events[0]?.timestamp ?? "").localeCompare(
         b.events[0]?.timestamp ?? "",
@@ -323,12 +381,18 @@ export function buildGroupedCareTimeline(
     );
 
   const groups: CareTimelineGroup[] = [];
-
-  // Initial consultation: intake events + first shipping cycle (if any)
   const initialEvents: CareTimelineEvent[] = [...intakeEvents];
-  if (sortedOrders.length > 0) {
-    initialEvents.push(...sortedOrders[0].events);
+
+  // The chronologically-first group merges into "Initial consultation" —
+  // unless it belongs to a refill request (a refill must never be mistaken
+  // for the account's original prescription cycle, even if its own
+  // fulfillment events happen to sort earliest, e.g. in mock testing).
+  let firstRefillIndex = 0;
+  if (sortedGroups.length > 0 && !refillKeys.has(sortedGroups[0].key)) {
+    initialEvents.push(...sortedGroups[0].events);
+    firstRefillIndex = 1;
   }
+
   groups.push({
     id: "initial",
     label: "Initial consultation",
@@ -337,12 +401,11 @@ export function buildGroupedCareTimeline(
     isInitial: true,
   });
 
-  // Subsequent order cycles = refill sections
-  for (let i = 1; i < sortedOrders.length; i++) {
-    const { orderId, events } = sortedOrders[i];
+  for (let i = firstRefillIndex; i < sortedGroups.length; i++) {
+    const { key, events } = sortedGroups[i];
     const firstAt = events[0]?.timestamp ?? submittedAt;
     groups.push({
-      id: orderId,
+      id: key,
       label: "Refill",
       dateLabel: _formatGroupDate(firstAt),
       events,

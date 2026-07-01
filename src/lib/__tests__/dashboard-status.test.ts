@@ -5,7 +5,11 @@ import {
   buildGroupedCareTimeline,
   hasUnresolvedDeliveryIssue,
 } from "@/lib/dashboard-status";
-import type { IntakeStatus, PersistedCareEvent } from "@/lib/types/mvp";
+import type {
+  IntakeStatus,
+  PersistedCareEvent,
+  RefillRequest,
+} from "@/lib/types/mvp";
 
 const SUBMITTED_AT = "2026-06-27T12:00:00Z";
 
@@ -538,5 +542,105 @@ describe("buildGroupedCareTimeline", () => {
     const refillMilestones = groups[1].events.map((e) => e.milestone);
     expect(refillMilestones).toContain("pharmacy-shipped");
     expect(refillMilestones).not.toContain("package-delivery-failed");
+  });
+
+  function makeRefill(overrides: Partial<RefillRequest> = {}): RefillRequest {
+    return {
+      id: "refill-1",
+      user_id: "user-1",
+      side_effect_check_in_id: null,
+      status: "pending",
+      request_type: "titration",
+      beluga_order_id: "",
+      created_at: "2026-07-01T09:00:00Z",
+      ...overrides,
+    };
+  }
+
+  it("a pending refill with no fulfillment events yet shows as its own group immediately", () => {
+    const groups = buildGroupedCareTimeline(
+      "prescription_sent",
+      SUBMITTED_AT,
+      [],
+      [makeRefill()],
+    );
+    expect(groups).toHaveLength(2);
+    expect(groups[0].id).toBe("initial");
+    expect(groups[1].isInitial).toBe(false);
+    expect(groups[1].label).toBe("Refill");
+    expect(groups[1].events).toHaveLength(1);
+    expect(groups[1].events[0].title).toBe("Refill requested");
+  });
+
+  it("does not mistake a pending refill for the initial consultation even with no other events", () => {
+    const groups = buildGroupedCareTimeline(
+      "prescription_sent",
+      SUBMITTED_AT,
+      [],
+      [makeRefill({ created_at: "2026-06-01T00:00:00Z" })], // earlier than SUBMITTED_AT
+    );
+    expect(groups[0].id).toBe("initial");
+    expect(
+      groups[0].events.every((e) => e.milestone !== "refill-requested"),
+    ).toBe(true);
+    expect(groups[1].isInitial).toBe(false);
+  });
+
+  it("shows a more_info_needed refill with an orange tone and distinct title", () => {
+    const groups = buildGroupedCareTimeline(
+      "prescription_sent",
+      SUBMITTED_AT,
+      [],
+      [makeRefill({ status: "more_info_needed" })],
+    );
+    const entry = groups[1].events[0];
+    expect(entry.title).toBe("More information needed");
+    expect(entry.tone).toBe("orange");
+  });
+
+  it("merges fulfillment events into the same group once beluga_order_id links them", () => {
+    const careEvents: PersistedCareEvent[] = [
+      {
+        id: "evt-1",
+        milestone: "pharmacy-in-fulfillment",
+        title: "In fulfillment",
+        description: "Preparing.",
+        occurred_at: "2026-07-02T10:00:00Z",
+        order_id: "order-refill-1",
+      },
+    ];
+    const groups = buildGroupedCareTimeline(
+      "prescription_sent",
+      SUBMITTED_AT,
+      careEvents,
+      [makeRefill({ beluga_order_id: "order-refill-1" })],
+    );
+    // 1 initial + 1 refill group (merged, not split into two)
+    expect(groups).toHaveLength(2);
+    const refillGroup = groups[1];
+    const milestones = refillGroup.events.map((e) => e.milestone);
+    expect(milestones).toEqual(["refill-requested", "pharmacy-in-fulfillment"]);
+  });
+
+  it("still merges the earliest real order_id into initial when no refillRequests are passed (back-compat)", () => {
+    const careEvents: PersistedCareEvent[] = [
+      {
+        id: "evt-1",
+        milestone: "pharmacy-shipped",
+        title: "Shipped",
+        description: "Shipped.",
+        occurred_at: "2026-06-28T10:00:00Z",
+        order_id: "order-A",
+      },
+    ];
+    const groups = buildGroupedCareTimeline(
+      "prescription_sent",
+      SUBMITTED_AT,
+      careEvents,
+    );
+    expect(groups).toHaveLength(1);
+    expect(groups[0].events.map((e) => e.milestone)).toContain(
+      "pharmacy-shipped",
+    );
   });
 });

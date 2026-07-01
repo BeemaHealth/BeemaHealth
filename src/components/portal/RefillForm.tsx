@@ -39,7 +39,29 @@ const REFILL_STATUS_LABELS: Record<RefillRequest["status"], string> = {
   pending: "Pending review",
   approved: "Approved",
   denied: "Denied",
+  more_info_needed: "More info needed",
 };
+
+// Sub-label sourced from the raw Beluga response status, where it adds real
+// information beyond pending/approved/denied (e.g. distinguishing a transient
+// hold from a hard denial).
+const BELUGA_RESPONSE_SUB_LABELS: Record<string, string> = {
+  NEW_RX_SENT: "Sent to pharmacy",
+  NEEDS_CHECKIN: "Provider check-in required",
+  RX_TIME_OUT_OF_RANGE: "Outside refill window",
+  NO_MORE_REFILLS: "No refills remaining",
+  NO_VISIT: "No active visit on file",
+  not_configured: "Pharmacy integration pending",
+  connection_error: "Pharmacy system unreachable",
+};
+
+function refillSubLabel(item: RefillRequest): string | null {
+  if (item.status === "more_info_needed") {
+    return "Check your care team messages";
+  }
+  if (!item.beluga_response_status) return null;
+  return BELUGA_RESPONSE_SUB_LABELS[item.beluga_response_status] ?? null;
+}
 
 const ROUTE_LABELS: Record<string, string> = {
   injection: "Injection",
@@ -128,7 +150,11 @@ export function RefillForm({
       id: resp.id,
       user_id: "",
       side_effect_check_in_id: null,
-      status: "pending",
+      status: resp.status,
+      request_type: resp.request_type,
+      titration_direction:
+        resp.request_type === "titration" ? resp.titration_direction : null,
+      beluga_response_status: resp.beluga_status,
       created_at: resp.created_at,
     };
     setRefillRequests((items) => [partial, ...items].slice(0, 5));
@@ -355,19 +381,27 @@ export function RefillForm({
           tone="orders"
         >
           <ul className="divide-y divide-border/80 text-sm">
-            {refillRequests.map((item) => (
-              <li
-                key={item.id}
-                className="flex justify-between gap-3 py-2.5 first:pt-0 last:pb-0"
-              >
-                <span className="text-foreground">
-                  {REFILL_STATUS_LABELS[item.status] ?? item.status}
-                </span>
-                <span className="text-muted-foreground">
-                  {new Date(item.created_at).toLocaleDateString()}
-                </span>
-              </li>
-            ))}
+            {refillRequests.map((item) => {
+              const subLabel = refillSubLabel(item);
+              return (
+                <li
+                  key={item.id}
+                  className="flex justify-between gap-3 py-2.5 first:pt-0 last:pb-0"
+                >
+                  <span className="text-foreground">
+                    {REFILL_STATUS_LABELS[item.status] ?? item.status}
+                    {subLabel ? (
+                      <span className="ml-1.5 text-xs text-muted-foreground">
+                        · {subLabel}
+                      </span>
+                    ) : null}
+                  </span>
+                  <span className="shrink-0 text-muted-foreground">
+                    {new Date(item.created_at).toLocaleDateString()}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </AccountSectionCard>
       )}

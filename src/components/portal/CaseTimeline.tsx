@@ -12,7 +12,11 @@ import {
 } from "@/lib/dashboard-status";
 import { TIMELINE_TONE_STYLES } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
-import type { IntakeStatus, PersistedCareEvent } from "@/lib/types/mvp";
+import type {
+  IntakeStatus,
+  PersistedCareEvent,
+  RefillRequest,
+} from "@/lib/types/mvp";
 
 function formatTimelineDate(timestamp: string) {
   return new Date(timestamp).toLocaleString(undefined, {
@@ -104,17 +108,20 @@ export function CaseTimeline({
   intakeStatus,
   submittedAt,
   careEvents,
+  refillRequests = [],
   className,
 }: {
   intakeStatus: IntakeStatus;
   submittedAt: string | null;
   careEvents: PersistedCareEvent[];
+  refillRequests?: RefillRequest[];
   className?: string;
 }) {
   const groups = buildGroupedCareTimeline(
     intakeStatus,
     submittedAt,
     careEvents,
+    refillRequests,
   );
 
   const [openGroups, setOpenGroups] = useState<Set<string>>(() => {

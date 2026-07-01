@@ -218,8 +218,27 @@ class RefillRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RefillRequest
-        fields = ["id", "user_id", "side_effect_check_in_id", "status", "created_at"]
-        read_only_fields = ["id", "user_id", "status", "created_at"]
+        fields = [
+            "id",
+            "user_id",
+            "side_effect_check_in_id",
+            "status",
+            "request_type",
+            "titration_direction",
+            "beluga_response_status",
+            "beluga_order_id",
+            "created_at",
+        ]
+        read_only_fields = [
+            "id",
+            "user_id",
+            "status",
+            "request_type",
+            "titration_direction",
+            "beluga_response_status",
+            "beluga_order_id",
+            "created_at",
+        ]
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

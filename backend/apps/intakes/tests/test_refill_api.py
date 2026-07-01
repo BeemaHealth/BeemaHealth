@@ -1,4 +1,5 @@
 from datetime import timedelta
+from unittest.mock import patch
 
 from django.test import TestCase
 from django.urls import reverse
@@ -145,6 +146,7 @@ class SameDoseRefillViewTests(TestCase):
         self.assertEqual(response.data["request_type"], "same_dose")
         # Beluga is not configured in tests so status should be not_configured
         self.assertEqual(response.data["beluga_status"], "not_configured")
+        self.assertEqual(response.data["status"], "pending")
         self.assertIn("id", response.data)
         self.assertIn("message", response.data)
         self.assertIn("created_at", response.data)
@@ -152,6 +154,7 @@ class SameDoseRefillViewTests(TestCase):
         refill = RefillRequest.objects.get(id=response.data["id"])
         self.assertEqual(refill.request_type, "same_dose")
         self.assertEqual(refill.beluga_response_status, "not_configured")
+        self.assertEqual(refill.status, "pending")
 
     def test_same_dose_requires_active_prescription(self):
         """Returns 403 when patient has no active prescription."""
@@ -162,6 +165,49 @@ class SameDoseRefillViewTests(TestCase):
         anon = APIClient()
         response = anon.post(reverse("refill-same-dose"), {}, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_same_dose_new_rx_sent_marks_refill_approved(self):
+        """Beluga's synchronous NEW_RX_SENT response approves the refill immediately."""
+        self._setup_active_prescription()
+        with patch(
+            "apps.intakes.refill_views.beluga_client.trigger_same_dose_refill",
+            return_value={"status": "NEW_RX_SENT"},
+        ):
+            response = self.client.post(
+                reverse("refill-same-dose"), {}, format="json"
+            )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["status"], "approved")
+        refill = RefillRequest.objects.get(id=response.data["id"])
+        self.assertEqual(refill.status, "approved")
+
+    def test_same_dose_no_more_refills_marks_refill_denied(self):
+        """An unambiguous rejection status denies the refill immediately."""
+        self._setup_active_prescription()
+        with patch(
+            "apps.intakes.refill_views.beluga_client.trigger_same_dose_refill",
+            return_value={"status": "NO_MORE_REFILLS"},
+        ):
+            response = self.client.post(
+                reverse("refill-same-dose"), {}, format="json"
+            )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["status"], "denied")
+        refill = RefillRequest.objects.get(id=response.data["id"])
+        self.assertEqual(refill.status, "denied")
+
+    def test_same_dose_transient_hold_stays_pending(self):
+        """A transient hold status (e.g. outside refill window) stays pending."""
+        self._setup_active_prescription()
+        with patch(
+            "apps.intakes.refill_views.beluga_client.trigger_same_dose_refill",
+            return_value={"status": "RX_TIME_OUT_OF_RANGE"},
+        ):
+            response = self.client.post(
+                reverse("refill-same-dose"), {}, format="json"
+            )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["status"], "pending")
 
 
 # ---------------------------------------------------------------------------
@@ -218,10 +264,13 @@ class TitrationRefillViewTests(TestCase):
         self.assertEqual(response.data["titration_direction"], "increase")
         self.assertIn("beluga_status", response.data)
         self.assertIn("message", response.data)
+        # Titration stays pending until a doctor-review webhook resolves it.
+        self.assertEqual(response.data["status"], "pending")
 
         refill = RefillRequest.objects.get(id=response.data["id"])
         self.assertEqual(refill.request_type, "titration")
         self.assertEqual(refill.titration_direction, "increase")
+        self.assertEqual(refill.status, "pending")
         self.assertIsNotNone(refill.side_effect_check_in)
 
         check_in = refill.side_effect_check_in
