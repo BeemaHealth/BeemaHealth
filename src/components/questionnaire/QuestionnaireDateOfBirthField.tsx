@@ -103,7 +103,7 @@ function DobPartInput({
         {open && !readOnly && options.length > 0 ? (
           <ul
             ref={listRef}
-            className="absolute z-20 mt-1 max-h-44 w-full overflow-y-auto rounded-2xl border border-border bg-card py-1 shadow-md"
+            className="absolute z-20 mt-1 max-h-44 w-full overflow-y-auto overscroll-contain rounded-2xl border border-border bg-card py-1 shadow-md"
           >
             {options.map((opt) => (
               <li key={opt.value}>

@@ -174,6 +174,7 @@ class RefillRequest(models.Model):
     beluga_response_status = models.CharField(max_length=64, blank=True, default="not_sent")
     beluga_visit_id = models.CharField(max_length=128, blank=True, default="")
     beluga_master_id = models.CharField(max_length=128, blank=True, default="")
+    beluga_order_id = models.CharField(max_length=128, blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

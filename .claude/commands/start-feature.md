@@ -31,6 +31,12 @@ ls /Users/mattaertker/Documents/Github/ | grep -i Aretide
 git -C /Users/mattaertker/Documents/Github/Aretide ls-remote --heads origin | grep feature/
 ```
 
+**Check local branches too — not just remote:**
+```bash
+git -C /Users/mattaertker/Documents/Github/Aretide branch --list 'feature/*'
+```
+Local `main` can be ahead of `origin/main` (uncommitted work gets pushed in batches, not every session), so a branch or commits can exist locally with nothing on GitHub to show for it. Always check both.
+
 Show the user what exists. If any branch or clone looks related to the requested feature, ask:
 
 > "I found existing branch(es) that may be relevant: `feature/xxx`. Would you like to continue work there instead of starting a new branch?"
@@ -57,19 +63,21 @@ Ask the user to confirm or adjust the name. Do not create the branch until they 
 
 ## Step 3 — Clone into the workspace
 
-Clone into the `Github/` directory, naming the folder after the branch:
+Clone from the **local canonical checkout**, not GitHub — local `main` is the source of truth and may hold commits `origin/main` doesn't have yet. Cloning from `https://github.com/...` would silently drop that work. After cloning, repoint `origin` back to GitHub so pushes in Step 6 go to the right place:
 
 ```bash
-git clone https://github.com/Aretide/Aretide.git /Users/mattaertker/Documents/Github/Aretide-<approved-name>
+git clone /Users/mattaertker/Documents/Github/Aretide /Users/mattaertker/Documents/Github/Aretide-<approved-name>
 cd /Users/mattaertker/Documents/Github/Aretide-<approved-name>
 git checkout -b feature/<approved-name>
+git remote set-url origin https://github.com/Aretide/Aretide.git
 ```
 
 Example for `feature/refill-request-api`:
 ```bash
-git clone https://github.com/Aretide/Aretide.git /Users/mattaertker/Documents/Github/Aretide-refill-request-api
+git clone /Users/mattaertker/Documents/Github/Aretide /Users/mattaertker/Documents/Github/Aretide-refill-request-api
 cd /Users/mattaertker/Documents/Github/Aretide-refill-request-api
 git checkout -b feature/refill-request-api
+git remote set-url origin https://github.com/Aretide/Aretide.git
 ```
 
 Confirm to the user: **"Cloned into `Aretide-<name>/` and on branch `feature/<name>`. Ready to start work."**
