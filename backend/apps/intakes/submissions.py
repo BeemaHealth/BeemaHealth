@@ -3,9 +3,12 @@ from __future__ import annotations
 import json
 import logging
 
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Max
 from django.utils import timezone
+
+from apps.common.dev_logging import dev_log
 
 logger = logging.getLogger(__name__)
 
@@ -248,11 +251,40 @@ def create_intake_submission(
     intake.working_version = version
     intake.save(update_fields=["active_submission_version", "working_version", "updated_at"])
 
+    dev_log(
+        logger,
+        "[INTAKE SUBMISSION] Full frozen snapshot for user=%s submission_version=%s "
+        "intake=%s status_at_submit=%s:\n%s",
+        user.id,
+        version,
+        intake.id,
+        status_at_submit,
+        json.dumps(snapshot, indent=2, default=str),
+    )
+
     beluga_payload = snapshot.get("beluga_visit_payload")
     if beluga_payload:
+        destination = (
+            f"{getattr(settings, 'BELUGA_BASE_URL', '') or '<BELUGA_BASE_URL unset>'}/"
+            f"{getattr(settings, 'BELUGA_CREATION_PATH', '') or '<BELUGA_CREATION_PATH unset>'}"
+        )
+        # Structural metadata only (no PHI) — safe to log unconditionally so
+        # this line survives even outside DEBUG.
         logger.info(
-            "[INTAKE SUBMISSION] Beluga visit payload built for user=%s submission_version=%s "
-            "(would be sent to Beluga on provider approval):\n%s",
+            "[INTAKE SUBMISSION] Beluga visit payload frozen for user=%s submission_version=%s "
+            "ready=%s missing=%s. Outbound POST to Beluga is NOT WIRED YET (see "
+            "docs/features/beluga-integration.md) — payload only lives in "
+            "IntakeSubmission.snapshot until that lands. It SHOULD be sent to: %s",
+            user.id,
+            version,
+            beluga_payload.get("ready"),
+            beluga_payload.get("missing"),
+            destination,
+        )
+        dev_log(
+            logger,
+            "[BELUGA PAYLOAD] Frozen form_obj + per-question field audit (which question "
+            "answered which Beluga field) for user=%s submission_version=%s:\n%s",
             user.id,
             version,
             json.dumps(beluga_payload, indent=2, default=str),

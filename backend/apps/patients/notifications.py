@@ -8,6 +8,7 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 
 from apps.accounts.models import User
+from apps.common.dev_logging import dev_log
 from apps.common.sms import send_sms
 from apps.patients.email_templates import render_notification_email
 from apps.patients.models import PatientSettings
@@ -75,6 +76,10 @@ def build_notification_payload(
 def deliver_notification(payload: NotificationPayload) -> dict[str, bool]:
     sent = {"email": False, "sms": False}
     if not payload.category_enabled:
+        logger.info(
+            "[NOTIFICATION] skipped subject=%r — category disabled in patient settings",
+            payload.subject,
+        )
         return sent
 
     if payload.email_enabled:
@@ -98,6 +103,17 @@ def deliver_notification(payload: NotificationPayload) -> dict[str, bool]:
         send_sms(to_phone=payload.phone, body=payload.sms_body)
         sent["sms"] = True
 
+    logger.info(
+        "[NOTIFICATION] delivered subject=%r email_sent=%s sms_sent=%s "
+        "(email_enabled=%s sms_enabled=%s has_phone=%s)",
+        payload.subject, sent["email"], sent["sms"],
+        payload.email_enabled, payload.sms_enabled, bool(payload.phone),
+    )
+    dev_log(
+        logger,
+        "[NOTIFICATION] body preview — email:\n%s\nsms:\n%s",
+        payload.email_body, payload.sms_body,
+    )
     return sent
 
 
@@ -123,7 +139,7 @@ def _deliver_and_log_errors(payload: NotificationPayload) -> None:
     try:
         deliver_notification(payload)
     except Exception:
-        logger.exception("Failed to send patient notification")
+        logger.exception("[NOTIFICATION] failed to send subject=%r", payload.subject)
 
 
 def queue_patient_event(
@@ -141,6 +157,12 @@ def queue_patient_event(
         subject=subject,
         email_body=email_body,
         sms_body=sms_body,
+    )
+    logger.info(
+        "[NOTIFICATION] queued user=%s category=%s subject=%r category_enabled=%s "
+        "email_enabled=%s sms_enabled=%s",
+        user.id, category, subject, payload.category_enabled,
+        payload.email_enabled, payload.sms_enabled,
     )
     threading.Thread(
         target=_deliver_and_log_errors,

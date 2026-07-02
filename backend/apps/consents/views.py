@@ -1,3 +1,6 @@
+import json
+import logging
+
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
@@ -5,6 +8,7 @@ from rest_framework.views import APIView
 
 from apps.accounts.permissions import IsPatient
 from apps.audit.services import log_audit_event
+from apps.common.dev_logging import dev_log
 from apps.consents.models import ConsentRecord
 from apps.consents.serializers import ConsentRecordSerializer
 from apps.eligibility.models import EligibilityResponse
@@ -24,6 +28,8 @@ from apps.questionnaires.services import (
     responses_accept_legal_consent,
     version_requires_beluga_submit_validation,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class ConsentMeView(APIView):
@@ -122,6 +128,17 @@ class ConsentMeView(APIView):
                         "zip": identity.get("zip") or (profile.zip_code if profile else ""),
                     },
                     sex=sex or None,
+                )
+                dev_log(
+                    logger,
+                    "[BELUGA PAYLOAD] Consent-time validation for user=%s intake=%s — "
+                    "per-question Beluga field audit (ready=%s, %s/%s required filled):\n%s",
+                    request.user.id,
+                    intake.id,
+                    beluga_payload.get("ready"),
+                    beluga_payload.get("ready_count"),
+                    beluga_payload.get("required_count"),
+                    json.dumps(beluga_payload.get("fields"), indent=2, default=str),
                 )
                 if not beluga_payload_is_ready(beluga_payload):
                     missing = ", ".join(beluga_payload.get("missing") or []) or "required fields"

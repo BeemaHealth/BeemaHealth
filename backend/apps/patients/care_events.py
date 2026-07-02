@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import logging
+
 from django.utils import timezone
 
 from apps.accounts.models import User
 from apps.patients.models import PatientCareEvent
+
+logger = logging.getLogger(__name__)
 
 # Canonical milestone slugs shown on the patient case timeline (after prescription-sent).
 FULFILLMENT_MILESTONES = (
@@ -117,9 +121,22 @@ def record_care_event(
             idempotency_key=idempotency_key,
             defaults={"user": user, **defaults},
         )
+        logger.info(
+            "[CARE EVENT] %s user=%s milestone=%s source=%s source_event=%s idempotency_key=%s "
+            "id=%s",
+            "created" if created else "skipped(duplicate)",
+            user.id, milestone, source, source_event, idempotency_key,
+            event.id,
+        )
         return event if created else None
 
-    return PatientCareEvent.objects.create(user=user, **defaults)
+    event = PatientCareEvent.objects.create(user=user, **defaults)
+    logger.info(
+        "[CARE EVENT] created user=%s milestone=%s source=%s source_event=%s id=%s "
+        "(no idempotency_key — dedup not applied)",
+        user.id, milestone, source, source_event, event.id,
+    )
+    return event
 
 
 def record_beluga_fulfillment_event(

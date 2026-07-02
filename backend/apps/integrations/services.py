@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.utils.dateparse import parse_date
 
 from apps.accounts.models import User
+from apps.common.dev_logging import dev_log
 from apps.intakes.models import MedicalIntake, RefillRequest
 from apps.prescriptions.models import PatientPrescription
 from apps.prescriptions.services import deactivate_prescriptions
@@ -186,13 +187,27 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
     if refill is not None:
         user = refill.user
         review, _ = ProviderReview.objects.get_or_create(user=user)
+        logger.info(
+            "[BELUGA WEBHOOK] resolved masterId=%s -> titration RefillRequest id=%s user=%s",
+            event.master_id, refill.id, user.id,
+        )
     else:
         try:
             review = ProviderReview.objects.select_related("user").get(
                 external_review_id=event.master_id
             )
             user = review.user
+            logger.info(
+                "[BELUGA WEBHOOK] resolved masterId=%s -> ProviderReview id=%s user=%s "
+                "(initial consult or same-dose refill)",
+                event.master_id, review.id, user.id,
+            )
         except ProviderReview.DoesNotExist:
+            logger.warning(
+                "[BELUGA WEBHOOK] unresolved masterId=%s event=%s — no titration RefillRequest "
+                "or ProviderReview matched",
+                event.master_id, event.event,
+            )
             raise ValueError(
                 f"No visit found for masterId={event.master_id!r}"
             )
@@ -224,6 +239,12 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
             summary=summary,
         )
         result.update({"status": new_status, "decision": new_decision})
+        logger.info(
+            "[BELUGA WEBHOOK] CONSULT_CONCLUDED masterId=%s user=%s visitOutcome=%s -> "
+            "review.status=%s review.decision=%s refill_status=%s notification=queued(review)",
+            event.master_id, user.id, event.visit_outcome, new_status, new_decision,
+            (refill.status if refill is not None else "n/a"),
+        )
 
     elif event.event == "CONSULT_CANCELED":
         review.status = "not_approved"
@@ -240,6 +261,11 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
             summary="Your visit has been canceled. Please start a new visit if you would still like to be seen.",
         )
         result["status"] = "not_approved"
+        logger.info(
+            "[BELUGA WEBHOOK] CONSULT_CANCELED masterId=%s user=%s -> review.status=not_approved "
+            "refill_status=%s notification=queued(review)",
+            event.master_id, user.id, (refill.status if refill is not None else "n/a"),
+        )
 
     elif event.event == "RX_WRITTEN":
         review.status = "prescription_sent"
@@ -258,6 +284,16 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
             summary="Your provider has written your prescription and it's on its way to the pharmacy.",
         )
         result["prescriptions_created"] = len(rxs)
+        logger.info(
+            "[BELUGA WEBHOOK] RX_WRITTEN masterId=%s user=%s docName=%s prescriptions_created=%d "
+            "-> review.status=prescription_sent notification=queued(prescription)",
+            event.master_id, user.id, event.doc_name, len(rxs),
+        )
+        dev_log(
+            logger,
+            "[BELUGA WEBHOOK] RX_WRITTEN masterId=%s medsPrescribed=%s",
+            event.master_id, event.meds_prescribed,
+        )
 
     elif event.event in ("DOCTOR_CHAT", "CS_MESSAGE"):
         prefix = "[Provider]" if event.event == "DOCTOR_CHAT" else "[Support]"
@@ -276,6 +312,7 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
             # A doctor chat message on a titration (dose-change) visit still
             # awaiting a decision means the provider needs something from the
             # patient before the review can conclude.
+            flipped_to_more_info = False
             if (
                 event.event == "DOCTOR_CHAT"
                 and refill is not None
@@ -283,15 +320,27 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
             ):
                 refill.status = "more_info_needed"
                 refill.save(update_fields=["status"])
+                flipped_to_more_info = True
         result["appended_message"] = bool(msg)
+        logger.info(
+            "[BELUGA WEBHOOK] %s masterId=%s user=%s appended_message=%s "
+            "refill_flipped_to_more_info_needed=%s notification=queued(messages)",
+            event.event, event.master_id, user.id, bool(msg),
+            flipped_to_more_info if msg else "n/a",
+        )
+        dev_log(
+            logger,
+            "[BELUGA WEBHOOK] %s masterId=%s content=%r",
+            event.event, event.master_id, event.content,
+        )
 
     elif event.event in _SHIPPING_EVENT_SUMMARIES:
         logger.info(
-            "[BELUGA WEBHOOK] %s masterId=%s orderId=%s info=%s",
-            event.event, event.master_id, event.order_id, event.info,
+            "[BELUGA WEBHOOK] %s masterId=%s user=%s orderId=%s info=%s",
+            event.event, event.master_id, user.id, event.order_id, event.info,
         )
         _attach_order_id(user=user, refill=refill, master_id=event.master_id, order_id=event.order_id)
-        record_beluga_fulfillment_event(
+        care_event = record_beluga_fulfillment_event(
             user,
             event_type=event.event,
             master_id=event.master_id,
@@ -305,11 +354,16 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
             summary=_SHIPPING_EVENT_SUMMARIES[event.event],
         )
         result["logged"] = True
+        logger.info(
+            "[BELUGA WEBHOOK] %s masterId=%s -> care_event=%s notification=queued(shipping)",
+            event.event, event.master_id,
+            f"created id={care_event.id}" if care_event is not None else "skipped(duplicate)",
+        )
 
     elif event.event.startswith("LAB_ORDER_"):
         logger.info(
-            "[BELUGA WEBHOOK] %s masterId=%s orderId=%s",
-            event.event, event.master_id, event.order_id,
+            "[BELUGA WEBHOOK] %s masterId=%s user=%s orderId=%s",
+            event.event, event.master_id, user.id, event.order_id,
         )
         queue_status_notification(
             user,
@@ -320,9 +374,13 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
             ),
         )
         result["logged"] = True
+        logger.info(
+            "[BELUGA WEBHOOK] %s masterId=%s -> notification=queued(labs)",
+            event.event, event.master_id,
+        )
 
     elif event.event in ("BOOKING_CREATED", "BOOKING_RESCHEDULED", "BOOKING_CANCELLED", "NO_SHOW"):
-        logger.info("[BELUGA WEBHOOK] %s masterId=%s", event.event, event.master_id)
+        logger.info("[BELUGA WEBHOOK] %s masterId=%s user=%s", event.event, event.master_id, user.id)
         queue_status_notification(
             user,
             category="appointments",
@@ -332,9 +390,18 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
             ),
         )
         result["logged"] = True
+        logger.info(
+            "[BELUGA WEBHOOK] %s masterId=%s -> notification=queued(appointments)",
+            event.event, event.master_id,
+        )
 
     else:
-        logger.warning("[BELUGA WEBHOOK] Unknown event %s masterId=%s", event.event, event.master_id)
+        logger.warning(
+            "[BELUGA WEBHOOK] UNHANDLED event=%s masterId=%s user=%s — no state change, "
+            "no notification queued. Add a branch in apply_beluga_webhook() if this event "
+            "should do something.",
+            event.event, event.master_id, user.id,
+        )
         result["unhandled"] = True
 
     return result
@@ -367,6 +434,10 @@ def _attach_order_id(*, user: User, refill: RefillRequest | None, master_id: str
         if not refill.beluga_order_id:
             refill.beluga_order_id = order_id
             refill.save(update_fields=["beluga_order_id"])
+            logger.info(
+                "[BELUGA WEBHOOK] attached orderId=%s -> RefillRequest id=%s (titration, direct)",
+                order_id, refill.id,
+            )
         return
 
     candidate = (
@@ -379,6 +450,17 @@ def _attach_order_id(*, user: User, refill: RefillRequest | None, master_id: str
     if candidate is not None:
         candidate.beluga_order_id = order_id
         candidate.save(update_fields=["beluga_order_id"])
+        logger.info(
+            "[BELUGA WEBHOOK] attached orderId=%s -> RefillRequest id=%s "
+            "(most-recent-unattached match for masterId=%s)",
+            order_id, candidate.id, master_id,
+        )
+    else:
+        logger.info(
+            "[BELUGA WEBHOOK] orderId=%s on masterId=%s not attached to any RefillRequest "
+            "-> belongs to initial-consultation timeline group",
+            order_id, master_id,
+        )
 
 
 def _upsert_beluga_prescriptions(
@@ -414,6 +496,21 @@ def _upsert_beluga_prescriptions(
         rx.drug_category = infer_drug_category(rx.medication_name)
         rx.save(update_fields=["beluga_med_id", "drug_category"])
         created.append(rx)
+
+    dev_log(
+        logger,
+        "[BELUGA WEBHOOK] RX_WRITTEN -> created/updated PatientPrescription rows: %s",
+        [
+            {
+                "id": str(rx.id),
+                "medication_name": rx.medication_name,
+                "dosage": rx.dosage,
+                "beluga_med_id": rx.beluga_med_id,
+                "drug_category": rx.drug_category,
+            }
+            for rx in created
+        ],
+    )
     return created
 
 

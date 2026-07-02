@@ -199,17 +199,53 @@ if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Logging — never log PHI in request bodies
+#
+# Beluga flow trace (DEBUG only): the modules that build/send/receive Beluga
+# data write a full-fidelity trace — including PHI, via dev_log() — to
+# logs/beluga_flow.log so the whole initial-consult flow (payload build →
+# snapshot freeze → outbound POST attempts → inbound webhooks → notifications
+# → care timeline) can be replayed from one file. This handler is only wired
+# up when DEBUG=True (local dev / docker-compose sets DEBUG=true); it never
+# exists in staging/production, so PHI never reaches disk outside local dev.
+BELUGA_FLOW_LOGGERS = (
+    "apps.questionnaires.beluga_payload",
+    "apps.consents.views",
+    "apps.intakes.submissions",
+    "apps.integrations.adapters.beluga_client",
+    "apps.integrations.services",
+    "apps.integrations.views",
+    "apps.patients.notifications",
+    "apps.patients.care_events",
+    "apps.staff.views",
+)
+
+if DEBUG:
+    LOGS_DIR = BASE_DIR / "logs"
+    LOGS_DIR.mkdir(exist_ok=True)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
         "simple": {"format": "%(levelname)s %(name)s %(message)s"},
+        "beluga_flow": {"format": "[%(asctime)s] %(levelname)s %(name)s: %(message)s"},
     },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
+        **(
+            {
+                "beluga_flow_file": {
+                    "class": "logging.FileHandler",
+                    "filename": str(BASE_DIR / "logs" / "beluga_flow.log"),
+                    "formatter": "beluga_flow",
+                }
+            }
+            if DEBUG
+            else {}
+        ),
     },
     "root": {
         "handlers": ["console"],
@@ -217,6 +253,18 @@ LOGGING = {
     },
     "loggers": {
         "django.request": {"level": "WARNING", "propagate": True},
+        **(
+            {
+                name: {
+                    "handlers": ["console", "beluga_flow_file"],
+                    "level": "INFO",
+                    "propagate": False,
+                }
+                for name in BELUGA_FLOW_LOGGERS
+            }
+            if DEBUG
+            else {}
+        ),
     },
 }
 

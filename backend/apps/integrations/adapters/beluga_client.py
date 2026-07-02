@@ -120,16 +120,36 @@ def _headers() -> dict:
     }
 
 
+def _target_url(path: str) -> str:
+    """Best-effort destination URL for logging, even when half-configured."""
+    if not path:
+        return "<endpoint path not configured>"
+    base = _base_url()
+    if not base:
+        return f"<BELUGA_BASE_URL not configured>/{path.lstrip('/')}"
+    return f"{base}/{path.lstrip('/')}"
+
+
+def _log_would_send(request_id: str, path: str, body: dict) -> None:
+    """Log exactly once per outbound attempt where and what would be sent.
+
+    Called from the single point that actually decides the call can't go out
+    (either the caller's path-unset check or _post's not-configured check) so
+    a half-configured env doesn't produce two log lines for one attempt.
+    """
+    dev_log(
+        logger,
+        "[BELUGA OUTBOUND MOCK] would_send request_id=%s url=%s body=%s",
+        request_id,
+        _target_url(path),
+        _redact_beluga_body(body),
+    )
+
+
 def _post(path: str, body: dict, *, request_id: str) -> dict:
     """POST to Beluga, return parsed JSON response dict with 'status' key."""
     if not _is_configured():
-        dev_log(
-            logger,
-            "[BELUGA OUTBOUND MOCK] would_send request_id=%s path=%s body=%s",
-            request_id,
-            path or "<unset>",
-            _redact_beluga_body(body),
-        )
+        _log_would_send(request_id, path, body)
         logger.warning(
             "[BELUGA OUTBOUND] not_configured request_id=%s path=%s",
             request_id,
@@ -205,15 +225,8 @@ def trigger_same_dose_refill(
     if pharmacy_id:
         body["pharmacyId"] = pharmacy_id
 
-    dev_log(
-        logger,
-        "[BELUGA OUTBOUND MOCK] would_send request_id=%s path=%s body=%s",
-        request_id,
-        f"{_base_url()}/{path}" if path else "<unset>",
-        _redact_beluga_body(body),
-    )
-
     if not path:
+        _log_would_send(request_id, path, body)
         logger.warning(
             "[BELUGA OUTBOUND] refill_endpoint_not_set request_id=%s master_id=%.8s",
             request_id,
@@ -249,15 +262,8 @@ def submit_titration_checkin(
     if pharmacy_id:
         body["pharmacyId"] = pharmacy_id
 
-    dev_log(
-        logger,
-        "[BELUGA OUTBOUND MOCK] would_send request_id=%s path=%s body=%s",
-        request_id,
-        f"{_base_url()}/{path}" if path else "<unset>",
-        _redact_beluga_body(body),
-    )
-
     if not path or not visit_type:
+        _log_would_send(request_id, path, body)
         logger.warning(
             "[BELUGA OUTBOUND] checkin_not_configured request_id=%s master_id=%.8s",
             request_id,
@@ -286,16 +292,8 @@ def submit_photo(
         "images": [{"mime": "image/jpeg", "data": encoded}],
     }
 
-    dev_log(
-        logger,
-        "[BELUGA OUTBOUND MOCK] would_send request_id=%s path=%s body=%s bytes=%d",
-        request_id,
-        f"{_base_url()}/{path}" if path else "<unset>",
-        _redact_beluga_body(body),
-        len(jpeg_bytes),
-    )
-
     if not path:
+        _log_would_send(request_id, path, body)
         logger.warning(
             "[BELUGA OUTBOUND] photo_endpoint_not_set request_id=%s visit_id=%.8s",
             request_id,

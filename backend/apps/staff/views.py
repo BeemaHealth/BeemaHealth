@@ -1,9 +1,13 @@
+import logging
+
 from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.accounts.permissions import IsStaff
+
+logger = logging.getLogger(__name__)
 
 
 class StaffDevSettingsView(APIView):
@@ -147,12 +151,24 @@ class StaffDevBelugaMockView(APIView):
 
                 review.external_review_id = f"mock-consult-{uuid.uuid4()}"
                 review.save(update_fields=["external_review_id"])
+                logger.info(
+                    "[STAFF DEV] assigned mock masterId=%s to ProviderReview id=%s "
+                    "(patient=%s had no prior external_review_id)",
+                    review.external_review_id, review.id, patient.id,
+                )
             master_id = review.external_review_id
         elif not master_id:
             return Response(
                 {"detail": "master_id is required unless target_kind=initial_consult."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+        logger.info(
+            "[STAFF DEV] staff=%s firing mock Beluga webhook event=%s target_kind=%s "
+            "patient=%s masterId=%s orderId=%s",
+            request.user.id, event_type, target_kind or "refill", patient.id,
+            master_id, order_id or "<none>",
+        )
 
         # Order-id attachment (linking this event's orderId to the right
         # RefillRequest) is handled by apply_beluga_webhook itself, the same
