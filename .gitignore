@@ -24,6 +24,7 @@ bugs.txt
 
 # Vendor API docs (proprietary — local copy only; agents: see docs/LIFEFILE_MEDIVERA_API.md)
 docs/vendor/
+full_Beluga_API_documentation_examples.md
 
 # Python / Django
 backend/.venv/
