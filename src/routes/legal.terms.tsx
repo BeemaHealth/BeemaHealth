@@ -13,11 +13,11 @@ import { Section } from "@/components/site/primitives";
 export const Route = createFileRoute("/legal/terms")({
   head: () => ({
     meta: [
-      { title: "Terms of Service — Aretide" },
+      { title: "Terms of Service — Beema Health" },
       {
         name: "description",
         content:
-          "Terms governing your use of Aretide's weight-management telehealth platform.",
+          "Terms governing your use of Beema Health's weight-management telehealth platform.",
       },
     ],
     links: [{ rel: "canonical", href: "/legal/terms" }],

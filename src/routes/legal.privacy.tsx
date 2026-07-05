@@ -13,11 +13,11 @@ import { Section } from "@/components/site/primitives";
 export const Route = createFileRoute("/legal/privacy")({
   head: () => ({
     meta: [
-      { title: "Privacy Policy — Aretide" },
+      { title: "Privacy Policy — Beema Health" },
       {
         name: "description",
         content:
-          "How Aretide collects, uses, shares, and protects your personal and health information.",
+          "How Beema Health collects, uses, shares, and protects your personal and health information.",
       },
     ],
     links: [{ rel: "canonical", href: "/legal/privacy" }],

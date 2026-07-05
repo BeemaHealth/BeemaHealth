@@ -94,13 +94,16 @@ export function TreatmentLineup() {
         </div>
 
         <p className="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">
+          {/* Pricing disclaimer disabled along with per-treatment pricing above.
           <span className="font-medium">†</span>From pricing includes medication only, if prescribed.
-          Final cost depends on your plan, pharmacy, and provider decision. Treatment
-          availability depends on your intake, clinical eligibility, and a licensed
-          provider&apos;s independent decision. Brand-name medications are FDA-approved
-          for chronic weight management where indicated. Compounded semaglutide is not
-          FDA-approved and is only considered when legally available and clinically
-          appropriate. Completing intake does not guarantee a prescription.
+          */}
+          Final cost depends on your plan, pharmacy, and provider decision.
+          Treatment availability depends on your intake, clinical eligibility,
+          and a licensed provider&apos;s independent decision. Brand-name
+          medications are FDA-approved for chronic weight management where
+          indicated. Compounded semaglutide is not FDA-approved and is only
+          considered when legally available and clinically appropriate.
+          Completing intake does not guarantee a prescription.
         </p>
       </div>
     </section>
@@ -142,11 +145,15 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
 
       <div className="space-y-0.5 px-6 pb-8 pt-2">
         <h3 className="text-2xl font-bold text-foreground">{treatment.name}</h3>
+        {/* Pricing disabled — pricing model not finalized yet.
         <p className="text-sm font-semibold text-foreground/90">
           From {treatment.priceFrom}/mo
           <span className="font-normal text-foreground/70">†</span>
         </p>
-        <p className="text-sm font-medium text-foreground/80">{treatment.form}</p>
+        */}
+        <p className="text-sm font-medium text-foreground/80">
+          {treatment.form}
+        </p>
         <p className="text-sm text-foreground/65">{treatment.generic}</p>
       </div>
     </article>

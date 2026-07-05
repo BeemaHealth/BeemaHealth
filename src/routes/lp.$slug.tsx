@@ -101,7 +101,7 @@ function LandingPageRoute() {
       {/* Minimal nav — no distractions on a landing page */}
       <header className="border-b border-border bg-background px-6 py-4">
         <Link to="/" className="text-xl font-bold text-foreground">
-          Aretide
+          Beema <span className="text-accent-foreground">Health</span>
         </Link>
       </header>
 

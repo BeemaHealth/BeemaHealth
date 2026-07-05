@@ -83,49 +83,39 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "Aretide — Clear, human weight-loss care" },
+        { title: "Beema Health — Continuous care. Precision medicine." },
         {
           name: "description",
           content:
-            "Aretide is telehealth weight-management care with real clinicians, clear pricing, and reliable refill help.",
+            "Beema Health is telehealth weight-management care with licensed providers, transparent pricing, and continuous follow-through.",
         },
-        { name: "author", content: "Aretide" },
+        { name: "author", content: "Beema Health" },
         {
           property: "og:title",
-          content: "Aretide — Clear, human weight-loss care",
+          content: "Beema Health — Continuous care. Precision medicine.",
         },
         {
           property: "og:description",
           content:
-            "Real clinicians, clear pricing, and reliable refills. Telehealth weight care built around trust.",
+            "Licensed providers, transparent pricing, and lifelong follow-through. Telehealth weight care built the way nature works.",
         },
         { property: "og:type", content: "website" },
-        { property: "og:site_name", content: "Aretide" },
+        { property: "og:site_name", content: "Beema Health" },
         { name: "twitter:card", content: "summary" },
         {
           name: "twitter:title",
-          content: "Aretide — Clear, human weight-loss care",
-        },
-        {
-          name: "description",
-          content:
-            "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills.",
-        },
-        {
-          property: "og:description",
-          content:
-            "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills.",
+          content: "Beema Health — Continuous care. Precision medicine.",
         },
         {
           name: "twitter:description",
           content:
-            "Aretide offers telehealth weight management with real clinicians, clear pricing, and reliable refills.",
+            "Beema Health offers telehealth weight management with licensed providers, transparent pricing, and reliable refills.",
         },
-        { property: "og:image", content: "/aretide-logo.png" },
-        { name: "twitter:image", content: "/aretide-logo.png" },
+        { property: "og:image", content: "/beema-mark.png" },
+        { name: "twitter:image", content: "/beema-mark.png" },
       ],
       links: [
-        { rel: "icon", href: "/aretide-logo.png", type: "image/png" },
+        { rel: "icon", href: "/favicon-beema.png", type: "image/png" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         {
           rel: "preconnect",

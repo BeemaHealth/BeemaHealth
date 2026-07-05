@@ -14,16 +14,16 @@ import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Aretide" },
+      { title: "Contact — Beema Health" },
       {
         name: "description",
         content:
-          "Questions about eligibility, pricing, or your care? Reach the Aretide support team. For emergencies, call 911.",
+          "Questions about eligibility, pricing, or your care? Reach the Beema Health support team. For emergencies, call 911.",
       },
-      { property: "og:title", content: "Contact — Aretide" },
+      { property: "og:title", content: "Contact — Beema Health" },
       {
         property: "og:description",
-        content: "Get in touch with the Aretide care team.",
+        content: "Get in touch with the Beema Health care team.",
       },
     ],
     links: [{ rel: "canonical", href: "/contact" }],
@@ -66,7 +66,7 @@ function ContactPage() {
         <SectionHeading
           eyebrow="Contact"
           title="We're here to help"
-          description="Questions before you start? Reach out — or begin your eligibility check to see if Aretide may be a fit."
+          description="Questions before you start? Reach out — or begin your eligibility check to see if Beema Health may be a fit."
         />
       </Section>
 
@@ -74,7 +74,7 @@ function ContactPage() {
         <div className="grid gap-6 md:grid-cols-3">
           {CONTACT_OPTIONS.map((c) => (
             <SurfaceCard key={c.title} className="flex h-full flex-col">
-              <c.icon className="size-6 text-primary" />
+              <c.icon className="size-6 text-accent-foreground" />
               <h3 className="mt-4 text-lg font-semibold text-foreground">
                 {c.title}
               </h3>
@@ -90,7 +90,7 @@ function ContactPage() {
                   ) : (
                     <a
                       href={c.href}
-                      className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+                      className="text-sm font-medium text-accent-foreground underline-offset-4 hover:underline"
                     >
                       {c.action}
                     </a>
@@ -106,8 +106,8 @@ function ContactPage() {
             Medical emergencies
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Aretide does not provide emergency care. If you are experiencing a
-            medical emergency, call{" "}
+            Beema Health does not provide emergency care. If you are
+            experiencing a medical emergency, call{" "}
             <strong className="text-foreground">911</strong> or go to your
             nearest emergency room.
           </p>

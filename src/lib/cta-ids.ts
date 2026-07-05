@@ -13,6 +13,7 @@ export const CTA_IDS = {
   faq: "faq",
   safety: "safety",
   contact: "contact",
+  about: "about",
   landing_page: "landing_page",
   login_prompt: "login_prompt",
 } as const;

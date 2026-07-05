@@ -11,11 +11,11 @@ import { Section } from "@/components/site/primitives";
 export const Route = createFileRoute("/legal/intake-acknowledgments")({
   head: () => ({
     meta: [
-      { title: "Intake Acknowledgments — Aretide" },
+      { title: "Intake Acknowledgments — Beema Health" },
       {
         name: "description",
         content:
-          "Medication risks, telehealth care, emergency instructions, and other acknowledgments for Aretide weight-management intake.",
+          "Medication risks, telehealth care, emergency instructions, and other acknowledgments for Beema Health weight-management intake.",
       },
     ],
     links: [{ rel: "canonical", href: "/legal/intake-acknowledgments" }],

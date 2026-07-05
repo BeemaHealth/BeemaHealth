@@ -1,19 +1,21 @@
 import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/brand/Logo";
+import { InfinityMotif } from "@/components/site/primitives";
 import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 
 const COLUMNS = [
   {
-    title: "Product",
+    title: "Care",
     links: [
       { label: "Weight Loss", to: "/weight-loss" },
-      { label: "Pricing", to: "/pricing" },
       { label: "How it works", to: "/how-it-works" },
+      // { label: "Pricing", to: "/pricing" }, // disabled — pricing model not finalized yet
     ],
   },
   {
     title: "Trust",
     links: [
+      { label: "About Beema Health", to: "/about" },
       { label: "Safety & eligibility", to: "/safety" },
       { label: "FAQ", to: "/faq" },
       { label: "Contact", to: "/contact" },
@@ -31,18 +33,20 @@ const COLUMNS = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-muted/40">
-      <div className="veya-container py-14">
+    <footer className="bg-grad-ink relative overflow-hidden text-ink-foreground">
+      <InfinityMotif className="pointer-events-none absolute -right-16 -top-20 w-80 text-primary/10" />
+      <div className="veya-container relative py-16">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="max-w-sm">
-            <Logo />
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Weight-loss care with real clinicians, clear pricing, and refill
-              help that actually follows through.
+            <Logo className="h-10" tone="ink" />
+            <p className="mt-4 text-sm leading-relaxed text-ink-foreground/70">
+              Continuous care. Precision medicine. Weight-loss care with
+              licensed providers, transparent pricing, and follow-through built
+              for the long run.
             </p>
             <Link
               to={qualifyHref(CTA_IDS.footer)}
-              className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-soft transition-colors hover:bg-primary/90"
+              className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition-colors hover:bg-primary/90"
             >
               See if you qualify
             </Link>
@@ -50,7 +54,7 @@ export function SiteFooter() {
 
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <h4 className="text-sm font-semibold text-foreground">
+              <h4 className="text-sm font-semibold uppercase tracking-wide text-primary">
                 {col.title}
               </h4>
               <ul className="mt-4 space-y-3">
@@ -58,7 +62,7 @@ export function SiteFooter() {
                   <li key={l.to}>
                     <Link
                       to={l.to}
-                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      className="inline-flex min-h-11 items-center text-sm text-ink-foreground/70 transition-colors hover:text-ink-foreground md:min-h-0"
                     >
                       {l.label}
                     </Link>
@@ -69,12 +73,12 @@ export function SiteFooter() {
           ))}
         </div>
 
-        <div className="mt-12 space-y-4 border-t border-border pt-8 text-xs leading-relaxed text-muted-foreground">
+        <div className="mt-12 space-y-4 border-t border-ink-foreground/15 pt-8 text-xs leading-relaxed text-ink-foreground/60">
           <p>
-            <strong className="font-semibold text-foreground">
+            <strong className="font-semibold text-ink-foreground/90">
               Important:
             </strong>{" "}
-            Aretide is a telehealth platform that connects patients with
+            Beema Health is a telehealth platform that connects patients with
             independently licensed clinicians. Completing intake does not
             guarantee a prescription. Clinicians make all medical decisions
             independently.
@@ -84,7 +88,7 @@ export function SiteFooter() {
             does not provide emergency care.
           </p>
           <div className="pt-2">
-            <span>© {new Date().getFullYear()} Aretide Health, Inc.</span>
+            <span>© {new Date().getFullYear()} Beema Health</span>
           </div>
         </div>
       </div>

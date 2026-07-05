@@ -100,16 +100,17 @@ export type FaqItem = { q: string; a: string };
 export type FaqGroup = { category: string; items: FaqItem[] };
 
 export const FAQ_GROUPS: FaqGroup[] = [
+  /* Pricing category disabled — pricing model not finalized yet.
   {
     category: "Pricing",
     items: [
       {
-        q: "How much does Aretide cost?",
+        q: "How much does Beema Health cost?",
         a: "There is no platform membership or subscription fee. You pay for your prescribed medication — typically $199–$349/month cash-pay, or your insurance copay if covered. Shipping and labs, when applicable, are shown separately before any charge.",
       },
       {
         q: "Is there a monthly membership fee?",
-        a: "No. Aretide uses medication-only pricing. Your cost is the medication your clinician prescribes, if appropriate. We do not charge a separate monthly platform or care-coordination membership on top of that.",
+        a: "No. Beema Health uses medication-only pricing. Your cost is the medication your clinician prescribes, if appropriate. We do not charge a separate monthly platform or care-coordination membership on top of that.",
       },
       {
         q: "Are there hidden fees?",
@@ -117,11 +118,12 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
     ],
   },
+  */
   {
     category: "Insurance",
     items: [
       {
-        q: "Can Aretide help with insurance?",
+        q: "Can Beema Health help with insurance?",
         a: "Yes. Our insurance & pharmacy rescue desk helps you find the cheapest, fastest path — including prior-authorization support and appeals. We can't guarantee coverage, but we'll help you navigate it.",
       },
       {
@@ -138,8 +140,8 @@ export const FAQ_GROUPS: FaqGroup[] = [
         a: "No. A licensed clinician independently reviews your intake and decides whether treatment is appropriate. Completing intake does not guarantee a prescription.",
       },
       {
-        q: "Which medications does Aretide support?",
-        a: "Aretide supports clinically appropriate weight-management options. Your clinician will discuss what's right for you. We don't claim any product is equivalent to a specific branded medication.",
+        q: "Which medications does Beema Health support?",
+        a: "Beema Health supports clinically appropriate weight-management options. Your clinician will discuss what's right for you. We don't claim any product is equivalent to a specific branded medication.",
       },
     ],
   },
@@ -190,7 +192,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
         a: "Eligibility depends on your medical history and a clinician's independent evaluation. Some conditions are contraindications. We explain eligibility in plain language during intake.",
       },
       {
-        q: "Which states is Aretide available in?",
+        q: "Which states is Beema Health available in?",
         a: "We launch state by state. During intake we check your state instantly — if we're not live there yet, you can join the waitlist.",
       },
     ],

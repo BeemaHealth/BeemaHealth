@@ -13,11 +13,11 @@ import { Section } from "@/components/site/primitives";
 export const Route = createFileRoute("/legal/telehealth-consent")({
   head: () => ({
     meta: [
-      { title: "Telehealth Consent — Aretide" },
+      { title: "Telehealth Consent — Beema Health" },
       {
         name: "description",
         content:
-          "Informed consent for receiving weight-management care via telehealth through Aretide.",
+          "Informed consent for receiving weight-management care via telehealth through Beema Health.",
       },
     ],
     links: [{ rel: "canonical", href: "/legal/telehealth-consent" }],

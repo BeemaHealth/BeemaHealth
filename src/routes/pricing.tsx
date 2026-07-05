@@ -1,6 +1,20 @@
+import { createFileRoute, redirect } from "@tanstack/react-router";
+
+/**
+ * Pricing page disabled — the pricing model isn't finalized yet.
+ * Original implementation commented out below for easy restoration once
+ * real pricing is ready.
+ */
+export const Route = createFileRoute("/pricing")({
+  beforeLoad: () => {
+    throw redirect({ to: "/" });
+  },
+});
+
+/*
 import { useEffect, useMemo, useState } from "react";
 import { trackPageViewed } from "@/lib/analytics";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Check, X, ArrowRight, Info } from "lucide-react";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import {
@@ -13,25 +27,22 @@ import { Button } from "@/components/ui/button";
 import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/pricing")({
-  head: () => ({
-    meta: [
-      { title: "Pricing — Aretide" },
-      {
-        name: "description",
-        content:
-          "Medication-only pricing: pay for your prescription when clinically appropriate. Shipping and labs shown separately before any charge.",
-      },
-      { property: "og:title", content: "Pricing — Aretide" },
-      {
-        property: "og:description",
-        content:
-          "No platform membership fee. Estimate your monthly medication cost.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "/pricing" }],
-  }),
-  component: PricingPage,
+const headMeta = () => ({
+  meta: [
+    { title: "Pricing — Beema Health" },
+    {
+      name: "description",
+      content:
+        "Medication-only pricing: pay for your prescription when clinically appropriate. Shipping and labs shown separately before any charge.",
+    },
+    { property: "og:title", content: "Pricing — Beema Health" },
+    {
+      property: "og:description",
+      content:
+        "No platform membership fee. Estimate your monthly medication cost.",
+    },
+  ],
+  links: [{ rel: "canonical", href: "/pricing" }],
 });
 
 const MED_PATHS = [
@@ -102,7 +113,7 @@ function PricingPage() {
               Pay for your medication. That's it.
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Aretide does not charge a separate monthly membership or
+              Beema Health does not charge a separate monthly membership or
               subscription fee. Your cost is the medication your clinician
               prescribes, if appropriate.
             </p>
@@ -271,7 +282,11 @@ function PricingPage() {
             Start with a quick eligibility check — you'll see medication pricing
             before paying anything.
           </p>
-          <Button asChild size="xl" variant="soft" className="mt-6">
+          <Button
+            asChild
+            size="xl"
+            className="mt-6 bg-ink text-ink-foreground hover:bg-ink/85"
+          >
             <Link to={qualifyHref(CTA_IDS.pricing_footer)}>
               See if you qualify <ArrowRight />
             </Link>
@@ -281,3 +296,4 @@ function PricingPage() {
     </MarketingLayout>
   );
 }
+*/

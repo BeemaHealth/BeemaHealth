@@ -1,7 +1,9 @@
 /**
- * Aretide design tokens — single TypeScript source for semantic color usage.
+ * Beema Health design tokens — single TypeScript source for semantic color usage.
  *
  * Raw oklch values live in `src/styles.css` (`:root` and `.dark`).
+ * Brand system: white/near-white surfaces, near-black ink, honey-yellow
+ * primary, black `ink` contrast bands for marketing hero/footer/manifesto.
  * Components must reference semantic tokens from this file (or Tailwind
  * classes that map to those CSS variables) — never ad hoc hex/rgb/oklch.
  *
@@ -22,6 +24,7 @@ export const SEMANTIC_COLORS = [
   "success",
   "warning",
   "destructive",
+  "ink",
   "border",
   "card",
   "background",

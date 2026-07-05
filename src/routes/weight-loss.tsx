@@ -11,6 +11,8 @@ import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { TreatmentLineup } from "@/components/site/TreatmentLineup";
 import {
+  HexBadge,
+  Reveal,
   Section,
   SectionHeading,
   SurfaceCard,
@@ -21,13 +23,13 @@ import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 export const Route = createFileRoute("/weight-loss")({
   head: () => ({
     meta: [
-      { title: "Weight Loss — Aretide" },
+      { title: "Weight Loss — Beema Health" },
       {
         name: "description",
         content:
           "Medical weight-loss care with Zepbound, Wegovy, and affordable compounded options when clinically appropriate. Reviewed by licensed providers.",
       },
-      { property: "og:title", content: "Weight Loss — Aretide" },
+      { property: "og:title", content: "Weight Loss — Beema Health" },
       {
         property: "og:description",
         content:
@@ -48,7 +50,7 @@ const BENEFITS = [
   {
     icon: Syringe,
     title: "Proven GLP-1 pathways",
-    text: "Zepbound, Wegovy, and compounded semaglutide when clinically appropriate and legally available.",
+    text: "Compounded Semaglutide and Compounded Tirzepatide when clinically appropriate and legally available.",
   },
   {
     icon: Scale,
@@ -67,7 +69,7 @@ function WeightLossPage() {
         <SectionHeading
           eyebrow="Medical weight loss"
           title="GLP-1 care with real clinicians and clear next steps"
-          description="Aretide focuses on high-demand, evidence-based weight-loss treatments — reviewed by licensed providers, with pricing you can understand before you pay."
+          description="Beema Health focuses on high-demand, evidence-based weight-loss treatments — reviewed by licensed providers, with pricing you can understand before you pay."
         />
         <div className="mt-10 text-center">
           <Button asChild size="xl">
@@ -82,23 +84,25 @@ function WeightLossPage() {
 
       <Section>
         <SectionHeading
-          eyebrow="Why Aretide"
+          eyebrow="Why Beema Health"
           title="Weight-loss care that respects your time and trust"
           description="No hype, no fake urgency — just a calm path from eligibility to provider review."
         />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {BENEFITS.map((b) => (
-            <SurfaceCard key={b.title} className="flex h-full flex-col p-6">
-              <span className="grid size-10 place-items-center rounded-xl bg-primary-soft text-primary">
-                <b.icon className="size-5" />
-              </span>
-              <h3 className="mt-4 text-lg font-semibold text-foreground">
-                {b.title}
-              </h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
-                {b.text}
-              </p>
-            </SurfaceCard>
+          {BENEFITS.map((b, i) => (
+            <Reveal key={b.title} delay={i * 120} className="h-full">
+              <SurfaceCard className="flex h-full flex-col p-6">
+                <HexBadge className="size-11">
+                  <b.icon className="size-5" />
+                </HexBadge>
+                <h3 className="mt-4 text-lg font-semibold text-foreground">
+                  {b.title}
+                </h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
+                  {b.text}
+                </p>
+              </SurfaceCard>
+            </Reveal>
           ))}
         </div>
       </Section>
@@ -109,8 +113,8 @@ function WeightLossPage() {
             Who this is for
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Aretide is for adults seeking medical weight-loss support. During
-            your eligibility check we review BMI, health history, and
+            Beema Health is for adults seeking medical weight-loss support.
+            During your eligibility check we review BMI, health history, and
             contraindications. A licensed provider then decides whether
             treatment may be appropriate — prescribing is never guaranteed.
           </p>
@@ -118,13 +122,13 @@ function WeightLossPage() {
             {[
               "Adults 18 and older",
               "Adults with BMI and health history suitable for review",
-              "Patients seeking Zepbound, Wegovy, or cash-pay compounded options",
+              "Patients seeking cash-pay compounded Semaglutide or Tirzepatide options",
             ].map((t) => (
               <li
                 key={t}
                 className="flex items-start gap-2 text-sm text-foreground"
               >
-                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
+                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-foreground" />
                 {t}
               </li>
             ))}
@@ -133,9 +137,11 @@ function WeightLossPage() {
             <Button asChild variant="outline">
               <Link to="/safety">Safety & eligibility</Link>
             </Button>
+            {/* Pricing page disabled — pricing model not finalized yet.
             <Button asChild variant="outline">
               <Link to="/pricing">See pricing</Link>
             </Button>
+            */}
           </div>
         </SurfaceCard>
       </Section>

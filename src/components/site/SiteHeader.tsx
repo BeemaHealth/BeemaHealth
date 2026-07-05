@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, type ComponentProps } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,16 +10,59 @@ import {
 } from "@/components/ui/sheet";
 import { useAuth } from "@/context/AuthContext";
 import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { cn } from "@/lib/utils";
 
 type NavItem = { label: string; to: string };
 
 const NAV: NavItem[] = [
   { label: "Weight Loss", to: "/weight-loss" },
-  { label: "Pricing", to: "/pricing" },
+  { label: "How it works", to: "/how-it-works" },
+  // { label: "Pricing", to: "/pricing" }, // disabled — pricing model not finalized yet
   { label: "FAQ", to: "/faq" },
-  { label: "Safety", to: "/safety" },
+  { label: "About", to: "/about" },
   { label: "Contact", to: "/contact" },
 ];
+
+/** Pointy-top hexagon menu trigger — matches HexMotif / logo geometry. */
+function HexMenuButton({ className, ...props }: ComponentProps<"button">) {
+  return (
+    <button
+      type="button"
+      className={cn(
+        "relative flex size-11 shrink-0 items-center justify-center",
+        "transition-opacity hover:opacity-90 active:opacity-80",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        className,
+      )}
+      {...props}
+    >
+      <svg
+        viewBox="0 0 100 112"
+        className="absolute inset-0 size-full"
+        aria-hidden
+        focusable="false"
+      >
+        <path
+          d="M50 4L94 30V82L50 108L6 82V30L50 4Z"
+          className="fill-background stroke-primary"
+          strokeWidth="4"
+          strokeLinejoin="round"
+        />
+        {/* Menu bars — dark on white */}
+        <g
+          className="stroke-foreground"
+          fill="none"
+          strokeWidth="5.5"
+          strokeLinecap="round"
+        >
+          <line x1="32" y1="44" x2="68" y2="44" />
+          <line x1="32" y1="56" x2="68" y2="56" />
+          <line x1="32" y1="68" x2="68" y2="68" />
+        </g>
+      </svg>
+    </button>
+  );
+}
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -29,8 +71,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
       <div className="veya-container flex h-16 items-center justify-between gap-4">
-        <Link to="/" className="shrink-0" aria-label="Aretide home">
-          <Logo />
+        <Link to="/" className="shrink-0" aria-label="Beema Health home">
+          <Logo className="h-9" />
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
@@ -68,13 +110,11 @@ export function SiteHeader() {
         <div className="lg:hidden">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="Open menu">
-                <Menu />
-              </Button>
+              <HexMenuButton aria-label="Open menu" />
             </SheetTrigger>
             <SheetContent side="right" className="w-[88%] max-w-sm">
               <div className="mb-6 mt-2">
-                <Logo />
+                <Logo className="h-9" />
               </div>
               <div className="flex flex-col gap-1">
                 {NAV.map((item) => (

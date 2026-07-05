@@ -17,16 +17,19 @@ import { FAQ_GROUPS } from "@/lib/veya-data";
 export const Route = createFileRoute("/faq")({
   head: () => ({
     meta: [
-      { title: "FAQ — Aretide" },
+      { title: "FAQ — Beema Health" },
       {
         name: "description",
         content:
           "Answers about pricing, insurance, medication, shipping, refills, cancellation, eligibility, labs, and privacy.",
       },
-      { property: "og:title", content: "Frequently asked questions — Aretide" },
+      {
+        property: "og:title",
+        content: "Frequently asked questions — Beema Health",
+      },
       {
         property: "og:description",
-        content: "Clear answers about how Aretide works.",
+        content: "Clear answers about how Beema Health works.",
       },
     ],
     links: [{ rel: "canonical", href: "/faq" }],
