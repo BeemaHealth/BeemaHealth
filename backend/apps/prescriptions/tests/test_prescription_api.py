@@ -36,7 +36,7 @@ class PatientPrescriptionApiTests(TestCase):
             "frequency": "Once weekly",
             "route": "injection",
             "instructions": "Inject subcutaneously on the same day each week.",
-            "pharmacy_name": "Aretide Pharmacy Partner",
+            "pharmacy_name": "Beema Health Pharmacy Partner",
         }
         payload.update(overrides)
         return self.provider_client.post(

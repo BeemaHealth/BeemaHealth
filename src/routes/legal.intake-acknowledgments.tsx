@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { absoluteUrl } from "@/lib/seo";
 import {
   LegalDocument,
   LegalList,
@@ -18,7 +19,9 @@ export const Route = createFileRoute("/legal/intake-acknowledgments")({
           "Medication risks, telehealth care, emergency instructions, and other acknowledgments for Beema Health weight-management intake.",
       },
     ],
-    links: [{ rel: "canonical", href: "/legal/intake-acknowledgments" }],
+    links: [
+      { rel: "canonical", href: absoluteUrl("/legal/intake-acknowledgments") },
+    ],
   }),
   component: IntakeAcknowledgmentsPage,
 });
@@ -99,7 +102,7 @@ const SECTIONS: LegalSection[] = [
       <>
         <LegalP>
           <strong className="font-semibold text-foreground">
-            Aretide does not provide emergency care. Call 911 or go to the
+            Beema Health does not provide emergency care. Call 911 or go to the
             nearest emergency department if you experience:
           </strong>
         </LegalP>
@@ -171,7 +174,7 @@ const SECTIONS: LegalSection[] = [
     content: (
       <LegalP>
         You consent to receive care-related communications electronically
-        through Aretide, including email, SMS where you opt in, and in-app
+        through Beema Health, including email, SMS where you opt in, and in-app
         notifications about your intake, prescriptions, refills, and account.
       </LegalP>
     ),
@@ -182,7 +185,7 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          You consent to Aretide securely storing your intake answers, uploaded
+          You consent to Beema Health securely storing your intake answers, uploaded
           documents, and related health information so that licensed providers
           can review your case, coordinate pharmacy fulfillment, and support
           your ongoing care.

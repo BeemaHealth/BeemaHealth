@@ -11,7 +11,7 @@ export default defineConfig({
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
-    // Static export for GitHub Pages (aretide.com)
+    // Static export for GitHub Pages (beemahealth)
     spa: { enabled: true },
     prerender: {
       enabled: true,
@@ -28,7 +28,7 @@ export default defineConfig({
   vite: {
     base: "/",
     server: {
-      // Same-origin proxy so HttpOnly funnel cookies (aretide_funnel) persist in dev.
+      // Same-origin proxy so HttpOnly funnel cookies (beemahealth_funnel) persist in dev.
       // Frontend :8080 → /api/* → backend :8000/api/*
       proxy: {
         "/api": {

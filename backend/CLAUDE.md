@@ -53,7 +53,7 @@ Attack payloads: `backend/apps/common/validation/payloads.py` (keep in sync with
 
 ## External API — Beluga Health only (NO LifeFile outbound)
 
-**Aretide makes outbound calls to Beluga Health only. Do not wire LifeFile/MediVera to any live outbound flow.**
+**Beema Health makes outbound calls to Beluga Health only. Do not wire LifeFile/MediVera to any live outbound flow.**
 
 - Beluga handles both clinical review (provider network) and prescription fulfillment.
 - On provider approval a `POST` to the Beluga visit API is made using the frozen `beluga_visit_payload` from `IntakeSubmission.snapshot`.

@@ -3,12 +3,12 @@ flowchart TB
     P1["POST /api/refills/titration/"]
   end
 
-  subgraph aretide [Aretide backend]
+  subgraph aretide [Beema Health backend]
     A1[refill_views.py]
     WebhookRx["POST /api/webhooks/beluga/"]
   end
 
-  subgraph outbound [Aretide POST to Beluga]
+  subgraph outbound [Beema Health POST to Beluga]
     O1[POST CREATION_PATH new masterId]
     O2[POST PHOTO_ENDPOINT]
   end

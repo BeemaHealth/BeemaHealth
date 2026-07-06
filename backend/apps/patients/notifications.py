@@ -180,7 +180,7 @@ def _build_care_team_bodies(sender_label: str, message_preview: str) -> tuple[st
     if len(preview) > 240:
         preview = f"{preview[:237]}..."
 
-    subject = "New message from your Aretide care team"
+    subject = "New message from your Beema Health care team"
     email_body = f"You have a new message from {sender_label}.\n\n"
     if preview:
         email_body += f'"{preview}"\n\n'
@@ -189,7 +189,7 @@ def _build_care_team_bodies(sender_label: str, message_preview: str) -> tuple[st
         "You can change notification preferences in Account settings.\n"
     )
     sms_body = (
-        f"Aretide: New message from your care team ({sender_label}). "
+        f"Beema Health: New message from your care team ({sender_label}). "
         f"Sign in to view: {dashboard_url}"
     )
     return subject, email_body, sms_body
@@ -249,7 +249,7 @@ def queue_status_notification(
         f"View the details on your dashboard: {dashboard_url}\n\n"
         "You can change notification preferences in Account settings.\n",
     )
-    sms_body = f"Aretide: {summary} Sign in: {dashboard_url}"
+    sms_body = f"Beema Health: {summary} Sign in: {dashboard_url}"
     queue_patient_event(
         user,
         category=category,

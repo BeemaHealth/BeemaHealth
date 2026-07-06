@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
+import { SITE_URL } from "@/lib/seo";
 
-const BASE_URL = "";
+const BASE_URL = SITE_URL;
 
 interface SitemapEntry {
   path: string;
@@ -14,28 +15,38 @@ export const Route = createFileRoute("/sitemap.xml")({
     handlers: {
       GET: async () => {
         const entries: SitemapEntry[] = [
+          // Only live, indexable marketing pages. /switch, /insurance,
+          // /clinicians, and /learn currently redirect home — re-add them
+          // here when those pages return.
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/weight-loss", changefreq: "monthly", priority: "0.9" },
           { path: "/how-it-works", changefreq: "monthly", priority: "0.8" },
           { path: "/pricing", changefreq: "monthly", priority: "0.9" },
+          { path: "/about", changefreq: "monthly", priority: "0.7" },
           { path: "/contact", changefreq: "monthly", priority: "0.6" },
-          { path: "/switch", changefreq: "monthly", priority: "0.8" },
-          { path: "/insurance", changefreq: "monthly", priority: "0.7" },
           { path: "/safety", changefreq: "monthly", priority: "0.7" },
-          { path: "/clinicians", changefreq: "monthly", priority: "0.7" },
           { path: "/faq", changefreq: "monthly", priority: "0.6" },
-          { path: "/learn", changefreq: "weekly", priority: "0.6" },
           { path: "/legal/privacy", changefreq: "yearly", priority: "0.3" },
           { path: "/legal/terms", changefreq: "yearly", priority: "0.3" },
-          { path: "/legal/telehealth-consent", changefreq: "yearly", priority: "0.3" },
-          { path: "/legal/intake-acknowledgments", changefreq: "yearly", priority: "0.3" },
+          {
+            path: "/legal/telehealth-consent",
+            changefreq: "yearly",
+            priority: "0.3",
+          },
+          {
+            path: "/legal/intake-acknowledgments",
+            changefreq: "yearly",
+            priority: "0.3",
+          },
         ];
 
         const urls = entries.map((e) =>
           [
             `  <url>`,
             `    <loc>${BASE_URL}${e.path}</loc>`,
-            e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
+            e.changefreq
+              ? `    <changefreq>${e.changefreq}</changefreq>`
+              : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
             `  </url>`,
           ]

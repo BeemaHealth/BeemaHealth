@@ -1,11 +1,11 @@
-# Aretide
+# Beema Health
 
 Colorado-first telehealth medical weight-loss intake platform. This repo contains the **React frontend** (TanStack Start) and **Django REST (Representational State Transfer) API (Application Programming Interface) backend**.
 
 Use this file as the **documentation index** — for humans and AI agents. When looking something up, start here, then follow the link to the right doc.
 
 ---
-https://aretide.com/
+https://beemahealth.com/
 ## Glossary (acronyms used in this repo)
 
 | Acronym | Stands for |
@@ -87,10 +87,10 @@ Full local dev guide (identical setup on every machine): **[docs/LOCAL-DEV.md](d
 ## Repository layout
 
 ```
-Aretide/
+Beema Health/
 ├── README.md                 ← You are here (doc index)
 ├── AGENTS.md                 ← AI agent guide (production standards, tests, security)
-├── .env.dev                  ← Dev env (ARETIDE_ENV=dev)
+├── .env.dev                  ← Dev env (BEEMAHEALTH_ENV=dev)
 ├── src/                      ← React / TanStack Start frontend
 ├── backend/                  ← Django REST API
 │   ├── README.md             ← Backend setup, API list, HIPAA notes
@@ -99,7 +99,7 @@ Aretide/
 │   └── deploy/aws.md         ← AWS EC2 deployment outline
 ├── docs/
 │   ├── LOCAL-DEV.md                    ← Docker local dev (required for backend)
-│   ├── DEPLOY-FRONTEND.md              ← GitHub Pages + aretide.com deploy guide
+│   ├── DEPLOY-FRONTEND.md              ← GitHub Pages + beemahealth deploy guide
 │   ├── archived-marketing-pages.md   ← Removed marketing nav + pages (restore guide)
 │   └── archived-marketing/           ← Full source copies from pre-MVP site
 ├── scripts/
@@ -157,7 +157,7 @@ Aretide/
 
 | File | Contents |
 |------|----------|
-| [docs/DEPLOY-FRONTEND.md](docs/DEPLOY-FRONTEND.md) | **GitHub Pages + aretide.com** — one-time setup and `deploy-frontend-prod.sh` |
+| [docs/DEPLOY-FRONTEND.md](docs/DEPLOY-FRONTEND.md) | **GitHub Pages + beemahealth** — one-time setup and `deploy-frontend-prod.sh` |
 
 ---
 
@@ -177,7 +177,7 @@ npm install
 
 ### 2. Environment
 
-Create `.env.dev` at the repo root. Set `VITE_API_URL=/api` (Vite proxies to the API) and generate `FERNET_KEY`. The backend and frontend both use `ARETIDE_ENV` (default `dev`) to load `.env.dev`. A legacy root `.env` still works as a fallback overlay.
+Create `.env.dev` at the repo root. Set `VITE_API_URL=/api` (Vite proxies to the API) and generate `FERNET_KEY`. The backend and frontend both use `BEEMAHEALTH_ENV` (default `dev`) to load `.env.dev`. A legacy root `.env` still works as a fallback overlay.
 
 ### 3. Backend (Docker)
 
@@ -231,12 +231,12 @@ Production: **AWS EC2** ([backend/deploy/aws.md](backend/deploy/aws.md)) or **He
 
 ## Frontend ↔ API
 
-1. Create or edit `.env.dev` at the repo root (`ARETIDE_ENV=dev` is the default; a legacy root `.env` still works as a fallback overlay).
-2. Set `ARETIDE_ENV=dev` and `VITE_API_URL=/api` (Vite proxies API requests to `localhost:8000` in dev).
+1. Create or edit `.env.dev` at the repo root (`BEEMAHEALTH_ENV=dev` is the default; a legacy root `.env` still works as a fallback overlay).
+2. Set `BEEMAHEALTH_ENV=dev` and `VITE_API_URL=/api` (Vite proxies API requests to `localhost:8000` in dev).
 3. Generate `FERNET_KEY` for the backend.
 4. Restart both servers after changing env vars.
 
-**Environment switching:** `ARETIDE_ENV` selects `.env.dev`, `.env.staging`, or `.env.production`. Frontend npm scripts map to Vite modes: `npm run dev` → dev, `npm run build:staging` → staging, `npm run build` → production.
+**Environment switching:** `BEEMAHEALTH_ENV` selects `.env.dev`, `.env.staging`, or `.env.production`. Frontend npm scripts map to Vite modes: `npm run dev` → dev, `npm run build:staging` → staging, `npm run build` → production.
 
 PHI must **never** be stored in `localStorage` or `sessionStorage`. When `VITE_API_URL` is set, the frontend sends PHI to the API. A temporary `localStorage` fallback in the prototype will be removed.
 

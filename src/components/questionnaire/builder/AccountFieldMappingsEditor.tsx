@@ -47,7 +47,7 @@ export function AccountFieldMappingsEditor({
       <p className="text-[10px] text-muted-foreground">
         {backendReadOnly
           ? `Registration fields map to the Django register API automatically. ${vendorLabel} mappings can be adjusted per input.`
-          : `Map each account input to an Aretide backend target and a ${vendorLabel} field.`}
+          : `Map each account input to a Beema Health backend target and a ${vendorLabel} field.`}
       </p>
       <div
         className={`rounded-xl border border-border overflow-hidden ${

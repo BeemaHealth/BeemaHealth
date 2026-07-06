@@ -1,11 +1,11 @@
 ---
-description: Aretide production engineering standards — always apply
+description: Beema Health production engineering standards — always apply
 alwaysApply: true
 ---
 
-# Aretide core standards
+# Beema Health core standards
 
-**Company:** Aretide ([aretide.com](https://aretide.com/)) — HIPAA-aligned telehealth weight-loss intake.
+**Company:** Beema Health ([beemahealth](https://beemahealth/)) — HIPAA-aligned telehealth weight-loss intake.
 
 **Mindset:** Senior SWE + QA. Nothing is a prototype. Ship production-quality code, validation, and tests on every change.
 

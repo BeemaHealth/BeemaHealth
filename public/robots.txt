@@ -25,4 +25,4 @@ Disallow: /login
 Disallow: /verify-email
 Disallow: /lp/
 
-Sitemap: https://aretide.com/sitemap.xml
+Sitemap: https://beemahealth.com/sitemap.xml

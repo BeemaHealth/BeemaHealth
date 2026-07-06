@@ -7,8 +7,8 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = BASE_DIR.parent
 
-ARETIDE_ENV = os.environ.get("ARETIDE_ENV", "dev")
-_env_file = ROOT_DIR / f".env.{ARETIDE_ENV}"
+BEEMAHEALTH_ENV = os.environ.get("BEEMAHEALTH_ENV", "dev")
+_env_file = ROOT_DIR / f".env.{BEEMAHEALTH_ENV}"
 if _env_file.is_file():
     environ.Env.read_env(_env_file)
 environ.Env.read_env(ROOT_DIR / ".env")
@@ -91,7 +91,7 @@ DATABASES = {
     "default": dj_database_url.config(
         default=env(
             "DATABASE_URL",
-            default="postgres://aretide:aretide@localhost:5432/aretide",
+            default="postgres://beemahealth:beemahealth@localhost:5432/beemahealth",
         ),
         conn_max_age=600,
         ssl_require=env.bool("DATABASE_SSL_REQUIRE", default=False),
@@ -173,7 +173,7 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Aretide API",
+    "TITLE": "Beema Health API",
     "DESCRIPTION": "HIPAA-aligned telehealth intake API (prototype infrastructure in dev).",
     "VERSION": "1.0.0",
 }
@@ -283,7 +283,7 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
 EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@aretide.com")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@beemahealth")
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:8080")
 
 # SMS — console backend logs delivery in dev; set SMS_BACKEND=twilio with Twilio creds for production.

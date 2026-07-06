@@ -48,8 +48,8 @@ DATABASE_URL=postgres://<user>:<pass>@<rds-endpoint>:5432/aretide
 DATABASE_SSL_REQUIRE=true
 SECURE_SSL_REDIRECT=true
 # CORS = Cross-Origin Resource Sharing
-CORS_ALLOWED_ORIGINS=https://aretide.com,https://www.aretide.com
-AWS_STORAGE_BUCKET_NAME=aretide-phi-documents
+CORS_ALLOWED_ORIGINS=https://beemahealth.com,https://www.beemahealth
+AWS_STORAGE_BUCKET_NAME=beemahealth-phi-documents
 AWS_S3_REGION_NAME=us-west-2
 AWS_ACCESS_KEY_ID=<instance-role-preferred>
 AWS_SECRET_ACCESS_KEY=<instance-role-preferred>
@@ -61,17 +61,17 @@ Prefer an **IAM instance role** for S3 access instead of long-lived access keys.
 
 1. **Build** the production image locally or in CI:
    ```bash
-   docker build -t aretide-api:latest backend/
+   docker build -t beemahealth-api:latest backend/
    ```
 2. **Transfer** the image to EC2 (push to ECR and pull on EC2, or `docker save` / `docker load` for early setups)
 3. **Run migrations** once against RDS:
    ```bash
-   docker run --rm --env-file /path/to/prod.env aretide-api:latest python manage.py migrate --noinput
+   docker run --rm --env-file /path/to/prod.env beemahealth-api:latest python manage.py migrate --noinput
    ```
 4. **Start the API** on EC2 (systemd unit, `docker run -d`, or a small `docker-compose.prod.yml`):
    ```bash
-   docker run -d --name aretide-api --restart unless-stopped \
-     -p 8000:8000 --env-file /path/to/prod.env aretide-api:latest
+   docker run -d --name beemahealth-api --restart unless-stopped \
+     -p 8000:8000 --env-file /path/to/prod.env beemahealth-api:latest
    ```
 5. Configure **ALB** target group → EC2:8000 with **ACM** TLS certificate
 6. Point frontend `VITE_API_URL` to `https://api.your-domain.com/api`

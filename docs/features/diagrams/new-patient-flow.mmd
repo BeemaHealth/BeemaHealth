@@ -1,15 +1,15 @@
 flowchart TB
-  subgraph patient [Patient on Aretide]
+  subgraph patient [Patient on Beema Health]
     P1[Intake + consent]
   end
 
-  subgraph aretide [Aretide backend]
+  subgraph aretide [Beema Health backend]
     A1[Freeze payload + masterId]
     A2[Visit payment planned]
     WebhookRx["POST /api/webhooks/beluga/"]
   end
 
-  subgraph outbound [Aretide POST to Beluga]
+  subgraph outbound [Beema Health POST to Beluga]
     O1[POST CREATION_PATH]
     O2[POST PHOTO_ENDPOINT]
   end

@@ -33,7 +33,7 @@ def create_email_verification_token(user: User) -> str:
 def send_verification_email(user: User, token: str) -> None:
     frontend_url = getattr(settings, "FRONTEND_URL", "http://localhost:8080").rstrip("/")
     verify_url = f"{frontend_url}/verify-email?token={token}"
-    subject = "Verify your Aretide email"
+    subject = "Verify your Beema Health email"
     message = (
         f"Hi,\n\n"
         f"Please verify your email address to continue your medical intake:\n\n"
@@ -109,7 +109,7 @@ def create_login_mfa_challenge(user: User) -> tuple[LoginMfaChallenge, str]:
 
 
 def send_login_mfa_email(user: User, code: str) -> None:
-    subject = "Your Aretide sign-in code"
+    subject = "Your Beema Health sign-in code"
     message = (
         f"Hi {user.first_name or 'there'},\n\n"
         f"Your sign-in verification code is: {code}\n\n"

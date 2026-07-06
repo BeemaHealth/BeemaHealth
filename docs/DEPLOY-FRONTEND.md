@@ -1,4 +1,4 @@
-# Deploy frontend to GitHub Pages (aretide.com)
+# Deploy frontend to GitHub Pages (beemahealth)
 
 The marketing site and patient intake UI are **static files** built from `dist/client/` and published to the `gh-pages` branch.
 
@@ -17,7 +17,7 @@ After one-time setup below, deploy with:
 | Build | `npm run build` (Vite + TanStack Start static prerender) |
 | Output | `dist/client/` |
 | Host | GitHub Pages (`gh-pages` branch) |
-| Domain | `aretide.com` (custom domain) |
+| Domain | `beemahealth` (custom domain) |
 | Backend | **Not** included — API stays on separate hosting ([backend/HOSTING.md](../backend/HOSTING.md)) |
 
 ---
@@ -26,7 +26,7 @@ After one-time setup below, deploy with:
 
 ### 1. GitHub repository
 
-Repo: **https://github.com/Aretide/Aretide**
+Repo: **https://github.com/BeemaHealth/BeemaHealth**
 
 You need **push access** to `origin`.
 
@@ -40,7 +40,7 @@ chmod +x deploy-frontend-prod.sh
 Edit `.env.production` when your API is live:
 
 ```bash
-VITE_API_URL=https://api.aretide.com/api
+VITE_API_URL=https://api.beemahealth/api
 ```
 
 Until the backend is deployed, leave `VITE_API_URL` unset.
@@ -66,16 +66,16 @@ This builds the site and pushes `dist/client` to a new `gh-pages` branch on GitH
 ### 5. Custom domain on GitHub
 
 1. Still on **Settings → Pages**
-2. Under **Custom domain**, enter: `aretide.com`
+2. Under **Custom domain**, enter: `beemahealth`
 3. Click **Save**
 4. Wait for DNS check (can take up to 24 hours; often minutes)
 5. Enable **Enforce HTTPS** once the certificate is issued
 
 ### 6. DNS at your domain registrar
 
-Point `aretide.com` to GitHub Pages.
+Point `beemahealth` to GitHub Pages.
 
-**Apex domain (`aretide.com`)** — add **A** records:
+**Apex domain (`beemahealth`)** — add **A** records:
 
 | Type | Name | Value |
 |------|------|-------|
@@ -88,9 +88,9 @@ Point `aretide.com` to GitHub Pages.
 
 | Type | Name | Value |
 |------|------|-------|
-| CNAME | `www` | `aretide.github.io` |
+| CNAME | `www` | `beemahealth.github.io` |
 
-If you use `www`, add `www.aretide.com` as an additional custom domain in GitHub Pages settings and set your registrar to redirect apex → www (or vice versa).
+If you use `www`, add `www.beemahealth` as an additional custom domain in GitHub Pages settings and set your registrar to redirect apex → www (or vice versa).
 
 Official reference: [GitHub — Managing a custom domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)
 
@@ -111,8 +111,8 @@ The script:
 
 Verify:
 
-- https://aretide.com
-- https://aretide.github.io/Aretide/ (works before DNS propagates)
+- https://beemahealth
+- https://beemahealth.github.io/Aretide/ (works before DNS propagates)
 
 ---
 
@@ -124,7 +124,7 @@ Verify:
 | Site shows old content | Hard refresh; GitHub Pages can take 1–3 minutes |
 | Custom domain not verified | Check DNS A records; wait up to 24h |
 | `/admin/xyz` 404 | `404.html` SPA fallback should load the app — confirm it exists on `gh-pages` |
-| API calls fail in production | Set `VITE_API_URL` in `.env.production` and redeploy; configure backend CORS for `https://aretide.com` |
+| API calls fail in production | Set `VITE_API_URL` in `.env.production` and redeploy; configure backend CORS for `https://beemahealth` |
 
 ---
 

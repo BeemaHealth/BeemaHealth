@@ -66,8 +66,8 @@ export function LegalDocument({
 
       <p className="mt-12 border-t border-border pt-8 text-xs leading-relaxed text-muted-foreground">
         Questions about this document? Contact us at{" "}
-        <a href="mailto:support@aretide.com" className="text-foreground underline-offset-2 hover:underline">
-          support@aretide.com
+        <a href="mailto:support@beemahealth" className="text-foreground underline-offset-2 hover:underline">
+          support@beemahealth
         </a>
         . See also our{" "}
         <Link to="/legal/privacy" className="text-foreground underline-offset-2 hover:underline">

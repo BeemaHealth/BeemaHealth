@@ -1,4 +1,4 @@
-# Aretide Intake Schema v2
+# Beema Health Intake Schema v2
 
 > **Launch plan:** [Starting Point/launchPlan.md](../Starting%20Point/launchPlan.md) — Step 2 (qualification funnel), Step 4 (full medical intake), Step 5 (consent). Steps 9–10 cover turnkey partner and pharmacy integrations.
 
@@ -9,7 +9,7 @@ This schema reflects the updated GLP-1 telehealth flow:
 3. Full medical intake before clinician review
 4. Clinician review and prescription decision
 5. Pharmacy fulfillment via MediVera/Life File-style order API
-6. Pharmacy status/shipping updates back into Aretide
+6. Pharmacy status/shipping updates back into Beema Health
 
 The design keeps marketing qualification, clinical intake, provider review, prescription, and pharmacy fulfillment separate.
 

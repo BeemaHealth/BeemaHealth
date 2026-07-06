@@ -191,7 +191,7 @@ export const STEP_SUBTITLES: Partial<Record<QualifyStepId, string>> = {
   weight_loss_goal:
     "An estimate is fine. Your provider will review your full health picture.",
   state_consent: "Licensed telehealth is regulated differently in each state.",
-  dob: "Aretide care is available to adults 18 and older.",
+  dob: "Beema Health care is available to adults 18 and older.",
   body_metrics: "These figures help us calculate BMI for your clinical review.",
   sex_assigned_at_birth:
     "Certain treatments are prescribed differently based on biological sex.",
@@ -314,7 +314,7 @@ export function getQualifyStepError(
       if (!data.dob) return "";
       if (computeIsAdult(data.dob) === null) return "";
       if (computeIsAdult(data.dob) === false)
-        return "Aretide is available to adults 18 and older.";
+        return "Beema Health is available to adults 18 and older.";
       return null;
     case "body_metrics": {
       if (

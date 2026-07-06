@@ -16,7 +16,7 @@ export function FlowLayout({
     <div className="flex min-h-screen flex-col bg-grad-hero">
       <header className="border-b border-border/60 bg-background/80 backdrop-blur">
         <div className="veya-container flex h-16 items-center justify-between">
-          <Link to="/" aria-label="Aretide home">
+          <Link to="/" aria-label="Beema Health home">
             <Logo />
           </Link>
           <Link

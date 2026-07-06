@@ -1,12 +1,12 @@
-# CLAUDE.md — Aretide project guide for Claude Code
+# CLAUDE.md — Beema Health project guide for Claude Code
 
-Read `AGENTS.md` first — it is the authoritative engineering guide. This file contains Claude Code-specific context and mirrors the always-apply Cursor rule (`aretide-core.mdc`).
+Read `AGENTS.md` first — it is the authoritative engineering guide. This file contains Claude Code-specific context and mirrors the always-apply Cursor rule (`beemahealth-core.mdc`).
 
 ---
 
 ## Company & product
 
-**Aretide** ([aretide.com](https://aretide.com/)) — HIPAA-aligned telehealth medical weight-loss intake platform.
+**Beema Health** ([beemahealth](https://beemahealth/)) — HIPAA-aligned telehealth medical weight-loss intake platform.
 Patient funnel: qualification → account → medical intake → consent → provider review → prescription → patient dashboard.
 
 **Compliance:** HIPAA. All patient data is PHI — treat it as real and sensitive even in local dev.

@@ -10,13 +10,13 @@ That file is **gitignored** (proprietary Life File PDF content). It must be pres
 
 - Implementing or changing `backend/apps/pharmacy/` (LifeFile adapter, mapper, webhooks)
 - Configuring `LIFEFILE_*` environment variables
-- Mapping Aretide patient/prescription data to `POST /order` payloads
+- Mapping Beema Health patient/prescription data to `POST /order` payloads
 - Debugging webhook handling or smoke clinical flow
 
 ## Related docs
 
 | Doc | Purpose |
 |-----|---------|
-| [`docs/vendor/LIFEFILE_MEDIVERA_API.md`](vendor/LIFEFILE_MEDIVERA_API.md) | Full API spec + Aretide field mapping (gitignored) |
+| [`docs/vendor/LIFEFILE_MEDIVERA_API.md`](vendor/LIFEFILE_MEDIVERA_API.md) | Full API spec + Beema Health field mapping (gitignored) |
 | [`docs/MEDIVERA_ONBOARDING_QUESTIONS.md`](MEDIVERA_ONBOARDING_QUESTIONS.md) | Open onboarding questions for the vendor call |
 | [`docs/PROVIDER_API_TESTING.md`](PROVIDER_API_TESTING.md) | Physician network (OpenLoop) integration testing |

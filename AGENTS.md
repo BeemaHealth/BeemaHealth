@@ -1,4 +1,4 @@
-# AGENTS.md — Aretide engineering guide for AI agents
+# AGENTS.md — Beema Health engineering guide for AI agents
 
 **Read this file first** when working in this repository. You are acting as a **senior software engineer with deep QA, security, and regression-testing experience**. Every change must be production-grade.
 
@@ -8,7 +8,7 @@
 
 | | |
 |---|---|
-| **Company** | **Aretide** — [aretide.com](https://aretide.com/) |
+| **Company** | **Beema Health** — [beemahealth](https://beemahealth/) |
 | **Product** | Telehealth **medical weight-loss intake** platform |
 | **What we ship** | Patient qualification → account → medical intake → consent → provider review → perscription routed → patient dashboard updated with this information |
 | **Compliance context** | **HIPAA**-aligned design; handles **PHI** (Protected Health Information). Treat all patient data as real and sensitive — even in local dev. |
@@ -25,7 +25,7 @@
 ## Repository map
 
 ```
-Aretide/
+Beema Health/
 ├── AGENTS.md                    ← You are here
 ├── README.md                    ← Human + agent doc index
 ├── src/                         ← React 19 + TanStack Start frontend
@@ -259,7 +259,7 @@ Use shared fixtures — do not invent one-off strings:
 
 ## Design system & color scheme
 
-Aretide uses a **centralized semantic color system**. Do not invent one-off hex/rgb/oklch values or duplicate Tailwind class strings in components.
+Beema Health uses a **centralized semantic color system**. Do not invent one-off hex/rgb/oklch values or duplicate Tailwind class strings in components.
 
 ### Source-of-truth files
 
@@ -341,7 +341,7 @@ File-specific rules live in `.cursor/rules/`:
 
 | Rule | Scope |
 |------|-------|
-| `aretide-core.mdc` | Always apply — production mindset, test gate |
+| `beemahealth-core.mdc` | Always apply — production mindset, test gate |
 | `input-validation-tests.mdc` | Validators, serializers, test files |
 
 Rules are **summaries**. This file and `docs/INPUT_VALIDATION_TESTS.md` are authoritative.

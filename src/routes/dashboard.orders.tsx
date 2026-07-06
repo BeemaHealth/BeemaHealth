@@ -94,13 +94,13 @@ function DashboardOrdersPage() {
         </AccountSectionCard>
 
         <AccountSectionCard
-          title="Aretide fulfillment"
+          title="Beema Health fulfillment"
           description="How your medication is packaged and delivered"
           icon={Package}
           tone="contact"
         >
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Aretide coordinates fulfillment with licensed pharmacies.
+            Beema Health coordinates fulfillment with licensed pharmacies.
             You&apos;ll receive your medication in packaging with
             tracking details posted here when available.
           </p>

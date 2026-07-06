@@ -12,7 +12,7 @@ import {
 import { formatUsStateName, usStatesMatch } from "@/lib/us-states";
 
 const NOMINATIM_BASE = "https://nominatim.openstreetmap.org/search";
-const NOMINATIM_USER_AGENT = "AretideIntake/1.0 (https://aretide.com/)";
+const NOMINATIM_USER_AGENT = "BeemaHealthIntake/1.0 (https://beemahealth.com/)";
 
 const DELIVERABLE_NOMINATIM_TYPES = new Set([
   "house",

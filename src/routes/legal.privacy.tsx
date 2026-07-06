@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { absoluteUrl } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   LegalDocument,
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/legal/privacy")({
           "How Beema Health collects, uses, shares, and protects your personal and health information.",
       },
     ],
-    links: [{ rel: "canonical", href: "/legal/privacy" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/legal/privacy") }],
   }),
   component: PrivacyPage,
 });
@@ -32,7 +33,7 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          Aretide Health, Inc. (&quot;Aretide,&quot; &quot;we,&quot;
+          Beema Health, Inc. (&quot;Beema Health,&quot; &quot;we,&quot;
           &quot;us,&quot; or &quot;our&quot;) respects your privacy. This
           Privacy Policy explains how we collect, use, disclose, and protect
           personal information when you visit our websites, use our
@@ -120,7 +121,7 @@ const SECTIONS: LegalSection[] = [
             </>,
             <>
               Send service-related notices and, where permitted, marketing about
-              Aretide products and features.
+              Beema Health products and features.
             </>,
             <>
               Analyze usage to improve performance, accessibility, and patient
@@ -192,7 +193,7 @@ const SECTIONS: LegalSection[] = [
         <LegalP>
           Some information you provide may be PHI under the Health Insurance
           Portability and Accountability Act (&quot;HIPAA&quot;) when handled by
-          a covered entity or business associate. Aretide may act as a business
+          a covered entity or business associate. Beema Health may act as a business
           associate to certain Care Partners and, in that role, use and disclose
           PHI only as permitted by HIPAA and our agreements.
         </LegalP>
@@ -226,7 +227,7 @@ const SECTIONS: LegalSection[] = [
         <LegalP>
           Some data is required to provide the Service. If you delete required
           information or withdraw consent for essential processing, we may be
-          unable to continue your care through Aretide.
+          unable to continue your care through Beema Health.
         </LegalP>
       </>
     ),
@@ -275,10 +276,10 @@ const SECTIONS: LegalSection[] = [
         <LegalP>
           To exercise these rights, contact{" "}
           <a
-            href="mailto:support@aretide.com"
+            href="mailto:support@beemahealth"
             className="text-foreground underline-offset-2 hover:underline"
           >
-            support@aretide.com
+            support@beemahealth
           </a>
           . We will respond within the timeframe required by applicable law.
         </LegalP>
@@ -337,7 +338,7 @@ const SECTIONS: LegalSection[] = [
     title: "U.S. focus",
     content: (
       <LegalP>
-        Aretide is based in the United States and the Service is directed to
+        Beema Health is based in the United States and the Service is directed to
         U.S. residents. If you access the Service from outside the United
         States, you understand that information may be processed in the U.S. and
         other locations where we or our vendors operate.
@@ -363,14 +364,14 @@ const SECTIONS: LegalSection[] = [
       <LegalP>
         For privacy questions or requests, contact:
         <br />
-        Aretide Health, Inc.
+        Beema Health, Inc.
         <br />
         Email:{" "}
         <a
-          href="mailto:support@aretide.com"
+          href="mailto:support@beemahealth"
           className="text-foreground underline-offset-2 hover:underline"
         >
-          support@aretide.com
+          support@beemahealth
         </a>
       </LegalP>
     ),
@@ -387,7 +388,7 @@ function PrivacyPage() {
         <LegalDocument
           title="Privacy Policy"
           lastUpdated="June 18, 2026"
-          description="This Policy describes how Aretide handles personal and health information across our telehealth platform."
+          description="This Policy describes how Beema Health handles personal and health information across our telehealth platform."
           callout={
             <>
               <strong className="font-semibold text-foreground">

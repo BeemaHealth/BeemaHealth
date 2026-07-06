@@ -70,7 +70,7 @@ class EligibilitySerializer(serializers.ModelSerializer):
         )
         if is_adult is False:
             raise serializers.ValidationError(
-                "Aretide is currently only available for adults 18 and older."
+                "Beema Health is currently only available for adults 18 and older."
             )
 
         field_errors = validate_eligibility_fields(attrs, self.instance)

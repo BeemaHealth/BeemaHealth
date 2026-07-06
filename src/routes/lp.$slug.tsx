@@ -41,20 +41,20 @@ function LandingPageRoute() {
 
         trackingTimer = setTimeout(() => {
           if (cancelled) return;
-          console.log("[aretide] creating funnel session", { slug: data.slug });
+          console.log("[beemahealth] creating funnel session", { slug: data.slug });
           createFunnelSession(utms)
             .then(() => {
-              console.log("[aretide] funnel session ready");
+              console.log("[beemahealth] funnel session ready");
               if (!cancelled) {
                 trackPageViewed("landing_page", {
                   landing_page_slug: data.slug,
                 });
-                console.log("[aretide] page_viewed event fired");
+                console.log("[beemahealth] page_viewed event fired");
                 if (data.redirect_to_home) void navigate({ to: "/" });
               }
             })
             .catch((err: unknown) => {
-              console.error("[aretide] funnel session creation failed:", err);
+              console.error("[beemahealth] funnel session creation failed:", err);
               if (!cancelled) {
                 trackPageViewed("landing_page", {
                   landing_page_slug: data.slug,

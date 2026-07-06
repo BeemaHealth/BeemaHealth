@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { absoluteUrl } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ShieldCheck, AlertTriangle, Phone, ArrowRight } from "lucide-react";
 import { trackPageViewed } from "@/lib/analytics";
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/safety")({
           "Plain-language safety information for weight-management care.",
       },
     ],
-    links: [{ rel: "canonical", href: "/safety" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/safety") }],
   }),
   component: SafetyPage,
 });

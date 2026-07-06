@@ -9,7 +9,7 @@ from django.utils import timezone
 from apps.eligibility.models import EligibilityResponse, FunnelSession
 from apps.intakes.services import compute_age, compute_bmi
 
-COOKIE_NAME = "aretide_funnel"
+COOKIE_NAME = "beemahealth_funnel"
 COOKIE_MAX_AGE = 30 * 24 * 3600
 
 

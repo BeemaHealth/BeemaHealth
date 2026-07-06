@@ -1,4 +1,4 @@
-// Mock data for Aretide marketing + qualify funnel (no backend yet).
+// Mock data for Beema Health marketing + qualify funnel (no backend yet).
 
 export const LAUNCH_STATES = [
   "California",
@@ -69,7 +69,7 @@ export type PharmacyPartner = {
 
 export const PHARMACY_PARTNERS: PharmacyPartner[] = [
   {
-    name: "Aretide Mail Pharmacy",
+    name: "Beema Health Mail Pharmacy",
     detail:
       "Cold-chain shipping with tracking. 2–4 business days in launch states.",
     shipping: true,
@@ -119,19 +119,6 @@ export const FAQ_GROUPS: FaqGroup[] = [
     ],
   },
   */
-  {
-    category: "Insurance",
-    items: [
-      {
-        q: "Can Beema Health help with insurance?",
-        a: "Yes. Our insurance & pharmacy rescue desk helps you find the cheapest, fastest path — including prior-authorization support and appeals. We can't guarantee coverage, but we'll help you navigate it.",
-      },
-      {
-        q: "What if my insurance denies coverage?",
-        a: "We help you understand the denial, explore cash-pay alternatives, and — when appropriate — support an appeal. You're never left to figure it out alone.",
-      },
-    ],
-  },
   {
     category: "Medication",
     items: [
@@ -247,7 +234,7 @@ export const LEARN_POSTS: LearnPost[] = [
     title: "Prior authorizations, explained simply",
     category: "Prior authorizations",
     excerpt:
-      "What a PA is, why it happens, and how Aretide helps you through it.",
+      "What a PA is, why it happens, and how Beema Health helps you through it.",
     readMins: 5,
   },
   {

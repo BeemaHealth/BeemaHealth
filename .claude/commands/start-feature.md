@@ -4,13 +4,13 @@ Run this skill at the beginning of every new feature. It checks for existing wor
 
 ## Workspace layout
 
-All Aretide clones live as sibling directories under `/Users/mattaertker/Documents/Github/`:
+All Beema Health clones live as sibling directories under `/Users/mattaertker/Documents/Github/`:
 
 ```
 Github/
-  Aretide/                          ← canonical working copy (main)
-  Aretide-feature-consent-flow/     ← feature clone example
-  Aretide-feature-lp-ab-testing/    ← another feature clone
+  Beema Health/                          ← canonical working copy (main)
+  Beema Health-feature-consent-flow/     ← feature clone example
+  Beema Health-feature-lp-ab-testing/    ← another feature clone
 ```
 
 Open `/Users/mattaertker/Documents/Github/` as the workspace root in your IDE to see all clones at once.
@@ -23,17 +23,17 @@ Before creating anything, check whether relevant work already exists.
 
 **Check existing clone directories:**
 ```bash
-ls /Users/mattaertker/Documents/Github/ | grep -i Aretide
+ls /Users/mattaertker/Documents/Github/ | grep -i Beema Health
 ```
 
 **Check remote branches on GitHub:**
 ```bash
-git -C /Users/mattaertker/Documents/Github/Aretide ls-remote --heads origin | grep feature/
+git -C /Users/mattaertker/Documents/Github/Beema Health ls-remote --heads origin | grep feature/
 ```
 
 **Check local branches too — not just remote:**
 ```bash
-git -C /Users/mattaertker/Documents/Github/Aretide branch --list 'feature/*'
+git -C /Users/mattaertker/Documents/Github/Beema Health branch --list 'feature/*'
 ```
 Local `main` can be ahead of `origin/main` (uncommitted work gets pushed in batches, not every session), so a branch or commits can exist locally with nothing on GitHub to show for it. Always check both.
 
@@ -66,21 +66,21 @@ Ask the user to confirm or adjust the name. Do not create the branch until they 
 Clone from the **local canonical checkout**, not GitHub — local `main` is the source of truth and may hold commits `origin/main` doesn't have yet. Cloning from `https://github.com/...` would silently drop that work. After cloning, repoint `origin` back to GitHub so pushes in Step 6 go to the right place:
 
 ```bash
-git clone /Users/mattaertker/Documents/Github/Aretide /Users/mattaertker/Documents/Github/Aretide-<approved-name>
-cd /Users/mattaertker/Documents/Github/Aretide-<approved-name>
+git clone /Users/mattaertker/Documents/Github/Beema Health /Users/mattaertker/Documents/Github/Beema Health-<approved-name>
+cd /Users/mattaertker/Documents/Github/Beema Health-<approved-name>
 git checkout -b feature/<approved-name>
-git remote set-url origin https://github.com/Aretide/Aretide.git
+git remote set-url origin https://github.com/Beema Health/Beema Health.git
 ```
 
 Example for `feature/refill-request-api`:
 ```bash
-git clone /Users/mattaertker/Documents/Github/Aretide /Users/mattaertker/Documents/Github/Aretide-refill-request-api
-cd /Users/mattaertker/Documents/Github/Aretide-refill-request-api
+git clone /Users/mattaertker/Documents/Github/Beema Health /Users/mattaertker/Documents/Github/Beema Health-refill-request-api
+cd /Users/mattaertker/Documents/Github/Beema Health-refill-request-api
 git checkout -b feature/refill-request-api
-git remote set-url origin https://github.com/Aretide/Aretide.git
+git remote set-url origin https://github.com/Beema Health/Beema Health.git
 ```
 
-Confirm to the user: **"Cloned into `Aretide-<name>/` and on branch `feature/<name>`. Ready to start work."**
+Confirm to the user: **"Cloned into `Beema Health-<name>/` and on branch `feature/<name>`. Ready to start work."**
 
 ---
 
@@ -118,7 +118,7 @@ FILES=$(git diff --name-only --diff-filter=ACMR origin/main -- '*.ts' '*.tsx')
 
 When work is done and tests pass, say:
 
-> "All tests pass on branch `feature/<name>` in `Aretide-<name>/`. When you're ready to merge, push with:
+> "All tests pass on branch `feature/<name>` in `Beema Health-<name>/`. When you're ready to merge, push with:
 > ```
 > git push -u origin feature/<name>
 > ```

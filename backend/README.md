@@ -1,4 +1,4 @@
-# Aretide Backend (Django + DRF)
+# Beema Health Backend (Django + DRF)
 
 > **Documentation index:** [../README.md](../README.md) — links to all project docs (includes acronym glossary). **Launch plan:** [Starting Point/launchPlan.md](../Starting%20Point/launchPlan.md) — API endpoints below map to Steps 2–8; partner/pharmacy/Stripe integrations are Steps 9–11.
 
@@ -108,10 +108,10 @@ See [HOSTING.md](./HOSTING.md) for hosting go/no-go and:
 
 Each patient field has a single canonical table — no duplicate storage across `users`, `patient_profiles`, `eligibility_responses`, or intake JSON. See [DATABASE.md — Canonical field ownership](DATABASE.md#canonical-field-ownership-no-duplicates).
 
-Environment files live at the repo root as `.env.dev`, `.env.staging`, or `.env.production`. Set `ARETIDE_ENV` to pick which file the backend loads (`dev` is the default). `npm run dev` uses Vite mode `dev` (`.env.dev`); `npm run build:staging` uses `.env.staging`.
+Environment files live at the repo root as `.env.dev`, `.env.staging`, or `.env.production`. Set `BEEMAHEALTH_ENV` to pick which file the backend loads (`dev` is the default). `npm run dev` uses Vite mode `dev` (`.env.dev`); `npm run build:staging` uses `.env.staging`.
 
 ```
-ARETIDE_ENV=dev
+BEEMAHEALTH_ENV=dev
 VITE_API_URL=/api
 ```
 

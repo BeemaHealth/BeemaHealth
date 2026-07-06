@@ -73,7 +73,7 @@ export function TreatmentLineup() {
     <section className="bg-muted/40 py-16 md:py-20">
       <div className="veya-container">
         <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-          Provider-reviewed weight-loss options
+          GLP-1 weight-loss options
         </h2>
 
         <div className="relative mt-10">

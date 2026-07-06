@@ -18,7 +18,7 @@ export const Route = createFileRoute("/faq")({
       {
         name: "description",
         content:
-          "Answers about pricing, insurance, medication, shipping, refills, cancellation, eligibility, labs, and privacy.",
+          "Answers about pricing, medication, shipping, refills, cancellation, eligibility, labs, and privacy.",
       },
       { property: "og:title", content: "Frequently asked questions — Aretide" },
       { property: "og:description", content: "Clear answers about how Aretide works." },
@@ -51,7 +51,7 @@ function FaqPage() {
         <SectionHeading
           eyebrow="FAQ"
           title="Frequently asked questions"
-          description="Pricing, insurance, medication, shipping, refills, cancellation, eligibility, labs, and privacy — all in one place."
+          description="Pricing, medication, shipping, refills, cancellation, eligibility, labs, and privacy — all in one place."
         />
       </Section>
 

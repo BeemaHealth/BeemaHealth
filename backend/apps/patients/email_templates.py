@@ -32,7 +32,7 @@ _TEMPLATE = """\
 <!-- Brand header -->
 <tr>
   <td style="background-color:{brand};padding:20px 32px;border-radius:12px 12px 0 0">
-    <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.3px">Aretide</p>
+    <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.3px">Beema Health</p>
   </td>
 </tr>
 
@@ -71,7 +71,7 @@ _TEMPLATE = """\
 """
 
 _FOOTER_DEFAULT = (
-    "You are receiving this email because you have an Aretide account. "
+    "You are receiving this email because you have an Beema Health account. "
     "Notification preferences can be changed in Account settings on your dashboard."
 )
 

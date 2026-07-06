@@ -1,4 +1,4 @@
-const SESSION_KEY = "aretide_pending_utms";
+const SESSION_KEY = "beemahealth_pending_utms";
 
 export type UtmParams = {
   utm_source: string;

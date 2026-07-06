@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { absoluteUrl } from "@/lib/seo";
 import { trackPageViewed } from "@/lib/analytics";
 import { createFunnelSession } from "@/lib/api/client";
 import { getPendingUtms, clearPendingUtms } from "@/lib/utm";
@@ -40,6 +41,7 @@ export const Route = createFileRoute("/")({
           "Medical weight-loss care reviewed by a licensed provider. Secure intake for Zepbound, Wegovy, and affordable alternatives when appropriate.",
       },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/") }],
   }),
   component: HomePage,
 });
@@ -98,7 +100,7 @@ function HomePage() {
           trackPageViewed("home");
         })
         .catch((err: unknown) => {
-          console.error("[aretide] home session failed:", err);
+          console.error("[beemahealth] home session failed:", err);
           trackPageViewed("home");
         });
     }, 0);
@@ -114,12 +116,12 @@ function HomePage() {
         <FloatingHexagons className="z-0" />
         <div className="veya-container relative z-10 grid items-center gap-12 py-16 md:py-24 lg:grid-cols-2">
           <div>
-            <Eyebrow>Telehealth weight-loss care</Eyebrow>
+            <Eyebrow>GLP-1 weight-loss care</Eyebrow>
             <h1 className="mt-5 text-balance text-4xl font-bold leading-[1.05] text-foreground md:text-6xl">
               Weight-loss care that's{" "}
-              <span className="text-grad-brand">human.</span> and built for the{" "}
+              <span className="text-grad-brand">human</span> and built for the{" "}
               <span className="text-grad-brand">long run.</span>
-            </h1>
+            </h1> 
             <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
               Licensed providers, pricing you see before you pay, and
               follow-through that doesn't stop at the first prescription.
@@ -243,7 +245,7 @@ function HomePage() {
               <p className="mt-4 text-pretty leading-relaxed text-ink-foreground/75">
                 Our bee stands for precision, trust, and consistency. Its
                 infinity-shaped wings are a reminder that health isn't a finish
-                line — it's a lifelong journey we stay on with you.
+                line, but a lifelong journey we stay on with you.
               </p>
               <Button
                 asChild

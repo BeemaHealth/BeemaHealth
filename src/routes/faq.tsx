@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { absoluteUrl } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { trackPageViewed } from "@/lib/analytics";
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/faq")({
       {
         name: "description",
         content:
-          "Answers about pricing, insurance, medication, shipping, refills, cancellation, eligibility, labs, and privacy.",
+          "Answers about pricing, medication, shipping, refills, cancellation, eligibility, labs, and privacy.",
       },
       {
         property: "og:title",
@@ -32,7 +33,7 @@ export const Route = createFileRoute("/faq")({
         content: "Clear answers about how Beema Health works.",
       },
     ],
-    links: [{ rel: "canonical", href: "/faq" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/faq") }],
     scripts: [
       {
         type: "application/ld+json",
@@ -63,7 +64,7 @@ function FaqPage() {
         <SectionHeading
           eyebrow="FAQ"
           title="Frequently asked questions"
-          description="Pricing, insurance, medication, shipping, refills, cancellation, eligibility, labs, and privacy — all in one place."
+          description="Pricing, medication, shipping, refills, cancellation, eligibility, labs, and privacy — all in one place."
         />
       </Section>
 

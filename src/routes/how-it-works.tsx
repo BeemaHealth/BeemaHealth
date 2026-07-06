@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { absoluteUrl } from "@/lib/seo";
 import {
   ArrowRight,
   ClipboardCheck,
@@ -34,7 +35,7 @@ export const Route = createFileRoute("/how-it-works")({
           "A minimal path from eligibility to provider review. No membership fee, no prescription guarantees.",
       },
     ],
-    links: [{ rel: "canonical", href: "/how-it-works" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/how-it-works") }],
   }),
   component: HowItWorksPage,
 });

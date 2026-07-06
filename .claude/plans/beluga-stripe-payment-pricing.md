@@ -1,4 +1,4 @@
-# Aretide — Beluga + Stripe Payment/Pricing: Engineering Plan
+# Beema Health — Beluga + Stripe Payment/Pricing: Engineering Plan
 
 > **⚠ This document is an engineering plan, not legal advice.** The permissible fee structure for telehealth platforms — including what may be charged for clinical consultations, medication, and platform services — varies by state and is governed by healthcare regulations that differ from ordinary commerce. All fee amounts, fee types, and patient disclosures described here are **placeholders pending review and approval by qualified healthcare counsel before any production implementation.** Do not implement the pricing, fee collection, or patient-facing copy in Sections 2, 4, and 6b until legal has signed off.
 
@@ -9,7 +9,7 @@
 The integration adds revenue infrastructure across two moments: (1) charges related to the clinical visit (constrained by telehealth law), and (2) charges related to medication and platform services (structure TBD by legal). The architectural work spans Stripe, Beluga, and a new `payments` Django app.
 
 **What Beluga confirmed (Joshua's response):**
-- Telehealth regulations prohibit profiting from a clinical consultation charge — the consult fee must be a pass-through of Beluga's cost, with any Aretide revenue structured as a separate service/platform fee if permitted by counsel.
+- Telehealth regulations prohibit profiting from a clinical consultation charge — the consult fee must be a pass-through of Beluga's cost, with any Beema Health revenue structured as a separate service/platform fee if permitted by counsel.
 - Medication pricing is similarly constrained; many compliant platforms use a **subscription/membership model** to capture platform revenue rather than markup on individual medication charges.
 - Order cancellation before pharmacy fulfillment is currently possible, but only **via Slack** — there is no Beluga API for hold/release. Slack cancellation is an operational fallback, not a reliable automated gate.
 - Disqualification at the doctor level is rare: patients who would not qualify are typically screened out before the visit is sent to Beluga, so the practical risk of a completed visit that results in no prescription is low.
@@ -17,7 +17,7 @@ The integration adds revenue infrastructure across two moments: (1) charges rela
 **Consequences for the plan:**
 1. `strict` payment gating (hold pharmacy fulfillment until payment clears) is **not currently achievable** for Beluga-routed prescriptions via API. The realistic mode for Beluga-routed prescriptions is `advisory` with `manual_cancel_before_fulfillment` as the operational fallback.
 2. Fee framing throughout is changed from "margin" to "service fee / platform fee" pending legal guidance on what is permissible.
-3. A **subscription architecture** is added as the primary revenue model under evaluation: monthly Aretide membership covers platform access, care coordination, refill management, and support. Medication and consult costs are charged as pass-throughs or offset against the subscription at legal's direction.
+3. A **subscription architecture** is added as the primary revenue model under evaluation: monthly Beema Health membership covers platform access, care coordination, refill management, and support. Medication and consult costs are charged as pass-throughs or offset against the subscription at legal's direction.
 4. Legal/compliance review is added as a required Phase 0 gate — no pricing logic or fee collection is implemented until the permissible fee model is confirmed.
 
 Stripe is net-new to the codebase. No payment models, SDK dependencies, or routes exist today.
@@ -31,12 +31,12 @@ Stripe is net-new to the codebase. No payment models, SDK dependencies, or route
 **Block all pricing implementation on this phase.** Two parallel workstreams:
 
 **0A — Legal/compliance review (required before any fee collection):**
-- What clinical consultation fees may Aretide charge patients beyond Beluga pass-through cost?
-- May Aretide add a service/platform fee on top of medication vendor cost, or must medication be pure pass-through?
+- What clinical consultation fees may Beema Health charge patients beyond Beluga pass-through cost?
+- May Beema Health add a service/platform fee on top of medication vendor cost, or must medication be pure pass-through?
 - Is a subscription/membership model the preferred compliance path?
 - What patient disclosures are required, by what states, at what point in the funnel?
 - What copy is required on estimated medication pricing ("only charged if prescribed")?
-- May Aretide charge a visit fee for a consult that results in no prescription?
+- May Beema Health charge a visit fee for a consult that results in no prescription?
 
 **0B — Beluga operational questions:**
 - Confirm exact window between `RX_WRITTEN` and pharmacy fulfillment (how much time does Slack cancellation realistically allow?).
@@ -107,7 +107,7 @@ Intake checkout UI, cost estimate display, payment-failed dashboard state, subsc
 
 ### Phase 7 — Hardening & Own-Pharmacy Gate (future)
 
-If Aretide builds a direct pharmacy relationship (not Beluga-routed), implement hard `strict` payment gate (do not create pharmacy order until charge succeeds). Idempotency audit, catalog sync automation, Beluga API cancellation endpoint (if they add it).
+If Beema Health builds a direct pharmacy relationship (not Beluga-routed), implement hard `strict` payment gate (do not create pharmacy order until charge succeeds). Idempotency audit, catalog sync automation, Beluga API cancellation endpoint (if they add it).
 
 ---
 
@@ -133,7 +133,7 @@ One `Medication` (e.g. Semaglutide) maps to many `BelugaMedicationSku` rows (0.2
 | `concentration` | CharField(256) | e.g. "Semaglutide + Glycine 4mg/0.5mg/mL × 1ml" |
 | `supply_days` | PositiveSmallIntegerField | `30` or `90` |
 | `program_type` | CharField(32) | `autorx`, `standard`, `refill` |
-| `vendor_drug_cost_cents` | IntegerField | Aretide's cost to Beluga |
+| `vendor_drug_cost_cents` | IntegerField | Beema Health's cost to Beluga |
 | `vendor_shipping_cost_cents` | IntegerField | |
 | `vendor_dispense_fee_cents` | IntegerField | Branded / Partner 2 items |
 | `vendor_facilitation_fee_cents` | IntegerField | Per-shipment facilitation at current tier |
@@ -159,7 +159,7 @@ Configures per-drug and default service fee and fulfillment gate behavior. Edita
 | `category` | CharField(32) | Nullable; for `category_override` |
 | `sku` | FK → BelugaMedicationSku | Nullable; for `item_override` |
 | `fee_type` | CharField(32) | `service_fee_percent`, `subscription_allocation`, `pass_through_only` — set after legal review |
-| `service_fee_pct` | DecimalField(5,2) | Aretide's service fee as % of vendor total. **Requires legal approval before use.** |
+| `service_fee_pct` | DecimalField(5,2) | Beema Health's service fee as % of vendor total. **Requires legal approval before use.** |
 | `service_fee_floor_cents` | IntegerField | Minimum service fee in cents. **Requires legal approval before use.** |
 | `stripe_fee_pass_through` | BooleanField | Whether Stripe ~2.9% + 30¢ is added to patient price |
 | `allowed_supply_days` | ArrayField(int) | `[30]`, `[90]`, `[30, 90]` |
@@ -184,9 +184,9 @@ Doctor visit fee by visit type. **Per Joshua's response: the visit charge to pat
 |---|---|---|
 | `id` | UUID PK | |
 | `visit_type` | CharField(64) | Maps to Beluga `visitType` strings |
-| `beluga_cost_cents` | IntegerField | Aretide's cost for this visit type (pass-through) |
-| `aretide_service_fee_cents` | IntegerField | **Zero until legal confirms this is permissible** |
-| `total_patient_charge_cents` | IntegerField | `beluga_cost_cents + aretide_service_fee_cents` |
+| `beluga_cost_cents` | IntegerField | Beema Health's cost for this visit type (pass-through) |
+| `beemahealth_service_fee_cents` | IntegerField | **Zero until legal confirms this is permissible** |
+| `total_patient_charge_cents` | IntegerField | `beluga_cost_cents + beemahealth_service_fee_cents` |
 | `display_label` | CharField(128) | Patient-facing label |
 | `fee_disclosure_copy` | TextField | Patient-facing disclosure of what the fee covers. **Requires legal review.** |
 | `is_active` | BooleanField | |
@@ -203,12 +203,12 @@ Doctor visit fee by visit type. **Per Joshua's response: the visit charge to pat
 
 #### `SubscriptionPlan` (`subscription_plans`)
 
-Defines a recurring Aretide membership tier. **This model is built speculatively — whether to use subscription billing vs. per-transaction fees is a legal/product decision pending Phase 0.**
+Defines a recurring Beema Health membership tier. **This model is built speculatively — whether to use subscription billing vs. per-transaction fees is a legal/product decision pending Phase 0.**
 
 | Field | Type | Notes |
 |---|---|---|
 | `id` | UUID PK | |
-| `name` | CharField(128) | e.g. "Aretide GLP-1 Care" |
+| `name` | CharField(128) | e.g. "Beema Health GLP-1 Care" |
 | `slug` | SlugField unique | |
 | `stripe_price_id` | CharField(64) | Stripe Price object ID (`price_…`) |
 | `billing_interval` | CharField(16) | `month`, `year` |
@@ -284,7 +284,7 @@ The clinical consultation charge.
 | `user` | FK → User | |
 | `visit_pricing_config` | FK → VisitPricingConfig | Config snapshot at charge time |
 | `beluga_pass_through_cents` | IntegerField | Portion that is Beluga cost pass-through |
-| `aretide_service_fee_cents` | IntegerField | Portion that is Aretide service fee (zero until legal approves) |
+| `beemahealth_service_fee_cents` | IntegerField | Portion that is Beema Health service fee (zero until legal approves) |
 | `total_amount_cents` | IntegerField | Sum charged |
 | `stripe_payment_intent_id` | EncryptedCharField(128) | |
 | `stripe_charge_id` | EncryptedCharField(128) | |
@@ -308,7 +308,7 @@ Post-approval medication and service fee charge.
 | `sku` | FK → BelugaMedicationSku | Nullable; matched by `beluga_med_id` |
 | `pricing_rule_snapshot` | JSONField | Full rule state at charge time |
 | `vendor_total_cost_cents` | IntegerField | Drug + shipping + facilitation |
-| `aretide_service_fee_cents` | IntegerField | **Zero until legal approves fee model** |
+| `beemahealth_service_fee_cents` | IntegerField | **Zero until legal approves fee model** |
 | `stripe_fee_cents` | IntegerField | |
 | `patient_price_cents` | IntegerField | Final amount charged |
 | `stripe_payment_intent_id` | EncryptedCharField(128) | |
@@ -325,7 +325,7 @@ Post-approval medication and service fee charge.
 
 #### `FulfillmentGate` (`fulfillment_gates`)
 
-Tracks the advisory payment-and-fulfillment state for a prescription. **Note: for Beluga-routed prescriptions, this is advisory — Beluga may already be routing to pharmacy. `strict` mode (guaranteed hold) is only possible with Aretide's own pharmacy relationship or a future Beluga API hold endpoint.**
+Tracks the advisory payment-and-fulfillment state for a prescription. **Note: for Beluga-routed prescriptions, this is advisory — Beluga may already be routing to pharmacy. `strict` mode (guaranteed hold) is only possible with Beema Health's own pharmacy relationship or a future Beluga API hold endpoint.**
 
 | Field | Type | Notes |
 |---|---|---|
@@ -441,7 +441,7 @@ Present costs in a way that complies with telehealth disclosure requirements. Pe
 Three payment flow options — which one ships depends on the legal/product decision from Phase 0:
 
 **Option A — Subscription-first (recommended if legal approves):**
-1. Patient starts Aretide membership subscription (Stripe Billing).
+1. Patient starts Beema Health membership subscription (Stripe Billing).
 2. First month charged now; subscription covers care coordination, messaging, refill management, and platform access.
 3. Provider consultation and medication are disclosed as separate pass-through charges (if applicable) or included in subscription.
 4. Card saved via subscription creation (no separate SetupIntent needed — Stripe Billing handles it).
@@ -455,7 +455,7 @@ Three payment flow options — which one ships depends on the legal/product deci
 **Option C — Own-pharmacy (future, not MVP):**
 1. Patient pays visit fee and saves card.
 2. Medication charge attempted before pharmacy order is created.
-3. Because Aretide controls the pharmacy order, fulfillment only starts after charge succeeds — this is a hard gate, not advisory.
+3. Because Beema Health controls the pharmacy order, fulfillment only starts after charge succeeds — this is a hard gate, not advisory.
 
 ### After prescription approval
 
@@ -499,7 +499,7 @@ Dashboard banner:
 **Sections:**
 
 1. **Visit Fees** — `VisitPricingConfig` table:
-   - Beluga cost (pass-through), Aretide service fee (initially $0), total patient charge, disclosure copy.
+   - Beluga cost (pass-through), Beema Health service fee (initially $0), total patient charge, disclosure copy.
    - All amounts read-only until legal has signed off; then editable by staff with `pricing_admin` permission.
 
 2. **Pricing Rules** — `PricingRule` table:
@@ -563,10 +563,10 @@ Dashboard banner:
 ### Doctor visit charge
 
 ```
-total_patient_charge = beluga_consult_pass_through + aretide_service_fee
+total_patient_charge = beluga_consult_pass_through + beemahealth_service_fee
 ```
 
-Per Joshua's response: telehealth regulations prohibit profiting from the clinical consultation charge. The consult cost must be disclosed as a pass-through of Beluga's cost. An Aretide service fee may be separately permissible, depending on how it is structured and disclosed. **Do not set `aretide_service_fee_cents > 0` until legal confirms.**
+Per Joshua's response: telehealth regulations prohibit profiting from the clinical consultation charge. The consult cost must be disclosed as a pass-through of Beluga's cost. An Beema Health service fee may be separately permissible, depending on how it is structured and disclosed. **Do not set `beemahealth_service_fee_cents > 0` until legal confirms.**
 
 ### Medication patient price
 
@@ -602,7 +602,7 @@ patient_price = price_before_stripe + stripe_fee
 
 **Previous bug:** The prior version compared `vendor_total / (1 - margin_pct)` (a full price) against `margin_floor_cents` (a margin amount) inside `max()`. These are not the same unit. The corrected version computes both a full price from percent and a full price from floor, then takes the max of two prices.
 
-**Note on service fee naming:** The fields are called `service_fee_pct` and `service_fee_floor_cents`, not "margin." What Aretide can call this, how it must be disclosed to patients, and whether it is legally permissible as a standalone line item vs. bundled into a subscription allocation is a legal question.
+**Note on service fee naming:** The fields are called `service_fee_pct` and `service_fee_floor_cents`, not "margin." What Beema Health can call this, how it must be disclosed to patients, and whether it is legally permissible as a standalone line item vs. bundled into a subscription allocation is a legal question.
 
 ### Rounding
 
@@ -739,11 +739,11 @@ New behavior in `apply_beluga_webhook` on `RX_WRITTEN`:
 
 | Program type | Who controls fulfillment trigger | Gate mode available | Notes |
 |---|---|---|---|
-| GLP-1 AutoRx (subsequent shipments) | Aretide — must call `autorx_endpoint` | `strict` is achievable | Do not call `autorx_endpoint` until payment succeeds |
+| GLP-1 AutoRx (subsequent shipments) | Beema Health — must call `autorx_endpoint` | `strict` is achievable | Do not call `autorx_endpoint` until payment succeeds |
 | Standard programs (initial Rx) | Beluga routes automatically after clinician approval | `advisory` only | Payment gate is best-effort; Slack cancellation is the fallback |
-| Own-pharmacy (future) | Aretide — controls pharmacy order creation | `strict` is achievable | Do not create pharmacy order until payment succeeds |
+| Own-pharmacy (future) | Beema Health — controls pharmacy order creation | `strict` is achievable | Do not create pharmacy order until payment succeeds |
 
-**`strict` mode (`payment_gate_mode = "strict"`) is only valid when Aretide controls the fulfillment trigger.** For Beluga-routed prescriptions on standard programs, remove `strict` from the allowed options. The system must prevent a `payment_gate_mode = "strict"` setting on rules that apply to standard Beluga programs.
+**`strict` mode (`payment_gate_mode = "strict"`) is only valid when Beema Health controls the fulfillment trigger.** For Beluga-routed prescriptions on standard programs, remove `strict` from the allowed options. The system must prevent a `payment_gate_mode = "strict"` setting on rules that apply to standard Beluga programs.
 
 ### Advisory gate + Slack cancellation fallback (standard programs)
 
@@ -758,7 +758,7 @@ On `MedicationCharge` failure for a standard Beluga program:
    - Cancellation too late (pharmacy already processing) → `FulfillmentGate.status = "cancellation_too_late"`. Patient received medication unpaid; staff handles per collections policy.
 6. Staff updates `FulfillmentGate` manually via staff API.
 
-**This is an operational process, not an automated gate.** The plan acknowledges this is imperfect and is a reason to prioritize: (a) asking Beluga for an API cancellation endpoint, and (b) building own pharmacy relationships where Aretide can hard-gate.
+**This is an operational process, not an automated gate.** The plan acknowledges this is imperfect and is a reason to prioritize: (a) asking Beluga for an API cancellation endpoint, and (b) building own pharmacy relationships where Beema Health can hard-gate.
 
 ### On successful payment for partner-controlled fulfillment (AutoRx)
 
@@ -797,7 +797,7 @@ Catalog refill windows:
 | 1-month | 15 | 60 |
 | 3-month | 60 | 120 |
 
-**GLP-1 AutoRx is naturally gateable:** each shipment requires Aretide to call `POST {autorx_endpoint}`. Simply do not call it until payment succeeds. This is the only currently available hard gate for Beluga-integrated fulfillment.
+**GLP-1 AutoRx is naturally gateable:** each shipment requires Beema Health to call `POST {autorx_endpoint}`. Simply do not call it until payment succeeds. This is the only currently available hard gate for Beluga-integrated fulfillment.
 
 ### Payment gate modes (updated)
 
@@ -811,7 +811,7 @@ Same as `advisory` but the staff UI and notification copy are more prominent abo
 
 **`disabled`** — No automated charge. Staff handles billing manually. Fulfillment proceeds.
 
-**`strict`** — Only valid when `beluga_fulfillment_endpoint = "autorx"` or when Aretide has a direct pharmacy relationship. System must validate at rule creation that `strict` is only set on rules where Aretide controls fulfillment.
+**`strict`** — Only valid when `beluga_fulfillment_endpoint = "autorx"` or when Beema Health has a direct pharmacy relationship. System must validate at rule creation that `strict` is only set on rules where Beema Health controls fulfillment.
 
 ### Supply strategy
 
@@ -1079,13 +1079,13 @@ export interface PriceEstimate {
 > **⚠ These questions require qualified healthcare counsel, not internal team discussion.**
 
 **L1 — Clinical consultation fees:**
-What may Aretide charge patients for a telehealth clinical consultation? Must the charge be a pure pass-through of Beluga's cost? May Aretide add a separately disclosed "platform service fee"? What must the disclosure say?
+What may Beema Health charge patients for a telehealth clinical consultation? Must the charge be a pure pass-through of Beluga's cost? May Beema Health add a separately disclosed "platform service fee"? What must the disclosure say?
 
 **L2 — Medication fees:**
-May Aretide add a service fee on top of medication vendor cost, or must medication be a pass-through? If a service fee is permissible, how must it be structured and disclosed?
+May Beema Health add a service fee on top of medication vendor cost, or must medication be a pass-through? If a service fee is permissible, how must it be structured and disclosed?
 
 **L3 — Subscription model:**
-Is a monthly membership/subscription the preferred compliance path for capturing Aretide's platform revenue? What must the subscription disclose as included vs. excluded? Which states have additional telehealth subscription regulations?
+Is a monthly membership/subscription the preferred compliance path for capturing Beema Health's platform revenue? What must the subscription disclose as included vs. excluded? Which states have additional telehealth subscription regulations?
 
 **L4 — No-prescription visit fee:**
 If a patient completes and pays for the consultation but is not prescribed medication, is the visit fee refundable? What must the patient be told at intake about refund policy?
@@ -1108,7 +1108,7 @@ Is an API-based order cancel or hold/release endpoint on Beluga's roadmap? What 
 Is there a webhook event that indicates a Beluga order is no longer cancelable (pharmacy has started fulfillment)?
 
 **B4 — Financial responsibility:**
-If a Slack cancellation is requested but arrives too late and the pharmacy has already shipped, who bears the cost — Aretide or Beluga?
+If a Slack cancellation is requested but arrives too late and the pharmacy has already shipped, who bears the cost — Beema Health or Beluga?
 
 **B5 — Exact visitType strings and endpoint paths:**
 Exact `visitType` values for GLP-1 initial (AutoRx), check-in, standard async, standard sync. Exact URL paths for all placeholder endpoint names in the documentation.
@@ -1124,7 +1124,7 @@ Is there any additional fee for the month-3 check-in, or is it fully covered by 
 
 ### Other known risks
 
-**Advisory gate exposure:** If a medication charge fails and Beluga has already routed to pharmacy, Aretide bears the vendor cost. Mitigation: use `one_month_trial` supply strategy for standard programs to limit maximum exposure per incident; use `strict` mode (AutoRx endpoint control) wherever possible.
+**Advisory gate exposure:** If a medication charge fails and Beluga has already routed to pharmacy, Beema Health bears the vendor cost. Mitigation: use `one_month_trial` supply strategy for standard programs to limit maximum exposure per incident; use `strict` mode (AutoRx endpoint control) wherever possible.
 
 **3DS / requires_action rate:** Expect 5–10% of off-session charges to require customer authentication (SCA). Test `requires_action` handling before launch with Stripe's test cards.
 
@@ -1132,7 +1132,7 @@ Is there any additional fee for the month-3 check-in, or is it fully covered by 
 
 **Stripe fee estimation:** `0.029 * price + 0.30` is an approximation (varies by card type, international cards). Build into service fee estimate for MVP; reconcile monthly.
 
-**Volume tier transitions:** When Aretide crosses a Beluga volume tier, facilitation fee drops. Staff must update `vendor_facilitation_fee_cents` on catalog SKUs at tier crossing.
+**Volume tier transitions:** When Beema Health crosses a Beluga volume tier, facilitation fee drops. Staff must update `vendor_facilitation_fee_cents` on catalog SKUs at tier crossing.
 
 **PCI scope:** Stripe Elements (hosted iframes) → PCI SAQ-A. Do not introduce any server-side card data handling. Annual SAQ-A attestation required.
 

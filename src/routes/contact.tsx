@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { absoluteUrl } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Clock, Mail, MessageCircle } from "lucide-react";
 import { trackPageViewed } from "@/lib/analytics";
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/contact")({
         content: "Get in touch with the Beema Health care team.",
       },
     ],
-    links: [{ rel: "canonical", href: "/contact" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/contact") }],
   }),
   component: ContactPage,
 });
@@ -36,8 +37,8 @@ const CONTACT_OPTIONS = [
     icon: Mail,
     title: "Email support",
     text: "For questions about eligibility, pricing, account access, or your intake.",
-    action: "support@aretide.com",
-    href: "mailto:support@aretide.com",
+    action: "support@beemahealth",
+    href: "mailto:support@beemahealth",
   },
   {
     icon: MessageCircle,

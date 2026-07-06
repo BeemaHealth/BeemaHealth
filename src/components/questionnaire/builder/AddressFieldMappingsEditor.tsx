@@ -46,8 +46,8 @@ export function AddressFieldMappingsEditor({
       </p>
       <p className="text-[10px] text-muted-foreground">
         {backendReadOnly
-          ? `Nominatim fills each part when a patient picks a suggestion. Aretide intake targets are fixed for the section you chose; adjust ${vendorLabel} mappings as needed.`
-          : `Map each address part to an Aretide intake target and a ${vendorLabel} field.`}
+          ? `Nominatim fills each part when a patient picks a suggestion. Beema Health intake targets are fixed for the section you chose; adjust ${vendorLabel} mappings as needed.`
+          : `Map each address part to a Beema Health intake target and a ${vendorLabel} field.`}
       </p>
       <div
         className={`rounded-xl border border-border overflow-hidden ${
@@ -56,7 +56,7 @@ export function AddressFieldMappingsEditor({
       >
         <div className="grid grid-cols-[1.1fr_1fr_1fr] gap-2 bg-muted/40 px-2.5 py-1.5 font-medium text-muted-foreground">
           <span>Nominatim part</span>
-          <span>Aretide backend</span>
+          <span>Beema Health backend</span>
           <span>{vendorLabel}</span>
         </div>
         {mappings.map((row) => (
@@ -105,7 +105,7 @@ export function AddressFieldMappingsEditor({
         ))}
       </div>
       <p className="text-[10px] text-muted-foreground">
-        County and country are stored for Aretide intake and pharmacy routing.
+        County and country are stored for Beema Health intake and pharmacy routing.
         Vendor visit payloads typically only include street, city, state, and
         ZIP.
       </p>

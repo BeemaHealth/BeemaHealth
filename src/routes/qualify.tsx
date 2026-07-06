@@ -74,7 +74,7 @@ const QUALIFY_STEPS_WITH_REQUIRED_FIELDS = new Set<QualifyStepId>([
 export const Route = createFileRoute("/qualify")({
   head: () => ({
     meta: [
-      { title: "Eligibility check — Aretide" },
+      { title: "Eligibility check — Beema Health" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -415,7 +415,7 @@ function QualifyHardcodedPage() {
             {under18 && currentStep === "dob" && (
               <div className="mt-4">
                 <BlockedMessage
-                  title="Aretide is currently only available for adults 18 and older."
+                  title="Beema Health is currently only available for adults 18 and older."
                   body="We cannot continue with this intake. If you have questions, contact support."
                 />
               </div>

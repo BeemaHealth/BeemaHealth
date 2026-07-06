@@ -35,6 +35,6 @@ class LandingPageAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
 
     def ad_url_col(self, obj):
-        url = f"https://aretide.com/lp/{obj.slug}"
+        url = f"https://beemahealth/lp/{obj.slug}"
         return format_html('<a href="{}" target="_blank">{}</a>', url, url)
     ad_url_col.short_description = "Ad URL"

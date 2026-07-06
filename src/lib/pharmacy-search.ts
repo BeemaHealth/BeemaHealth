@@ -4,7 +4,7 @@
  */
 
 const NOMINATIM_BASE = "https://nominatim.openstreetmap.org/search";
-const NOMINATIM_USER_AGENT = "AretideIntake/1.0 (https://aretide.com/)";
+const NOMINATIM_USER_AGENT = "BeemaHealthIntake/1.0 (https://beemahealth.com/)";
 
 type NominatimAddress = {
   house_number?: string;

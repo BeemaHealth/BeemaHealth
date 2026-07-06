@@ -24,7 +24,7 @@ export function landingPageUrl(slug: string): string {
   return `${getFrontendBaseUrl()}/lp/${encodeURIComponent(slug)}`;
 }
 
-/** Display form without scheme — e.g. `aretide.com/lp/foo`. */
+/** Display form without scheme — e.g. `beemahealth/lp/foo`. */
 export function landingPageDisplayUrl(slug: string): string {
   return landingPageUrl(slug).replace(/^https?:\/\//, "");
 }

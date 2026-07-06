@@ -140,13 +140,13 @@ _SHIPPING_EVENT_SUMMARIES = {
     "PACKAGE_DELIVERED": "Your package has been delivered.",
     "PACKAGE_DELIVERY_FAILED": (
         "We weren't able to deliver your package. "
-        "Please contact our support team at support@aretide.com — "
+        "Please contact our support team at support@beemahealth — "
         "do not submit a refill request for a delivery issue."
     ),
 }
 
 _SHIPPING_EVENT_SUBJECTS = {
-    "PACKAGE_DELIVERY_FAILED": "Delivery issue with your Aretide order",
+    "PACKAGE_DELIVERY_FAILED": "Delivery issue with your Beema Health order",
 }
 
 _LAB_EVENT_SUMMARIES = {
@@ -235,7 +235,7 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
         queue_status_notification(
             user,
             category="review",
-            subject="Update on your Aretide visit",
+            subject="Update on your Beema Health visit",
             summary=summary,
         )
         result.update({"status": new_status, "decision": new_decision})
@@ -257,7 +257,7 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
         queue_status_notification(
             user,
             category="review",
-            subject="Your Aretide visit was canceled",
+            subject="Your Beema Health visit was canceled",
             summary="Your visit has been canceled. Please start a new visit if you would still like to be seen.",
         )
         result["status"] = "not_approved"
@@ -280,7 +280,7 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
         queue_status_notification(
             user,
             category="prescription",
-            subject="Your Aretide prescription has been written and is on its way to the pharmacy.",
+            subject="Your Beema Health prescription has been written and is on its way to the pharmacy.",
             summary="Your provider has written your prescription and it's on its way to the pharmacy.",
         )
         result["prescriptions_created"] = len(rxs)
@@ -350,7 +350,7 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
         queue_status_notification(
             user,
             category="shipping",
-            subject=_SHIPPING_EVENT_SUBJECTS.get(event.event, "Your Aretide order update"),
+            subject=_SHIPPING_EVENT_SUBJECTS.get(event.event, "Your Beema Health order update"),
             summary=_SHIPPING_EVENT_SUMMARIES[event.event],
         )
         result["logged"] = True
@@ -368,7 +368,7 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
         queue_status_notification(
             user,
             category="labs",
-            subject="Your Aretide lab update",
+            subject="Your Beema Health lab update",
             summary=_LAB_EVENT_SUMMARIES.get(
                 event.event, "There's an update on your lab order."
             ),
@@ -384,7 +384,7 @@ def apply_beluga_webhook(event: BelugaWebhookEvent) -> dict:
         queue_status_notification(
             user,
             category="appointments",
-            subject="Your Aretide appointment update",
+            subject="Your Beema Health appointment update",
             summary=_BOOKING_EVENT_SUMMARIES.get(
                 event.event, "There's an update on your appointment."
             ),

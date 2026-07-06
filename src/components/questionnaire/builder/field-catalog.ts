@@ -29,7 +29,7 @@ export function belugaMappingToApiFieldId(beluga: string): string {
   return trimmed.slice(BELUGA_PREFIX.length);
 }
 
-/** Snake_case field key for Aretide storage (e.g. `firstName` → `first_name`). */
+/** Snake_case field key for Beema Health storage (e.g. `firstName` → `first_name`). */
 export function belugaMappingToFieldKey(beluga: string): string {
   const apiId = belugaMappingToApiFieldId(beluga);
   if (!apiId) return "";

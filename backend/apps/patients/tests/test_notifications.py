@@ -44,7 +44,7 @@ class PatientNotificationTests(TestCase):
         self.assertTrue(sent["sms"])
         self.assertEqual(len(mail.outbox), 1)
         msg = mail.outbox[0]
-        self.assertIn("New message from your Aretide care team", msg.subject)
+        self.assertIn("New message from your Beema Health care team", msg.subject)
         self.assertIn("hello i need more info", msg.body)
         self.assertIn("/dashboard", msg.body)
 
@@ -60,7 +60,7 @@ class PatientNotificationTests(TestCase):
         self.assertTrue(html, "Expected an HTML alternative on the email")
         self.assertIn("/dashboard", html)
         self.assertIn("<!DOCTYPE html", html)
-        self.assertIn("Aretide", html)
+        self.assertIn("Beema Health", html)
 
     def test_email_plain_text_fallback_present(self):
         notify_care_team_message(
@@ -76,9 +76,9 @@ class PatientNotificationTests(TestCase):
         notify_patient_event(
             self.patient,
             category="shipping",
-            subject="Your Aretide order update",
+            subject="Your Beema Health order update",
             email_body="Hi Jane,\n\nYour order has shipped.\n\nView: http://localhost:8080/dashboard",
-            sms_body="Aretide: Your order has shipped.",
+            sms_body="Beema Health: Your order has shipped.",
         )
         self.assertEqual(len(mail.outbox), 1)
         html = self._html_body(mail.outbox[0])
@@ -123,9 +123,9 @@ class PatientNotificationTests(TestCase):
         sent = notify_patient_event(
             self.patient,
             category="shipping",
-            subject="Your Aretide order update",
+            subject="Your Beema Health order update",
             email_body="Your order has shipped.",
-            sms_body="Aretide: Your order has shipped.",
+            sms_body="Beema Health: Your order has shipped.",
         )
 
         self.assertFalse(sent["email"])
@@ -140,9 +140,9 @@ class PatientNotificationTests(TestCase):
         sent = notify_patient_event(
             self.patient,
             category="prescription",
-            subject="Your Aretide prescription has been written and is on its way to the pharmacy.",
+            subject="Your Beema Health prescription has been written and is on its way to the pharmacy.",
             email_body="Your prescription is on its way.",
-            sms_body="Aretide: prescription ready.",
+            sms_body="Beema Health: prescription ready.",
         )
 
         self.assertTrue(sent["email"])

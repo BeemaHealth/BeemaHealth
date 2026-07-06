@@ -20,7 +20,7 @@ function MobilePortalHeader() {
       <Link
         to="/dashboard"
         className="flex min-w-0 shrink items-center"
-        aria-label="Aretide dashboard"
+        aria-label="Beema Health dashboard"
       >
         <Logo className="h-9 w-auto" />
       </Link>

@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { capturePageUtms } from "@/lib/utm";
+import { absoluteUrl } from "@/lib/seo";
 
 import appCss from "../styles.css?url";
 import { AuthProvider } from "../context/AuthContext";
@@ -111,8 +112,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           content:
             "Beema Health offers telehealth weight management with licensed providers, transparent pricing, and reliable refills.",
         },
-        { property: "og:image", content: "/beema-mark.png" },
-        { name: "twitter:image", content: "/beema-mark.png" },
+        { property: "og:image", content: absoluteUrl("/beema-mark.png") },
+        { name: "twitter:image", content: absoluteUrl("/beema-mark.png") },
       ],
       links: [
         { rel: "icon", href: "/favicon-beema.png", type: "image/png" },

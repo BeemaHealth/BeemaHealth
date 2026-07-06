@@ -35,7 +35,7 @@ class BelugaClientUnconfiguredTests(TestCase):
             master_id="master-002",
             form_obj={"firstName": "Jane"},
             visit_type="weightlossCheckin",
-            company="aretide",
+            company="beemahealth",
         )
         self.assertEqual(result["status"], "not_configured")
         self.assertIn("request_id", result)
@@ -72,7 +72,7 @@ class BelugaClientMissingEndpointTests(TestCase):
             master_id="master-004",
             form_obj={},
             visit_type="weightlossCheckin",
-            company="aretide",
+            company="beemahealth",
         )
         self.assertEqual(result["status"], "not_configured")
 
@@ -83,7 +83,7 @@ class BelugaClientMissingEndpointTests(TestCase):
                 master_id="master-005",
                 form_obj={},
                 visit_type="",
-                company="aretide",
+                company="beemahealth",
             )
         self.assertEqual(result["status"], "not_configured")
 
@@ -116,7 +116,7 @@ class BelugaClientDevLoggingTests(TestCase):
                     "patientPreference": [{"medId": "med-1", "name": "Semaglutide"}],
                 },
                 visit_type="weightlossCheckin",
-                company="aretide",
+                company="beemahealth",
             )
         output = "\n".join(cm.output)
         self.assertIn("[BELUGA OUTBOUND MOCK]", output)

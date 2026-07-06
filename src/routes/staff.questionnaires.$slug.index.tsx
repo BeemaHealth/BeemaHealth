@@ -441,7 +441,7 @@ function StaffQuestionnaireVersionsPage() {
   async function handleImportFile(file: File | null) {
     if (!file) return;
     if (file.type && file.type !== "application/json") {
-      setError("Choose a JSON file exported from Aretide.");
+      setError("Choose a JSON file exported from Beema Health.");
       return;
     }
     setError("");

@@ -18,13 +18,13 @@ import type {
 } from "@/lib/types/mvp";
 
 const KEYS = {
-  session: "aretide_session",
-  users: "aretide_users",
-  eligibility: "aretide_eligibility",
-  intakes: "aretide_intakes",
-  consents: "aretide_consents",
-  flags: "aretide_safety_flags",
-  reviews: "aretide_reviews",
+  session: "beemahealth_session",
+  users: "beemahealth_users",
+  eligibility: "beemahealth_eligibility",
+  intakes: "beemahealth_intakes",
+  consents: "beemahealth_consents",
+  flags: "beemahealth_safety_flags",
+  reviews: "beemahealth_reviews",
 } as const;
 
 function read<T>(key: string, fallback: T): T {

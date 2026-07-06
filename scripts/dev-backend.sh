@@ -59,12 +59,12 @@ if port_in_use 8000; then
   exit 1
 fi
 
-ARETIDE_ENV="${ARETIDE_ENV:-dev}"
-ENV_FILE=".env.${ARETIDE_ENV}"
+BEEMAHEALTH_ENV="${BEEMAHEALTH_ENV:-dev}"
+ENV_FILE=".env.${BEEMAHEALTH_ENV}"
 
 if [[ ! -f "$ENV_FILE" ]]; then
   if [[ -f .env ]]; then
-    echo "Note: $ENV_FILE not found — falling back to .env (ARETIDE_ENV=${ARETIDE_ENV})."
+    echo "Note: $ENV_FILE not found — falling back to .env (BEEMAHEALTH_ENV=${BEEMAHEALTH_ENV})."
     ENV_FILE=".env"
   else
     echo "Warning: no $ENV_FILE or .env found. Create or edit .env.dev at the repo root and set FERNET_KEY."
@@ -76,6 +76,6 @@ COMPOSE=(docker compose -f backend/docker-compose.yml)
 if [[ -f "$ENV_FILE" ]]; then
   COMPOSE+=(--env-file "$ENV_FILE")
 fi
-export ARETIDE_ENV
+export BEEMAHEALTH_ENV
 "${COMPOSE[@]}" run --rm api python manage.py migrate
 exec "${COMPOSE[@]}" up "$@"

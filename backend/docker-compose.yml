@@ -2,15 +2,15 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: aretide
-      POSTGRES_USER: aretide
-      POSTGRES_PASSWORD: aretide
+      POSTGRES_DB: postgres
+      POSTGRES_USER: beemahealth
+      POSTGRES_PASSWORD: beemahealth
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U aretide -d aretide"]
+      test: ["CMD-SHELL", "pg_isready -U beemahealth -d beemahealth"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -25,10 +25,10 @@ services:
     env_file:
       - ../.env.dev
     environment:
-      ARETIDE_ENV: ${ARETIDE_ENV:-dev}
+      BEEMAHEALTH_ENV: ${BEEMAHEALTH_ENV:-dev}
       DEBUG: "true"
       SECRET_KEY: dev-secret-key-change-in-production
-      DATABASE_URL: postgres://aretide:aretide@db:5432/aretide
+      DATABASE_URL: postgres://beemahealth:beemahealth@db:5432/beemahealth
       DATABASE_SSL_REQUIRE: "false"
       SECURE_SSL_REDIRECT: "false"
       ALLOWED_HOSTS: localhost,127.0.0.1,0.0.0.0
@@ -43,7 +43,7 @@ services:
       EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
       EMAIL_USE_TLS: ${EMAIL_USE_TLS:-true}
       EMAIL_USE_SSL: ${EMAIL_USE_SSL:-false}
-      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-noreply@aretide.com}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-noreply@beemahealth.com}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
     depends_on:
       db:
@@ -51,3 +51,5 @@ services:
 
 volumes:
   postgres_data:
+
+name: beemahealth

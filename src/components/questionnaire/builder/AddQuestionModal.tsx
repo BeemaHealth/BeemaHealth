@@ -273,7 +273,7 @@ export function AddQuestionModal({
           <Field
             label="Component type"
             required
-            help="Determines how patients answer and how answers map to Aretide and Beluga."
+            help="Determines how patients answer and how answers map to Beema Health and Beluga."
           >
             <select
               className={inputCls}
@@ -379,7 +379,7 @@ export function AddQuestionModal({
               <p className="text-xs text-muted-foreground rounded-lg bg-muted/50 px-3 py-2">
                 Patients type an address and pick a Nominatim suggestion.
                 Street, city, state, ZIP, county, and country are filled
-                automatically and mapped to Aretide intake and vendor API as
+                automatically and mapped to Beema Health intake and vendor API as
                 configured above.
               </p>
             </>

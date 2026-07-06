@@ -351,7 +351,7 @@ The questionnaire never changes. Only the mapping changes per provider.
 ## Part 4 — Patient funnel (complete, including page navigation tracking)
 
 ```
-[User arrives at aretide.com]
+[User arrives at beemahealth]
   → FunnelEvent: page_viewed { page: "home" }
 
 [User navigates to /weight-loss]

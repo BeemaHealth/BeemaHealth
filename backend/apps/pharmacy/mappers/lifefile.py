@@ -60,7 +60,7 @@ class LifeFilePayloadMapper:
             "order": {
                 "general": {
                     "referenceId": str(order.external_reference_id or order.id),
-                    "memo": "Aretide weight management",
+                    "memo": "Beema Health weight management",
                 },
                 "prescriber": prescriber,
                 "practice": {"id": self.practice_id or prescription.practice_id or 0},

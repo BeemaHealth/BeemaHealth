@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { absoluteUrl } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   LegalDocument,
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/legal/terms")({
           "Terms governing your use of Beema Health's weight-management telehealth platform.",
       },
     ],
-    links: [{ rel: "canonical", href: "/legal/terms" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/legal/terms") }],
   }),
   component: TermsPage,
 });
@@ -34,7 +35,7 @@ const SECTIONS: LegalSection[] = [
         <LegalP>
           These Terms of Service (&quot;Terms&quot;) govern your access to and
           use of the websites, applications, and related services operated by
-          Aretide Health, Inc. (&quot;Aretide,&quot; &quot;we,&quot;
+          Beema Health, Inc. (&quot;Beema Health,&quot; &quot;we,&quot;
           &quot;us,&quot; or &quot;our&quot;) (collectively, the
           &quot;Service&quot;). By creating an account, completing intake, or
           otherwise using the Service, you agree to these Terms and our Privacy
@@ -65,24 +66,24 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "relationship",
-    title: "Your relationship with Aretide",
+    title: "Your relationship with Beema Health",
     content: (
       <>
         <LegalP>
-          Aretide is a telehealth platform that connects patients with
+          Beema Health is a telehealth platform that connects patients with
           independently licensed clinicians, pharmacies, and laboratories
-          (&quot;Care Partners&quot;). Aretide does not practice medicine,
+          (&quot;Care Partners&quot;). Beema Health does not practice medicine,
           nursing, or pharmacy and does not provide medical advice.
         </LegalP>
         <LegalP>
           Using the Service does not create a doctor-patient or other
-          clinician-patient relationship between you and Aretide. You may
+          clinician-patient relationship between you and Beema Health. You may
           establish a clinical relationship with a Provider or medical group
           made available through the Service. Each Provider and Care Partner is
           solely responsible for the professional services they deliver.
         </LegalP>
         <LegalP>
-          You establish a customer relationship with Aretide for platform
+          You establish a customer relationship with Beema Health for platform
           access, care coordination, billing for eligible services, and related
           non-clinical support.
         </LegalP>
@@ -95,8 +96,8 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          Unless we state otherwise, services offered through Aretide are
-          provided on a direct-pay basis. Aretide and its Care Partners may not
+          Unless we state otherwise, services offered through Beema Health are
+          provided on a direct-pay basis. Beema Health and its Care Partners may not
           participate in Medicare, Medicaid, or commercial insurance networks
           for all services. You are responsible for charges disclosed at
           checkout or in your account, including clinical visits, medications,
@@ -142,7 +143,7 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          Aretide focuses on medication-supported weight management under
+          Beema Health focuses on medication-supported weight management under
           clinician supervision. These services are not comprehensive primary
           care and are not a substitute for ongoing care from your regular
           physician.
@@ -155,7 +156,7 @@ const SECTIONS: LegalSection[] = [
           not be FDA-approved for your indication.
         </LegalP>
         <LegalP>
-          Aretide does not claim that any product is equivalent to a specific
+          Beema Health does not claim that any product is equivalent to a specific
           branded medication. Availability, pricing, and formulary options may
           change.
         </LegalP>
@@ -168,7 +169,7 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          Aretide uses medication-forward pricing: you pay for clinical care,
+          Beema Health uses medication-forward pricing: you pay for clinical care,
           medication, shipping, and applicable labs as disclosed before you are
           charged. There is no separate platform membership fee unless we
           clearly identify one at checkout.
@@ -201,7 +202,7 @@ const SECTIONS: LegalSection[] = [
         >
           Telehealth Consent
         </a>
-        . You agree that Aretide is a third-party beneficiary of that Consent
+        . You agree that Beema Health is a third-party beneficiary of that Consent
         and may enforce it to the extent permitted by law.
       </LegalP>
     ),
@@ -213,7 +214,7 @@ const SECTIONS: LegalSection[] = [
       <>
         <LegalP>
           You may provide health and medical information through the Service.
-          Aretide may be a business associate of certain Care Partners and, in
+          Beema Health may be a business associate of certain Care Partners and, in
           that role, handle protected health information (&quot;PHI&quot;)
           subject to applicable law, including HIPAA where it applies.
         </LegalP>
@@ -245,7 +246,7 @@ const SECTIONS: LegalSection[] = [
           you have an active account or open clinical matter.
         </LegalP>
         <LegalP>
-          Neither Aretide nor your Provider is responsible for losses resulting
+          Neither Beema Health nor your Provider is responsible for losses resulting
           from your failure to read or act on communications sent through the
           Service.
         </LegalP>
@@ -304,7 +305,7 @@ const SECTIONS: LegalSection[] = [
     content: (
       <LegalP>
         The Service, including its design, text, graphics, logos, and software,
-        is owned by Aretide or its licensors and is protected by
+        is owned by Beema Health or its licensors and is protected by
         intellectual-property laws. You receive a limited, non-exclusive,
         non-transferable license to use the Service for personal, non-commercial
         purposes in accordance with these Terms.
@@ -318,7 +319,7 @@ const SECTIONS: LegalSection[] = [
       <LegalP>
         The Service may link to or integrate third-party websites, payment
         processors, pharmacies, laboratories, or tools. Those parties operate
-        under their own terms and privacy policies. Aretide is not responsible
+        under their own terms and privacy policies. Beema Health is not responsible
         for third-party services except as expressly stated in writing.
       </LegalP>
     ),
@@ -329,7 +330,7 @@ const SECTIONS: LegalSection[] = [
     content: (
       <LegalP>
         THE SERVICE IS PROVIDED ON AN &quot;AS IS&quot; AND &quot;AS
-        AVAILABLE&quot; BASIS. TO THE FULLEST EXTENT PERMITTED BY LAW, ARETIDE
+        AVAILABLE&quot; BASIS. TO THE FULLEST EXTENT PERMITTED BY LAW, BEEMA HEALTH
         AND ITS CARE PARTNERS DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED,
         INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
         PURPOSE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICE WILL
@@ -344,7 +345,7 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          TO THE FULLEST EXTENT PERMITTED BY LAW, ARETIDE WILL NOT BE LIABLE FOR
+          TO THE FULLEST EXTENT PERMITTED BY LAW, BEEMA HEALTH WILL NOT BE LIABLE FOR
           INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR
           FOR LOST PROFITS, DATA, OR GOODWILL, ARISING FROM YOUR USE OF THE
           SERVICE.
@@ -352,7 +353,7 @@ const SECTIONS: LegalSection[] = [
         <LegalP>
           OUR TOTAL LIABILITY FOR ANY CLAIM ARISING OUT OF OR RELATING TO THE
           SERVICE OR THESE TERMS WILL NOT EXCEED THE GREATER OF (A) THE AMOUNT
-          YOU PAID TO ARETIDE FOR THE SERVICE IN THE TWELVE MONTHS BEFORE THE
+          YOU PAID TO BEEMA HEALTH FOR THE SERVICE IN THE TWELVE MONTHS BEFORE THE
           EVENT GIVING RISE TO THE CLAIM OR (B) ONE HUNDRED U.S. DOLLARS ($100),
           EXCEPT WHERE SUCH LIMITATIONS ARE PROHIBITED BY LAW.
         </LegalP>
@@ -371,15 +372,15 @@ const SECTIONS: LegalSection[] = [
         <LegalP>
           Before filing a formal claim, you agree to contact us at{" "}
           <a
-            href="mailto:support@aretide.com"
+            href="mailto:support@beemahealth"
             className="text-foreground underline-offset-2 hover:underline"
           >
-            support@aretide.com
+            support@beemahealth
           </a>{" "}
           and attempt to resolve the dispute informally.
         </LegalP>
         <LegalP>
-          Except where prohibited by law, you and Aretide agree that disputes
+          Except where prohibited by law, you and Beema Health agree that disputes
           arising out of these Terms or the Service will be resolved through
           binding individual arbitration rather than in court, and that each
           party waives the right to participate in a class action. You may opt
@@ -426,22 +427,22 @@ const SECTIONS: LegalSection[] = [
     title: "Contact",
     content: (
       <LegalP>
-        Aretide Health, Inc.
+        Beema Health, Inc.
         <br />
         Email:{" "}
         <a
-          href="mailto:support@aretide.com"
+          href="mailto:support@beemahealth"
           className="text-foreground underline-offset-2 hover:underline"
         >
-          support@aretide.com
+          support@beemahealth
         </a>
         <br />
         Website:{" "}
         <a
-          href="https://aretide.com"
+          href="https://beemahealth"
           className="text-foreground underline-offset-2 hover:underline"
         >
-          aretide.com
+          beemahealth
         </a>
       </LegalP>
     ),
@@ -458,7 +459,7 @@ function TermsPage() {
         <LegalDocument
           title="Terms of Service"
           lastUpdated="June 18, 2026"
-          description="These Terms explain how you may use Aretide and what to expect from our platform and Care Partners."
+          description="These Terms explain how you may use Beema Health and what to expect from our platform and Care Partners."
           callout={
             <>
               <strong className="font-semibold text-foreground">

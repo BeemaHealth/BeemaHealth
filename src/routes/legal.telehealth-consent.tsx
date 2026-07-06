@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { absoluteUrl } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   LegalDocument,
@@ -20,7 +21,9 @@ export const Route = createFileRoute("/legal/telehealth-consent")({
           "Informed consent for receiving weight-management care via telehealth through Beema Health.",
       },
     ],
-    links: [{ rel: "canonical", href: "/legal/telehealth-consent" }],
+    links: [
+      { rel: "canonical", href: absoluteUrl("/legal/telehealth-consent") },
+    ],
   }),
   component: TelehealthConsentPage,
 });
@@ -33,15 +36,15 @@ const SECTIONS: LegalSection[] = [
       <>
         <LegalP>
           This Telehealth Consent (&quot;Consent&quot;) explains how care is
-          delivered remotely through Aretide and asks for your informed consent
+          delivered remotely through Beema Health and asks for your informed consent
           to receive healthcare via telehealth from independently licensed
           physicians, nurse practitioners, physician assistants, and other
           qualified clinicians (&quot;Providers&quot;).
         </LegalP>
         <LegalP>
-          Aretide Health, Inc. (&quot;Aretide,&quot; &quot;we,&quot; or
-          &quot;us&quot;) operates the Aretide platform (the
-          &quot;Service&quot;). Aretide is a technology and care-coordination
+          Beema Health, Inc. (&quot;Beema Health,&quot; &quot;we,&quot; or
+          &quot;us&quot;) operates the Beema Health platform (the
+          &quot;Service&quot;). Beema Health is a technology and care-coordination
           platform — not a medical practice. Clinical decisions are made solely
           by your Provider.
         </LegalP>
@@ -139,7 +142,7 @@ const SECTIONS: LegalSection[] = [
             If you think you are having a medical emergency, call 911 or go to
             the nearest emergency department immediately.
           </strong>{" "}
-          Do not use Aretide for emergency or crisis care.
+          Do not use Beema Health for emergency or crisis care.
         </LegalP>
         <LegalP>
           Providers may not respond immediately to messages sent through the
@@ -151,10 +154,10 @@ const SECTIONS: LegalSection[] = [
           If a technical failure prevents you from reaching your Provider
           through the Service, contact{" "}
           <a
-            href="mailto:support@aretide.com"
+            href="mailto:support@beemahealth"
             className="text-foreground underline-offset-2 hover:underline"
           >
-            support@aretide.com
+            support@beemahealth
           </a>
           .
         </LegalP>
@@ -242,12 +245,12 @@ const SECTIONS: LegalSection[] = [
       <>
         <LegalP>
           If a Provider writes a prescription, you may fill it through a
-          pharmacy partner integrated with Aretide or, where permitted, at a
+          pharmacy partner integrated with Beema Health or, where permitted, at a
           pharmacy of your choice. Prescriptions may be transferred between
           pharmacies as needed to fulfill your order.
         </LegalP>
         <LegalP>
-          Aretide and affiliated entities may have commercial relationships with
+          Beema Health and affiliated entities may have commercial relationships with
           pharmacy partners. You are free to obtain prescriptions elsewhere by
           updating your pharmacy preferences or contacting support, subject to
           applicable law and pharmacy policies.
@@ -277,7 +280,7 @@ const SECTIONS: LegalSection[] = [
             </>,
             <>
               You will provide truthful, accurate, and complete information to
-              Aretide and your Provider.
+              Beema Health and your Provider.
             </>,
             <>
               You are responsible for monitoring communications about your care
@@ -311,10 +314,10 @@ const SECTIONS: LegalSection[] = [
           You may withdraw consent to telehealth at any time by notifying your
           Provider in writing or contacting{" "}
           <a
-            href="mailto:support@aretide.com"
+            href="mailto:support@beemahealth"
             className="text-foreground underline-offset-2 hover:underline"
           >
-            support@aretide.com
+            support@beemahealth
           </a>
           . Withdrawal does not affect care already provided in reliance on this
           Consent and does not entitle you to in-person treatment from Providers
@@ -322,7 +325,7 @@ const SECTIONS: LegalSection[] = [
         </LegalP>
         <LegalP>
           Withdrawing telehealth consent may limit or end your ability to
-          receive certain services through Aretide.
+          receive certain services through Beema Health.
         </LegalP>
       </>
     ),
@@ -339,7 +342,7 @@ function TelehealthConsentPage() {
         <LegalDocument
           title="Telehealth Consent"
           lastUpdated="June 18, 2026"
-          description="Please read this document carefully before starting care through Aretide."
+          description="Please read this document carefully before starting care through Beema Health."
           callout={
             <>
               <strong className="font-semibold text-foreground">

@@ -21,7 +21,7 @@ For Step 1, marketing pages were stubbed with redirects to `/` and nav links wer
 | `/faq` | FAQ | Redirect → `/` (header + footer only) | [routes/faq.tsx](archived-marketing/routes/faq.tsx) |
 | `/safety` | Safety | Redirect → `/` | [routes/safety.tsx](archived-marketing/routes/safety.tsx) |
 | *(TBD)* | Contact | **Not built** | — |
-| `/switch` | Switch to Aretide | Redirect → `/` (not in Step 1) | [routes/switch.tsx](archived-marketing/routes/switch.tsx) |
+| `/switch` | Switch to Beema Health | Redirect → `/` (not in Step 1) | [routes/switch.tsx](archived-marketing/routes/switch.tsx) |
 | `/insurance` | Insurance & Pharmacy | Redirect → `/` (not in Step 1) | [routes/insurance.tsx](archived-marketing/routes/insurance.tsx) |
 | `/clinicians` | Clinicians | Redirect → `/` (not in Step 1) | [routes/clinicians.tsx](archived-marketing/routes/clinicians.tsx) |
 | `/learn` | Learn | Redirect → `/` (footer + mobile menu only; not in Step 1) | [routes/learn.tsx](archived-marketing/routes/learn.tsx) |
@@ -34,7 +34,7 @@ Original header nav — all six primary links plus FAQ in the desktop CTA row:
 const NAV = [
   { label: "How it works", to: "/how-it-works" },
   { label: "Pricing", to: "/pricing" },
-  { label: "Switch to Aretide", to: "/switch" },
+  { label: "Switch to Beema Health", to: "/switch" },
   { label: "Insurance & Pharmacy", to: "/insurance" },
   { label: "Clinicians", to: "/clinicians" },
   { label: "Safety", to: "/safety" },
@@ -53,7 +53,7 @@ Original footer had two columns:
 
 | Column | Links |
 |--------|-------|
-| **Product** | How it works, Pricing, Switch to Aretide, Insurance & Pharmacy |
+| **Product** | How it works, Pricing, Switch to Beema Health, Insurance & Pharmacy |
 | **Trust** | Clinicians, Safety & eligibility, Learn, FAQ |
 
 Tagline: *"Weight-loss care with real clinicians, clear pricing, and refill help that actually follows through."*
@@ -106,7 +106,7 @@ Includes SEO meta tags and canonical `/how-it-works`.
 
 **Sections:** Transparent pricing, refill billing, pre-charge reminders; shipping/labs/insurance caveats; closing CTA "No surprises. Ever."
 
-### Switch to Aretide (`/switch`)
+### Switch to Beema Health (`/switch`)
 
 **Hero:** "Switching providers? We'll make it smooth."
 
@@ -124,7 +124,7 @@ Includes SEO meta tags and canonical `/how-it-works`.
 
 **Four help cards:** Prior authorization support, local pharmacy routing, stock checks, refill escalation.
 
-**Pharmacy partners table:** Aretide Mail Pharmacy, Regional Compounding Partner, Local Retail Network — with shipping/pickup/insurance/cash-pay columns.
+**Pharmacy partners table:** Beema Health Mail Pharmacy, Regional Compounding Partner, Local Retail Network — with shipping/pickup/insurance/cash-pay columns.
 
 **Can do / can't control** lists. CTA: "Get insurance help" → `/qualify`.
 
