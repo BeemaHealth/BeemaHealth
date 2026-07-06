@@ -1,9 +1,0 @@
-{
-  "orderId": "24200716",
-  "referenceId": "00000000-0000-4000-8000-000000000099",
-  "eventType": "order_status_changed",
-  "status": "shipped",
-  "trackingNumber": "1Z999AA10123456784",
-  "carrier": "UPS",
-  "eventId": "evt-shipped-001"
-}

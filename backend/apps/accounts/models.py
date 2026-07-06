@@ -38,22 +38,6 @@ class EmailVerificationToken(models.Model):
         db_table = "email_verification_tokens"
 
 
-class LoginMfaChallenge(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(
-        "User",
-        on_delete=models.CASCADE,
-        related_name="login_mfa_challenges",
-    )
-    code_hash = models.CharField(max_length=64)
-    expires_at = models.DateTimeField()
-    used_at = models.DateTimeField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = "login_mfa_challenges"
-
-
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)

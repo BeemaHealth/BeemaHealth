@@ -127,13 +127,3 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         if value and not is_valid_phone(value):
             raise serializers.ValidationError("Enter a valid 10-digit US phone number.")
         return value.strip() if value else value
-
-
-class LoginMfaSerializer(serializers.Serializer):
-    mfa_challenge_id = serializers.UUIDField()
-    code = serializers.CharField(min_length=6, max_length=6)
-
-
-class TwoFactorConfirmSerializer(serializers.Serializer):
-    challenge_id = serializers.UUIDField()
-    code = serializers.CharField(min_length=6, max_length=6)
