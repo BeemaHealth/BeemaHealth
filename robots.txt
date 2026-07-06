@@ -1,3 +1,28 @@
+# Beema Health — crawl rules
+# Marketing pages are open to all crawlers, including AI crawlers
+# (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Bingbot) — we want
+# to be retrievable and citable by answer engines. Do not add blanket
+# blocks for AI user-agents.
+#
+# Funnel, portal, and staff routes are excluded: they carry no search
+# value and sit adjacent to PHI. Analytics there is Google Analytics'
+# job, not crawlers'.
+#
+# NOTE: if the production domain changes, update the Sitemap URL below
+# and BASE_URL in src/routes/sitemap[.]xml.ts together.
+
 User-agent: *
 Allow: /
 Disallow: /qualify
+Disallow: /intake
+Disallow: /consent
+Disallow: /submitted
+Disallow: /eligibility
+Disallow: /dashboard
+Disallow: /staff
+Disallow: /admin
+Disallow: /login
+Disallow: /verify-email
+Disallow: /lp/
+
+Sitemap: https://beemahealth.com/sitemap.xml
