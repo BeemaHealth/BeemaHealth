@@ -9,7 +9,7 @@
 # job, not crawlers'.
 #
 # NOTE: if the production domain changes, update the Sitemap URL below
-# and BASE_URL in src/routes/sitemap[.]xml.ts together.
+# together with public/sitemap.xml and SITE_URL in src/lib/seo.ts.
 
 User-agent: *
 Allow: /
