@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { absoluteUrl } from "@/lib/seo";
+import { canonicalUrl } from "@/lib/seo";
 import {
   ArrowRight,
   Heart,
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/about")({
           "Precision, trust, community, health, and consistency — the values behind Beema Health telehealth care.",
       },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/about") }],
+    links: [{ rel: "canonical", href: canonicalUrl("/about") }],
   }),
   component: AboutPage,
 });

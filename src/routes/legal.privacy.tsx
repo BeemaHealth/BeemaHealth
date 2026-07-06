@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { absoluteUrl } from "@/lib/seo";
+import { canonicalUrl } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   LegalDocument,
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/legal/privacy")({
           "How Beema Health collects, uses, shares, and protects your personal and health information.",
       },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/legal/privacy") }],
+    links: [{ rel: "canonical", href: canonicalUrl("/legal/privacy") }],
   }),
   component: PrivacyPage,
 });

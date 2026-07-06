@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { absoluteUrl } from "@/lib/seo";
+import { canonicalUrl } from "@/lib/seo";
 import {
   LegalDocument,
   LegalList,
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/legal/intake-acknowledgments")({
       },
     ],
     links: [
-      { rel: "canonical", href: absoluteUrl("/legal/intake-acknowledgments") },
+      { rel: "canonical", href: canonicalUrl("/legal/intake-acknowledgments") },
     ],
   }),
   component: IntakeAcknowledgmentsPage,

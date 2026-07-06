@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { absoluteUrl } from "@/lib/seo";
+import { canonicalUrl } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/weight-loss")({
           "Provider-reviewed GLP-1 weight-loss options with clear pricing and follow-through.",
       },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/weight-loss") }],
+    links: [{ rel: "canonical", href: canonicalUrl("/weight-loss") }],
   }),
   component: WeightLossPage,
 });

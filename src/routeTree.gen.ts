@@ -14,7 +14,6 @@ import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as SwitchRouteImport } from './routes/switch'
 import { Route as SubmittedRouteImport } from './routes/submitted'
 import { Route as StaffRouteImport } from './routes/staff'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SafetyRouteImport } from './routes/safety'
 import { Route as QualifyRouteImport } from './routes/qualify'
 import { Route as PricingRouteImport } from './routes/pricing'
@@ -81,11 +80,6 @@ const SubmittedRoute = SubmittedRouteImport.update({
 const StaffRoute = StaffRouteImport.update({
   id: '/staff',
   path: '/staff',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SafetyRoute = SafetyRouteImport.update({
@@ -320,7 +314,6 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/staff': typeof StaffRouteWithChildren
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
@@ -369,7 +362,6 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
   '/weight-loss': typeof WeightLossRoute
@@ -416,7 +408,6 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/staff': typeof StaffRouteWithChildren
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
@@ -468,7 +459,6 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/qualify'
     | '/safety'
-    | '/sitemap.xml'
     | '/staff'
     | '/submitted'
     | '/switch'
@@ -517,7 +507,6 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/qualify'
     | '/safety'
-    | '/sitemap.xml'
     | '/submitted'
     | '/switch'
     | '/weight-loss'
@@ -563,7 +552,6 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/qualify'
     | '/safety'
-    | '/sitemap.xml'
     | '/staff'
     | '/submitted'
     | '/switch'
@@ -614,7 +602,6 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   QualifyRoute: typeof QualifyRoute
   SafetyRoute: typeof SafetyRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StaffRoute: typeof StaffRouteWithChildren
   SubmittedRoute: typeof SubmittedRoute
   SwitchRoute: typeof SwitchRoute
@@ -662,13 +649,6 @@ declare module '@tanstack/react-router' {
       path: '/staff'
       fullPath: '/staff'
       preLoaderRoute: typeof StaffRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/safety': {
@@ -1077,7 +1057,6 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   QualifyRoute: QualifyRoute,
   SafetyRoute: SafetyRoute,
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
   StaffRoute: StaffRouteWithChildren,
   SubmittedRoute: SubmittedRoute,
   SwitchRoute: SwitchRoute,

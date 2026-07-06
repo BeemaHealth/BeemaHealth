@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { absoluteUrl } from "@/lib/seo";
+import { canonicalUrl } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Clock, Mail, MessageCircle } from "lucide-react";
 import { trackPageViewed } from "@/lib/analytics";
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/contact")({
         content: "Get in touch with the Beema Health care team.",
       },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/contact") }],
+    links: [{ rel: "canonical", href: canonicalUrl("/contact") }],
   }),
   component: ContactPage,
 });

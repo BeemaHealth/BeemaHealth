@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { absoluteUrl } from "@/lib/seo";
+import { canonicalUrl } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   LegalDocument,
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/legal/telehealth-consent")({
       },
     ],
     links: [
-      { rel: "canonical", href: absoluteUrl("/legal/telehealth-consent") },
+      { rel: "canonical", href: canonicalUrl("/legal/telehealth-consent") },
     ],
   }),
   component: TelehealthConsentPage,

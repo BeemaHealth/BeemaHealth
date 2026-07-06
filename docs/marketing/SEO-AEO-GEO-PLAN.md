@@ -31,7 +31,7 @@ Realistic organic timeline: long-tail rankings in 3–6 months, mid-tail in 6–
 | Prerendered static HTML | `vite.config.ts` — TanStack Start `prerender: { enabled: true }`. Crawlers get full HTML, not an empty SPA shell. This is the single most important technical prerequisite and it's done. |
 | Per-route meta | `head()` with title/description/OG/Twitter on `index`, `weight-loss`, `pricing`, `how-it-works`, `about`, `faq`, `safety`, `contact`, all `legal.*` routes. |
 | FAQ structured data | `src/routes/faq.tsx` ships `FAQPage` JSON-LD. |
-| Sitemap route | `src/routes/sitemap[.]xml.ts` exists. |
+| Sitemap | `public/sitemap.xml` (static — the old `sitemap[.]xml.ts` server route never ran on GitHub Pages, so `/sitemap.xml` 404'd; replaced July 2026). Synced by `src/lib/__tests__/sitemap.test.ts`. |
 | robots.txt | `public/robots.txt` exists, allows crawl, blocks `/qualify`. |
 | Landing-page CMS | `lp.$slug.tsx` + staff LP builder — ideal for paid-traffic pages. |
 | UTM capture + analytics | `capturePageUtms()` in `__root.tsx`, staff analytics dashboard. |
@@ -40,13 +40,13 @@ Realistic organic timeline: long-tail rankings in 3–6 months, mid-tail in 6–
 
 | # | Gap | Where | Impact |
 |---|---|---|---|
-| G1 | Sitemap `BASE_URL = ""` → `<loc>` values are relative paths. Invalid per the sitemap protocol; Google may discard the whole file. | `src/routes/sitemap[.]xml.ts` | High |
+| G1 | ~~Sitemap `BASE_URL = ""` → relative `<loc>` values; also the server route never ran on GitHub Pages, so `/sitemap.xml` 404'd in production.~~ **Done July 2026** — replaced with static `public/sitemap.xml` (absolute trailing-slash URLs), synced by `src/lib/__tests__/sitemap.test.ts`. | `public/sitemap.xml` | ✅ |
 | G2 | ~~robots.txt has no `Sitemap:` directive and doesn't block funnel/portal/staff routes.~~ **Done July 2026** — see A2. | `public/robots.txt` | ✅ |
 | G3 | Canonical links are relative (`href: "/pricing"`). Google wants absolute canonicals; relative ones are unreliable. No `og:url` anywhere. | every route with `head()` | High |
 | G4 | `og:image` / `twitter:image` are relative paths — social/AI crawlers need absolute URLs; card previews currently break off-site. | `src/routes/__root.tsx` | Med |
 | G5 | `/learn` content hub was **removed** (redirects home). No blog = no content engine = no long-tail rankings. This is the biggest strategic gap. | `src/routes/learn.tsx` | Critical |
 | G6 | `lp.$slug.tsx` has no `head()` at all — no title, no description, and critically no `noindex`. Paid LPs duplicating organic pages can trigger duplicate-content problems. | `src/routes/lp.$slug.tsx` | High |
-| G7 | `clinicians.tsx`, `insurance.tsx`, `switch.tsx`, and `learn.tsx` all **redirect to `/`** (MVP removals) yet are still listed in the sitemap. A sitemap full of redirecting URLs erodes Google's trust in it. Remove them from the sitemap until the pages come back. | `src/routes/sitemap[.]xml.ts` | High |
+| G7 | ~~`clinicians.tsx`, `insurance.tsx`, `switch.tsx`, and `learn.tsx` all **redirect to `/`** (MVP removals) yet are still listed in the sitemap.~~ **Done July 2026** — `public/sitemap.xml` lists only live marketing pages (redirecting routes and unshipped `/pricing` excluded). | `public/sitemap.xml` | ✅ |
 | G8 | Structured data is FAQ-only. Missing: `Organization`/`MedicalOrganization`, `WebSite`, `MedicalWebPage`, `Physician`, `Product`/`Offer` (pricing), `BreadcrumbList`. AI engines lean heavily on schema. | site-wide | High |
 | G9 | **Brand + domain decided (July 2026): Beema Health at beemahealth.com** (domain purchased). Production still serves from beemahealth until cutover — see the migration checklist below. Internal docs/copy still say Aretide in places; that rebrand is a separate low-cost cleanup task, **not part of this plan's execution**. | site-wide | Cutover pending |
 | G10 | Google Fonts loaded from CDN render-blocking; hurts LCP/CWV. | `__root.tsx` | Med |
@@ -71,10 +71,8 @@ Frontend CTAs will link into the Bask flow on the backend side; that wiring is p
 
 Ordered backlog. All items are small, code-level, and testable.
 
-### A1. Fix the sitemap (G1)
-- Set `BASE_URL` to the canonical production origin (env-driven: `VITE_SITE_URL`).
-- Add `/about` (currently missing); remove or fix any route that 404s.
-- Add `<lastmod>` sourced from a per-entry date constant.
+### A1. Fix the sitemap (G1) — ✅ shipped July 2026
+Replaced the `sitemap[.]xml.ts` server route (which never ran on GitHub Pages static hosting — `/sitemap.xml` returned 404) with a static `public/sitemap.xml`. Absolute URLs on the canonical origin, trailing-slash form matching what GitHub Pages actually serves with 200, only live marketing pages listed. Page canonicals now use `canonicalUrl()` from `src/lib/seo.ts` so canonical = sitemap = served URL. Kept in sync by `src/lib/__tests__/sitemap.test.ts`. Remaining nice-to-have: `<lastmod>` from a per-entry date constant (only if dates are kept accurate).
 
 ### A2. Harden robots.txt (G2) — ✅ shipped July 2026
 `public/robots.txt` now blocks all funnel/portal/staff/login routes plus `/lp/`, declares the sitemap URL, and documents that AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Bingbot) are intentionally allowed — GEO requires being crawlable by them; never blanket-block AI user-agents. If the domain changes, update the `Sitemap:` line together with the sitemap's `BASE_URL`.

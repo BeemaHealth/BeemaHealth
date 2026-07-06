@@ -188,7 +188,7 @@ In `src/components/site/SiteFooter.tsx`:
 
 ### 4. Sitemap
 
-[`src/routes/sitemap[.]xml.ts`](../src/routes/sitemap%5B.%5Dxml.ts) already lists all marketing URLs — no change needed unless routes were renamed.
+[`public/sitemap.xml`](../public/sitemap.xml) lists the live marketing URLs (static file — server routes don't run on GitHub Pages). When restoring an archived page, add its trailing-slash URL there and update the expected list in `src/lib/__tests__/sitemap.test.ts`.
 
 ### 5. Verify
 

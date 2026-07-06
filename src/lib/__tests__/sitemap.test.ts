@@ -1,0 +1,92 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { describe, expect, it } from "vitest";
+import { SITE_URL, canonicalUrl } from "../seo";
+
+const sitemapXml = readFileSync(
+  resolve(__dirname, "../../../public/sitemap.xml"),
+  "utf-8",
+);
+const robotsTxt = readFileSync(
+  resolve(__dirname, "../../../public/robots.txt"),
+  "utf-8",
+);
+
+/** Live, indexable marketing pages. Update together with public/sitemap.xml. */
+const EXPECTED_PATHS = [
+  "/",
+  "/weight-loss/",
+  "/how-it-works/",
+  "/about/",
+  "/safety/",
+  "/faq/",
+  "/contact/",
+  "/legal/privacy/",
+  "/legal/terms/",
+  "/legal/telehealth-consent/",
+];
+
+function sitemapLocs(): string[] {
+  return [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+}
+
+describe("public/sitemap.xml", () => {
+  it("lists exactly the live marketing pages", () => {
+    expect(sitemapLocs()).toEqual(EXPECTED_PATHS.map((p) => `${SITE_URL}${p}`));
+  });
+
+  it("uses the canonical trailing-slash URL form GitHub Pages serves", () => {
+    for (const loc of sitemapLocs()) {
+      expect(loc.endsWith("/")).toBe(true);
+      const path = loc.slice(SITE_URL.length);
+      expect(loc).toBe(canonicalUrl(path));
+    }
+  });
+
+  it("stays on the canonical production origin", () => {
+    for (const loc of sitemapLocs()) {
+      expect(loc.startsWith(`${SITE_URL}/`) || loc === `${SITE_URL}/`).toBe(
+        true,
+      );
+    }
+  });
+
+  it("never lists funnel, portal, staff, or auth routes", () => {
+    const disallowed = [
+      "/qualify",
+      "/intake",
+      "/consent",
+      "/submitted",
+      "/eligibility",
+      "/dashboard",
+      "/staff",
+      "/admin",
+      "/login",
+      "/verify-email",
+      "/lp/",
+    ];
+    for (const loc of sitemapLocs()) {
+      const path = loc.slice(SITE_URL.length);
+      for (const prefix of disallowed) {
+        expect(path.startsWith(prefix)).toBe(false);
+      }
+    }
+  });
+});
+
+describe("public/robots.txt", () => {
+  it("declares the sitemap at the canonical origin", () => {
+    expect(robotsTxt).toContain(`Sitemap: ${SITE_URL}/sitemap.xml`);
+  });
+});
+
+describe("canonicalUrl", () => {
+  it("appends a trailing slash to bare paths", () => {
+    expect(canonicalUrl("/weight-loss")).toBe(`${SITE_URL}/weight-loss/`);
+  });
+
+  it("leaves trailing-slash paths and the root untouched", () => {
+    expect(canonicalUrl("/weight-loss/")).toBe(`${SITE_URL}/weight-loss/`);
+    expect(canonicalUrl("/")).toBe(`${SITE_URL}/`);
+  });
+});

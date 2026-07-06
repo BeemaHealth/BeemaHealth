@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { absoluteUrl } from "@/lib/seo";
+import { canonicalUrl } from "@/lib/seo";
 import { trackPageViewed } from "@/lib/analytics";
 import { createFunnelSession } from "@/lib/api/client";
 import { getPendingUtms, clearPendingUtms } from "@/lib/utm";
@@ -41,7 +41,7 @@ export const Route = createFileRoute("/")({
           "Medical weight-loss care reviewed by a licensed provider. Secure intake for Zepbound, Wegovy, and affordable alternatives when appropriate.",
       },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/") }],
+    links: [{ rel: "canonical", href: canonicalUrl("/") }],
   }),
   component: HomePage,
 });

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { absoluteUrl } from "@/lib/seo";
+import { canonicalUrl } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { trackPageViewed } from "@/lib/analytics";
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/faq")({
         content: "Clear answers about how Beema Health works.",
       },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/faq") }],
+    links: [{ rel: "canonical", href: canonicalUrl("/faq") }],
     scripts: [
       {
         type: "application/ld+json",

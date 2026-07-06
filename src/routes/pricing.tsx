@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { absoluteUrl } from "@/lib/seo";
+import { canonicalUrl } from "@/lib/seo";
 
 /**
  * Pricing page disabled — the pricing model isn't finalized yet.
@@ -43,7 +43,7 @@ const headMeta = () => ({
         "No platform membership fee. Estimate your monthly medication cost.",
     },
   ],
-  links: [{ rel: "canonical", href: absoluteUrl("/pricing") }],
+  links: [{ rel: "canonical", href: canonicalUrl("/pricing") }],
 });
 
 const MED_PATHS = [

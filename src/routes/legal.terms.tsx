@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { absoluteUrl } from "@/lib/seo";
+import { canonicalUrl } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   LegalDocument,
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/legal/terms")({
           "Terms governing your use of Beema Health's weight-management telehealth platform.",
       },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/legal/terms") }],
+    links: [{ rel: "canonical", href: canonicalUrl("/legal/terms") }],
   }),
   component: TermsPage,
 });
