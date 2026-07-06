@@ -40,7 +40,7 @@ export function SiteFooter() {
           <div className="max-w-sm">
             <Logo className="h-10" tone="ink" />
             <p className="mt-4 text-sm leading-relaxed text-ink-foreground/70">
-              Continuous care. Precision medicine. Weight-loss care with
+              Precision medicine. Weight-loss care with
               licensed providers, transparent pricing, and follow-through built
               for the long run.
             </p>

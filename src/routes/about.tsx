@@ -150,19 +150,19 @@ function AboutPage() {
         </div>
       </Section>
 
-      {/* Infinity — continuous care */}
+      {/* Infinity — care that lasts */}
       <Section className="bg-muted/40 pt-0">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <Reveal>
             <Eyebrow>Infinity wings</Eyebrow>
             <h2 className="mt-4 text-balance text-3xl font-bold text-foreground md:text-4xl">
-              Continuous care, not a finish line
+              Health doesn't have a finish line
             </h2>
             <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
               The infinity shape in our wings is a reminder that wellness
               doesn't end at a prescription. It's why we build for
               follow-through — refill coordination, ongoing check-ins, and a
-              care team that stays with you long after your first visit.
+              care team that stays available to you long after your first visit.
             </p>
           </Reveal>
           <Reveal delay={140}>

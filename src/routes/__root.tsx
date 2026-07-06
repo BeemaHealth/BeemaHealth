@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "Beema Health — Continuous care. Precision medicine." },
+        { title: "Beema Health — Care that lasts. Precision medicine." },
         {
           name: "description",
           content:
@@ -93,7 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { name: "author", content: "Beema Health" },
         {
           property: "og:title",
-          content: "Beema Health — Continuous care. Precision medicine.",
+          content: "Beema Health — Care that lasts. Precision medicine.",
         },
         {
           property: "og:description",
@@ -105,7 +105,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { name: "twitter:card", content: "summary" },
         {
           name: "twitter:title",
-          content: "Beema Health — Continuous care. Precision medicine.",
+          content: "Beema Health — Care that lasts. Precision medicine.",
         },
         {
           name: "twitter:description",

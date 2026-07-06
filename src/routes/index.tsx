@@ -125,7 +125,7 @@ function HomePage() {
             <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
               Licensed providers, pricing you see before you pay, and
               follow-through that doesn't stop at the first prescription.
-              Continuous care. Precision medicine.
+              Precision medicine.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="xl">
