@@ -39,7 +39,8 @@ import { applySession, clearSession } from "@/lib/session";
 import * as store from "@/lib/storage";
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "";
-const USE_API = Boolean(API_BASE);
+// Force mock mode for frontend-only deployment
+const USE_API = false;
 
 type ApiOptions = RequestInit & { withCredentials?: boolean };
 
@@ -56,6 +57,72 @@ export class ApiError extends Error {
 }
 
 const GENERIC_SERVER_ERROR = "Something went wrong. Please try again.";
+
+function getInstantMockData<T>(path: string): T {
+  // Return instant mock data for common endpoints
+  if (path.includes("/auth/me/")) {
+    return {
+      token: "mock-token",
+      user: {
+        id: "mock-user-1",
+        email: "demo@beemahealth.com",
+        first_name: "Demo",
+        last_name: "User",
+        phone: "555-0123",
+        dob: "1990-01-15",
+        state: "CA",
+        email_verified: true,
+        is_staff: false,
+        is_provider: false,
+        is_patient: true,
+        created_at: new Date().toISOString(),
+      },
+    } as T;
+  }
+  if (path.includes("/dashboard/me/")) {
+    return {
+      user: { email: "demo@beemahealth.com", first_name: "Demo" },
+      status: "pending_review",
+      prescription: null,
+      refill_requests: [],
+      side_effect_check_ins: [],
+    } as T;
+  }
+  if (path.includes("/staff/")) {
+    // Return empty arrays/objects for staff endpoints
+    if (path.includes("/patients")) return { patients: [], count: 0 } as T;
+    if (path.includes("/analytics")) return { steps: [] } as T;
+    if (path.includes("/medications")) return [] as T;
+    if (path.includes("/questionnaires")) return [] as T;
+    if (path.includes("/vendors")) return [] as T;
+    if (path.includes("/experiments")) return [] as T;
+    if (path.includes("/summary")) return { total_patients: 0, active_funnel_sessions: 0, submitted_intakes: 0 } as T;
+    return {} as T;
+  }
+  if (path.includes("/eligibility")) {
+    return {
+      user_id: "mock-user-1",
+      age: 35,
+      weight_lbs: 220,
+      bmi: 31.5,
+      has_diabetes: false,
+      has_hypertension: false,
+      qualifies: true,
+    } as T;
+  }
+  if (path.includes("/medical-intakes")) {
+    return {
+      user_id: "mock-user-1",
+      status: "pending_review",
+      responses: {},
+    } as T;
+  }
+  if (path.includes("/questionnaires")) {
+    return { steps: [] } as T;
+  }
+  // Default empty response
+  return {} as T;
+}
 
 function looksLikeHtml(body: string): boolean {
   const trimmed = body.trimStart().toLowerCase();
@@ -104,7 +171,8 @@ async function parseApiErrorMessage(
 
 async function apiFetch<T>(path: string, options: ApiOptions = {}): Promise<T> {
   if (!USE_API) {
-    throw new Error("VITE_API_URL is not configured.");
+    // Frontend-only mode: return mock data immediately without waiting
+    return getInstantMockData<T>(path);
   }
   const session = store.getSession();
   const headers: Record<string, string> = {
@@ -322,6 +390,26 @@ export async function logoutUser() {
 }
 
 export async function fetchAuthMe(): Promise<SessionUser> {
+  if (!USE_API) {
+    // Return mock user without needing a session
+    return {
+      token: "mock-token",
+      user: {
+        id: "mock-user-1",
+        email: "demo@beemahealth.com",
+        first_name: "Demo",
+        last_name: "User",
+        phone: "555-0123",
+        dob: "1990-01-15",
+        state: "CA",
+        email_verified: true,
+        is_staff: false,
+        is_provider: false,
+        is_patient: true,
+        created_at: new Date().toISOString(),
+      },
+    };
+  }
   return apiFetch<SessionUser>("/auth/me/");
 }
 
@@ -447,7 +535,15 @@ export async function syncReview(data: ProviderReview) {
 }
 
 export async function fetchDashboard(): Promise<DashboardData | null> {
-  if (!USE_API) return null;
+  if (!USE_API) {
+    return {
+      user: { email: "demo@beemahealth.com", first_name: "Demo" },
+      status: "pending_review",
+      prescription: null,
+      refill_requests: [],
+      side_effect_check_ins: [],
+    };
+  }
   return apiFetch<DashboardData>("/dashboard/me/");
 }
 
