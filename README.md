@@ -1,6 +1,6 @@
 # Beema Health
 
-Colorado-first telehealth medical weight-loss intake platform. This repo contains the **React frontend** (TanStack Start) and **Django REST (Representational State Transfer) API (Application Programming Interface) backend**.
+Telehealth medical weight-loss intake platform. This repo contains the **React frontend** (TanStack Start) and **Django REST (Representational State Transfer) API (Application Programming Interface) backend**.
 
 Use this file as the **documentation index** — for humans and AI agents. When looking something up, start here, then follow the link to the right doc.
 

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { canonicalUrl } from "@/lib/seo";
+import { canonicalUrl, ORGANIZATION_JSONLD, WEBSITE_JSONLD } from "@/lib/seo";
 import { trackPageViewed } from "@/lib/analytics";
 import { createFunnelSession } from "@/lib/api/client";
 import { getPendingUtms, clearPendingUtms } from "@/lib/utm";
@@ -42,6 +42,16 @@ export const Route = createFileRoute("/")({
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/") }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(ORGANIZATION_JSONLD),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(WEBSITE_JSONLD),
+      },
+    ],
   }),
   component: HomePage,
 });
@@ -121,7 +131,7 @@ function HomePage() {
               Weight-loss care that's{" "}
               <span className="text-grad-brand">human</span> and built for the{" "}
               <span className="text-grad-brand">long run.</span>
-            </h1> 
+            </h1>
             <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
               Licensed providers, pricing you see before you pay, and
               follow-through that doesn't stop at the first prescription.

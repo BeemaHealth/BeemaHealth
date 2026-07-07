@@ -90,3 +90,50 @@ describe("canonicalUrl", () => {
     expect(canonicalUrl("/")).toBe(`${SITE_URL}/`);
   });
 });
+
+describe("public/llms.txt", () => {
+  const llmsTxt = readFileSync(
+    resolve(__dirname, "../../../public/llms.txt"),
+    "utf-8",
+  );
+
+  it("only links pages that are in the sitemap (no dead or redirecting URLs)", () => {
+    // AI crawlers follow these links directly; a 404 (like the /pricing
+    // link that shipped while the page was unrouted) burns trust.
+    const linked = [...llmsTxt.matchAll(/\((https:\/\/[^)]+)\)/g)].map(
+      (m) => m[1],
+    );
+    expect(linked.length).toBeGreaterThan(0);
+    const sitemapUrls = new Set(sitemapLocs());
+    for (const url of linked) {
+      expect(sitemapUrls.has(url), `${url} not in sitemap`).toBe(true);
+    }
+  });
+
+  it("uses the canonical origin for every absolute URL", () => {
+    const absolute = llmsTxt.match(/https?:\/\/[^\s)\]]+/g) ?? [];
+    for (const url of absolute) {
+      expect(url.startsWith(SITE_URL), `${url} is off-origin`).toBe(true);
+    }
+  });
+});
+
+describe("IndexNow", () => {
+  it("deploy script key matches a key file in public/", () => {
+    const deployScript = readFileSync(
+      resolve(__dirname, "../../../deploy-frontend-prod.sh"),
+      "utf-8",
+    );
+    const match = deployScript.match(/INDEXNOW_KEY="([0-9a-f]{32})"/);
+    expect(
+      match,
+      "INDEXNOW_KEY not found in deploy-frontend-prod.sh",
+    ).not.toBeNull();
+    const key = match![1];
+    const keyFile = readFileSync(
+      resolve(__dirname, `../../../public/${key}.txt`),
+      "utf-8",
+    );
+    expect(keyFile.trim()).toBe(key);
+  });
+});

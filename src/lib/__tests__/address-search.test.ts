@@ -236,24 +236,24 @@ describe("address-search", () => {
       [
         "abbreviated state",
         {
-          address: "2510 Summit Drive",
-          city: "Colorado Springs",
-          zip: "80909",
-          state: "CO",
-          county: "El Paso County",
+          address: "2510 Oak Drive",
+          city: "Phoenix",
+          zip: "85001",
+          state: "AZ",
+          county: "Maricopa County",
         },
-        "2510 Summit Drive, Colorado Springs, Colorado 80909",
+        "2510 Oak Drive, Phoenix, Arizona 85001",
       ],
       [
         "full state name",
         {
           address: "123 Main Street",
-          city: "Denver",
-          zip: "80202",
-          state: "Colorado",
-          county: "Denver County",
+          city: "Tucson",
+          zip: "85013",
+          state: "Arizona",
+          county: "Pima County",
         },
-        "123 Main Street, Denver, Colorado 80202",
+        "123 Main Street, Tucson, Arizona 85013",
       ],
     ])("formats %s", (_label, parsed, expected) => {
       expect(formatVerifiedAddress(parsed)).toBe(expected);

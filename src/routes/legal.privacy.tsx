@@ -212,10 +212,9 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          Residents of certain states — including Colorado and other states with
-          consumer health data laws — may have additional rights regarding
-          &quot;consumer health data&quot; or similarly defined sensitive health
-          information.
+          Residents of certain states with consumer health data laws may have
+          additional rights regarding &quot;consumer health data&quot; or
+          similarly defined sensitive health information.
         </LegalP>
         <LegalP>
           Depending on your state, you may have the right to confirm whether we

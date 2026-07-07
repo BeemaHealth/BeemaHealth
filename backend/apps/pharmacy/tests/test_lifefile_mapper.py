@@ -23,7 +23,7 @@ class LifeFileMapperTests(TestCase):
             last_name="Doe",
             phone="3035550100",
             dob="1990-01-01",
-            state="Colorado",
+            state="Texas",
         )
         intake = MedicalIntake.objects.create(
             user=user,

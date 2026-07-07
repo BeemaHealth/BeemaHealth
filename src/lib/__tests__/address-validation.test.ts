@@ -207,10 +207,10 @@ describe("address-validation", () => {
 
   describe("normalizeUsState", () => {
     it("treats abbreviations and full names as the same state", () => {
-      expect(normalizeUsState("CO")).toBe("colorado");
-      expect(normalizeUsState("Colorado")).toBe("colorado");
-      expect(normalizeUsState("COLORADO")).toBe("colorado");
-      expect(usStatesMatch("CO", "Colorado")).toBe(true);
+      expect(normalizeUsState("AZ")).toBe("arizona");
+      expect(normalizeUsState("Arizona")).toBe("arizona");
+      expect(normalizeUsState("ARIZONA")).toBe("arizona");
+      expect(usStatesMatch("AZ", "Arizona")).toBe(true);
     });
 
     it("returns null for unknown values", () => {
@@ -219,29 +219,29 @@ describe("address-validation", () => {
     });
 
     it("formats display names from abbreviations", () => {
-      expect(formatUsStateName("CO")).toBe("Colorado");
-      expect(formatUsStateName("colorado")).toBe("Colorado");
+      expect(formatUsStateName("AZ")).toBe("Arizona");
+      expect(formatUsStateName("arizona")).toBe("Arizona");
     });
   });
 
   describe("verifyCityZip state matching", () => {
-    const zippopotamDenver = {
-      "post code": "80202",
-      places: [{ "place name": "Denver", "state abbreviation": "CO" }],
+    const zippopotamPhoenix = {
+      "post code": "85001",
+      places: [{ "place name": "Phoenix", "state abbreviation": "AZ" }],
     };
 
-    it("accepts CO address when account state is Colorado", async () => {
+    it("accepts AZ address when account state is Arizona", async () => {
       vi.stubGlobal(
         "fetch",
         vi.fn().mockResolvedValue({
           ok: true,
           status: 200,
-          json: async () => zippopotamDenver,
+          json: async () => zippopotamPhoenix,
         }),
       );
 
-      const result = await verifyCityZip("Denver", "80202", "Colorado");
-      expect(result).toEqual({ ok: true, state: "CO" });
+      const result = await verifyCityZip("Phoenix", "85001", "Arizona");
+      expect(result).toEqual({ ok: true, state: "AZ" });
 
       vi.unstubAllGlobals();
     });
@@ -252,11 +252,11 @@ describe("address-validation", () => {
         vi.fn().mockResolvedValue({
           ok: true,
           status: 200,
-          json: async () => zippopotamDenver,
+          json: async () => zippopotamPhoenix,
         }),
       );
 
-      const result = await verifyCityZip("Denver", "80202", "Texas");
+      const result = await verifyCityZip("Phoenix", "85001", "Texas");
       expect(result.ok).toBe(false);
       if (!result.ok) {
         expect(result.message).toMatch(/account state is Texas/);
@@ -271,19 +271,19 @@ describe("address-validation", () => {
       address_components: [
         { long_name: "2510", short_name: "2510", types: ["street_number"] },
         {
-          long_name: "Summit Drive",
-          short_name: "Summit Dr",
+          long_name: "Oak Street",
+          short_name: "Oak St",
           types: ["route"],
         },
       ],
-      formatted_address: "2510 Summit Dr, Colorado Springs, CO 80909, USA",
+      formatted_address: "2510 Oak St, Phoenix, AZ 85001, USA",
       geometry: { location_type: "ROOFTOP" },
       types: ["street_address"],
     };
 
     it("accepts rooftop street-level matches with matching street number", () => {
       expect(
-        isDeliverableGeocodeResult(deliverableResult, "2510 Summit Dr"),
+        isDeliverableGeocodeResult(deliverableResult, "2510 Oak St"),
       ).toBe(true);
     });
 
@@ -293,16 +293,16 @@ describe("address-validation", () => {
           {
             address_components: [
               {
-                long_name: "80909",
-                short_name: "80909",
+                long_name: "85001",
+                short_name: "85001",
                 types: ["postal_code"],
               },
             ],
-            formatted_address: "Colorado Springs, CO 80909, USA",
+            formatted_address: "Phoenix, AZ 85001, USA",
             geometry: { location_type: "APPROXIMATE" },
             types: ["postal_code"],
           },
-          "2510 sum",
+          "2510 oak",
         ),
       ).toBe(false);
     });
@@ -315,10 +315,10 @@ describe("address-validation", () => {
   });
 
   describe("verifyMailingAddress", () => {
-    const coloradoSpringsZip = {
-      "post code": "80909",
+    const phoenixZip = {
+      "post code": "85001",
       places: [
-        { "place name": "Colorado Springs", "state abbreviation": "CO" },
+        { "place name": "Phoenix", "state abbreviation": "AZ" },
       ],
     };
 
@@ -331,7 +331,7 @@ describe("address-validation", () => {
             return {
               ok: true,
               status: 200,
-              json: async () => coloradoSpringsZip,
+              json: async () => phoenixZip,
             };
           }
           return {
@@ -343,12 +343,12 @@ describe("address-validation", () => {
                 {
                   address_components: [
                     {
-                      long_name: "80909",
-                      short_name: "80909",
+                      long_name: "85001",
+                      short_name: "85001",
                       types: ["postal_code"],
                     },
                   ],
-                  formatted_address: "Colorado Springs, CO 80909, USA",
+                  formatted_address: "Phoenix, AZ 85001, USA",
                   geometry: { location_type: "APPROXIMATE" },
                   types: ["postal_code"],
                 },
@@ -366,9 +366,9 @@ describe("address-validation", () => {
 
       const result = await verifyFresh(
         "9999 Imaginary Boulevard",
-        "Colorado Springs",
-        "80909",
-        "Colorado",
+        "Phoenix",
+        "85001",
+        "Arizona",
       );
       expect(result.ok).toBe(false);
       if (!result.ok) {

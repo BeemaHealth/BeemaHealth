@@ -97,4 +97,4 @@ Do not expose RDS to the public internet.
 
 ## Region
 
-Deploy to **us-west-2** (close to Colorado) unless counsel advises otherwise.
+Deploy to **us-west-2** unless counsel advises otherwise.

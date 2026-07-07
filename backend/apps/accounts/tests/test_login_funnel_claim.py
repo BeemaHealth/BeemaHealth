@@ -73,7 +73,7 @@ class LoginFunnelClaimTests(TestCase):
                 "first_name": "New",
                 "last_name": "Patient",
                 "phone": "(303) 555-0199",
-                "state": "Colorado",
+                "state": "Massachusetts",
             },
             format="json",
         )

@@ -52,7 +52,7 @@ describe("questionnaire validation", () => {
         {
           address: "123 Main St",
           city: "Denver",
-          state: "Colorado",
+          state: "Arizona",
           zip: "80202",
           county: "Denver County",
           country: "US",

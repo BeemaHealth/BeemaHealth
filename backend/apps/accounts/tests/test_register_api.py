@@ -13,7 +13,7 @@ def valid_register_payload(**overrides):
         "first_name": "Jane",
         "last_name": "Doe",
         "phone": "(303) 555-0100",
-        "state": "Colorado",
+        "state": "Washington",
     }
     payload.update(overrides)
     return payload

@@ -26,7 +26,7 @@ class IntakeSubmissionTests(TestCase):
             first_name="Jane",
             last_name="Doe",
             phone="3035550100",
-            state="Colorado",
+            state="Florida",
         )
         self.eligibility = EligibilityResponse.objects.create(
             user=self.user,

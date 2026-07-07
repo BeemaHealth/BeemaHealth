@@ -58,16 +58,16 @@ class SyncPatientProfileFromIntakeTests(TestCase):
             self.user,
             identity={},
             shipping={
-                "shipping_address": "2510 Summit Drive",
-                "shipping_city": "Colorado Springs",
-                "shipping_zip": "80909",
-                "shipping_county": "El Paso",
+                "shipping_address": "2510 Oak Street",
+                "shipping_city": "Phoenix",
+                "shipping_zip": "85001",
+                "shipping_county": "Maricopa",
             },
         )
-        self.assertEqual(profile.address, "2510 Summit Drive")
-        self.assertEqual(profile.city, "Colorado Springs")
-        self.assertEqual(profile.zip_code, "80909")
-        self.assertEqual(profile.county, "El Paso")
+        self.assertEqual(profile.address, "2510 Oak Street")
+        self.assertEqual(profile.city, "Phoenix")
+        self.assertEqual(profile.zip_code, "85001")
+        self.assertEqual(profile.county, "Maricopa")
 
     def test_identity_address_takes_precedence_over_shipping(self):
         profile = sync_patient_profile_from_intake(
@@ -75,7 +75,7 @@ class SyncPatientProfileFromIntakeTests(TestCase):
             identity={"address": "123 Main St", "city": "Denver", "zip": "80202"},
             shipping={
                 "shipping_address": "2510 Summit Drive",
-                "shipping_city": "Colorado Springs",
+                "shipping_city": "Phoenix",
                 "shipping_zip": "80909",
             },
         )

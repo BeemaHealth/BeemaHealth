@@ -71,7 +71,6 @@ docker compose -f backend/docker-compose.yml exec api python manage.py shell -c 
 - Token authentication with rate limiting on auth endpoints
 - PHI access audit log (`audit_events` table)
 - **RBAC** (Role-Based Access Control): patients see only `/me/`; providers see `/api/admin/`
-- Colorado-only validation on registration and eligibility
 - No PHI in application logs
 
 ## HIPAA administrative launch blockers (required before real PHI)
@@ -84,7 +83,7 @@ See [HOSTING.md](./HOSTING.md) for hosting go/no-go and:
 4. Security risk assessment (annual)
 5. Workforce access policies and training
 6. Breach notification procedure
-7. Colorado telehealth legal review
+7. Telehealth legal review for all states
 8. Covered entity vs Business Associate structure with counsel
 
 > **Disclaimer:** This codebase implements HIPAA-aligned technical controls. Final compliance requires legal counsel and a completed risk assessment.

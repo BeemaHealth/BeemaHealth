@@ -15,7 +15,7 @@ const sampleSnapshot: IntakeSubmissionSnapshot = {
     email: "jane@example.com",
     phone: "3035550100",
     dob: "1990-01-01",
-    state: "Colorado",
+    state: "Arizona",
   },
   account_summary: {
     first_name: "Jane",
@@ -24,7 +24,7 @@ const sampleSnapshot: IntakeSubmissionSnapshot = {
     email: "jane@example.com",
     phone: "3035550100",
     dob: "1990-01-01",
-    state: "Colorado",
+    state: "Arizona",
     height_ft: 5,
     height_in: 8,
     weight_lbs: "170",

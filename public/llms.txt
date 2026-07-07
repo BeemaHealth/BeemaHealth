@@ -7,22 +7,21 @@ Key facts:
 - Care model: online eligibility check → medical intake questionnaire → review by a licensed provider → prescription when clinically appropriate → home delivery from US pharmacies → ongoing check-ins and refill management.
 - Medications: Zepbound® (tirzepatide), Wegovy® (semaglutide injection), Wegovy® oral semaglutide, and compounded semaglutide. Compounded semaglutide is not FDA-approved and is only offered when clinically indicated.
 - Prescriptions are never guaranteed; a licensed provider makes every prescribing decision.
-- Pricing is transparent cash-pay, listed at https://beemahealth.com/pricing — no hidden fees.
+- Pricing is transparent cash-pay — no hidden fees.
 - Privacy: HIPAA-aligned handling of all patient information.
 
 ## Main pages
 
 - [Home](https://beemahealth.com/): what Beema Health is and how care works
-- [Weight-loss treatments](https://beemahealth.com/weight-loss): the medication lineup and who each is for
-- [How it works](https://beemahealth.com/how-it-works): step-by-step care process
-- [Pricing](https://beemahealth.com/pricing): current plans and monthly costs
-- [Safety](https://beemahealth.com/safety): side effects, contraindications, and clinical safeguards
-- [FAQ](https://beemahealth.com/faq): common questions about eligibility, medications, shipping, and refills
-- [About](https://beemahealth.com/about): company and clinical team
-- [Contact](https://beemahealth.com/contact): support channels
+- [Weight-loss treatments](https://beemahealth.com/weight-loss/): the medication lineup and who each is for
+- [How it works](https://beemahealth.com/how-it-works/): step-by-step care process
+- [Safety](https://beemahealth.com/safety/): side effects, contraindications, and clinical safeguards
+- [FAQ](https://beemahealth.com/faq/): common questions about eligibility, medications, shipping, and refills
+- [About](https://beemahealth.com/about/): company and clinical team
+- [Contact](https://beemahealth.com/contact/): support channels
 
 ## Policies
 
-- [Privacy policy](https://beemahealth.com/legal/privacy)
-- [Terms of service](https://beemahealth.com/legal/terms)
-- [Telehealth consent](https://beemahealth.com/legal/telehealth-consent)
+- [Privacy policy](https://beemahealth.com/legal/privacy/)
+- [Terms of service](https://beemahealth.com/legal/terms/)
+- [Telehealth consent](https://beemahealth.com/legal/telehealth-consent/)

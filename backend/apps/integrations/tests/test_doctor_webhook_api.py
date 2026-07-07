@@ -27,7 +27,7 @@ class DoctorWebhookTests(TestCase):
             last_name="Doe",
             phone="3035550100",
             dob="1990-01-01",
-            state="Colorado",
+            state="Illinois",
         )
         self.intake = MedicalIntake.objects.create(
             user=self.patient,

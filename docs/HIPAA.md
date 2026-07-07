@@ -62,7 +62,7 @@ These are **launch blockers for real PHI** — not fully automatable in code:
 | Security risk assessment | **Required (annual)** | Note new risks when adding features |
 | Workforce access policies & training | **Required** | Provider admin access is sensitive |
 | Breach notification procedure | **Required** | Escalate suspected breaches to user immediately |
-| Colorado telehealth legal review | **Required** | Jurisdiction-specific — flag legal questions |
+| Telehealth legal review for operating states | **Required** | Jurisdiction-specific — flag legal questions |
 | CE vs BA entity structure | **Legal counsel** | Do not assume in code |
 
 ### Physical safeguards
@@ -205,7 +205,7 @@ Does it touch patient health or identifying data?
 
 ## Pre-launch compliance gate (real patients)
 
-Before accepting real Colorado patient PHI in production, confirm with the user that these are done:
+Before accepting real patient PHI in production, confirm with the user that these are done:
 
 - [ ] AWS BAA (or Heroku Shield BAA) signed
 - [ ] BAAs for email, document storage, and any other subprocessors
@@ -215,7 +215,7 @@ Before accepting real Colorado patient PHI in production, confirm with the user 
 - [ ] Security risk assessment completed
 - [ ] Breach notification procedure documented
 - [ ] `src/lib/storage.ts` localStorage PHI fallback removed or disabled in production builds
-- [ ] Legal review of Colorado telehealth + MSO/PC structure
+- [ ] Legal review of telehealth requirements for all operating states + MSO/PC structure
 
 ---
 

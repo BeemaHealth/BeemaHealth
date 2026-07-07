@@ -76,15 +76,15 @@ class QuestionnaireSyncTests(TestCase):
                 "dob": "1990-06-15",
                 "sex": "male",
                 "ship": {
-                    "address": "2510 Summit Drive",
-                    "city": "Colorado Springs",
-                    "state": "CO",
-                    "zip": "80909",
+                    "address": "2510 Oak Street",
+                    "city": "Phoenix",
+                    "state": "AZ",
+                    "zip": "85001",
                     "verified": True,
                 },
             },
             medication_preferences={
-                "shipping_state": "CO",
+                "shipping_state": "AZ",
             },
         )
 
@@ -93,7 +93,7 @@ class QuestionnaireSyncTests(TestCase):
         self.user.refresh_from_db()
         profile = PatientProfile.objects.get(user=self.user)
         self.assertEqual(str(self.user.dob), "1990-06-15")
-        self.assertEqual(self.user.state, "Colorado")
+        self.assertEqual(self.user.state, "Arizona")
         self.assertEqual(profile.sex_assigned_at_birth, "male")
 
     def test_format_us_state_name(self):

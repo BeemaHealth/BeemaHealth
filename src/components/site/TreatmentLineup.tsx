@@ -7,8 +7,6 @@ import {
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import zepboundPenImg from "@/assets/treatments/zepbound-pen.png";
-import wegovyPillImg from "@/assets/treatments/wegovy-pill.png";
-import wegovyPenImg from "@/assets/treatments/wegovy-pen.png";
 import compoundedPenImg from "@/assets/treatments/compounded-pen.png";
 
 type Treatment = {
@@ -33,27 +31,6 @@ const TREATMENTS: Treatment[] = [
     fdaApproved: true,
     image: zepboundPenImg,
     imageAlt: "Zepbound tirzepatide KwikPen auto-injector",
-  },
-  {
-    id: "wegovy-pill",
-    name: "Wegovy®",
-    form: "Daily pill, if prescribed",
-    generic: "Semaglutide",
-    priceFrom: "$149",
-    badge: "Pill option",
-    fdaApproved: true,
-    image: wegovyPillImg,
-    imageAlt: "Wegovy semaglutide oral tablet",
-  },
-  {
-    id: "wegovy-pen",
-    name: "Wegovy®",
-    form: "Weekly injection",
-    generic: "Semaglutide",
-    priceFrom: "$199",
-    fdaApproved: true,
-    image: wegovyPenImg,
-    imageAlt: "Wegovy semaglutide injection pen",
   },
   {
     id: "compounded",

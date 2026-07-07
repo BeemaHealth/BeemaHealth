@@ -12,7 +12,6 @@ export const LAUNCH_STATES = [
   "North Carolina",
   "Arizona",
   "Washington",
-  "Colorado",
 ] as const;
 
 export { US_STATES } from "@/lib/us-states";
@@ -35,7 +34,7 @@ export const CLINICIANS: Clinician[] = [
     credentials: "MD, Internal Medicine",
     role: "Medical Director",
     bio: "Board-certified internist with 12 years in metabolic health. Amara believes weight care should be unhurried, judgment-free, and built around each person's real life.",
-    states: "Licensed in CA, AZ, NV, WA, CO",
+    states: "Licensed in CA, AZ, NV, WA, OR",
     initials: "AO",
   },
   {

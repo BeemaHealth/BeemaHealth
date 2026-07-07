@@ -248,7 +248,7 @@ Add provider dashboard, case review, approval workflow, prescription creation.
 
 ### Step 14 — Recruit Your Own Providers
 
-Start with a Colorado physician and Colorado NP.
+Recruit physicians and nurse practitioners in your launch states.
 
 **Goal:** Lower clinical costs.
 
@@ -341,7 +341,7 @@ You cannot prescribe without legal structure.
 
 **Professional Corporation (PC)** — owned by the licensed provider; the provider practices medicine. The LLC provides services to the PC. This **MSO (Management Services Organization) model** is standard in telehealth.
 
-Charlie's job: find turnkey partners first; later recruit Colorado MD/DO/NP for Step 14.
+Charlie's job: find turnkey partners first; later recruit regional MD/DO/NP for Step 14.
 
 ---
 
@@ -368,7 +368,7 @@ Profit ≈ **$125/month** before marketing. Break-even around Month 2 if CAC ≈
 | Facebook | $80–250 | Best balance |
 | TikTok | $50–150 | Cheaper; more education |
 | Referrals | $10–40 | Best long-term |
-| Colorado local partnerships | $10–50 | Gyms, med spas, trainers |
+| Local partnerships | $10–50 | Gyms, med spas, trainers in launch regions |
 
 **Launch ads budget suggestion:** ~$1,500 total (Facebook + TikTok + local partnerships). Goal: 10–20 consultations.
 

@@ -44,7 +44,7 @@ HIPAA requires a **signed AWS BAA**, encryption, access controls, and administra
 ### Action items
 
 1. Create AWS account and sign **AWS BAA** (AWS Artifact)
-2. Deploy to `us-west-2` (close to Colorado)
+2. Deploy to `us-west-2`
 3. Set `HOSTING_TARGET=aws`
 4. Enable `DATABASE_SSL_REQUIRE=true` and `SECURE_SSL_REDIRECT=true`
 5. Follow [deploy/aws.md](./deploy/aws.md)

@@ -173,7 +173,7 @@ Each patient fact is stored in **one** table. Other tables may expose it read-on
 | `email` | Login identifier (replaces username) — matches frontend auth flow |
 | `first_name`, `last_name` | Collected at account creation in `/qualify` |
 | `phone`, `dob` (date of birth) | PHI (Protected Health Information) — stored with field-level encryption (`EncryptedCharField` / `EncryptedDateField`) |
-| `state` | Colorado gate — default `"Colorado"`, validated on register |
+| `state` | State of residence — validated on register |
 | `is_patient`, `is_provider`, `is_staff` | RBAC (Role-Based Access Control): patients use `/me/` endpoints; providers use `/api/admin/` |
 | UUID `id` | Universally Unique Identifier — matches frontend `User.id` strings; safe for APIs |
 
@@ -389,7 +389,7 @@ The software does **not** auto-prescribe — it only stores the provider’s man
 | **JSON on intake** | JavaScript Object Notation — matches React form structure; fastest path to MVP |
 | **Structured columns on eligibility** | Small, fixed questionnaire; used in admin list views |
 | **Encryption on phone/DOB/address** | Defense in depth on top of disk encryption (DOB = date of birth) |
-| **Colorado validation in API** | UI-only gates are not enough for compliance |
+| **State validation in API** | UI-only gates are not enough for compliance |
 | **Token auth** | Frontend already sends `Authorization: Token …` |
 
 ---

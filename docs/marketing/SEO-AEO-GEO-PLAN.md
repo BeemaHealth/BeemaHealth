@@ -88,7 +88,7 @@ export function pageHead(opts: { title: string; description: string; path: strin
 `lp.$slug.tsx`: add `head()` with LP title/description and `<meta name="robots" content="noindex,follow">`. Paid LPs should convert, not compete with organic pages.
 
 ### A5. Site-wide structured data (G8)
-- `__root.tsx`: `Organization` (or `MedicalOrganization`) + `WebSite` JSON-LD — name, logo, sameAs (social profiles), contactPoint.
+- ✅ **Shipped July 2026:** `MedicalOrganization` + `WebSite` JSON-LD on the homepage (`ORGANIZATION_JSONLD` / `WEBSITE_JSONLD` in `src/lib/seo.ts`, rendered by `index.tsx`). Deliberately minimal — only verified facts. **Add when available:** `sameAs` (social profiles) and `contactPoint` (blocked on fixing the invalid `support@beemahealth` address in site copy).
 - `pricing.tsx`: `Product` + `Offer` with real prices (from `veya-data.ts`).
 - Treatment pages: `MedicalWebPage` + `Drug`/`MedicalTherapy` where accurate, with `lastReviewed` and `reviewedBy` (→ `Physician` with NPI-verifiable name).
 - Article pages (Workstream B): `MedicalWebPage`/`Article` + `author` + `reviewedBy` + `BreadcrumbList` + per-article `FAQPage`.
@@ -100,12 +100,17 @@ export function pageHead(opts: { title: string; description: string; path: strin
 
 ### A7. GEO plumbing (G11)
 - ✅ `public/llms.txt` shipped July 2026 — canonical markdown summary of who we are, treatments, care model, and key page links for LLM crawlers. Keep it in lockstep with site facts: any pricing/treatment/domain change must update `llms.txt` in the same PR.
+- ✅ **Guardrail (July 2026):** `src/lib/__tests__/sitemap.test.ts` fails the suite if `llms.txt` links any URL not in the sitemap (this caught a dead `/pricing` link) or any off-origin URL. All page links use the trailing-slash canonical form.
+- `llms-full.txt` (full page content inline) — optional; revisit when `/learn` articles exist and are worth inlining.
 - OG image: replace the bare logo mark with a branded 1200×630 card.
 
 ### A8. Register with the engines (do immediately after A1/A3)
-- **Google Search Console** — verify, submit sitemap, monitor coverage weekly.
-- **Bing Webmaster Tools** — equally important for AI visibility: ChatGPT search and Microsoft Copilot retrieve from Bing's index. A site invisible to Bing is invisible to ChatGPT's browsing answers.
-- **IndexNow** — Bing/Yandex instant-indexing ping; one static API key file in `public/` plus a ping on each deploy. Cheap way to get new/updated articles into the Bing index (and therefore ChatGPT retrieval) within hours instead of weeks.
+- **Google Search Console** — ✅ verified, sitemap submitted and fetching (July 2026). Remaining manual steps while the site is new and unindexed:
+  1. URL Inspection → **Request indexing** for each of the 10 sitemap URLs, starting with `/`, `/weight-loss/`, `/how-it-works/`. This is per-URL and rate-limited (~10/day) — do all 10 across a day or two.
+  2. Expect "Discovered/Crawled – currently not indexed" for days-to-weeks on a new small site; that is queue time, not an error. The homepage served an **empty SPA shell** until July 2026, so Google must re-crawl before it will index — request indexing rather than waiting.
+  3. Check Pages → indexing report weekly; escalate only if a URL shows an actual error (redirect, noindex, 404).
+- **Bing Webmaster Tools** (https://www.bing.com/webmasters) — equally important for AI visibility: ChatGPT search and Microsoft Copilot retrieve from Bing's index. A site invisible to Bing is invisible to ChatGPT's browsing answers. Use "Import from Google Search Console" for one-click verification, then submit the sitemap there too. **Not yet done — highest-leverage 15 minutes available.**
+- **IndexNow** — ✅ shipped July 2026: key file in `public/` (`<key>.txt`) + automatic ping of all sitemap URLs on every `npm run deploy:frontend` (see `deploy-frontend-prod.sh`). Gets updated pages into the Bing index (and therefore ChatGPT/Copilot retrieval) within hours instead of weeks. Key/keyfile consistency is enforced by `sitemap.test.ts`.
 
 ### A9. Hosting note
 GitHub Pages (static) stays — including after the beemahealth.com cutover, which is only a CNAME/DNS change. Known limits: no server-side redirects and no custom headers. The one place that matters is redirecting the retired beemahealth domain, which is solved with free Cloudflare bulk redirects in front of the old domain only (see the G9 cutover checklist) — no hosting move needed.
@@ -171,12 +176,31 @@ Target: featured snippets, People Also Ask, and Google AI Overviews.
 
 Target: being cited/recommended by ChatGPT, Perplexity, Gemini, Claude when users ask "best online semaglutide provider", "cheapest legit GLP‑1 telehealth", etc.
 
-How AI assistants pick who to show: for a query like "best online semaglutide provider," they either (a) retrieve live web results (ChatGPT search → Bing index; Perplexity → its own crawler + web; Gemini → Google) and synthesize from the top pages, or (b) answer from training data, where brand-mention frequency across the open web dominates. Both paths are influenceable:
+How AI assistants pick who to show: for a query like "best online semaglutide provider," they either (a) retrieve live web results (ChatGPT search → Bing index; Perplexity → its own crawler + web; Gemini → Google; Claude → Brave Search) and synthesize from the top pages, or (b) answer from training data, where brand-mention frequency across the open web dominates. Both paths are influenceable — D1–D7 below are the levers; D0 is the current status and the standing routine.
 
-1. **Be retrievable** — the plumbing (mostly done/queued):
-   - AI crawlers allowed in robots.txt ✅, `llms.txt` shipped ✅, static prerendered HTML ✅.
-   - Bing Webmaster Tools + IndexNow (A8) — ChatGPT and Copilot can only cite what Bing has indexed.
-   - Structured data everywhere (A5) — retrieval pipelines and answer rankers use it.
+### D0. Plumbing status + operating checklist (July 2026)
+
+**Shipped (in the repo, verified by tests):** static `sitemap.xml` + trailing-slash canonicals; prerendered HTML on every marketing page including the homepage (was an empty SPA shell — the single worst GEO bug possible); `robots.txt` allowing all AI crawlers; `llms.txt` with dead-link guard; `MedicalOrganization`/`WebSite` JSON-LD; IndexNow ping on every deploy.
+
+**Do once, this week (manual, ~1 hour total):**
+1. Bing Webmaster Tools: verify via GSC import, submit the sitemap (see A8). Bing = ChatGPT + Copilot retrieval.
+2. GSC: Request indexing on all 10 sitemap URLs (see A8).
+3. Fix the invalid `support@beemahealth` email in site copy, then add `contactPoint` + `sameAs` to the Organization schema (A5) and create matching LinkedIn/Crunchbase profiles — the entity graph AI uses to trust that Beema Health is a real company.
+
+**Recurring routine — this is what actually moves "suggest me more than other sites":**
+- *Every deploy:* facts identical everywhere. Prices, medication list, process claims must match across page copy, `llms.txt`, JSON-LD, and third-party profiles. One contradiction and an assistant hedges or drops us.
+- *Weekly (~30 min):* GSC + Bing coverage check; answer any Reddit/forum thread where the brand is mentioned (disclosed, helpful, no astroturf).
+- *Monthly (~2 h):* the prompt audit (D7): ask ChatGPT, Perplexity, Gemini, and Claude the ~20 standard prompts, log who gets recommended and **which sources each answer cites**. Every cited source we're absent from is the next outreach target — that list *is* the GEO backlog, ordered by impact.
+- *Per new page/article:* answer-first paragraph, question-form H2s, one date-stamped quotable stat block, FAQ schema where genuine, added to sitemap + `llms.txt` in the same PR.
+
+**Why competitors win right now and how to displace them:** assistants recommending Hims/Ro/Noom for "best GLP-1 telehealth" are not reading those companies' homepages — they're reading Innerbody, Forbes Health, Healthline roundups and Reddit consensus. Getting Beema Health into the top 5 roundups that every assistant cites (D2) is worth more than any on-site change now that the plumbing is fixed. On-site work (D3–D5) decides what assistants *say* about us once we're retrieved; third-party presence decides *whether* we're retrieved at all.
+
+### D1–D7. The levers
+
+1. **Be retrievable** — the plumbing (see D0 for live status):
+   - AI crawlers allowed in robots.txt ✅, `llms.txt` shipped ✅, static prerendered HTML incl. homepage ✅, IndexNow on deploy ✅, `MedicalOrganization`/`WebSite` schema ✅.
+   - Bing Webmaster Tools (A8) — **still pending, do first**: ChatGPT and Copilot can only cite what Bing has indexed.
+   - Remaining structured data (A5): `Product`/`Offer` when pricing ships, `MedicalWebPage`/`Drug` on treatment pages, per-article schema.
 2. **Be in the pages assistants actually cite.** For "best provider" queries, they overwhelmingly cite third-party roundups, review sites, and Reddit — not vendor homepages. So:
    - Pitch inclusion in every "best GLP‑1 telehealth 2026" listicle and comparison table that exists (Innerbody, Healthline-tier reviewers, Forbes Health, niche telehealth reviewers). This is the single highest-leverage GEO action.
    - Reddit presence (r/semaglutide, r/tirzepatide, r/WeightLossAdvice): genuine, disclosed participation and being the brand users mention organically. No astroturfing — it gets detected and torched.

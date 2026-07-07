@@ -415,9 +415,9 @@ const SECTIONS: LegalSection[] = [
     title: "Governing law",
     content: (
       <LegalP>
-        These Terms are governed by the laws of the State of Colorado, without
+        These Terms are governed by the laws of the State of Delaware, without
         regard to conflict-of-law rules, except where federal law applies.
-        Subject to the dispute-resolution section, courts located in Colorado
+        Subject to the dispute-resolution section, courts located in Delaware
         will have exclusive jurisdiction over any non-arbitrable disputes.
       </LegalP>
     ),

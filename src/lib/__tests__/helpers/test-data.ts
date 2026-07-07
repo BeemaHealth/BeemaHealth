@@ -22,7 +22,7 @@ export function validQualifySlice(
     primaryGoal: "improve_health",
     treatmentPriority: "fda_approved",
     targetWeightLossRange: "16_50",
-    state: "Colorado",
+    state: "California",
     consents: { terms: true, privacy: true, telehealth: true },
     dob: "1990-06-15",
     heightFt: "5",

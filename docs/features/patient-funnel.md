@@ -43,7 +43,7 @@ Multiple intake questionnaires may be published at once (different slugs), and *
 **`EligibilityResponse`** (`eligibility_responses` table) holds all pre-signup answers:
 - Treatment interest, primary goal, treatment priority
 - Height/weight/goal weight, BMI (auto-calculated)
-- DOB (field-level encrypted), state (Colorado-only validation)
+- DOB (field-level encrypted), state (validated for operating regions)
 - Safety screen JSON, `safety_concern_flag`
 - `is_likely_eligible` + `disqualification_reason` — set by backend eligibility service
 - `questionnaire_responses` JSON — raw dynamic questionnaire answers keyed by field_key

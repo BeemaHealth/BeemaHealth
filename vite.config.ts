@@ -22,7 +22,7 @@ export default defineConfig({
     },
     prerender: {
       enabled: true,
-      filter: ({ path }) =>
+      filter: ({ path }: { path: string }) =>
         // Exact /dashboard is the spa.maskPath shell entry — it must pass
         // the filter to emit _shell.html (it never writes dashboard HTML).
         path === "/dashboard" ||

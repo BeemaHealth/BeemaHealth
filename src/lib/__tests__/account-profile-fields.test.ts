@@ -53,15 +53,15 @@ describe("resolveAccountDemographics", () => {
         dob: "1990-06-15",
         sex: "male",
         ship: {
-          address: "2510 Summit Drive",
-          city: "Colorado Springs",
-          state: "CO",
-          zip: "80909",
+          address: "2510 Oak Drive",
+          city: "Phoenix",
+          state: "AZ",
+          zip: "85001",
           verified: true,
         },
       },
       medication_preferences: {
-        shipping_state: "CO",
+        shipping_state: "AZ",
       },
     } as unknown as MedicalIntake;
 
@@ -75,7 +75,7 @@ describe("resolveAccountDemographics", () => {
 
     expect(resolved.dob).toBe("1990-06-15");
     expect(resolved.sexAtBirth).toBe("male");
-    expect(resolved.state).toBe("Colorado");
+    expect(resolved.state).toBe("Arizona");
   });
 
   it("prefers canonical user fields when already set", () => {
@@ -101,7 +101,7 @@ describe("resolveShippingAddress", () => {
       questionnaire_responses: {
         ship: {
           address: "2510 Summit Drive",
-          city: "Colorado Springs",
+          city: "Phoenix",
           state: "CO",
           zip: "80909",
           county: "El Paso",
@@ -115,11 +115,11 @@ describe("resolveShippingAddress", () => {
       profile: null,
       intake,
       questionnaireFields: fields,
-      fallbackState: "Colorado",
+      fallbackState: "Arizona",
     });
 
     expect(resolved.address).toBe("2510 Summit Drive");
-    expect(resolved.city).toBe("Colorado Springs");
+    expect(resolved.city).toBe("Phoenix");
     expect(resolved.zip).toBe("80909");
     expect(resolved.county).toBe("El Paso");
   });
@@ -129,7 +129,7 @@ describe("resolveShippingAddress", () => {
       questionnaire_responses: {},
       medication_preferences: {
         shipping_address: "2510 Summit Drive",
-        shipping_city: "Colorado Springs",
+        shipping_city: "Phoenix",
         shipping_state: "CO",
         shipping_zip: "80909",
         shipping_county: "El Paso",
@@ -141,11 +141,11 @@ describe("resolveShippingAddress", () => {
       profile: null,
       intake,
       questionnaireFields: [],
-      fallbackState: "Colorado",
+      fallbackState: "Arizona",
     });
 
     expect(resolved.address).toBe("2510 Summit Drive");
-    expect(resolved.city).toBe("Colorado Springs");
+    expect(resolved.city).toBe("Phoenix");
     expect(resolved.zip).toBe("80909");
   });
 
@@ -159,7 +159,7 @@ describe("resolveShippingAddress", () => {
 
     const intake = {
       questionnaire_responses: {
-        ship: { address: "2510 Summit Drive", city: "Colorado Springs" },
+        ship: { address: "2510 Summit Drive", city: "Phoenix" },
       },
     } as unknown as MedicalIntake;
 
@@ -167,7 +167,7 @@ describe("resolveShippingAddress", () => {
       profile,
       intake,
       questionnaireFields: fields,
-      fallbackState: "Colorado",
+      fallbackState: "Arizona",
     });
 
     expect(resolved.address).toBe("1 Profile St");
@@ -178,10 +178,10 @@ describe("resolveShippingAddress", () => {
     const resolved = resolveShippingAddress({
       profile: null,
       intake: null,
-      fallbackState: "Colorado",
+      fallbackState: "Arizona",
     });
 
     expect(resolved.address).toBe("");
-    expect(resolved.state).toBe("Colorado");
+    expect(resolved.state).toBe("Arizona");
   });
 });

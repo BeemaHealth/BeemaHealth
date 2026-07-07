@@ -31,7 +31,7 @@ class Command(BaseCommand):
             last_name="Patient",
             phone="3035550100",
             dob="1990-01-01",
-            state="Colorado",
+            state="California",
         )
         provider = User.objects.create_user(
             email=f"smoke-provider-{timezone.now().timestamp()}@example.com",

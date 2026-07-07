@@ -10,7 +10,7 @@ describe("address-group helpers", () => {
   const verified = {
     address: "123 Main St",
     city: "Denver",
-    state: "Colorado",
+    state: "Arizona",
     zip: "80202",
     county: "Denver County",
     country: "US",
@@ -25,7 +25,7 @@ describe("address-group helpers", () => {
     expect(flattenAddressGroupForSection(verified, "identity")).toEqual({
       address: "123 Main St",
       city: "Denver",
-      state: "Colorado",
+      state: "Arizona",
       zip: "80202",
       county: "Denver County",
       country: "US",
@@ -40,7 +40,7 @@ describe("address-group helpers", () => {
       use_different_shipping_address: "true",
       shipping_address: "123 Main St",
       shipping_city: "Denver",
-      shipping_state: "Colorado",
+      shipping_state: "Arizona",
       shipping_zip: "80202",
       shipping_county: "Denver County",
       shipping_country: "US",
@@ -53,7 +53,7 @@ describe("address-group helpers", () => {
       hydrateAddressGroupFromSection("identity", {
         address: "123 Main St",
         city: "Denver",
-        state: "Colorado",
+        state: "Arizona",
         zip: "80202",
         county: "Denver County",
         country: "US",
