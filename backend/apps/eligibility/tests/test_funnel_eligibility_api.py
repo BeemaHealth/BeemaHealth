@@ -49,6 +49,17 @@ class FunnelEligibilityApiValidationTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()["gender_identity"], "female")
 
+    def test_excluded_state_marks_not_eligible(self):
+        response = self.client.patch(
+            reverse("funnel-eligibility"),
+            {"state": "WV"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        self.assertFalse(data["is_likely_eligible"])
+        self.assertEqual(data["disqualification_reason"], "state_not_eligible")
+
 
 class EligibilityVersionRepinTests(TestCase):
     def setUp(self):

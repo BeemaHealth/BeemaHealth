@@ -50,8 +50,8 @@ const CONTACT_OPTIONS = [
   },
   {
     icon: Clock,
-    title: "Response time",
-    text: "We typically respond within one business day. Messages are not monitored 24/7.",
+    title: "Business hours",
+    text: "Monday to Friday, 9 AM to 5 PM MT. We'll respond to messages within one business day.",
     action: null,
     href: null,
   },

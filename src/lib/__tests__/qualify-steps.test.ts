@@ -99,6 +99,21 @@ describe("qualify-steps validation", () => {
       ).toBe(false);
     });
 
+    it("state_consent rejects excluded states with a user-facing message", () => {
+      expect(
+        getQualifyStepError(
+          "state_consent",
+          validQualifySlice({ state: "Kansas" }),
+        ),
+      ).toContain("not currently available in your state");
+      expect(
+        isQualifyStepComplete(
+          "state_consent",
+          validQualifySlice({ state: "NM" }),
+        ),
+      ).toBe(false);
+    });
+
     it("dob blocks progress without a user-facing message when empty", () => {
       expect(getQualifyStepError("dob", validQualifySlice({ dob: "" }))).toBe(
         "",

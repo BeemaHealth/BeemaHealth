@@ -24,6 +24,7 @@ import {
   validateOptionalBloodPressure,
   validateOptionalPharmacyAddress,
   validateOptionalPharmacyPhone,
+  validateStateEligibility,
   isValidOptionalMemberId,
   validateWeightLbs,
 } from "@/lib/form-validation";
@@ -322,6 +323,26 @@ describe("form-validation", () => {
 
     it.each(SQL_INJECTION)("rejects injection in lab field %j", (payload) => {
       expect(validateOptionalNumericLab(payload, "glucose")).not.toBeNull();
+    });
+  });
+
+  describe("validateStateEligibility", () => {
+    it("allows empty state", () => {
+      expect(validateStateEligibility("")).toBeNull();
+    });
+
+    it("allows eligible states", () => {
+      expect(validateStateEligibility("California")).toBeNull();
+      expect(validateStateEligibility("CO")).toBeNull();
+    });
+
+    it("rejects excluded states by name or abbreviation", () => {
+      expect(validateStateEligibility("Kansas")).not.toBeNull();
+      expect(validateStateEligibility("KS")).not.toBeNull();
+      expect(validateStateEligibility("New Mexico")).not.toBeNull();
+      expect(validateStateEligibility("NM")).not.toBeNull();
+      expect(validateStateEligibility("West Virginia")).not.toBeNull();
+      expect(validateStateEligibility("WV")).not.toBeNull();
     });
   });
 

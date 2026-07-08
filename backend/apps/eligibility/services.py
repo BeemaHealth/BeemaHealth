@@ -351,8 +351,21 @@ def _clear_claimed_identity_from_eligibility(eligibility: EligibilityResponse) -
 
 
 def derive_eligibility_flags(eligibility: EligibilityResponse) -> None:
+    # Excluded states that are not currently eligible for service
+    EXCLUDED_STATES = {"NM", "KS", "WV"}
+
     safety = eligibility.safety_screen or {}
     eligibility.safety_concern_flag = any(v is True for v in safety.values())
+
+    # Check state eligibility first
+    state = eligibility.state
+    if not state and eligibility.user_id:
+        state = eligibility.user.state
+    if state and state.upper() in EXCLUDED_STATES:
+        eligibility.is_likely_eligible = False
+        eligibility.needs_clinician_review = False
+        eligibility.disqualification_reason = "state_not_eligible"
+        return
 
     bmi = eligibility.bmi
     if bmi is None and eligibility.height_ft and eligibility.weight_lbs:

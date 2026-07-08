@@ -1,6 +1,7 @@
 /** Shared input validation for qualify and intake flows. */
 
 import { isValidStreetAddress } from "@/lib/address-validation";
+import { isStateEligible } from "@/lib/us-states";
 
 export const SHIPPING_PREFERENCE_VALUES = ["pickup", "shipping"] as const;
 export type ShippingPreference = (typeof SHIPPING_PREFERENCE_VALUES)[number];
@@ -250,6 +251,15 @@ export function validateOptionalBloodPressure(value: string): string | null {
   }
   if (systolic <= diastolic) {
     return "Systolic (first number) should be higher than diastolic.";
+  }
+  return null;
+}
+
+/** Validate state eligibility. Returns error message if state is excluded. */
+export function validateStateEligibility(state: string): string | null {
+  if (!isFilled(state)) return null;
+  if (!isStateEligible(state)) {
+    return "Beema Health is not currently available in your state. Please check back soon.";
   }
   return null;
 }

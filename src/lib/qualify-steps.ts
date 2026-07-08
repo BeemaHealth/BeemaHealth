@@ -14,6 +14,7 @@ import {
   validateGoalWeightLbs,
   validateHeightFt,
   validateHeightIn,
+  validateStateEligibility,
   validateWeightLbs,
 } from "@/lib/form-validation";
 import {
@@ -306,10 +307,13 @@ export function getQualifyStepError(
     case "gender_identity":
       // ChoiceCard-only steps: block Continue without a redundant footer message.
       return getChoiceStepValue(stepId, data) ? null : "";
-    case "state_consent":
+    case "state_consent": {
       if (!data.state) return "";
+      const stateErr = validateStateEligibility(data.state);
+      if (stateErr) return stateErr;
       if (!hasAllPreSignupConsents(data.consents)) return "";
       return null;
+    }
     case "dob":
       if (!data.dob) return "";
       if (computeIsAdult(data.dob) === null) return "";

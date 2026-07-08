@@ -54,3 +54,16 @@ class EligibilityApiValidationTests(TestCase):
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_excluded_state_marks_not_eligible(self):
+        self.user.state = "KS"
+        self.user.save(update_fields=["state"])
+        response = self.client.patch(
+            reverse("eligibility-me"),
+            {"height_ft": 5, "height_in": 8, "weight_lbs": "190.0"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        self.assertFalse(data["is_likely_eligible"])
+        self.assertEqual(data["disqualification_reason"], "state_not_eligible")

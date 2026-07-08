@@ -6,7 +6,6 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
-import zepboundPenImg from "@/assets/treatments/zepbound-pen.png";
 import compoundedPenImg from "@/assets/treatments/compounded-pen.png";
 
 type Treatment = {
@@ -23,18 +22,8 @@ type Treatment = {
 
 const TREATMENTS: Treatment[] = [
   {
-    id: "zepbound",
-    name: "Zepbound®",
-    form: "Weekly injection",
-    generic: "Tirzepatide",
-    priceFrom: "$199",
-    fdaApproved: true,
-    image: zepboundPenImg,
-    imageAlt: "Zepbound tirzepatide KwikPen auto-injector",
-  },
-  {
-    id: "compounded",
-    name: "Semaglutide",
+    id: "compounded-semaglutide",
+    name: "Compounded Semaglutide",
     form: "Weekly injection",
     generic: "Compounded, if prescribed",
     priceFrom: "$199",
@@ -42,6 +31,16 @@ const TREATMENTS: Treatment[] = [
     fdaApproved: false,
     image: compoundedPenImg,
     imageAlt: "Compounded semaglutide injection pen",
+  },
+  {
+    id: "compounded-tirzepatide",
+    name: "Compounded Tirzepatide",
+    form: "Weekly injection",
+    generic: "Compounded, if prescribed",
+    priceFrom: "$249",
+    fdaApproved: false,
+    image: compoundedPenImg,
+    imageAlt: "Compounded tirzepatide injection pen",
   },
 ];
 
