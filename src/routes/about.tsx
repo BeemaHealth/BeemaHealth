@@ -85,7 +85,7 @@ function AboutPage() {
         />
       </Section>
 
-      {/* Manifesto — black band, honey accents */}
+      {/* Mission — black band, honey accents */}
       <Section className="pt-0">
         <Reveal>
           <div className="bg-grad-ink relative overflow-hidden rounded-4xl px-6 py-14 text-ink-foreground md:px-16 md:py-20">
@@ -93,7 +93,7 @@ function AboutPage() {
             <HexMotif className="pointer-events-none absolute -bottom-16 -left-14 w-64 text-primary/10" />
             <div className="relative mx-auto max-w-2xl space-y-6 text-pretty leading-relaxed text-ink-foreground/85">
               <Eyebrow className="border-primary/40 bg-primary/10 text-primary">
-                Manifesto
+                Mission
               </Eyebrow>
               <p className="text-xl font-semibold text-ink-foreground md:text-2xl">
                 At Beema Health, we believe the best healthcare should work the

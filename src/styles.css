@@ -1,15 +1,15 @@
 /* Fonts (Outfit + Figtree) are loaded via <link> tags in src/routes/__root.tsx */
-@import "tailwindcss" source(none);
-@source "../src";
+@import "tailwindcss";
+@source ".";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 /*
  * Beema Health design system.
- * Brand: precision, trust, community, health, consistency — inspired by the
+ * Brand: trust, community, health, consistency — inspired by the
  * honey bee. Clean white backgrounds, near-black ink, warm honey-yellow
- * primary, black contrast bands (hero/footer/manifesto), cool neutral borders.
+ * primary, black contrast bands (hero/footer/Mission), cool neutral borders.
  * All colors use oklch. Use semantic tokens only — never ad hoc colors.
  * TypeScript usage patterns: see src/lib/design-tokens.ts
  */
@@ -101,7 +101,7 @@
   --success: oklch(0.6 0.11 152);
   --success-foreground: oklch(0.99 0.01 155);
 
-  /* black contrast bands (hero, footer, manifesto) */
+  /* black contrast bands (hero, footer, Mission) */
   --ink: oklch(0.19 0.012 270);
   --ink-foreground: oklch(0.985 0.002 95);
 
@@ -196,7 +196,7 @@
   );
 }
 
-/* Black band with a soft honey glow — hero/manifesto/footer surfaces */
+/* Black band with a soft honey glow — hero/Mission/footer surfaces */
 @utility bg-grad-ink {
   background-color: var(--ink);
   background-image:

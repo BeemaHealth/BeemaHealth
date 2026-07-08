@@ -12,6 +12,8 @@
     "build:dev": "vite build --mode dev",
     "preview": "vite preview",
     "deploy:frontend": "./deploy-frontend-prod.sh",
+    "deploy:production": "./deploy-frontend-prod.sh",
+    "deploy:staging": "./deploy-frontend-staging.sh",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",

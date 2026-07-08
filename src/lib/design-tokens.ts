@@ -3,7 +3,7 @@
  *
  * Raw oklch values live in `src/styles.css` (`:root` and `.dark`).
  * Brand system: white/near-white surfaces, near-black ink, honey-yellow
- * primary, black `ink` contrast bands for marketing hero/footer/manifesto.
+ * primary, black `ink` contrast bands for marketing hero/footer/Mission.
  * Components must reference semantic tokens from this file (or Tailwind
  * classes that map to those CSS variables) — never ad hoc hex/rgb/oklch.
  *
