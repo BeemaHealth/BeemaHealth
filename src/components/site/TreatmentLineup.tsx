@@ -1,10 +1,3 @@
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import compoundedPenImg from "@/assets/treatments/compounded-pen.png";
 
@@ -38,6 +31,7 @@ const TREATMENTS: Treatment[] = [
     form: "Weekly injection",
     generic: "Compounded, if prescribed",
     priceFrom: "$249",
+    badge: "Cash-pay option",
     fdaApproved: false,
     image: compoundedPenImg,
     imageAlt: "Compounded tirzepatide injection pen",
@@ -52,21 +46,10 @@ export function TreatmentLineup() {
           GLP-1 weight-loss options
         </h2>
 
-        <div className="relative mt-10">
-          <Carousel opts={{ align: "start", loop: false }} className="w-full">
-            <CarouselContent className="-ml-4">
-              {TREATMENTS.map((t) => (
-                <CarouselItem
-                  key={t.id}
-                  className="basis-[85%] pl-4 sm:basis-[55%] lg:basis-1/4"
-                >
-                  <TreatmentCard treatment={t} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-2 border-border bg-card text-foreground hover:bg-muted md:-left-5" />
-            <CarouselNext className="right-2 border-border bg-card text-foreground hover:bg-muted md:-right-5" />
-          </Carousel>
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
+          {TREATMENTS.map((t) => (
+            <TreatmentCard key={t.id} treatment={t} />
+          ))}
         </div>
 
         <p className="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">
@@ -77,9 +60,9 @@ export function TreatmentLineup() {
           Treatment availability depends on your intake, clinical eligibility,
           and a licensed provider&apos;s independent decision. Brand-name
           medications are FDA-approved for chronic weight management where
-          indicated. Compounded semaglutide is not FDA-approved and is only
-          considered when legally available and clinically appropriate.
-          Completing intake does not guarantee a prescription.
+          indicated. Compounded semaglutide and tirzepatide are not FDA-approved
+          and are only considered when legally available and clinically
+          appropriate. Completing intake does not guarantee a prescription.
         </p>
       </div>
     </section>
@@ -90,8 +73,8 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
   return (
     <article
       className={cn(
-        "relative flex h-[420px] flex-col overflow-hidden rounded-3xl",
-        "bg-primary-soft shadow-lift",
+        "relative flex min-h-[400px] flex-col overflow-hidden rounded-3xl sm:min-h-[420px] md:min-h-[480px]",
+        "bg-primary-soft shadow-lift md:transition-[transform,box-shadow] md:duration-300 md:hover:-translate-y-1 md:hover:shadow-soft",
       )}
     >
       {treatment.badge && (
@@ -111,7 +94,7 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
         </span>
       )}
 
-      <div className="relative min-h-0 flex-1 overflow-hidden">
+      <div className="relative min-h-[200px] flex-[1.4] overflow-hidden sm:min-h-[220px] md:min-h-[280px]">
         <img
           src={treatment.image}
           alt={treatment.imageAlt}
@@ -119,8 +102,10 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
         />
       </div>
 
-      <div className="space-y-0.5 px-6 pb-8 pt-2">
-        <h3 className="text-2xl font-bold text-foreground">{treatment.name}</h3>
+      <div className="space-y-1 px-6 pb-8 pt-4 md:px-8 md:pb-10 md:pt-5">
+        <h3 className="text-2xl font-bold text-foreground md:text-[1.75rem]">
+          {treatment.name}
+        </h3>
         {/* Pricing disabled — pricing model not finalized yet.
         <p className="text-sm font-semibold text-foreground/90">
           From {treatment.priceFrom}/mo
