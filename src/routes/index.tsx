@@ -240,7 +240,7 @@ function HomePage() {
 
       <TreatmentLineup />
 
-      {/* Brand manifesto teaser */}
+      {/* Brand Mission teaser */}
       <Section>
         <Reveal>
           <div className="bg-grad-ink relative overflow-hidden rounded-4xl px-6 py-14 text-ink-foreground md:px-14 md:py-16">
