@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "apps.analytics",
     "apps.questionnaires",
     "apps.staff",
+    "apps.payments",
 ]
 
 MIDDLEWARE = [
@@ -169,6 +170,8 @@ REST_FRAMEWORK = {
         "anon": "60/minute",
         "user": "300/minute",
         "auth": "20/minute",
+        "payment_hold": "5/minute",
+        "payment_hold_change_card": "3/minute",
     },
 }
 
@@ -187,6 +190,16 @@ USE_S3_STORAGE = bool(AWS_STORAGE_BUCKET_NAME)
 
 MEDIA_ROOT = BASE_DIR / "media"
 MAX_DOCUMENT_UPLOAD_BYTES = env.int("MAX_DOCUMENT_UPLOAD_BYTES", default=20 * 1024 * 1024)
+
+# Stripe — restricted API key (rk_) only; never a full secret key (sk_) in any
+# committed env file. See .claude/plans/stripe-questionnaire-payment-hold.md.
+PAYMENTS_ENABLED = env.bool("PAYMENTS_ENABLED", default=False)
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", default="")
+STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY", default="")
+STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", default="")
+# Placeholder visit-fee hold amount pending legal sign-off on the permissible
+# fee model (see the plan doc's Phase 0 gate) — not a priced product yet.
+PAYMENT_HOLD_AMOUNT_CENTS = env.int("PAYMENT_HOLD_AMOUNT_CENTS", default=2500)
 
 # Production security (enable when DEBUG=False)
 if not DEBUG:

@@ -253,6 +253,57 @@ def _step_has_account_field(step) -> bool:
     return False
 
 
+PAYMENT_HOLD_PLUGIN_ID = "stripe_payment_hold"
+PAYMENT_HOLD_MODES = ("auth_hold", "setup_only")
+
+
+def validate_payment_field_placement(version) -> None:
+    """Enforce publish-time placement rules for the Stripe payment plugin field.
+
+    Raises ``ValueError`` with a patient/staff-safe message on violation.
+    """
+    payment_fields: list[tuple[Any, Any]] = []
+    for step in version.steps.all():
+        for field in step.fields.all():
+            if field.field_type == "plugin" and field.plugin_id == PAYMENT_HOLD_PLUGIN_ID:
+                payment_fields.append((step, field))
+
+    if not payment_fields:
+        return
+    if len(payment_fields) > 1:
+        raise ValueError("Only one payment field is allowed per questionnaire version.")
+
+    step, field = payment_fields[0]
+    payment_mode = (field.options or {}).get("payment_mode", "auth_hold")
+    if payment_mode not in PAYMENT_HOLD_MODES:
+        raise ValueError(
+            f"Payment field payment_mode must be one of {PAYMENT_HOLD_MODES}."
+        )
+
+    if version.questionnaire.questionnaire_type == "qualify":
+        # The account step is terminal within a qualify version (see
+        # _step_has_account_field / resolve_next_step) — the flow always ends
+        # there and continues into a separately-routed intake version. That
+        # means the only way to guarantee payment happens after account
+        # within this version is for both fields to live on the same step,
+        # with the account field ordered first.
+        account_fields = [
+            f
+            for f in step.fields.all()
+            if f.field_type == "account"
+            or (f.field_type == "plugin" and f.plugin_id == "account_registration")
+        ]
+        if not account_fields:
+            raise ValueError(
+                "A payment field in a qualify questionnaire must be on the "
+                "same step as the account field."
+            )
+        if any(field.sort_order <= a.sort_order for a in account_fields):
+            raise ValueError(
+                "The payment field must come after the account field on its step."
+            )
+
+
 def resolve_next_step(step, responses: dict[str, Any], steps: list):
     """Next step given answers, honouring per-step ``routing_rules``.
 

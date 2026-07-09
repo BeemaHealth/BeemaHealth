@@ -17,6 +17,7 @@ from apps.questionnaires.models import (
     QuestionnaireStep,
     QuestionnaireVersion,
 )
+from apps.questionnaires.validation import validate_payment_field_placement
 
 
 def serialize_field(field: QuestionnaireField) -> dict:
@@ -366,6 +367,8 @@ def publish_version(version: QuestionnaireVersion) -> QuestionnaireVersion:
         raise ValueError("Only draft versions can be published.")
     if not version.steps.exists():
         raise ValueError("Cannot publish a version with no steps.")
+
+    validate_payment_field_placement(version)
 
     q_type = version.questionnaire.questionnaire_type
     if q_type == Questionnaire.QuestionnaireType.QUALIFY:

@@ -26,6 +26,7 @@ python manage.py test \
   apps.analytics.tests \
   apps.questionnaires.tests \
   apps.staff.tests \
+  apps.payments.tests \
   --settings=config.settings_test \
   "$@"
 

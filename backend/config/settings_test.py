@@ -16,6 +16,8 @@ DEFAULT_THROTTLE_RATES = {
     "anon": "10000/minute",
     "user": "10000/minute",
     "auth": "10000/minute",
+    "payment_hold": "10000/minute",
+    "payment_hold_change_card": "10000/minute",
 }
 REST_FRAMEWORK = {
     **REST_FRAMEWORK,  # noqa: F405
