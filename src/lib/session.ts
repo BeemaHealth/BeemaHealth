@@ -7,7 +7,9 @@ const listeners = new Set<SessionListener>();
 
 export function subscribeSession(listener: SessionListener) {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  return () => {
+    listeners.delete(listener);
+  };
 }
 
 export function applySession(session: SessionUser | null) {

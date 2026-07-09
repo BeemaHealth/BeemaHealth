@@ -6,6 +6,7 @@ import {
 import {
   emptyIntakeData,
   normalizeIntake,
+  type IntakeEligibilityContext,
   type PriorMedDetails,
 } from "@/lib/intake-steps";
 import type { MedicalIntake } from "@/lib/types/mvp";
@@ -51,13 +52,8 @@ export function validAccountFields(
 }
 
 export function validEligibility(
-  overrides: {
-    treatment_interest?: string;
-    weight_lbs?: number;
-    sex_assigned_at_birth?: string;
-    gender_identity?: string;
-  } = {},
-) {
+  overrides: Partial<IntakeEligibilityContext> = {},
+): IntakeEligibilityContext {
   return {
     treatment_interest: "glp1_pills",
     weight_lbs: 190,

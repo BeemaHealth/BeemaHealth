@@ -67,6 +67,7 @@ export function getEligibility(userId: string): EligibilityResponses | null {
 }
 
 export function saveEligibility(data: EligibilityResponses) {
+  if (!data.user_id) return;
   const all = read<Record<string, EligibilityResponses>>(KEYS.eligibility, {});
   all[data.user_id] = data;
   write(KEYS.eligibility, all);
