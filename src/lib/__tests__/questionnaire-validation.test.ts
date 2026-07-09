@@ -167,6 +167,31 @@ describe("questionnaire validation", () => {
     expect(validateFieldValue(field, true, {})).toBeNull();
   });
 
+  it("blocks advancing until the payment field reports held or captured", () => {
+    const field: QuestionnaireFieldSchema = {
+      field_key: "payment",
+      field_type: "plugin",
+      plugin_id: "stripe_payment_hold",
+      label: "Payment",
+      required: true,
+    };
+    expect(validateFieldValue(field, undefined, {})).toMatch(
+      /complete payment/i,
+    );
+    expect(
+      validateFieldValue(field, { payment_status: "processing" }, {}),
+    ).toMatch(/complete payment/i);
+    expect(validateFieldValue(field, { payment_status: "failed" }, {})).toMatch(
+      /complete payment/i,
+    );
+    expect(
+      validateFieldValue(field, { payment_status: "held" }, {}),
+    ).toBeNull();
+    expect(
+      validateFieldValue(field, { payment_status: "captured" }, {}),
+    ).toBeNull();
+  });
+
   it("validates dob fields as ISO dates and requires 18+", () => {
     const field: QuestionnaireFieldSchema = {
       field_key: "dob",

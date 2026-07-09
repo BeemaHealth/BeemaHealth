@@ -19,6 +19,8 @@ import { QuestionnaireReviewField } from "@/components/questionnaire/Questionnai
 import type { QuestionnaireReviewVariant } from "@/components/questionnaire/QuestionnaireReviewField";
 import { QuestionnaireLegalConsentField } from "@/components/questionnaire/QuestionnaireLegalConsentField";
 import { QuestionnaireDateOfBirthField } from "@/components/questionnaire/QuestionnaireDateOfBirthField";
+import { QuestionnairePaymentField } from "@/components/payments/QuestionnairePaymentField";
+import { PAYMENT_HOLD_PLUGIN_ID } from "@/lib/questionnaire/payment-field";
 import type { BelugaAccountExtras } from "@/lib/questionnaire/beluga-review";
 import {
   isAccountField,
@@ -292,6 +294,37 @@ export function renderQuestionnaireField(
             rows={4}
           />
         </Field>
+        {error ? (
+          <p className="mt-1 text-sm text-destructive">{error}</p>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (
+    field.field_type === "plugin" &&
+    field.plugin_id === PAYMENT_HOLD_PLUGIN_ID
+  ) {
+    // Staff builder's interactive "Preview" modal renders live (non-readOnly)
+    // so routing/validation can be clicked through, but must never mount a
+    // real Stripe form or hit the payment-hold API under the staff's own
+    // account — reviewVariant="preview" is the same signal the review field
+    // already uses to detect that context.
+    if (reviewVariant === "preview") {
+      return (
+        <p className="text-sm text-muted-foreground">
+          Payment — auth hold (preview)
+        </p>
+      );
+    }
+    return (
+      <div>
+        <FieldLabel field={field} />
+        <QuestionnairePaymentField
+          value={value}
+          onChange={onChange}
+          readOnly={readOnly}
+        />
         {error ? (
           <p className="mt-1 text-sm text-destructive">{error}</p>
         ) : null}

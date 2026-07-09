@@ -216,6 +216,7 @@ export function AddQuestionModal({
           fieldType === "account" ||
           fieldType === "review" ||
           fieldType === "legal_consent" ||
+          fieldType === "stripe_payment_hold" ||
           isMultiChoiceType(fieldType)
             ? ""
             : fieldType === "address_group"
@@ -247,6 +248,7 @@ export function AddQuestionModal({
   const isReviewType = fieldType === "review";
   const isLegalConsentType = fieldType === "legal_consent";
   const isDobType = fieldType === "dob";
+  const isPaymentType = fieldType === "stripe_payment_hold";
   const isChoice = isChoiceType(fieldType);
   const isSingleChoice = fieldType === "single_choice";
   const isMultiChoice = isMultiChoiceType(fieldType);
@@ -256,7 +258,8 @@ export function AddQuestionModal({
     !isAddressType &&
     !isReviewType &&
     !isLegalConsentType &&
-    !isDobType;
+    !isDobType &&
+    !isPaymentType;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -379,8 +382,8 @@ export function AddQuestionModal({
               <p className="text-xs text-muted-foreground rounded-lg bg-muted/50 px-3 py-2">
                 Patients type an address and pick a Nominatim suggestion.
                 Street, city, state, ZIP, county, and country are filled
-                automatically and mapped to Beema Health intake and vendor API as
-                configured above.
+                automatically and mapped to Beema Health intake and vendor API
+                as configured above.
               </p>
             </>
           ) : isChoice ? (

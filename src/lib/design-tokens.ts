@@ -135,6 +135,8 @@ export const SECTION_TONE_PALETTE = {
   orders: "secondary",
   /** Refills — green */
   refills: "success",
+  /** Payment — primary brand */
+  payment: "primary",
 } as const satisfies Record<string, SemanticPalette>;
 
 export type SectionTone = keyof typeof SECTION_TONE_PALETTE;

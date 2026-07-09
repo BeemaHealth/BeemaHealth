@@ -13,6 +13,7 @@
  */
 
 import type {
+  AuthorizationHold,
   ConsentRecord,
   DashboardData,
   PatientPrescription,
@@ -30,6 +31,7 @@ import type {
   RefillRequestsResponse,
   SameDoseRefillResponse,
   SessionUser,
+  StripePaymentMethodSummary,
   TitrationRefillResponse,
   UploadedDocument,
   User,
@@ -1939,4 +1941,28 @@ export async function submitTitrationRefill(
     throw new Error(detail);
   }
   return resp.json() as Promise<TitrationRefillResponse>;
+}
+
+export async function createPaymentHold(): Promise<AuthorizationHold> {
+  return apiFetch<AuthorizationHold>("/payments/payment-hold/", {
+    method: "POST",
+  });
+}
+
+export async function fetchPaymentHold(): Promise<AuthorizationHold | null> {
+  if (!USE_API) return null;
+  return apiFetch<AuthorizationHold | null>("/payments/payment-hold/me/");
+}
+
+export async function changePaymentCard(): Promise<AuthorizationHold> {
+  return apiFetch<AuthorizationHold>("/payments/payment-hold/change-card/", {
+    method: "POST",
+  });
+}
+
+export async function fetchPaymentMethods(): Promise<
+  StripePaymentMethodSummary[]
+> {
+  if (!USE_API) return [];
+  return apiFetch<StripePaymentMethodSummary[]>("/payments/payment-methods/");
 }

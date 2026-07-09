@@ -540,6 +540,43 @@ export interface SameDoseRefillResponse {
   created_at: string;
 }
 
+export type PaymentMode = "auth_hold" | "setup_only";
+
+export type AuthorizationHoldStatus =
+  | "created"
+  | "processing"
+  | "held"
+  | "requires_action"
+  | "captured"
+  | "failed"
+  | "canceled"
+  | "expired";
+
+export interface AuthorizationHold {
+  id: string;
+  payment_mode: PaymentMode;
+  amount_cents: number;
+  status: AuthorizationHoldStatus;
+  status_reason: string;
+  captured_amount_cents: number | null;
+  held_at: string | null;
+  captured_at: string | null;
+  canceled_at: string | null;
+  expires_at: string | null;
+  created_at: string;
+  client_secret: string | null;
+}
+
+export interface StripePaymentMethodSummary {
+  id: string;
+  card_brand: string;
+  card_last4: string;
+  card_exp_month: number | null;
+  card_exp_year: number | null;
+  is_default: boolean;
+  created_at: string;
+}
+
 export interface TitrationRefillResponse {
   id: string;
   request_type: "titration";

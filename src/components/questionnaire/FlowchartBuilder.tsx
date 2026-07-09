@@ -2684,14 +2684,23 @@ function StepEditorPanel({
     choice_options?: import("@/lib/questionnaire/choice-options").ChoiceOptionDraft[];
   }) {
     setError("");
+    // "stripe_payment_hold" is a UI-only pseudo field_type (see
+    // QUESTION_FIELD_TYPES) — the API model has no dedicated payment field
+    // type, it's field_type="plugin" + plugin_id="stripe_payment_hold" with
+    // config (not choice options) in `options`.
+    const isPaymentField = payload.field_type === "stripe_payment_hold";
     await createStaffQuestionnaireField(slug, versionId, step.step_key, {
       field_key: payload.field_key,
-      field_type: payload.field_type,
+      field_type: isPaymentField ? "plugin" : payload.field_type,
+      plugin_id: isPaymentField ? "stripe_payment_hold" : undefined,
       label: payload.label,
       maps_to_section: payload.maps_to_section,
       required: payload.required,
-      options:
-        payload.field_type === "account" && payload.account_mappings
+      options: isPaymentField
+        ? ({
+            payment_mode: "auth_hold",
+          } as unknown as QuestionnaireFieldSchema["options"])
+        : payload.field_type === "account" && payload.account_mappings
           ? payload.account_mappings.map((row) => ({
               value: row.key,
               label: row.label,

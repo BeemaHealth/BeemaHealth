@@ -75,6 +75,7 @@ export const QUESTION_FIELD_TYPES = [
   { value: "account", label: "Account (email & password)" },
   { value: "review", label: "Review & confirm answers" },
   { value: "legal_consent", label: "TOS / Privacy / Telehealth consent" },
+  { value: "stripe_payment_hold", label: "Payment (Stripe auth hold)" },
 ] as const;
 
 export type QuestionFieldType = (typeof QUESTION_FIELD_TYPES)[number]["value"];
@@ -94,7 +95,9 @@ export function defaultFieldKeyForType(
             ? "legal_consent"
             : fieldType === "dob"
               ? "dob"
-              : `field_${existingKeys.size + 1}`;
+              : fieldType === "stripe_payment_hold"
+                ? "payment"
+                : `field_${existingKeys.size + 1}`;
   if (!existingKeys.has(base)) return base;
   let n = 2;
   while (existingKeys.has(`${base}_${n}`)) n += 1;
@@ -119,6 +122,8 @@ export function defaultLabelForType(fieldType: QuestionFieldType): string {
       return "Choose one";
     case "multi_choice":
       return "Choose all that apply";
+    case "stripe_payment_hold":
+      return "Payment method";
     default:
       return "Question";
   }

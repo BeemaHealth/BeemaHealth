@@ -4,6 +4,7 @@ import type {
 } from "@/lib/api/client";
 import { validateAddressGroupValue } from "@/lib/questionnaire/address-group";
 import { validateIsoDateOfBirth } from "@/lib/questionnaire/dob-field";
+import { isPaymentField } from "@/lib/questionnaire/payment-field";
 
 export type { QuestionnaireFieldSchema, QuestionnaireStepSchema };
 
@@ -77,6 +78,14 @@ export function validateFieldValue(
       return "Please agree to the Terms of Service, Privacy Policy, and Telehealth Consent to continue.";
     }
     return null;
+  }
+  if (isPaymentField(field)) {
+    const paymentStatus =
+      value && typeof value === "object" && "payment_status" in value
+        ? (value as { payment_status?: string }).payment_status
+        : undefined;
+    if (paymentStatus === "held" || paymentStatus === "captured") return null;
+    return "Please complete payment to continue.";
   }
   if (field.field_type === "dob") {
     if (!required && isEmptyValue(value)) return null;

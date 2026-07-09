@@ -20,6 +20,7 @@ import {
   Truck,
   UserRound,
 } from "lucide-react";
+import { PaymentMethodSection } from "@/components/payments/PaymentMethodSection";
 import { Button } from "@/components/ui/button";
 import {
   AccountSectionCard,
@@ -44,6 +45,8 @@ import {
   fetchIntakeMe,
   fetchPatientProfile,
   fetchPatientSettings,
+  fetchPaymentHold,
+  fetchPaymentMethods,
   isApiEnabled,
   patchAuthMe,
   patchPatientProfile,
@@ -59,11 +62,13 @@ import {
 import { getIntake } from "@/lib/storage";
 import { US_STATE_ENTRIES } from "@/lib/us-states";
 import type {
+  AuthorizationHold,
   ConsentRecord,
   EligibilityResponses,
   MedicalIntake,
   PatientProfile,
   PatientSettings,
+  StripePaymentMethodSummary,
   User,
 } from "@/lib/types/mvp";
 import { useAuth } from "@/context/AuthContext";
@@ -207,6 +212,10 @@ function DashboardAccountPage() {
   const [profile, setProfile] = useState<PatientProfile | null>(null);
   const [settings, setSettings] = useState<PatientSettings | null>(null);
   const [consent, setConsent] = useState<ConsentRecord | null>(null);
+  const [paymentMethods, setPaymentMethods] = useState<
+    StripePaymentMethodSummary[]
+  >([]);
+  const [activeHold, setActiveHold] = useState<AuthorizationHold | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [editingSection, setEditingSection] = useState<EditingSection>(null);
@@ -254,6 +263,8 @@ function DashboardAccountPage() {
         loadedConsent,
         loadedProfile,
         loadedSettings,
+        loadedPaymentMethods,
+        loadedHold,
         refreshedUser,
       ] = await Promise.all([
         fetchIntakeMe(),
@@ -261,6 +272,8 @@ function DashboardAccountPage() {
         fetchConsentMe(),
         fetchPatientProfile(),
         fetchPatientSettings(),
+        fetchPaymentMethods(),
+        fetchPaymentHold(),
         isApiEnabled() ? fetchAuthMe() : Promise.resolve(null),
       ]);
       if (cancelled) return;
@@ -299,6 +312,8 @@ function DashboardAccountPage() {
       setConsent(loadedConsent);
       setProfile(loadedProfile);
       setSettings(loadedSettings);
+      setPaymentMethods(loadedPaymentMethods);
+      setActiveHold(loadedHold);
       setQuestionnaireFields(fields);
       setLoading(false);
     })();
@@ -968,6 +983,15 @@ function DashboardAccountPage() {
             )}
           </div>
         </AccountSectionCard>
+
+        <PaymentMethodSection
+          paymentMethods={paymentMethods}
+          activeHold={activeHold}
+          onCardUpdated={(hold) => {
+            setActiveHold(hold);
+            void fetchPaymentMethods().then(setPaymentMethods);
+          }}
+        />
       </div>
     </div>
   );
