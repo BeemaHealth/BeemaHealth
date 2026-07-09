@@ -1,19 +1,8 @@
 # Start Feature
 
-Run this skill at the beginning of every new feature. It checks for existing work, sets up a fresh clone in the shared workspace, and defines the testing gate.
+Run this command at the beginning of every new feature. It checks for existing work, stashes in-progress changes in the repo checkout, creates a feature branch, and defines the testing gate.
 
-## Workspace layout
-
-All Beema Health clones live as sibling directories under `/Users/mattaertker/Documents/Github/`:
-
-```
-Github/
-  Beema Health/                          ← canonical working copy (main)
-  Beema Health-feature-consent-flow/     ← feature clone example
-  Beema Health-feature-lp-ab-testing/    ← another feature clone
-```
-
-Open `/Users/mattaertker/Documents/Github/` as the workspace root in your IDE to see all clones at once.
+**Repo:** `/Users/mattaertker/Documents/Github/BeemaHealth` — one working copy; do not clone sibling directories.
 
 ---
 
@@ -21,27 +10,23 @@ Open `/Users/mattaertker/Documents/Github/` as the workspace root in your IDE to
 
 Before creating anything, check whether relevant work already exists.
 
-**Check existing clone directories:**
-```bash
-ls /Users/mattaertker/Documents/Github/ | grep -i Beema Health
-```
-
 **Check remote branches on GitHub:**
 ```bash
-git -C /Users/mattaertker/Documents/Github/Beema Health ls-remote --heads origin | grep feature/
+git -C /Users/mattaertker/Documents/Github/BeemaHealth ls-remote --heads origin | grep feature/
 ```
 
 **Check local branches too — not just remote:**
 ```bash
-git -C /Users/mattaertker/Documents/Github/Beema Health branch --list 'feature/*'
+git -C /Users/mattaertker/Documents/Github/BeemaHealth branch --list 'feature/*'
 ```
+
 Local `main` can be ahead of `origin/main` (uncommitted work gets pushed in batches, not every session), so a branch or commits can exist locally with nothing on GitHub to show for it. Always check both.
 
-Show the user what exists. If any branch or clone looks related to the requested feature, ask:
+Show the user what exists. If any branch looks related to the requested feature, ask:
 
 > "I found existing branch(es) that may be relevant: `feature/xxx`. Would you like to continue work there instead of starting a new branch?"
 
-Wait for the user to decide before proceeding. If they say yes, check out the existing clone (or clone that branch) instead of creating a new one.
+Wait for the user to decide before proceeding. If they say yes, check out that branch instead of creating a new one. Offer to `git stash pop` if you stashed in Step 3 on a prior run and they want that work back.
 
 ---
 
@@ -61,26 +46,37 @@ Ask the user to confirm or adjust the name. Do not create the branch until they 
 
 ---
 
-## Step 3 — Clone into the workspace
+## Step 3 — Stash WIP and create the branch
 
-Clone from the **local canonical checkout**, not GitHub — local `main` is the source of truth and may hold commits `origin/main` doesn't have yet. Cloning from `https://github.com/...` would silently drop that work. After cloning, repoint `origin` back to GitHub so pushes in Step 6 go to the right place:
+Work in the single repo checkout. **Local `main` is the source of truth** — do not clone from GitHub (that can drop commits `origin/main` does not have yet).
 
 ```bash
-git clone /Users/mattaertker/Documents/Github/Beema Health /Users/mattaertker/Documents/Github/Beema Health-<approved-name>
-cd /Users/mattaertker/Documents/Github/Beema Health-<approved-name>
+cd /Users/mattaertker/Documents/Github/BeemaHealth
+
+# Stash only if the working tree is dirty (tracked + untracked)
+if [ -n "$(git status --porcelain)" ]; then
+  git stash push -u -m "WIP before feature/<approved-name> ($(date +%Y-%m-%d))"
+fi
+
+git checkout main
 git checkout -b feature/<approved-name>
-git remote set-url origin https://github.com/Beema Health/Beema Health.git
 ```
 
 Example for `feature/refill-request-api`:
 ```bash
-git clone /Users/mattaertker/Documents/Github/Beema Health /Users/mattaertker/Documents/Github/Beema Health-refill-request-api
-cd /Users/mattaertker/Documents/Github/Beema Health-refill-request-api
+cd /Users/mattaertker/Documents/Github/BeemaHealth
+git stash push -u -m "WIP before feature/refill-request-api ($(date +%Y-%m-%d))"  # skip if clean
+git checkout main
 git checkout -b feature/refill-request-api
-git remote set-url origin https://github.com/Beema Health/Beema Health.git
 ```
 
-Confirm to the user: **"Cloned into `Beema Health-<name>/` and on branch `feature/<name>`. Ready to start work."**
+**Rules:**
+- Use `git stash push -u` so untracked files are preserved.
+- If stash fails, stop and tell the user — do not discard work.
+- Do not run `git pull` unless the user asks; local `main` may intentionally be ahead of `origin/main`.
+- If `feature/<approved-name>` already exists locally, stop and ask whether to check it out instead.
+
+Confirm to the user: **"On branch `feature/<name>` in `BeemaHealth/`. Ready to start work."** If you stashed, note the stash message so they can recover it later with `git stash list` / `git stash pop`.
 
 ---
 
@@ -118,7 +114,7 @@ FILES=$(git diff --name-only --diff-filter=ACMR origin/main -- '*.ts' '*.tsx')
 
 When work is done and tests pass, say:
 
-> "All tests pass on branch `feature/<name>` in `Beema Health-<name>/`. When you're ready to merge, push with:
+> "All tests pass on branch `feature/<name>` in `BeemaHealth/`. When you're ready to merge, push with:
 > ```
 > git push -u origin feature/<name>
 > ```

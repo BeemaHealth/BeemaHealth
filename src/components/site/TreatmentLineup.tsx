@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
-import compoundedPenImg from "@/assets/treatments/compounded-pen.png";
+import compoundedSemaglutideVialImg from "@/assets/treatments/compounded-semaglutide-vial.png";
+import compoundedTirzepatideVialImg from "@/assets/treatments/compounded-tirzepatide-vial.png";
 
 type Treatment = {
   id: string;
@@ -22,8 +23,8 @@ const TREATMENTS: Treatment[] = [
     priceFrom: "$199",
     badge: "Cash-pay option",
     fdaApproved: false,
-    image: compoundedPenImg,
-    imageAlt: "Compounded semaglutide injection pen",
+    image: compoundedSemaglutideVialImg,
+    imageAlt: "Beema Health compounded semaglutide injection vial",
   },
   {
     id: "compounded-tirzepatide",
@@ -33,8 +34,8 @@ const TREATMENTS: Treatment[] = [
     priceFrom: "$249",
     badge: "Cash-pay option",
     fdaApproved: false,
-    image: compoundedPenImg,
-    imageAlt: "Compounded tirzepatide injection pen",
+    image: compoundedTirzepatideVialImg,
+    imageAlt: "Beema Health compounded tirzepatide injection vial",
   },
 ];
 

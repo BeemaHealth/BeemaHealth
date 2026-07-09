@@ -64,7 +64,7 @@ Pre-signup progress: `POST /api/funnel/session/` + `PATCH /api/funnel/eligibilit
 
 ## New feature requests
 
-**Before writing any code for a new feature, run `/start-feature` (`.claude/commands/start-feature.md`).** That skill handles cloning from GitHub, naming and checking out the feature branch, and setting the testing gate. Full instructions are there — do not duplicate them here.
+**Before writing any code for a new feature, run `/start-feature` (`.claude/commands/start-feature.md`).** That command stashes WIP, checks out a new feature branch from local `main`, and sets the testing gate. Full instructions are there — do not duplicate them here.
 
 ---
 
