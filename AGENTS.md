@@ -64,7 +64,12 @@ Pre-signup progress: `POST /api/funnel/session/` + `PATCH /api/funnel/eligibilit
 
 ## New feature requests
 
-**Before writing any code for a new feature, run `/start-feature` (`.claude/commands/start-feature.md`).** That command stashes WIP, checks out a new feature branch from local `main`, and sets the testing gate. Full instructions are there — do not duplicate them here.
+**Before writing any code for a new feature:**
+
+1. **`/start-feature`** (`.claude/commands/start-feature.md`) — stash WIP, check out a feature branch from local `main`.
+2. **`/discover-feature`** (`.claude/commands/discover-feature.md`) — blindspot pass, prototypes, interview, and plan in `.claude/plans/` before production code (skip for trivial fixes).
+
+Full instructions are in those command files — do not duplicate them here.
 
 ---
 

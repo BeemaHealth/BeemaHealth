@@ -80,7 +80,13 @@ Confirm to the user: **"On branch `feature/<name>` in `BeemaHealth/`. Ready to s
 
 ---
 
-## Step 4 — Do the work
+## Step 4 — Discover before you build (non-trivial features)
+
+For anything beyond a small fix or approved spec, run **`/discover-feature`** before writing production code. That command runs blindspot pass → prototype → interview → plan in `.claude/plans/`. Do not implement until the plan is approved.
+
+---
+
+## Step 5 — Do the work
 
 Follow the standard task workflow (`AGENTS.md`):
 - Orient: read the relevant `docs/features/` doc; flag any discrepancies against the code before starting
@@ -91,7 +97,7 @@ Follow the standard task workflow (`AGENTS.md`):
 
 ---
 
-## Step 5 — Testing gate (required before declaring done)
+## Step 6 — Testing gate (required before declaring done)
 
 **All of the following must pass. Report each result in chat.**
 
@@ -108,7 +114,7 @@ FILES=$(git diff --name-only --diff-filter=ACMR origin/main -- '*.ts' '*.tsx')
 
 ---
 
-## Step 6 — Hand off to the user
+## Step 7 — Hand off to the user
 
 **Do not push. The user pushes when ready.**
 

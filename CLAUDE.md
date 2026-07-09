@@ -35,7 +35,7 @@ Patient funnel: qualification → account → medical intake → consent → pro
 
 ## New feature requests
 
-Before writing any code for a new feature, run `/start-feature`. That command stashes WIP, checks out a new feature branch from local `main`, and defines the testing gate. Full instructions live there. Never push — the user pushes when ready.
+Before writing any code for a new feature, run `/start-feature` (branch setup) then `/discover-feature` (blindspot pass → prototype → interview → plan) for non-trivial work. Full instructions live in `.claude/commands/`. Never push — the user pushes when ready.
 
 ---
 
