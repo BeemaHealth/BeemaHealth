@@ -6,7 +6,6 @@ type Treatment = {
   id: string;
   name: string;
   form: string;
-  generic: string;
   priceFrom: string;
   badge?: string;
   fdaApproved: boolean;
@@ -18,8 +17,7 @@ const TREATMENTS: Treatment[] = [
   {
     id: "compounded-semaglutide",
     name: "Compounded Semaglutide",
-    form: "Weekly injection",
-    generic: "Compounded, if prescribed",
+    form: "Weekly injection, if prescribed",
     priceFrom: "$199",
     badge: "Cash-pay option",
     fdaApproved: false,
@@ -29,8 +27,7 @@ const TREATMENTS: Treatment[] = [
   {
     id: "compounded-tirzepatide",
     name: "Compounded Tirzepatide",
-    form: "Weekly injection",
-    generic: "Compounded, if prescribed",
+    form: "Weekly injection, if prescribed",
     priceFrom: "$249",
     badge: "Cash-pay option",
     fdaApproved: false,
@@ -57,13 +54,13 @@ export function TreatmentLineup() {
           {/* Pricing disclaimer disabled along with per-treatment pricing above.
           <span className="font-medium">†</span>From pricing includes medication only, if prescribed.
           */}
-          Final cost depends on your plan, pharmacy, and provider decision.
-          Treatment availability depends on your intake, clinical eligibility,
-          and a licensed provider&apos;s independent decision. Brand-name
-          medications are FDA-approved for chronic weight management where
-          indicated. Compounded semaglutide and tirzepatide are not FDA-approved
-          and are only considered when legally available and clinically
-          appropriate. Completing intake does not guarantee a prescription.
+          Final cost depends on your provider decision as well as dosage
+          recommendation. Treatment availability depends on your intake,
+          clinical eligibility, and a licensed provider&apos;s independent
+          decision. Compounded semaglutide and compounded tirzepatide are not
+          FDA-approved and are only considered when legally available and
+          clinically appropriate. Completing intake does not guarantee a
+          prescription.
         </p>
       </div>
     </section>
@@ -116,7 +113,6 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
         <p className="text-sm font-medium text-foreground/80">
           {treatment.form}
         </p>
-        <p className="text-sm text-foreground/65">{treatment.generic}</p>
       </div>
     </article>
   );

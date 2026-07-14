@@ -36,7 +36,7 @@ export const Route = createFileRoute("/about")({
       {
         property: "og:description",
         content:
-          "Precision, trust, community, health, and consistency — the values behind Beema Health telehealth care.",
+          "Purpose, trust, community, health, and consistency — the values behind Beema Health telehealth care.",
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/about") }],
@@ -47,18 +47,18 @@ export const Route = createFileRoute("/about")({
 const PILLARS = [
   {
     icon: Target,
-    title: "Precision",
-    text: "Every action serves a purpose — from intake questions to provider review.",
+    title: "Purpose",
+    text: "Every action serves a purpose — from intake questions to provider review to order fulfillment.",
   },
   {
     icon: ShieldCheck,
     title: "Trust",
-    text: "Licensed clinicians make independent medical decisions, always.",
+    text: "Licensed clinicians make independent medical decisions… always.",
   },
   {
     icon: Users,
     title: "Community",
-    text: "Patients, providers, and technology working toward the same goal.",
+    text: "Patients, providers, and technology work in harmony toward the objective.",
   },
   {
     icon: Heart,
@@ -68,7 +68,7 @@ const PILLARS = [
   {
     icon: RefreshCcw,
     title: "Consistency",
-    text: "Follow-through that continues past the first visit.",
+    text: "Professional support that continues from the first visit to success.",
   },
 ];
 
@@ -81,7 +81,7 @@ function AboutPage() {
         <SectionHeading
           eyebrow="Our story"
           title="Health isn't a destination. It's a lifelong journey."
-          description="The bee, the infinity wings, and the hexagon — every part of our mark says something about how we believe care should work."
+          description="The bee with its infinity wings, and the hexagon — every piece of our logo speaks to how we believe healthcare should function."
         />
       </Section>
 
@@ -96,8 +96,8 @@ function AboutPage() {
                 Mission
               </Eyebrow>
               <p className="text-xl font-semibold text-ink-foreground md:text-2xl">
-                At Beema Health, we believe the best healthcare should work the
-                way nature does.
+                At Beema Health, we believe the best healthcare should work in
+                harmony with nature.
               </p>
               <p>
                 Honey bees are among nature's most efficient builders. Every
@@ -107,16 +107,16 @@ function AboutPage() {
               </p>
               <p>That's how we believe healthcare should work.</p>
               <p>
-                Our bee represents precision, trust, and collaboration. The
+                Our bee represents effectiveness, trust, and collaboration. The
                 infinity-shaped wings symbolize lifelong wellness, because
                 health isn't a finish line, it's a continuous journey. The
                 hexagon reflects efficiency and strength, inspired by one of
                 nature's most perfect designs.
               </p>
               <p>
-                At Beema Health, our mission is simple: connect patients,
-                providers, and technology to deliver care that's smarter, more
-                personal, and built for lasting results.
+                At Beema Health, our mission is simple: connect patients and
+                providers through technology to deliver care that's more
+                intelligent, more personal, and built for lifelong results.
               </p>
             </div>
           </div>
@@ -128,7 +128,7 @@ function AboutPage() {
         <Reveal>
           <SectionHeading
             eyebrow="What the bee means"
-            title="Five pillars, one mark"
+            title="Five pillars, one objective"
           />
         </Reveal>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
@@ -150,7 +150,7 @@ function AboutPage() {
         </div>
       </Section>
 
-      {/* Infinity — care that lasts */}
+      {/* Infinity wings */}
       <Section className="bg-muted/40 pt-0">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <Reveal>
@@ -190,7 +190,7 @@ function AboutPage() {
             <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
               Hexagons tile perfectly with zero wasted space — the same
               principle we apply to your care. Minimal steps, no unnecessary
-              friction, from eligibility check to provider review.
+              friction, from eligibility check to provider review to success.
             </p>
           </Reveal>
         </div>

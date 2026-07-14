@@ -136,11 +136,11 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "How is medication shipped?",
-        a: "Through cold-chain shipping with tracking, typically 2–4 business days in launch states. Local pickup is available for in-stock options in some areas.",
+        a: "Through cold-chain shipping with tracking, typically 2–4 business days in launch states.",
       },
       {
         q: "What if my shipment is delayed or lost?",
-        a: "Report it in the app and we open a ticket immediately. Refill reliability is our core promise — we escalate cold-chain and lost-shipment issues fast.",
+        a: "Please report it in the app and we will open a ticket immediately. Refill reliability is our core promise — we urgently escalate all cold-chain and lost-shipment issues.",
       },
     ],
   },
@@ -149,7 +149,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "How do refills work?",
-        a: "Your Refills screen shows days remaining, refill window, pharmacy status, and a refill-risk level (green / yellow / red). Request a refill in a tap and track every step on a timeline.",
+        a: "Your Refills screen shows days remaining, refill window, pharmacy status, and a refill-risk level (green / yellow / red). You can quickly and easily request a refill and track your order and shipment status every step along the way.",
       },
       {
         q: "What's your refill response promise?",
@@ -175,7 +175,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "Who is eligible?",
-        a: "Eligibility depends on your medical history and a clinician's independent evaluation. Some conditions are contraindications. We explain eligibility in plain language during intake.",
+        a: "Eligibility depends on your medical history and a clinician's independent evaluation. Some conditions will disqualify you for some prescriptions. We explain eligibility in plain language during the intake process.",
       },
       {
         q: "Which states is Beema Health available in?",
@@ -197,7 +197,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "How is my health data protected?",
-        a: "We use encryption in transit and at rest, role-based access, and audit logs for clinical and administrative actions. We never expose your health data in logs.",
+        a: "We are always within strict compliance with all HIPAA requirements. We use encryption in transit and at rest, role-based access, as well as audit logs for clinical and administrative actions. We never expose any of your health data in logs.",
       },
     ],
   },

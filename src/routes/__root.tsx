@@ -84,33 +84,33 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "Beema Health — Care that lasts. Precision medicine." },
+        { title: "Beema Health — Medical weight-loss care" },
         {
           name: "description",
           content:
-            "Beema Health is telehealth weight-management care with licensed providers, transparent pricing, and continuous follow-through.",
+            "Medical weight-loss care reviewed by a licensed provider. Secure intake for Zepbound, Wegovy, and affordable alternatives when appropriate.",
         },
         { name: "author", content: "Beema Health" },
         {
           property: "og:title",
-          content: "Beema Health — Care that lasts. Precision medicine.",
+          content: "Beema Health — Medical weight-loss care",
         },
         {
           property: "og:description",
           content:
-            "Licensed providers, transparent pricing, and lifelong follow-through. Telehealth weight care built the way nature works.",
+            "USA physicians, licensed pharmacies, clear pricing, and thoughtful medical care that doesn't stop at the first prescription.",
         },
         { property: "og:type", content: "website" },
         { property: "og:site_name", content: "Beema Health" },
         { name: "twitter:card", content: "summary" },
         {
           name: "twitter:title",
-          content: "Beema Health — Care that lasts. Precision medicine.",
+          content: "Beema Health — Medical weight-loss care",
         },
         {
           name: "twitter:description",
           content:
-            "Beema Health offers telehealth weight management with licensed providers, transparent pricing, and reliable refills.",
+            "Medical weight-loss care with licensed providers, transparent pricing, and support designed for success.",
         },
         { property: "og:image", content: absoluteUrl("/beema-mark.png") },
         { name: "twitter:image", content: absoluteUrl("/beema-mark.png") },

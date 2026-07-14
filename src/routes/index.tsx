@@ -60,17 +60,17 @@ const STEPS = [
   {
     icon: ClipboardCheck,
     title: "Complete your eligibility check",
-    text: "Answer a short set of questions to see if Beema Health may be a fit. It takes about 5 minutes.",
+    text: "Answer a 5-minute set of questions to see if Beema Health can help you.",
   },
   {
     icon: Send,
     title: "Submit your medical intake",
-    text: "Complete a secure medical questionnaire for provider review — private, encrypted, and at your pace.",
+    text: "Complete a secure medical questionnaire for provider review — private and encrypted",
   },
   {
     icon: Stethoscope,
-    title: "A licensed provider reviews",
-    text: "A licensed provider reviews your information and decides next steps. No prescription is guaranteed.",
+    title: "Licensed provider review",
+    text: "A licensed provider reviews your information and determines the next steps of medical care based on their independent, professional medical judgment. No prescription is guaranteed.",
   },
 ];
 
@@ -78,22 +78,22 @@ const TRUST_ITEMS = [
   {
     icon: Stethoscope,
     title: "Licensed providers",
-    text: "Independent clinicians review every intake",
+    text: "Independent clinicians review every patient",
   },
   {
     icon: BadgeCheck,
     title: "Transparent pricing",
-    text: "Every charge shown before you pay",
+    text: "Clear, concise billing with no surprises",
   },
   {
     icon: Truck,
-    title: "US pharmacies",
-    text: "Medication ships from US-based pharmacies",
+    title: "USA licensed pharmacies",
+    text: "Medication ships from USA pharmacies",
   },
   {
     icon: Lock,
     title: "Private & secure",
-    text: "HIPAA-aligned handling of your health data",
+    text: "Full HIPAA compliance",
   },
 ];
 
@@ -129,13 +129,14 @@ function HomePage() {
             <Eyebrow>GLP-1 weight-loss care</Eyebrow>
             <h1 className="mt-5 text-balance text-4xl font-bold leading-[1.05] text-foreground md:text-6xl">
               Weight-loss care that's{" "}
-              <span className="text-grad-brand">human</span> and built for the{" "}
-              <span className="text-grad-brand">long run.</span>
+              <span className="text-grad-brand">human</span> and built for{" "}
+              <span className="text-grad-brand">success.</span>
             </h1>
             <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-              Licensed providers, pricing you see before you pay, and
-              follow-through that doesn't stop at the first prescription.
-              Precision medicine.
+              USA physicians, licensed and certified USA compounding pharmacies,
+              clear and concise pricing, no bait-and-switch, no surprises, and
+              thoughtful medical care that doesn't stop at the first
+              prescription.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="xl">
@@ -149,9 +150,9 @@ function HomePage() {
             </div>
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
               {[
-                "Licensed provider review",
+                "Licensed USA physician network",
                 "No surprise charges",
-                "Reliable refills",
+                "Quick shipping",
               ].map((t) => (
                 <span key={t} className="inline-flex items-center gap-2">
                   <CheckCircle2 className="size-4 text-accent-foreground" /> {t}
@@ -176,10 +177,10 @@ function HomePage() {
               />
               <div className="absolute inset-x-0 top-[24%] px-8 text-left md:px-12">
                 <p className="text-sm font-semibold text-ink-foreground">
-                  Care that stays with you
+                  Compassionate medical care
                 </p>
                 <p className="mt-1 text-xs text-ink-foreground/80">
-                  From first check-in to lasting results
+                  From first contact to long-term success
                 </p>
               </div>
             </div>
@@ -208,11 +209,7 @@ function HomePage() {
 
       <Section id="how-it-works">
         <Reveal>
-          <SectionHeading
-            eyebrow="How it works"
-            title="Three simple steps"
-            description="A minimal path from eligibility to provider review — education here, care decisions with your clinician."
-          />
+          <SectionHeading eyebrow="How it works" title="Three simple steps" />
         </Reveal>
         <div className="mt-12 grid w-full gap-5 md:grid-cols-3">
           {STEPS.map((s, i) => (
@@ -250,12 +247,12 @@ function HomePage() {
                 Why the bee?
               </Eyebrow>
               <h2 className="mt-4 text-balance text-3xl font-bold md:text-4xl">
-                The best healthcare works the way nature does.
+                The best healthcare works in harmony with nature.
               </h2>
               <p className="mt-4 text-pretty leading-relaxed text-ink-foreground/75">
-                Our bee stands for precision, trust, and consistency. Its
-                infinity-shaped wings are a reminder that health isn't a finish
-                line, but a lifelong journey we stay on with you.
+                Our bee represents natural effectiveness, trust, and
+                consistency. Its infinity-shaped wings are a reminder that
+                health isn't a finish line, but a lifelong journey.
               </p>
               <Button
                 asChild

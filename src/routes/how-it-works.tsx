@@ -32,7 +32,7 @@ export const Route = createFileRoute("/how-it-works")({
       {
         property: "og:description",
         content:
-          "A minimal path from eligibility to provider review. No membership fee, no prescription guarantees.",
+          "A direct path from eligibility to provider review. No membership fee, no prescription guarantees.",
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/how-it-works") }],
@@ -44,17 +44,17 @@ const STEPS = [
   {
     icon: ClipboardCheck,
     title: "Complete your eligibility check",
-    text: "Answer short questions about your health, location, and treatment interest. It takes about 5 minutes.",
+    text: "Answer a few brief questions about your health, location, and health goals. This takes about 5 minutes.",
   },
   {
     icon: Send,
     title: "Submit your medical intake",
-    text: "Create an account and complete a secure medical questionnaire. Save and continue later anytime.",
+    text: "Create an account and complete a secure medical questionnaire. Save at any point and continue at your convenience.",
   },
   {
     icon: Stethoscope,
     title: "Provider review",
-    text: "A licensed provider reviews your intake and decides whether treatment may be appropriate. Prescribing is never guaranteed.",
+    text: "A licensed provider reviews your intake and determines recommended treatment. Prescribing is never guaranteed.",
   },
 ];
 
@@ -62,12 +62,12 @@ const AFTER = [
   {
     icon: MessageCircle,
     title: "Stay connected",
-    text: "Your care doesn't end at checkout — track your status and updates from your dashboard.",
+    text: "Clear communication tracks your status and provides updates to your dashboard.",
   },
   {
     icon: RefreshCcw,
-    title: "Refills that follow through",
-    text: "When treatment continues, refill coordination keeps your plan moving without restarting from zero.",
+    title: "Timely Refills",
+    text: "As treatment continues, refill coordination keeps your progress moving forward.",
   },
 ];
 
@@ -77,7 +77,7 @@ function HowItWorksPage() {
       <Section className="bg-grad-hero">
         <SectionHeading
           eyebrow="How it works"
-          title="A minimal path from intake to provider review"
+          title="A direct path from intake to provider review"
           description="Medication-only pricing with no platform membership fee — just the essentials from eligibility to provider review."
         />
       </Section>

@@ -56,7 +56,7 @@ const BENEFITS = [
   {
     icon: Scale,
     title: "Built for follow-through",
-    text: "Refill coordination, progress tracking, and a care team that stays with you — not just a one-time script.",
+    text: "Refill coordination, progress tracking, and ongoing support from first visit to success — not just a one-time script.",
   },
 ];
 
@@ -69,8 +69,8 @@ function WeightLossPage() {
       <Section className="bg-grad-hero">
         <SectionHeading
           eyebrow="Medical weight loss"
-          title="GLP-1 care with real clinicians and clear next steps"
-          description="Beema Health focuses on high-demand, evidence-based weight-loss treatments — reviewed by licensed providers, with pricing you can understand before you pay."
+          title="GLP-1 care guided by medical professionals"
+          description="Beema Health focuses on evidence-based weight-loss treatments — reviewed by licensed providers, with clear, transparent pricing"
         />
         <div className="mt-10 text-center">
           <Button asChild size="xl">
@@ -114,10 +114,11 @@ function WeightLossPage() {
             Who this is for
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Beema Health is for adults seeking medical weight-loss support.
-            During your eligibility check we review BMI, health history, and
-            contraindications. A licensed provider then decides whether
-            treatment may be appropriate — prescribing is never guaranteed.
+            Beema Health is here for adults seeking medical weight-loss support.
+            During your eligibility check, we review BMI, health history, and
+            any factors that might make a GLP-1 treatment plan inadvisable. A
+            licensed provider decides whether treatment may be appropriate —
+            prescribing is never guaranteed.
           </p>
           <ul className="mt-5 space-y-2">
             {[

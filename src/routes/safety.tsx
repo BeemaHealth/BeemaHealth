@@ -42,8 +42,8 @@ function SafetyPage() {
       <Section className="bg-grad-hero">
         <SectionHeading
           eyebrow="Safety & eligibility"
-          title="Plain-language safety, no fine-print games"
-          description="We believe you should understand your care. Here's how eligibility, contraindications, and side effects work — in simple terms."
+          title="Plain-language, safety, no fine-print games"
+          description="We believe you should fully understand your care. Here's how eligibility, reasons for not prescribing a GLP-1, and side effects work — in simple terms."
         />
       </Section>
 
@@ -79,9 +79,10 @@ function SafetyPage() {
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             Common side effects can include nausea, reduced appetite, and
-            digestive changes, especially early on. Most are manageable —
-            message your care team and we'll help. We track side effects over
-            time so your clinician can adjust your plan.
+            digestive changes, especially early in the process. Most of these
+            side effects are manageable — message your care team and we'll help.
+            We track side effects over time so your clinician can adjust your
+            plan to optimize your results.
           </p>
         </SurfaceCard>
 
