@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { canonicalUrl, ORGANIZATION_JSONLD, WEBSITE_JSONLD } from "@/lib/seo";
 import { trackPageViewed } from "@/lib/analytics";
@@ -97,7 +98,34 @@ const TRUST_ITEMS = [
   },
 ];
 
+/**
+ * Staggered fade-up entrance for the hero column. Durations collapse to 0
+ * under prefers-reduced-motion (via useReducedMotion) so reduced-motion
+ * users see the final layout immediately, matching the `.reveal` CSS
+ * convention used elsewhere on this page.
+ */
+function useHeroMotionVariants(reduceMotion: boolean) {
+  const duration = reduceMotion ? 0 : 0.55;
+  const container = {
+    hidden: {},
+    show: { transition: { staggerChildren: reduceMotion ? 0 : 0.12 } },
+  };
+  const item = {
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 16 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration, ease: [0.22, 1, 0.36, 1] as const },
+    },
+  };
+  return { container, item };
+}
+
 function HomePage() {
+  const reduceMotion = useReducedMotion();
+  const { container: heroContainer, item: heroItem } = useHeroMotionVariants(
+    Boolean(reduceMotion),
+  );
   useEffect(() => {
     let cancelled = false;
     const timer = setTimeout(() => {
@@ -125,30 +153,56 @@ function HomePage() {
       <section className="bg-grad-hero relative overflow-hidden">
         <FloatingHexagons className="z-0" />
         <div className="veya-container relative z-10 grid items-center gap-12 py-16 md:py-24 lg:grid-cols-2">
-          <div>
-            <Eyebrow>GLP-1 weight-loss care</Eyebrow>
-            <h1 className="mt-5 text-balance text-4xl font-bold leading-[1.05] text-foreground md:text-6xl">
+          <motion.div initial="hidden" animate="show" variants={heroContainer}>
+            <motion.div variants={heroItem}>
+              <Eyebrow>GLP-1 weight-loss care</Eyebrow>
+            </motion.div>
+            <motion.h1
+              variants={heroItem}
+              className="mt-5 text-balance text-4xl font-bold leading-[1.05] text-foreground md:text-6xl"
+            >
               Weight-loss care that's{" "}
               <span className="text-grad-brand">human</span> and built for{" "}
               <span className="text-grad-brand">success.</span>
-            </h1>
-            <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
+            </motion.h1>
+            <motion.p
+              variants={heroItem}
+              className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground"
+            >
               USA physicians, licensed and certified USA compounding pharmacies,
               clear and concise pricing, no bait-and-switch, no surprises, and
               thoughtful medical care that doesn't stop at the first
               prescription.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="xl">
-                <Link to={qualifyHref(CTA_IDS.home_hero)}>
-                  See if you qualify <ArrowRight />
-                </Link>
-              </Button>
-              <Button asChild size="xl" variant="outline">
-                <Link to="/how-it-works">How it works</Link>
-              </Button>
-            </div>
-            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
+            </motion.p>
+            <motion.div
+              variants={heroItem}
+              className="mt-8 flex flex-col gap-3 sm:flex-row"
+            >
+              <motion.div
+                whileHover={reduceMotion ? undefined : { scale: 1.03 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+                transition={{ duration: 0.15 }}
+              >
+                <Button asChild size="xl">
+                  <Link to={qualifyHref(CTA_IDS.home_hero)}>
+                    See if you qualify <ArrowRight />
+                  </Link>
+                </Button>
+              </motion.div>
+              <motion.div
+                whileHover={reduceMotion ? undefined : { scale: 1.03 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+                transition={{ duration: 0.15 }}
+              >
+                <Button asChild size="xl" variant="outline">
+                  <Link to="/how-it-works">How it works</Link>
+                </Button>
+              </motion.div>
+            </motion.div>
+            <motion.div
+              variants={heroItem}
+              className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground"
+            >
               {[
                 "Licensed USA physician network",
                 "No surprise charges",
@@ -158,8 +212,8 @@ function HomePage() {
                   <CheckCircle2 className="size-4 text-accent-foreground" /> {t}
                 </span>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           <div className="relative mx-auto w-full max-w-md lg:max-w-none">
             <HexMotif className="float-slow pointer-events-none absolute -right-8 -top-10 w-28 text-primary/30" />
