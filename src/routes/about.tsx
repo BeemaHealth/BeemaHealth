@@ -1,5 +1,12 @@
+import { useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { canonicalUrl } from "@/lib/seo";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "motion/react";
 import {
   ArrowRight,
   Heart,
@@ -15,11 +22,12 @@ import {
   HexBadge,
   HexMotif,
   InfinityMotif,
-  Reveal,
+  MagneticButton,
   Section,
   SectionHeading,
   SurfaceCard,
 } from "@/components/site/primitives";
+import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 
@@ -73,24 +81,81 @@ const PILLARS = [
 ];
 
 function AboutPage() {
+  const reduceMotion = useReducedMotion();
+
+  // Single decorative scroll-parallax accent for the page: the infinity
+  // motif in the "Infinity wings" section drifts slightly as it scrolls
+  // through view. Transform-only, aria-hidden, no layout impact.
+  const wingsRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: wingsProgress } = useScroll({
+    target: wingsRef,
+    offset: ["start end", "end start"],
+  });
+  const wingsY = useTransform(
+    wingsProgress,
+    [0, 1],
+    [0, reduceMotion ? 0 : -28],
+  );
+
   return (
     <MarketingLayout>
       {/* Hero */}
       <Section className="bg-grad-hero relative overflow-hidden">
-        <HexMotif className="float-slow pointer-events-none absolute -right-16 top-8 hidden w-56 text-primary/15 lg:block" />
-        <SectionHeading
-          eyebrow="Our story"
-          title="Health isn't a destination. It's a lifelong journey."
-          description="The bee with its infinity wings, and the hexagon — every piece of our logo speaks to how we believe healthcare should function."
+        <div
+          aria-hidden
+          className="bg-mesh-glow mesh-drift pointer-events-none absolute inset-0 z-0"
         />
+        <div
+          aria-hidden
+          className="bg-grain pointer-events-none absolute inset-0 z-0 text-foreground/[0.035]"
+        />
+        <HexMotif className="float-slow pointer-events-none absolute -right-16 top-8 z-0 hidden w-56 text-primary/15 lg:block" />
+        <div className="relative z-10 mx-auto max-w-2xl text-center">
+          <motion.div
+            initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE_OUT }}
+          >
+            <Eyebrow>Our story</Eyebrow>
+          </motion.div>
+          <h2 className="mt-4 text-balance text-3xl font-bold text-foreground md:text-4xl">
+            <LineReveal>Health isn&apos;t a destination. </LineReveal>
+            <LineReveal delay={0.1}>It&apos;s a lifelong journey.</LineReveal>
+          </h2>
+          <motion.p
+            className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg"
+            initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: reduceMotion ? 0 : 0.6,
+              delay: reduceMotion ? 0 : 0.3,
+              ease: EASE_OUT,
+            }}
+          >
+            The bee with its infinity wings, and the hexagon — every piece of
+            our logo speaks to how we believe healthcare should function.
+          </motion.p>
+        </div>
       </Section>
 
       {/* Mission — black band, honey accents */}
       <Section className="pt-0">
-        <Reveal>
+        <motion.div
+          initial={reduceMotion ? undefined : { opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: reduceMotion ? 0 : 0.7, ease: EASE_OUT }}
+        >
           <div className="bg-grad-ink relative overflow-hidden rounded-4xl px-6 py-14 text-ink-foreground md:px-16 md:py-20">
-            <InfinityMotif className="pointer-events-none absolute -right-12 -top-8 w-80 text-primary/12" />
-            <HexMotif className="pointer-events-none absolute -bottom-16 -left-14 w-64 text-primary/10" />
+            <div
+              aria-hidden
+              className="bg-mesh-glow-dark mesh-drift-reverse pointer-events-none absolute inset-0"
+            />
+            <InfinityMotif
+              animateDraw
+              className="float-slow pointer-events-none absolute -right-12 -top-8 w-80 text-primary/12"
+            />
+            <HexMotif className="float-slower pointer-events-none absolute -bottom-16 -left-14 w-64 text-primary/10" />
             <div className="relative mx-auto max-w-2xl space-y-6 text-pretty leading-relaxed text-ink-foreground/85">
               <Eyebrow className="border-primary/40 bg-primary/10 text-primary">
                 Mission
@@ -120,20 +185,45 @@ function AboutPage() {
               </p>
             </div>
           </div>
-        </Reveal>
+        </motion.div>
       </Section>
 
       {/* Five pillars */}
       <Section className="pt-0">
-        <Reveal>
+        <motion.div
+          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE_OUT }}
+        >
           <SectionHeading
             eyebrow="What the bee means"
             title="Five pillars, one objective"
           />
-        </Reveal>
+        </motion.div>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {PILLARS.map((p, i) => (
-            <Reveal key={p.title} delay={i * 100} className="h-full">
+            <motion.div
+              key={p.title}
+              className="h-full"
+              initial={
+                reduceMotion
+                  ? undefined
+                  : {
+                      opacity: 0,
+                      y: 32,
+                      rotate: i % 2 === 0 ? -1.5 : 1.5,
+                    }
+              }
+              whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              whileHover={reduceMotion ? undefined : { y: -6 }}
+              transition={{
+                duration: reduceMotion ? 0 : 0.55,
+                delay: reduceMotion ? 0 : i * 0.1,
+                ease: EASE_OUT,
+              }}
+            >
               <SurfaceCard className="flex h-full flex-col items-start p-6">
                 <HexBadge className="size-11">
                   <p.icon className="size-5" />
@@ -145,15 +235,20 @@ function AboutPage() {
                   {p.text}
                 </p>
               </SurfaceCard>
-            </Reveal>
+            </motion.div>
           ))}
         </div>
       </Section>
 
       {/* Infinity wings */}
       <Section className="bg-muted/40 pt-0">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <Reveal>
+        <div ref={wingsRef} className="grid items-center gap-10 lg:grid-cols-2">
+          <motion.div
+            initial={reduceMotion ? undefined : { opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: reduceMotion ? 0 : 0.65, ease: EASE_OUT }}
+          >
             <Eyebrow>Infinity wings</Eyebrow>
             <h2 className="mt-4 text-balance text-3xl font-bold text-foreground md:text-4xl">
               Health doesn't have a finish line
@@ -164,25 +259,62 @@ function AboutPage() {
               follow-through — refill coordination, ongoing check-ins, and a
               care team that stays available to you long after your first visit.
             </p>
-          </Reveal>
-          <Reveal delay={140}>
-            <div className="relative mx-auto flex aspect-square w-full max-w-sm items-center justify-center">
-              <InfinityMotif className="float-slow w-3/4 text-primary" />
-            </div>
-          </Reveal>
+          </motion.div>
+          <motion.div
+            initial={
+              reduceMotion ? undefined : { opacity: 0, y: 28, scale: 0.94 }
+            }
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{
+              duration: reduceMotion ? 0 : 0.65,
+              delay: reduceMotion ? 0 : 0.14,
+              ease: EASE_OUT,
+            }}
+            className="relative mx-auto flex aspect-square w-full max-w-sm items-center justify-center"
+          >
+            <motion.div
+              aria-hidden
+              style={reduceMotion ? undefined : { y: wingsY }}
+              className="w-3/4"
+            >
+              <InfinityMotif
+                animateDraw
+                className="float-slow w-full text-primary"
+              />
+            </motion.div>
+          </motion.div>
         </div>
       </Section>
 
       {/* Hexagon — efficiency */}
       <Section className="pt-0">
         <div className="grid items-center gap-10 lg:grid-cols-2">
-          <Reveal className="order-2 lg:order-1">
+          <motion.div
+            initial={
+              reduceMotion ? undefined : { opacity: 0, y: 28, scale: 0.94 }
+            }
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: reduceMotion ? 0 : 0.65, ease: EASE_OUT }}
+            className="order-2 lg:order-1"
+          >
             <div className="relative mx-auto flex aspect-square w-full max-w-sm items-center justify-center">
               <HexMotif className="float-slower w-3/4 text-primary" />
               <Sparkles className="absolute size-10 text-accent-foreground" />
             </div>
-          </Reveal>
-          <Reveal delay={140} className="order-1 lg:order-2">
+          </motion.div>
+          <motion.div
+            initial={reduceMotion ? undefined : { opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{
+              duration: reduceMotion ? 0 : 0.65,
+              delay: reduceMotion ? 0 : 0.14,
+              ease: EASE_OUT,
+            }}
+            className="order-1 lg:order-2"
+          >
             <Eyebrow>Hexagon</Eyebrow>
             <h2 className="mt-4 text-balance text-3xl font-bold text-foreground md:text-4xl">
               Nature's most efficient shape
@@ -192,32 +324,47 @@ function AboutPage() {
               principle we apply to your care. Minimal steps, no unnecessary
               friction, from eligibility check to provider review to success.
             </p>
-          </Reveal>
+          </motion.div>
         </div>
       </Section>
 
       {/* CTA */}
       <Section className="pt-0">
-        <Reveal>
+        <motion.div
+          initial={reduceMotion ? undefined : { opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: reduceMotion ? 0 : 0.65, ease: EASE_OUT }}
+        >
           <div className="relative overflow-hidden rounded-4xl bg-primary px-6 py-14 text-center text-primary-foreground md:px-12">
-            <HexMotif className="pointer-events-none absolute -left-10 -bottom-14 w-44 text-primary-foreground/10" />
-            <HexMotif className="pointer-events-none absolute -right-8 -top-12 w-36 text-primary-foreground/10" />
-            <h2 className="text-3xl font-bold">Ready to start your journey?</h2>
-            <p className="mx-auto mt-3 max-w-xl text-primary-foreground/80">
-              The eligibility check takes about 5 minutes. No payment required,
-              and no prescription is guaranteed.
-            </p>
-            <Button
-              asChild
-              size="xl"
-              className="mt-8 bg-ink text-ink-foreground hover:bg-ink/85"
-            >
-              <Link to={qualifyHref(CTA_IDS.about)}>
-                See if you qualify <ArrowRight />
-              </Link>
-            </Button>
+            <div
+              aria-hidden
+              className="bg-mesh-primary-depth mesh-drift pointer-events-none absolute inset-0"
+            />
+            <HexMotif className="float-slow pointer-events-none absolute -left-10 -bottom-14 w-44 text-primary-foreground/10" />
+            <HexMotif className="float-slower pointer-events-none absolute -right-8 -top-12 w-36 text-primary-foreground/10" />
+            <div className="relative">
+              <h2 className="text-3xl font-bold">
+                Ready to start your journey?
+              </h2>
+              <p className="mx-auto mt-3 max-w-xl text-primary-foreground/80">
+                The eligibility check takes about 5 minutes. No payment
+                required, and no prescription is guaranteed.
+              </p>
+              <MagneticButton className="mt-8">
+                <Button
+                  asChild
+                  size="xl"
+                  className="bg-ink text-ink-foreground hover:bg-ink/85"
+                >
+                  <Link to={qualifyHref(CTA_IDS.about)}>
+                    See if you qualify <ArrowRight />
+                  </Link>
+                </Button>
+              </MagneticButton>
+            </div>
           </div>
-        </Reveal>
+        </motion.div>
       </Section>
     </MarketingLayout>
   );

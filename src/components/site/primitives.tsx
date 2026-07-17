@@ -1,4 +1,17 @@
-import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  type CSSProperties,
+  type MouseEvent as ReactMouseEvent,
+  type ReactNode,
+} from "react";
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+} from "motion/react";
 import { cn } from "@/lib/utils";
 
 export function Eyebrow({
@@ -164,8 +177,21 @@ export function HexBadge({
 /**
  * Infinity linework motif (the bee's wings) — decorative only.
  * Inherits `currentColor`; size with width/height classes.
+ *
+ * `animateDraw` traces the stroke in as it scrolls into view (Motion
+ * `pathLength`, once). Falls back to the static path under reduced motion.
  */
-export function InfinityMotif({ className }: { className?: string }) {
+export function InfinityMotif({
+  className,
+  animateDraw = false,
+}: {
+  className?: string;
+  animateDraw?: boolean;
+}) {
+  const reduceMotion = useReducedMotion();
+  const d =
+    "M50 24C42 8 18 8 18 24C18 40 42 40 50 24C58 8 82 8 82 24C82 40 58 40 50 24Z";
+
   return (
     <svg
       viewBox="0 0 100 48"
@@ -174,12 +200,25 @@ export function InfinityMotif({ className }: { className?: string }) {
       className={className}
       focusable="false"
     >
-      <path
-        d="M50 24C42 8 18 8 18 24C18 40 42 40 50 24C58 8 82 8 82 24C82 40 58 40 50 24Z"
-        stroke="currentColor"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-      />
+      {animateDraw && !reduceMotion ? (
+        <motion.path
+          d={d}
+          stroke="currentColor"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          initial={{ pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+        />
+      ) : (
+        <path
+          d={d}
+          stroke="currentColor"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+        />
+      )}
     </svg>
   );
 }
@@ -281,5 +320,81 @@ export function FloatingHexagons({
         />
       ))}
     </div>
+  );
+}
+
+/**
+ * Wraps a button/link so it eases toward the cursor within a small radius
+ * (a "magnetic" hover, common on premium marketing sites) on top of the
+ * usual hover/tap scale. Pointer tracking and the scale feedback are two
+ * independent reduced-motion opt-outs: under reduced motion neither runs
+ * and children render inert.
+ */
+export function MagneticButton({
+  children,
+  className,
+  strength = 0.3,
+}: {
+  children: ReactNode;
+  className?: string;
+  /** Fraction of the cursor's offset from center to follow (0–1). */
+  strength?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 300, damping: 20, mass: 0.4 });
+  const springY = useSpring(y, { stiffness: 300, damping: 20, mass: 0.4 });
+
+  function handleMouseMove(event: ReactMouseEvent<HTMLDivElement>) {
+    if (reduceMotion || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    x.set((event.clientX - (rect.left + rect.width / 2)) * strength);
+    y.set((event.clientY - (rect.top + rect.height / 2)) * strength);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={reduceMotion ? undefined : { x: springX, y: springY }}
+      whileHover={reduceMotion ? undefined : { scale: 1.04 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+      transition={{ duration: 0.15 }}
+      className={cn("inline-block", className)}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/**
+ * Fixed top-of-viewport bar tracking page scroll progress. A functional
+ * wayfinding cue rather than decoration, but it's an autonomous visual
+ * effect with no purpose to a reduced-motion user, so it renders nothing
+ * in that mode rather than showing a static full/empty bar.
+ */
+export function ScrollProgressBar({ className }: { className?: string }) {
+  const { scrollYProgress } = useScroll();
+  const reduceMotion = useReducedMotion();
+
+  if (reduceMotion) return null;
+
+  return (
+    <motion.div
+      aria-hidden
+      className={cn(
+        "fixed inset-x-0 top-0 z-[60] h-[3px] origin-left bg-gradient-to-r from-primary via-accent-foreground to-primary",
+        className,
+      )}
+      style={{ scaleX: scrollYProgress }}
+    />
   );
 }

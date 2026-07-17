@@ -1,4 +1,12 @@
+import { useRef, type MouseEvent as ReactMouseEvent } from "react";
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+} from "motion/react";
 import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/site/primitives";
 import compoundedSemaglutideVialImg from "@/assets/treatments/compounded-semaglutide-vial.png";
 import compoundedTirzepatideVialImg from "@/assets/treatments/compounded-tirzepatide-vial.png";
 
@@ -40,39 +48,102 @@ export function TreatmentLineup() {
   return (
     <section className="bg-muted/40 py-16 md:py-20">
       <div className="veya-container">
-        <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-          GLP-1 weight-loss options
-        </h2>
+        <Reveal>
+          <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            GLP-1 weight-loss options
+          </h2>
+        </Reveal>
 
         <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
-          {TREATMENTS.map((t) => (
-            <TreatmentCard key={t.id} treatment={t} />
+          {TREATMENTS.map((t, i) => (
+            <TreatmentCard key={t.id} treatment={t} index={i} />
           ))}
         </div>
 
-        <p className="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">
-          {/* Pricing disclaimer disabled along with per-treatment pricing above.
-          <span className="font-medium">†</span>From pricing includes medication only, if prescribed.
-          */}
-          Final cost depends on your provider decision as well as dosage
-          recommendation. Treatment availability depends on your intake,
-          clinical eligibility, and a licensed provider&apos;s independent
-          decision. Compounded semaglutide and compounded tirzepatide are not
-          FDA-approved and are only considered when legally available and
-          clinically appropriate. Completing intake does not guarantee a
-          prescription.
-        </p>
+        <Reveal delay={200}>
+          <p className="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">
+            {/* Pricing disclaimer disabled along with per-treatment pricing above.
+            <span className="font-medium">†</span>From pricing includes medication only, if prescribed.
+            */}
+            Final cost depends on your provider decision as well as dosage
+            recommendation. Treatment availability depends on your intake,
+            clinical eligibility, and a licensed provider&apos;s independent
+            decision. Compounded semaglutide and compounded tirzepatide are not
+            FDA-approved and are only considered when legally available and
+            clinically appropriate. Completing intake does not guarantee a
+            prescription.
+          </p>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-function TreatmentCard({ treatment }: { treatment: Treatment }) {
+/**
+ * Cursor-driven tilt (rotateX/rotateY via pointer position) layered on top
+ * of the existing lift/shadow treatment. No-ops under reduced motion and on
+ * touch (no mousemove without a real pointer), so it only ever adds polish.
+ */
+function TreatmentCard({
+  treatment,
+  index,
+}: {
+  treatment: Treatment;
+  index: number;
+}) {
+  const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const rotateXValue = useMotionValue(0);
+  const rotateYValue = useMotionValue(0);
+  const springRotateX = useSpring(rotateXValue, {
+    stiffness: 220,
+    damping: 22,
+  });
+  const springRotateY = useSpring(rotateYValue, {
+    stiffness: 220,
+    damping: 22,
+  });
+
+  function handleMouseMove(event: ReactMouseEvent<HTMLDivElement>) {
+    if (reduceMotion || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const px = (event.clientX - rect.left) / rect.width - 0.5;
+    const py = (event.clientY - rect.top) / rect.height - 0.5;
+    rotateYValue.set(px * 8);
+    rotateXValue.set(py * -8);
+  }
+
+  function handleMouseLeave() {
+    rotateXValue.set(0);
+    rotateYValue.set(0);
+  }
+
   return (
-    <article
+    <motion.article
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      whileHover={reduceMotion ? undefined : { y: -6 }}
+      transition={{
+        duration: reduceMotion ? 0 : 0.5,
+        delay: reduceMotion ? 0 : index * 0.12,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      style={
+        reduceMotion
+          ? undefined
+          : {
+              rotateX: springRotateX,
+              rotateY: springRotateY,
+              transformPerspective: 800,
+            }
+      }
       className={cn(
-        "relative flex min-h-[400px] flex-col overflow-hidden rounded-3xl sm:min-h-[420px] md:min-h-[480px]",
-        "bg-primary-soft shadow-lift md:transition-[transform,box-shadow] md:duration-300 md:hover:-translate-y-1 md:hover:shadow-soft",
+        "group relative flex min-h-[400px] flex-col overflow-hidden rounded-3xl sm:min-h-[420px] md:min-h-[480px]",
+        "bg-primary-soft shadow-lift",
       )}
     >
       {treatment.badge && (
@@ -96,7 +167,7 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
         <img
           src={treatment.image}
           alt={treatment.imageAlt}
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
         />
       </div>
 
@@ -114,6 +185,6 @@ function TreatmentCard({ treatment }: { treatment: Treatment }) {
           {treatment.form}
         </p>
       </div>
-    </article>
+    </motion.article>
   );
 }

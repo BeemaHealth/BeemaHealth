@@ -136,11 +136,11 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "How is medication shipped?",
-        a: "Through cold-chain shipping with tracking, typically 2–4 business days in launch states.",
+        a: "Through cold-chain shipping with tracking, typically 1-3 business days in launch states.",
       },
       {
         q: "What if my shipment is delayed or lost?",
-        a: "Please report it in the app and we will open a ticket immediately. Refill reliability is our core promise — we urgently escalate all cold-chain and lost-shipment issues.",
+        a: "Please report it to support@beemahealth.com immediately. Refill reliability is our core promise — we urgently escalate all cold-chain and lost-shipment issues.",
       },
     ],
   },

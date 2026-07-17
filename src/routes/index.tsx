@@ -1,36 +1,17 @@
 import { useEffect } from "react";
-import { motion, useReducedMotion } from "motion/react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { canonicalUrl, ORGANIZATION_JSONLD, WEBSITE_JSONLD } from "@/lib/seo";
 import { trackPageViewed } from "@/lib/analytics";
 import { createFunnelSession } from "@/lib/api/client";
 import { getPendingUtms, clearPendingUtms } from "@/lib/utm";
-import {
-  ArrowRight,
-  BadgeCheck,
-  CheckCircle2,
-  ClipboardCheck,
-  Lock,
-  Send,
-  Stethoscope,
-  Truck,
-} from "lucide-react";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
-import { TreatmentLineup } from "@/components/site/TreatmentLineup";
-import {
-  Eyebrow,
-  FloatingHexagons,
-  HexBadge,
-  HexMotif,
-  InfinityMotif,
-  Reveal,
-  Section,
-  SectionHeading,
-  SurfaceCard,
-} from "@/components/site/primitives";
-import { Button } from "@/components/ui/button";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
-import heroImg from "@/assets/hero.jpg";
+import { ScrollProgressBar } from "@/components/site/primitives";
+import { HomeHero } from "@/components/home/HomeHero";
+import { DoseJourney } from "@/components/home/DoseJourney";
+import { HowItWorksScrolly } from "@/components/home/HowItWorksScrolly";
+import { TreatmentShowcase } from "@/components/home/TreatmentShowcase";
+import { MissionSection } from "@/components/home/MissionSection";
+import { FinalCTASection } from "@/components/home/FinalCTASection";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -57,75 +38,7 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const STEPS = [
-  {
-    icon: ClipboardCheck,
-    title: "Complete your eligibility check",
-    text: "Answer a 5-minute set of questions to see if Beema Health can help you.",
-  },
-  {
-    icon: Send,
-    title: "Submit your medical intake",
-    text: "Complete a secure medical questionnaire for provider review — private and encrypted",
-  },
-  {
-    icon: Stethoscope,
-    title: "Licensed provider review",
-    text: "A licensed provider reviews your information and determines the next steps of medical care based on their independent, professional medical judgment. No prescription is guaranteed.",
-  },
-];
-
-const TRUST_ITEMS = [
-  {
-    icon: Stethoscope,
-    title: "Licensed providers",
-    text: "Independent clinicians review every patient",
-  },
-  {
-    icon: BadgeCheck,
-    title: "Transparent pricing",
-    text: "Clear, concise billing with no surprises",
-  },
-  {
-    icon: Truck,
-    title: "USA licensed pharmacies",
-    text: "Medication ships from USA pharmacies",
-  },
-  {
-    icon: Lock,
-    title: "Private & secure",
-    text: "Full HIPAA compliance",
-  },
-];
-
-/**
- * Staggered fade-up entrance for the hero column. Durations collapse to 0
- * under prefers-reduced-motion (via useReducedMotion) so reduced-motion
- * users see the final layout immediately, matching the `.reveal` CSS
- * convention used elsewhere on this page.
- */
-function useHeroMotionVariants(reduceMotion: boolean) {
-  const duration = reduceMotion ? 0 : 0.55;
-  const container = {
-    hidden: {},
-    show: { transition: { staggerChildren: reduceMotion ? 0 : 0.12 } },
-  };
-  const item = {
-    hidden: { opacity: 0, y: reduceMotion ? 0 : 16 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { duration, ease: [0.22, 1, 0.36, 1] as const },
-    },
-  };
-  return { container, item };
-}
-
 function HomePage() {
-  const reduceMotion = useReducedMotion();
-  const { container: heroContainer, item: heroItem } = useHeroMotionVariants(
-    Boolean(reduceMotion),
-  );
   useEffect(() => {
     let cancelled = false;
     const timer = setTimeout(() => {
@@ -147,248 +60,18 @@ function HomePage() {
       clearTimeout(timer);
     };
   }, []);
+
   return (
-    <MarketingLayout>
-      {/* Hero */}
-      <section className="bg-grad-hero relative overflow-hidden">
-        <FloatingHexagons className="z-0" />
-        <div className="veya-container relative z-10 grid items-center gap-12 py-16 md:py-24 lg:grid-cols-2">
-          <motion.div initial="hidden" animate="show" variants={heroContainer}>
-            <motion.div variants={heroItem}>
-              <Eyebrow>GLP-1 weight-loss care</Eyebrow>
-            </motion.div>
-            <motion.h1
-              variants={heroItem}
-              className="mt-5 text-balance text-4xl font-bold leading-[1.05] text-foreground md:text-6xl"
-            >
-              Weight-loss care that's{" "}
-              <span className="text-grad-brand">human</span> and built for{" "}
-              <span className="text-grad-brand">success.</span>
-            </motion.h1>
-            <motion.p
-              variants={heroItem}
-              className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground"
-            >
-              USA physicians, licensed and certified USA compounding pharmacies,
-              clear and concise pricing, no bait-and-switch, no surprises, and
-              thoughtful medical care that doesn't stop at the first
-              prescription.
-            </motion.p>
-            <motion.div
-              variants={heroItem}
-              className="mt-8 flex flex-col gap-3 sm:flex-row"
-            >
-              <motion.div
-                whileHover={reduceMotion ? undefined : { scale: 1.03 }}
-                whileTap={reduceMotion ? undefined : { scale: 0.97 }}
-                transition={{ duration: 0.15 }}
-              >
-                <Button asChild size="xl">
-                  <Link to={qualifyHref(CTA_IDS.home_hero)}>
-                    See if you qualify <ArrowRight />
-                  </Link>
-                </Button>
-              </motion.div>
-              <motion.div
-                whileHover={reduceMotion ? undefined : { scale: 1.03 }}
-                whileTap={reduceMotion ? undefined : { scale: 0.97 }}
-                transition={{ duration: 0.15 }}
-              >
-                <Button asChild size="xl" variant="outline">
-                  <Link to="/how-it-works">How it works</Link>
-                </Button>
-              </motion.div>
-            </motion.div>
-            <motion.div
-              variants={heroItem}
-              className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground"
-            >
-              {[
-                "Licensed USA physician network",
-                "No surprise charges",
-                "Quick shipping",
-              ].map((t) => (
-                <span key={t} className="inline-flex items-center gap-2">
-                  <CheckCircle2 className="size-4 text-accent-foreground" /> {t}
-                </span>
-              ))}
-            </motion.div>
-          </motion.div>
-
-          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <HexMotif className="float-slow pointer-events-none absolute -right-8 -top-10 w-28 text-primary/30" />
-            <div className="clip-hex relative aspect-[100/112] w-full overflow-hidden bg-ink">
-              <img
-                src={heroImg}
-                alt="A calm, bright kitchen with fresh vegetables and a glass of water"
-                width={1280}
-                height={1024}
-                className="h-full w-full object-cover"
-              />
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-gradient-to-b from-ink/75 via-ink/10 to-transparent"
-              />
-              <div className="absolute inset-x-0 top-[24%] px-8 text-left md:px-12">
-                <p className="text-sm font-semibold text-ink-foreground">
-                  Compassionate medical care
-                </p>
-                <p className="mt-1 text-xs text-ink-foreground/80">
-                  From first contact to long-term success
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust strip */}
-      <section className="bg-grad-ink text-ink-foreground">
-        <div className="veya-container grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
-          {TRUST_ITEMS.map((item) => (
-            <div key={item.title} className="flex items-start gap-3">
-              <span className="clip-hex grid size-10 shrink-0 place-items-center bg-primary/15 text-primary">
-                <item.icon className="size-5" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold">{item.title}</p>
-                <p className="mt-1 text-xs leading-relaxed text-ink-foreground/70">
-                  {item.text}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <Section id="how-it-works">
-        <Reveal>
-          <SectionHeading eyebrow="How it works" title="Three simple steps" />
-        </Reveal>
-        <div className="mt-12 grid w-full gap-5 md:grid-cols-3">
-          {STEPS.map((s, i) => (
-            <Reveal key={s.title} delay={i * 120} className="h-full">
-              <SurfaceCard className="flex h-full flex-col p-6">
-                <span className="text-sm font-semibold text-muted-foreground">
-                  Step {i + 1}
-                </span>
-                <div className="mt-3 flex items-center gap-3">
-                  <HexBadge className="size-11">
-                    <s.icon className="size-5" />
-                  </HexBadge>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {s.title}
-                  </h3>
-                </div>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-                  {s.text}
-                </p>
-              </SurfaceCard>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      <TreatmentLineup />
-
-      {/* Brand Mission teaser */}
-      <Section>
-        <Reveal>
-          <div className="bg-grad-ink relative overflow-hidden rounded-4xl px-6 py-14 text-ink-foreground md:px-14 md:py-16">
-            <InfinityMotif className="pointer-events-none absolute -right-10 -bottom-12 w-72 text-primary/12" />
-            <div className="relative max-w-2xl">
-              <Eyebrow className="border-primary/40 bg-primary/10 text-primary">
-                Why the bee?
-              </Eyebrow>
-              <h2 className="mt-4 text-balance text-3xl font-bold md:text-4xl">
-                The best healthcare works in harmony with nature.
-              </h2>
-              <p className="mt-4 text-pretty leading-relaxed text-ink-foreground/75">
-                Our bee represents natural effectiveness, trust, and
-                consistency. Its infinity-shaped wings are a reminder that
-                health isn't a finish line, but a lifelong journey.
-              </p>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="mt-8 border-ink-foreground/25 bg-transparent text-ink-foreground hover:bg-ink-foreground/10"
-              >
-                <Link to="/about">
-                  Our story <ArrowRight />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </Reveal>
-      </Section>
-
-      {/* Transparent pricing teaser — disabled, pricing model not finalized yet
-      <Section className="pt-0">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <Reveal>
-            <Eyebrow>Transparent pricing</Eyebrow>
-            <h2 className="mt-4 text-balance text-3xl font-bold text-foreground md:text-4xl">
-              You see every charge before you pay.
-            </h2>
-            <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
-              No platform membership fee. Medication, shipping, and labs are
-              always listed separately — estimate your monthly cost before you
-              even create an account.
-            </p>
-            <Button asChild size="lg" className="mt-8">
-              <Link to="/pricing">
-                Explore pricing <ArrowRight />
-              </Link>
-            </Button>
-          </Reveal>
-          <Reveal delay={140}>
-            <SurfaceCard>
-              <ul className="space-y-4">
-                {[
-                  "Medication-only pricing — no monthly membership",
-                  "Pre-charge reminders before every payment",
-                  "Insurance, cash-pay, and local pickup paths",
-                  "Receipts for every charge",
-                ].map((t) => (
-                  <li
-                    key={t}
-                    className="flex items-start gap-3 text-sm text-foreground"
-                  >
-                    <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-accent-foreground" />
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </SurfaceCard>
-          </Reveal>
-        </div>
-      </Section>
-      */}
-
-      {/* Final CTA */}
-      <Section className="pt-0">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-4xl bg-primary px-6 py-14 text-center text-primary-foreground md:px-12">
-            <HexMotif className="pointer-events-none absolute -left-10 -bottom-14 w-44 text-primary-foreground/10" />
-            <HexMotif className="pointer-events-none absolute -right-8 -top-12 w-36 text-primary-foreground/10" />
-            <h2 className="text-3xl font-bold">Ready to start?</h2>
-            <p className="mx-auto mt-3 max-w-xl text-primary-foreground/80">
-              The eligibility check takes about 5 minutes. No payment required
-              to start, and no prescription is guaranteed.
-            </p>
-            <Button
-              asChild
-              size="xl"
-              className="mt-8 bg-ink text-ink-foreground hover:bg-ink/85"
-            >
-              <Link to={qualifyHref(CTA_IDS.home_mid)}>
-                See if you qualify <ArrowRight />
-              </Link>
-            </Button>
-          </div>
-        </Reveal>
-      </Section>
-    </MarketingLayout>
+    <>
+      <ScrollProgressBar />
+      <MarketingLayout>
+        <HomeHero />
+        <HowItWorksScrolly />
+        <DoseJourney />
+        <TreatmentShowcase />
+        <MissionSection />
+        <FinalCTASection />
+      </MarketingLayout>
+    </>
   );
 }

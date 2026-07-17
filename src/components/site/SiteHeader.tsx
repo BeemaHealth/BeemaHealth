@@ -8,7 +8,6 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import { useAuth } from "@/context/AuthContext";
 import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
 import { cn } from "@/lib/utils";
 
@@ -66,7 +65,6 @@ function HexMenuButton({ className, ...props }: ComponentProps<"button">) {
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const { session, isInitialized } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
@@ -89,19 +87,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:ml-auto lg:flex">
-          {!isInitialized ? (
-            <div className="h-9 w-24" aria-hidden />
-          ) : session ? (
-            <Button asChild variant="ghost" size="sm">
-              <Link to="/dashboard">Dashboard</Link>
-            </Button>
-          ) : (
-            <Button asChild variant="ghost" size="sm">
-              <Link to="/login" search={{ redirect: "/dashboard" }}>
-                Log in
-              </Link>
-            </Button>
-          )}
+          {/* Log in / Dashboard link disabled — site in pre-launch waitlist mode */}
           <Button asChild>
             <Link to={qualifyHref(CTA_IDS.nav_header)}>See if you qualify</Link>
           </Button>
@@ -127,15 +113,7 @@ export function SiteHeader() {
                     </Link>
                   </SheetClose>
                 ))}
-                <SheetClose asChild>
-                  <Link
-                    to={isInitialized && session ? "/dashboard" : "/login"}
-                    search={{ redirect: "/dashboard" }}
-                    className="rounded-xl px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
-                  >
-                    {isInitialized && session ? "Dashboard" : "Log in"}
-                  </Link>
-                </SheetClose>
+                {/* Log in / Dashboard link disabled — site in pre-launch waitlist mode */}
               </div>
               <div className="mt-6">
                 <SheetClose asChild>

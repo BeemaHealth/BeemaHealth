@@ -211,6 +211,64 @@
   color: transparent;
 }
 
+/*
+ * Layered honey-glow mesh — a bigger, multi-blob version of bg-grad-hero's
+ * single glow, for sections that need more depth (hero, mission, final CTA
+ * on the premium homepage treatment). Same hue anchors as the rest of the
+ * palette (84 honey / 270 ink) — no new colors introduced.
+ */
+@utility bg-mesh-glow {
+  background-image:
+    radial-gradient(44rem 34rem at 12% -14%, oklch(0.86 0.15 84 / 0.4), transparent 62%),
+    radial-gradient(36rem 30rem at 92% 8%, oklch(0.8 0.16 84 / 0.22), transparent 58%),
+    radial-gradient(40rem 34rem at 50% 118%, oklch(0.78 0.15 84 / 0.16), transparent 60%);
+}
+
+@utility bg-mesh-glow-dark {
+  background-image:
+    radial-gradient(40rem 32rem at 85% -18%, oklch(0.8 0.16 84 / 0.22), transparent 60%),
+    radial-gradient(34rem 30rem at 6% 110%, oklch(0.8 0.16 84 / 0.12), transparent 58%);
+}
+
+/* Vignette-style depth for solid-honey surfaces (Final CTA band). */
+@utility bg-mesh-primary-depth {
+  background-image:
+    radial-gradient(36rem 28rem at 10% -18%, oklch(0.97 0.05 92 / 0.55), transparent 62%),
+    radial-gradient(34rem 30rem at 96% 122%, oklch(0.19 0.012 270 / 0.22), transparent 60%);
+}
+
+/* Frosted panel built from semantic tokens — never raw hex. */
+@utility glass-panel {
+  background-color: color-mix(in oklch, var(--background) 82%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid color-mix(in oklch, var(--foreground) 10%, transparent);
+}
+
+@utility glass-panel-dark {
+  background-color: color-mix(in oklch, var(--ink) 68%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid color-mix(in oklch, var(--ink-foreground) 14%, transparent);
+}
+
+/* Faint dot-grid texture — reads as premium grain without a raster asset. */
+@utility bg-grain {
+  background-image: radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0);
+  background-size: 20px 20px;
+}
+
+/* Outlined display text for oversized decorative background words. */
+@utility text-outline-primary {
+  -webkit-text-stroke: 1.5px color-mix(in oklch, var(--primary) 55%, transparent);
+  color: transparent;
+}
+
+@utility text-outline-ink {
+  -webkit-text-stroke: 1.5px color-mix(in oklch, var(--foreground) 20%, transparent);
+  color: transparent;
+}
+
 /* Hexagon (pointy-top) clip for photography and decorative surfaces */
 @utility clip-hex {
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
@@ -232,6 +290,43 @@
   top: var(--hex-drift-top, 20%);
   left: var(--hex-drift-start, -12%);
   opacity: var(--hex-drift-opacity, 0.4);
+}
+
+/*
+ * Infinite horizontal marquee (see Marquee in src/components/home/home-motion.tsx).
+ * Two identical tracks are rendered; each scrolls -100% of its own width for a
+ * seamless loop. Under reduced motion the animation never applies, leaving the
+ * first track statically visible.
+ */
+.marquee {
+  display: flex;
+  overflow: hidden;
+}
+
+.marquee-track {
+  display: flex;
+  min-width: 100%;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-around;
+  gap: var(--marquee-gap, 3rem);
+  padding-inline: calc(var(--marquee-gap, 3rem) / 2);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track {
+    animation: marquee-scroll var(--marquee-duration, 28s) linear infinite;
+  }
+
+  .marquee-track-reverse {
+    animation-direction: reverse;
+  }
+
+  @keyframes marquee-scroll {
+    to {
+      transform: translateX(-100%);
+    }
+  }
 }
 
 /*
@@ -260,6 +355,24 @@
 
   .float-slower {
     animation: beema-float 13s ease-in-out infinite reverse;
+  }
+
+  /* Slow autonomous drift for background gradient-mesh blobs. */
+  .mesh-drift {
+    animation: mesh-drift 22s ease-in-out infinite alternate;
+  }
+
+  .mesh-drift-reverse {
+    animation: mesh-drift 26s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes mesh-drift {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    100% {
+      transform: translate3d(3%, -4%, 0) scale(1.06);
+    }
   }
 
   @keyframes beema-float {
