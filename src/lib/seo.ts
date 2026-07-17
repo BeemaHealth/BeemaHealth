@@ -30,14 +30,12 @@ export function canonicalUrl(path: string): string {
 }
 
 /**
- * Site-wide entity schema, rendered as JSON-LD on the homepage.
+ * Site-wide entity schema, rendered as JSON-LD in the root layout head.
  *
  * GEO note: search and AI retrieval pipelines use this to resolve the
  * "Beema Health" entity. The description must stay factually consistent
  * with public/llms.txt and page copy — LLMs favor sources whose facts
- * never contradict each other. Only verified facts belong here: add
- * sameAs (social profiles) and contactPoint (support email) once those
- * exist and are confirmed.
+ * never contradict each other.
  */
 export const ORGANIZATION_JSONLD = {
   "@context": "https://schema.org",
@@ -49,6 +47,19 @@ export const ORGANIZATION_JSONLD = {
   description:
     "Beema Health is a US telehealth medical weight-loss service. Licensed providers evaluate patients online and, when clinically appropriate, prescribe GLP-1 medications with transparent cash pricing, US pharmacy fulfillment, and ongoing follow-up care.",
   areaServed: { "@type": "Country", name: "United States" },
+  sameAs: [
+    "https://www.facebook.com/beemahealth",
+    "https://www.instagram.com/beemahealth",
+    "https://www.tiktok.com/@beema.health",
+    "https://www.reddit.com/r/beemahealth",
+    "https://x.com/beemahealth",
+    "https://www.linkedin.com/in/beema-health-339219423/",
+  ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    url: `${SITE_URL}/contact/`,
+    contactType: "Customer Support",
+  },
 } as const;
 
 export const WEBSITE_JSONLD = {

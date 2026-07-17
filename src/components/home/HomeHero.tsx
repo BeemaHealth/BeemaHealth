@@ -20,7 +20,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal, Marquee } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 import heroImg from "@/assets/hero.jpg";
 import semaVial from "@/assets/treatments/compounded-semaglutide-vial.png";
 
@@ -181,14 +181,17 @@ export function HomeHero() {
             >
               <MagneticButton>
                 <Button asChild size="xl">
-                  <Link to={qualifyHref(CTA_IDS.home_hero)}>
+                  <Link
+                    to={QUALIFY_PATH}
+                    search={qualifySearch(CTA_IDS.home_hero)}
+                  >
                     See if you qualify <ArrowRight />
                   </Link>
                 </Button>
               </MagneticButton>
               <MagneticButton>
                 <Button asChild size="xl" variant="outline">
-                  <Link to="/how-it-works">How it works</Link>
+                  <Link to="/how-it-works/">How it works</Link>
                 </Button>
               </MagneticButton>
             </motion.div>

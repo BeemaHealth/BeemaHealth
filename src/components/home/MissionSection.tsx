@@ -50,7 +50,7 @@ export function MissionSection() {
                 variant="outline"
                 className="border-ink-foreground/25 bg-transparent text-ink-foreground hover:bg-ink-foreground/10"
               >
-                <Link to="/about">
+                <Link to="/about/">
                   Our story
                   <ArrowRight className="size-4" />
                 </Link>

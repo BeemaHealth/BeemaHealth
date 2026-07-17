@@ -28,7 +28,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/weight-loss")({
   head: () => ({
@@ -124,7 +124,10 @@ function WeightLossPage() {
           >
             <MagneticButton>
               <Button asChild size="xl">
-                <Link to={qualifyHref(CTA_IDS.weight_loss_hero)}>
+                <Link
+                  to={QUALIFY_PATH}
+                  search={qualifySearch(CTA_IDS.weight_loss_hero)}
+                >
                   See if you qualify <ArrowRight />
                 </Link>
               </Button>
@@ -238,12 +241,12 @@ function WeightLossPage() {
             <div className="mt-6 flex flex-wrap gap-3">
               <MagneticButton>
                 <Button asChild variant="outline">
-                  <Link to="/safety">Safety & eligibility</Link>
+                  <Link to="/safety/">Safety & eligibility</Link>
                 </Button>
               </MagneticButton>
               {/* Pricing page disabled — pricing model not finalized yet.
               <Button asChild variant="outline">
-                <Link to="/pricing">See pricing</Link>
+                <Link to="/pricing/">See pricing</Link>
               </Button>
               */}
             </div>
@@ -273,7 +276,10 @@ function WeightLossPage() {
                 size="xl"
                 className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
               >
-                <Link to={qualifyHref(CTA_IDS.weight_loss_footer)}>
+                <Link
+                  to={QUALIFY_PATH}
+                  search={qualifySearch(CTA_IDS.weight_loss_footer)}
+                >
                   See if you qualify <ArrowRight />
                 </Link>
               </Button>

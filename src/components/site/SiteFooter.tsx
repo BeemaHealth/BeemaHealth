@@ -1,32 +1,33 @@
 import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/brand/Logo";
 import { InfinityMotif } from "@/components/site/primitives";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 
+/** Trailing-slash paths — match sitemap.xml / canonicalUrl / GitHub Pages 200 URLs. */
 const COLUMNS = [
   {
     title: "Care",
     links: [
-      { label: "Weight Loss", to: "/weight-loss" },
-      { label: "How it works", to: "/how-it-works" },
-      // { label: "Pricing", to: "/pricing" }, // disabled — pricing model not finalized yet
+      { label: "Weight Loss", to: "/weight-loss/" },
+      { label: "How it works", to: "/how-it-works/" },
+      // { label: "Pricing", to: "/pricing/" }, // disabled — pricing model not finalized yet
     ],
   },
   {
     title: "Trust",
     links: [
-      { label: "About Beema Health", to: "/about" },
-      { label: "Safety & eligibility", to: "/safety" },
-      { label: "FAQ", to: "/faq" },
-      { label: "Contact", to: "/contact" },
+      { label: "About Beema Health", to: "/about/" },
+      { label: "Safety & eligibility", to: "/safety/" },
+      { label: "FAQ", to: "/faq/" },
+      { label: "Contact", to: "/contact/" },
     ],
   },
   {
     title: "Legal",
     links: [
-      { label: "Privacy Policy", to: "/legal/privacy" },
-      { label: "Terms of Service", to: "/legal/terms" },
-      { label: "Telehealth Consent", to: "/legal/telehealth-consent" },
+      { label: "Privacy Policy", to: "/legal/privacy/" },
+      { label: "Terms of Service", to: "/legal/terms/" },
+      { label: "Telehealth Consent", to: "/legal/telehealth-consent/" },
     ],
   },
 ] as const;
@@ -45,7 +46,8 @@ export function SiteFooter() {
               for success.
             </p>
             <Link
-              to={qualifyHref(CTA_IDS.footer)}
+              to={QUALIFY_PATH}
+              search={qualifySearch(CTA_IDS.footer)}
               className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition-colors hover:bg-primary/90"
             >
               See if you qualify

@@ -12,7 +12,7 @@ import {
   inputCls,
 } from "@/components/quiz/quiz-primitives";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -204,7 +204,8 @@ function LoginPage() {
         <p className="mt-4 text-center text-sm text-muted-foreground">
           New patient?{" "}
           <Link
-            to={qualifyHref(CTA_IDS.login_prompt)}
+            to={QUALIFY_PATH}
+            search={qualifySearch(CTA_IDS.login_prompt)}
             className="text-primary underline"
           >
             Start eligibility check

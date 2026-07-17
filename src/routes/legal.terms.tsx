@@ -97,11 +97,11 @@ const SECTIONS: LegalSection[] = [
       <>
         <LegalP>
           Unless we state otherwise, services offered through Beema Health are
-          provided on a direct-pay basis. Beema Health and its Care Partners may not
-          participate in Medicare, Medicaid, or commercial insurance networks
-          for all services. You are responsible for charges disclosed at
-          checkout or in your account, including clinical visits, medications,
-          shipping, and laboratory fees when applicable.
+          provided on a direct-pay basis. Beema Health and its Care Partners may
+          not participate in Medicare, Medicaid, or commercial insurance
+          networks for all services. You are responsible for charges disclosed
+          at checkout or in your account, including clinical visits,
+          medications, shipping, and laboratory fees when applicable.
         </LegalP>
         <LegalP>
           You agree not to submit claims to government or commercial payers for
@@ -156,9 +156,9 @@ const SECTIONS: LegalSection[] = [
           not be FDA-approved for your indication.
         </LegalP>
         <LegalP>
-          Beema Health does not claim that any product is equivalent to a specific
-          branded medication. Availability, pricing, and formulary options may
-          change.
+          Beema Health does not claim that any product is equivalent to a
+          specific branded medication. Availability, pricing, and formulary
+          options may change.
         </LegalP>
       </>
     ),
@@ -169,10 +169,10 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          Beema Health uses medication-forward pricing: you pay for clinical care,
-          medication, shipping, and applicable labs as disclosed before you are
-          charged. There is no separate platform membership fee unless we
-          clearly identify one at checkout.
+          Beema Health uses medication-forward pricing: you pay for clinical
+          care, medication, shipping, and applicable labs as disclosed before
+          you are charged. There is no separate platform membership fee unless
+          we clearly identify one at checkout.
         </LegalP>
         <LegalP>
           Recurring medication or refill plans, when offered, renew
@@ -197,13 +197,13 @@ const SECTIONS: LegalSection[] = [
         To use clinical features of the Service, you must review and agree to
         our{" "}
         <a
-          href="/legal/telehealth-consent"
+          href="/legal/telehealth-consent/"
           className="text-foreground underline-offset-2 hover:underline"
         >
           Telehealth Consent
         </a>
-        . You agree that Beema Health is a third-party beneficiary of that Consent
-        and may enforce it to the extent permitted by law.
+        . You agree that Beema Health is a third-party beneficiary of that
+        Consent and may enforce it to the extent permitted by law.
       </LegalP>
     ),
   },
@@ -214,8 +214,8 @@ const SECTIONS: LegalSection[] = [
       <>
         <LegalP>
           You may provide health and medical information through the Service.
-          Beema Health may be a business associate of certain Care Partners and, in
-          that role, handle protected health information (&quot;PHI&quot;)
+          Beema Health may be a business associate of certain Care Partners and,
+          in that role, handle protected health information (&quot;PHI&quot;)
           subject to applicable law, including HIPAA where it applies.
         </LegalP>
         <LegalP>
@@ -246,9 +246,9 @@ const SECTIONS: LegalSection[] = [
           you have an active account or open clinical matter.
         </LegalP>
         <LegalP>
-          Neither Beema Health nor your Provider is responsible for losses resulting
-          from your failure to read or act on communications sent through the
-          Service.
+          Neither Beema Health nor your Provider is responsible for losses
+          resulting from your failure to read or act on communications sent
+          through the Service.
         </LegalP>
       </>
     ),
@@ -319,8 +319,9 @@ const SECTIONS: LegalSection[] = [
       <LegalP>
         The Service may link to or integrate third-party websites, payment
         processors, pharmacies, laboratories, or tools. Those parties operate
-        under their own terms and privacy policies. Beema Health is not responsible
-        for third-party services except as expressly stated in writing.
+        under their own terms and privacy policies. Beema Health is not
+        responsible for third-party services except as expressly stated in
+        writing.
       </LegalP>
     ),
   },
@@ -330,12 +331,12 @@ const SECTIONS: LegalSection[] = [
     content: (
       <LegalP>
         THE SERVICE IS PROVIDED ON AN &quot;AS IS&quot; AND &quot;AS
-        AVAILABLE&quot; BASIS. TO THE FULLEST EXTENT PERMITTED BY LAW, BEEMA HEALTH
-        AND ITS CARE PARTNERS DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED,
-        INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-        PURPOSE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICE WILL
-        BE UNINTERRUPTED, ERROR-FREE, OR FREE OF HARMFUL COMPONENTS, OR THAT ANY
-        CLINICAL OR MEDICATION OUTCOME WILL BE ACHIEVED.
+        AVAILABLE&quot; BASIS. TO THE FULLEST EXTENT PERMITTED BY LAW, BEEMA
+        HEALTH AND ITS CARE PARTNERS DISCLAIM ALL WARRANTIES, EXPRESS OR
+        IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+        PARTICULAR PURPOSE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE
+        SERVICE WILL BE UNINTERRUPTED, ERROR-FREE, OR FREE OF HARMFUL
+        COMPONENTS, OR THAT ANY CLINICAL OR MEDICATION OUTCOME WILL BE ACHIEVED.
       </LegalP>
     ),
   },
@@ -345,17 +346,17 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          TO THE FULLEST EXTENT PERMITTED BY LAW, BEEMA HEALTH WILL NOT BE LIABLE FOR
-          INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR
-          FOR LOST PROFITS, DATA, OR GOODWILL, ARISING FROM YOUR USE OF THE
-          SERVICE.
+          TO THE FULLEST EXTENT PERMITTED BY LAW, BEEMA HEALTH WILL NOT BE
+          LIABLE FOR INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE
+          DAMAGES, OR FOR LOST PROFITS, DATA, OR GOODWILL, ARISING FROM YOUR USE
+          OF THE SERVICE.
         </LegalP>
         <LegalP>
           OUR TOTAL LIABILITY FOR ANY CLAIM ARISING OUT OF OR RELATING TO THE
           SERVICE OR THESE TERMS WILL NOT EXCEED THE GREATER OF (A) THE AMOUNT
-          YOU PAID TO BEEMA HEALTH FOR THE SERVICE IN THE TWELVE MONTHS BEFORE THE
-          EVENT GIVING RISE TO THE CLAIM OR (B) ONE HUNDRED U.S. DOLLARS ($100),
-          EXCEPT WHERE SUCH LIMITATIONS ARE PROHIBITED BY LAW.
+          YOU PAID TO BEEMA HEALTH FOR THE SERVICE IN THE TWELVE MONTHS BEFORE
+          THE EVENT GIVING RISE TO THE CLAIM OR (B) ONE HUNDRED U.S. DOLLARS
+          ($100), EXCEPT WHERE SUCH LIMITATIONS ARE PROHIBITED BY LAW.
         </LegalP>
         <LegalP>
           Some jurisdictions do not allow certain exclusions or limitations, so
@@ -380,13 +381,13 @@ const SECTIONS: LegalSection[] = [
           and attempt to resolve the dispute informally.
         </LegalP>
         <LegalP>
-          Except where prohibited by law, you and Beema Health agree that disputes
-          arising out of these Terms or the Service will be resolved through
-          binding individual arbitration rather than in court, and that each
-          party waives the right to participate in a class action. You may opt
-          out of arbitration within thirty (30) days of first accepting these
-          Terms by sending written notice to the address below with your name,
-          account email, and a clear statement that you opt out.
+          Except where prohibited by law, you and Beema Health agree that
+          disputes arising out of these Terms or the Service will be resolved
+          through binding individual arbitration rather than in court, and that
+          each party waives the right to participate in a class action. You may
+          opt out of arbitration within thirty (30) days of first accepting
+          these Terms by sending written notice to the address below with your
+          name, account email, and a clear statement that you opt out.
         </LegalP>
         <LegalP>
           Either party may seek injunctive relief in court for misuse of

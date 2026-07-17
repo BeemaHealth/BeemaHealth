@@ -19,7 +19,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -48,14 +48,6 @@ const CONTACT_OPTIONS = [
     text: "For questions about eligibility, pricing, account access, or your intake.",
     action: "support@beemahealth",
     href: "mailto:support@beemahealth",
-  },
-  {
-    icon: MessageCircle,
-    title: "Already a patient?",
-    text: "Log in to your dashboard for intake status and care updates.",
-    action: "Go to dashboard",
-    href: "/dashboard",
-    internal: true,
   },
   {
     icon: Clock,
@@ -147,18 +139,12 @@ function ContactPage() {
                   </p>
                   {c.action && c.href && (
                     <div className="mt-4">
-                      {c.internal ? (
-                        <Button asChild variant="outline" size="sm">
-                          <Link to={c.href}>{c.action}</Link>
-                        </Button>
-                      ) : (
-                        <a
-                          href={c.href}
-                          className="text-sm font-medium text-accent-foreground underline-offset-4 hover:underline"
-                        >
-                          {c.action}
-                        </a>
-                      )}
+                      <a
+                        href={c.href}
+                        className="text-sm font-medium text-accent-foreground underline-offset-4 hover:underline"
+                      >
+                        {c.action}
+                      </a>
                     </div>
                   )}
                 </SurfaceCard>
@@ -204,12 +190,15 @@ function ContactPage() {
             <div className="flex flex-wrap justify-center gap-3">
               <MagneticButton>
                 <Button asChild variant="outline">
-                  <Link to="/faq">Read FAQ</Link>
+                  <Link to="/faq/">Read FAQ</Link>
                 </Button>
               </MagneticButton>
               <MagneticButton>
                 <Button asChild size="xl">
-                  <Link to={qualifyHref(CTA_IDS.contact)}>
+                  <Link
+                    to={QUALIFY_PATH}
+                    search={qualifySearch(CTA_IDS.contact)}
+                  >
                     See if you qualify <ArrowRight />
                   </Link>
                 </Button>

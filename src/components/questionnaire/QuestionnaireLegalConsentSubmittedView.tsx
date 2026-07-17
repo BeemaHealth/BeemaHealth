@@ -33,7 +33,7 @@ export function QuestionnaireLegalConsentSubmittedView({
           <p className="text-muted-foreground">
             You agreed to the{" "}
             <Link
-              to="/legal/terms"
+              to="/legal/terms/"
               className="text-primary underline"
               target="_blank"
             >
@@ -41,7 +41,7 @@ export function QuestionnaireLegalConsentSubmittedView({
             </Link>
             ,{" "}
             <Link
-              to="/legal/privacy"
+              to="/legal/privacy/"
               className="text-primary underline"
               target="_blank"
             >
@@ -49,7 +49,7 @@ export function QuestionnaireLegalConsentSubmittedView({
             </Link>
             , and{" "}
             <Link
-              to="/legal/telehealth-consent"
+              to="/legal/telehealth-consent/"
               className="text-primary underline"
               target="_blank"
             >

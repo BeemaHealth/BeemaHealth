@@ -158,7 +158,7 @@ function TreatmentCard({
   return (
     <MotionLink
       ref={cardRef}
-      to="/weight-loss"
+      to="/weight-loss/"
       aria-label={`Learn more about ${treatment.name} on the weight-loss page`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}

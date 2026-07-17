@@ -29,7 +29,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -357,7 +357,7 @@ function AboutPage() {
                   size="xl"
                   className="bg-ink text-ink-foreground hover:bg-ink/85"
                 >
-                  <Link to={qualifyHref(CTA_IDS.about)}>
+                  <Link to={QUALIFY_PATH} search={qualifySearch(CTA_IDS.about)}>
                     See if you qualify <ArrowRight />
                   </Link>
                 </Button>

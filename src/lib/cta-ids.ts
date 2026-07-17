@@ -20,6 +20,18 @@ export const CTA_IDS = {
 
 export type CtaId = (typeof CTA_IDS)[keyof typeof CTA_IDS];
 
+/** Qualify route path — trailing slash matches sitemap-style canonical URLs. */
+export const QUALIFY_PATH = "/qualify/" as const;
+
+/** Search object for `<Link to={QUALIFY_PATH} search={qualifySearch(id)} />`. */
+export function qualifySearch(ctaId: CtaId): { cta_id: CtaId } {
+  return { cta_id: ctaId };
+}
+
+/**
+ * Full path+search string for raw anchors / non-Link navigation.
+ * Slash before `?` so the path matches the GitHub Pages canonical form.
+ */
 export function qualifyHref(ctaId: CtaId): string {
-  return `/qualify?cta_id=${encodeURIComponent(ctaId)}`;
+  return `${QUALIFY_PATH}?cta_id=${encodeURIComponent(ctaId)}`;
 }

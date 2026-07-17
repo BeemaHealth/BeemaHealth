@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { capturePageUtms } from "@/lib/utm";
-import { absoluteUrl } from "@/lib/seo";
+import { absoluteUrl, ORGANIZATION_JSONLD } from "@/lib/seo";
 
 import appCss from "../styles.css?url";
 import { AuthProvider } from "../context/AuthContext";
@@ -130,6 +130,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         {
           rel: "stylesheet",
           href: appCss,
+        },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(ORGANIZATION_JSONLD),
         },
       ],
     }),

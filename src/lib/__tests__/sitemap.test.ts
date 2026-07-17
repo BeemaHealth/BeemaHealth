@@ -91,6 +91,47 @@ describe("canonicalUrl", () => {
   });
 });
 
+describe("internal marketing links (trailing slash)", () => {
+  // GitHub Pages 301s bare paths → slash form. Router default was `never`,
+  // which stripped trailing slashes from <Link> hrefs and caused duplicate
+  // indexing. Guard the plumbing that keeps crawlable hrefs on the canonical URL.
+  const headerSrc = readFileSync(
+    resolve(__dirname, "../../components/site/SiteHeader.tsx"),
+    "utf-8",
+  );
+  const footerSrc = readFileSync(
+    resolve(__dirname, "../../components/site/SiteFooter.tsx"),
+    "utf-8",
+  );
+  const routerSrc = readFileSync(
+    resolve(__dirname, "../../router.tsx"),
+    "utf-8",
+  );
+
+  it("configures TanStack Router trailingSlash: preserve", () => {
+    expect(routerSrc).toMatch(/trailingSlash:\s*["']preserve["']/);
+  });
+
+  it("SiteHeader and SiteFooter use trailing-slash marketing paths", () => {
+    const paths = [
+      ...headerSrc.matchAll(/to:\s*"(\/[^"]+)"/g),
+      ...footerSrc.matchAll(/to:\s*"(\/[^"]+)"/g),
+    ].map((m) => m[1]);
+    expect(paths.length).toBeGreaterThan(0);
+    for (const path of paths) {
+      expect(path.endsWith("/"), path).toBe(true);
+    }
+  });
+});
+
+describe("qualifyHref", () => {
+  it("puts the trailing slash before the query string", async () => {
+    const { qualifyHref, QUALIFY_PATH } = await import("../cta-ids");
+    expect(QUALIFY_PATH).toBe("/qualify/");
+    expect(qualifyHref("faq")).toBe("/qualify/?cta_id=faq");
+  });
+});
+
 describe("public/llms.txt", () => {
   const llmsTxt = readFileSync(
     resolve(__dirname, "../../../public/llms.txt"),

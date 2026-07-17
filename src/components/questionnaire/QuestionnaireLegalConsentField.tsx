@@ -28,7 +28,7 @@ export function QuestionnaireLegalConsentField({
       <span className="text-sm leading-relaxed text-foreground">
         I have read and agree to the{" "}
         <Link
-          to="/legal/terms"
+          to="/legal/terms/"
           className="text-primary underline"
           target="_blank"
         >
@@ -36,7 +36,7 @@ export function QuestionnaireLegalConsentField({
         </Link>
         ,{" "}
         <Link
-          to="/legal/privacy"
+          to="/legal/privacy/"
           className="text-primary underline"
           target="_blank"
         >
@@ -44,7 +44,7 @@ export function QuestionnaireLegalConsentField({
         </Link>
         , and{" "}
         <Link
-          to="/legal/telehealth-consent"
+          to="/legal/telehealth-consent/"
           className="text-primary underline"
           target="_blank"
         >

@@ -28,7 +28,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
@@ -216,7 +216,10 @@ function HowItWorksPage() {
           <div className="mt-10 text-center">
             <MagneticButton>
               <Button asChild size="lg">
-                <Link to={qualifyHref(CTA_IDS.how_it_works)}>
+                <Link
+                  to={QUALIFY_PATH}
+                  search={qualifySearch(CTA_IDS.how_it_works)}
+                >
                   See if you qualify <ArrowRight />
                 </Link>
               </Button>

@@ -25,7 +25,7 @@ import {
   SurfaceCard,
 } from "@/components/site/primitives";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 import { cn } from "@/lib/utils";
 
 const headMeta = () => ({
@@ -288,7 +288,7 @@ function PricingPage() {
             size="xl"
             className="mt-6 bg-ink text-ink-foreground hover:bg-ink/85"
           >
-            <Link to={qualifyHref(CTA_IDS.pricing_footer)}>
+            <Link to={QUALIFY_PATH} search={qualifySearch(CTA_IDS.pricing_footer)}>
               See if you qualify <ArrowRight />
             </Link>
           </Button>

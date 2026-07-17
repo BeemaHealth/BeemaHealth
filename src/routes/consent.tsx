@@ -114,7 +114,7 @@ function ConsentPage() {
           <p className="text-sm text-muted-foreground">
             You already agreed to the{" "}
             <Link
-              to="/legal/intake-acknowledgments"
+              to="/legal/intake-acknowledgments/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary underline"
@@ -150,7 +150,7 @@ function ConsentPage() {
               <span className="text-sm text-foreground">
                 I certify that my typed signature applies to the{" "}
                 <Link
-                  to="/legal/intake-acknowledgments"
+                  to="/legal/intake-acknowledgments/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary underline"

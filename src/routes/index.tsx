@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { canonicalUrl, ORGANIZATION_JSONLD, WEBSITE_JSONLD } from "@/lib/seo";
+import { canonicalUrl, WEBSITE_JSONLD } from "@/lib/seo";
 import { trackPageViewed } from "@/lib/analytics";
 import { createFunnelSession } from "@/lib/api/client";
 import { getPendingUtms, clearPendingUtms } from "@/lib/utm";
@@ -25,10 +25,6 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/") }],
     scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify(ORGANIZATION_JSONLD),
-      },
       {
         type: "application/ld+json",
         children: JSON.stringify(WEBSITE_JSONLD),

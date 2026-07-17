@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { HexMotif, MagneticButton } from "@/components/site/primitives";
 import { LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 
 /**
  * Closing homepage CTA — a solid-honey band with a vignette mesh and two
@@ -37,7 +37,10 @@ export function FinalCTASection() {
                 size="xl"
                 className="bg-ink text-ink-foreground hover:bg-ink/85"
               >
-                <Link to={qualifyHref(CTA_IDS.home_mid)}>
+                <Link
+                  to={QUALIFY_PATH}
+                  search={qualifySearch(CTA_IDS.home_mid)}
+                >
                   See if you qualify
                   <ArrowRight className="size-4" />
                 </Link>

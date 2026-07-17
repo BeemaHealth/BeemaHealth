@@ -8,18 +8,19 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 import { cn } from "@/lib/utils";
 
 type NavItem = { label: string; to: string };
 
+/** Trailing-slash paths — match sitemap.xml / canonicalUrl / GitHub Pages 200 URLs. */
 const NAV: NavItem[] = [
-  { label: "Weight Loss", to: "/weight-loss" },
-  { label: "How it works", to: "/how-it-works" },
-  // { label: "Pricing", to: "/pricing" }, // disabled — pricing model not finalized yet
-  { label: "FAQ", to: "/faq" },
-  { label: "About", to: "/about" },
-  { label: "Contact", to: "/contact" },
+  { label: "Weight Loss", to: "/weight-loss/" },
+  { label: "How it works", to: "/how-it-works/" },
+  // { label: "Pricing", to: "/pricing/" }, // disabled — pricing model not finalized yet
+  { label: "FAQ", to: "/faq/" },
+  { label: "About", to: "/about/" },
+  { label: "Contact", to: "/contact/" },
 ];
 
 /** Pointy-top hexagon menu trigger — matches HexMotif / logo geometry. */
@@ -89,7 +90,9 @@ export function SiteHeader() {
         <div className="hidden items-center gap-2 lg:ml-auto lg:flex">
           {/* Log in / Dashboard link disabled — site in pre-launch waitlist mode */}
           <Button asChild>
-            <Link to={qualifyHref(CTA_IDS.nav_header)}>See if you qualify</Link>
+            <Link to={QUALIFY_PATH} search={qualifySearch(CTA_IDS.nav_header)}>
+              See if you qualify
+            </Link>
           </Button>
         </div>
 
@@ -118,7 +121,10 @@ export function SiteHeader() {
               <div className="mt-6">
                 <SheetClose asChild>
                   <Button asChild size="lg" className="w-full">
-                    <Link to={qualifyHref(CTA_IDS.nav_mobile)}>
+                    <Link
+                      to={QUALIFY_PATH}
+                      search={qualifySearch(CTA_IDS.nav_mobile)}
+                    >
                       See if you qualify
                     </Link>
                   </Button>

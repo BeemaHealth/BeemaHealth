@@ -1379,7 +1379,7 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
             <span className="text-sm text-foreground">
               I have read and agree to the{" "}
               <Link
-                to="/legal/intake-acknowledgments"
+                to="/legal/intake-acknowledgments/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary underline"

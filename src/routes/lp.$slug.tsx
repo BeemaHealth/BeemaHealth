@@ -8,7 +8,7 @@ import {
 import { storePendingUtms } from "@/lib/utm";
 import { trackPageViewed } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/lp/$slug")({
@@ -41,7 +41,9 @@ function LandingPageRoute() {
 
         trackingTimer = setTimeout(() => {
           if (cancelled) return;
-          console.log("[beemahealth] creating funnel session", { slug: data.slug });
+          console.log("[beemahealth] creating funnel session", {
+            slug: data.slug,
+          });
           createFunnelSession(utms)
             .then(() => {
               console.log("[beemahealth] funnel session ready");
@@ -54,7 +56,10 @@ function LandingPageRoute() {
               }
             })
             .catch((err: unknown) => {
-              console.error("[beemahealth] funnel session creation failed:", err);
+              console.error(
+                "[beemahealth] funnel session creation failed:",
+                err,
+              );
               if (!cancelled) {
                 trackPageViewed("landing_page", {
                   landing_page_slug: data.slug,
@@ -126,7 +131,10 @@ function LandingPageRoute() {
           size="lg"
           className="mt-10"
           onClick={() =>
-            void navigate({ to: qualifyHref(CTA_IDS.landing_page) })
+            void navigate({
+              to: QUALIFY_PATH,
+              search: qualifySearch(CTA_IDS.landing_page),
+            })
           }
         >
           Get started

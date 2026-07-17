@@ -158,7 +158,7 @@ const SECTIONS: LegalSection[] = [
         <LegalP>
           For full details, see our{" "}
           <Link
-            to="/legal/telehealth-consent"
+            to="/legal/telehealth-consent/"
             className="text-foreground underline-offset-2 hover:underline"
           >
             Telehealth Consent
@@ -185,15 +185,15 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          You consent to Beema Health securely storing your intake answers, uploaded
-          documents, and related health information so that licensed providers
-          can review your case, coordinate pharmacy fulfillment, and support
-          your ongoing care.
+          You consent to Beema Health securely storing your intake answers,
+          uploaded documents, and related health information so that licensed
+          providers can review your case, coordinate pharmacy fulfillment, and
+          support your ongoing care.
         </LegalP>
         <LegalP>
           Use and disclosure of your information are described in our{" "}
           <Link
-            to="/legal/privacy"
+            to="/legal/privacy/"
             className="text-foreground underline-offset-2 hover:underline"
           >
             Privacy Policy

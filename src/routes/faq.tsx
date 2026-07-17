@@ -18,7 +18,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, qualifyHref } from "@/lib/cta-ids";
+import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 import {
   Accordion,
   AccordionContent,
@@ -168,7 +168,7 @@ function FaqPage() {
           <div className="mt-12 text-center">
             <MagneticButton>
               <Button asChild size="xl">
-                <Link to={qualifyHref(CTA_IDS.faq)}>
+                <Link to={QUALIFY_PATH} search={qualifySearch(CTA_IDS.faq)}>
                   See if you qualify <ArrowRight />
                 </Link>
               </Button>
