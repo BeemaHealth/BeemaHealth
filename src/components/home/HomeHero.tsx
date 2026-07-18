@@ -355,7 +355,7 @@ export function HomeHero() {
               >
                 <img
                   src={semaVial}
-                  alt=""
+                  alt="Compounded semaglutide medication vial"
                   width={200}
                   height={200}
                   className="h-full w-full object-contain drop-shadow-lg"

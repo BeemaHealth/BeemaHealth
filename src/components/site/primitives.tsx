@@ -55,13 +55,17 @@ export function SectionHeading({
   description,
   align = "center",
   className,
+  /** Page heroes should pass `as="h1"`; section titles stay the default `h2`. */
+  as = "h2",
 }: {
   eyebrow?: string;
   title: ReactNode;
   description?: ReactNode;
   align?: "center" | "left";
   className?: string;
+  as?: "h1" | "h2";
 }) {
+  const TitleTag = as;
   return (
     <div
       className={cn(
@@ -71,9 +75,9 @@ export function SectionHeading({
       )}
     >
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <h2 className="mt-4 text-balance text-3xl font-bold text-foreground md:text-4xl">
+      <TitleTag className="mt-4 text-balance text-3xl font-bold text-foreground md:text-4xl">
         {title}
-      </h2>
+      </TitleTag>
       {description && (
         <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
           {description}

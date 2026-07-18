@@ -19,13 +19,15 @@ export function Logo({
     <span className="inline-flex items-center gap-2.5">
       <img
         src={beemaMark}
-        alt=""
-        aria-hidden
+        alt="Beema Health"
         width={592}
         height={653}
         className={cn("h-10 w-auto object-contain", className)}
       />
+      {/* Wordmark is visual; accessible name comes from the img alt (and any
+          wrapping Link aria-label). Keeps Bing/Lighthouse from flagging empty alt. */}
       <span
+        aria-hidden="true"
         className={cn(
           "font-display text-xl font-bold leading-none tracking-tight",
           tone === "ink" ? "text-ink-foreground" : "text-foreground",

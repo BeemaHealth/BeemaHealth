@@ -93,6 +93,7 @@ function ContactPage() {
 
         <div className="veya-container relative z-10">
           <SectionHeading
+            as="h1"
             eyebrow="Contact"
             title={<LineReveal>We&apos;re here to help</LineReveal>}
             description="Questions before you start? Reach out — or begin your eligibility check to see if Beema Health may be a fit."

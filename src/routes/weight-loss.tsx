@@ -103,6 +103,7 @@ function WeightLossPage() {
         <FloatingHexagons className="z-0" />
         <div className="relative z-10">
           <SectionHeading
+            as="h1"
             eyebrow="Medical weight loss"
             title={
               <>

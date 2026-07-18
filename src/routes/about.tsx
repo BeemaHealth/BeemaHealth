@@ -118,10 +118,10 @@ function AboutPage() {
           >
             <Eyebrow>Our story</Eyebrow>
           </motion.div>
-          <h2 className="mt-4 text-balance text-3xl font-bold text-foreground md:text-4xl">
+          <h1 className="mt-4 text-balance text-3xl font-bold text-foreground md:text-4xl">
             <LineReveal>Health isn&apos;t a destination. </LineReveal>
             <LineReveal delay={0.1}>It&apos;s a lifelong journey.</LineReveal>
-          </h2>
+          </h1>
           <motion.p
             className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg"
             initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}

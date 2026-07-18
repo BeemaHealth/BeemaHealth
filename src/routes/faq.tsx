@@ -102,6 +102,7 @@ function FaqPage() {
 
         <div className="veya-container relative z-10">
           <SectionHeading
+            as="h1"
             eyebrow="FAQ"
             title={<LineReveal>Frequently asked questions</LineReveal>}
             description="Pricing, medication, shipping, refills, cancellation, eligibility, labs, and privacy — all in one place."

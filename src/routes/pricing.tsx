@@ -100,6 +100,7 @@ function PricingPage() {
     <MarketingLayout>
       <Section className="bg-grad-hero">
         <SectionHeading
+          as="h1"
           eyebrow="Clear-price promise"
           title="Pricing you can actually understand"
           description="No platform membership fee. You pay for medication when prescribed — plus shipping or labs only when they apply, always shown before you pay."
