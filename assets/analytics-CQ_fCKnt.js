@@ -1,0 +1,1 @@
+import{ag as i,ah as r}from"./index-DrYMyDO2.js";function t(e){r()}performance.getEntriesByType("navigation")[0]?.type;function c(e,a){i(),t({properties:{...a?.landing_page_slug?{landing_page_slug:a.landing_page_slug}:{}}})}function o(e,a,n){a?.trim()&&t()}function u(e,a,n,g){a?.trim()&&t()}function s(e,a){t()}export{s as a,o as b,u as c,c as t};
