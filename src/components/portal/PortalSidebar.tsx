@@ -120,7 +120,7 @@ export function PortalSidebar({ user }: { user: User }) {
               {user.first_name} {user.last_name}
             </p>
             <p className="truncate text-xs text-muted-foreground">
-              Member · {user.state || "—"}
+              Member · {user.state || "N/A"}
             </p>
           </div>
           <Button

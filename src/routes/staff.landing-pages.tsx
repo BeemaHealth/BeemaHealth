@@ -132,7 +132,7 @@ function LandingPageForm({
           className={inputCls}
           value={form.name}
           maxLength={128}
-          placeholder="e.g. Facebook — Semaglutide Jan"
+          placeholder="e.g. Facebook: Semaglutide Jan"
           required
           onChange={(e) => set("name", e.target.value)}
         />

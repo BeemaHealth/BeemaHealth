@@ -14,7 +14,7 @@ import { Section } from "@/components/site/primitives";
 export const Route = createFileRoute("/legal/telehealth-consent")({
   head: () => ({
     meta: [
-      { title: "Telehealth Consent — Beema Health" },
+      { title: "Telehealth Consent | Beema Health" },
       {
         name: "description",
         content:
@@ -36,17 +36,17 @@ const SECTIONS: LegalSection[] = [
       <>
         <LegalP>
           This Telehealth Consent (&quot;Consent&quot;) explains how care is
-          delivered remotely through Beema Health and asks for your informed consent
-          to receive healthcare via telehealth from independently licensed
-          physicians, nurse practitioners, physician assistants, and other
-          qualified clinicians (&quot;Providers&quot;).
+          delivered remotely through Beema Health and asks for your informed
+          consent to receive healthcare via telehealth from independently
+          licensed physicians, nurse practitioners, physician assistants, and
+          other qualified clinicians (&quot;Providers&quot;).
         </LegalP>
         <LegalP>
           Beema Health, Inc. (&quot;Beema Health,&quot; &quot;we,&quot; or
           &quot;us&quot;) operates the Beema Health platform (the
-          &quot;Service&quot;). Beema Health is a technology and care-coordination
-          platform — not a medical practice. Clinical decisions are made solely
-          by your Provider.
+          &quot;Service&quot;). Beema Health is a technology and
+          care-coordination platform, not a medical practice. Clinical decisions
+          are made solely by your Provider.
         </LegalP>
       </>
     ),
@@ -212,9 +212,9 @@ const SECTIONS: LegalSection[] = [
       <LegalP>
         By accepting this Consent, you authorize your Provider and authorized
         clinical staff to access, review, and use health information you provide
-        through the Service — including intake answers, uploaded documents,
-        prior prescriptions, lab results, and communications — as needed for
-        diagnosis, treatment, follow-up, and care coordination.
+        through the Service, including intake answers, uploaded documents, prior
+        prescriptions, lab results, and communications, as needed for diagnosis,
+        treatment, follow-up, and care coordination.
       </LegalP>
     ),
   },
@@ -245,19 +245,19 @@ const SECTIONS: LegalSection[] = [
       <>
         <LegalP>
           If a Provider writes a prescription, you may fill it through a
-          pharmacy partner integrated with Beema Health or, where permitted, at a
-          pharmacy of your choice. Prescriptions may be transferred between
+          pharmacy partner integrated with Beema Health or, where permitted, at
+          a pharmacy of your choice. Prescriptions may be transferred between
           pharmacies as needed to fulfill your order.
         </LegalP>
         <LegalP>
-          Beema Health and affiliated entities may have commercial relationships with
-          pharmacy partners. You are free to obtain prescriptions elsewhere by
-          updating your pharmacy preferences or contacting support, subject to
-          applicable law and pharmacy policies.
+          Beema Health and affiliated entities may have commercial relationships
+          with pharmacy partners. You are free to obtain prescriptions elsewhere
+          by updating your pharmacy preferences or contacting support, subject
+          to applicable law and pharmacy policies.
         </LegalP>
         <LegalP>
-          Some products discussed on the Service — including compounded GLP-1
-          medications when legally available — may not be FDA-approved for your
+          Some products discussed on the Service, including compounded GLP-1
+          medications when legally available, may not be FDA-approved for your
           specific use. Your Provider will explain risks, benefits, and
           alternatives before treatment.
         </LegalP>

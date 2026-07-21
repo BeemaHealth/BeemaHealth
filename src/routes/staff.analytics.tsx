@@ -58,7 +58,7 @@ function dateRangeLabel(range: DateRange) {
 }
 
 function fmtDate(iso: string | null) {
-  if (!iso) return "—";
+  if (!iso) return "N/A";
   return new Date(iso).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -71,7 +71,7 @@ function intakeSlugFromVersion(v: VersionListRow): string {
   const slugs = [
     ...new Set(rules.map((r) => r.intake_questionnaire_slug).filter(Boolean)),
   ];
-  if (slugs.length === 0) return "—";
+  if (slugs.length === 0) return "N/A";
   if (slugs.length === 1) return slugs[0];
   const defaultRule = rules.find(
     (r) => !r.when_field || r.when_field === "__default__",
@@ -215,7 +215,7 @@ function VersionTable({
                             ))}
                           </div>
                         ) : (
-                          <span className="text-muted-foreground">—</span>
+                          <span className="text-muted-foreground">N/A</span>
                         )}
                       </td>
                       <td className="py-2.5 pr-4 font-mono text-xs text-muted-foreground">
@@ -290,7 +290,7 @@ function FieldDistribution({
       {field.answer_distribution.length === 0 ? (
         <p className="text-xs text-muted-foreground italic">
           {field.total_answers > 0
-            ? "Individual values not shown — field contains patient identifiers."
+            ? "Individual values not shown: field contains patient identifiers."
             : "No responses yet."}
         </p>
       ) : (
@@ -338,11 +338,11 @@ function StepAnalyticsDetail({ data }: { data: VersionStepAnalytics }) {
           <span className="text-muted-foreground">Entry routing</span>
           {data.is_default_entry ? (
             <span className="ml-2 rounded bg-primary/10 px-1.5 py-0.5 text-[11px] font-medium text-primary">
-              Default — handles all unrouted CTAs
+              Default (handles all unrouted CTAs)
             </span>
           ) : (
             <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
-              Not default — reached via specific CTA only
+              Not default (reached via specific CTA only)
             </span>
           )}
         </div>
@@ -710,7 +710,7 @@ function StaffAnalyticsPage() {
         >
           <p className="mb-3 text-xs text-muted-foreground">
             Which call-to-action buttons drove funnel sessions and account
-            creations. Each qualify version claims specific CTA ids — sessions
+            creations. Each qualify version claims specific CTA ids; sessions
             started via that CTA load its questionnaire version.
           </p>
           <div className="overflow-x-auto">
@@ -826,7 +826,7 @@ function StaffAnalyticsPage() {
         icon={TrendingUp}
       >
         <p className="mb-3 text-xs text-muted-foreground">
-          "(direct)" = no UTM parameters — typed URL, bookmarks, or non-tagged
+          "(direct)" = no UTM parameters: typed URL, bookmarks, or non-tagged
           links.
         </p>
         {sources.length === 0 ? (
@@ -851,10 +851,10 @@ function StaffAnalyticsPage() {
                   <tr key={i} className="border-b border-border/60">
                     <td className="py-2 pr-4 font-medium">{row.utm_source}</td>
                     <td className="py-2 pr-4 text-muted-foreground">
-                      {row.utm_medium || "—"}
+                      {row.utm_medium || "N/A"}
                     </td>
                     <td className="py-2 pr-4 text-muted-foreground">
-                      {row.utm_campaign || "—"}
+                      {row.utm_campaign || "N/A"}
                     </td>
                     <td className="py-2 pr-4">{row.sessions}</td>
                     <td className="py-2 pr-4">{row.accounts_created}</td>
@@ -940,7 +940,7 @@ function StaffAnalyticsPage() {
         />
 
         <p className="mt-2 text-xs text-muted-foreground">
-          Click a row to view per-step analytics — questions answered, answer
+          Click a row to view per-step analytics: questions answered, answer
           distributions, and drop-off.
         </p>
       </AccountSectionCard>
@@ -961,11 +961,11 @@ function StaffAnalyticsPage() {
               {qType === "qualify" &&
                 (selectedVersion.is_default_entry ? (
                   <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[11px] font-medium text-primary">
-                    Default entry — handles unrouted CTAs
+                    Default entry (handles unrouted CTAs)
                   </span>
                 ) : (
                   <span className="rounded bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
-                    Not default — CTA-routed only
+                    Not default (CTA-routed only)
                   </span>
                 ))}
             </div>
@@ -980,7 +980,7 @@ function StaffAnalyticsPage() {
           {/* Step analytics content */}
           <AccountSectionCard
             tone="primary"
-            title={`Step analytics — ${selectedVersion.version_label} (${label})`}
+            title={`Step analytics: ${selectedVersion.version_label} (${label})`}
             icon={BarChart3}
           >
             {stepLoading ? (

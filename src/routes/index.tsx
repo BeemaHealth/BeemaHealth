@@ -16,7 +16,7 @@ import { FinalCTASection } from "@/components/home/FinalCTASection";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Beema Health — Medical weight-loss care" },
+      { title: "Beema Health | Medical weight-loss care" },
       {
         name: "description",
         content:

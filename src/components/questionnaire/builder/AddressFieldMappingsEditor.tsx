@@ -69,7 +69,7 @@ export function AddressFieldMappingsEditor({
               <span className="text-muted-foreground">
                 {row.backend
                   ? addressBackendLabelForValue(row.backend)
-                  : "— none —"}
+                  : "(none)"}
               </span>
             ) : (
               <select
@@ -105,9 +105,9 @@ export function AddressFieldMappingsEditor({
         ))}
       </div>
       <p className="text-[10px] text-muted-foreground">
-        County and country are stored for Beema Health intake and pharmacy routing.
-        Vendor visit payloads typically only include street, city, state, and
-        ZIP.
+        County and country are stored for Beema Health intake and pharmacy
+        routing. Vendor visit payloads typically only include street, city,
+        state, and ZIP.
       </p>
     </div>
   );

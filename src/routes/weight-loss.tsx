@@ -33,13 +33,13 @@ import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 export const Route = createFileRoute("/weight-loss")({
   head: () => ({
     meta: [
-      { title: "Weight Loss — Beema Health" },
+      { title: "Weight Loss | Beema Health" },
       {
         name: "description",
         content:
           "Medical weight-loss care with Zepbound, Wegovy, and affordable compounded options when clinically appropriate. Reviewed by licensed providers.",
       },
-      { property: "og:title", content: "Weight Loss — Beema Health" },
+      { property: "og:title", content: "Weight Loss | Beema Health" },
       {
         property: "og:description",
         content:
@@ -65,7 +65,7 @@ const BENEFITS = [
   {
     icon: Scale,
     title: "Built for follow-through",
-    text: "Refill coordination, progress tracking, and ongoing support from first visit to success — not just a one-time script.",
+    text: "Refill coordination, progress tracking, and ongoing support from first visit to success, not just a one-time script.",
   },
 ];
 
@@ -111,7 +111,7 @@ function WeightLossPage() {
                 <LineReveal delay={0.1}>medical professionals</LineReveal>
               </>
             }
-            description="Beema Health focuses on evidence-based weight-loss treatments — reviewed by licensed providers, with clear, transparent pricing"
+            description="Beema Health focuses on evidence-based weight-loss treatments, reviewed by licensed providers, with clear, transparent pricing"
           />
           <motion.div
             className="mt-10 text-center"
@@ -149,7 +149,7 @@ function WeightLossPage() {
           <SectionHeading
             eyebrow="Why Beema Health"
             title="Weight-loss care that respects your time and trust"
-            description="No hype, no fake urgency — just a calm path from eligibility to provider review."
+            description="No hype, no fake urgency, just a calm path from eligibility to provider review."
           />
         </motion.div>
         <div className="mt-12 grid gap-5 md:grid-cols-3">
@@ -214,7 +214,7 @@ function WeightLossPage() {
               support. During your eligibility check, we review BMI, health
               history, and any factors that might make a GLP-1 treatment plan
               inadvisable. A licensed provider decides whether treatment may be
-              appropriate — prescribing is never guaranteed.
+              appropriate; prescribing is never guaranteed.
             </p>
             <ul className="mt-5 space-y-2">
               {[

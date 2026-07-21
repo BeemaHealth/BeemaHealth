@@ -29,7 +29,7 @@ const STEPS: Step[] = [
   {
     icon: Send,
     title: "Submit your medical intake",
-    text: "Complete a secure medical questionnaire for provider review — private and encrypted",
+    text: "Complete a secure medical questionnaire for provider review, private and encrypted",
   },
   {
     icon: Stethoscope,

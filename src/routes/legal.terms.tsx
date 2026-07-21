@@ -14,7 +14,7 @@ import { Section } from "@/components/site/primitives";
 export const Route = createFileRoute("/legal/terms")({
   head: () => ({
     meta: [
-      { title: "Terms of Service — Beema Health" },
+      { title: "Terms of Service | Beema Health" },
       {
         name: "description",
         content:
@@ -406,8 +406,8 @@ const SECTIONS: LegalSection[] = [
         We may suspend or terminate your access if you violate these Terms,
         create risk for us or others, or as required by law. You may stop using
         the Service at any time. Provisions that by their nature should survive
-        termination — including payment obligations, disclaimers, limitations of
-        liability, and dispute resolution — will survive.
+        termination, including payment obligations, disclaimers, limitations of
+        liability, and dispute resolution, will survive.
       </LegalP>
     ),
   },

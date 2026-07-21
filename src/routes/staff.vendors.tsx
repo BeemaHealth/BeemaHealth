@@ -510,8 +510,8 @@ function VendorVersionRow({
                 />
                 {fields.length > 0 && (
                   <p className="text-xs text-muted-foreground">
-                    {fields.length} field{fields.length !== 1 ? "s" : ""} ready
-                    — switch to Editor to review, then save.
+                    {fields.length} field{fields.length !== 1 ? "s" : ""} ready.
+                    Switch to Editor to review, then save.
                   </p>
                 )}
               </>
@@ -529,7 +529,7 @@ function VendorVersionRow({
           {!isDraft && (
             <p className="text-xs text-muted-foreground">
               {isArchived
-                ? "Archived — restore to edit."
+                ? "Archived. Restore to edit."
                 : "Published versions are read-only. Create a new draft version to make changes."}
             </p>
           )}
@@ -812,7 +812,7 @@ function VendorCard({
                   {newFields.length > 0 && (
                     <p className="text-xs text-muted-foreground">
                       {newFields.length} field
-                      {newFields.length !== 1 ? "s" : ""} imported — switch to
+                      {newFields.length !== 1 ? "s" : ""} imported. Switch to
                       Fields editor to review or edit.
                     </p>
                   )}
@@ -901,7 +901,7 @@ function SwitchingVendorsDialog({
               </li>
               <li>
                 Open each step and <strong>remap every field</strong> to the
-                equivalent field in the new vendor&apos;s schema — including
+                equivalent field in the new vendor&apos;s schema, including
                 account, address, choice options, and direct mappings.
               </li>
               <li>
@@ -915,9 +915,9 @@ function SwitchingVendorsDialog({
             <p className="font-semibold text-xs">API endpoint note</p>
             <p className="text-xs">
               The intake submission endpoint is also vendor-specific. Beluga
-              Health is the current primary vendor — its endpoint is wired to
-              the Beluga visit creation API. If you switch to a different
-              vendor, the backend{" "}
+              Health is the current primary vendor; its endpoint is wired to the
+              Beluga visit creation API. If you switch to a different vendor,
+              the backend{" "}
               <span className="font-mono">build_beluga_visit_payload</span>{" "}
               logic and intake submission view will also need updating to target
               the new vendor&apos;s API.
@@ -926,7 +926,7 @@ function SwitchingVendorsDialog({
 
           <p className="text-xs text-muted-foreground">
             Existing questionnaire versions and their field mappings are never
-            modified automatically — all changes are opt-in via duplication.
+            modified automatically; all changes are opt-in via duplication.
           </p>
         </div>
         <div className="flex justify-end pt-2">

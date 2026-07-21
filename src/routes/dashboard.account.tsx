@@ -611,7 +611,7 @@ function DashboardAccountPage() {
           <p className="mt-1.5 text-sm text-muted-foreground">
             You can update name, email, phone, and shipping here for contact and
             delivery. Your clinician still sees the medical intake you submitted
-            (version {intake?.active_submission_version ?? "—"}). Clinical
+            (version {intake?.active_submission_version ?? "N/A"}). Clinical
             intake information can only be changed if your clinician requests
             updates.
           </p>

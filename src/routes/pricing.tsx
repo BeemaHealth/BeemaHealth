@@ -30,13 +30,13 @@ import { cn } from "@/lib/utils";
 
 const headMeta = () => ({
   meta: [
-    { title: "Pricing — Beema Health" },
+    { title: "Pricing | Beema Health" },
     {
       name: "description",
       content:
         "Medication-only pricing: pay for your prescription when clinically appropriate. Shipping and labs shown separately before any charge.",
     },
-    { property: "og:title", content: "Pricing — Beema Health" },
+    { property: "og:title", content: "Pricing | Beema Health" },
     {
       property: "og:description",
       content:
@@ -103,7 +103,7 @@ function PricingPage() {
           as="h1"
           eyebrow="Clear-price promise"
           title="Pricing you can actually understand"
-          description="No platform membership fee. You pay for medication when prescribed — plus shipping or labs only when they apply, always shown before you pay."
+          description="No platform membership fee. You pay for medication when prescribed, plus shipping or labs only when they apply, always shown before you pay."
         />
       </Section>
 
@@ -127,7 +127,7 @@ function PricingPage() {
                 <ul className="mt-3 space-y-2 text-sm text-foreground">
                   {[
                     "Prescribed medication (per fill or month)",
-                    "Cash-pay, insurance copay, or pharmacy pricing — your path",
+                    "Cash-pay, insurance copay, or pharmacy pricing, your path",
                   ].map((t) => (
                     <li key={t} className="flex items-start gap-2">
                       <Check className="mt-0.5 size-4 shrink-0 text-success" />{" "}
@@ -246,7 +246,7 @@ function PricingPage() {
             },
             {
               t: "Refill billing",
-              d: "Each refill is billed at the medication price shown for your plan and pharmacy path — no hidden platform fees on top.",
+              d: "Each refill is billed at the medication price shown for your plan and pharmacy path, no hidden platform fees on top.",
             },
             {
               t: "Pre-charge reminders",
@@ -269,7 +269,7 @@ function PricingPage() {
             Shipping costs depend on your delivery choice and location. Labs are
             only billed when clinically needed, and the cost is shown before you
             agree. Insurance coverage, copays, and prior-authorization outcomes
-            are determined by your plan — we help you navigate them but can't
+            are determined by your plan. We help you navigate them but can't
             guarantee coverage.
           </p>
         </SurfaceCard>
@@ -281,7 +281,7 @@ function PricingPage() {
             No surprises. Ever.
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-primary-foreground/85">
-            Start with a quick eligibility check — you'll see medication pricing
+            Start with a quick eligibility check. You'll see medication pricing
             before paying anything.
           </p>
           <Button

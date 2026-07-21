@@ -1,4 +1,9 @@
-import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from "@tanstack/react-router";
 import { MailWarning } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
@@ -12,7 +17,10 @@ import { extractVerificationToken } from "@/lib/verification";
 export const Route = createFileRoute("/verify-email/pending")({
   ssr: false,
   beforeLoad: async () => {
-    const session = await requireAuth({ redirectTo: "/qualify", redirectPath: "/intake" });
+    const session = await requireAuth({
+      redirectTo: "/qualify",
+      redirectPath: "/intake",
+    });
     if (session.user.email_verified) throw redirect({ to: "/intake" });
   },
   component: VerifyEmailPendingPage,
@@ -47,10 +55,14 @@ function VerifyEmailPendingPage() {
       if (refreshed?.user.email_verified) {
         navigate({ to: "/intake" });
       } else {
-        setError("Not verified yet — open your email and click the verification link first.");
+        setError(
+          "Not verified yet. Open your email and click the verification link first.",
+        );
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not check verification status.");
+      setError(
+        e instanceof Error ? e.message : "Could not check verification status.",
+      );
     } finally {
       setChecking(false);
     }
@@ -95,22 +107,29 @@ function VerifyEmailPendingPage() {
       <QuizShell
         label="Check your email"
         title="Verify your email to continue"
-        subtitle={`We sent a verification link to ${session.user.email}. Open your email and click the link — that verifies your account automatically.`}
+        subtitle={`We sent a verification link to ${session.user.email}. Open your email and click the link; that verifies your account automatically.`}
       >
         <div className="grid gap-4">
           <div
             className="flex gap-3 rounded-2xl border border-warning/30 bg-warning/10 px-4 py-3"
             role="note"
           >
-            <MailWarning className="mt-0.5 size-5 shrink-0 text-warning" aria-hidden="true" />
+            <MailWarning
+              className="mt-0.5 size-5 shrink-0 text-warning"
+              aria-hidden="true"
+            />
             <p className="text-sm text-foreground">
-              <span className="font-semibold">Check your spam or junk folder.</span> If you don&apos;t
-              see the email within a few minutes, verification messages often land there first.
+              <span className="font-semibold">
+                Check your spam or junk folder.
+              </span>{" "}
+              If you don&apos;t see the email within a few minutes, verification
+              messages often land there first.
             </p>
           </div>
 
           <p className="text-sm text-muted-foreground">
-            The link may open in a new tab. After you click it, return here and press continue below.
+            The link may open in a new tab. After you click it, return here and
+            press continue below.
           </p>
 
           <Button
@@ -118,18 +137,30 @@ function VerifyEmailPendingPage() {
             onClick={() => void handleContinueAfterVerify()}
             disabled={checking}
           >
-            {checking ? "Checking…" : "I verified my email — continue"}
+            {checking ? "Checking…" : "I verified my email, continue"}
           </Button>
 
-          <Button variant="outline" className="w-full" onClick={() => void handleResend()} disabled={sending}>
-            {sending ? "Sending…" : sent ? "Email sent again" : "Resend verification email"}
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => void handleResend()}
+            disabled={sending}
+          >
+            {sending
+              ? "Sending…"
+              : sent
+                ? "Email sent again"
+                : "Resend verification email"}
           </Button>
 
           <details className="rounded-2xl border border-border px-4 py-3">
             <summary className="cursor-pointer text-sm font-medium text-foreground">
               Link won&apos;t open?
             </summary>
-            <form onSubmit={(e) => void handleManualVerify(e)} className="mt-3 grid gap-3">
+            <form
+              onSubmit={(e) => void handleManualVerify(e)}
+              className="mt-3 grid gap-3"
+            >
               <Field label="Paste verification link">
                 <input
                   className={inputCls}
@@ -139,7 +170,12 @@ function VerifyEmailPendingPage() {
                   autoComplete="off"
                 />
               </Field>
-              <Button type="submit" variant="secondary" className="w-full" disabled={verifying || !verifyInput.trim()}>
+              <Button
+                type="submit"
+                variant="secondary"
+                className="w-full"
+                disabled={verifying || !verifyInput.trim()}
+              >
                 {verifying ? "Verifying…" : "Verify with pasted link"}
               </Button>
             </form>
@@ -149,7 +185,11 @@ function VerifyEmailPendingPage() {
 
           <p className="text-center text-sm text-muted-foreground">
             Wrong email?{" "}
-            <Link to="/login" search={{ redirect: "/intake" }} className="text-primary underline">
+            <Link
+              to="/login"
+              search={{ redirect: "/intake" }}
+              className="text-primary underline"
+            >
               Log in with a different account
             </Link>
           </p>

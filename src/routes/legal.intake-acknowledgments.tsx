@@ -12,7 +12,7 @@ import { Section } from "@/components/site/primitives";
 export const Route = createFileRoute("/legal/intake-acknowledgments")({
   head: () => ({
     meta: [
-      { title: "Intake Acknowledgments — Beema Health" },
+      { title: "Intake Acknowledgments | Beema Health" },
       {
         name: "description",
         content:

@@ -18,13 +18,13 @@ import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 export const Route = createFileRoute("/safety")({
   head: () => ({
     meta: [
-      { title: "Safety & Eligibility — Beema Health" },
+      { title: "Safety & Eligibility | Beema Health" },
       {
         name: "description",
         content:
           "Eligibility, contraindications, side effects, and emergency warning signs explained in plain language. Clinicians make independent medical decisions.",
       },
-      { property: "og:title", content: "Safety & Eligibility — Beema Health" },
+      { property: "og:title", content: "Safety & Eligibility | Beema Health" },
       {
         property: "og:description",
         content:
@@ -95,7 +95,7 @@ function SafetyPage() {
           >
             We believe you should fully understand your care. Here's how
             eligibility, reasons for not prescribing a GLP-1, and side effects
-            work — in simple terms.
+            work, in simple terms.
           </motion.p>
         </div>
       </Section>
@@ -120,7 +120,7 @@ function SafetyPage() {
                 Common contraindications
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Some histories may make certain medications unsafe — for example
+                Some histories may make certain medications unsafe, for example
                 a personal/family history of medullary thyroid cancer or MEN2,
                 pancreatitis, certain gallbladder issues, pregnancy or
                 breastfeeding, or a history of eating disorders. Your clinician
@@ -141,7 +141,7 @@ function SafetyPage() {
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Common side effects can include nausea, reduced appetite, and
               digestive changes, especially early in the process. Most of these
-              side effects are manageable — message your care team and we'll
+              side effects are manageable; message your care team and we'll
               help. We track side effects over time so your clinician can adjust
               your plan to optimize your results.
             </p>

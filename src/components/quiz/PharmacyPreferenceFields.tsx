@@ -241,7 +241,7 @@ function PreferredPharmacyField({
             )}
         </div>
         <p className="mt-1.5 text-xs text-muted-foreground">
-          Enter your pharmacy name — we&apos;ll search near your home address
+          Enter your pharmacy name; we&apos;ll search near your home address
           when available.
         </p>
         {lookupError && !dropdownOpen && (

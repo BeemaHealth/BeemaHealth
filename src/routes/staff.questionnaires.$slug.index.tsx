@@ -702,7 +702,7 @@ function StaffQuestionnaireVersionsPage() {
               )}
               {v.status === "archived" && v.is_in_use ? (
                 <span className="self-center text-xs text-muted-foreground">
-                  Used by patients — cannot delete
+                  Used by patients, cannot delete
                 </span>
               ) : null}
               {v.status === "published" ? (

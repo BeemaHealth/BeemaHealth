@@ -34,17 +34,17 @@ import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — Beema Health" },
+      { title: "About | Beema Health" },
       {
         name: "description",
         content:
-          "Health isn't a destination, it's a lifelong journey. The story behind Beema Health's bee, infinity wings, and hexagon — and what they mean for your care.",
+          "Health isn't a destination, it's a lifelong journey. The story behind Beema Health's bee, infinity wings, and hexagon, and what they mean for your care.",
       },
-      { property: "og:title", content: "About — Beema Health" },
+      { property: "og:title", content: "About | Beema Health" },
       {
         property: "og:description",
         content:
-          "Purpose, trust, community, health, and consistency — the values behind Beema Health telehealth care.",
+          "Purpose, trust, community, health, and consistency: the values behind Beema Health telehealth care.",
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/about") }],
@@ -56,7 +56,7 @@ const PILLARS = [
   {
     icon: Target,
     title: "Purpose",
-    text: "Every action serves a purpose — from intake questions to provider review to order fulfillment.",
+    text: "Every action serves a purpose, from intake questions to provider review to order fulfillment.",
   },
   {
     icon: ShieldCheck,
@@ -132,8 +132,8 @@ function AboutPage() {
               ease: EASE_OUT,
             }}
           >
-            The bee with its infinity wings, and the hexagon — every piece of
-            our logo speaks to how we believe healthcare should function.
+            The bee with its infinity wings, and the hexagon: every piece of our
+            logo speaks to how we believe healthcare should function.
           </motion.p>
         </div>
       </Section>
@@ -256,8 +256,8 @@ function AboutPage() {
             <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
               The infinity shape in our wings is a reminder that wellness
               doesn't end at a prescription. It's why we build for
-              follow-through — refill coordination, ongoing check-ins, and a
-              care team that stays available to you long after your first visit.
+              follow-through: refill coordination, ongoing check-ins, and a care
+              team that stays available to you long after your first visit.
             </p>
           </motion.div>
           <motion.div
@@ -320,9 +320,9 @@ function AboutPage() {
               Nature's most efficient shape
             </h2>
             <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
-              Hexagons tile perfectly with zero wasted space — the same
-              principle we apply to your care. Minimal steps, no unnecessary
-              friction, from eligibility check to provider review to success.
+              Hexagons tile perfectly with zero wasted space. We apply the same
+              principle to your care: minimal steps, no unnecessary friction,
+              from eligibility check to provider review to success.
             </p>
           </motion.div>
         </div>

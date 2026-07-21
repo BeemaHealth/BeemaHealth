@@ -312,7 +312,7 @@ export function renderQuestionnaireField(
     if (readOnly || signedIn) {
       return (
         <p className="text-sm text-muted-foreground text-center py-2">
-          Signed in — continue to medical intake.
+          Signed in. Continue to medical intake.
         </p>
       );
     }

@@ -100,7 +100,7 @@ export function BelugaVisitPayloadPanel({
                         </td>
                         <td className="px-3 py-2 text-foreground max-w-[200px] truncate">
                           {row.value ?? (
-                            <span className="text-muted-foreground">—</span>
+                            <span className="text-muted-foreground">N/A</span>
                           )}
                         </td>
                         <td className="px-3 py-2 text-xs text-muted-foreground">
@@ -108,7 +108,7 @@ export function BelugaVisitPayloadPanel({
                             ? `${row.source ?? "?"} · ${row.source_label}`
                             : row.status === "unmapped"
                               ? "No question mapped"
-                              : "—"}
+                              : "N/A"}
                         </td>
                       </tr>
                     );

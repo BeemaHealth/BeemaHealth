@@ -220,7 +220,7 @@ function BelugaMockPanel() {
     <AccountSectionCard
       tone="communication"
       title="Beluga Mock Webhooks"
-      description="Fire mock Beluga status events against a specific patient visit — routed through the same masterId lookup a real Beluga webhook would use."
+      description="Fire mock Beluga status events against a specific patient visit, routed through the same masterId lookup a real Beluga webhook would use."
     >
       <div className="space-y-4">
         <div className="flex items-end gap-3">
@@ -259,7 +259,7 @@ function BelugaMockPanel() {
                     <SelectItem key={targetKey(t)} value={targetKey(t)}>
                       {t.label}
                       {!t.master_id && t.kind === "initial_consult"
-                        ? " (no masterId yet — will be assigned on fire)"
+                        ? " (no masterId yet, will be assigned on fire)"
                         : ""}
                     </SelectItem>
                   ))}
@@ -543,7 +543,7 @@ function StaffDevPage() {
               <p className="text-sm font-medium">Email verification required</p>
               <p className="text-xs text-muted-foreground">
                 When off, new registrations are auto-verified and no
-                verification email is sent. Existing users are unaffected — use
+                verification email is sent. Existing users are unaffected; use
                 the Django admin to verify them manually if needed.
               </p>
             </div>

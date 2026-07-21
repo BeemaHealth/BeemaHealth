@@ -79,7 +79,7 @@ function StaffExperimentsPage() {
           </Button>
         </div>
         <p className="mt-2 text-xs text-muted-foreground">
-          Assign variants after creating — link each variant to a questionnaire
+          Assign variants after creating: link each variant to a questionnaire
           version ID.
         </p>
       </AccountSectionCard>

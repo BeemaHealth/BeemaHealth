@@ -75,7 +75,7 @@ export function AccountFieldMappingsEditor({
               <span className="text-muted-foreground">
                 {row.backend
                   ? backendLabelForValue(row.backend)
-                  : "— validation only —"}
+                  : "(validation only)"}
               </span>
             ) : (
               <select

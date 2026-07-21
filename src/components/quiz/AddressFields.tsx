@@ -246,7 +246,7 @@ export function AddressFields({
       </div>
       {!value.verified && (
         <p className="mt-1.5 text-xs text-muted-foreground">
-          Type your street address, city, or ZIP — then choose your address from
+          Type your street address, city, or ZIP, then choose your address from
           the list.
         </p>
       )}

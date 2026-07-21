@@ -54,17 +54,17 @@ const DIRECTION_OPTIONS: {
   {
     value: "same",
     label: "Same dose",
-    description: "Continue at my current dose — send to pharmacy",
+    description: "Continue at my current dose, send to pharmacy",
   },
   {
     value: "increase",
     label: "Increase dose",
-    description: "Request a higher dose — provider will review",
+    description: "Request a higher dose, provider will review",
   },
   {
     value: "decrease",
     label: "Decrease dose",
-    description: "Request a lower dose — provider will review",
+    description: "Request a lower dose, provider will review",
   },
 ];
 
@@ -212,7 +212,7 @@ export function RefillDialog({
               <DialogTitle>Request a refill</DialogTitle>
             </DialogHeader>
             <p className="text-sm text-muted-foreground">
-              {prescription.medication_name} — how would you like to continue?
+              {prescription.medication_name}: how would you like to continue?
             </p>
             <div className="mt-2 space-y-3">
               {DIRECTION_OPTIONS.map((opt) => (
@@ -250,7 +250,7 @@ export function RefillDialog({
                 You&apos;re requesting a refill at your{" "}
                 <span className="font-semibold">current dose</span> (
                 {prescription.dosage}). This will be sent directly to the
-                pharmacy — no provider review needed.
+                pharmacy; no provider review needed.
               </p>
             </div>
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
@@ -282,7 +282,7 @@ export function RefillDialog({
         {step === "check-in" && isTitration && (
           <>
             <DialogHeader>
-              <DialogTitle>Dose {directionLabel} — check-in</DialogTitle>
+              <DialogTitle>Dose {directionLabel}: check-in</DialogTitle>
             </DialogHeader>
             <p className="text-sm text-muted-foreground">
               Your provider will review this information before adjusting your
@@ -386,7 +386,7 @@ export function RefillDialog({
                 {submitting
                   ? "Submitting…"
                   : drugConfig.collects_photo
-                    ? "Next — add photo"
+                    ? "Next: add photo"
                     : "Submit to provider"}
               </Button>
             </DialogFooter>
@@ -403,7 +403,7 @@ export function RefillDialog({
               Upload a photo of yourself standing on a scale. This helps your
               provider confirm your current weight.{" "}
               <span className="font-medium text-foreground">
-                Optional — skip if not available.
+                Optional, skip if not available.
               </span>
             </p>
             <div className="mt-2 space-y-3">

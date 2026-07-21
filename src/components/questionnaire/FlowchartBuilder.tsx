@@ -664,7 +664,7 @@ function EntryNode({ data }: NodeProps<Node<EntryNodeData>>) {
       <div className="px-3 py-2 flex flex-wrap gap-1">
         {ctaIds.length === 0 ? (
           <p className="text-[11px] italic text-muted-foreground">
-            No CTAs assigned — click to edit
+            No CTAs assigned. Click to edit.
           </p>
         ) : (
           ctaIds.map((c) => (
@@ -968,7 +968,7 @@ function EdgePanel({
               >
                 {allSteps.map((s) => (
                   <option key={s.step_key} value={s.step_key}>
-                    {s.step_key} — {stripHtml(s.title) || "(no title)"}
+                    {s.step_key} · {stripHtml(s.title) || "(no title)"}
                   </option>
                 ))}
               </select>
@@ -986,7 +986,7 @@ function EdgePanel({
                   disabled={!isDraft || saving}
                   onChange={(e) => handleFromFieldChange(e.target.value)}
                 >
-                  <option value="">— field —</option>
+                  <option value="">(field)</option>
                   {routingFields.map((f) => (
                     <option key={f.field_key} value={f.field_key}>
                       {f.field_key}
@@ -1012,7 +1012,7 @@ function EdgePanel({
                   disabled={!isDraft || saving}
                   onChange={(e) => setChangeFromValue(e.target.value)}
                 >
-                  <option value="">— value —</option>
+                  <option value="">(value)</option>
                   {fieldOptions.map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}
@@ -1037,7 +1037,7 @@ function EdgePanel({
                   .filter((s) => s.step_key !== effFromStep)
                   .map((s) => (
                     <option key={s.step_key} value={s.step_key}>
-                      {s.step_key} — {stripHtml(s.title) || "(no title)"}
+                      {s.step_key} · {stripHtml(s.title) || "(no title)"}
                     </option>
                   ))}
               </select>
@@ -1229,7 +1229,7 @@ function EdgePanel({
               disabled={!isDraft || saving}
               onChange={(e) => setChangeTarget(e.target.value)}
             >
-              <option value="">None — no default flow</option>
+              <option value="">None (no default flow)</option>
               {naturalNext && (
                 <option value={naturalNext.step_key}>
                   {naturalNext.step_key} (automatic)
@@ -1243,14 +1243,14 @@ function EdgePanel({
                 )
                 .map((s) => (
                   <option key={s.step_key} value={s.step_key}>
-                    {s.step_key} — {stripHtml(s.title) || "(no title)"}
+                    {s.step_key} · {stripHtml(s.title) || "(no title)"}
                   </option>
                 ))}
             </select>
           </div>
           {!isOverride && (
             <p className="text-[10px] text-muted-foreground italic">
-              Automatic — no override set.
+              Automatic, no override set.
             </p>
           )}
         </div>
@@ -1655,7 +1655,7 @@ function AddConnectionPanel({
             >
               {allSteps.map((s) => (
                 <option key={s.step_key} value={s.step_key}>
-                  {s.step_key} — {stripHtml(s.title) || "(no title)"}
+                  {s.step_key} · {stripHtml(s.title) || "(no title)"}
                 </option>
               ))}
             </select>
@@ -1671,7 +1671,7 @@ function AddConnectionPanel({
                 disabled={saving}
                 onChange={(e) => handleFromFieldChange(e.target.value)}
               >
-                <option value="">— field —</option>
+                <option value="">(field)</option>
                 {routingFields.map((f) => (
                   <option key={f.field_key} value={f.field_key}>
                     {f.field_key}
@@ -1695,7 +1695,7 @@ function AddConnectionPanel({
                 disabled={saving}
                 onChange={(e) => setFromValue(e.target.value)}
               >
-                <option value="">— value —</option>
+                <option value="">(value)</option>
                 {fieldOptions.map((o) => (
                   <option key={o.value} value={o.value}>
                     {o.label}
@@ -1714,10 +1714,10 @@ function AddConnectionPanel({
               disabled={saving}
               onChange={(e) => setToStep(e.target.value)}
             >
-              <option value="">— step —</option>
+              <option value="">(step)</option>
               {otherSteps.map((s) => (
                 <option key={s.step_key} value={s.step_key}>
-                  {s.step_key} — {stripHtml(s.title) || "(no title)"}
+                  {s.step_key} · {stripHtml(s.title) || "(no title)"}
                 </option>
               ))}
             </select>
@@ -2377,7 +2377,7 @@ function buildNodesAndEdges(
 // ── Beluga API field mapping & field types (see field-catalog.ts) ─────────────
 
 const NO_VENDOR_FIELDS: ReadonlyArray<{ value: string; label: string }> = [
-  { value: "", label: "— no vendor assigned —" },
+  { value: "", label: "(no vendor assigned)" },
 ];
 
 function buildBelugaFields(
@@ -2386,7 +2386,7 @@ function buildBelugaFields(
   if (!vendorInfo?.schema?.fields?.length) return NO_VENDOR_FIELDS;
   const prefix = `${vendorInfo.vendor_slug}:`;
   return [
-    { value: "", label: "— none —" },
+    { value: "", label: "(none)" },
     ...vendorInfo.schema.fields.map((f) => ({
       value: `${prefix}${f.id}`,
       label: f.label,
@@ -2470,7 +2470,7 @@ function RoutingRulesEditor({
                 disabled={disabled}
                 onChange={(e) => updateRule(i, { when_field: e.target.value })}
               >
-                <option value="">— field —</option>
+                <option value="">(field)</option>
                 {fields.map((f) => (
                   <option key={f.field_key} value={f.field_key}>
                     {f.field_key}
@@ -2500,7 +2500,7 @@ function RoutingRulesEditor({
                     updateRule(i, { when_value: e.target.value })
                   }
                 >
-                  <option value="">— value —</option>
+                  <option value="">(value)</option>
                   {options.map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}
@@ -2532,7 +2532,7 @@ function RoutingRulesEditor({
                   updateRule(i, { next_step_key: e.target.value })
                 }
               >
-                <option value="">— step —</option>
+                <option value="">(step)</option>
                 {otherSteps.map((s) => (
                   <option key={s.step_key} value={s.step_key}>
                     {s.step_key}
@@ -2802,7 +2802,7 @@ function StepEditorPanel({
     const source = step.fields.find((f) => f.field_key === fieldKey);
     if (!source) return;
     if (isAccountField(source)) {
-      setError("Account fields cannot be duplicated — each step allows one.");
+      setError("Account fields cannot be duplicated: each step allows one.");
       return;
     }
     setError("");
@@ -2928,7 +2928,7 @@ function StepEditorPanel({
           </Field>
           <Field
             label="Progress level"
-            help="Tier for the patient progress bar (0 = first). Branching alternatives at the same depth share a level — e.g. pill / injection / compounding = level 1, account = level 2."
+            help="Tier for the patient progress bar (0 = first). Branching alternatives at the same depth share a level, e.g. pill / injection / compounding = level 1, account = level 2."
           >
             <input
               type="number"
@@ -2953,12 +2953,13 @@ function StepEditorPanel({
           {defaultIntakeSlug ? (
             <p className="text-[11px] text-success">
               This step’s default routes to intake “{defaultIntakeSlug}”. A step
-              has one default — change it in the Intake routing panel, or set a
+              has one default; change it in the Intake routing panel, or set a
               step below to override it.
             </p>
           ) : (
             <p className="text-[11px] text-muted-foreground">
-              The gray line — where patients go when no routing rule matches.
+              The gray line shows where patients go when no routing rule
+              matches.
             </p>
           )}
           <select
@@ -2975,11 +2976,11 @@ function StepEditorPanel({
             <option value="">
               {defaultIntakeSlug
                 ? `Intake: ${defaultIntakeSlug} (current)`
-                : "None — no default flow"}
+                : "None (no default flow)"}
             </option>
             {naturalNext ? (
               <option value={naturalNext.step_key}>
-                {naturalNext.step_key} —{" "}
+                {naturalNext.step_key} ·{" "}
                 {stripHtml(naturalNext.title) || "(no title)"} (automatic)
               </option>
             ) : null}
@@ -2991,7 +2992,7 @@ function StepEditorPanel({
               )
               .map((s) => (
                 <option key={s.step_key} value={s.step_key}>
-                  {s.step_key} — {stripHtml(s.title) || "(no title)"}
+                  {s.step_key} · {stripHtml(s.title) || "(no title)"}
                 </option>
               ))}
           </select>
@@ -4069,7 +4070,7 @@ export function FlowchartBuilder({
                   }
                 }}
               >
-                <option value="">— none —</option>
+                <option value="">(none)</option>
                 {vendors.flatMap((v) =>
                   v.versions
                     .filter((ver) => ver.status === "published")
@@ -4090,7 +4091,7 @@ export function FlowchartBuilder({
             {vendorMismatchSlugs.length > 0 && (
               <button
                 type="button"
-                title="Vendor mismatch — click for details"
+                title="Vendor mismatch, click for details"
                 onClick={() => setShowVendorMismatchDialog(true)}
                 className="ml-1 flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 bg-amber-100 hover:bg-amber-200 transition-colors"
               >
@@ -4373,7 +4374,7 @@ export function FlowchartBuilder({
               </button>
             </>
           ) : (
-            "Connect mode: click an answer option (Yes/No/A/B/C…) to route that answer, or click a step to route it by default — then click a step or intake to connect."
+            "Connect mode: click an answer option (Yes/No/A/B/C…) to route that answer, or click a step to route it by default. Then click a step or intake to connect."
           )}
         </div>
       )}

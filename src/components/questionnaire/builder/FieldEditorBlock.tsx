@@ -327,7 +327,7 @@ export function FieldEditorBlock({
             disabled={!isDraft}
             onChange={(e) => onUpdate({ required: e.target.checked })}
           />
-          Required — patient must answer before continuing
+          Required: patient must answer before continuing
         </label>
       )}
 

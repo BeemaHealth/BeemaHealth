@@ -23,14 +23,14 @@ function StaffDashboardPage() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Staff dashboard</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Ops CRM — funnel analytics, questionnaires, and patient pipeline.
+          Ops CRM: funnel analytics, questionnaires, and patient pipeline.
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <AccountSectionCard tone="contact" title="Patients" icon={Users}>
           <p className="text-3xl font-bold text-foreground">
-            {summary?.total_patients ?? "—"}
+            {summary?.total_patients ?? "N/A"}
           </p>
           <p className="text-sm text-muted-foreground">Registered accounts</p>
         </AccountSectionCard>
@@ -40,7 +40,7 @@ function StaffDashboardPage() {
           icon={BarChart3}
         >
           <p className="text-3xl font-bold text-foreground">
-            {summary?.active_funnel_sessions ?? "—"}
+            {summary?.active_funnel_sessions ?? "N/A"}
           </p>
           <p className="text-sm text-muted-foreground">Anonymous sessions</p>
         </AccountSectionCard>
@@ -50,7 +50,7 @@ function StaffDashboardPage() {
           icon={ListChecks}
         >
           <p className="text-3xl font-bold text-foreground">
-            {summary?.submitted_intakes ?? "—"}
+            {summary?.submitted_intakes ?? "N/A"}
           </p>
           <p className="text-sm text-muted-foreground">Awaiting or in review</p>
         </AccountSectionCard>

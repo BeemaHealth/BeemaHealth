@@ -72,7 +72,7 @@ export function QuestionnaireAddressSection({
             ))}
           </address>
         ) : (
-          <p className="text-sm text-muted-foreground">—</p>
+          <p className="text-sm text-muted-foreground">N/A</p>
         )}
       </div>
     );

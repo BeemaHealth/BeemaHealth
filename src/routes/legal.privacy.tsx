@@ -14,7 +14,7 @@ import { Section } from "@/components/site/primitives";
 export const Route = createFileRoute("/legal/privacy")({
   head: () => ({
     meta: [
-      { title: "Privacy Policy — Beema Health" },
+      { title: "Privacy Policy | Beema Health" },
       {
         name: "description",
         content:
@@ -193,9 +193,9 @@ const SECTIONS: LegalSection[] = [
         <LegalP>
           Some information you provide may be PHI under the Health Insurance
           Portability and Accountability Act (&quot;HIPAA&quot;) when handled by
-          a covered entity or business associate. Beema Health may act as a business
-          associate to certain Care Partners and, in that role, use and disclose
-          PHI only as permitted by HIPAA and our agreements.
+          a covered entity or business associate. Beema Health may act as a
+          business associate to certain Care Partners and, in that role, use and
+          disclose PHI only as permitted by HIPAA and our agreements.
         </LegalP>
         <LegalP>
           HIPAA does not apply to every organization that handles health-related
@@ -337,8 +337,8 @@ const SECTIONS: LegalSection[] = [
     title: "U.S. focus",
     content: (
       <LegalP>
-        Beema Health is based in the United States and the Service is directed to
-        U.S. residents. If you access the Service from outside the United
+        Beema Health is based in the United States and the Service is directed
+        to U.S. residents. If you access the Service from outside the United
         States, you understand that information may be processed in the U.S. and
         other locations where we or our vendors operate.
       </LegalP>

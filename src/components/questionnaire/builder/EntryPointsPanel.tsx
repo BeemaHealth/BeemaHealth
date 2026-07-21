@@ -133,7 +133,7 @@ export function EntryPointsPanel({
             onChange={(e) => setLocalDefault(e.target.checked)}
           />
           <span>
-            <strong>Default entry</strong> — used for any CTA or landing page
+            <strong>Default entry</strong>: used for any CTA or landing page
             with no explicit mapping. Only one published qualify can be default.
           </span>
         </label>
@@ -178,7 +178,7 @@ export function EntryPointsPanel({
                       Currently published on{" "}
                       <strong>{conflict.questionnaire_slug}</strong> (
                       {conflict.version_label}). It stays there until you{" "}
-                      <strong>publish</strong> this draft — then it moves here
+                      <strong>publish</strong> this draft; then it moves here
                       {conflict.will_archive_on_claim
                         ? " and that qualify flow is unpublished (its last CTA)"
                         : ""}
@@ -236,7 +236,7 @@ export function EntryPointsPanel({
                         onClick={() => addCta(c)}
                         title={
                           conflict
-                            ? `Currently published on ${conflict.questionnaire_slug} — moves here when you publish`
+                            ? `Currently published on ${conflict.questionnaire_slug}, moves here when you publish`
                             : undefined
                         }
                       >

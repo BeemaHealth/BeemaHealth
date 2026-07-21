@@ -72,7 +72,7 @@ function AdminListPage() {
             <h1 className="text-3xl font-bold text-foreground">Provider review</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               {isApiEnabled()
-                ? "Connected to provider API — provider login required."
+                ? "Connected to provider API. Provider login required."
                 : "Review submitted patient intakes."}
             </p>
           </div>
@@ -101,12 +101,12 @@ function AdminListPage() {
               {rows.map((row) => (
                 <tr key={row.id} className="border-b border-border/60">
                   <td className="px-4 py-3 font-medium">{row.first_name} {row.last_name}</td>
-                  <td className="px-4 py-3">{row.age ?? "—"}</td>
-                  <td className="px-4 py-3">{row.bmi ?? "—"}</td>
-                  <td className="px-4 py-3">{row.city || "—"}</td>
-                  <td className="px-4 py-3">{row.submitted_at ? new Date(row.submitted_at).toLocaleDateString() : "—"}</td>
-                  <td className="px-4 py-3">{row.treatment_interest?.replace(/_/g, " ") ?? "—"}</td>
-                  <td className="px-4 py-3">{row.flag_count || "—"}</td>
+                  <td className="px-4 py-3">{row.age ?? "N/A"}</td>
+                  <td className="px-4 py-3">{row.bmi ?? "N/A"}</td>
+                  <td className="px-4 py-3">{row.city || "N/A"}</td>
+                  <td className="px-4 py-3">{row.submitted_at ? new Date(row.submitted_at).toLocaleDateString() : "N/A"}</td>
+                  <td className="px-4 py-3">{row.treatment_interest?.replace(/_/g, " ") ?? "N/A"}</td>
+                  <td className="px-4 py-3">{row.flag_count || "N/A"}</td>
                   <td className="px-4 py-3">{row.status}</td>
                   <td className="px-4 py-3">
                     <Link to="/admin/$patientId" params={{ patientId: row.id }} className="text-primary underline">

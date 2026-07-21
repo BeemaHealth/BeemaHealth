@@ -85,7 +85,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "Beema Health — Medical weight-loss care" },
+        { title: "Beema Health | Medical weight-loss care" },
         {
           name: "description",
           content:
@@ -94,7 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { name: "author", content: "Beema Health" },
         {
           property: "og:title",
-          content: "Beema Health — Medical weight-loss care",
+          content: "Beema Health | Medical weight-loss care",
         },
         {
           property: "og:description",
@@ -103,18 +103,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
         { property: "og:type", content: "website" },
         { property: "og:site_name", content: "Beema Health" },
-        { name: "twitter:card", content: "summary" },
+        { property: "og:image", content: absoluteUrl("/og-card.jpg") },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { property: "og:image:alt", content: "Beema Health logo" },
+        { name: "twitter:card", content: "summary_large_image" },
         {
           name: "twitter:title",
-          content: "Beema Health — Medical weight-loss care",
+          content: "Beema Health | Medical weight-loss care",
         },
         {
           name: "twitter:description",
           content:
             "Medical weight-loss care with licensed providers, transparent pricing, and support designed for success.",
         },
-        { property: "og:image", content: absoluteUrl("/beema-mark.png") },
-        { name: "twitter:image", content: absoluteUrl("/beema-mark.png") },
+        { name: "twitter:image", content: absoluteUrl("/og-card.jpg") },
+        {
+          name: "twitter:image:alt",
+          content: "Beema Health logo",
+        },
       ],
       links: [
         { rel: "icon", href: "/favicon-beema.png", type: "image/png" },

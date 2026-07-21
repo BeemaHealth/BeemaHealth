@@ -105,7 +105,7 @@ function AdminDetailPage() {
       <div className="veya-container py-12">
         <Link to="/admin" className="text-sm text-primary underline">← Back to list</Link>
         <h1 className="mt-4 text-3xl font-bold">{user.first_name} {user.last_name}</h1>
-        <p className="text-muted-foreground">BMI {eligibility?.bmi ?? "—"} · {user.state}</p>
+        <p className="text-muted-foreground">BMI {eligibility?.bmi ?? "N/A"} · {user.state}</p>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <SurfaceCard className="space-y-3 p-6 text-sm">
@@ -131,7 +131,7 @@ function AdminDetailPage() {
         <SurfaceCard className="mt-6 p-6">
           <h2 className="text-lg font-semibold">Provider decision</h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            Software organizes information only — does not recommend or prescribe medication.
+            Software organizes information only. It does not recommend or prescribe medication.
           </p>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <label className="text-sm">

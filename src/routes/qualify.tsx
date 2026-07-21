@@ -17,7 +17,7 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xwvgljjr";
 export const Route = createFileRoute("/qualify")({
   head: () => ({
     meta: [
-      { title: "Join the waitlist — Beema Health" },
+      { title: "Join the waitlist | Beema Health" },
       {
         name: "description",
         content:
@@ -145,7 +145,7 @@ function WaitlistPage() {
           >
             Beema Health is putting the finishing touches on our medical
             weight-loss platform. Join the waitlist and we&apos;ll email you as
-            soon as we&apos;re live — plus an early-adopter discount for signing
+            soon as we&apos;re live, plus an early-adopter discount for signing
             up now.
           </motion.p>
 

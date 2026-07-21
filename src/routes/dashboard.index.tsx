@@ -229,7 +229,7 @@ function DashboardHomePage() {
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
               Updates from your provider and support team appear here. Reply is
-              not available yet — we will email or text you based on your
+              not available yet; we will email or text you based on your
               notification settings.
             </p>
             <div className="mt-4">

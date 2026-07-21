@@ -71,23 +71,28 @@ export function EligibilityAccountEditor({
 
   const displayBmi = summary?.bmi ?? null;
   const rows = [
-    ["Name", summary?.full_name || "—"],
-    ["Email", summary?.email || "—"],
-    ["Phone", summary?.phone || "—"],
-    ["Date of birth", summary?.dob || "—"],
-    ["State", summary?.state || "—"],
+    ["Name", summary?.full_name || "N/A"],
+    ["Email", summary?.email || "N/A"],
+    ["Phone", summary?.phone || "N/A"],
+    ["Date of birth", summary?.dob || "N/A"],
+    ["State", summary?.state || "N/A"],
     [
       "Height",
       summary?.height_ft != null
         ? `${summary.height_ft}' ${summary.height_in ?? 0}"`
-        : "—",
+        : "N/A",
     ],
-    ["Weight", summary?.weight_lbs != null ? `${summary.weight_lbs} lb` : "—"],
+    [
+      "Weight",
+      summary?.weight_lbs != null ? `${summary.weight_lbs} lb` : "N/A",
+    ],
     [
       "Goal weight",
-      summary?.goal_weight_lbs != null ? `${summary.goal_weight_lbs} lb` : "—",
+      summary?.goal_weight_lbs != null
+        ? `${summary.goal_weight_lbs} lb`
+        : "N/A",
     ],
-    ["BMI", displayBmi != null ? String(displayBmi) : "—"],
+    ["BMI", displayBmi != null ? String(displayBmi) : "N/A"],
   ];
 
   useEffect(() => {

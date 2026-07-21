@@ -57,7 +57,7 @@ export function QuestionnaireReviewSubmittedView({
                   {field.label}
                 </dt>
                 <dd className="text-sm text-foreground whitespace-pre-line">
-                  {field.value ?? "—"}
+                  {field.value ?? "N/A"}
                 </dd>
               </div>
             ))}

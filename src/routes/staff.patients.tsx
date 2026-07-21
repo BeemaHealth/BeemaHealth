@@ -32,7 +32,7 @@ function StaffPatientsPage() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Patient pipeline</h1>
         <p className="text-sm text-muted-foreground">
-          Ops view — funnel stage, last activity, and attribution.
+          Ops view: funnel stage, last activity, and attribution.
         </p>
       </div>
 
@@ -82,9 +82,9 @@ function StaffPatientsPage() {
                       </div>
                     </td>
                     <td className="py-2 pr-3">{row.stage}</td>
-                    <td className="py-2 pr-3">{row.last_step_key || "—"}</td>
-                    <td className="py-2 pr-3">{row.utm_source || "—"}</td>
-                    <td className="py-2">{row.variant_key || "—"}</td>
+                    <td className="py-2 pr-3">{row.last_step_key || "N/A"}</td>
+                    <td className="py-2 pr-3">{row.utm_source || "N/A"}</td>
+                    <td className="py-2">{row.variant_key || "N/A"}</td>
                   </tr>
                 ))}
               </tbody>

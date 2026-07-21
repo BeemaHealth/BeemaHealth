@@ -30,7 +30,7 @@ import { FAQ_GROUPS } from "@/lib/veya-data";
 export const Route = createFileRoute("/faq")({
   head: () => ({
     meta: [
-      { title: "FAQ — Beema Health" },
+      { title: "FAQ | Beema Health" },
       {
         name: "description",
         content:
@@ -38,7 +38,7 @@ export const Route = createFileRoute("/faq")({
       },
       {
         property: "og:title",
-        content: "Frequently asked questions — Beema Health",
+        content: "Frequently asked questions | Beema Health",
       },
       {
         property: "og:description",
@@ -105,7 +105,7 @@ function FaqPage() {
             as="h1"
             eyebrow="FAQ"
             title={<LineReveal>Frequently asked questions</LineReveal>}
-            description="Pricing, medication, shipping, refills, cancellation, eligibility, labs, and privacy — all in one place."
+            description="Pricing, medication, shipping, refills, cancellation, eligibility, labs, and privacy, all in one place."
           />
         </div>
       </section>

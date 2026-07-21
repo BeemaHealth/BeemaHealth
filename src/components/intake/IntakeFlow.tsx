@@ -843,7 +843,7 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
             <div className="grid gap-4">
               <p className="text-sm text-muted-foreground">
                 For each medication below, tell your clinician the dose, when
-                you stopped, and why — this helps with safe prescribing. It does
+                you stopped, and why. This helps with safe prescribing and does
                 not affect eligibility.
               </p>
               {wh.prior_meds.map((med) => (
@@ -1192,7 +1192,7 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
                     "compounded_sema",
                     "Compounded semaglutide injection, if legally available",
                   ],
-                  ["provider_choice", "Not sure — provider to recommend"],
+                  ["provider_choice", "Not sure, provider to recommend"],
                 ].map(([k, label]) => (
                   <ChoiceCard
                     key={k}
@@ -1297,7 +1297,7 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
                         .join(", "),
                     ]
                       .filter(Boolean)
-                      .join("\n") || "—"}
+                      .join("\n") || "N/A"}
                   </p>
                 </div>
                 <button
@@ -1361,9 +1361,9 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
       {step === 11 && (
         <div className="grid gap-4">
           <p className="text-sm text-muted-foreground">
-            Please review our intake acknowledgments — including medication
+            Please review our intake acknowledgments, including medication
             risks, emergency care, telehealth care, and how we use your
-            information — then confirm below.
+            information, then confirm below.
           </p>
           <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border px-4 py-3">
             <input
@@ -1453,7 +1453,7 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
           title="Medical intake"
           subtitle={
             intakeLocked
-              ? `View only · version ${activeSubmission?.version ?? "—"} on file`
+              ? `View only · version ${activeSubmission?.version ?? "N/A"} on file`
               : `Step ${applicableStepIndex + 1} of ${applicableSteps.length} · ${INTAKE_STEP_LABELS[step]}`
           }
         />

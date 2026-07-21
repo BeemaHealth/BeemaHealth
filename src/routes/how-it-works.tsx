@@ -33,13 +33,13 @@ import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
-      { title: "How it works — Beema Health" },
+      { title: "How it works | Beema Health" },
       {
         name: "description",
         content:
-          "From a 5-minute eligibility check to licensed provider review — how Beema Health telehealth weight-loss care works, step by step.",
+          "From a 5-minute eligibility check to licensed provider review: how Beema Health telehealth weight-loss care works, step by step.",
       },
-      { property: "og:title", content: "How it works — Beema Health" },
+      { property: "og:title", content: "How it works | Beema Health" },
       {
         property: "og:description",
         content:
@@ -120,7 +120,7 @@ function HowItWorksPage() {
                 <LineReveal delay={0.1}>to provider review</LineReveal>
               </>
             }
-            description="Medication-only pricing with no platform membership fee — just the essentials from eligibility to provider review."
+            description="Medication-only pricing with no platform membership fee, just the essentials from eligibility to provider review."
           />
         </div>
       </Section>

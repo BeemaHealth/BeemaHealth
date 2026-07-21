@@ -24,13 +24,13 @@ import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Beema Health" },
+      { title: "Contact | Beema Health" },
       {
         name: "description",
         content:
           "Questions about eligibility, pricing, or your care? Reach the Beema Health support team. For emergencies, call 911.",
       },
-      { property: "og:title", content: "Contact — Beema Health" },
+      { property: "og:title", content: "Contact | Beema Health" },
       {
         property: "og:description",
         content: "Get in touch with the Beema Health care team.",
@@ -96,7 +96,7 @@ function ContactPage() {
             as="h1"
             eyebrow="Contact"
             title={<LineReveal>We&apos;re here to help</LineReveal>}
-            description="Questions before you start? Reach out — or begin your eligibility check to see if Beema Health may be a fit."
+            description="Questions before you start? Reach out, or begin your eligibility check to see if Beema Health may be a fit."
           />
         </div>
       </section>

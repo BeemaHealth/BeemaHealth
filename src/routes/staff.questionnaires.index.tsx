@@ -175,7 +175,7 @@ function StaffQuestionnairesPage() {
                 onChange={(e) => setNewTitle(e.target.value)}
               />
             </Field>
-            <Field label="Medication (optional — leave blank for default)">
+            <Field label="Medication (optional, leave blank for default)">
               <select
                 className={inputCls}
                 value={newMedId}

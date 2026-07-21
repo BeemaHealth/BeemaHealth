@@ -187,7 +187,7 @@ export function RefillForm({
           <p className="font-medium">Delivery issue with your last order</p>
           <p className="mt-1 text-muted-foreground">
             It looks like your last package had a delivery problem. Please
-            contact our support team to resolve this — do not submit a refill
+            contact our support team to resolve this. Do not submit a refill
             request for a missing or undelivered package.
           </p>
           <p className="mt-2 text-muted-foreground">

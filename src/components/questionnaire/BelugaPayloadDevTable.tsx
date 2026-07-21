@@ -33,8 +33,8 @@ export function BelugaPayloadDevTable({ review }: BelugaPayloadDevTableProps) {
           Dev: Beluga visit payload
         </p>
         <p className="mt-1 text-muted-foreground">
-          {readyCount} ready · {missingCount} not ready — this panel only
-          appears in development (not production).
+          {readyCount} ready · {missingCount} not ready. This panel only appears
+          in development (not production).
         </p>
       </div>
 
@@ -75,7 +75,7 @@ export function BelugaPayloadDevTable({ review }: BelugaPayloadDevTableProps) {
                     </td>
                     <td className="px-3 py-2 text-foreground max-w-[200px] truncate">
                       {row.value ?? (
-                        <span className="text-muted-foreground">—</span>
+                        <span className="text-muted-foreground">N/A</span>
                       )}
                     </td>
                     <td className="px-3 py-2 text-xs text-muted-foreground">
@@ -83,7 +83,7 @@ export function BelugaPayloadDevTable({ review }: BelugaPayloadDevTableProps) {
                         ? `${row.source ?? "?"} · ${row.sourceLabel}`
                         : row.status === "unmapped"
                           ? "No question mapped"
-                          : "—"}
+                          : "N/A"}
                     </td>
                   </tr>
                 );

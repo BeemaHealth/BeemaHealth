@@ -264,7 +264,7 @@ export function AddQuestionModal({
         <DialogHeader>
           <DialogTitle>Add question to step</DialogTitle>
           <DialogDescription>
-            Start by choosing the component type — it controls which fields and
+            Start by choosing the component type. It controls which fields and
             mappings appear below.
           </DialogDescription>
         </DialogHeader>
@@ -379,8 +379,8 @@ export function AddQuestionModal({
               <p className="text-xs text-muted-foreground rounded-lg bg-muted/50 px-3 py-2">
                 Patients type an address and pick a Nominatim suggestion.
                 Street, city, state, ZIP, county, and country are filled
-                automatically and mapped to Beema Health intake and vendor API as
-                configured above.
+                automatically and mapped to Beema Health intake and vendor API
+                as configured above.
               </p>
             </>
           ) : isChoice ? (
@@ -448,7 +448,7 @@ export function AddQuestionModal({
                   checked={required}
                   onChange={(e) => setRequired(e.target.checked)}
                 />
-                Required — patient must answer before continuing
+                Required: patient must answer before continuing
               </label>
               {fieldType === "multi_choice" ? (
                 <p className="text-xs text-muted-foreground">
@@ -491,7 +491,7 @@ export function AddQuestionModal({
                   checked={required}
                   onChange={(e) => setRequired(e.target.checked)}
                 />
-                Required — patient must confirm before continuing
+                Required: patient must confirm before continuing
               </label>
               <p className="text-xs text-muted-foreground rounded-lg bg-muted/50 px-3 py-2">
                 Patients see what will be sent to their doctor, any missing
@@ -537,7 +537,7 @@ export function AddQuestionModal({
                   checked={required}
                   onChange={(e) => setRequired(e.target.checked)}
                 />
-                Required — patient must agree before continuing
+                Required: patient must agree before continuing
               </label>
               <p className="text-xs text-muted-foreground rounded-lg bg-muted/50 px-3 py-2">
                 Shows Terms of Service, Privacy Policy, and Telehealth Consent
@@ -580,7 +580,7 @@ export function AddQuestionModal({
                   checked={required}
                   onChange={(e) => setRequired(e.target.checked)}
                 />
-                Required — patient must enter a valid birth date
+                Required: patient must enter a valid birth date
               </label>
               <p className="text-xs text-muted-foreground rounded-lg bg-muted/50 px-3 py-2">
                 Patients type month, day, and year in three fields (no
@@ -615,7 +615,7 @@ export function AddQuestionModal({
               {showStandardMappings ? (
                 <Field
                   label="Beluga Health API mapping"
-                  help="Optional — maps this answer into the Beluga visit payload."
+                  help="Optional. Maps this answer into the Beluga visit payload."
                 >
                   <select
                     className={inputCls}
@@ -637,7 +637,7 @@ export function AddQuestionModal({
                   checked={required}
                   onChange={(e) => setRequired(e.target.checked)}
                 />
-                Required — patient must answer before continuing
+                Required: patient must answer before continuing
               </label>
             </>
           )}
