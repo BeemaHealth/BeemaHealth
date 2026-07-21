@@ -18,6 +18,7 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:seo-live": "node scripts/check-prod-redirects.mjs",
     "test:backend": "./scripts/test-backend.sh",
     "test:all": "npm test && npm run test:backend"
   },

@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { capturePageUtms } from "@/lib/utm";
 import { absoluteUrl, ORGANIZATION_JSONLD } from "@/lib/seo";
+import { duplicateHomepageRedirectTarget } from "@/lib/canonicalize-url";
 
 import appCss from "../styles.css?url";
 import { AuthProvider } from "../context/AuthContext";
@@ -167,6 +168,20 @@ function RootComponent() {
   // when the funnel session is eventually created in qualify.tsx.
   useEffect(() => {
     capturePageUtms();
+  }, []);
+
+  // GitHub Pages also serves the homepage at /index.html (HTTP 200). That is
+  // a duplicate of /. Rewrite once to the canonical path — never when already
+  // on `/` (avoids the intermittent self-redirect class of bugs).
+  useEffect(() => {
+    const target = duplicateHomepageRedirectTarget(
+      window.location.pathname,
+      window.location.search,
+      window.location.hash,
+    );
+    if (target !== null) {
+      window.location.replace(target);
+    }
   }, []);
 
   return (
