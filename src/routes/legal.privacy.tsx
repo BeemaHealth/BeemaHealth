@@ -275,10 +275,10 @@ const SECTIONS: LegalSection[] = [
         <LegalP>
           To exercise these rights, contact{" "}
           <a
-            href="mailto:support@beemahealth"
+            href="mailto:support@beemahealth.com"
             className="text-foreground underline-offset-2 hover:underline"
           >
-            support@beemahealth
+            support@beemahealth.com
           </a>
           . We will respond within the timeframe required by applicable law.
         </LegalP>
@@ -367,10 +367,10 @@ const SECTIONS: LegalSection[] = [
         <br />
         Email:{" "}
         <a
-          href="mailto:support@beemahealth"
+          href="mailto:support@beemahealth.com"
           className="text-foreground underline-offset-2 hover:underline"
         >
-          support@beemahealth
+          support@beemahealth.com
         </a>
       </LegalP>
     ),

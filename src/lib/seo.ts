@@ -57,6 +57,7 @@ export const ORGANIZATION_JSONLD = {
   ],
   contactPoint: {
     "@type": "ContactPoint",
+    email: "support@beemahealth.com",
     url: `${SITE_URL}/contact/`,
     contactType: "Customer Support",
   },

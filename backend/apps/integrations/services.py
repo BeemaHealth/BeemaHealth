@@ -140,7 +140,7 @@ _SHIPPING_EVENT_SUMMARIES = {
     "PACKAGE_DELIVERED": "Your package has been delivered.",
     "PACKAGE_DELIVERY_FAILED": (
         "We weren't able to deliver your package. "
-        "Please contact our support team at support@beemahealth — "
+        "Please contact our support team at support@beemahealth.com — "
         "do not submit a refill request for a delivery issue."
     ),
 }

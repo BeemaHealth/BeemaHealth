@@ -11,6 +11,13 @@ import {
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  COMPOUNDED_SEMAGLUTIDE_PRICING,
+  COMPOUNDED_TIRZEPATIDE_PRICING,
+  formatCompoundedPriceLine,
+  formatStartingAtPerMonth,
+  type CompoundedMedicationPricing,
+} from "@/lib/medication-pricing";
 import { LineReveal, EASE_OUT } from "@/components/home/home-motion";
 import compoundedSemaglutideVialImg from "@/assets/treatments/compounded-semaglutide-vial.png";
 import compoundedTirzepatideVialImg from "@/assets/treatments/compounded-tirzepatide-vial.png";
@@ -20,6 +27,7 @@ type Treatment = {
   name: string;
   form: string;
   badge: string;
+  pricing: CompoundedMedicationPricing;
   image: string;
   imageAlt: string;
 };
@@ -37,6 +45,7 @@ const TREATMENTS: Treatment[] = [
     name: "Compounded Semaglutide",
     form: "Weekly injection, if prescribed",
     badge: "Cash-pay option",
+    pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
     image: compoundedSemaglutideVialImg,
     imageAlt: "Beema Health compounded semaglutide injection vial",
   },
@@ -45,6 +54,7 @@ const TREATMENTS: Treatment[] = [
     name: "Compounded Tirzepatide",
     form: "Weekly injection, if prescribed",
     badge: "Cash-pay option",
+    pricing: COMPOUNDED_TIRZEPATIDE_PRICING,
     image: compoundedTirzepatideVialImg,
     imageAlt: "Beema Health compounded tirzepatide injection vial",
   },
@@ -85,6 +95,10 @@ export function TreatmentShowcase() {
         <h2 className="max-w-2xl text-balance text-4xl font-bold tracking-tight text-foreground md:text-5xl">
           <LineReveal>GLP-1 weight-loss options</LineReveal>
         </h2>
+        <p className="mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+          Transparent cash pricing on every card: first-month offer and ongoing
+          monthly rate, with no membership fee.
+        </p>
 
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
           {TREATMENTS.map((treatment, index) => (
@@ -98,13 +112,14 @@ export function TreatmentShowcase() {
         </div>
 
         <p className="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">
-          Final cost depends on your provider decision as well as dosage
-          recommendation. Treatment availability depends on your intake,
-          clinical eligibility, and a licensed provider&apos;s independent
-          decision. Compounded semaglutide and compounded tirzepatide are not
-          FDA-approved and are only considered when legally available and
-          clinically appropriate. Completing intake does not guarantee a
-          prescription.
+          <span className="font-medium">†</span> Listed prices are medication
+          only (cash-pay), if prescribed. Final cost depends on your provider
+          decision as well as dosage recommendation. Treatment availability
+          depends on your intake, clinical eligibility, and a licensed
+          provider&apos;s independent decision. Compounded semaglutide and
+          compounded tirzepatide are not FDA-approved and are only considered
+          when legally available and clinically appropriate. Completing intake
+          does not guarantee a prescription.
         </p>
       </div>
     </section>
@@ -200,6 +215,13 @@ function TreatmentCard({
         <h3 className="text-2xl font-bold text-foreground md:text-[1.75rem]">
           {treatment.name}
         </h3>
+        <p className="text-sm font-semibold text-foreground">
+          {formatStartingAtPerMonth(treatment.pricing)}
+          <span className="font-normal text-muted-foreground">†</span>
+        </p>
+        <p className="text-sm text-muted-foreground">
+          {formatCompoundedPriceLine(treatment.pricing)}
+        </p>
         <p className="text-sm font-medium text-foreground/80">
           {treatment.form}
         </p>

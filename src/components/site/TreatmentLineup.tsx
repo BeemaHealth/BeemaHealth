@@ -6,6 +6,13 @@ import {
   useSpring,
 } from "motion/react";
 import { cn } from "@/lib/utils";
+import {
+  COMPOUNDED_SEMAGLUTIDE_PRICING,
+  COMPOUNDED_TIRZEPATIDE_PRICING,
+  formatCompoundedPriceLine,
+  formatStartingAtPerMonth,
+  type CompoundedMedicationPricing,
+} from "@/lib/medication-pricing";
 import { Reveal } from "@/components/site/primitives";
 import compoundedSemaglutideVialImg from "@/assets/treatments/compounded-semaglutide-vial.png";
 import compoundedTirzepatideVialImg from "@/assets/treatments/compounded-tirzepatide-vial.png";
@@ -14,7 +21,7 @@ type Treatment = {
   id: string;
   name: string;
   form: string;
-  priceFrom: string;
+  pricing: CompoundedMedicationPricing;
   badge?: string;
   fdaApproved: boolean;
   image: string;
@@ -26,7 +33,7 @@ const TREATMENTS: Treatment[] = [
     id: "compounded-semaglutide",
     name: "Compounded Semaglutide",
     form: "Weekly injection, if prescribed",
-    priceFrom: "$199",
+    pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
     badge: "Cash-pay option",
     fdaApproved: false,
     image: compoundedSemaglutideVialImg,
@@ -36,7 +43,7 @@ const TREATMENTS: Treatment[] = [
     id: "compounded-tirzepatide",
     name: "Compounded Tirzepatide",
     form: "Weekly injection, if prescribed",
-    priceFrom: "$249",
+    pricing: COMPOUNDED_TIRZEPATIDE_PRICING,
     badge: "Cash-pay option",
     fdaApproved: false,
     image: compoundedTirzepatideVialImg,
@@ -52,6 +59,10 @@ export function TreatmentLineup() {
           <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             GLP-1 weight-loss options
           </h2>
+          <p className="mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+            Transparent cash pricing on every option: first-month offer and
+            ongoing monthly rate, with no membership fee.
+          </p>
         </Reveal>
 
         <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
@@ -62,16 +73,14 @@ export function TreatmentLineup() {
 
         <Reveal delay={200}>
           <p className="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">
-            {/* Pricing disclaimer disabled along with per-treatment pricing above.
-            <span className="font-medium">†</span>From pricing includes medication only, if prescribed.
-            */}
-            Final cost depends on your provider decision as well as dosage
-            recommendation. Treatment availability depends on your intake,
-            clinical eligibility, and a licensed provider&apos;s independent
-            decision. Compounded semaglutide and compounded tirzepatide are not
-            FDA-approved and are only considered when legally available and
-            clinically appropriate. Completing intake does not guarantee a
-            prescription.
+            <span className="font-medium">†</span> Listed prices are medication
+            only (cash-pay), if prescribed. Final cost depends on your provider
+            decision as well as dosage recommendation. Treatment availability
+            depends on your intake, clinical eligibility, and a licensed
+            provider&apos;s independent decision. Compounded semaglutide and
+            compounded tirzepatide are not FDA-approved and are only considered
+            when legally available and clinically appropriate. Completing intake
+            does not guarantee a prescription.
           </p>
         </Reveal>
       </div>
@@ -175,12 +184,13 @@ function TreatmentCard({
         <h3 className="text-2xl font-bold text-foreground md:text-[1.75rem]">
           {treatment.name}
         </h3>
-        {/* Pricing disabled — pricing model not finalized yet.
-        <p className="text-sm font-semibold text-foreground/90">
-          From {treatment.priceFrom}/mo
-          <span className="font-normal text-foreground/70">†</span>
+        <p className="text-sm font-semibold text-foreground">
+          {formatStartingAtPerMonth(treatment.pricing)}
+          <span className="font-normal text-muted-foreground">†</span>
         </p>
-        */}
+        <p className="text-sm text-muted-foreground">
+          {formatCompoundedPriceLine(treatment.pricing)}
+        </p>
         <p className="text-sm font-medium text-foreground/80">
           {treatment.form}
         </p>

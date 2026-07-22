@@ -4,6 +4,11 @@ import { HexMotif, MagneticButton } from "@/components/site/primitives";
 import { LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import {
+  EARLY_ADOPTER_DISCOUNT,
+  WAITLIST_CTA_LABEL,
+  earlyAdopterIncentiveLine,
+} from "@/lib/marketing-copy";
 
 /**
  * Closing homepage CTA — a solid-honey band with a vignette mesh and two
@@ -27,8 +32,9 @@ export function FinalCTASection() {
             </h2>
 
             <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-primary-foreground/80 md:text-lg">
-              The eligibility check takes about 5 minutes. No payment required
-              to start, and no prescription is guaranteed.
+              Join the waitlist in about a minute. {earlyAdopterIncentiveLine()}{" "}
+              when we launch. No payment required to start, and no prescription
+              is guaranteed.
             </p>
 
             <MagneticButton className="mt-8">
@@ -41,11 +47,14 @@ export function FinalCTASection() {
                   to={QUALIFY_PATH}
                   search={qualifySearch(CTA_IDS.home_mid)}
                 >
-                  See if you qualify
+                  {WAITLIST_CTA_LABEL}
                   <ArrowRight className="size-4" />
                 </Link>
               </Button>
             </MagneticButton>
+            <p className="mt-4 text-sm font-semibold text-primary-foreground">
+              Waitlist perk: {EARLY_ADOPTER_DISCOUNT}
+            </p>
           </div>
         </div>
       </div>

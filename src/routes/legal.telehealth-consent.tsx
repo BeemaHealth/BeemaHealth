@@ -154,10 +154,10 @@ const SECTIONS: LegalSection[] = [
           If a technical failure prevents you from reaching your Provider
           through the Service, contact{" "}
           <a
-            href="mailto:support@beemahealth"
+            href="mailto:support@beemahealth.com"
             className="text-foreground underline-offset-2 hover:underline"
           >
-            support@beemahealth
+            support@beemahealth.com
           </a>
           .
         </LegalP>
@@ -314,10 +314,10 @@ const SECTIONS: LegalSection[] = [
           You may withdraw consent to telehealth at any time by notifying your
           Provider in writing or contacting{" "}
           <a
-            href="mailto:support@beemahealth"
+            href="mailto:support@beemahealth.com"
             className="text-foreground underline-offset-2 hover:underline"
           >
-            support@beemahealth
+            support@beemahealth.com
           </a>
           . Withdrawal does not affect care already provided in reliance on this
           Consent and does not entitle you to in-person treatment from Providers

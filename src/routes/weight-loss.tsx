@@ -29,6 +29,11 @@ import {
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import { WAITLIST_CTA_LABEL } from "@/lib/marketing-copy";
+import {
+  dualCompoundedHeroPricingLine,
+  dualCompoundedShortPricingLine,
+} from "@/lib/medication-pricing";
 
 export const Route = createFileRoute("/weight-loss")({
   head: () => ({
@@ -42,8 +47,7 @@ export const Route = createFileRoute("/weight-loss")({
       { property: "og:title", content: "Weight Loss | Beema Health" },
       {
         property: "og:description",
-        content:
-          "Provider-reviewed GLP-1 weight-loss options with clear pricing and follow-through.",
+        content: `Provider-reviewed GLP-1 weight-loss options with transparent cash pricing: ${dualCompoundedShortPricingLine()}.`,
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/weight-loss") }],
@@ -111,7 +115,7 @@ function WeightLossPage() {
                 <LineReveal delay={0.1}>medical professionals</LineReveal>
               </>
             }
-            description="Beema Health focuses on evidence-based weight-loss treatments, reviewed by licensed providers, with clear, transparent pricing"
+            description={`Beema Health focuses on evidence-based weight-loss treatments, reviewed by licensed providers, with transparent cash pricing: ${dualCompoundedHeroPricingLine()}.`}
           />
           <motion.div
             className="mt-10 text-center"
@@ -129,7 +133,7 @@ function WeightLossPage() {
                   to={QUALIFY_PATH}
                   search={qualifySearch(CTA_IDS.weight_loss_hero)}
                 >
-                  See if you qualify <ArrowRight />
+                  {WAITLIST_CTA_LABEL} <ArrowRight />
                 </Link>
               </Button>
             </MagneticButton>
@@ -265,7 +269,7 @@ function WeightLossPage() {
           <HexMotif className="float-slower pointer-events-none absolute -bottom-10 -right-8 z-0 w-48 text-primary-foreground/10 md:w-64" />
           <div className="relative z-10">
             <h2 className="text-3xl font-bold">
-              <LineReveal>Ready to see if you qualify?</LineReveal>
+              <LineReveal>Ready to join the waitlist?</LineReveal>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">
               The eligibility check takes about 5 minutes. No payment required
@@ -281,7 +285,7 @@ function WeightLossPage() {
                   to={QUALIFY_PATH}
                   search={qualifySearch(CTA_IDS.weight_loss_footer)}
                 >
-                  See if you qualify <ArrowRight />
+                  {WAITLIST_CTA_LABEL} <ArrowRight />
                 </Link>
               </Button>
             </MagneticButton>

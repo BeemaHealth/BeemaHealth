@@ -1,6 +1,6 @@
 # Analytics & Tracking
 
-All user behaviour across the site — page views, funnel steps, and conversion events — is stored as `FunnelEvent` rows. No third-party analytics SDK (no GA, no Segment). Events are fire-and-forget; they never block the UI.
+All user behaviour across the site — page views, funnel steps, and conversion events — is stored as `FunnelEvent` rows (first-party). Optional Meta Pixel and Google Ads tags can also fire on waitlist submit when configured via Vite env vars (see **Ad conversions** below). Events are fire-and-forget; they never block the UI.
 
 ## Event model
 
@@ -18,18 +18,34 @@ All user behaviour across the site — page views, funnel steps, and conversion 
 
 ## Frontend tracking
 
-All tracking calls go through `src/lib/analytics.ts`:
+All first-party tracking calls go through `src/lib/analytics.ts`:
 
 ```ts
 trackPageViewed(page, { landing_page_slug? })   // fires on every route
 trackStepViewed(slug, stepKey, meta?)            // on step render
 trackStepCompleted(slug, stepKey, durationMs, meta?)  // on next/submit
 trackFunnelEvent(payload)                        // raw — used by the above
+trackWaitlistSubmit(page?)                       // waitlist success → FunnelEvent + ad Lead
 ```
 
 `trackPageViewed` also calls `capturePageUtms()` (from `src/lib/utm.ts`) to store UTM params from the current URL into the funnel session on the backend.
 
 Events are sent via `POST /api/analytics/events/` — public endpoint, rate-limited by `AnalyticsEventThrottle`.
+
+## Ad conversions (Meta + Google Ads)
+
+Pre-launch waitlist leads on `/qualify` also fire paid-media conversion events via `src/lib/ad-conversions.ts` (loaded from `__root.tsx` with `initAdPixels()`).
+
+| Env var | Purpose |
+|---------|---------|
+| `VITE_META_PIXEL_ID` | Meta Pixel ID — fires `PageView` on load + `Lead` on successful waitlist submit |
+| `VITE_GOOGLE_ADS_ID` | Google Ads tag ID (`AW-…`) |
+| `VITE_GOOGLE_ADS_CONVERSION_LABEL` | Conversion label — with Ads ID, fires `gtag('event','conversion')` on submit |
+| `VITE_WAITLIST_DISPLAY_COUNT` | Optional override for the qualify-page waitlist social-proof number |
+
+If IDs are unset, helpers no-op (safe for local/dev). Do **not** send email, name, or other PHI to pixel/gtag calls. Pixel IDs are public client config — still do not commit production secrets adjacent to them in shared docs.
+
+After a successful Formspree waitlist submit, `trackWaitlistSubmit("qualify")` records `cta_clicked` / `waitlist_submit` first-party and calls `trackWaitlistLeadConversion()`.
 
 ## CTA attribution
 
@@ -116,6 +132,8 @@ These are mutually exclusive per event — `FunnelEventCreateView` sets exactly 
 | File | Role |
 |------|------|
 | `src/lib/analytics.ts` | All frontend tracking functions |
+| `src/lib/ad-conversions.ts` | Meta Pixel + Google Ads init / Lead conversion |
+| `src/lib/marketing-copy.ts` | Early-adopter discount + waitlist social-proof constants |
 | `src/lib/utm.ts` | UTM capture from URL → funnel session |
 | `backend/apps/analytics/models.py` | FunnelEvent, LandingPage |
 | `backend/apps/analytics/views.py` | Public event ingestion endpoint |

@@ -20,6 +20,7 @@ import {
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import { WAITLIST_CTA_LABEL } from "@/lib/marketing-copy";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -46,8 +47,8 @@ const CONTACT_OPTIONS = [
     icon: Mail,
     title: "Email support",
     text: "For questions about eligibility, pricing, account access, or your intake.",
-    action: "support@beemahealth",
-    href: "mailto:support@beemahealth",
+    action: "support@beemahealth.com",
+    href: "mailto:support@beemahealth.com",
   },
   {
     icon: Clock,
@@ -200,7 +201,7 @@ function ContactPage() {
                     to={QUALIFY_PATH}
                     search={qualifySearch(CTA_IDS.contact)}
                   >
-                    See if you qualify <ArrowRight />
+                    {WAITLIST_CTA_LABEL} <ArrowRight />
                   </Link>
                 </Button>
               </MagneticButton>

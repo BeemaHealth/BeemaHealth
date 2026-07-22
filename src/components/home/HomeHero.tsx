@@ -21,21 +21,32 @@ import {
 import { EASE_OUT, LineReveal, Marquee } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import {
+  EARLY_ADOPTER_DISCOUNT,
+  WAITLIST_CTA_LABEL,
+  earlyAdopterIncentiveLine,
+} from "@/lib/marketing-copy";
+import {
+  dualCompoundedHeroPricingLine,
+  dualCompoundedShortPricingLine,
+} from "@/lib/medication-pricing";
 import heroImg from "@/assets/hero.jpg";
 import semaVial from "@/assets/treatments/compounded-semaglutide-vial.png";
 
 const CHECKLIST_ITEMS = [
   "Licensed USA physician network",
-  "No surprise charges",
-  "Quick shipping",
+  "Private & secure encrypted intake",
+  "USA compounding pharmacies",
+  dualCompoundedShortPricingLine(),
 ] as const;
 
 const MARQUEE_ITEMS = [
   "Licensed providers",
-  "Transparent pricing",
+  dualCompoundedShortPricingLine(),
   "USA licensed pharmacies",
-  "Private & secure",
-  "Full HIPAA compliance",
+  "Private & secure encrypted intake",
+  "HIPAA-aligned care",
+  EARLY_ADOPTER_DISCOUNT,
   "5-minute eligibility check",
 ] as const;
 
@@ -170,14 +181,14 @@ export function HomeHero() {
               className="mt-5 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground"
             >
               USA physicians, licensed and certified USA compounding pharmacies,
-              clear and concise pricing, no bait-and-switch, no surprises, and
-              thoughtful medical care that doesn't stop at the first
-              prescription.
+              transparent cash pricing: {dualCompoundedHeroPricingLine()}. No
+              bait-and-switch, no surprises, and thoughtful medical care that
+              doesn&apos;t stop at the first prescription.
             </motion.p>
 
             <motion.div
               variants={item}
-              className="mt-6 flex flex-col gap-3 sm:flex-row"
+              className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
             >
               <MagneticButton>
                 <Button asChild size="xl">
@@ -185,7 +196,7 @@ export function HomeHero() {
                     to={QUALIFY_PATH}
                     search={qualifySearch(CTA_IDS.home_hero)}
                   >
-                    See if you qualify <ArrowRight />
+                    {WAITLIST_CTA_LABEL} <ArrowRight />
                   </Link>
                 </Button>
               </MagneticButton>
@@ -195,6 +206,17 @@ export function HomeHero() {
                 </Button>
               </MagneticButton>
             </motion.div>
+
+            <motion.p
+              variants={item}
+              className="mt-3 text-sm font-medium text-foreground"
+            >
+              {earlyAdopterIncentiveLine()}.
+              <span className="font-normal text-muted-foreground">
+                {" "}
+                Join the waitlist before launch.
+              </span>
+            </motion.p>
 
             <motion.div
               variants={item}

@@ -2,6 +2,11 @@ import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/brand/Logo";
 import { InfinityMotif } from "@/components/site/primitives";
 import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import {
+  EARLY_ADOPTER_DISCOUNT,
+  WAITLIST_CTA_LABEL,
+} from "@/lib/marketing-copy";
+import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
 
 /** Trailing-slash paths — match sitemap.xml / canonicalUrl / GitHub Pages 200 URLs. */
 const COLUMNS = [
@@ -42,16 +47,20 @@ export function SiteFooter() {
             <Logo className="h-10" tone="ink" />
             <p className="mt-4 text-sm leading-relaxed text-ink-foreground/70">
               Weight-loss care guided by independent medical professionals,
-              licensed providers, with transparent pricing, and support designed
-              for success.
+              licensed providers, with transparent cash pricing (
+              {dualCompoundedShortPricingLine()}), and support designed for
+              success.
             </p>
             <Link
               to={QUALIFY_PATH}
               search={qualifySearch(CTA_IDS.footer)}
               className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition-colors hover:bg-primary/90"
             >
-              See if you qualify
+              {WAITLIST_CTA_LABEL}
             </Link>
+            <p className="mt-3 text-xs font-medium text-primary">
+              Early adopters: {EARLY_ADOPTER_DISCOUNT}
+            </p>
           </div>
 
           {COLUMNS.map((col) => (

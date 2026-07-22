@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { capturePageUtms } from "@/lib/utm";
+import { initAdPixels } from "@/lib/ad-conversions";
 import { absoluteUrl, ORGANIZATION_JSONLD } from "@/lib/seo";
 import { duplicateHomepageRedirectTarget } from "@/lib/canonicalize-url";
 
@@ -175,6 +176,11 @@ function RootComponent() {
   // when the funnel session is eventually created in qualify.tsx.
   useEffect(() => {
     capturePageUtms();
+  }, []);
+
+  // Meta Pixel / Google Ads — no-op when VITE_* IDs are unset (local/dev).
+  useEffect(() => {
+    initAdPixels();
   }, []);
 
   // GitHub Pages also serves the homepage at /index.html (HTTP 200). That is

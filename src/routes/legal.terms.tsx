@@ -373,10 +373,10 @@ const SECTIONS: LegalSection[] = [
         <LegalP>
           Before filing a formal claim, you agree to contact us at{" "}
           <a
-            href="mailto:support@beemahealth"
+            href="mailto:support@beemahealth.com"
             className="text-foreground underline-offset-2 hover:underline"
           >
-            support@beemahealth
+            support@beemahealth.com
           </a>{" "}
           and attempt to resolve the dispute informally.
         </LegalP>
@@ -432,10 +432,10 @@ const SECTIONS: LegalSection[] = [
         <br />
         Email:{" "}
         <a
-          href="mailto:support@beemahealth"
+          href="mailto:support@beemahealth.com"
           className="text-foreground underline-offset-2 hover:underline"
         >
-          support@beemahealth
+          support@beemahealth.com
         </a>
         <br />
         Website:{" "}

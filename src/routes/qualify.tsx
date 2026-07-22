@@ -1,7 +1,14 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { CheckCircle2, Loader2, Mail } from "lucide-react";
+import {
+  CheckCircle2,
+  Loader2,
+  Lock,
+  Mail,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { Eyebrow, FloatingHexagons } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
@@ -9,10 +16,38 @@ import { Field, inputCls } from "@/components/quiz/quiz-primitives";
 import { Button } from "@/components/ui/button";
 import { US_STATES } from "@/lib/veya-data";
 import { isValidEmail, isValidPersonName } from "@/lib/form-validation";
-import { trackCtaClicked, trackPageViewed } from "@/lib/analytics";
+import { trackPageViewed, trackWaitlistSubmit } from "@/lib/analytics";
 import { canonicalUrl } from "@/lib/seo";
+import {
+  EARLY_ADOPTER_DISCOUNT,
+  WAITLIST_CTA_LABEL,
+  waitlistIncentiveBody,
+  waitlistSocialProofLine,
+  waitlistSuccessIncentiveLine,
+} from "@/lib/marketing-copy";
+import {
+  getWaitlistDisplayCount,
+  getWaitlistDisplayCountSeed,
+  incrementWaitlistDisplayCount,
+} from "@/lib/waitlist-count";
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xwvgljjr";
+
+/** Honest trust claims already used sitewide — no invented credentials. */
+const TRUST_SIGNALS = [
+  {
+    icon: ShieldCheck,
+    label: "HIPAA-aligned care",
+  },
+  {
+    icon: Lock,
+    label: "Private, encrypted intake",
+  },
+  {
+    icon: CheckCircle2,
+    label: "USA-licensed physicians",
+  },
+] as const;
 
 export const Route = createFileRoute("/qualify")({
   head: () => ({
@@ -20,8 +55,7 @@ export const Route = createFileRoute("/qualify")({
       { title: "Join the waitlist | Beema Health" },
       {
         name: "description",
-        content:
-          "Beema Health is getting ready to launch. Join the waitlist for early-adopter pricing on medical weight-loss care.",
+        content: `Beema Health is getting ready to launch. Join the waitlist for ${EARLY_ADOPTER_DISCOUNT} on medical weight-loss care.`,
       },
       { name: "robots", content: "noindex" },
     ],
@@ -60,11 +94,20 @@ function WaitlistPage() {
   const [submitted, setSubmitted] = useState(false);
   const [confirmedEmail, setConfirmedEmail] = useState("");
   const [error, setError] = useState("");
+  // Seed on first paint (SSR-safe); sync max(seed, localStorage) after mount.
+  const [waitlistCount, setWaitlistCount] = useState(
+    getWaitlistDisplayCountSeed,
+  );
+
+  useEffect(() => {
+    setWaitlistCount(getWaitlistDisplayCount());
+  }, []);
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setData((d) => ({ ...d, [key]: value }));
 
   const validationError = fieldError(data);
+  const socialProof = waitlistSocialProofLine(waitlistCount);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -72,7 +115,7 @@ function WaitlistPage() {
     setError("");
     if (validationError) return;
     if (data.company) {
-      // Honeypot tripped — pretend success without submitting.
+      // Honeypot tripped — pretend success without submitting or firing ads.
       setConfirmedEmail(data.email.trim());
       setSubmitted(true);
       return;
@@ -94,7 +137,8 @@ function WaitlistPage() {
         }),
       });
       if (!res.ok) throw new Error("submit_failed");
-      trackCtaClicked("waitlist_submit", "qualify");
+      trackWaitlistSubmit("qualify");
+      setWaitlistCount(incrementWaitlistDisplayCount());
       setConfirmedEmail(data.email.trim());
       setSubmitted(true);
     } catch {
@@ -125,7 +169,7 @@ function WaitlistPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE_OUT }}
           >
-            <Eyebrow>Coming soon</Eyebrow>
+            <Eyebrow>Coming soon · {EARLY_ADOPTER_DISCOUNT}</Eyebrow>
           </motion.div>
 
           <h1 className="mt-4 max-w-2xl text-balance text-center text-4xl font-bold leading-[1.05] text-foreground md:text-5xl">
@@ -144,9 +188,21 @@ function WaitlistPage() {
             }}
           >
             Beema Health is putting the finishing touches on our medical
-            weight-loss platform. Join the waitlist and we&apos;ll email you as
-            soon as we&apos;re live, plus an early-adopter discount for signing
-            up now.
+            weight-loss platform. {waitlistIncentiveBody()}
+          </motion.p>
+
+          <motion.p
+            className="mt-4 inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-sm font-medium text-foreground shadow-soft"
+            initial={{ opacity: 0, y: reduceMotion ? 0 : 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: reduceMotion ? 0 : 0.5,
+              delay: reduceMotion ? 0 : 0.45,
+              ease: EASE_OUT,
+            }}
+          >
+            <Users className="size-4 text-accent-foreground" aria-hidden />
+            {socialProof}
           </motion.p>
 
           <motion.div
@@ -192,7 +248,7 @@ function WaitlistPage() {
                       <span className="font-medium text-foreground">
                         {confirmedEmail}
                       </span>{" "}
-                      when we launch, with your early-adopter discount.
+                      {waitlistSuccessIncentiveLine()}
                     </p>
                   </motion.div>
                 ) : (
@@ -268,15 +324,38 @@ function WaitlistPage() {
                         </>
                       ) : (
                         <>
-                          <Mail className="size-4" /> Join the waitlist
+                          <Mail className="size-4" /> {WAITLIST_CTA_LABEL}
                         </>
                       )}
                     </Button>
+                    <p className="text-center text-xs text-muted-foreground">
+                      Includes {EARLY_ADOPTER_DISCOUNT} when we launch.
+                    </p>
                   </motion.form>
                 )}
               </AnimatePresence>
             </div>
           </motion.div>
+
+          <motion.ul
+            className="mt-10 flex max-w-2xl flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-muted-foreground"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration: reduceMotion ? 0 : 0.5,
+              delay: reduceMotion ? 0 : 0.7,
+            }}
+          >
+            {TRUST_SIGNALS.map(({ icon: Icon, label }) => (
+              <li key={label} className="inline-flex items-center gap-2">
+                <Icon
+                  className="size-4 shrink-0 text-accent-foreground"
+                  aria-hidden
+                />
+                {label}
+              </li>
+            ))}
+          </motion.ul>
         </div>
       </section>
     </MarketingLayout>

@@ -9,6 +9,10 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import {
+  EARLY_ADOPTER_DISCOUNT_SHORT,
+  WAITLIST_CTA_LABEL,
+} from "@/lib/marketing-copy";
 import { cn } from "@/lib/utils";
 
 type NavItem = { label: string; to: string };
@@ -87,11 +91,14 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:ml-auto lg:flex">
+        <div className="hidden items-center gap-3 lg:ml-auto lg:flex">
           {/* Log in / Dashboard link disabled — site in pre-launch waitlist mode */}
+          <span className="text-xs font-medium text-muted-foreground">
+            {EARLY_ADOPTER_DISCOUNT_SHORT} for early adopters
+          </span>
           <Button asChild>
             <Link to={QUALIFY_PATH} search={qualifySearch(CTA_IDS.nav_header)}>
-              See if you qualify
+              {WAITLIST_CTA_LABEL}
             </Link>
           </Button>
         </div>
@@ -118,17 +125,20 @@ export function SiteHeader() {
                 ))}
                 {/* Log in / Dashboard link disabled — site in pre-launch waitlist mode */}
               </div>
-              <div className="mt-6">
+              <div className="mt-6 space-y-2">
                 <SheetClose asChild>
                   <Button asChild size="lg" className="w-full">
                     <Link
                       to={QUALIFY_PATH}
                       search={qualifySearch(CTA_IDS.nav_mobile)}
                     >
-                      See if you qualify
+                      {WAITLIST_CTA_LABEL}
                     </Link>
                   </Button>
                 </SheetClose>
+                <p className="text-center text-xs font-medium text-muted-foreground">
+                  {EARLY_ADOPTER_DISCOUNT_SHORT} for early adopters
+                </p>
               </div>
             </SheetContent>
           </Sheet>

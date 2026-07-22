@@ -1,5 +1,11 @@
 // Mock data for Beema Health marketing + qualify funnel (no backend yet).
 
+import {
+  COMPOUNDED_SEMAGLUTIDE_PRICING,
+  COMPOUNDED_TIRZEPATIDE_PRICING,
+  dualCompoundedFaqPricingParagraph,
+} from "@/lib/medication-pricing";
+
 export const LAUNCH_STATES = [
   "California",
   "Texas",
@@ -99,13 +105,20 @@ export type FaqItem = { q: string; a: string };
 export type FaqGroup = { category: string; items: FaqItem[] };
 
 export const FAQ_GROUPS: FaqGroup[] = [
-  /* Pricing category disabled — pricing model not finalized yet.
   {
     category: "Pricing",
     items: [
       {
         q: "How much does Beema Health cost?",
-        a: "There is no platform membership or subscription fee. You pay for your prescribed medication — typically $199–$349/month cash-pay, or your insurance copay if covered. Shipping and labs, when applicable, are shown separately before any charge.",
+        a: dualCompoundedFaqPricingParagraph(),
+      },
+      {
+        q: "What is the price for compounded semaglutide?",
+        a: `Compounded semaglutide is $${COMPOUNDED_SEMAGLUTIDE_PRICING.firstMonthUsd} for your first month, then $${COMPOUNDED_SEMAGLUTIDE_PRICING.ongoingUsd}/month ongoing if prescribed and you continue treatment. Final cost can depend on dosage and clinical decisions.`,
+      },
+      {
+        q: "What is the price for compounded tirzepatide?",
+        a: `Compounded tirzepatide is $${COMPOUNDED_TIRZEPATIDE_PRICING.firstMonthUsd} for your first month, then $${COMPOUNDED_TIRZEPATIDE_PRICING.ongoingUsd}/month ongoing if prescribed and you continue treatment. Final cost can depend on dosage and clinical decisions.`,
       },
       {
         q: "Is there a monthly membership fee?",
@@ -117,7 +130,6 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
     ],
   },
-  */
   {
     category: "Medication",
     items: [
@@ -140,7 +152,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "What if my shipment is delayed or lost?",
-        a: "Please report it to support@beemahealth.com immediately. Refill reliability is our core promise — we urgently escalate all cold-chain and lost-shipment issues.",
+        a: "Please report it to support@beemahealth.com immediately. Refill reliability is our core promise: we urgently escalate all cold-chain and lost-shipment issues.",
       },
     ],
   },
@@ -162,7 +174,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "Can I stop treatment anytime?",
-        a: "Yes. You can stop requesting refills at any time. Because there is no platform membership fee, you are not locked into a separate monthly subscription — you only pay when medication is prescribed and you choose to fill it.",
+        a: "Yes. You can stop requesting refills at any time. Because there is no platform membership fee, you are not locked into a separate monthly subscription; you only pay when medication is prescribed and you choose to fill it.",
       },
       {
         q: "Can I pause refills?",
@@ -179,7 +191,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "Which states is Beema Health available in?",
-        a: "We launch state by state. During intake we check your state instantly — if we're not live there yet, you can join the waitlist.",
+        a: "We launch state by state. During intake we check your state instantly; if we're not live there yet, you can join the waitlist.",
       },
     ],
   },
@@ -270,7 +282,7 @@ export const LEARN_POSTS: LearnPost[] = [
     title: "A clear-eyed guide to the real costs",
     category: "Cost guides",
     excerpt:
-      "Medication vs labs vs shipping — what to actually budget for with medication-only pricing.",
+      "Medication vs labs vs shipping: what to actually budget for with medication-only pricing.",
     readMins: 7,
   },
 ];

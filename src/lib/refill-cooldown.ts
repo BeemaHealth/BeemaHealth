@@ -2,7 +2,7 @@ import type { RefillCooldown } from "@/lib/types/mvp";
 
 export const REFILL_REQUEST_COOLDOWN_HOURS = 24;
 
-export const REFILL_COOLDOWN_SUPPORT_EMAIL = "support@beemahealth";
+export const REFILL_COOLDOWN_SUPPORT_EMAIL = "support@beemahealth.com";
 
 export function isRefillCooldownActive(
   cooldown: RefillCooldown | null | undefined,

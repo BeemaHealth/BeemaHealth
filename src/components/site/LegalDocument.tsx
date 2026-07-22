@@ -88,10 +88,10 @@ export function LegalDocument({
       <p className="mt-12 border-t border-border pt-8 text-xs leading-relaxed text-muted-foreground">
         Questions about this document? Contact us at{" "}
         <a
-          href="mailto:support@beemahealth"
+          href="mailto:support@beemahealth.com"
           className="text-foreground underline-offset-2 hover:underline"
         >
-          support@beemahealth
+          support@beemahealth.com
         </a>
         . See also our{" "}
         <Link
