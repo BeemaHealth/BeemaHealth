@@ -1,13 +1,13 @@
 # Beema Health
 
-> Beema Health is a US telehealth medical weight-loss service. Licensed providers evaluate patients online and, when clinically appropriate, prescribe GLP-1 medications — Zepbound® (tirzepatide), Wegovy® (semaglutide, injection and oral), and compounded semaglutide — with transparent cash pricing, US pharmacy fulfillment, and ongoing follow-up care.
+> Beema Health is a US telehealth medical weight-loss service. Licensed providers evaluate patients online and, when clinically appropriate, prescribe GLP-1 medications (Zepbound® (tirzepatide), Wegovy® (semaglutide, injection and oral), and compounded semaglutide and tirzepatide) with transparent cash pricing, US pharmacy fulfillment, and ongoing follow-up care.
 
 Key facts:
 
 - Care model: online eligibility check → medical intake questionnaire → review by a licensed provider → prescription when clinically appropriate → home delivery from US pharmacies → ongoing check-ins and refill management.
-- Medications: Zepbound® (tirzepatide), Wegovy® (semaglutide injection), Wegovy® oral semaglutide, and compounded semaglutide. Compounded semaglutide is not FDA-approved and is only offered when clinically indicated.
+- Medications: Zepbound® (tirzepatide), Wegovy® (semaglutide injection), Wegovy® oral semaglutide, and compounded semaglutide/tirzepatide. Compounded semaglutide/tirzepatide is not FDA-approved and is only offered when clinically indicated.
 - Prescriptions are never guaranteed; a licensed provider makes every prescribing decision.
-- Pricing is transparent cash-pay — no hidden fees.
+- Pricing is transparent cash-pay (no hidden fees). Semaglutide from $99/mo first month ($199 after); Tirzepatide from $197/mo first month ($297 after).
 - Privacy: Full HIPAA compliance for all patient information.
 
 ## Main pages
@@ -16,7 +16,7 @@ Key facts:
 - [Weight-loss treatments](https://beemahealth.com/weight-loss/): the medication lineup and who each is for
 - [How it works](https://beemahealth.com/how-it-works/): step-by-step care process
 - [Safety](https://beemahealth.com/safety/): side effects, contraindications, and clinical safeguards
-- [FAQ](https://beemahealth.com/faq/): common questions about eligibility, medications, shipping, and refills
+- [FAQ](https://beemahealth.com/faq/): common questions about pricing, eligibility, medications, shipping, and refills
 - [About](https://beemahealth.com/about/): company and clinical team
 - [Contact](https://beemahealth.com/contact/): support channels
 
