@@ -8,7 +8,7 @@ export const Route = createFileRoute("/intake")({
   ssr: false,
   beforeLoad: async () => {
     const session = await requireAuth({
-      redirectTo: "/qualify",
+      redirectTo: "/waitlist",
       redirectPath: "/intake",
     });
     if (!session.user.email_verified)

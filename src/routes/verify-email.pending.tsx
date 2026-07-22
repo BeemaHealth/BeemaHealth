@@ -18,7 +18,7 @@ export const Route = createFileRoute("/verify-email/pending")({
   ssr: false,
   beforeLoad: async () => {
     const session = await requireAuth({
-      redirectTo: "/qualify",
+      redirectTo: "/waitlist",
       redirectPath: "/intake",
     });
     if (session.user.email_verified) throw redirect({ to: "/intake" });

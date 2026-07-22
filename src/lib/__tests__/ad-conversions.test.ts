@@ -2,9 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   __resetAdPixelBootstrapForTests,
   isAnyAdPixelConfigured,
+  isGaConfigured,
   isGoogleAdsConversionConfigured,
   isMetaPixelConfigured,
   readAdPixelConfig,
+  trackGaPageView,
   trackWaitlistLeadConversion,
 } from "@/lib/ad-conversions";
 
@@ -52,6 +54,7 @@ describe("ad-conversions", () => {
     const config = readAdPixelConfig();
     expect(isMetaPixelConfigured(config)).toBe(false);
     expect(isGoogleAdsConversionConfigured(config)).toBe(false);
+    expect(isGaConfigured(config)).toBe(false);
     expect(isAnyAdPixelConfigured(config)).toBe(false);
   });
 
@@ -83,5 +86,31 @@ describe("ad-conversions", () => {
     const gtagArgs = JSON.stringify(gtag.mock.calls);
     expect(fbqArgs).not.toMatch(/@/);
     expect(gtagArgs).not.toMatch(/@/);
+  });
+
+  it("fires GA4 generate_lead and page_view with optional cta_id", () => {
+    vi.stubEnv("VITE_GA_MEASUREMENT_ID", "G-TEST123");
+
+    const gtag = vi.fn();
+    installDomStubs({
+      gtag,
+      location: { pathname: "/waitlist/", search: "?cta_id=nav_header" },
+    } as FakeWindow & { location: { pathname: string; search: string } });
+
+    trackGaPageView("waitlist", "nav_header");
+    trackWaitlistLeadConversion();
+
+    expect(gtag).toHaveBeenCalledWith(
+      "event",
+      "page_view",
+      expect.objectContaining({
+        page_title: "waitlist",
+        cta_id: "nav_header",
+      }),
+    );
+    expect(gtag).toHaveBeenCalledWith("event", "generate_lead", {
+      event_category: "waitlist",
+    });
+    expect(JSON.stringify(gtag.mock.calls)).not.toMatch(/@/);
   });
 });

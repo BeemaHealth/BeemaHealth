@@ -1,8 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-/** MVP: eligibility lives at /qualify — keep old /eligibility links working. */
+/** Legacy alias — eligibility / qualify entry now lands on the waitlist. */
 export const Route = createFileRoute("/eligibility")({
   beforeLoad: () => {
-    throw redirect({ to: "/qualify/" });
+    throw redirect({ to: "/waitlist/", replace: true });
   },
 });

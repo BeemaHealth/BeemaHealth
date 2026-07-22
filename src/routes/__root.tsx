@@ -172,13 +172,13 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
-  // Capture UTMs from the URL on every page load so they're available
-  // when the funnel session is eventually created in qualify.tsx.
+  // Capture UTMs / cta_id from the URL on every page load so Formspree and
+  // GA can attribute waitlist leads and sessions without a backend.
   useEffect(() => {
     capturePageUtms();
   }, []);
 
-  // Meta Pixel / Google Ads — no-op when VITE_* IDs are unset (local/dev).
+  // Meta Pixel / Google Ads / GA4 — no-op when VITE_* IDs are unset (local/dev).
   useEffect(() => {
     initAdPixels();
   }, []);

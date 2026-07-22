@@ -25,7 +25,7 @@ export const Route = createFileRoute("/consent")({
   ssr: false,
   beforeLoad: async () => {
     const session = await requireAuth({
-      redirectTo: "/qualify",
+      redirectTo: "/waitlist",
       redirectPath: "/consent",
     });
     if (isApiEnabled()) {

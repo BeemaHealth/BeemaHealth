@@ -1,6 +1,9 @@
 import { trackFunnelEventApi } from "@/lib/api/client";
-import { capturePageUtms } from "@/lib/utm";
-import { trackWaitlistLeadConversion } from "@/lib/ad-conversions";
+import { capturePageUtms, getPendingUtms } from "@/lib/utm";
+import {
+  trackGaPageView,
+  trackWaitlistLeadConversion,
+} from "@/lib/ad-conversions";
 
 export type FunnelEventPayload = {
   event_name: string;
@@ -45,6 +48,8 @@ export function trackPageViewed(
         : {}),
     },
   });
+  // Frontend-only GA4 (no-op unless VITE_GA_MEASUREMENT_ID is set).
+  trackGaPageView(page, getPendingUtms().cta_id);
 }
 
 export function trackStepViewed(
@@ -111,10 +116,10 @@ export function trackCtaClicked(ctaId: string, page?: string) {
 }
 
 /**
- * First-party funnel event + Meta/Google lead conversion after a successful
- * waitlist/qualify submit. Never pass PHI into ad pixels.
+ * First-party funnel event + Meta/Google/GA lead conversion after a successful
+ * waitlist submit. Never pass PHI into ad pixels.
  */
-export function trackWaitlistSubmit(page = "qualify") {
+export function trackWaitlistSubmit(page = "waitlist") {
   trackCtaClicked("waitlist_submit", page);
   trackWaitlistLeadConversion();
 }

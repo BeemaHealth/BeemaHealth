@@ -28,7 +28,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
 import { WAITLIST_CTA_LABEL } from "@/lib/marketing-copy";
 import {
   dualCompoundedHeroPricingLine,
@@ -130,8 +130,8 @@ function WeightLossPage() {
             <MagneticButton>
               <Button asChild size="xl">
                 <Link
-                  to={QUALIFY_PATH}
-                  search={qualifySearch(CTA_IDS.weight_loss_hero)}
+                  to={WAITLIST_PATH}
+                  search={waitlistSearch(CTA_IDS.weight_loss_hero)}
                 >
                   {WAITLIST_CTA_LABEL} <ArrowRight />
                 </Link>
@@ -282,8 +282,8 @@ function WeightLossPage() {
                 className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
               >
                 <Link
-                  to={QUALIFY_PATH}
-                  search={qualifySearch(CTA_IDS.weight_loss_footer)}
+                  to={WAITLIST_PATH}
+                  search={waitlistSearch(CTA_IDS.weight_loss_footer)}
                 >
                   {WAITLIST_CTA_LABEL} <ArrowRight />
                 </Link>

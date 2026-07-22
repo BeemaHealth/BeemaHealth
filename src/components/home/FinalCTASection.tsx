@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { HexMotif, MagneticButton } from "@/components/site/primitives";
 import { LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
 import {
   EARLY_ADOPTER_DISCOUNT,
   WAITLIST_CTA_LABEL,
@@ -44,8 +44,8 @@ export function FinalCTASection() {
                 className="bg-ink text-ink-foreground hover:bg-ink/85"
               >
                 <Link
-                  to={QUALIFY_PATH}
-                  search={qualifySearch(CTA_IDS.home_mid)}
+                  to={WAITLIST_PATH}
+                  search={waitlistSearch(CTA_IDS.home_mid)}
                 >
                   {WAITLIST_CTA_LABEL}
                   <ArrowRight className="size-4" />

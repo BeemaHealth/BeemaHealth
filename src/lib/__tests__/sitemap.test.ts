@@ -54,6 +54,7 @@ describe("public/sitemap.xml", () => {
   it("never lists funnel, portal, staff, or auth routes", () => {
     const disallowed = [
       "/qualify",
+      "/waitlist",
       "/intake",
       "/consent",
       "/submitted",
@@ -124,11 +125,11 @@ describe("internal marketing links (trailing slash)", () => {
   });
 });
 
-describe("qualifyHref", () => {
+describe("waitlistHref", () => {
   it("puts the trailing slash before the query string", async () => {
-    const { qualifyHref, QUALIFY_PATH } = await import("../cta-ids");
-    expect(QUALIFY_PATH).toBe("/qualify/");
-    expect(qualifyHref("faq")).toBe("/qualify/?cta_id=faq");
+    const { waitlistHref, WAITLIST_PATH } = await import("../cta-ids");
+    expect(WAITLIST_PATH).toBe("/waitlist/");
+    expect(waitlistHref("faq")).toBe("/waitlist/?cta_id=faq");
   });
 });
 

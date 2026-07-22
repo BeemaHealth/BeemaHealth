@@ -29,7 +29,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
 import { WAITLIST_CTA_LABEL } from "@/lib/marketing-copy";
 
 export const Route = createFileRoute("/about")({
@@ -358,7 +358,7 @@ function AboutPage() {
                   size="xl"
                   className="bg-ink text-ink-foreground hover:bg-ink/85"
                 >
-                  <Link to={QUALIFY_PATH} search={qualifySearch(CTA_IDS.about)}>
+                  <Link to={WAITLIST_PATH} search={waitlistSearch(CTA_IDS.about)}>
                     {WAITLIST_CTA_LABEL} <ArrowRight />
                   </Link>
                 </Button>

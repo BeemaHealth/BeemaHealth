@@ -1,4 +1,4 @@
-/** Stable CTA identifiers for funnel attribution (routing unchanged). */
+/** Stable CTA identifiers for funnel / waitlist attribution (routing unchanged). */
 export const CTA_IDS = {
   nav_header: "nav_header",
   nav_mobile: "nav_mobile",
@@ -20,18 +20,27 @@ export const CTA_IDS = {
 
 export type CtaId = (typeof CTA_IDS)[keyof typeof CTA_IDS];
 
-/** Qualify route path — trailing slash matches sitemap-style canonical URLs. */
-export const QUALIFY_PATH = "/qualify/" as const;
+/** Waitlist route — trailing slash matches sitemap-style canonical URLs. */
+export const WAITLIST_PATH = "/waitlist/" as const;
 
-/** Search object for `<Link to={QUALIFY_PATH} search={qualifySearch(id)} />`. */
-export function qualifySearch(ctaId: CtaId): { cta_id: CtaId } {
+/** @deprecated Prefer WAITLIST_PATH — alias kept so old imports keep working. */
+export const QUALIFY_PATH = WAITLIST_PATH;
+
+/** Search object for `<Link to={WAITLIST_PATH} search={waitlistSearch(id)} />`. */
+export function waitlistSearch(ctaId: CtaId): { cta_id: CtaId } {
   return { cta_id: ctaId };
 }
+
+/** @deprecated Prefer waitlistSearch */
+export const qualifySearch = waitlistSearch;
 
 /**
  * Full path+search string for raw anchors / non-Link navigation.
  * Slash before `?` so the path matches the GitHub Pages canonical form.
  */
-export function qualifyHref(ctaId: CtaId): string {
-  return `${QUALIFY_PATH}?cta_id=${encodeURIComponent(ctaId)}`;
+export function waitlistHref(ctaId: CtaId): string {
+  return `${WAITLIST_PATH}?cta_id=${encodeURIComponent(ctaId)}`;
 }
+
+/** @deprecated Prefer waitlistHref */
+export const qualifyHref = waitlistHref;

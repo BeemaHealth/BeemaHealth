@@ -8,7 +8,7 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
 import {
   EARLY_ADOPTER_DISCOUNT_SHORT,
   WAITLIST_CTA_LABEL,
@@ -97,7 +97,10 @@ export function SiteHeader() {
             {EARLY_ADOPTER_DISCOUNT_SHORT} for early adopters
           </span>
           <Button asChild>
-            <Link to={QUALIFY_PATH} search={qualifySearch(CTA_IDS.nav_header)}>
+            <Link
+              to={WAITLIST_PATH}
+              search={waitlistSearch(CTA_IDS.nav_header)}
+            >
               {WAITLIST_CTA_LABEL}
             </Link>
           </Button>
@@ -129,8 +132,8 @@ export function SiteHeader() {
                 <SheetClose asChild>
                   <Button asChild size="lg" className="w-full">
                     <Link
-                      to={QUALIFY_PATH}
-                      search={qualifySearch(CTA_IDS.nav_mobile)}
+                      to={WAITLIST_PATH}
+                      search={waitlistSearch(CTA_IDS.nav_mobile)}
                     >
                       {WAITLIST_CTA_LABEL}
                     </Link>

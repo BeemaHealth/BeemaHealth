@@ -32,31 +32,35 @@ trackWaitlistSubmit(page?)                       // waitlist success → FunnelE
 
 Events are sent via `POST /api/analytics/events/` — public endpoint, rate-limited by `AnalyticsEventThrottle`.
 
-## Ad conversions (Meta + Google Ads)
+## Ad conversions & frontend-only analytics (Meta + Google)
 
-Pre-launch waitlist leads on `/qualify` also fire paid-media conversion events via `src/lib/ad-conversions.ts` (loaded from `__root.tsx` with `initAdPixels()`).
+Pre-launch waitlist lives at **`/waitlist/`** (legacy `/qualify/` redirects there and keeps query params). Paid-media + visitor analytics run via `src/lib/ad-conversions.ts` (loaded from `__root.tsx` with `initAdPixels()`). **No backend required** for these.
 
 | Env var | Purpose |
 |---------|---------|
+| `VITE_GA_MEASUREMENT_ID` | **GA4** (`G-…`) — all page views + UTM/session source (including visitors who never join the waitlist) |
 | `VITE_META_PIXEL_ID` | Meta Pixel ID — fires `PageView` on load + `Lead` on successful waitlist submit |
 | `VITE_GOOGLE_ADS_ID` | Google Ads tag ID (`AW-…`) |
 | `VITE_GOOGLE_ADS_CONVERSION_LABEL` | Conversion label — with Ads ID, fires `gtag('event','conversion')` on submit |
-| `VITE_WAITLIST_DISPLAY_COUNT` | Optional override for the qualify-page waitlist social-proof number |
+| `VITE_WAITLIST_DISPLAY_COUNT` | Optional override for the waitlist social-proof number |
 
 If IDs are unset, helpers no-op (safe for local/dev). Do **not** send email, name, or other PHI to pixel/gtag calls. Pixel IDs are public client config — still do not commit production secrets adjacent to them in shared docs.
 
-After a successful Formspree waitlist submit, `trackWaitlistSubmit("qualify")` records `cta_clicked` / `waitlist_submit` first-party and calls `trackWaitlistLeadConversion()`.
+After a successful Formspree waitlist submit, `trackWaitlistSubmit("waitlist")` records a first-party event (no-ops without API), fires Meta `Lead` / Google Ads conversion / GA4 `generate_lead`, and Formspree receives hidden attribution fields (`utm_*`, `cta_id`, `referrer`, `landing_path`) from `getAttributionForSubmit()`.
 
 ## CTA attribution
 
-Marketing CTAs use stable ids (`src/lib/cta-ids.ts`), passed as `?cta_id=` on links to `/qualify`.
+Marketing CTAs use stable ids (`src/lib/cta-ids.ts`), passed as `?cta_id=` on links to `/waitlist/`.
 
 | Storage | Field |
 |---------|--------|
-| `FunnelSession` | `cta_id` — set when user enters qualify |
-| `FunnelEvent.properties` | `cta_id` — on `page_viewed`, `step_viewed`, etc. when known |
+| URL query | `cta_id` — which on-site button was clicked |
+| `sessionStorage` (non-PHI) | first-touch UTMs + `cta_id` + referrer + landing path |
+| Formspree submission | same fields attached on waitlist join |
+| GA4 `page_view` | optional `cta_id` event param when present |
+| `FunnelSession` / `FunnelEvent` | only when the API is live (optional; not required for launch) |
 
-Staff analytics can compare conversion by CTA placement (home hero vs nav vs pricing footer). CTAs do **not** change which qualify version runs — only one qualify version is published globally.
+Staff analytics can compare conversion by CTA placement when the API exists. For a **frontend-only** site, use GA4 Explorations + Formspree fields instead.
 
 ## Staff analytics views
 
@@ -78,7 +82,8 @@ Accessible at `/staff/analytics`. Six aggregated views served by `backend/apps/a
 | Route | Page name |
 |-------|-----------|
 | `/` | `home` |
-| `/qualify` | `qualify` |
+| `/waitlist` | `waitlist` |
+| `/qualify` | redirects → `/waitlist` |
 | `/intake` | `intake` |
 | `/consent` | `consent` |
 | `/lp/:slug` | `lp:{slug}` |

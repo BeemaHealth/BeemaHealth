@@ -20,7 +20,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal, Marquee } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
 import {
   EARLY_ADOPTER_DISCOUNT,
   WAITLIST_CTA_LABEL,
@@ -193,8 +193,8 @@ export function HomeHero() {
               <MagneticButton>
                 <Button asChild size="xl">
                   <Link
-                    to={QUALIFY_PATH}
-                    search={qualifySearch(CTA_IDS.home_hero)}
+                    to={WAITLIST_PATH}
+                    search={waitlistSearch(CTA_IDS.home_hero)}
                   >
                     {WAITLIST_CTA_LABEL} <ArrowRight />
                   </Link>

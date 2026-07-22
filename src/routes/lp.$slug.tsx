@@ -8,7 +8,7 @@ import {
 import { storePendingUtms } from "@/lib/utm";
 import { trackPageViewed } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/lp/$slug")({
@@ -132,8 +132,8 @@ function LandingPageRoute() {
           className="mt-10"
           onClick={() =>
             void navigate({
-              to: QUALIFY_PATH,
-              search: qualifySearch(CTA_IDS.landing_page),
+              to: WAITLIST_PATH,
+              search: waitlistSearch(CTA_IDS.landing_page),
             })
           }
         >

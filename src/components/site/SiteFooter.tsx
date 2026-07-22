@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/brand/Logo";
 import { InfinityMotif } from "@/components/site/primitives";
-import { CTA_IDS, QUALIFY_PATH, qualifySearch } from "@/lib/cta-ids";
+import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
 import {
   EARLY_ADOPTER_DISCOUNT,
   WAITLIST_CTA_LABEL,
@@ -52,8 +52,8 @@ export function SiteFooter() {
               success.
             </p>
             <Link
-              to={QUALIFY_PATH}
-              search={qualifySearch(CTA_IDS.footer)}
+              to={WAITLIST_PATH}
+              search={waitlistSearch(CTA_IDS.footer)}
               className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition-colors hover:bg-primary/90"
             >
               {WAITLIST_CTA_LABEL}
