@@ -71,3 +71,34 @@ export const WEBSITE_JSONLD = {
   name: "Beema Health",
   publisher: { "@id": `${SITE_URL}/#organization` },
 } as const;
+
+export type FaqJsonLdItem = { q: string; a: string };
+
+/** FAQPage JSON-LD — pass exactly the Q&A items rendered visibly on the page. */
+export function faqPageJsonLd(items: readonly FaqJsonLdItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
+
+export type BreadcrumbJsonLdItem = { name: string; path: string };
+
+/** BreadcrumbList JSON-LD — pass items matching the visible breadcrumb trail exactly. */
+export function breadcrumbJsonLd(items: readonly BreadcrumbJsonLdItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: canonicalUrl(item.path),
+    })),
+  };
+}

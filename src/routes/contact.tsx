@@ -19,8 +19,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
-import { WAITLIST_CTA_LABEL } from "@/lib/marketing-copy";
+import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -60,6 +59,7 @@ const CONTACT_OPTIONS = [
 ];
 
 function ContactPage() {
+  const cta = resolveCta(CTA_IDS.contact);
   useEffect(() => {
     trackPageViewed("contact");
   }, []);
@@ -197,11 +197,8 @@ function ContactPage() {
               </MagneticButton>
               <MagneticButton>
                 <Button asChild size="xl">
-                  <Link
-                    to={WAITLIST_PATH}
-                    search={waitlistSearch(CTA_IDS.contact)}
-                  >
-                    {WAITLIST_CTA_LABEL} <ArrowRight />
+                  <Link to={cta.to} search={cta.search}>
+                    {cta.label} <ArrowRight />
                   </Link>
                 </Button>
               </MagneticButton>

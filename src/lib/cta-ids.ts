@@ -9,6 +9,10 @@ export const CTA_IDS = {
   pricing_footer: "pricing_footer",
   weight_loss_hero: "weight_loss_hero",
   weight_loss_footer: "weight_loss_footer",
+  tirzepatide_hero: "tirzepatide_hero",
+  tirzepatide_footer: "tirzepatide_footer",
+  semaglutide_hero: "semaglutide_hero",
+  semaglutide_footer: "semaglutide_footer",
   how_it_works: "how_it_works",
   faq: "faq",
   safety: "safety",
@@ -44,3 +48,45 @@ export function waitlistHref(ctaId: CtaId): string {
 
 /** @deprecated Prefer waitlistHref */
 export const qualifyHref = waitlistHref;
+
+/**
+ * ---------------------------------------------------------------------
+ * CTA switchboard
+ * ---------------------------------------------------------------------
+ * Beema is currently pre-launch: every marketing CTA sitewide sends
+ * visitors to the waitlist. Once the patient portal (intake, payment,
+ * dashboard — built separately from this marketing site) is live, CTAs
+ * need to start pointing there instead — possibly a different URL per
+ * CTA (e.g. a medication-specific intake link).
+ *
+ * `resolveCta(id)` is the ONLY place that decision should be made.
+ * Every CTA button/link in the app calls this instead of hardcoding
+ * WAITLIST_PATH or a label — so flipping the site from waitlist mode to
+ * live mode (fully or one CTA at a time) is a one-file edit here, not a
+ * hunt through every route/component.
+ *
+ * To change what a CTA does:
+ *   - Change every CTA at once → edit DEFAULT_CTA_TARGET.
+ *   - Change one CTA (e.g. tirzepatide_hero → a live intake URL) → add
+ *     an entry to CTA_OVERRIDES keyed by the CtaId. `to` may be an
+ *     internal path ("/intake/") or a full external URL (the portal
+ *     may live on a different domain) — both render correctly via
+ *     TanStack Router's <Link>.
+ */
+type CtaTarget = { label: string; to: string };
+
+const DEFAULT_CTA_TARGET: CtaTarget = {
+  label: "Join waitlist",
+  to: WAITLIST_PATH,
+};
+
+/** Per-CTA overrides. Empty today — every CtaId falls back to DEFAULT_CTA_TARGET. */
+const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {};
+
+/** Resolve a CTA id to its current label, destination, and attribution search params. */
+export function resolveCta(
+  ctaId: CtaId,
+): CtaTarget & { search: { cta_id: CtaId } } {
+  const target = CTA_OVERRIDES[ctaId] ?? DEFAULT_CTA_TARGET;
+  return { ...target, search: { cta_id: ctaId } };
+}

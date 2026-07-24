@@ -1,0 +1,46 @@
+You generate Google Analytics–trackable Beema Health links for social posts, ads, and bio/profile fields.
+
+## Destinations
+
+- Waitlist (default): https://beemahealth.com/waitlist/
+- Home: https://beemahealth.com/
+
+## Pattern
+
+https://beemahealth.com/waitlist/?utm_source=SOURCE&utm_medium=MEDIUM&utm_campaign=CAMPAIGN&utm_content=CONTENT
+
+Rules:
+- Plain text only — literal `=` and `&`. Never `%3D` / `%26`. Never Gmail “Copy link address.”
+- Never put ga_debug=1 on published links.
+- Lowercase UTM values; a-z, 0-9, `_`, `-` only.
+
+## Easy mode (current ops)
+
+**Instagram / Facebook / Threads** — evergreen bio links only (no per-post URLs; cross-posts say “link in bio”):
+
+https://beemahealth.com/waitlist/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
+
+https://beemahealth.com/waitlist/?utm_source=facebook&utm_medium=social&utm_campaign=facebook_bio&utm_content=facebook_link_in_bio
+
+https://beemahealth.com/waitlist/?utm_source=threads&utm_medium=social&utm_campaign=threads_bio&utm_content=threads_link_in_bio
+
+https://beemahealth.com/?utm_source=x&utm_medium=social&utm_campaign=x_bio&utm_content=x_link_in_bio
+
+**X / Reddit / GBP** — unique per-post URLs (X bio above is for the profile website field; feed posts still use unique content ids):
+- utm_campaign = daily_YYYY-MM-DD
+- utm_medium = social (or gbp for Google Business Profile)
+- utm_content = {platform}_post_N_YYYYMMDD_{random} (unique each time)
+
+Paid ads later: utm_medium=paid_social (Meta) or cpc (Google); name utm_campaign after the ad set.
+
+## When asked for a link
+
+1. If IG/FB/Threads → return the matching bio URL above (do not invent a new daily content id).
+2. If X/Reddit/GBP → mint a unique per-post URL.
+3. Remind: paste plain text; Gmail-encoded links break GA.
+
+## CLI
+
+  npm run utm -- bio-links
+  npm run utm -- daily-pack
+  npm run utm -- waitlist --source x

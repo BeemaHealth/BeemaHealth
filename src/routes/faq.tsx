@@ -18,8 +18,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
-import { WAITLIST_CTA_LABEL } from "@/lib/marketing-copy";
+import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
   Accordion,
   AccordionContent,
@@ -68,6 +67,7 @@ export const Route = createFileRoute("/faq")({
 });
 
 function FaqPage() {
+  const cta = resolveCta(CTA_IDS.faq);
   useEffect(() => {
     trackPageViewed("faq");
   }, []);
@@ -170,8 +170,8 @@ function FaqPage() {
           <div className="mt-12 text-center">
             <MagneticButton>
               <Button asChild size="xl">
-                <Link to={WAITLIST_PATH} search={waitlistSearch(CTA_IDS.faq)}>
-                  {WAITLIST_CTA_LABEL} <ArrowRight />
+                <Link to={cta.to} search={cta.search}>
+                  {cta.label} <ArrowRight />
                 </Link>
               </Button>
             </MagneticButton>

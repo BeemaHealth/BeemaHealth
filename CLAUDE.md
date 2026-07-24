@@ -58,6 +58,7 @@ Before writing any code for a new feature, run `/start-feature` (branch setup) t
 | **Medical intake** | `docs/features/medical-intake.md` |
 | **Analytics & tracking** | `docs/features/analytics.md` |
 | **Landing pages** | `docs/features/landing-pages.md` |
+| **Treatment pages (per-medication SEO pages, CTA switchboard)** | `docs/features/treatment-pages.md` |
 | **Staff CRM** | `docs/features/staff-crm.md` |
 | **Medications catalog** | `docs/features/medications.md` |
 | **Dynamic questionnaire system** | `docs/features/dynamic-questionnaire.md` |
@@ -131,6 +132,7 @@ Portal sections: use `AccountSectionCard` + a `tone` from `SectionTone` / `SECTI
 - Backend: one Django app per domain under `backend/apps/`.
 - Commits: only when the user asks. No `--no-verify`, no force-push to main.
 - Scope: smallest correct diff. No drive-by refactors.
+- **This marketing site is pre-launch (waitlist mode).** The real patient portal (intake, payment, dashboard) is a separate system being built independently — this repo is currently just the marketing/SEO surface. Every CTA button must call `resolveCta(CTA_IDS.x)` from `src/lib/cta-ids.ts` rather than hardcoding a waitlist path/label, so the whole site (or individual CTAs) can be repointed at the live portal from that one file when it's ready. See `docs/features/treatment-pages.md`.
 
 ---
 

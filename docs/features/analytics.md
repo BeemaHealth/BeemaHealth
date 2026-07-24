@@ -62,6 +62,27 @@ Marketing CTAs use stable ids (`src/lib/cta-ids.ts`), passed as `?cta_id=` on li
 
 Staff analytics can compare conversion by CTA placement when the API exists. For a **frontend-only** site, use GA4 Explorations + Formspree fields instead.
 
+## Generating trackable social / ad URLs
+
+Use unique UTM params on every published post so GA4 (visits) and Formspree (signups) can attribute traffic. Do **not** put `ga_debug=1` on public links.
+
+| Tool | Path |
+|------|------|
+| CLI | `npm run utm -- waitlist --source instagram` · `npm run utm -- home -s x` · `npm run utm -- daily-pack` |
+| Script | `scripts/generate-utm-url.mjs` |
+| Phone / AI agent prompt | `scripts/utm-url-agent-prompt.txt` (`npm run utm -- prompt`) |
+| Daily social Gmail-draft prompt | `scripts/daily-beema-social-posts-prompt.txt` |
+
+Pattern:
+
+```text
+https://beemahealth.com/waitlist/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
+```
+
+**Ops (simple):** IG / FB / Threads use evergreen **bio** links (`*_bio` campaigns). X / Reddit / GBP get unique per-post UTMs via `npm run utm -- daily-pack`. Cross-post captions say “link in bio.”
+
+Cross-posts of the same creative (IG/FB/Threads): same bio CTA — no per-post `utm_content`.
+
 ## Staff analytics views
 
 Accessible at `/staff/analytics`. Six aggregated views served by `backend/apps/analytics/staff_views.py`:
@@ -140,6 +161,9 @@ These are mutually exclusive per event — `FunnelEventCreateView` sets exactly 
 | `src/lib/ad-conversions.ts` | Meta Pixel + Google Ads init / Lead conversion |
 | `src/lib/marketing-copy.ts` | Early-adopter discount + waitlist social-proof constants |
 | `src/lib/utm.ts` | UTM capture from URL → funnel session |
+| `scripts/generate-utm-url.mjs` | CLI to mint unique social/ad UTM URLs |
+| `scripts/utm-url-agent-prompt.txt` | Prompt for an AI / phone agent to mint URLs |
+| `scripts/daily-beema-social-posts-prompt.txt` | Daily social Gmail draft prompt (includes UTM rules) |
 | `backend/apps/analytics/models.py` | FunnelEvent, LandingPage |
 | `backend/apps/analytics/views.py` | Public event ingestion endpoint |
 | `backend/apps/analytics/services.py` | Aggregation logic: step counts, dropoff, stopped sessions |

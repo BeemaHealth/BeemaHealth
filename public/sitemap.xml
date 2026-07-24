@@ -13,6 +13,16 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://beemahealth.com/tirzepatide/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://beemahealth.com/semaglutide/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://beemahealth.com/weight-loss/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>

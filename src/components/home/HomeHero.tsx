@@ -20,10 +20,9 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal, Marquee } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
+import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
   EARLY_ADOPTER_DISCOUNT,
-  WAITLIST_CTA_LABEL,
   earlyAdopterIncentiveLine,
 } from "@/lib/marketing-copy";
 import {
@@ -31,7 +30,7 @@ import {
   dualCompoundedShortPricingLine,
 } from "@/lib/medication-pricing";
 import heroImg from "@/assets/hero.jpg";
-import semaVial from "@/assets/treatments/compounded-semaglutide-vial.png";
+import semaVial from "@/assets/treatments/compounded-semaglutide-vial-cutout.png";
 
 const CHECKLIST_ITEMS = [
   "Licensed USA physician network",
@@ -95,6 +94,7 @@ function useHeroColumnStagger(reduceMotion: boolean) {
 export function HomeHero() {
   const reduceMotion = useReducedMotion();
   const { container, item } = useHeroColumnStagger(Boolean(reduceMotion));
+  const heroCta = resolveCta(CTA_IDS.home_hero);
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -192,11 +192,8 @@ export function HomeHero() {
             >
               <MagneticButton>
                 <Button asChild size="xl">
-                  <Link
-                    to={WAITLIST_PATH}
-                    search={waitlistSearch(CTA_IDS.home_hero)}
-                  >
-                    {WAITLIST_CTA_LABEL} <ArrowRight />
+                  <Link to={heroCta.to} search={heroCta.search}>
+                    {heroCta.label} <ArrowRight />
                   </Link>
                 </Button>
               </MagneticButton>
@@ -360,7 +357,7 @@ export function HomeHero() {
               }
             >
               <motion.div
-                className="glass-panel rounded-3xl p-3 shadow-lift"
+                className="glass-panel-clear rounded-3xl p-2 shadow-sm"
                 animate={
                   reduceMotion ? undefined : { y: [-10, 10], rotate: [-4, 4] }
                 }

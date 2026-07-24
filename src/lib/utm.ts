@@ -19,10 +19,79 @@ export type AttributionSnapshot = Partial<UtmParams> & {
   page_path?: string;
 };
 
+/**
+ * Gmail (and some “copy link” UIs) sometimes percent-encode the entire UTM
+ * query so `=` → `%3D` and `&` → `%26`. The browser then treats the blob as
+ * one parameter *name*, so GA never sees `utm_source` / `utm_content`.
+ *
+ * Example broken:
+ *   ?utm_source%3Dx%26utm_medium%3Dsocial%26…&source=gmail&ust=…
+ * Repaired:
+ *   ?utm_source=x&utm_medium=social&…&source=gmail&ust=…
+ */
+export function repairMangledUtmSearch(search: string): string {
+  const raw = search.startsWith("?") ? search.slice(1) : search;
+  if (!raw) return search.startsWith("?") ? "?" : "";
+
+  const params = new URLSearchParams(raw);
+  if (params.get("utm_source")) {
+    return search.startsWith("?") ? `?${raw}` : raw;
+  }
+
+  // Case: first segment is fully encoded (`utm_source%3Dx%26utm_medium%3D…`)
+  const amp = raw.indexOf("&");
+  const first = amp === -1 ? raw : raw.slice(0, amp);
+  const rest = amp === -1 ? "" : raw.slice(amp); // includes leading &
+  if (/%3[Dd]|%26/.test(first) && /utm_source/i.test(first)) {
+    try {
+      const decoded = decodeURIComponent(first);
+      if (decoded.includes("utm_source=") && decoded.includes("&")) {
+        const fixed = `${decoded}${rest}`;
+        return search.startsWith("?") ? `?${fixed}` : fixed;
+      }
+    } catch {
+      // ignore bad encoding
+    }
+  }
+
+  // Case: URLSearchParams already decoded the blob into a key named
+  // `utm_source=x&utm_medium=social&…` with an empty value
+  for (const key of params.keys()) {
+    if (key.startsWith("utm_source=") && key.includes("&")) {
+      const merged = new URLSearchParams(key);
+      if (!merged.get("utm_source")) continue;
+      if (rest) {
+        for (const [k, v] of new URLSearchParams(rest.slice(1))) {
+          if (!merged.has(k)) merged.set(k, v);
+        }
+      }
+      const out = merged.toString();
+      return search.startsWith("?") ? `?${out}` : out;
+    }
+  }
+
+  return search.startsWith("?") ? `?${raw}` : raw;
+}
+
+/**
+ * If the address bar has a Gmail-mangled UTM query, rewrite it in place so
+ * GA4’s automatic campaign detection can read real utm_* keys.
+ */
+export function repairMangledUtmLocation(): boolean {
+  if (typeof window === "undefined") return false;
+  const current = window.location.search;
+  const fixed = repairMangledUtmSearch(current);
+  if (!fixed || fixed === current) return false;
+  if (!new URLSearchParams(fixed).get("utm_source")) return false;
+  const next = `${window.location.pathname}${fixed}${window.location.hash}`;
+  window.history.replaceState(window.history.state, "", next);
+  return true;
+}
+
 export function readUtmsFromUrl(
   search: string = window.location.search,
 ): Partial<UtmParams> {
-  const params = new URLSearchParams(search);
+  const params = new URLSearchParams(repairMangledUtmSearch(search));
   const result: Partial<UtmParams> = {};
   for (const key of [
     "utm_source",
@@ -75,6 +144,9 @@ export function clearPendingUtms(): void {
  */
 export function capturePageUtms(): void {
   if (typeof window === "undefined") return;
+
+  // Fix Gmail/double-encoded UTMs before Formspree + GA read the query.
+  repairMangledUtmLocation();
 
   const fromUrl = readUtmsFromUrl();
   const existing = getPendingUtms();

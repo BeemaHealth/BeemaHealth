@@ -28,8 +28,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
-import { WAITLIST_CTA_LABEL } from "@/lib/marketing-copy";
+import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
@@ -84,6 +83,7 @@ const AFTER = [
 ];
 
 function HowItWorksPage() {
+  const cta = resolveCta(CTA_IDS.how_it_works);
   const reduceMotion = useReducedMotion();
 
   // The page's one scroll-parallax accent: a faint hexagon drifting behind
@@ -218,11 +218,8 @@ function HowItWorksPage() {
           <div className="mt-10 text-center">
             <MagneticButton>
               <Button asChild size="lg">
-                <Link
-                  to={WAITLIST_PATH}
-                  search={waitlistSearch(CTA_IDS.how_it_works)}
-                >
-                  {WAITLIST_CTA_LABEL} <ArrowRight />
+                <Link to={cta.to} search={cta.search}>
+                  {cta.label} <ArrowRight />
                 </Link>
               </Button>
             </MagneticButton>

@@ -30,6 +30,8 @@ type Treatment = {
   pricing: CompoundedMedicationPricing;
   image: string;
   imageAlt: string;
+  /** Own indexable landing page — see docs/features/ (treatment pages). */
+  to: string;
 };
 
 /**
@@ -48,6 +50,7 @@ const TREATMENTS: Treatment[] = [
     pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
     image: compoundedSemaglutideVialImg,
     imageAlt: "Beema Health compounded semaglutide injection vial",
+    to: "/semaglutide/",
   },
   {
     id: "compounded-tirzepatide",
@@ -57,6 +60,7 @@ const TREATMENTS: Treatment[] = [
     pricing: COMPOUNDED_TIRZEPATIDE_PRICING,
     image: compoundedTirzepatideVialImg,
     imageAlt: "Beema Health compounded tirzepatide injection vial",
+    to: "/tirzepatide/",
   },
 ];
 
@@ -173,8 +177,8 @@ function TreatmentCard({
   return (
     <MotionLink
       ref={cardRef}
-      to="/weight-loss/"
-      aria-label={`Learn more about ${treatment.name} on the weight-loss page`}
+      to={treatment.to}
+      aria-label={`Explore ${treatment.name}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 32, rotate: reduceMotion ? 0 : rotateOffset }}
@@ -228,7 +232,7 @@ function TreatmentCard({
       </div>
 
       <div className="flex items-center gap-1.5 px-6 pb-8 text-sm font-semibold text-accent-foreground md:px-8 md:pb-10">
-        <span>Learn more</span>
+        <span>Explore {treatment.name}</span>
         <ArrowRight className="size-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
       </div>
     </MotionLink>

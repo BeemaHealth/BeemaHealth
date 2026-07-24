@@ -15,6 +15,8 @@ const robotsTxt = readFileSync(
 /** Live, indexable marketing pages. Update together with public/sitemap.xml. */
 const EXPECTED_PATHS = [
   "/",
+  "/tirzepatide/",
+  "/semaglutide/",
   "/weight-loss/",
   "/how-it-works/",
   "/about/",

@@ -1,10 +1,12 @@
 import { useRef, type MouseEvent as ReactMouseEvent } from "react";
+import { Link } from "@tanstack/react-router";
 import {
   motion,
   useMotionValue,
   useReducedMotion,
   useSpring,
 } from "motion/react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
@@ -26,6 +28,8 @@ type Treatment = {
   fdaApproved: boolean;
   image: string;
   imageAlt: string;
+  /** Own indexable landing page — see docs/features/ (treatment pages). */
+  to: string;
 };
 
 const TREATMENTS: Treatment[] = [
@@ -38,6 +42,7 @@ const TREATMENTS: Treatment[] = [
     fdaApproved: false,
     image: compoundedSemaglutideVialImg,
     imageAlt: "Beema Health compounded semaglutide injection vial",
+    to: "/semaglutide/",
   },
   {
     id: "compounded-tirzepatide",
@@ -48,6 +53,7 @@ const TREATMENTS: Treatment[] = [
     fdaApproved: false,
     image: compoundedTirzepatideVialImg,
     imageAlt: "Beema Health compounded tirzepatide injection vial",
+    to: "/tirzepatide/",
   },
 ];
 
@@ -89,9 +95,17 @@ export function TreatmentLineup() {
 }
 
 /**
+ * Motion-wrapped router Link — defined once at module scope so its identity
+ * is stable across renders (recreating it per-render would remount the
+ * card and drop the tilt/reveal animation state).
+ */
+const MotionLink = motion.create(Link);
+
+/**
  * Cursor-driven tilt (rotateX/rotateY via pointer position) layered on top
  * of the existing lift/shadow treatment. No-ops under reduced motion and on
  * touch (no mousemove without a real pointer), so it only ever adds polish.
+ * The whole card is a single Link — no interactive elements nested inside.
  */
 function TreatmentCard({
   treatment,
@@ -101,7 +115,7 @@ function TreatmentCard({
   index: number;
 }) {
   const reduceMotion = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLAnchorElement>(null);
   const rotateXValue = useMotionValue(0);
   const rotateYValue = useMotionValue(0);
   const springRotateX = useSpring(rotateXValue, {
@@ -113,7 +127,7 @@ function TreatmentCard({
     damping: 22,
   });
 
-  function handleMouseMove(event: ReactMouseEvent<HTMLDivElement>) {
+  function handleMouseMove(event: ReactMouseEvent<HTMLAnchorElement>) {
     if (reduceMotion || !ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const px = (event.clientX - rect.left) / rect.width - 0.5;
@@ -128,8 +142,10 @@ function TreatmentCard({
   }
 
   return (
-    <motion.article
+    <MotionLink
       ref={ref}
+      to={treatment.to}
+      aria-label={`Explore ${treatment.name}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 24 }}
@@ -151,8 +167,8 @@ function TreatmentCard({
             }
       }
       className={cn(
-        "group relative flex min-h-[400px] flex-col overflow-hidden rounded-3xl sm:min-h-[420px] md:min-h-[480px]",
-        "bg-primary-soft shadow-lift",
+        "group relative flex min-h-[400px] cursor-pointer flex-col overflow-hidden rounded-3xl outline-none sm:min-h-[420px] md:min-h-[480px]",
+        "bg-primary-soft shadow-lift focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       )}
     >
       {treatment.badge && (
@@ -180,7 +196,7 @@ function TreatmentCard({
         />
       </div>
 
-      <div className="space-y-1 px-6 pb-8 pt-4 md:px-8 md:pb-10 md:pt-5">
+      <div className="space-y-1 px-6 pb-4 pt-4 md:px-8 md:pt-5">
         <h3 className="text-2xl font-bold text-foreground md:text-[1.75rem]">
           {treatment.name}
         </h3>
@@ -195,6 +211,11 @@ function TreatmentCard({
           {treatment.form}
         </p>
       </div>
-    </motion.article>
+
+      <div className="flex items-center gap-1.5 px-6 pb-8 text-sm font-semibold text-accent-foreground md:px-8 md:pb-10">
+        <span>Explore {treatment.name}</span>
+        <ArrowRight className="size-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
+      </div>
+    </MotionLink>
   );
 }

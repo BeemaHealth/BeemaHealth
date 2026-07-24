@@ -12,7 +12,7 @@ import {
   inputCls,
 } from "@/components/quiz/quiz-primitives";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
+import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -48,6 +48,7 @@ async function finishLogin(
 }
 
 function LoginPage() {
+  const loginPromptCta = resolveCta(CTA_IDS.login_prompt);
   const { redirect } = Route.useSearch();
   const { setSession } = useAuth();
   const emailRef = useRef<HTMLInputElement>(null);
@@ -204,8 +205,8 @@ function LoginPage() {
         <p className="mt-4 text-center text-sm text-muted-foreground">
           New patient?{" "}
           <Link
-            to={WAITLIST_PATH}
-            search={waitlistSearch(CTA_IDS.login_prompt)}
+            to={loginPromptCta.to}
+            search={loginPromptCta.search}
             className="text-primary underline"
           >
             Start eligibility check

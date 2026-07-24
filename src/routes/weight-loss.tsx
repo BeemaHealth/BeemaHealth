@@ -28,8 +28,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
-import { WAITLIST_CTA_LABEL } from "@/lib/marketing-copy";
+import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
   dualCompoundedHeroPricingLine,
   dualCompoundedShortPricingLine,
@@ -74,6 +73,8 @@ const BENEFITS = [
 ];
 
 function WeightLossPage() {
+  const heroCta = resolveCta(CTA_IDS.weight_loss_hero);
+  const footerCta = resolveCta(CTA_IDS.weight_loss_footer);
   useEffect(() => {
     trackPageViewed("weight_loss");
   }, []);
@@ -129,11 +130,8 @@ function WeightLossPage() {
           >
             <MagneticButton>
               <Button asChild size="xl">
-                <Link
-                  to={WAITLIST_PATH}
-                  search={waitlistSearch(CTA_IDS.weight_loss_hero)}
-                >
-                  {WAITLIST_CTA_LABEL} <ArrowRight />
+                <Link to={heroCta.to} search={heroCta.search}>
+                  {heroCta.label} <ArrowRight />
                 </Link>
               </Button>
             </MagneticButton>
@@ -281,11 +279,8 @@ function WeightLossPage() {
                 size="xl"
                 className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
               >
-                <Link
-                  to={WAITLIST_PATH}
-                  search={waitlistSearch(CTA_IDS.weight_loss_footer)}
-                >
-                  {WAITLIST_CTA_LABEL} <ArrowRight />
+                <Link to={footerCta.to} search={footerCta.search}>
+                  {footerCta.label} <ArrowRight />
                 </Link>
               </Button>
             </MagneticButton>

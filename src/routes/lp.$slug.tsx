@@ -8,7 +8,7 @@ import {
 import { storePendingUtms } from "@/lib/utm";
 import { trackPageViewed } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
+import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/lp/$slug")({
@@ -130,12 +130,10 @@ function LandingPageRoute() {
         <Button
           size="lg"
           className="mt-10"
-          onClick={() =>
-            void navigate({
-              to: WAITLIST_PATH,
-              search: waitlistSearch(CTA_IDS.landing_page),
-            })
-          }
+          onClick={() => {
+            const cta = resolveCta(CTA_IDS.landing_page);
+            void navigate({ to: cta.to, search: cta.search });
+          }}
         >
           Get started
         </Button>

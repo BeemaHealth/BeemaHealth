@@ -67,4 +67,26 @@ describe("utm / attribution (frontend-only)", () => {
     expect(snap.cta_id).toBe("footer");
     expect(snap.page_path).toBe("/waitlist/?utm_source=meta&cta_id=footer");
   });
+
+  it("repairs Gmail-style percent-encoded UTM blobs so GA keys exist", () => {
+    const mangled =
+      "?utm_source%3Dx%26utm_medium%3Dsocial%26utm_campaign%3Ddaily_2026-07-22%26utm_content%3Dx_post_1_20260722_jbwy&source=gmail&ust=1&sa=E";
+    expect(readUtmsFromUrl(mangled)).toEqual({
+      utm_source: "x",
+      utm_medium: "social",
+      utm_campaign: "daily_2026-07-22",
+      utm_content: "x_post_1_20260722_jbwy",
+    });
+  });
+
+  it("leaves already-valid UTM queries unchanged", () => {
+    const ok =
+      "?utm_source=x&utm_medium=social&utm_campaign=daily_2026-07-22&utm_content=x_post_1";
+    expect(readUtmsFromUrl(ok)).toEqual({
+      utm_source: "x",
+      utm_medium: "social",
+      utm_campaign: "daily_2026-07-22",
+      utm_content: "x_post_1",
+    });
+  });
 });

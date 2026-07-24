@@ -1,19 +1,23 @@
 import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/brand/Logo";
 import { InfinityMotif } from "@/components/site/primitives";
-import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
-import {
-  EARLY_ADOPTER_DISCOUNT,
-  WAITLIST_CTA_LABEL,
-} from "@/lib/marketing-copy";
+import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
+import { EARLY_ADOPTER_DISCOUNT } from "@/lib/marketing-copy";
 import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
 
-/** Trailing-slash paths — match sitemap.xml / canonicalUrl / GitHub Pages 200 URLs. */
+/**
+ * Trailing-slash paths — match sitemap.xml / canonicalUrl / GitHub Pages 200
+ * URLs. No direct "Weight Loss" link — /weight-loss/ is kept live and
+ * indexable (see public/sitemap.xml) but intentionally has no internal
+ * links pointing at it while the per-medication pages below are the
+ * primary entry points.
+ */
 const COLUMNS = [
   {
     title: "Care",
     links: [
-      { label: "Weight Loss", to: "/weight-loss/" },
+      { label: "Compounded Tirzepatide", to: "/tirzepatide/" },
+      { label: "Compounded Semaglutide", to: "/semaglutide/" },
       { label: "How it works", to: "/how-it-works/" },
       // { label: "Pricing", to: "/pricing/" }, // disabled — pricing model not finalized yet
     ],
@@ -38,6 +42,7 @@ const COLUMNS = [
 ] as const;
 
 export function SiteFooter() {
+  const cta = resolveCta(CTA_IDS.footer);
   return (
     <footer className="bg-grad-ink relative overflow-hidden text-ink-foreground">
       <InfinityMotif className="pointer-events-none absolute -right-16 -top-20 w-80 text-primary/10" />
@@ -52,11 +57,11 @@ export function SiteFooter() {
               success.
             </p>
             <Link
-              to={WAITLIST_PATH}
-              search={waitlistSearch(CTA_IDS.footer)}
+              to={cta.to}
+              search={cta.search}
               className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition-colors hover:bg-primary/90"
             >
-              {WAITLIST_CTA_LABEL}
+              {cta.label}
             </Link>
             <p className="mt-3 text-xs font-medium text-primary">
               Early adopters: {EARLY_ADOPTER_DISCOUNT}

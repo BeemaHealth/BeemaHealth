@@ -3,10 +3,9 @@ import { Link } from "@tanstack/react-router";
 import { HexMotif, MagneticButton } from "@/components/site/primitives";
 import { LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { CTA_IDS, WAITLIST_PATH, waitlistSearch } from "@/lib/cta-ids";
+import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
   EARLY_ADOPTER_DISCOUNT,
-  WAITLIST_CTA_LABEL,
   earlyAdopterIncentiveLine,
 } from "@/lib/marketing-copy";
 
@@ -15,6 +14,7 @@ import {
  * floating hexagon outlines behind an oversized "Ready to start?" reveal.
  */
 export function FinalCTASection() {
+  const cta = resolveCta(CTA_IDS.home_mid);
   return (
     <section className="pb-16 md:pb-24">
       <div className="veya-container">
@@ -43,11 +43,8 @@ export function FinalCTASection() {
                 size="xl"
                 className="bg-ink text-ink-foreground hover:bg-ink/85"
               >
-                <Link
-                  to={WAITLIST_PATH}
-                  search={waitlistSearch(CTA_IDS.home_mid)}
-                >
-                  {WAITLIST_CTA_LABEL}
+                <Link to={cta.to} search={cta.search}>
+                  {cta.label}
                   <ArrowRight className="size-4" />
                 </Link>
               </Button>

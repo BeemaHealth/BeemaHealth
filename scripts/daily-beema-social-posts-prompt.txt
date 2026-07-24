@@ -1,0 +1,262 @@
+Generate daily social media content for Beema Health and create a Gmail draft with all posts ready to copy/paste.
+
+
+
+**IMPORTANT: Content Strategy**
+
+- DO NOT mention specific products, medications, or services Beema Health plans to offer.
+
+- Focus on: helpful health advice, educational content, dieting tips, wellness teaser posts, "coming soon" vibes.
+
+- Every post must include a join-waitlist CTA (see Tracking Rules). Never use a bare beemahealth.com link without UTM params.
+
+
+
+**Tracking Rules (required) — keep it simple**
+
+Base waitlist path: https://beemahealth.com/waitlist/
+
+### Evergreen bio / profile links (Instagram + Facebook + Threads)
+
+Cross-posted IG → FB → Threads creatives do **NOT** get per-post URLs.
+CTA in those posts: “link in bio” / “link in profile” only.
+
+Use these fixed URLs (paste as plain text into each platform’s website/bio field once; do not regenerate daily):
+
+- Instagram bio:
+  https://beemahealth.com/waitlist/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
+
+- Facebook page / profile website:
+  https://beemahealth.com/waitlist/?utm_source=facebook&utm_medium=social&utm_campaign=facebook_bio&utm_content=facebook_link_in_bio
+
+- Threads bio / website:
+  https://beemahealth.com/waitlist/?utm_source=threads&utm_medium=social&utm_campaign=threads_bio&utm_content=threads_link_in_bio
+
+- X website / profile:
+  https://beemahealth.com/?utm_source=x&utm_medium=social&utm_campaign=x_bio&utm_content=x_link_in_bio
+
+In the Gmail draft, include a one-time reminder block with these bio URLs at the top. Do **not** invent new IG/FB/Threads UTM links per post. X feed posts still get unique per-post URLs (below); the X bio link is optional for the profile website field.
+
+### Per-post trackable links (X, Reddit, GBP only)
+
+Pattern:
+https://beemahealth.com/waitlist/?utm_source=SOURCE&utm_medium=MEDIUM&utm_campaign=CAMPAIGN&utm_content=CONTENT
+
+Where:
+- DATE = today YYYY-MM-DD
+- DATECOMPACT = YYYYMMDD
+- RANDOM = fresh 3–4 char alphanumeric id (unique per post)
+- utm_campaign = daily_DATE  (example: daily_2026-07-23)
+- utm_medium = social (organic) · gbp for Google Business Profile
+- X: utm_source=x , utm_content=x_post_1_DATECOMPACT_RANDOM …
+- Reddit: utm_source=reddit , utm_content=reddit_post_1_DATECOMPACT_RANDOM
+- GBP: utm_source=google , utm_medium=gbp , utm_content=gbp_post_1_DATECOMPACT_RANDOM
+
+Never include ga_debug=1 on published links.
+
+Optional local generator:
+  npm run utm -- daily-pack
+  npm run utm -- bio-links
+
+**Copy/paste hygiene:**
+- Paste URLs as plain text with literal `=` and `&` — never `%3D` / `%26`.
+- Do NOT use Gmail “Copy link address” (adds `source=gmail` and breaks GA).
+- Broken look: `…?utm_source%3D…&source=gmail` — never post those.
+- X `t.co` shortening is fine if the destination UTMs are clean.
+
+Under each X / Reddit / GBP post in the email:
+🔗 Trackable link: [full URL with UTMs]
+
+Do not shorten URLs unless the platform requires it.
+
+
+
+**How we measure (do not put in social posts):**
+
+- Visits → GA4 from UTMs (Chrome most reliable; some browsers block GA).
+- Signups → Formspree utm_* fields.
+- IG/FB/Threads traffic rolls up by platform bio campaign (not per feed post).
+
+
+
+**Content Requirements:**
+
+
+
+1. **INSTAGRAM / FACEBOOK / THREADS — 3 posts (cross-post)**
+
+   - Exactly 3 posts; same creative cross-posted to Instagram, Facebook, and Threads.
+
+   - For each: AI image prompt OR generate the image if you can.
+
+   - Educational / teaser / wellness / dieting tips / coming soon.
+
+   - Platform-appropriate hashtags.
+
+   - CTA: “Join the waitlist — link in bio” (no per-post URL in the caption).
+
+   - Best posting time for each.
+
+
+
+2. **X / TWITTER — 2–3 posts**
+
+   - Educational or teaser; include the full per-post trackable waitlist URL (or CTA + URL in a reply if over 280 chars).
+
+   - Best posting times.
+
+
+
+3. **REDDIT — 1 post**
+
+   - Helpful advice tone. Prefer r/beemahealth.
+
+   - Include per-post trackable waitlist CTA.
+
+   - Recommend flair from: Discussion, News, Research, Question, Nutrition, Exercise, GLP-1, Telehealth, Success Story.
+
+   - Include "beemahealth update" as a tag/flair if applicable.
+
+
+
+4. **GOOGLE BUSINESS PROFILE (GBP)**
+
+   Include in the email:
+
+   "📍 GOOGLE BUSINESS PROFILE UPDATE INSTRUCTIONS:
+
+   1. Login to: matt.aertker@beemahealth.com
+
+   2. Go to: https://business.google.com/locations
+
+   3. This will take you directly to your GBP manage page
+
+   4. Update your business information, posts, or messaging as needed
+
+   5. Use the post copy below if creating a new GBP post"
+
+   Then 1 GBP-specific post (professional) with the GBP per-post trackable waitlist link.
+
+
+
+**Gmail Draft Creation:**
+
+Use mcp__Gmail__create_draft:
+
+- To: matt.aertker@beemahealth.com
+
+- Subject: "Beema Health Social Posts - [Today's Date]"
+
+- Body format:
+
+
+
+---
+
+📧 BEEMA HEALTH DAILY SOCIAL CONTENT
+
+Generated: [Today's Date]
+
+Campaign tag (X/Reddit/GBP posts): daily_[YYYY-MM-DD]
+
+
+
+---
+
+
+
+📌 BIO / PROFILE LINKS (set once — IG / FB / Threads)
+
+Instagram: https://beemahealth.com/waitlist/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
+
+Facebook: https://beemahealth.com/waitlist/?utm_source=facebook&utm_medium=social&utm_campaign=facebook_bio&utm_content=facebook_link_in_bio
+
+Threads: https://beemahealth.com/waitlist/?utm_source=threads&utm_medium=social&utm_campaign=threads_bio&utm_content=threads_link_in_bio
+
+X: https://beemahealth.com/?utm_source=x&utm_medium=social&utm_campaign=x_bio&utm_content=x_link_in_bio
+
+Cross-post captions → “link in bio” only. Do not paste per-post URLs for IG/FB/Threads.
+
+
+
+---
+
+
+
+📍 GOOGLE BUSINESS PROFILE UPDATE INSTRUCTIONS
+
+1. Login to: matt.aertker@beemahealth.com
+
+2. Go to: https://business.google.com/locations
+
+[GBP post content]
+
+🔗 Trackable link: [GBP UTM URL]
+
+
+
+---
+
+
+
+📱 INSTAGRAM / FACEBOOK / THREADS — 3 Posts (Cross-Post)
+
+
+
+🖼️ POST 1
+
+[Post copy — Instagram version; CTA = link in bio]
+
+🎨 Image Prompt: [...]
+
+Best time to post: [...]
+
+
+
+[Continue for posts 2–3…]
+
+
+
+---
+
+
+
+🐦 X / TWITTER — 2–3 Posts
+
+
+
+POST 1: [Copy including trackable URL]
+
+🔗 Trackable link: [...]
+
+Best time to post: [...]
+
+
+
+---
+
+
+
+🔴 REDDIT — 1 Post
+
+
+
+Title: [...]
+
+Subreddits: [...]
+
+Recommended Flair: [...]
+
+Tags: [...]
+
+Content: [...]
+
+🔗 Trackable link: [...]
+
+
+
+---
+
+
+
+**CRITICAL:** Ensure the Gmail draft is created successfully. Generate all content now and create the Gmail draft.

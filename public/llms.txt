@@ -13,7 +13,9 @@ Key facts:
 ## Main pages
 
 - [Home](https://beemahealth.com/): what Beema Health is and how care works
-- [Weight-loss treatments](https://beemahealth.com/weight-loss/): the medication lineup and who each is for
+- [Compounded Tirzepatide](https://beemahealth.com/tirzepatide/): tirzepatide-specific care, pricing, eligibility, and FAQ
+- [Compounded Semaglutide](https://beemahealth.com/semaglutide/): semaglutide-specific care, pricing, eligibility, and FAQ
+- [Weight-loss treatments](https://beemahealth.com/weight-loss/): overview of the medication lineup and who each is for
 - [How it works](https://beemahealth.com/how-it-works/): step-by-step care process
 - [Safety](https://beemahealth.com/safety/): side effects, contraindications, and clinical safeguards
 - [FAQ](https://beemahealth.com/faq/): common questions about pricing, eligibility, medications, shipping, and refills

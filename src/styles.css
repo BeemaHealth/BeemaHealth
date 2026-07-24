@@ -245,6 +245,14 @@
   border: 1px solid color-mix(in oklch, var(--foreground) 10%, transparent);
 }
 
+/* Near-clear glass for floating product cutouts over the hero. */
+@utility glass-panel-clear {
+  background-color: color-mix(in oklch, var(--background) 3%, transparent);
+  backdrop-filter: blur(4px) saturate(110%);
+  -webkit-backdrop-filter: blur(4px) saturate(110%);
+  border: 1px solid color-mix(in oklch, var(--foreground) 4%, transparent);
+}
+
 @utility glass-panel-dark {
   background-color: color-mix(in oklch, var(--ink) 68%, transparent);
   backdrop-filter: blur(18px) saturate(140%);
