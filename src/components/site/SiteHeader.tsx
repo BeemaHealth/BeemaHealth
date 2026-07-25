@@ -1,22 +1,15 @@
-import { useRef, useState, type ComponentProps } from "react";
+import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { Link } from "@tanstack/react-router";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { ChevronDown, Phone } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet";
+import { CircleRevealMenu } from "@/components/site/CircleRevealMenu";
+import { EASE_OUT } from "@/components/home/home-motion";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { EARLY_ADOPTER_DISCOUNT_SHORT } from "@/lib/marketing-copy";
+import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
+import { SOCIAL_LINKS } from "@/lib/social-links";
 import { cn } from "@/lib/utils";
 
 type NavItem = { label: string; to: string };
@@ -41,6 +34,173 @@ const WEIGHT_LOSS_ITEMS: NavItem[] = [
   { label: "Compounded Tirzepatide", to: "/tirzepatide/" },
   { label: "Compounded Semaglutide", to: "/semaglutide/" },
 ];
+
+/**
+ * Plain, hand-rolled hover dropdown — deliberately not built on Radix's
+ * DropdownMenu. That component is designed for click/keyboard menus: its
+ * Popper positioning recalculates on every layout tick and its open/close
+ * animation resizes the content for ~150ms after opening, both of which
+ * move the menu's hit-box out from under a stationary cursor and caused a
+ * persistent open/close flicker. This version has no portal, no animation,
+ * and no dynamic positioning — the menu is a plain absolutely-positioned
+ * child of the trigger's own wrapper, so there is nothing that can shift
+ * under the cursor while it's open.
+ */
+function WeightLossNavDropdown() {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openMenu = () => {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    setOpen(true);
+  };
+  const closeMenuSoon = () => {
+    closeTimeoutRef.current = setTimeout(() => setOpen(false), 150);
+  };
+
+  // Click-outside + Escape close it when opened via click/keyboard rather
+  // than hover (hover already closes itself via onMouseLeave above).
+  useEffect(() => {
+    if (!open) return;
+    function handlePointerDown(event: PointerEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    }
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative"
+      onMouseEnter={openMenu}
+      onMouseLeave={closeMenuSoon}
+    >
+      <button
+        type="button"
+        aria-haspopup="true"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-expanded:bg-muted aria-expanded:text-foreground"
+      >
+        Weight Loss
+        <ChevronDown className="size-3.5" aria-hidden />
+      </button>
+      {open && (
+        <div
+          role="menu"
+          className="absolute left-0 top-full z-50 mt-1 min-w-[10rem] overflow-hidden whitespace-nowrap rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md"
+        >
+          {WEIGHT_LOSS_ITEMS.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className="block rounded-sm px-2 py-1.5 text-sm text-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Mobile-menu equivalent of `WeightLossNavDropdown` — a tap-to-expand
+ * disclosure instead of a hover dropdown, since there's no hover on touch.
+ * Local `expanded` state so it collapses back down each time the mobile
+ * menu itself is reopened, rather than persisting open across visits.
+ */
+function MobileWeightLossDropdown({ onNavigate }: { onNavigate: () => void }) {
+  const [expanded, setExpanded] = useState(false);
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div>
+      <button
+        type="button"
+        aria-expanded={expanded}
+        onClick={() => setExpanded((e) => !e)}
+        className="flex w-full items-center justify-between rounded-xl px-1 py-2.5 text-xl font-semibold text-ink-foreground transition-colors hover:text-primary"
+      >
+        Weight Loss
+        <ChevronDown
+          className={cn(
+            "size-5 shrink-0 transition-transform duration-300 ease-out",
+            expanded && "rotate-180",
+          )}
+          aria-hidden
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            key="weight-loss-links"
+            initial={reduceMotion ? false : { height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.28, ease: EASE_OUT }}
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col gap-1 pb-1 pl-3">
+              {WEIGHT_LOSS_ITEMS.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={onNavigate}
+                  className="rounded-xl px-1 py-2 text-base font-medium text-ink-foreground/75 transition-colors hover:text-primary"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function SocialIconRow({
+  linkClassName = "text-muted-foreground transition-colors hover:text-foreground",
+  iconClassName = "size-4",
+}: {
+  linkClassName?: string;
+  iconClassName?: string;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+        <a
+          key={label}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Beema Health on ${label}`}
+          className={linkClassName}
+        >
+          <Icon className={iconClassName} />
+        </a>
+      ))}
+    </div>
+  );
+}
 
 /** Pointy-top hexagon menu trigger — matches HexMotif / logo geometry. */
 function HexMenuButton({ className, ...props }: ComponentProps<"button">) {
@@ -88,65 +248,25 @@ export function SiteHeader() {
   const headerCta = resolveCta(CTA_IDS.nav_header);
   const mobileCta = resolveCta(CTA_IDS.nav_mobile);
 
-  // Hoverable "Weight Loss" dropdown. A single mouseenter/mouseleave pair on
-  // the wrapper (not separate ones on trigger + content) is what makes this
-  // glitch-free: mouseenter/mouseleave only fire when the pointer crosses
-  // the boundary of an element's full DOM subtree, so as long as the menu
-  // content renders as a real DOM descendant of the wrapper — not through
-  // Radix's default Portal, which would move it out of that subtree and
-  // reintroduce the trigger/content hand-off race — moving from the trigger
-  // into the content below it never crosses that boundary and never fires a
-  // spurious close. That's why DropdownMenuPrimitive.Content is used here
-  // directly instead of the shared (portaled) DropdownMenuContent.
-  const [weightLossOpen, setWeightLossOpen] = useState(false);
-  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const openWeightLossMenu = () => {
-    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
-    setWeightLossOpen(true);
-  };
-  const closeWeightLossMenuSoon = () => {
-    closeTimeoutRef.current = setTimeout(() => setWeightLossOpen(false), 150);
-  };
-
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
       <div className="veya-container flex h-16 items-center justify-between gap-4">
-        <Link to="/" className="shrink-0" aria-label="Beema Health home">
+        {/* Desktop lockup — mobile gets its own centered, stacked lockup below. */}
+        <Link
+          to="/"
+          className="hidden shrink-0 lg:block"
+          aria-label="Beema Health home"
+        >
           <Logo className="h-9" />
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
-          <div
-            className="relative"
-            onMouseEnter={openWeightLossMenu}
-            onMouseLeave={closeWeightLossMenuSoon}
-          >
-            <DropdownMenu
-              open={weightLossOpen}
-              onOpenChange={setWeightLossOpen}
-            >
-              <DropdownMenuTrigger className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:bg-muted data-[state=open]:text-foreground">
-                Weight Loss
-                <ChevronDown className="size-3.5" aria-hidden />
-              </DropdownMenuTrigger>
-              <DropdownMenuPrimitive.Content
-                align="start"
-                sideOffset={4}
-                className="z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 origin-(--radix-dropdown-menu-content-transform-origin)"
-              >
-                {WEIGHT_LOSS_ITEMS.map((item) => (
-                  <DropdownMenuItem key={item.to} asChild>
-                    <Link to={item.to}>{item.label}</Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuPrimitive.Content>
-            </DropdownMenu>
-          </div>
+          <WeightLossNavDropdown />
           {NAV.map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               activeProps={{ className: "text-foreground bg-muted" }}
             >
               {item.label}
@@ -154,11 +274,22 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:ml-auto lg:flex">
-          {/* Log in / Dashboard link disabled — site in pre-launch waitlist mode */}
-          <span className="text-xs font-medium text-muted-foreground">
-            {EARLY_ADOPTER_DISCOUNT_SHORT} for early adopters
-          </span>
+        <div className="hidden items-center gap-4 lg:ml-auto lg:flex">
+          {/* Log in / Dashboard link disabled — site in pre-launch waitlist mode.
+              Early-adopter discount lives in the hero, marquee, and mobile
+              menu — dropped here so phone + socials have room without wrapping
+              (veya-container caps at 1200px; there isn't space for all five). */}
+          <div className="hidden items-center gap-4 border-r border-border pr-4 xl:flex">
+            <a
+              href={SUPPORT_PHONE_HREF}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <Phone className="size-4" aria-hidden />
+              {SUPPORT_PHONE_DISPLAY}
+            </a>
+            <SocialIconRow />
+          </div>
+
           <Button asChild>
             <Link to={headerCta.to} search={headerCta.search}>
               {headerCta.label}
@@ -166,55 +297,84 @@ export function SiteHeader() {
           </Button>
         </div>
 
-        <div className="lg:hidden">
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <HexMenuButton aria-label="Open menu" />
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[88%] max-w-sm">
-              <div className="mb-6 mt-2">
-                <Logo className="h-9" />
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="px-3 py-3 text-base font-semibold text-foreground">
-                  Weight Loss
-                </span>
-                {WEIGHT_LOSS_ITEMS.map((item) => (
-                  <SheetClose asChild key={item.to}>
-                    <Link
-                      to={item.to}
-                      className="rounded-xl px-6 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
+        {/* Mobile header: hamburger left, centered stacked lockup, phone button right. */}
+        <div className="relative flex w-full items-center justify-between lg:hidden">
+          <CircleRevealMenu
+            open={open}
+            onOpenChange={setOpen}
+            trigger={<HexMenuButton aria-label="Open menu" />}
+          >
+            <div className="mb-2 mt-8 px-8">
+              <Logo tone="ink" className="h-9" />
+            </div>
+            <div className="flex flex-1 flex-col justify-center gap-1 px-8">
+              <MobileWeightLossDropdown onNavigate={() => setOpen(false)} />
+              {NAV.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  className="rounded-xl px-1 py-2.5 text-xl font-semibold text-ink-foreground transition-colors hover:text-primary"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              {/* Log in / Dashboard link disabled — site in pre-launch waitlist mode */}
+            </div>
+            <div className="space-y-4 px-8 pb-8">
+              <Button asChild size="lg" className="w-full">
+                <Link
+                  to={mobileCta.to}
+                  search={mobileCta.search}
+                  onClick={() => setOpen(false)}
+                >
+                  {mobileCta.label}
+                </Link>
+              </Button>
+              <p className="text-center text-xs font-medium text-ink-foreground/60">
+                {EARLY_ADOPTER_DISCOUNT_SHORT} for early adopters
+              </p>
+              <div className="flex items-center justify-between border-t border-ink-foreground/15 pt-4">
+                <a
+                  href={SUPPORT_PHONE_HREF}
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-foreground"
+                >
+                  <Phone className="size-4" aria-hidden />
+                  {SUPPORT_PHONE_DISPLAY}
+                </a>
+                <div className="flex items-center gap-4">
+                  {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Beema Health on ${label}`}
+                      className="text-ink-foreground/70 transition-colors hover:text-ink-foreground"
                     >
-                      {item.label}
-                    </Link>
-                  </SheetClose>
-                ))}
-                {NAV.map((item) => (
-                  <SheetClose asChild key={item.to}>
-                    <Link
-                      to={item.to}
-                      className="rounded-xl px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
-                    >
-                      {item.label}
-                    </Link>
-                  </SheetClose>
-                ))}
-                {/* Log in / Dashboard link disabled — site in pre-launch waitlist mode */}
+                      <Icon className="size-4" />
+                    </a>
+                  ))}
+                </div>
               </div>
-              <div className="mt-6 space-y-2">
-                <SheetClose asChild>
-                  <Button asChild size="lg" className="w-full">
-                    <Link to={mobileCta.to} search={mobileCta.search}>
-                      {mobileCta.label}
-                    </Link>
-                  </Button>
-                </SheetClose>
-                <p className="text-center text-xs font-medium text-muted-foreground">
-                  {EARLY_ADOPTER_DISCOUNT_SHORT} for early adopters
-                </p>
-              </div>
-            </SheetContent>
-          </Sheet>
+            </div>
+          </CircleRevealMenu>
+
+          <Link
+            to="/"
+            className="absolute left-1/2 -translate-x-1/2"
+            aria-label="Beema Health home"
+          >
+            <Logo stacked className="h-7" />
+          </Link>
+
+          <a
+            href={SUPPORT_PHONE_HREF}
+            aria-label={`Call Beema Health at ${SUPPORT_PHONE_DISPLAY}`}
+            className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-soft transition-colors hover:bg-primary/90"
+          >
+            <Phone className="size-5" aria-hidden />
+          </a>
         </div>
       </div>
     </header>

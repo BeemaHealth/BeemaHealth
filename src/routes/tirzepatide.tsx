@@ -30,12 +30,14 @@ import {
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
-import { COMPOUNDED_TIRZEPATIDE_PRICING } from "@/lib/medication-pricing";
+import {
+  COMPOUNDED_TIRZEPATIDE_PRICING,
+  compoundedMonthlyPricingSentence,
+} from "@/lib/medication-pricing";
 import compoundedTirzepatideVialImg from "@/assets/treatments/compounded-tirzepatide-vial.png";
 
 const TITLE = "Compounded Tirzepatide for Weight Loss | Beema Health";
-const DESCRIPTION =
-  "Compounded tirzepatide for medical weight loss, reviewed by licensed providers. Nationwide telehealth care from $197 the first month. Prescribing is never guaranteed.";
+const DESCRIPTION = `Compounded tirzepatide for medical weight loss, reviewed by licensed providers. Nationwide telehealth care from $${COMPOUNDED_TIRZEPATIDE_PRICING.firstMonthUsd} the first month. Prescribing is never guaranteed.`;
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
@@ -52,7 +54,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "How much does tirzepatide cost through Beema?",
-    a: `Compounded tirzepatide through Beema is $${COMPOUNDED_TIRZEPATIDE_PRICING.firstMonthUsd} for the first month, then $${COMPOUNDED_TIRZEPATIDE_PRICING.ongoingUsd}/month after, medication-only cash pricing with no platform membership fee. Final cost can depend on your provider's dosage recommendation.`,
+    a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide through Beema", COMPOUNDED_TIRZEPATIDE_PRICING)} It's medication-only cash pricing with no platform membership fee. Final cost can depend on your provider's dosage recommendation.`,
   },
   {
     q: "Does Beema serve patients nationwide?",
@@ -191,7 +193,8 @@ function TirzepatidePage() {
                   ${COMPOUNDED_TIRZEPATIDE_PRICING.firstMonthUsd} first month
                 </span>{" "}
                 <span className="text-muted-foreground">
-                  · ${COMPOUNDED_TIRZEPATIDE_PRICING.ongoingUsd}/month after
+                  · ${COMPOUNDED_TIRZEPATIDE_PRICING.ongoingUsd}/month months 2
+                  and 3
                 </span>
               </div>
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">

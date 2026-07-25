@@ -7,6 +7,7 @@ import { getPendingUtms, clearPendingUtms } from "@/lib/utm";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { ScrollProgressBar } from "@/components/site/primitives";
 import { HomeHero } from "@/components/home/HomeHero";
+import { TrustSignals } from "@/components/home/TrustSignals";
 import { DoseJourney } from "@/components/home/DoseJourney";
 import { HowItWorksScrolly } from "@/components/home/HowItWorksScrolly";
 import { TreatmentShowcase } from "@/components/home/TreatmentShowcase";
@@ -62,6 +63,7 @@ function HomePage() {
       <ScrollProgressBar />
       <MarketingLayout>
         <HomeHero />
+        <TrustSignals />
         <HowItWorksScrolly />
         <DoseJourney />
         <TreatmentShowcase />

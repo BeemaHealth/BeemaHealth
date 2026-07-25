@@ -1,9 +1,13 @@
+import { Phone } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/brand/Logo";
 import { InfinityMotif } from "@/components/site/primitives";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { EARLY_ADOPTER_DISCOUNT } from "@/lib/marketing-copy";
 import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
+import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
+import { SOCIAL_LINKS } from "@/lib/social-links";
+import { TRUST_SIGNALS } from "@/lib/trust-signals";
 
 /**
  * Trailing-slash paths — match sitemap.xml / canonicalUrl / GitHub Pages 200
@@ -66,6 +70,30 @@ export function SiteFooter() {
             <p className="mt-3 text-xs font-medium text-primary">
               Early adopters: {EARLY_ADOPTER_DISCOUNT}
             </p>
+
+            <div className="mt-6 flex items-center gap-5 border-t border-ink-foreground/15 pt-6">
+              <a
+                href={SUPPORT_PHONE_HREF}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-foreground/80 transition-colors hover:text-ink-foreground"
+              >
+                <Phone className="size-4" aria-hidden />
+                {SUPPORT_PHONE_DISPLAY}
+              </a>
+              <div className="flex items-center gap-4">
+                {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Beema Health on ${label}`}
+                    className="text-ink-foreground/70 transition-colors hover:text-ink-foreground"
+                  >
+                    <Icon className="size-4" />
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
 
           {COLUMNS.map((col) => (
@@ -89,7 +117,19 @@ export function SiteFooter() {
           ))}
         </div>
 
-        <div className="mt-12 space-y-4 border-t border-ink-foreground/15 pt-8 text-xs leading-relaxed text-ink-foreground/60">
+        <div className="mt-12 flex flex-wrap gap-x-8 gap-y-4 border-t border-ink-foreground/15 pt-8">
+          {TRUST_SIGNALS.map(({ icon: Icon, label }) => (
+            <span
+              key={label}
+              className="inline-flex items-center gap-2 text-xs font-medium text-ink-foreground/70"
+            >
+              <Icon className="size-4 shrink-0 text-primary" aria-hidden />
+              {label}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-8 space-y-4 border-t border-ink-foreground/15 pt-8 text-xs leading-relaxed text-ink-foreground/60">
           <p>
             <strong className="font-semibold text-ink-foreground/90">
               Important:

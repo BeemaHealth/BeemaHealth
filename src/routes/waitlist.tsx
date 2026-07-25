@@ -1,14 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import {
-  CheckCircle2,
-  Loader2,
-  Lock,
-  Mail,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
+import { CheckCircle2, Loader2, Mail, Users } from "lucide-react";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { Eyebrow, FloatingHexagons } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
@@ -31,24 +24,10 @@ import {
   getWaitlistDisplayCountSeed,
   incrementWaitlistDisplayCount,
 } from "@/lib/waitlist-count";
+import { SUPPORT_EMAIL } from "@/lib/contact-info";
+import { TRUST_SIGNALS } from "@/lib/trust-signals";
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xwvgljjr";
-
-/** Honest trust claims already used sitewide — no invented credentials. */
-const TRUST_SIGNALS = [
-  {
-    icon: ShieldCheck,
-    label: "HIPAA-aligned care",
-  },
-  {
-    icon: Lock,
-    label: "Private, encrypted intake",
-  },
-  {
-    icon: CheckCircle2,
-    label: "USA-licensed physicians",
-  },
-] as const;
 
 export const Route = createFileRoute("/waitlist")({
   validateSearch: (search: Record<string, unknown>) => {
@@ -171,7 +150,7 @@ function WaitlistPage() {
       setSubmitted(true);
     } catch {
       setError(
-        "Something went wrong submitting your info. Please try again, or email us directly at support@beemahealth.",
+        `Something went wrong submitting your info. Please try again, or email us directly at ${SUPPORT_EMAIL}.`,
       );
     } finally {
       setSubmitting(false);

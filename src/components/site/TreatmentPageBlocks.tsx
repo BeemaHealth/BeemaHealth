@@ -87,13 +87,16 @@ export function TreatmentPricingCard({
               /mo
             </span>
           </p>
-          <p className="mt-1 text-sm text-muted-foreground">Ongoing care</p>
+          <p className="mt-1 text-sm text-muted-foreground">Months 2 and 3</p>
         </div>
       </div>
       <p className="mx-auto mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
-        Medication-only cash pricing, with no platform membership fee. Pricing
-        and treatment availability may vary based on clinical appropriateness,
-        prescription, pharmacy fulfillment, and state requirements.
+        Your first month includes a $100 early-adopter discount. Months 2 and 3,
+        and any month after if you continue treatment, are priced at the
+        standard ${pricing.ongoingUsd}/mo rate shown above. Medication-only cash
+        pricing, with no platform membership fee. Pricing and treatment
+        availability may vary based on clinical appropriateness, prescription,
+        pharmacy fulfillment, and state requirements.
       </p>
     </SurfaceCard>
   );

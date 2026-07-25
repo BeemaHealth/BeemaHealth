@@ -8,15 +8,23 @@ type LogoProps = {
   tone?: "default" | "ink";
   /** Hide the text wordmark and show only the hexagon bee mark. */
   markOnly?: boolean;
+  /** Icon above wordmark instead of side-by-side — compact centered mobile header lockup. */
+  stacked?: boolean;
 };
 
 export function Logo({
   className,
   tone = "default",
   markOnly = false,
+  stacked = false,
 }: LogoProps) {
   return (
-    <span className="inline-flex items-center gap-2.5">
+    <span
+      className={cn(
+        "inline-flex items-center",
+        stacked ? "flex-col gap-1" : "gap-2.5",
+      )}
+    >
       <img
         src={beemaMark}
         alt="Beema Health"
@@ -29,7 +37,8 @@ export function Logo({
       <span
         aria-hidden="true"
         className={cn(
-          "font-display text-xl font-bold leading-none tracking-tight",
+          "font-display font-bold leading-none tracking-tight",
+          stacked ? "text-sm" : "text-xl",
           tone === "ink" ? "text-ink-foreground" : "text-foreground",
           markOnly && "sr-only",
         )}

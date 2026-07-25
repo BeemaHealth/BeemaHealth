@@ -1,6 +1,12 @@
 /**
  * Cash-pay list prices for compounded GLP-1 options shown on marketing pages.
  * Keep FAQ copy and treatment cards in sync via these values.
+ *
+ * Pricing structure: `firstMonthUsd` (the $100-off early-adopter price, see
+ * `EARLY_ADOPTER_DISCOUNT` in marketing-copy.ts) applies to month 1 only.
+ * `ongoingUsd` is the standard rate for months 2 and 3, and continues
+ * indefinitely at that same rate for as long as the patient keeps refilling
+ * after that.
  */
 export const COMPOUNDED_SEMAGLUTIDE_PRICING = {
   firstMonthUsd: 99,
@@ -17,11 +23,11 @@ export type CompoundedMedicationPricing = {
   ongoingUsd: number;
 };
 
-/** e.g. "$99 first month, then $199/mo" */
+/** e.g. "$99 first month, then $199/mo for months 2 and 3" */
 export function formatCompoundedPriceLine(
   pricing: CompoundedMedicationPricing,
 ): string {
-  return `$${pricing.firstMonthUsd} first month, then $${pricing.ongoingUsd}/mo`;
+  return `$${pricing.firstMonthUsd} first month, then $${pricing.ongoingUsd}/mo for months 2 and 3`;
 }
 
 /** Short card headline, e.g. "Starting at $99/mo" */
@@ -40,18 +46,30 @@ export function dualCompoundedShortPricingLine(): string {
 }
 
 /**
- * Full dual-med first-month + ongoing line for hero / page lead-ins.
- * e.g. "Semaglutide from $99/mo first month ($199 after); Tirzepatide from $197/mo first month ($297 after)"
+ * Full dual-med first-month + months 2-3 line for hero / page lead-ins.
+ * e.g. "Semaglutide from $99/mo first month, then $199/mo for months 2 and 3; Tirzepatide from $197/mo first month, then $297/mo for months 2 and 3"
  */
 export function dualCompoundedHeroPricingLine(): string {
   const sema = COMPOUNDED_SEMAGLUTIDE_PRICING;
   const tirz = COMPOUNDED_TIRZEPATIDE_PRICING;
-  return `Semaglutide from $${sema.firstMonthUsd}/mo first month ($${sema.ongoingUsd} after); Tirzepatide from $${tirz.firstMonthUsd}/mo first month ($${tirz.ongoingUsd} after)`;
+  return `Semaglutide from $${sema.firstMonthUsd}/mo first month, then $${sema.ongoingUsd}/mo for months 2 and 3; Tirzepatide from $${tirz.firstMonthUsd}/mo first month, then $${tirz.ongoingUsd}/mo for months 2 and 3`;
+}
+
+/**
+ * Long-form single-medication pricing sentence for FAQ / route body copy.
+ * e.g. "Compounded semaglutide is $99 for the first month, then $199/month
+ * for months 2 and 3, continuing at $199/month if you keep refilling after that."
+ */
+export function compoundedMonthlyPricingSentence(
+  medicationLabel: string,
+  pricing: CompoundedMedicationPricing,
+): string {
+  return `${medicationLabel} is $${pricing.firstMonthUsd} for the first month, then $${pricing.ongoingUsd}/month for months 2 and 3, continuing at $${pricing.ongoingUsd}/month if you keep refilling after that.`;
 }
 
 /** FAQ / long-form pricing paragraph (both meds, no membership fee). */
 export function dualCompoundedFaqPricingParagraph(): string {
   const sema = COMPOUNDED_SEMAGLUTIDE_PRICING;
   const tirz = COMPOUNDED_TIRZEPATIDE_PRICING;
-  return `Beema Health uses transparent cash-pay medication pricing with no platform membership fee. Compounded semaglutide is $${sema.firstMonthUsd} for the first month, then $${sema.ongoingUsd}/month after. Compounded tirzepatide is $${tirz.firstMonthUsd} for the first month, then $${tirz.ongoingUsd}/month after. Shipping and labs, when applicable, are shown separately before any charge. A prescription is never guaranteed: a licensed clinician decides whether treatment is appropriate.`;
+  return `Beema Health uses transparent cash-pay medication pricing with no platform membership fee. ${compoundedMonthlyPricingSentence("Compounded semaglutide", sema)} ${compoundedMonthlyPricingSentence("Compounded tirzepatide", tirz)} Shipping and labs, when applicable, are shown separately before any charge. A prescription is never guaranteed: a licensed clinician decides whether treatment is appropriate.`;
 }

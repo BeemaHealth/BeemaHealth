@@ -66,8 +66,9 @@ export function TreatmentLineup() {
             GLP-1 weight-loss options
           </h2>
           <p className="mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-            Transparent cash pricing on every option: first-month offer and
-            ongoing monthly rate, with no membership fee.
+            Transparent cash pricing on every option: a discounted first month,
+            then the standard monthly rate for months 2 and 3, with no
+            membership fee.
           </p>
         </Reveal>
 

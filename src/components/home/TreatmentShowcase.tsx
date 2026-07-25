@@ -100,8 +100,8 @@ export function TreatmentShowcase() {
           <LineReveal>GLP-1 weight-loss options</LineReveal>
         </h2>
         <p className="mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-          Transparent cash pricing on every card: first-month offer and ongoing
-          monthly rate, with no membership fee.
+          Transparent cash pricing on every card: a discounted first month, then
+          the standard monthly rate for months 2 and 3, with no membership fee.
         </p>
 
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">

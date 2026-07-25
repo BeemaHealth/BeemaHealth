@@ -1,3 +1,5 @@
+import { SUPPORT_EMAIL, SUPPORT_PHONE_E164 } from "@/lib/contact-info";
+
 /**
  * Canonical production origin — single source of truth for absolute URLs in
  * canonicals, OG tags, and the sitemap.
@@ -48,16 +50,16 @@ export const ORGANIZATION_JSONLD = {
     "Beema Health is a US telehealth medical weight-loss service. Licensed providers evaluate patients online and, when clinically appropriate, prescribe GLP-1 medications with transparent cash pricing, US pharmacy fulfillment, and ongoing follow-up care.",
   areaServed: { "@type": "Country", name: "United States" },
   sameAs: [
-    "https://www.facebook.com/beemahealth",
+    "https://www.facebook.com/profile.php?id=61591847661626",
     "https://www.instagram.com/beemahealth",
     "https://www.tiktok.com/@beema.health",
-    "https://www.reddit.com/r/beemahealth",
+    "https://www.reddit.com/r/beemahealth/",
     "https://x.com/beemahealth",
-    "https://www.linkedin.com/in/beema-health-339219423/",
   ],
   contactPoint: {
     "@type": "ContactPoint",
-    email: "support@beemahealth.com",
+    email: SUPPORT_EMAIL,
+    telephone: SUPPORT_PHONE_E164,
     url: `${SITE_URL}/contact/`,
     contactType: "Customer Support",
   },

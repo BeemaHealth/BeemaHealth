@@ -3,8 +3,10 @@
 import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   COMPOUNDED_TIRZEPATIDE_PRICING,
+  compoundedMonthlyPricingSentence,
   dualCompoundedFaqPricingParagraph,
 } from "@/lib/medication-pricing";
+import { SUPPORT_EMAIL } from "@/lib/contact-info";
 
 export const LAUNCH_STATES = [
   "California",
@@ -114,11 +116,11 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "What is the price for compounded semaglutide?",
-        a: `Compounded semaglutide is $${COMPOUNDED_SEMAGLUTIDE_PRICING.firstMonthUsd} for your first month, then $${COMPOUNDED_SEMAGLUTIDE_PRICING.ongoingUsd}/month ongoing if prescribed and you continue treatment. Final cost can depend on dosage and clinical decisions.`,
+        a: `${compoundedMonthlyPricingSentence("Compounded semaglutide", COMPOUNDED_SEMAGLUTIDE_PRICING)} That's if prescribed and you continue treatment; final cost can depend on dosage and clinical decisions.`,
       },
       {
         q: "What is the price for compounded tirzepatide?",
-        a: `Compounded tirzepatide is $${COMPOUNDED_TIRZEPATIDE_PRICING.firstMonthUsd} for your first month, then $${COMPOUNDED_TIRZEPATIDE_PRICING.ongoingUsd}/month ongoing if prescribed and you continue treatment. Final cost can depend on dosage and clinical decisions.`,
+        a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide", COMPOUNDED_TIRZEPATIDE_PRICING)} That's if prescribed and you continue treatment; final cost can depend on dosage and clinical decisions.`,
       },
       {
         q: "Is there a monthly membership fee?",
@@ -152,7 +154,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "What if my shipment is delayed or lost?",
-        a: "Please report it to support@beemahealth.com immediately. Refill reliability is our core promise: we urgently escalate all cold-chain and lost-shipment issues.",
+        a: `Please report it to ${SUPPORT_EMAIL} immediately. Refill reliability is our core promise: we urgently escalate all cold-chain and lost-shipment issues.`,
       },
     ],
   },

@@ -31,12 +31,14 @@ import {
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
-import { COMPOUNDED_SEMAGLUTIDE_PRICING } from "@/lib/medication-pricing";
+import {
+  COMPOUNDED_SEMAGLUTIDE_PRICING,
+  compoundedMonthlyPricingSentence,
+} from "@/lib/medication-pricing";
 import compoundedSemaglutideVialImg from "@/assets/treatments/compounded-semaglutide-vial.png";
 
 const TITLE = "Compounded Semaglutide for Weight Loss | Beema Health";
-const DESCRIPTION =
-  "Compounded semaglutide for medical weight loss, personalized by licensed providers. Nationwide telehealth care from $99 the first month. Prescribing is never guaranteed.";
+const DESCRIPTION = `Compounded semaglutide for medical weight loss, personalized by licensed providers. Nationwide telehealth care from $${COMPOUNDED_SEMAGLUTIDE_PRICING.firstMonthUsd} the first month. Prescribing is never guaranteed.`;
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
@@ -53,7 +55,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "How much does semaglutide cost through Beema?",
-    a: `Compounded semaglutide through Beema is $${COMPOUNDED_SEMAGLUTIDE_PRICING.firstMonthUsd} for the first month, then $${COMPOUNDED_SEMAGLUTIDE_PRICING.ongoingUsd}/month after, medication-only cash pricing with no platform membership fee. Your provider's dosage recommendation can affect the final cost.`,
+    a: `${compoundedMonthlyPricingSentence("Compounded semaglutide through Beema", COMPOUNDED_SEMAGLUTIDE_PRICING)} It's medication-only cash pricing with no platform membership fee. Your provider's dosage recommendation can affect the final cost.`,
   },
   {
     q: "Does Beema serve patients nationwide?",
@@ -192,7 +194,8 @@ function SemaglutidePage() {
                   ${COMPOUNDED_SEMAGLUTIDE_PRICING.firstMonthUsd} first month
                 </span>{" "}
                 <span className="text-muted-foreground">
-                  · ${COMPOUNDED_SEMAGLUTIDE_PRICING.ongoingUsd}/month after
+                  · ${COMPOUNDED_SEMAGLUTIDE_PRICING.ongoingUsd}/month months 2
+                  and 3
                 </span>
               </div>
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">

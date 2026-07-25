@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { canonicalUrl } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Clock, Mail, MessageCircle } from "lucide-react";
+import { ArrowRight, Clock, Mail, Phone } from "lucide-react";
 import {
   motion,
   useReducedMotion,
@@ -20,6 +20,12 @@ import {
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
+import {
+  SUPPORT_EMAIL,
+  SUPPORT_EMAIL_HREF,
+  SUPPORT_PHONE_DISPLAY,
+  SUPPORT_PHONE_HREF,
+} from "@/lib/contact-info";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -46,8 +52,15 @@ const CONTACT_OPTIONS = [
     icon: Mail,
     title: "Email support",
     text: "For questions about eligibility, pricing, account access, or your intake.",
-    action: "support@beemahealth.com",
-    href: "mailto:support@beemahealth.com",
+    action: SUPPORT_EMAIL,
+    href: SUPPORT_EMAIL_HREF,
+  },
+  {
+    icon: Phone,
+    title: "Call or text",
+    text: "For anything you'd rather talk through directly. No AI assistants, just real people.",
+    action: SUPPORT_PHONE_DISPLAY,
+    href: SUPPORT_PHONE_HREF,
   },
   {
     icon: Clock,
