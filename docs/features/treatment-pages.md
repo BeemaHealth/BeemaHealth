@@ -28,11 +28,26 @@ This is deliberate: Google can still crawl and index it via the sitemap, but vis
 
 ## Nav: "Weight Loss" dropdown
 
-`SiteHeader.tsx` renders "Weight Loss" as a `DropdownMenu` trigger (desktop) / a non-link section label with indented links (mobile), listing `WEIGHT_LOSS_ITEMS` — currently Compounded Tirzepatide and Compounded Semaglutide. Add new medication pages to that array (and to `SiteFooter.tsx`'s `COLUMNS[0].links`) rather than adding a new top-level nav entry.
+`SiteHeader.tsx` renders "Weight Loss" as a dropdown listing `WEIGHT_LOSS_ITEMS` — currently Compounded Tirzepatide and Compounded Semaglutide — via two separate components since hover and tap don't behave the same way:
+
+- **Desktop** — `WeightLossNavDropdown`, a hand-rolled hover dropdown (deliberately not Radix `DropdownMenu`; see the comment above it for why Radix's Popper positioning caused an open/close flicker).
+- **Mobile** — `MobileWeightLossDropdown`, a tap-to-expand disclosure inside the mobile menu (see `docs/features/homepage.md` for the `CircleRevealMenu` shell it lives in). Local `expanded` state collapses it back down every time the mobile menu reopens; the reveal/collapse is animated (Motion `AnimatePresence` + height/opacity), matching the site's other transitions.
+
+Add new medication pages to `WEIGHT_LOSS_ITEMS` (and to `SiteFooter.tsx`'s `COLUMNS[0].links`) rather than adding a new top-level nav entry.
 
 ## Medication cards
 
 `TreatmentShowcase.tsx` (homepage) and `TreatmentLineup.tsx` (`/weight-loss` page) each render one card per medication. Both cards are full-card `<Link>`s (not nested interactive elements) pointing at that medication's own page (`/tirzepatide/`, `/semaglutide/`) — never at `/weight-loss/`. CTA copy is `Explore {treatment.name}` (e.g. "Explore Compounded Tirzepatide"). These two files still duplicate their own local `TREATMENTS` array (pre-existing pattern) — add a new medication to both when it gets its own page.
+
+## Pricing model: month 1, then months 2-3 at the standard rate
+
+`src/lib/medication-pricing.ts` models each medication as `{ firstMonthUsd, ongoingUsd }`:
+
+- **Month 1** is the discounted, early-adopter price (`firstMonthUsd`) — this is the same `$100 off first month` promoted via `EARLY_ADOPTER_DISCOUNT` in `src/lib/marketing-copy.ts`.
+- **Months 2 and 3** bill at the standard rate (`ongoingUsd`).
+- **Month 4 onward** continues at that same `ongoingUsd` rate indefinitely, for as long as the patient keeps refilling — there is no further price change after month 3. The "3-month" framing in the copy exists to set expectations about when the discount ends, not to describe a program with a fixed end date.
+
+`compoundedMonthlyPricingSentence(label, pricing)` is the shared long-form sentence used across FAQ answers and route copy (e.g. "Compounded semaglutide is $99 for the first month, then $199/month for months 2 and 3, continuing at $199/month if you keep refilling after that."). `formatCompoundedPriceLine()` and `dualCompoundedHeroPricingLine()` are the shorter card/hero variants of the same structure. **Never hand-write a "first month X, then Y" sentence — always route through one of these helpers** so the months-2-3-then-ongoing framing stays consistent if the numbers or wording change again.
 
 ## CTA switchboard (waitlist → live portal cutover)
 
@@ -60,6 +75,7 @@ const cta = resolveCta(CTA_IDS.tirzepatide_hero);
 | `src/lib/medication-pricing.ts` | Single source of truth for pricing — never hardcode `$` amounts elsewhere |
 | `src/lib/cta-ids.ts` | `CTA_IDS`, `resolveCta()` — the CTA switchboard |
 | `src/lib/seo.ts` | `faqPageJsonLd()`, `breadcrumbJsonLd()`, `canonicalUrl()` |
-| `src/components/site/SiteHeader.tsx`, `SiteFooter.tsx` | Weight Loss dropdown / Care links |
+| `src/components/site/SiteHeader.tsx`, `SiteFooter.tsx` | Weight Loss dropdown (`WeightLossNavDropdown` desktop, `MobileWeightLossDropdown` mobile) / Care links |
+| `src/lib/marketing-copy.ts` | `EARLY_ADOPTER_DISCOUNT` — the month-1 discount promoted alongside pricing |
 | `src/components/home/TreatmentShowcase.tsx`, `src/components/site/TreatmentLineup.tsx` | Medication cards (home / `/weight-loss`) |
 | `public/sitemap.xml`, `public/llms.txt`, `src/lib/__tests__/sitemap.test.ts` | Keep in sync when adding a page |
