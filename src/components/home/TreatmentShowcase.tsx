@@ -14,10 +14,9 @@ import { cn } from "@/lib/utils";
 import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   COMPOUNDED_TIRZEPATIDE_PRICING,
-  formatCompoundedPriceLine,
-  formatStartingAtPerMonth,
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
+import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { LineReveal, EASE_OUT } from "@/components/home/home-motion";
 import compoundedSemaglutideVialImg from "@/assets/treatments/compounded-semaglutide-vial.png";
 import compoundedTirzepatideVialImg from "@/assets/treatments/compounded-tirzepatide-vial.png";
@@ -215,17 +214,11 @@ function TreatmentCard({
         />
       </div>
 
-      <div className="space-y-1 px-6 pb-6 pt-5 md:px-8 md:pb-8 md:pt-6">
+      <div className="space-y-3 px-6 pb-6 pt-5 md:px-8 md:pb-8 md:pt-6">
         <h3 className="text-2xl font-bold text-foreground md:text-[1.75rem]">
           {treatment.name}
         </h3>
-        <p className="text-sm font-semibold text-foreground">
-          {formatStartingAtPerMonth(treatment.pricing)}
-          <span className="font-normal text-muted-foreground">†</span>
-        </p>
-        <p className="text-sm text-muted-foreground">
-          {formatCompoundedPriceLine(treatment.pricing)}
-        </p>
+        <CompoundedPriceLockup pricing={treatment.pricing} />
         <p className="text-sm font-medium text-foreground/80">
           {treatment.form}
         </p>

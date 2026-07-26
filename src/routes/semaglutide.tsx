@@ -34,8 +34,8 @@ import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   compoundedMonthlyPricingSentence,
-  promoFirstMonthUsd,
 } from "@/lib/medication-pricing";
+import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import compoundedSemaglutideVialImg from "@/assets/treatments/compounded-semaglutide-vial.png";
 
 const TITLE = "Compounded Semaglutide for Weight Loss | Beema Health";
@@ -190,15 +190,11 @@ function SemaglutidePage() {
                   <Link to="/how-it-works/">How it works</Link>
                 </Button>
               </motion.div>
-              <div className="mt-6 text-sm text-foreground">
-                <span className="font-semibold">
-                  ${COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd}/month
-                </span>{" "}
-                <span className="text-muted-foreground">
-                  · or ${promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING)}{" "}
-                  first month with a one-time 3-month promo code
-                </span>
-              </div>
+              <CompoundedPriceLockup
+                className="mt-6 max-w-md"
+                pricing={COMPOUNDED_SEMAGLUTIDE_PRICING}
+                size="lg"
+              />
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">
                 Medication eligibility and availability are determined by a
                 licensed provider and applicable law.

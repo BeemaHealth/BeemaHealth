@@ -5,6 +5,7 @@ import {
   compoundedMonthlyPricingSentence,
   dualCompoundedFaqPricingParagraph,
   dualCompoundedHeroPricingLine,
+  dualCompoundedPromoShortPricingLine,
   dualCompoundedShortPricingLine,
   formatCompoundedPriceLine,
   formatStartingAtPerMonth,
@@ -37,16 +38,22 @@ describe("medication-pricing", () => {
     expect(formatStartingAtPerMonth(COMPOUNDED_TIRZEPATIDE_PRICING)).toBe(
       "$297/mo",
     );
+    expect(promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING)).toBe(99);
+    expect(promoFirstMonthUsd(COMPOUNDED_TIRZEPATIDE_PRICING)).toBe(197);
   });
 
-  it("balances both medications in short and hero dual lines, with no baked-in discount", () => {
+  it("balances both medications in short and hero dual lines", () => {
     expect(dualCompoundedShortPricingLine()).toBe(
       "Semaglutide $199/mo · Tirzepatide $297/mo",
     );
+    expect(dualCompoundedPromoShortPricingLine()).toBe(
+      "Semaglutide $99 then $199/mo · Tirzepatide $197 then $297/mo",
+    );
     expect(dualCompoundedHeroPricingLine()).toBe(
-      "Semaglutide $199/mo, Tirzepatide $297/mo, plus a one-time $100 promo code for your first month on a 3-month plan",
+      "Semaglutide $99 first month then $199/mo, Tirzepatide $197 first month then $297/mo, with a one-time $100 promo code on a 3-month plan",
     );
     expect(dualCompoundedShortPricingLine()).not.toMatch(/[—–]/);
+    expect(dualCompoundedPromoShortPricingLine()).not.toMatch(/[—–]/);
     expect(dualCompoundedHeroPricingLine()).not.toMatch(/[—–]/);
   });
 

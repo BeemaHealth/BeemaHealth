@@ -22,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { SurfaceCard } from "@/components/site/primitives";
+import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { cn } from "@/lib/utils";
 import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
@@ -69,35 +70,15 @@ export function TreatmentPricingCard({
   return (
     <SurfaceCard
       className={cn(
-        "border-primary/30 bg-primary-soft/30 text-center",
+        "border-primary/30 bg-primary-soft/30 text-left",
         className,
       )}
     >
       <p className="text-xs font-semibold uppercase tracking-wide text-accent-foreground">
         Transparent pricing
       </p>
-      <div className="mt-5 grid gap-6 sm:grid-cols-2">
-        <div>
-          <p className="text-4xl font-bold text-foreground">
-            ${pricing.monthlyUsd}
-            <span className="text-base font-medium text-muted-foreground">
-              /mo
-            </span>
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Standard monthly price
-          </p>
-        </div>
-        <div>
-          <p className="text-4xl font-bold text-foreground">
-            ${promoFirstMonthUsd(pricing)}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            First month with promo code
-          </p>
-        </div>
-      </div>
-      <p className="mx-auto mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
+      <CompoundedPriceLockup className="mt-5" pricing={pricing} size="lg" />
+      <p className="mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
         ${pricing.monthlyUsd}/mo is the standard cash-pay rate, billed monthly
         with no long-term contract. A one-time ${PROMO_CODE_DISCOUNT_USD} promo
         code brings your first month to ${promoFirstMonthUsd(pricing)},

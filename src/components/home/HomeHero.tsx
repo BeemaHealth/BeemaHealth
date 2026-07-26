@@ -23,7 +23,7 @@ import {
 } from "@/lib/marketing-copy";
 import {
   dualCompoundedHeroPricingLine,
-  dualCompoundedShortPricingLine,
+  dualCompoundedPromoShortPricingLine,
 } from "@/lib/medication-pricing";
 import heroImg from "@/assets/hero.jpg";
 import semaVial from "@/assets/treatments/compounded-semaglutide-vial-cutout.png";
@@ -32,12 +32,12 @@ const CHECKLIST_ITEMS = [
   "Licensed USA physician network",
   "Private & secure encrypted intake",
   "USA compounding pharmacies",
-  dualCompoundedShortPricingLine(),
+  dualCompoundedPromoShortPricingLine(),
 ] as const;
 
 const MARQUEE_ITEMS = [
   "Licensed providers",
-  dualCompoundedShortPricingLine(),
+  dualCompoundedPromoShortPricingLine(),
   "USA licensed pharmacies",
   "Private & secure encrypted intake",
   "HIPAA-compliant care",

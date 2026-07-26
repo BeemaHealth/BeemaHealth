@@ -44,7 +44,7 @@ export function formatCompoundedPriceLine(
   return `$${pricing.monthlyUsd}/mo, or $${promoFirstMonthUsd(pricing)} your first month with a one-time $${PROMO_CODE_DISCOUNT_USD} promo code on a ${PROMO_CODE_MIN_MONTHS}-month plan`;
 }
 
-/** Short card headline, e.g. "$199/mo" (the standard rate, no discount implied). */
+/** Short card headline for the standard rate, e.g. "$199/mo". */
 export function formatStartingAtPerMonth(
   pricing: CompoundedMedicationPricing,
 ): string {
@@ -52,7 +52,7 @@ export function formatStartingAtPerMonth(
 }
 
 /**
- * Concise dual-med teaser for hero checklist / marquee chips.
+ * Concise dual-med teaser for checklist / marquee / footer chips.
  * e.g. "Semaglutide $199/mo · Tirzepatide $297/mo"
  */
 export function dualCompoundedShortPricingLine(): string {
@@ -60,14 +60,27 @@ export function dualCompoundedShortPricingLine(): string {
 }
 
 /**
+ * Promo-first dual-med chip for the homepage hero checklist / marquee.
+ * Shows both the discounted first-month price and the ongoing monthly rate.
+ * e.g. "Semaglutide $99 then $199/mo · Tirzepatide $197 then $297/mo"
+ */
+export function dualCompoundedPromoShortPricingLine(): string {
+  const sema = COMPOUNDED_SEMAGLUTIDE_PRICING;
+  const tirz = COMPOUNDED_TIRZEPATIDE_PRICING;
+  return `Semaglutide $${promoFirstMonthUsd(sema)} then $${sema.monthlyUsd}/mo · Tirzepatide $${promoFirstMonthUsd(tirz)} then $${tirz.monthlyUsd}/mo`;
+}
+
+/**
  * Full dual-med pricing + promo teaser for hero / page lead-ins.
- * e.g. "Semaglutide $199/mo, Tirzepatide $297/mo, plus a one-time $100
- * promo code for your first month on a 3-month plan"
+ * Shows both the discounted first-month prices and the ongoing monthly rates,
+ * then names the one-time 3-month promo that unlocks the first-month discount.
+ * e.g. "Semaglutide $99 first month then $199/mo, Tirzepatide $197 first month
+ * then $297/mo, with a one-time $100 promo code on a 3-month plan"
  */
 export function dualCompoundedHeroPricingLine(): string {
   const sema = COMPOUNDED_SEMAGLUTIDE_PRICING;
   const tirz = COMPOUNDED_TIRZEPATIDE_PRICING;
-  return `Semaglutide $${sema.monthlyUsd}/mo, Tirzepatide $${tirz.monthlyUsd}/mo, plus a one-time $${PROMO_CODE_DISCOUNT_USD} promo code for your first month on a ${PROMO_CODE_MIN_MONTHS}-month plan`;
+  return `Semaglutide $${promoFirstMonthUsd(sema)} first month then $${sema.monthlyUsd}/mo, Tirzepatide $${promoFirstMonthUsd(tirz)} first month then $${tirz.monthlyUsd}/mo, with a one-time $${PROMO_CODE_DISCOUNT_USD} promo code on a ${PROMO_CODE_MIN_MONTHS}-month plan`;
 }
 
 /**
