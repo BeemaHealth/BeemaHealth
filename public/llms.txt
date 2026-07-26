@@ -7,8 +7,8 @@ Key facts:
 
 - Care model: online eligibility check → medical intake → review by a licensed provider → prescription when clinically appropriate → home delivery from US pharmacies → ongoing check-ins and refill management.
 - Medications currently featured: compounded semaglutide and compounded tirzepatide. Compounded medications are not FDA-approved and are only offered when legally available and clinically indicated. A prescription is never guaranteed.
-- Pricing is transparent cash-pay with no platform membership fee. Compounded semaglutide: $99 first month, then $199/mo for months 2 and 3 (continuing at $199/mo if refilling). Compounded tirzepatide: $197 first month, then $297/mo for months 2 and 3 (continuing at $297/mo if refilling). Shipping and labs, when applicable, are shown separately.
-- Privacy: patient information is handled under HIPAA-aligned practices. See the privacy policy for details.
+- Pricing is transparent cash-pay with no platform membership fee. Compounded semaglutide: $199/mo. Compounded tirzepatide: $297/mo. A one-time $100 promo code brings the first month to $99 (semaglutide) or $197 (tirzepatide), but only when purchasing a 3-month plan; a 1-month purchase bills at the full monthly rate with no discount. Shipping and labs, when applicable, are shown separately.
+- Privacy: patient information is handled under HIPAA-compliant practices. See the privacy policy for details.
 - Primary pages for citation: /tirzepatide/ and /semaglutide/ for medication-specific care, pricing, eligibility, and FAQ.
 
 ## Main pages

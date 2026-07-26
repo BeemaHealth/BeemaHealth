@@ -27,6 +27,9 @@ import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   COMPOUNDED_TIRZEPATIDE_PRICING,
   formatCompoundedPriceLine,
+  promoFirstMonthUsd,
+  PROMO_CODE_DISCOUNT_USD,
+  PROMO_CODE_MIN_MONTHS,
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
 
@@ -76,27 +79,34 @@ export function TreatmentPricingCard({
       <div className="mt-5 grid gap-6 sm:grid-cols-2">
         <div>
           <p className="text-4xl font-bold text-foreground">
-            ${pricing.firstMonthUsd}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">First month</p>
-        </div>
-        <div>
-          <p className="text-4xl font-bold text-foreground">
-            ${pricing.ongoingUsd}
+            ${pricing.monthlyUsd}
             <span className="text-base font-medium text-muted-foreground">
               /mo
             </span>
           </p>
-          <p className="mt-1 text-sm text-muted-foreground">Months 2 and 3</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Standard monthly price
+          </p>
+        </div>
+        <div>
+          <p className="text-4xl font-bold text-foreground">
+            ${promoFirstMonthUsd(pricing)}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            First month with promo code
+          </p>
         </div>
       </div>
       <p className="mx-auto mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
-        Your first month includes a $100 early-adopter discount. Months 2 and 3,
-        and any month after if you continue treatment, are priced at the
-        standard ${pricing.ongoingUsd}/mo rate shown above. Medication-only cash
-        pricing, with no platform membership fee. Pricing and treatment
-        availability may vary based on clinical appropriateness, prescription,
-        pharmacy fulfillment, and state requirements.
+        ${pricing.monthlyUsd}/mo is the standard cash-pay rate, billed monthly
+        with no long-term contract. A one-time ${PROMO_CODE_DISCOUNT_USD} promo
+        code brings your first month to ${promoFirstMonthUsd(pricing)},
+        available only on a {PROMO_CODE_MIN_MONTHS}-month plan purchase and
+        redeemable once per patient. A 1-month purchase bills at the full $
+        {pricing.monthlyUsd}/mo rate with no promo code discount.
+        Medication-only cash pricing, with no platform membership fee. Pricing
+        and treatment availability may vary based on clinical appropriateness,
+        prescription, pharmacy fulfillment, and state requirements.
       </p>
     </SurfaceCard>
   );

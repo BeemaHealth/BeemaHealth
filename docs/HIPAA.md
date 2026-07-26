@@ -1,6 +1,6 @@
 # HIPAA compliance guide for Aretide agents
 
-**Purpose:** Give AI agents a checklist to evaluate whether code and infrastructure changes are **HIPAA-aligned** for Aretide — a telehealth platform that stores **PHI** (Protected Health Information).
+**Purpose:** Give AI agents a checklist to evaluate whether code and infrastructure changes are **HIPAA-compliant** for Aretide — a telehealth platform that stores **PHI** (Protected Health Information).
 
 > **This is not legal advice.** Aretide implements technical safeguards in code, but full HIPAA compliance also requires signed **BAAs** (Business Associate Agreements), policies, training, and legal review. When in doubt, flag the issue to the user rather than assuming compliance.
 
@@ -186,7 +186,7 @@ Full hosting decision tree: [backend/HOSTING.md](../backend/HOSTING.md)
 
 ---
 
-## Agent decision tree: “Is my change HIPAA-aligned?”
+## Agent decision tree: “Is my change HIPAA-compliant?”
 
 ```
 Does it touch patient health or identifying data?

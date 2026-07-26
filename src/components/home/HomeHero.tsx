@@ -40,7 +40,7 @@ const MARQUEE_ITEMS = [
   dualCompoundedShortPricingLine(),
   "USA licensed pharmacies",
   "Private & secure encrypted intake",
-  "HIPAA-aligned care",
+  "HIPAA-compliant care",
   EARLY_ADOPTER_DISCOUNT,
   "5-minute eligibility check",
 ] as const;
@@ -183,7 +183,7 @@ export function HomeHero() {
             <Eyebrow>GLP-1 weight-loss care</Eyebrow>
           </motion.div>
 
-          <h1 className="mt-4 text-[clamp(2rem,4.5vw,4rem)] font-bold leading-[1.02] tracking-tight text-foreground">
+          <h1 className="mt-4 text-[clamp(2rem,4.5vw,4rem)] font-bold leading-[1.1] tracking-tight text-foreground">
             <LineReveal delay={0}>Weight-loss care </LineReveal>
             <LineReveal delay={0.1}>
               {"that's "}

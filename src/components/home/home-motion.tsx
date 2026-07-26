@@ -16,6 +16,9 @@ export const EASE_OUT = [0.22, 1, 0.36, 1] as const;
  * Clip-masked slide-up reveal for one line of display type. The outer span
  * clips; the inner line rises from below it when scrolled into view. Under
  * reduced motion the line renders in place with no animation.
+ *
+ * Bottom padding + matching negative margin leave room for descenders (g, y,
+ * p) inside the overflow clip without adding visual gap between stacked lines.
  */
 export function LineReveal({
   children,
@@ -36,7 +39,10 @@ export function LineReveal({
   const clipRef = useRef<HTMLSpanElement>(null);
   const inView = useInView(clipRef, { once: true, amount: 0.5 });
   return (
-    <span ref={clipRef} className={cn("block overflow-hidden", className)}>
+    <span
+      ref={clipRef}
+      className={cn("block overflow-hidden pb-[0.2em] -mb-[0.12em]", className)}
+    >
       <motion.span
         className={cn("block", innerClassName)}
         initial={reduceMotion ? false : { y: "112%" }}

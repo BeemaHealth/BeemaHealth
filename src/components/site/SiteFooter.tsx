@@ -53,7 +53,9 @@ export function SiteFooter() {
       <div className="veya-container relative py-16">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="max-w-sm">
-            <Logo className="h-10" tone="ink" />
+            <span className="inline-flex rounded-lg bg-white px-3 py-2">
+              <Logo className="h-10" />
+            </span>
             <p className="mt-4 text-sm leading-relaxed text-ink-foreground/70">
               Weight-loss care guided by independent medical professionals,
               licensed providers, with transparent cash pricing (

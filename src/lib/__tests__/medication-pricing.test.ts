@@ -8,47 +8,66 @@ import {
   dualCompoundedShortPricingLine,
   formatCompoundedPriceLine,
   formatStartingAtPerMonth,
+  promoFirstMonthUsd,
+  PROMO_CODE_DISCOUNT_USD,
+  PROMO_CODE_MIN_MONTHS,
 } from "@/lib/medication-pricing";
 
 describe("medication-pricing", () => {
+  it("has a single flat monthly rate per medication, no baked-in discount", () => {
+    expect(COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd).toBe(199);
+    expect(COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd).toBe(297);
+  });
+
+  it("computes the promo-code first-month price as monthlyUsd minus the discount", () => {
+    expect(promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING)).toBe(
+      COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd - PROMO_CODE_DISCOUNT_USD,
+    );
+    expect(promoFirstMonthUsd(COMPOUNDED_TIRZEPATIDE_PRICING)).toBe(
+      COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd - PROMO_CODE_DISCOUNT_USD,
+    );
+    expect(PROMO_CODE_DISCOUNT_USD).toBe(100);
+    expect(PROMO_CODE_MIN_MONTHS).toBe(3);
+  });
+
   it("formats single-med card lines from shared constants", () => {
     expect(formatCompoundedPriceLine(COMPOUNDED_SEMAGLUTIDE_PRICING)).toBe(
-      "$99 first month, then $199/mo for months 2 and 3",
+      "$199/mo, or $99 your first month with a one-time $100 promo code on a 3-month plan",
     );
     expect(formatStartingAtPerMonth(COMPOUNDED_TIRZEPATIDE_PRICING)).toBe(
-      "Starting at $197/mo",
+      "$297/mo",
     );
   });
 
-  it("balances both medications in short and hero dual lines", () => {
+  it("balances both medications in short and hero dual lines, with no baked-in discount", () => {
     expect(dualCompoundedShortPricingLine()).toBe(
-      "Semaglutide from $99/mo · Tirzepatide from $197/mo",
+      "Semaglutide $199/mo · Tirzepatide $297/mo",
     );
     expect(dualCompoundedHeroPricingLine()).toBe(
-      "Semaglutide from $99/mo first month, then $199/mo for months 2 and 3; Tirzepatide from $197/mo first month, then $297/mo for months 2 and 3",
+      "Semaglutide $199/mo, Tirzepatide $297/mo, plus a one-time $100 promo code for your first month on a 3-month plan",
     );
     expect(dualCompoundedShortPricingLine()).not.toMatch(/[—–]/);
     expect(dualCompoundedHeroPricingLine()).not.toMatch(/[—–]/);
   });
 
-  it("states the first-month, months-2-3, then-ongoing structure per medication", () => {
+  it("states the flat monthly rate and the 3-month-only promo code per medication", () => {
     const sentence = compoundedMonthlyPricingSentence(
       "Compounded semaglutide",
       COMPOUNDED_SEMAGLUTIDE_PRICING,
     );
     expect(sentence).toBe(
-      "Compounded semaglutide is $99 for the first month, then $199/month for months 2 and 3, continuing at $199/month if you keep refilling after that.",
+      "Compounded semaglutide is $199/month, billed monthly with no long-term contract. A one-time $100 promo code brings your first month to $99 when you purchase a 3-month plan; it can't be combined with a 1-month purchase and can only be used once per patient.",
     );
     expect(sentence).not.toMatch(/[—–]/);
   });
 
   it("keeps FAQ pricing paragraph dual-med and em-dash free", () => {
     const paragraph = dualCompoundedFaqPricingParagraph();
-    expect(paragraph).toContain("$99");
     expect(paragraph).toContain("$199");
-    expect(paragraph).toContain("$197");
+    expect(paragraph).toContain("$99");
     expect(paragraph).toContain("$297");
-    expect(paragraph).toMatch(/months 2 and 3/);
+    expect(paragraph).toContain("$197");
+    expect(paragraph).toMatch(/3-month plan/);
     expect(paragraph).toMatch(/semaglutide/i);
     expect(paragraph).toMatch(/tirzepatide/i);
     expect(paragraph).not.toMatch(/[—–]/);

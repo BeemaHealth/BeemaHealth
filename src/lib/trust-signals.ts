@@ -23,7 +23,7 @@ export type TrustSignal = {
 export const TRUST_SIGNALS: TrustSignal[] = [
   {
     icon: ShieldCheck,
-    label: "HIPAA-aligned & encrypted",
+    label: "HIPAA-compliant & encrypted",
     detail: "Every intake and message is encrypted, end to end.",
   },
   {

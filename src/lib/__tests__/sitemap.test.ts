@@ -81,6 +81,63 @@ describe("public/robots.txt", () => {
   it("declares the sitemap at the canonical origin", () => {
     expect(robotsTxt).toContain(`Sitemap: ${SITE_URL}/sitemap.xml`);
   });
+
+  it("explicitly allows major AI search/citation crawlers", () => {
+    for (const agent of [
+      "OAI-SearchBot",
+      "ChatGPT-User",
+      "Claude-SearchBot",
+      "Claude-User",
+      "PerplexityBot",
+      "Perplexity-User",
+      "Googlebot",
+      "Bingbot",
+    ]) {
+      expect(robotsTxt).toContain(`User-agent: ${agent}`);
+    }
+  });
+
+  it("blocks funnel, portal, staff, LP, and retired stub paths", () => {
+    for (const path of [
+      "/qualify",
+      "/waitlist",
+      "/intake",
+      "/consent",
+      "/dashboard",
+      "/staff",
+      "/admin",
+      "/login",
+      "/lp/",
+      "/pricing",
+      "/clinicians",
+      "/learn",
+      "/insurance",
+      "/switch",
+      "/legal/intake-acknowledgments",
+    ]) {
+      expect(robotsTxt).toContain(`Disallow: ${path}`);
+    }
+  });
+
+  it("blocks low-value scrapers while keeping GPTBot/ClaudeBot allowed", () => {
+    expect(robotsTxt).toMatch(/User-agent:\s*Bytespider[\s\S]*?Disallow:\s*\//);
+    expect(robotsTxt).toMatch(/User-agent:\s*CCBot[\s\S]*?Disallow:\s*\//);
+    expect(robotsTxt).toContain("User-agent: GPTBot");
+    expect(robotsTxt).toContain("User-agent: ClaudeBot");
+  });
+
+  it("repeats path Disallows in the named AI group (bots may not merge with *)", () => {
+    // Slice from the first named agent through the scraper block so we
+    // assert the shared AI group — not only the trailing User-agent: *.
+    const namedGroup = robotsTxt.slice(
+      robotsTxt.indexOf("User-agent: OAI-SearchBot"),
+      robotsTxt.indexOf("User-agent: Bytespider"),
+    );
+    expect(namedGroup.length).toBeGreaterThan(0);
+    for (const path of ["/dashboard", "/staff", "/waitlist", "/pricing"]) {
+      expect(namedGroup).toContain(`Disallow: ${path}`);
+    }
+  });
 });
 
 describe("canonicalUrl", () => {

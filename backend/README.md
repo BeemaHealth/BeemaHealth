@@ -4,7 +4,7 @@
 
 **DRF** = Django REST Framework. **HIPAA** = Health Insurance Portability and Accountability Act. **PHI** = **Protected Health Information** (patient-identifying health data: name, DOB, phone, intake answers, uploads, etc.).
 
-HIPAA-aligned technical controls for telehealth intake. **Local development is not HIPAA-compliant.** Do not store real patient PHI until production infrastructure and administrative safeguards are in place.
+HIPAA-compliant technical controls for telehealth intake. **Local development is not HIPAA-compliant.** Do not store real patient PHI until production infrastructure and administrative safeguards are in place.
 
 ## Quick start (Docker — required)
 
@@ -86,7 +86,7 @@ See [HOSTING.md](./HOSTING.md) for hosting go/no-go and:
 7. Telehealth legal review for all states
 8. Covered entity vs Business Associate structure with counsel
 
-> **Disclaimer:** This codebase implements HIPAA-aligned technical controls. Final compliance requires legal counsel and a completed risk assessment.
+> **Disclaimer:** This codebase implements HIPAA-compliant technical controls. Final compliance requires legal counsel and a completed risk assessment.
 
 ## Production deployment
 

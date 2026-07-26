@@ -39,15 +39,15 @@ Add new medication pages to `WEIGHT_LOSS_ITEMS` (and to `SiteFooter.tsx`'s `COLU
 
 `TreatmentShowcase.tsx` (homepage) and `TreatmentLineup.tsx` (`/weight-loss` page) each render one card per medication. Both cards are full-card `<Link>`s (not nested interactive elements) pointing at that medication's own page (`/tirzepatide/`, `/semaglutide/`) — never at `/weight-loss/`. CTA copy is `Explore {treatment.name}` (e.g. "Explore Compounded Tirzepatide"). These two files still duplicate their own local `TREATMENTS` array (pre-existing pattern) — add a new medication to both when it gets its own page.
 
-## Pricing model: month 1, then months 2-3 at the standard rate
+## Pricing model: flat monthly rate, with a 3-month-only promo code
 
-`src/lib/medication-pricing.ts` models each medication as `{ firstMonthUsd, ongoingUsd }`:
+`src/lib/medication-pricing.ts` models each medication as `{ monthlyUsd }` — a single flat, standard cash-pay rate with **no automatic discount**:
 
-- **Month 1** is the discounted, early-adopter price (`firstMonthUsd`) — this is the same `$100 off first month` promoted via `EARLY_ADOPTER_DISCOUNT` in `src/lib/marketing-copy.ts`.
-- **Months 2 and 3** bill at the standard rate (`ongoingUsd`).
-- **Month 4 onward** continues at that same `ongoingUsd` rate indefinitely, for as long as the patient keeps refilling — there is no further price change after month 3. The "3-month" framing in the copy exists to set expectations about when the discount ends, not to describe a program with a fixed end date.
+- **`monthlyUsd`** is the standard rate, billed monthly, from month 1 onward. A 1-month purchase always bills at this rate — it is never discounted.
+- **The only discount** is a one-time, per-patient `$100` promo code (`PROMO_CODE_DISCOUNT_USD`), redeemable **only** when purchasing a `3`-month plan (`PROMO_CODE_MIN_MONTHS`). It reduces month 1 only — `promoFirstMonthUsd(pricing)` computes that discounted first-month price. It cannot be combined with a 1-month purchase, and cannot be reused.
+- This promo code is the same incentive promoted via `EARLY_ADOPTER_DISCOUNT` in `src/lib/marketing-copy.ts`.
 
-`compoundedMonthlyPricingSentence(label, pricing)` is the shared long-form sentence used across FAQ answers and route copy (e.g. "Compounded semaglutide is $99 for the first month, then $199/month for months 2 and 3, continuing at $199/month if you keep refilling after that."). `formatCompoundedPriceLine()` and `dualCompoundedHeroPricingLine()` are the shorter card/hero variants of the same structure. **Never hand-write a "first month X, then Y" sentence — always route through one of these helpers** so the months-2-3-then-ongoing framing stays consistent if the numbers or wording change again.
+`compoundedMonthlyPricingSentence(label, pricing)` is the shared long-form sentence used across FAQ answers and route copy (e.g. "Compounded semaglutide is $199/month, billed monthly with no long-term contract. A one-time $100 promo code brings your first month to $99 when you purchase a 3-month plan; it can't be combined with a 1-month purchase and can only be used once per patient."). `formatCompoundedPriceLine()` and `dualCompoundedHeroPricingLine()` are the shorter card/hero variants of the same structure. **Never hand-write a pricing or promo-code sentence — always route through one of these helpers** so the flat-rate-plus-3-month-promo framing stays consistent if the numbers or wording change again.
 
 ## CTA switchboard (waitlist → live portal cutover)
 
@@ -76,6 +76,6 @@ const cta = resolveCta(CTA_IDS.tirzepatide_hero);
 | `src/lib/cta-ids.ts` | `CTA_IDS`, `resolveCta()` — the CTA switchboard |
 | `src/lib/seo.ts` | `faqPageJsonLd()`, `breadcrumbJsonLd()`, `canonicalUrl()` |
 | `src/components/site/SiteHeader.tsx`, `SiteFooter.tsx` | Weight Loss dropdown (`WeightLossNavDropdown` desktop, `MobileWeightLossDropdown` mobile) / Care links |
-| `src/lib/marketing-copy.ts` | `EARLY_ADOPTER_DISCOUNT` — the month-1 discount promoted alongside pricing |
+| `src/lib/marketing-copy.ts` | `EARLY_ADOPTER_DISCOUNT` — the one-time, 3-month-only promo code promoted alongside pricing |
 | `src/components/home/TreatmentShowcase.tsx`, `src/components/site/TreatmentLineup.tsx` | Medication cards (home / `/weight-loss`) |
 | `public/sitemap.xml`, `public/llms.txt`, `src/lib/__tests__/sitemap.test.ts` | Keep in sync when adding a page |

@@ -34,11 +34,12 @@ import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   compoundedMonthlyPricingSentence,
+  promoFirstMonthUsd,
 } from "@/lib/medication-pricing";
 import compoundedSemaglutideVialImg from "@/assets/treatments/compounded-semaglutide-vial.png";
 
 const TITLE = "Compounded Semaglutide for Weight Loss | Beema Health";
-const DESCRIPTION = `Compounded semaglutide for medical weight loss, personalized by licensed providers. Nationwide telehealth care from $${COMPOUNDED_SEMAGLUTIDE_PRICING.firstMonthUsd} the first month. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Compounded semaglutide for medical weight loss, personalized by licensed providers. Nationwide telehealth care at $${COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd}/mo. Prescribing is never guaranteed.`;
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
@@ -191,11 +192,11 @@ function SemaglutidePage() {
               </motion.div>
               <div className="mt-6 text-sm text-foreground">
                 <span className="font-semibold">
-                  ${COMPOUNDED_SEMAGLUTIDE_PRICING.firstMonthUsd} first month
+                  ${COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd}/month
                 </span>{" "}
                 <span className="text-muted-foreground">
-                  · ${COMPOUNDED_SEMAGLUTIDE_PRICING.ongoingUsd}/month months 2
-                  and 3
+                  · or ${promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING)}{" "}
+                  first month with a one-time 3-month promo code
                 </span>
               </div>
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">

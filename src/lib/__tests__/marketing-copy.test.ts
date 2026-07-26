@@ -17,8 +17,12 @@ describe("marketing-copy", () => {
   });
 
   it("keeps a single concrete early-adopter amount", () => {
-    expect(EARLY_ADOPTER_DISCOUNT).toBe("$100 off first month");
-    expect(EARLY_ADOPTER_DISCOUNT_SHORT).toBe("$100 off");
+    expect(EARLY_ADOPTER_DISCOUNT).toBe(
+      "a one-time $100 promo code for your first month on a 3-month plan",
+    );
+    expect(EARLY_ADOPTER_DISCOUNT_SHORT).toBe(
+      "$100 off with a 3-month promo code",
+    );
     expect(earlyAdopterIncentiveLine()).toContain(EARLY_ADOPTER_DISCOUNT);
     expect(waitlistIncentiveBody()).toContain(EARLY_ADOPTER_DISCOUNT);
     expect(waitlistSuccessIncentiveLine()).toContain(EARLY_ADOPTER_DISCOUNT);

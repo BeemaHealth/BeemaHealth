@@ -6,7 +6,7 @@ Read `AGENTS.md` first — it is the authoritative engineering guide. This file 
 
 ## Company & product
 
-**Beema Health** ([beemahealth](https://beemahealth/)) — HIPAA-aligned telehealth medical weight-loss intake platform.
+**Beema Health** ([beemahealth](https://beemahealth/)) — HIPAA-compliant telehealth medical weight-loss intake platform.
 Patient funnel: qualification → account → medical intake → consent → provider review → prescription → patient dashboard.
 
 **Compliance:** HIPAA. All patient data is PHI — treat it as real and sensitive even in local dev.
