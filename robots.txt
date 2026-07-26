@@ -1,18 +1,95 @@
 # Beema Health — crawl rules
-# Marketing pages are open to all crawlers, including AI crawlers
-# (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Bingbot) — we want
-# to be retrievable and citable by answer engines. Do not add blanket
-# blocks for AI user-agents.
 #
-# Funnel, portal, and staff routes are excluded: they carry no search
-# value and sit adjacent to PHI. Analytics there is Google Analytics'
-# job, not crawlers'.
+# Goal: be crawlable and citable by search engines and AI answer engines.
+# This file only controls crawl *access*. It cannot inject ranking keywords
+# or force recommendations — keep claims in page content and public/llms.txt.
 #
-# NOTE: if the production domain changes, update the Sitemap URL below
-# together with public/sitemap.xml and SITE_URL in src/lib/seo.ts.
+# AI bots come in three flavors (tokens are independent):
+#   1) Search / index  — decide whether you appear in AI answers
+#   2) Training        — may use crawled text to train foundation models
+#   3) User-triggered  — fetch a URL when a person asks about it
+# We allow (1)–(3) for major vendors so Beema can be cited. Flip any
+# training token into the "blocked scrapers" group (or its own
+# `Disallow: /` group) to opt out of training without leaving AI search.
+#
+# IMPORTANT: named User-agent groups below repeat the same path Disallows
+# as `User-agent: *`. Some bots do not merge with `*`; an `Allow: /`-only
+# group would otherwise open funnel/portal paths to those crawlers.
+#
+# Companion file: https://beemahealth.com/llms.txt
+# On domain change, update Sitemap below + public/sitemap.xml + SITE_URL
+# in src/lib/seo.ts.
+
+# ---------------------------------------------------------------------------
+# Major search + AI crawlers (same path policy as *)
+# Search/citation: OAI-SearchBot, Claude-SearchBot, PerplexityBot, Googlebot…
+# Training / generative: GPTBot, ClaudeBot, Google-Extended, Applebot-Extended…
+# ---------------------------------------------------------------------------
+
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: OAI-AdsBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: ClaudeBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Googlebot
+User-agent: Google-Extended
+User-agent: Bingbot
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: GPTBot
+User-agent: Amazonbot
+User-agent: meta-externalagent
+Allow: /
+
+# Patient funnel / waitlist
+Disallow: /qualify
+Disallow: /waitlist
+Disallow: /intake
+Disallow: /consent
+Disallow: /submitted
+Disallow: /eligibility
+
+# Authenticated portal + PHI-adjacent surfaces
+Disallow: /dashboard
+Disallow: /login
+Disallow: /verify-email
+
+# Internal tools
+Disallow: /staff
+Disallow: /admin
+
+# Paid / CRM landing pages (attribution, not organic discovery)
+Disallow: /lp/
+
+# Legal text tied to the intake funnel
+Disallow: /legal/intake-acknowledgments
+
+# Retired marketing stubs that only 301 → home (save crawl budget)
+Disallow: /pricing
+Disallow: /clinicians
+Disallow: /learn
+Disallow: /insurance
+Disallow: /switch
+
+# ---------------------------------------------------------------------------
+# Low-value / aggressive scrapers (sitewide block)
+# ---------------------------------------------------------------------------
+
+User-agent: Bytespider
+User-agent: CCBot
+User-agent: Diffbot
+Disallow: /
+
+# ---------------------------------------------------------------------------
+# Everyone else
+# ---------------------------------------------------------------------------
 
 User-agent: *
 Allow: /
+
 Disallow: /qualify
 Disallow: /waitlist
 Disallow: /intake
@@ -20,10 +97,16 @@ Disallow: /consent
 Disallow: /submitted
 Disallow: /eligibility
 Disallow: /dashboard
-Disallow: /staff
-Disallow: /admin
 Disallow: /login
 Disallow: /verify-email
+Disallow: /staff
+Disallow: /admin
 Disallow: /lp/
+Disallow: /legal/intake-acknowledgments
+Disallow: /pricing
+Disallow: /clinicians
+Disallow: /learn
+Disallow: /insurance
+Disallow: /switch
 
 Sitemap: https://beemahealth.com/sitemap.xml
