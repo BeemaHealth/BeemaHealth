@@ -8,9 +8,8 @@
 #   1) Search / index  — decide whether you appear in AI answers
 #   2) Training        — may use crawled text to train foundation models
 #   3) User-triggered  — fetch a URL when a person asks about it
-# We allow (1)–(3) for major vendors so Beema can be cited. Flip any
-# training token into the "blocked scrapers" group (or its own
-# `Disallow: /` group) to opt out of training without leaving AI search.
+# We allow (1)–(3) for major vendors, and everyone else via `User-agent: *`,
+# so Beema can be read and cited from anywhere. No bots are sitewide-blocked.
 #
 # IMPORTANT: named User-agent groups below repeat the same path Disallows
 # as `User-agent: *`. Some bots do not merge with `*`; an `Allow: /`-only
@@ -75,16 +74,7 @@ Disallow: /insurance
 Disallow: /switch
 
 # ---------------------------------------------------------------------------
-# Low-value / aggressive scrapers (sitewide block)
-# ---------------------------------------------------------------------------
-
-User-agent: Bytespider
-User-agent: CCBot
-User-agent: Diffbot
-Disallow: /
-
-# ---------------------------------------------------------------------------
-# Everyone else
+# Everyone else — no bot is sitewide-blocked; same standard path policy as above
 # ---------------------------------------------------------------------------
 
 User-agent: *
