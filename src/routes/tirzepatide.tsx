@@ -24,9 +24,11 @@ import {
   TreatmentBreadcrumb,
   TreatmentComparisonTable,
   TreatmentFaqSection,
+  TreatmentIncludedDropdown,
   TreatmentPricingCard,
   type TreatmentFaqItem,
 } from "@/components/site/TreatmentPageBlocks";
+import { BmiCalculator } from "@/components/site/BmiCalculator";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
@@ -69,6 +71,10 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     q: "How quickly can treatment begin?",
     a: "Timing depends on how quickly you complete intake, your provider's review, and pharmacy fulfillment. We can't promise a specific start date, and prescribing is never guaranteed.",
   },
+  {
+    q: "Can I switch to Beema if I'm already on tirzepatide elsewhere?",
+    a: "Yes. Tell us about your current provider and dose during intake, and your Beema provider will factor that history into their review, with the goal of keeping you on a comparable dose rather than restarting from scratch. Give accurate details in your intake, since your intake answers directly shape the dose your provider considers appropriate.",
+  },
 ];
 
 const STEPS = [
@@ -87,6 +93,15 @@ const STEPS = [
     title: "Licensed provider review",
     text: "A licensed provider reviews your intake and decides whether tirzepatide may be appropriate. Prescribing is never guaranteed.",
   },
+];
+
+const WHATS_INCLUDED = [
+  "Doctor Consultation & Visit",
+  "Prescription Medication",
+  "Ongoing Doctor Care",
+  "Syringes",
+  "Expedited Shipping",
+  "Alcohol Pads",
 ];
 
 const ELIGIBILITY_POINTS = [
@@ -198,6 +213,10 @@ function TirzepatidePage() {
                 Medication eligibility and availability are determined by a
                 licensed provider and applicable law.
               </p>
+              <TreatmentIncludedDropdown
+                items={WHATS_INCLUDED}
+                className="mt-6 max-w-md"
+              />
             </div>
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
@@ -246,6 +265,21 @@ function TirzepatidePage() {
             on a case-by-case basis, whether it may be an appropriate option as
             part of your care.
           </p>
+        </div>
+      </Section>
+
+      <Section className="pt-0">
+        <SectionHeading
+          align="left"
+          title="Check your BMI"
+          description="See where your BMI falls, then decide if it's worth a conversation with a licensed provider."
+          className="mx-0 max-w-2xl"
+        />
+        <div className="mt-8">
+          <BmiCalculator
+            ctaId={CTA_IDS.tirzepatide_bmi}
+            medicationLabel="tirzepatide"
+          />
         </div>
       </Section>
 

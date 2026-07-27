@@ -25,9 +25,11 @@ import {
   TreatmentBreadcrumb,
   TreatmentComparisonTable,
   TreatmentFaqSection,
+  TreatmentIncludedDropdown,
   TreatmentPricingCard,
   type TreatmentFaqItem,
 } from "@/components/site/TreatmentPageBlocks";
+import { BmiCalculator } from "@/components/site/BmiCalculator";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
@@ -70,6 +72,10 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     q: "How quickly can treatment begin?",
     a: "It depends on how quickly you finish intake, how fast your provider can review it, and pharmacy fulfillment timing. We can't guarantee a specific start date or that treatment will be approved at all.",
   },
+  {
+    q: "Can I switch to Beema if I'm already on semaglutide elsewhere?",
+    a: "Yes. Your medical intake asks about any current provider and dose, which lets your Beema provider review your treatment history and aim to continue you at a comparable dose instead of starting over. Accuracy here matters, since it's the information your provider relies on to determine your correct dose.",
+  },
 ];
 
 const STEPS = [
@@ -88,6 +94,15 @@ const STEPS = [
     title: "Your provider reviews your case",
     text: "A licensed provider independently decides whether semaglutide may be appropriate for you.",
   },
+];
+
+const WHATS_INCLUDED = [
+  "Prescription Medication",
+  "Ongoing Doctor Care",
+  "Alcohol Pads",
+  "Doctor Consultation & Visit",
+  "Syringes",
+  "Expedited Shipping",
 ];
 
 const ELIGIBILITY_POINTS = [
@@ -199,6 +214,10 @@ function SemaglutidePage() {
                 Medication eligibility and availability are determined by a
                 licensed provider and applicable law.
               </p>
+              <TreatmentIncludedDropdown
+                items={WHATS_INCLUDED}
+                className="mt-6 max-w-md"
+              />
             </div>
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
@@ -247,6 +266,21 @@ function SemaglutidePage() {
             option for you is a decision your licensed provider makes
             individually.
           </p>
+        </div>
+      </Section>
+
+      <Section className="pt-0">
+        <SectionHeading
+          align="left"
+          title="Check your BMI"
+          description="See where your BMI falls, then decide if it's worth a conversation with a licensed provider."
+          className="mx-0 max-w-2xl"
+        />
+        <div className="mt-8">
+          <BmiCalculator
+            ctaId={CTA_IDS.semaglutide_bmi}
+            medicationLabel="semaglutide"
+          />
         </div>
       </Section>
 

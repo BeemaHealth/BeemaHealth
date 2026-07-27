@@ -54,6 +54,7 @@ Before writing any code for a new feature, run `/start-feature` (branch setup) t
 | **Analytics & tracking** | `docs/features/analytics.md` |
 | **Landing pages** | `docs/features/landing-pages.md` |
 | **Treatment pages (per-medication SEO pages, CTA switchboard)** | `docs/features/treatment-pages.md` |
+| **BMI calculator (treatment pages)** | `docs/features/bmi-calculator.md` |
 | Backend (dormant — Django, patient funnel, medical intake, staff CRM, medications, dynamic questionnaire, LifeFile/Beluga vendor APIs) | `docs/BACKEND-DEFERRED.md` |
 
 Match existing patterns. Prefer minimal, focused diffs. If docs and code disagree, tell the user — do not silently fix either side.

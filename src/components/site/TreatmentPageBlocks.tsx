@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { CheckCircle2 } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -90,6 +91,46 @@ export function TreatmentPricingCard({
         prescription, pharmacy fulfillment, and state requirements.
       </p>
     </SurfaceCard>
+  );
+}
+
+/**
+ * Single-item "What's included" dropdown for the treatment page hero. Each
+ * page passes its own item order (see WHATS_INCLUDED in the route files) —
+ * deliberately not a shared constant, so the two pages don't render an
+ * identical list in an identical order.
+ */
+export function TreatmentIncludedDropdown({
+  items,
+  className,
+}: {
+  items: readonly string[];
+  className?: string;
+}) {
+  return (
+    <Accordion type="single" collapsible className={cn("w-full", className)}>
+      <AccordionItem
+        value="whats-included"
+        className="rounded-2xl border border-border bg-card px-5"
+      >
+        <AccordionTrigger className="text-left text-sm font-semibold text-foreground">
+          What&apos;s included
+        </AccordionTrigger>
+        <AccordionContent>
+          <ul className="space-y-2 pt-1">
+            {items.map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-2 text-sm text-muted-foreground"
+              >
+                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-foreground" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }
 

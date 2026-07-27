@@ -144,6 +144,10 @@ export const FAQ_GROUPS: FaqGroup[] = [
         q: "Which medications does Beema Health support?",
         a: "Beema Health supports clinically appropriate weight-management options. Your clinician will discuss what's right for you. We don't claim any product is equivalent to a specific branded medication.",
       },
+      {
+        q: "Can I switch from another provider to Beema Health?",
+        a: "Yes. If you're currently being treated elsewhere, your medical intake will ask about your existing prescription and dose so a Beema provider can review your history and aim to keep your treatment consistent rather than starting over. Filling out that part of intake carefully matters, since it's what your provider uses to land on the right dose for you.",
+      },
     ],
   },
   {
