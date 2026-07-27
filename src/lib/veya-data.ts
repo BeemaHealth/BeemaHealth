@@ -7,6 +7,7 @@ import {
   dualCompoundedFaqPricingParagraph,
 } from "@/lib/medication-pricing";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
+import { US_STATES } from "@/lib/us-states";
 
 export const LAUNCH_STATES = [
   "California",
@@ -150,7 +151,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "How is medication shipped?",
-        a: "Through cold-chain shipping with tracking, typically 1-3 business days in launch states.",
+        a: "Through cold-chain shipping with tracking, typically 1-3 business days nationwide.",
       },
       {
         q: "What if my shipment is delayed or lost?",
@@ -193,7 +194,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "Which states is Beema Health available in?",
-        a: "We launch state by state. During intake we check your state instantly; if we're not live there yet, you can join the waitlist.",
+        a: `Beema Health is available to patients in all 50 U.S. states: ${US_STATES.join(", ")}. Medication availability, prescribing, and pharmacy fulfillment still depend on your state's individual requirements and your provider's independent clinical decision.`,
       },
     ],
   },

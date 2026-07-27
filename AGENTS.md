@@ -12,6 +12,7 @@
 | **Product** | Telehealth **medical weight-loss intake** platform |
 | **What we ship** | Patient qualification → account → medical intake → consent → provider review → perscription routed → patient dashboard updated with this information |
 | **Compliance context** | **HIPAA**-aligned design; handles **PHI** (Protected Health Information). Treat all patient data as real and sensitive — even in local dev. |
+| **Current phase** | Beema is not hosting or running its own backend for the foreseeable future — [Bask](https://bask.co/) is the storefront/checkout/questionnaire platform for this phase. The Django backend in this repo is intact and accurate but **dormant** — see `docs/BACKEND-DEFERRED.md` before touching it or routing work through its docs. |
 
 ### Production mindset (non-negotiable)
 
@@ -33,7 +34,7 @@ Beema Health/
 │   └── lib/                     ← API client, validators, types, step logic
 │       └── design-tokens.ts     ← Semantic color usage (portal UI) — see below
 ├── src/styles.css               ← Raw brand oklch values (`:root`)
-├── backend/                     ← Django 5 + DRF + PostgreSQL
+├── backend/                     ← Django 5 + DRF + PostgreSQL — DORMANT, see docs/BACKEND-DEFERRED.md
 │   ├── apps/                    ← Domain apps (accounts, eligibility, intakes, …)
 │   └── apps/common/validation/  ← Shared backend input validators
 ├── docs/                        ← Deep dives (LOCAL-DEV, INPUT_VALIDATION_TESTS, …)
@@ -46,19 +47,14 @@ Beema Health/
 | Layer | Tech |
 |-------|------|
 | Frontend | React 19, TanStack Start/Router, Tailwind, shadcn/ui, Vitest |
-| Backend | Django 5, DRF, PostgreSQL 16 (Docker locally), Token auth |
+| Backend | Django 5, DRF, PostgreSQL 16 (Docker locally), Token auth — **dormant, see `docs/BACKEND-DEFERRED.md`** |
 | Types | `src/lib/types/mvp.ts` mirrors API shapes — keep in sync |
 
-### Patient funnel (where most work happens)
+### Where most work happens now
 
-1. **`/qualify`** — pre-signup eligibility quiz + account creation (`POST /api/auth/register/`)
-2. **`/intake`** — 12-step medical questionnaire (`PATCH /api/medical-intakes/me/`)
-3. **`/consent`** — legal acknowledgments + signature (`POST /api/consent-records/me/`)
-4. **`/dashboard`** — post-submission status
+This is a **marketing/SEO site** whose CTAs link out to Bask, a third-party storefront/checkout/questionnaire platform — not to an in-house funnel. The CTA switchboard (`resolveCta()` in `src/lib/cta-ids.ts`, documented in `docs/features/treatment-pages.md`) is the single place that decision is made.
 
-Pre-signup progress: `POST /api/funnel/session/` + `PATCH /api/funnel/eligibility/` (HttpOnly cookie).
-
-**Canonical data ownership:** see `backend/DATABASE.md` — do not duplicate fields across tables/JSON blobs.
+The in-house patient funnel this repo also contains (`/qualify` → `/intake` → `/consent` → `/dashboard`, backed by the Django API) is real, intact, and documented — but dormant. See `docs/BACKEND-DEFERRED.md` (which points to `docs/features/patient-funnel.md`, `docs/features/medical-intake.md`, and `backend/DATABASE.md` for canonical data ownership) before working in it.
 
 ---
 
@@ -81,23 +77,15 @@ Read the relevant doc(s):
 
 | Topic | Doc |
 |-------|-----|
-| Database / field ownership | `backend/DATABASE.md` |
-| Run backend, API list | `backend/README.md`, `docs/LOCAL-DEV.md` |
-| **LifeFile / MediVera pharmacy API** | **`docs/vendor/LIFEFILE_MEDIVERA_API.md`** (gitignored; pointer: `docs/LIFEFILE_MEDIVERA_API.md`) |
-| **Beluga Health provider/pharmacy API** | **`docs/vendor/BELUGA_API.md`** (gitignored; pointer: `docs/BELUGA_API.md`) |
-| **Beluga integration (consults, refills, webhooks)** | **`docs/features/beluga-integration.md`** |
 | Frontend routes | `src/routes/README.md` |
-| Input validation & security tests | `docs/INPUT_VALIDATION_TESTS.md` |
+| Input validation & security tests (frontend) | `docs/INPUT_VALIDATION_TESTS.md` |
 | API types & client | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |
 | **Color scheme / portal UI** | **`src/lib/design-tokens.ts`**, `src/styles.css`, `src/components/portal/AccountSectionCard.tsx` |
-| Compliance / PHI / HIPAA | **`docs/HIPAA.md`**, `backend/HOSTING.md` |
-| **Patient funnel (qualify flow, session/cookie)** | **`docs/features/patient-funnel.md`** |
-| **Medical intake (12-step questionnaire)** | **`docs/features/medical-intake.md`** |
+| Compliance / PHI / HIPAA | **`docs/HIPAA.md`** |
 | **Analytics & event tracking** | **`docs/features/analytics.md`** |
 | **Landing pages** | **`docs/features/landing-pages.md`** |
-| **Staff CRM** | **`docs/features/staff-crm.md`** |
-| **Medications catalog** | **`docs/features/medications.md`** |
-| **Dynamic questionnaire system** | **`docs/features/dynamic-questionnaire.md`**, `docs/DYNAMIC_QUESTIONNAIRE_SYSTEM.md` |
+| **Treatment pages (per-medication SEO pages, CTA switchboard)** | **`docs/features/treatment-pages.md`** |
+| Backend (dormant — DB ownership, run-backend, patient funnel, medical intake, staff CRM, medications, dynamic questionnaire, LifeFile/Beluga vendor APIs) | **`docs/BACKEND-DEFERRED.md`** |
 
 Match existing patterns in surrounding code. Prefer minimal, focused diffs. If discrepancies between the documentation and the code exist, then ask the user if they would like the documentation changed or the code changed and explain the differences and give a recommendation.
 
@@ -133,7 +121,7 @@ Both frontend **and** backend must reject malicious input on strict fields.
 
 **After every code change**, before marking the task done:
 
-1. **Run the full suite** — `npm run test:all` (frontend Vitest + backend Django unit tests + clinical integration smoke flow).
+1. **Run the frontend suite** — `npm test` (Vitest) is the default. Backend is dormant (`docs/BACKEND-DEFERRED.md`): only run `npm run test:all` / `npm run test:backend` (frontend Vitest + backend Django unit tests + clinical integration smoke flow) if the task explicitly touches `backend/`.
 2. **Run static checks on changed `.ts` / `.tsx` files** — both are required when you touch TypeScript; ESLint alone is **not** enough:
    - **ESLint (changed files only)** — do **not** run `npm run lint` project-wide (thousands of pre-existing issues). Lint your diff:
      ```bash
@@ -149,12 +137,14 @@ Both frontend **and** backend must reject malicious input on strict fields.
 6. **Decide if new tests are needed** — if behavior is new or the change could regress silently, add tests before finishing; if existing tests already cover it, say so in chat.
 
 ```bash
-npm run test:all     # frontend (Vitest) + backend (Django unit tests + smoke_clinical_flow) — preferred
-npm test             # frontend only
-npm run test:backend # backend unit tests + smoke_clinical_flow
+npm test             # frontend (Vitest) — preferred, default
 # ESLint — changed TS/TSX only (see workflow §3); do not run npm run lint project-wide
 npx tsc --noEmit     # required when any TS/TSX changed — not optional
 npx vitest run path/to/changed.test.ts   # optional: single test file
+
+# Only if a task explicitly touches backend/ (dormant otherwise — docs/BACKEND-DEFERRED.md):
+npm run test:all      # frontend + backend (Django unit tests + smoke_clinical_flow)
+npm run test:backend  # backend unit tests + smoke_clinical_flow
 ```
 
 If tests fail:
@@ -177,6 +167,8 @@ If you discover this file (or `.cursor/rules/*`) **does not match how the projec
 ## Testing reference
 
 Full guide: **`docs/INPUT_VALIDATION_TESTS.md`**
+
+Backend rows below (Backend unit, Backend API integration, Clinical integration smoke) are **dormant reference** — see `docs/BACKEND-DEFERRED.md`. Only run them if a task explicitly resumes backend work.
 
 ### Test types in this repo
 
@@ -201,7 +193,7 @@ There is **no separate E2E/browser test suite** today. API integration tests plu
 
 Config: `vitest.config.ts` — tests match `src/**/*.test.ts`.
 
-### Backend test files
+### Backend test files (dormant — see `docs/BACKEND-DEFERRED.md`)
 
 | File | Endpoint |
 |------|----------|
@@ -229,7 +221,7 @@ Complete **all** of the following:
 - [ ] Success + failure + injection tests in `src/lib/__tests/`
 - [ ] Update `test-data.ts` helpers if needed
 
-#### Backend (required for every POST/PATCH field)
+#### Backend (dormant — only applies if a task explicitly resumes backend work; see `docs/BACKEND-DEFERRED.md`)
 - [ ] Validator in `backend/apps/common/validation/`
 - [ ] Hook in the relevant `serializers.py` (`validate()` or `validate_<field>()`)
 - [ ] API test in `backend/apps/<app>/tests/test_*_api.py`
@@ -251,7 +243,7 @@ Use shared fixtures — do not invent one-off strings:
 
 **Free-text fields** (med dose, reactions, notes): test required/empty; SQL may pass as literal — backend must use parameterized queries; React must not render raw HTML.
 
-### Backend security checklist (every new endpoint or serializer)
+### Backend security checklist (dormant — every new endpoint or serializer, only if backend work resumes)
 
 - [ ] Auth permission class correct (`AllowAny` vs `IsPatient` vs provider)
 - [ ] Input validated in serializer — never trust client-only checks
@@ -319,7 +311,7 @@ Intake step colors/icons: `src/lib/intake-portal-ui.ts` (references `SectionTone
 - **Frontend routes:** file-based in `src/routes/` — see `src/routes/README.md`. Do not create `src/pages/`.
 - **API client:** `src/lib/api/client.ts` — extend here for new endpoints.
 - **Types:** update `src/lib/types/mvp.ts` when API shapes change.
-- **Backend:** one Django app per domain under `backend/apps/`.
+- **Backend:** one Django app per domain under `backend/apps/` — dormant, see `docs/BACKEND-DEFERRED.md`.
 - **Dev-only logging:** diagnostic log lines that should only ever appear locally (mock payload previews, debug-path visibility, etc.) must go through `apps.common.dev_logging.dev_log()` instead of a raw `logger.info(...)` call — it's a no-op unless `DEBUG=True`, so it's silent in staging/production by construction. Use the standard logger directly for anything that should be observable in production (real errors/warnings).
 - **Commits:** only when the user asks. No `--no-verify`, no force-push to main.
 - **Scope:** smallest correct diff. No drive-by refactors.
@@ -332,11 +324,12 @@ Intake step colors/icons: `src/lib/intake-portal-ui.ts` (references `SectionTone
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Frontend → http://localhost:8080 |
-| `npm run dev:backend` | Backend + Postgres via Docker → http://localhost:8000 |
-| `npm run test:all` | Run all validation/regression tests |
+| `npm test` | Frontend validation/regression tests — preferred default |
 | ESLint on changed `.ts`/`.tsx` only | See workflow §3 — `npx eslint <paths>` or git-diff pipe; not `npm run lint` |
 | `npx tsc --noEmit` | **Required** when any TS/TSX changed — catches errors ESLint/Vitest miss in routes |
-| `docker compose -f backend/docker-compose.yml exec api python manage.py migrate` | Apply migrations |
+| `npm run dev:backend` | *(dormant)* Backend + Postgres via Docker → http://localhost:8000 |
+| `npm run test:all` | *(dormant)* All tests including backend/smoke |
+| `docker compose -f backend/docker-compose.yml exec api python manage.py migrate` | *(dormant)* Apply migrations |
 
 ---
 
@@ -368,10 +361,9 @@ Rules are **summaries**. This file and `docs/INPUT_VALIDATION_TESTS.md` are auth
 
 - [README.md](README.md) — doc index
 - [docs/HIPAA.md](docs/HIPAA.md) — HIPAA compliance checklist for agents
-- [docs/INPUT_VALIDATION_TESTS.md](docs/INPUT_VALIDATION_TESTS.md) — validation test bible
-- [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md) — Docker setup
-- [backend/DATABASE.md](backend/DATABASE.md) — schema & data flow
-- [backend/README.md](backend/README.md) — API endpoints
+- [docs/INPUT_VALIDATION_TESTS.md](docs/INPUT_VALIDATION_TESTS.md) — validation test bible (frontend half active)
 - [src/lib/design-tokens.ts](src/lib/design-tokens.ts) — semantic color scheme (portal UI)
 - [src/styles.css](src/styles.css) — raw brand oklch palette
 - [Starting Point/launchPlan.md](Starting%20Point/launchPlan.md) — product launch plan
+
+**Deferred (backend — see [docs/BACKEND-DEFERRED.md](docs/BACKEND-DEFERRED.md)):** [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md), [backend/DATABASE.md](backend/DATABASE.md), [backend/README.md](backend/README.md)

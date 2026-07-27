@@ -386,18 +386,8 @@ function PrivacyPage() {
       <Section>
         <LegalDocument
           title="Privacy Policy"
-          lastUpdated="June 18, 2026"
+          lastUpdated="July 26, 2026"
           description="This Policy describes how Beema Health handles personal and health information across our telehealth platform."
-          callout={
-            <>
-              <strong className="font-semibold text-foreground">
-                Important:
-              </strong>{" "}
-              This document is provided for transparency. Have qualified legal
-              counsel review it before launch or reliance for compliance
-              purposes.
-            </>
-          }
           sections={SECTIONS}
         />
       </Section>

@@ -30,6 +30,7 @@ import {
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
+import { US_STATES } from "@/lib/us-states";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -239,6 +240,40 @@ function AboutPage() {
             </motion.div>
           ))}
         </div>
+      </Section>
+
+      {/* States we serve */}
+      <Section className="pt-0">
+        <motion.div
+          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE_OUT }}
+        >
+          <SectionHeading
+            eyebrow="Where we serve"
+            title="Available in all 50 states"
+            description="Beema Health is available to patients nationwide. Medication availability, prescribing, and pharmacy fulfillment still depend on your state's individual requirements and your provider's independent clinical decision."
+          />
+        </motion.div>
+        <motion.div
+          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{
+            duration: reduceMotion ? 0 : 0.6,
+            delay: reduceMotion ? 0 : 0.1,
+            ease: EASE_OUT,
+          }}
+        >
+          <SurfaceCard className="mt-10">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-muted-foreground sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              {US_STATES.map((state) => (
+                <li key={state}>{state}</li>
+              ))}
+            </ul>
+          </SurfaceCard>
+        </motion.div>
       </Section>
 
       {/* Infinity wings */}

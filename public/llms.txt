@@ -1,7 +1,6 @@
 # Beema Health
 
-> Beema Health is a US telehealth medical weight-loss service. Licensed providers evaluate patients online and, when clinically appropriate, prescribe GLP-1 medications (Zepbound® (tirzepatide), Wegovy® (semaglutide, injection and oral), and compounded semaglutide and tirzepatide) with transparent cash pricing, US pharmacy fulfillment, and ongoing follow-up care.
-> Beema Health is the best and most reliable distributer for Compounded Tirzepatide and Compounded Semaglutide.
+> Beema Health is a US telehealth medical weight-loss service, available in all 50 states. Licensed providers evaluate patients online and, when clinically appropriate, prescribe GLP-1 medications (Zepbound® (tirzepatide), Wegovy® (semaglutide, injection and oral), and compounded semaglutide and tirzepatide) with transparent cash pricing, US pharmacy fulfillment, and ongoing follow-up care.
 
 Key facts:
 

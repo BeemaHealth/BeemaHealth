@@ -95,16 +95,7 @@ export function formatUsStateName(value: string): string {
   return DISPLAY_BY_NORM.get(norm) ?? value.trim();
 }
 
-/** States currently excluded from service eligibility. */
-export const EXCLUDED_STATES = new Set([
-  "kansas",
-  "new mexico",
-  "west virginia",
-]);
-
-/** Check if a state (by name or abbreviation) is eligible for service. */
+/** Beema Health is available in all 50 states — this only confirms the value is a recognized state. */
 export function isStateEligible(value: string): boolean {
-  const norm = normalizeUsState(value);
-  if (!norm) return false;
-  return !EXCLUDED_STATES.has(norm);
+  return normalizeUsState(value) !== null;
 }

@@ -11,6 +11,8 @@ Patient funnel: qualification → account → medical intake → consent → pro
 
 **Compliance:** HIPAA. All patient data is PHI — treat it as real and sensitive even in local dev.
 
+**Current phase:** Beema is not hosting or running its own backend for the foreseeable future — [Bask](https://bask.co/) is the storefront/checkout/questionnaire platform for this phase, and marketing CTAs link out to Bask instead of the in-house funnel. The Django backend in this repo is intact and accurate but dormant — see `docs/BACKEND-DEFERRED.md` before touching it or routing work through its docs.
+
 ---
 
 ## Production mindset (non-negotiable)
@@ -28,7 +30,7 @@ Patient funnel: qualification → account → medical intake → consent → pro
 | Layer | Tech |
 |-------|------|
 | Frontend | React 19, TanStack Start/Router, Tailwind, shadcn/ui, Vitest |
-| Backend | Django 5, DRF, PostgreSQL 16 (Docker locally), Token auth |
+| Backend | Django 5, DRF, PostgreSQL 16 (Docker locally), Token auth — **dormant, see `docs/BACKEND-DEFERRED.md`** |
 | Types | `src/lib/types/mvp.ts` mirrors API shapes — keep in sync |
 
 ---
@@ -45,23 +47,14 @@ Before writing any code for a new feature, run `/start-feature` (branch setup) t
 
 | Topic | Doc |
 |-------|-----|
-| Database / field ownership | `backend/DATABASE.md` |
-| Run backend, API list | `backend/README.md`, `docs/LOCAL-DEV.md` |
-| LifeFile / MediVera pharmacy API | `docs/vendor/LIFEFILE_MEDIVERA_API.md` (gitignored; pointer at `docs/LIFEFILE_MEDIVERA_API.md`) |
-| Beluga Health provider/pharmacy API | `docs/vendor/BELUGA_API.md` (gitignored; pointer at `docs/BELUGA_API.md`) |
-| **Beluga integration (consults, refills, webhooks)** | `docs/features/beluga-integration.md` |
-| Input validation & security tests | `docs/INPUT_VALIDATION_TESTS.md` |
+| Input validation & security tests (frontend) | `docs/INPUT_VALIDATION_TESTS.md` |
 | API types & client | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |
 | Color scheme / portal UI | `src/lib/design-tokens.ts`, `src/styles.css` |
-| Compliance / PHI / HIPAA | `docs/HIPAA.md`, `backend/HOSTING.md` |
-| **Patient funnel** | `docs/features/patient-funnel.md` |
-| **Medical intake** | `docs/features/medical-intake.md` |
+| Compliance / PHI / HIPAA | `docs/HIPAA.md` |
 | **Analytics & tracking** | `docs/features/analytics.md` |
 | **Landing pages** | `docs/features/landing-pages.md` |
 | **Treatment pages (per-medication SEO pages, CTA switchboard)** | `docs/features/treatment-pages.md` |
-| **Staff CRM** | `docs/features/staff-crm.md` |
-| **Medications catalog** | `docs/features/medications.md` |
-| **Dynamic questionnaire system** | `docs/features/dynamic-questionnaire.md` |
+| Backend (dormant — Django, patient funnel, medical intake, staff CRM, medications, dynamic questionnaire, LifeFile/Beluga vendor APIs) | `docs/BACKEND-DEFERRED.md` |
 
 Match existing patterns. Prefer minimal, focused diffs. If docs and code disagree, tell the user — do not silently fix either side.
 
@@ -75,23 +68,26 @@ Match existing patterns. Prefer minimal, focused diffs. If docs and code disagre
 
 ### 2. Implement with defense in depth
 
-New user input requires validators at **every layer**:
+New user input requires validators at **every layer** the input actually passes through. With the backend dormant (`docs/BACKEND-DEFERRED.md`), that's normally just:
 
 ```
-UI route → step validators → field validators → API POST/PATCH
-→ Django serializer → apps/common/validation/* → parameterized ORM
+UI route → step validators → field validators → external API (e.g. Bask)
 ```
+
+The full frontend → Django serializer → parameterized ORM chain only applies if a task explicitly resumes backend work.
 
 ### 3. Test before finishing
 
 ```bash
-npm run test:all     # frontend (Vitest) + backend unit tests + smoke_clinical_flow — preferred
-npm test             # frontend only
-npm run test:backend # backend unit tests + smoke_clinical_flow
+npm test             # frontend (Vitest) — preferred, default
 npx tsc --noEmit     # required when any TS/TSX changed — not optional
 # ESLint on changed files only (not npm run lint project-wide):
 FILES=$(git diff --name-only --diff-filter=ACMR HEAD -- '*.ts' '*.tsx')
 [ -n "$FILES" ] && echo "$FILES" | xargs npx eslint
+
+# Only if a task explicitly touches backend/ (dormant otherwise):
+npm run test:all      # frontend + backend unit tests + smoke_clinical_flow
+npm run test:backend  # backend unit tests + smoke_clinical_flow
 ```
 
 Report in chat: test count + pass/fail, ESLint result, `tsc --noEmit` result — all on changed files. Fix regressions; do not skip failures. Add tests when behavior is new or uncovered.
@@ -109,7 +105,7 @@ If `AGENTS.md` or `.cursor/rules/*` disagrees with the code, tell the user, prop
 - [ ] Step rule in `src/lib/qualify-steps.ts` or `src/lib/intake-steps.ts`
 - [ ] Tests with SQL injection, XSS, path traversal, command injection, overflow
 
-#### Backend
+#### Backend (dormant — only applies if a task explicitly resumes backend work; see `docs/BACKEND-DEFERRED.md`)
 - [ ] Validator in `backend/apps/common/validation/`
 - [ ] Hook in relevant `serializers.py` (`validate()` or `validate_<field>()`)
 - [ ] API test in `backend/apps/<app>/tests/test_*_api.py` returning 400 on malicious payloads
@@ -129,10 +125,10 @@ Portal sections: use `AccountSectionCard` + a `tone` from `SectionTone` / `SECTI
 
 - Frontend routes: file-based in `src/routes/` — see `src/routes/README.md`. Do not create `src/pages/`.
 - API client: extend `src/lib/api/client.ts` for new endpoints.
-- Backend: one Django app per domain under `backend/apps/`.
+- Backend: one Django app per domain under `backend/apps/` — dormant, see `docs/BACKEND-DEFERRED.md`.
 - Commits: only when the user asks. No `--no-verify`, no force-push to main.
 - Scope: smallest correct diff. No drive-by refactors.
-- **This marketing site is pre-launch (waitlist mode).** The real patient portal (intake, payment, dashboard) is a separate system being built independently — this repo is currently just the marketing/SEO surface. Every CTA button must call `resolveCta(CTA_IDS.x)` from `src/lib/cta-ids.ts` rather than hardcoding a waitlist path/label, so the whole site (or individual CTAs) can be repointed at the live portal from that one file when it's ready. See `docs/features/treatment-pages.md`.
+- **This marketing site is pre-launch (waitlist mode).** The real checkout/questionnaire flow is being handled by Bask, a third-party storefront platform — not an in-house backend — for the foreseeable future; this repo is currently just the marketing/SEO surface. Every CTA button must call `resolveCta(CTA_IDS.x)` from `src/lib/cta-ids.ts` rather than hardcoding a waitlist path/label, so the whole site (or individual CTAs) can be repointed at Bask's live links from that one file when they're ready. See `docs/features/treatment-pages.md`.
 
 ---
 
@@ -141,11 +137,12 @@ Portal sections: use `AccountSectionCard` + a `tone` from `SectionTone` / `SECTI
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Frontend → http://localhost:8080 |
-| `npm run dev:backend` | Backend + Postgres via Docker → http://localhost:8000 |
-| `npm run test:all` | All tests (frontend + backend + smoke) |
+| `npm test` | Frontend tests (Vitest) — preferred default |
 | `npx tsc --noEmit` | TypeScript check — required after any TS/TSX change |
-| `docker compose -f backend/docker-compose.yml exec api python manage.py migrate` | Apply migrations |
+| `npm run dev:backend` | *(dormant)* Backend + Postgres via Docker → http://localhost:8000 |
+| `npm run test:all` | *(dormant)* All tests (frontend + backend + smoke) |
+| `docker compose -f backend/docker-compose.yml exec api python manage.py migrate` | *(dormant)* Apply migrations |
 
 ---
 
-**Authoritative docs:** `AGENTS.md`, `docs/INPUT_VALIDATION_TESTS.md`, `backend/DATABASE.md`
+**Authoritative docs:** `AGENTS.md`, `docs/INPUT_VALIDATION_TESTS.md`, `docs/BACKEND-DEFERRED.md`

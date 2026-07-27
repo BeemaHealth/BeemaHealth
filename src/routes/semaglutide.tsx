@@ -60,7 +60,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "Does Beema serve patients nationwide?",
-    a: "Yes, Beema is built as a nationwide telehealth platform. That said, medication availability still depends on your state's rules and pharmacy fulfillment, and eligibility is always an individual clinical decision.",
+    a: "Yes, Beema Health is available to patients in all 50 U.S. states. That said, medication availability still depends on your state's rules and pharmacy fulfillment, and eligibility is always an individual clinical decision.",
   },
   {
     q: "Is compounded semaglutide FDA-approved?",

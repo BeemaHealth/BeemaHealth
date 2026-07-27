@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   Clock,
   Factory,
+  MapPin,
   ShieldCheck,
 } from "lucide-react";
 import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
@@ -33,10 +34,10 @@ export const TRUST_SIGNALS: TrustSignal[] = [
       "Every prescriber is licensed and verified in the state you're treated in.",
   },
   {
-    icon: Clock,
-    label: "24–48 hour intake review",
+    icon: MapPin,
+    label: "Available in all 50 states",
     detail:
-      "A licensed provider typically reviews your intake within 24–48 hours.",
+      "Beema Health serves patients nationwide, subject to your state's requirements and clinical eligibility.",
   },
   {
     icon: BadgeDollarSign,

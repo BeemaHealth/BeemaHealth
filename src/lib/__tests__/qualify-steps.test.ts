@@ -99,17 +99,32 @@ describe("qualify-steps validation", () => {
       ).toBe(false);
     });
 
-    it("state_consent rejects excluded states with a user-facing message", () => {
+    it("state_consent allows previously-excluded states (Beema now serves all 50 states)", () => {
       expect(
         getQualifyStepError(
           "state_consent",
           validQualifySlice({ state: "Kansas" }),
         ),
-      ).toContain("not currently available in your state");
+      ).toBeNull();
       expect(
         isQualifyStepComplete(
           "state_consent",
           validQualifySlice({ state: "NM" }),
+        ),
+      ).toBe(true);
+    });
+
+    it("state_consent rejects unrecognized state values with a user-facing message", () => {
+      expect(
+        getQualifyStepError(
+          "state_consent",
+          validQualifySlice({ state: "Not A State" }),
+        ),
+      ).toContain("not currently available in your state");
+      expect(
+        isQualifyStepComplete(
+          "state_consent",
+          validQualifySlice({ state: "Not A State" }),
         ),
       ).toBe(false);
     });

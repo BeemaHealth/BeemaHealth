@@ -119,19 +119,20 @@ describe("public/robots.txt", () => {
     }
   });
 
-  it("blocks low-value scrapers while keeping GPTBot/ClaudeBot allowed", () => {
-    expect(robotsTxt).toMatch(/User-agent:\s*Bytespider[\s\S]*?Disallow:\s*\//);
-    expect(robotsTxt).toMatch(/User-agent:\s*CCBot[\s\S]*?Disallow:\s*\//);
+  it("does not sitewide-block any bot, including scrapers — everyone can read/cite the site", () => {
+    expect(robotsTxt).not.toMatch(/User-agent:\s*Bytespider/);
+    expect(robotsTxt).not.toMatch(/User-agent:\s*CCBot/);
+    expect(robotsTxt).not.toMatch(/User-agent:\s*Diffbot/);
     expect(robotsTxt).toContain("User-agent: GPTBot");
     expect(robotsTxt).toContain("User-agent: ClaudeBot");
   });
 
   it("repeats path Disallows in the named AI group (bots may not merge with *)", () => {
-    // Slice from the first named agent through the scraper block so we
-    // assert the shared AI group — not only the trailing User-agent: *.
+    // Slice from the first named agent through the trailing catch-all group
+    // so we assert the shared AI group — not only `User-agent: *` itself.
     const namedGroup = robotsTxt.slice(
       robotsTxt.indexOf("User-agent: OAI-SearchBot"),
-      robotsTxt.indexOf("User-agent: Bytespider"),
+      robotsTxt.lastIndexOf("User-agent: *"),
     );
     expect(namedGroup.length).toBeGreaterThan(0);
     for (const path of ["/dashboard", "/staff", "/waitlist", "/pricing"]) {

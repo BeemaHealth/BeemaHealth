@@ -331,18 +331,20 @@ describe("form-validation", () => {
       expect(validateStateEligibility("")).toBeNull();
     });
 
-    it("allows eligible states", () => {
+    it("allows eligible states, including previously-excluded ones (Beema now serves all 50 states)", () => {
       expect(validateStateEligibility("California")).toBeNull();
       expect(validateStateEligibility("CO")).toBeNull();
+      expect(validateStateEligibility("Kansas")).toBeNull();
+      expect(validateStateEligibility("KS")).toBeNull();
+      expect(validateStateEligibility("New Mexico")).toBeNull();
+      expect(validateStateEligibility("NM")).toBeNull();
+      expect(validateStateEligibility("West Virginia")).toBeNull();
+      expect(validateStateEligibility("WV")).toBeNull();
     });
 
-    it("rejects excluded states by name or abbreviation", () => {
-      expect(validateStateEligibility("Kansas")).not.toBeNull();
-      expect(validateStateEligibility("KS")).not.toBeNull();
-      expect(validateStateEligibility("New Mexico")).not.toBeNull();
-      expect(validateStateEligibility("NM")).not.toBeNull();
-      expect(validateStateEligibility("West Virginia")).not.toBeNull();
-      expect(validateStateEligibility("WV")).not.toBeNull();
+    it("rejects unrecognized state values", () => {
+      expect(validateStateEligibility("Not A State")).not.toBeNull();
+      expect(validateStateEligibility("XX")).not.toBeNull();
     });
   });
 

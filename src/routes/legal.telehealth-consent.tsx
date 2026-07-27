@@ -341,18 +341,8 @@ function TelehealthConsentPage() {
       <Section>
         <LegalDocument
           title="Telehealth Consent"
-          lastUpdated="June 18, 2026"
+          lastUpdated="July 26, 2026"
           description="Please read this document carefully before starting care through Beema Health."
-          callout={
-            <>
-              <strong className="font-semibold text-foreground">
-                Important:
-              </strong>{" "}
-              This document is provided for transparency and patient education.
-              Have qualified legal counsel review it before relying on it for
-              regulatory or clinical compliance.
-            </>
-          }
           sections={SECTIONS}
         />
       </Section>

@@ -440,10 +440,10 @@ const SECTIONS: LegalSection[] = [
         <br />
         Website:{" "}
         <a
-          href="https://beemahealth"
+          href="https://beemahealth.com"
           className="text-foreground underline-offset-2 hover:underline"
         >
-          beemahealth
+          beemahealth.com
         </a>
       </LegalP>
     ),
@@ -459,18 +459,8 @@ function TermsPage() {
       <Section>
         <LegalDocument
           title="Terms of Service"
-          lastUpdated="June 18, 2026"
+          lastUpdated="July 26, 2026"
           description="These Terms explain how you may use Beema Health and what to expect from our platform and Care Partners."
-          callout={
-            <>
-              <strong className="font-semibold text-foreground">
-                Important:
-              </strong>{" "}
-              This document is provided for transparency. Have qualified legal
-              counsel review it before launch or reliance for compliance
-              purposes.
-            </>
-          }
           sections={SECTIONS}
         />
       </Section>

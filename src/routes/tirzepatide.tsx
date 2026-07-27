@@ -59,7 +59,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "Does Beema serve patients nationwide?",
-    a: "Beema is a nationwide telehealth platform connecting patients with independently licensed providers. Medication availability and eligibility still depend on your state's requirements and your provider's clinical decision.",
+    a: "Yes, Beema Health is available to patients in all 50 U.S. states, connecting patients with independently licensed providers. Medication availability and eligibility still depend on your state's requirements and your provider's clinical decision.",
   },
   {
     q: "Is compounded tirzepatide FDA-approved?",
