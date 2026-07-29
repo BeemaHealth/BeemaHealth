@@ -172,6 +172,7 @@ export function HomeHero() {
 
       <div className="veya-container relative z-10 grid min-h-0 items-center gap-10 py-10 pb-20 md:py-12 md:pb-24 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-2 lg:gap-12 lg:py-14 lg:pb-24">
         <motion.div
+          className="relative z-10"
           initial="hidden"
           animate="show"
           variants={container}
@@ -251,7 +252,7 @@ export function HomeHero() {
         </motion.div>
 
         <motion.div
-          className="relative mx-auto w-full max-w-md lg:w-fit lg:max-w-none"
+          className="relative z-10 mx-auto w-full max-w-md lg:w-fit lg:max-w-none"
           initial={{ opacity: 0, scale: 1.12 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{
@@ -346,10 +347,15 @@ export function HomeHero() {
 
         {/*
             Floating medication vial — the "something moving" centerpiece.
-            Overlaps the seam between the two columns, hidden below lg to
-            avoid mobile clutter. Three nested motion layers so each motion
-            plane (entrance, scroll-linked spin/drift, continuous levitation)
-            composes independently instead of fighting over the same props:
+            Uses the same product photo as the treatment cards
+            (`resolveVialImagery().src`), so there is one vial image per
+            medication sitewide. It overlaps the seam between the two columns
+            and sits *behind* them (`z-0` here against `z-10` on both
+            columns), so headline and photo copy always read over the top of
+            it. Hidden below lg to avoid mobile clutter. Three nested motion
+            layers so each motion plane (entrance, scroll-linked spin/drift,
+            continuous levitation) composes independently instead of fighting
+            over the same props:
               A. one-time fade/scale entrance + absolute centering
               B. scroll-linked spin (-18deg to +24deg) and drift, tied to the
                  same scrollYProgress as the two columns but at its own rate
@@ -358,7 +364,7 @@ export function HomeHero() {
           */}
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 z-20 hidden w-28 -translate-x-1/2 -translate-y-1/2 lg:block lg:w-32 xl:w-36"
+          className="pointer-events-none absolute left-1/2 top-1/2 z-0 hidden w-28 -translate-x-1/2 -translate-y-1/2 lg:block lg:w-32 xl:w-36"
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{
@@ -393,11 +399,11 @@ export function HomeHero() {
               }
             >
               <img
-                src={SEMA_VIAL.floating.src}
+                src={SEMA_VIAL.src}
                 alt={SEMA_VIAL.alt}
-                width={SEMA_VIAL.floating.width}
-                height={SEMA_VIAL.floating.height}
-                className="h-full w-full object-contain drop-shadow-lg"
+                width={SEMA_VIAL.width}
+                height={SEMA_VIAL.height}
+                className="h-full w-full rounded-2xl object-cover drop-shadow-lg"
               />
             </motion.div>
           </motion.div>

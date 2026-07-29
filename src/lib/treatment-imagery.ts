@@ -1,11 +1,7 @@
 import brandedSemaglutide from "@/assets/treatments/compounded-semaglutide-vial.png";
-import brandedSemaglutideFloating from "@/assets/treatments/compounded-semaglutide-vial-cutout.png";
 import brandedTirzepatide from "@/assets/treatments/compounded-tirzepatide-vial.png";
-import brandedTirzepatideFloating from "@/assets/treatments/compounded-tirzepatide-vial-cutout.png";
 import unbrandedSemaglutide from "@/assets/treatments/unbranded-semaglutide-vial.webp";
-import unbrandedSemaglutideFloating from "@/assets/treatments/unbranded-semaglutide-vial-cutout.webp";
 import unbrandedTirzepatide from "@/assets/treatments/unbranded-tirzepatide-vial.webp";
-import unbrandedTirzepatideFloating from "@/assets/treatments/unbranded-tirzepatide-vial-cutout.webp";
 
 /**
  * ---------------------------------------------------------------------
@@ -25,9 +21,9 @@ import unbrandedTirzepatideFloating from "@/assets/treatments/unbranded-tirzepat
  * The two sets are framed differently — the branded render is a 3:2
  * canvas with a transparent background and the vial centred, the
  * unbranded shot is a square photo of a vial on a plinth — so each set
- * carries its own `wideCropClass`. That keeps the whole vial inside the
- * letterboxed image area of the treatment cards without either set
- * needing per-component overrides.
+ * carries its own `wideCropClass` and intrinsic `width`/`height`. That
+ * keeps the whole vial inside the letterboxed image area of the treatment
+ * cards without either set needing per-component overrides.
  */
 export type MedicationId = "semaglutide" | "tirzepatide";
 
@@ -37,14 +33,14 @@ export type VialImageryMode = "unbranded" | "branded";
 export const VIAL_IMAGERY_MODE: VialImageryMode = "unbranded";
 
 export type VialImagery = {
-  /** Full-bleed image for treatment cards and treatment page heroes. */
-  src: string;
   /**
-   * Transparent-background variant for the floating vial in the homepage
-   * hero, with its intrinsic size — the panel around it takes its shape from
-   * the image, so the two sets reserve different boxes.
+   * Product photo used everywhere a vial appears: treatment cards, treatment
+   * page heroes, and the homepage hero's floating vial.
    */
-  floating: { src: string; width: number; height: number };
+  src: string;
+  /** Intrinsic size of `src` — the two sets have different canvases. */
+  width: number;
+  height: number;
   alt: string;
   /** `object-position` for wide crops — keeps the vial fully in frame. */
   wideCropClass: string;
@@ -54,14 +50,16 @@ const IMAGERY: Record<VialImageryMode, Record<MedicationId, VialImagery>> = {
   unbranded: {
     semaglutide: {
       src: unbrandedSemaglutide,
-      floating: { src: unbrandedSemaglutideFloating, width: 345, height: 823 },
+      width: 1254,
+      height: 1254,
       alt: "Compounded semaglutide injection vial",
       // Square photo in a letterbox crop: bias upward so the cap stays in.
       wideCropClass: "object-[center_40%]",
     },
     tirzepatide: {
       src: unbrandedTirzepatide,
-      floating: { src: unbrandedTirzepatideFloating, width: 345, height: 820 },
+      width: 1254,
+      height: 1254,
       alt: "Compounded tirzepatide injection vial",
       wideCropClass: "object-[center_40%]",
     },
@@ -69,13 +67,15 @@ const IMAGERY: Record<VialImageryMode, Record<MedicationId, VialImagery>> = {
   branded: {
     semaglutide: {
       src: brandedSemaglutide,
-      floating: { src: brandedSemaglutideFloating, width: 1536, height: 1024 },
+      width: 1536,
+      height: 1024,
       alt: "Beema Health compounded semaglutide injection vial",
       wideCropClass: "object-center",
     },
     tirzepatide: {
       src: brandedTirzepatide,
-      floating: { src: brandedTirzepatideFloating, width: 1536, height: 1024 },
+      width: 1536,
+      height: 1024,
       alt: "Beema Health compounded tirzepatide injection vial",
       wideCropClass: "object-center",
     },

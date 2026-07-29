@@ -26,13 +26,15 @@ describe("treatment-imagery", () => {
     }
   });
 
-  it("floats a transparent cutout in the hero, sized for its own canvas", () => {
+  it("exposes one photo per medication, with its intrinsic size", () => {
     for (const mode of ["unbranded", "branded"] as const) {
       for (const id of MEDICATIONS) {
-        const { floating } = resolveVialImagery(id, mode);
-        expect(floating.src).toContain("cutout");
-        expect(floating.width).toBeGreaterThan(0);
-        expect(floating.height).toBeGreaterThan(0);
+        const imagery = resolveVialImagery(id, mode);
+        // The hero's floating vial and the treatment cards share this photo,
+        // so no transparent cutout variant exists anymore.
+        expect(imagery.src).not.toContain("cutout");
+        expect(imagery.width).toBeGreaterThan(0);
+        expect(imagery.height).toBeGreaterThan(0);
       }
     }
   });
