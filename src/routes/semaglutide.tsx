@@ -38,7 +38,9 @@ import {
   compoundedMonthlyPricingSentence,
 } from "@/lib/medication-pricing";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
-import compoundedSemaglutideVialImg from "@/assets/treatments/compounded-semaglutide-vial.png";
+import { resolveVialImagery } from "@/lib/treatment-imagery";
+
+const VIAL_IMAGERY = resolveVialImagery("semaglutide");
 
 const TITLE = "Compounded Semaglutide for Weight Loss | Beema Health";
 const DESCRIPTION = `Compounded semaglutide for medical weight loss, personalized by licensed providers. Nationwide telehealth care at $${COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd}/mo. Prescribing is never guaranteed.`;
@@ -230,8 +232,8 @@ function SemaglutidePage() {
               className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-4xl bg-primary-soft shadow-lift"
             >
               <img
-                src={compoundedSemaglutideVialImg}
-                alt="Beema Health compounded semaglutide injection vial"
+                src={VIAL_IMAGERY.src}
+                alt={VIAL_IMAGERY.alt}
                 className="absolute inset-0 h-full w-full object-cover object-center"
               />
             </motion.div>

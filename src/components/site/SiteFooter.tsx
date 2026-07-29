@@ -7,6 +7,10 @@ import { EARLY_ADOPTER_DISCOUNT } from "@/lib/marketing-copy";
 import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
 import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
 import { SOCIAL_LINKS } from "@/lib/social-links";
+import {
+  JURISDICTIONAL_NOTICE_BODY,
+  JURISDICTIONAL_NOTICE_TITLE,
+} from "@/lib/jurisdictional-notice";
 import { TRUST_SIGNALS } from "@/lib/trust-signals";
 
 /**
@@ -147,6 +151,12 @@ export function SiteFooter() {
             independently licensed clinicians. Completing intake does not
             guarantee a prescription. Clinicians make all medical decisions
             independently.
+          </p>
+          <p>
+            <strong className="font-semibold text-ink-foreground/90">
+              {JURISDICTIONAL_NOTICE_TITLE}:
+            </strong>{" "}
+            {JURISDICTIONAL_NOTICE_BODY}
           </p>
           <p>
             If you are experiencing a medical emergency, call 911. This site

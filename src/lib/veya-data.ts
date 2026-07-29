@@ -7,6 +7,10 @@ import {
   dualCompoundedFaqPricingParagraph,
 } from "@/lib/medication-pricing";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
+import {
+  JURISDICTIONAL_NOTICE_BODY,
+  JURISDICTIONAL_NOTICE_TITLE,
+} from "@/lib/jurisdictional-notice";
 import { partnerPharmacyFaqAnswer } from "@/lib/partner-pharmacy";
 import {
   clinicalProviderGroupFaqAnswer,
@@ -220,7 +224,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "Which states is Beema Health available in?",
-        a: `Beema Health is available to patients in all 50 U.S. states: ${US_STATES.join(", ")}. Medication availability, prescribing, and pharmacy fulfillment still depend on your state's individual requirements and your provider's independent clinical decision.`,
+        a: `Beema Health is available to patients in all 50 U.S. states: ${US_STATES.join(", ")}. ${JURISDICTIONAL_NOTICE_TITLE}: ${JURISDICTIONAL_NOTICE_BODY} Medication availability, prescribing, and pharmacy fulfillment still depend on your state's individual requirements and your provider's independent clinical decision.`,
       },
     ],
   },

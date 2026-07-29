@@ -18,8 +18,7 @@ import {
 } from "@/lib/medication-pricing";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { LineReveal, EASE_OUT } from "@/components/home/home-motion";
-import compoundedSemaglutideVialImg from "@/assets/treatments/compounded-semaglutide-vial.png";
-import compoundedTirzepatideVialImg from "@/assets/treatments/compounded-tirzepatide-vial.png";
+import { resolveVialImagery, type VialImagery } from "@/lib/treatment-imagery";
 
 type Treatment = {
   id: string;
@@ -27,8 +26,7 @@ type Treatment = {
   form: string;
   badge: string;
   pricing: CompoundedMedicationPricing;
-  image: string;
-  imageAlt: string;
+  imagery: VialImagery;
   /** Own indexable landing page — see docs/features/ (treatment pages). */
   to: string;
 };
@@ -47,8 +45,7 @@ const TREATMENTS: Treatment[] = [
     form: "Weekly injection, if prescribed",
     badge: "Cash-pay option",
     pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
-    image: compoundedSemaglutideVialImg,
-    imageAlt: "Beema Health compounded semaglutide injection vial",
+    imagery: resolveVialImagery("semaglutide"),
     to: "/semaglutide/",
   },
   {
@@ -57,8 +54,7 @@ const TREATMENTS: Treatment[] = [
     form: "Weekly injection, if prescribed",
     badge: "Cash-pay option",
     pricing: COMPOUNDED_TIRZEPATIDE_PRICING,
-    image: compoundedTirzepatideVialImg,
-    imageAlt: "Beema Health compounded tirzepatide injection vial",
+    imagery: resolveVialImagery("tirzepatide"),
     to: "/tirzepatide/",
   },
 ];
@@ -207,10 +203,13 @@ function TreatmentCard({
 
       <div className="relative min-h-[220px] flex-[1.4] overflow-hidden md:min-h-[280px]">
         <motion.img
-          src={treatment.image}
-          alt={treatment.imageAlt}
+          src={treatment.imagery.src}
+          alt={treatment.imagery.alt}
           style={reduceMotion ? undefined : { y: imageY }}
-          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+          className={cn(
+            "absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105",
+            treatment.imagery.wideCropClass,
+          )}
         />
       </div>
 

@@ -37,7 +37,9 @@ import {
   compoundedMonthlyPricingSentence,
 } from "@/lib/medication-pricing";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
-import compoundedTirzepatideVialImg from "@/assets/treatments/compounded-tirzepatide-vial.png";
+import { resolveVialImagery } from "@/lib/treatment-imagery";
+
+const VIAL_IMAGERY = resolveVialImagery("tirzepatide");
 
 const TITLE = "Compounded Tirzepatide for Weight Loss | Beema Health";
 const DESCRIPTION = `Compounded tirzepatide for medical weight loss, reviewed by licensed providers. Nationwide telehealth care at $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo. Prescribing is never guaranteed.`;
@@ -229,8 +231,8 @@ function TirzepatidePage() {
               className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-4xl bg-primary-soft shadow-lift"
             >
               <img
-                src={compoundedTirzepatideVialImg}
-                alt="Beema Health compounded tirzepatide injection vial"
+                src={VIAL_IMAGERY.src}
+                alt={VIAL_IMAGERY.alt}
                 className="absolute inset-0 h-full w-full object-cover object-center"
               />
             </motion.div>

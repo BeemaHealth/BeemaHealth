@@ -25,8 +25,10 @@ import {
   dualCompoundedHeroPricingLine,
   dualCompoundedPromoShortPricingLine,
 } from "@/lib/medication-pricing";
+import { resolveVialImagery } from "@/lib/treatment-imagery";
 import heroImg from "@/assets/hero.jpg";
-import semaVial from "@/assets/treatments/compounded-semaglutide-vial-cutout.png";
+
+const SEMA_VIAL = resolveVialImagery("semaglutide");
 
 const CHECKLIST_ITEMS = [
   "Licensed USA physician network",
@@ -391,10 +393,10 @@ export function HomeHero() {
               }
             >
               <img
-                src={semaVial}
-                alt="Compounded semaglutide medication vial"
-                width={200}
-                height={200}
+                src={SEMA_VIAL.floating.src}
+                alt={SEMA_VIAL.alt}
+                width={SEMA_VIAL.floating.width}
+                height={SEMA_VIAL.floating.height}
                 className="h-full w-full object-contain drop-shadow-lg"
               />
             </motion.div>

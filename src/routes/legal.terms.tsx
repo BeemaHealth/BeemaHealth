@@ -19,6 +19,10 @@ import {
   SUPPORT_PHONE_HREF,
 } from "@/lib/contact-info";
 import {
+  JURISDICTIONAL_NOTICE_BODY,
+  JURISDICTIONAL_NOTICE_TITLE,
+} from "@/lib/jurisdictional-notice";
+import {
   PARTNER_PHARMACY_ADDRESS_LINE1,
   PARTNER_PHARMACY_ADDRESS_LINE2,
   PARTNER_PHARMACY_NAME,
@@ -117,6 +121,12 @@ const SECTIONS: LegalSection[] = [
             <>Your use complies with these Terms and all applicable laws.</>,
           ]}
         />
+        <LegalP>
+          <strong className="font-semibold text-foreground">
+            {JURISDICTIONAL_NOTICE_TITLE}.
+          </strong>{" "}
+          {JURISDICTIONAL_NOTICE_BODY}
+        </LegalP>
         <LegalP>
           Services, Providers, medications, pharmacies, and fulfillment options
           vary by state and may not be available everywhere. Meeting the

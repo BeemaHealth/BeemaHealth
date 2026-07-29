@@ -15,8 +15,7 @@ import {
 } from "@/lib/medication-pricing";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { Reveal } from "@/components/site/primitives";
-import compoundedSemaglutideVialImg from "@/assets/treatments/compounded-semaglutide-vial.png";
-import compoundedTirzepatideVialImg from "@/assets/treatments/compounded-tirzepatide-vial.png";
+import { resolveVialImagery, type VialImagery } from "@/lib/treatment-imagery";
 
 type Treatment = {
   id: string;
@@ -25,8 +24,7 @@ type Treatment = {
   pricing: CompoundedMedicationPricing;
   badge?: string;
   fdaApproved: boolean;
-  image: string;
-  imageAlt: string;
+  imagery: VialImagery;
   /** Own indexable landing page — see docs/features/ (treatment pages). */
   to: string;
 };
@@ -39,8 +37,7 @@ const TREATMENTS: Treatment[] = [
     pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
     badge: "Cash-pay option",
     fdaApproved: false,
-    image: compoundedSemaglutideVialImg,
-    imageAlt: "Beema Health compounded semaglutide injection vial",
+    imagery: resolveVialImagery("semaglutide"),
     to: "/semaglutide/",
   },
   {
@@ -50,8 +47,7 @@ const TREATMENTS: Treatment[] = [
     pricing: COMPOUNDED_TIRZEPATIDE_PRICING,
     badge: "Cash-pay option",
     fdaApproved: false,
-    image: compoundedTirzepatideVialImg,
-    imageAlt: "Beema Health compounded tirzepatide injection vial",
+    imagery: resolveVialImagery("tirzepatide"),
     to: "/tirzepatide/",
   },
 ];
@@ -190,9 +186,12 @@ function TreatmentCard({
 
       <div className="relative min-h-[200px] flex-[1.4] overflow-hidden sm:min-h-[220px] md:min-h-[280px]">
         <img
-          src={treatment.image}
-          alt={treatment.imageAlt}
-          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+          src={treatment.imagery.src}
+          alt={treatment.imagery.alt}
+          className={cn(
+            "absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
+            treatment.imagery.wideCropClass,
+          )}
         />
       </div>
 
