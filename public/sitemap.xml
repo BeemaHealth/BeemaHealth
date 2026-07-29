@@ -63,6 +63,26 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://beemahealth.com/legal/refund/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://beemahealth.com/legal/shipping/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://beemahealth.com/legal/physician-code-of-conduct/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://beemahealth.com/legal/hipaa/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://beemahealth.com/legal/telehealth-consent/</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

@@ -34,7 +34,7 @@ export const Route = createFileRoute("/faq")({
       {
         name: "description",
         content:
-          "Answers about pricing, medication, shipping, refills, cancellation, eligibility, labs, and privacy.",
+          "Answers about Beema Health's clinical provider group, pricing, medication, shipping, refills, eligibility, labs, and privacy.",
       },
       {
         property: "og:title",
@@ -106,7 +106,7 @@ function FaqPage() {
             as="h1"
             eyebrow="FAQ"
             title={<LineReveal>Frequently asked questions</LineReveal>}
-            description="Pricing, medication, shipping, refills, cancellation, eligibility, labs, and privacy, all in one place."
+            description="Clinical providers, pricing, medication, shipping, refills, eligibility, labs, and privacy, all in one place."
           />
         </div>
       </section>

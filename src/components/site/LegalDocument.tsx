@@ -1,5 +1,15 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
+import {
+  BUSINESS_ADDRESS_LINE1,
+  BUSINESS_ADDRESS_LINE2,
+  LEGAL_BUSINESS_NAME,
+  SUPPORT_EMAIL,
+  SUPPORT_EMAIL_HREF,
+  SUPPORT_PHONE_DISPLAY,
+  SUPPORT_PHONE_HREF,
+} from "@/lib/contact-info";
+import { SITE_URL } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 export type LegalSection = {
@@ -88,10 +98,10 @@ export function LegalDocument({
       <p className="mt-12 border-t border-border pt-8 text-xs leading-relaxed text-muted-foreground">
         Questions about this document? Contact us at{" "}
         <a
-          href="mailto:support@beemahealth.com"
+          href={SUPPORT_EMAIL_HREF}
           className="text-foreground underline-offset-2 hover:underline"
         >
-          support@beemahealth.com
+          {SUPPORT_EMAIL}
         </a>
         . See also our{" "}
         <Link
@@ -107,6 +117,34 @@ export function LegalDocument({
         >
           Terms of Service
         </Link>
+        ,{" "}
+        <Link
+          to="/legal/refund/"
+          className="text-foreground underline-offset-2 hover:underline"
+        >
+          Refund Policy
+        </Link>
+        ,{" "}
+        <Link
+          to="/legal/shipping/"
+          className="text-foreground underline-offset-2 hover:underline"
+        >
+          Shipping Policy
+        </Link>
+        ,{" "}
+        <Link
+          to="/legal/physician-code-of-conduct/"
+          className="text-foreground underline-offset-2 hover:underline"
+        >
+          Physician Code of Conduct
+        </Link>
+        ,{" "}
+        <Link
+          to="/legal/hipaa/"
+          className="text-foreground underline-offset-2 hover:underline"
+        >
+          HIPAA Privacy Policy
+        </Link>
         , and{" "}
         <Link
           to="/legal/telehealth-consent/"
@@ -117,6 +155,43 @@ export function LegalDocument({
         .
       </p>
     </div>
+  );
+}
+
+/** Standard business contact block for policy pages (address + phone + email). */
+export function LegalBusinessContact() {
+  return (
+    <LegalP>
+      {LEGAL_BUSINESS_NAME}
+      <br />
+      {BUSINESS_ADDRESS_LINE1}
+      <br />
+      {BUSINESS_ADDRESS_LINE2}
+      <br />
+      Phone:{" "}
+      <a
+        href={SUPPORT_PHONE_HREF}
+        className="text-foreground underline-offset-2 hover:underline"
+      >
+        {SUPPORT_PHONE_DISPLAY}
+      </a>
+      <br />
+      Email:{" "}
+      <a
+        href={SUPPORT_EMAIL_HREF}
+        className="text-foreground underline-offset-2 hover:underline"
+      >
+        {SUPPORT_EMAIL}
+      </a>
+      <br />
+      Website:{" "}
+      <a
+        href={SITE_URL}
+        className="text-foreground underline-offset-2 hover:underline"
+      >
+        beemahealth.com
+      </a>
+    </LegalP>
   );
 }
 

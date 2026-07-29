@@ -20,22 +20,27 @@ is `src/routes/__root.tsx`.
 
 `routeTree.gen.ts` is auto-generated. Don't edit it by hand.
 
-## Marketing routes (Step 1 — see launch plan)
+## Marketing routes
 
-[Starting Point/launchPlan.md](../../Starting%20Point/launchPlan.md) Step 1 calls for: Home, Weight Loss, Pricing, FAQ, Safety, Contact — each with a **"See If You Qualify"** CTA into `/qualify`.
+The current marketing site uses the CTA switchboard in `src/lib/cta-ids.ts`;
+routes must not hardcode a destination or CTA label. The live, indexable route
+list is maintained in `public/sitemap.xml` and guarded by
+`src/lib/__tests__/sitemap.test.ts`.
 
-Several marketing routes were stubbed for the intake prototype. Full source and restore instructions: **[docs/archived-marketing-pages.md](../../docs/archived-marketing-pages.md)**.
-
-| Step 1 page | Route | Status |
-|-------------|-------|--------|
+| Page | Route | Status |
+|------|-------|--------|
 | Home | `/` | Live |
-| Weight Loss | TBD | Not built |
+| Weight Loss | `/weight-loss` | Live |
+| How it works | `/how-it-works` | Live |
+| About | `/about` | Live |
+| FAQ | `/faq` | Live |
+| Safety | `/safety` | Live |
+| Contact | `/contact` | Live |
 | Pricing | `/pricing` | Archived (redirect → `/`) |
-| FAQ | `/faq` | Archived (redirect → `/`) |
-| Safety | `/safety` | Archived (redirect → `/`) |
-| Contact | TBD | Not built |
 
-Also archived: `/switch`, `/insurance`, `/clinicians`, `/learn`, full `/how-it-works`.
+Also archived: `/switch`, `/insurance`, `/clinicians`, and `/learn`. Full source
+and restore instructions:
+**[docs/archived-marketing-pages.md](../../docs/archived-marketing-pages.md)**.
 
 ## Patient funnel routes (Steps 2–6)
 

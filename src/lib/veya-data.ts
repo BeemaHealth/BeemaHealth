@@ -7,6 +7,11 @@ import {
   dualCompoundedFaqPricingParagraph,
 } from "@/lib/medication-pricing";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
+import { partnerPharmacyFaqAnswer } from "@/lib/partner-pharmacy";
+import {
+  clinicalProviderGroupFaqAnswer,
+  seanAroraFaqAnswer,
+} from "@/lib/provider-info";
 import { US_STATES } from "@/lib/us-states";
 
 export const LAUNCH_STATES = [
@@ -109,6 +114,19 @@ export type FaqGroup = { category: string; items: FaqItem[] };
 
 export const FAQ_GROUPS: FaqGroup[] = [
   {
+    category: "Clinical providers",
+    items: [
+      {
+        q: "Who provides Beema Health's clinical care?",
+        a: clinicalProviderGroupFaqAnswer(),
+      },
+      {
+        q: "Who is Dr. Sean Arora?",
+        a: seanAroraFaqAnswer(),
+      },
+    ],
+  },
+  {
     category: "Pricing",
     items: [
       {
@@ -160,6 +178,10 @@ export const FAQ_GROUPS: FaqGroup[] = [
       {
         q: "What if my shipment is delayed or lost?",
         a: `Please report it to ${SUPPORT_EMAIL} immediately. Refill reliability is our core promise: we urgently escalate all cold-chain and lost-shipment issues.`,
+      },
+      {
+        q: "Who is Beema Health's partner pharmacy?",
+        a: partnerPharmacyFaqAnswer(),
       },
     ],
   },

@@ -40,6 +40,13 @@ const COLUMNS = [
     links: [
       { label: "Privacy Policy", to: "/legal/privacy/" },
       { label: "Terms of Service", to: "/legal/terms/" },
+      { label: "Refund Policy", to: "/legal/refund/" },
+      { label: "Shipping Policy", to: "/legal/shipping/" },
+      {
+        label: "Physician Code of Conduct",
+        to: "/legal/physician-code-of-conduct/",
+      },
+      { label: "HIPAA Privacy Policy", to: "/legal/hipaa/" },
       { label: "Telehealth Consent", to: "/legal/telehealth-consent/" },
     ],
   },

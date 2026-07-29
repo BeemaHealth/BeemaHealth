@@ -48,8 +48,12 @@ import { Route as StaffAnalyticsRouteImport } from './routes/staff.analytics'
 import { Route as LpSlugRouteImport } from './routes/lp.$slug'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
+import { Route as LegalShippingRouteImport } from './routes/legal.shipping'
+import { Route as LegalRefundRouteImport } from './routes/legal.refund'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
+import { Route as LegalPhysicianCodeOfConductRouteImport } from './routes/legal.physician-code-of-conduct'
 import { Route as LegalIntakeAcknowledgmentsRouteImport } from './routes/legal.intake-acknowledgments'
+import { Route as LegalHipaaRouteImport } from './routes/legal.hipaa'
 import { Route as DashboardRefillsRouteImport } from './routes/dashboard.refills'
 import { Route as DashboardOrdersRouteImport } from './routes/dashboard.orders'
 import { Route as DashboardIntakeRouteImport } from './routes/dashboard.intake'
@@ -255,17 +259,38 @@ const LegalTelehealthConsentRoute = LegalTelehealthConsentRouteImport.update({
   path: '/legal/telehealth-consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalShippingRoute = LegalShippingRouteImport.update({
+  id: '/legal/shipping',
+  path: '/legal/shipping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalRefundRoute = LegalRefundRouteImport.update({
+  id: '/legal/refund',
+  path: '/legal/refund',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
   id: '/legal/privacy',
   path: '/legal/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalPhysicianCodeOfConductRoute =
+  LegalPhysicianCodeOfConductRouteImport.update({
+    id: '/legal/physician-code-of-conduct',
+    path: '/legal/physician-code-of-conduct',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LegalIntakeAcknowledgmentsRoute =
   LegalIntakeAcknowledgmentsRouteImport.update({
     id: '/legal/intake-acknowledgments',
     path: '/legal/intake-acknowledgments',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LegalHipaaRoute = LegalHipaaRouteImport.update({
+  id: '/legal/hipaa',
+  path: '/legal/hipaa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRefillsRoute = DashboardRefillsRouteImport.update({
   id: '/refills',
   path: '/refills',
@@ -345,8 +370,12 @@ export interface FileRoutesByFullPath {
   '/dashboard/intake': typeof DashboardIntakeRoute
   '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/refills': typeof DashboardRefillsRoute
+  '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
+  '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
   '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/refund': typeof LegalRefundRoute
+  '/legal/shipping': typeof LegalShippingRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
@@ -394,8 +423,12 @@ export interface FileRoutesByTo {
   '/dashboard/intake': typeof DashboardIntakeRoute
   '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/refills': typeof DashboardRefillsRoute
+  '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
+  '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
   '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/refund': typeof LegalRefundRoute
+  '/legal/shipping': typeof LegalShippingRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
@@ -445,8 +478,12 @@ export interface FileRoutesById {
   '/dashboard/intake': typeof DashboardIntakeRoute
   '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/refills': typeof DashboardRefillsRoute
+  '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
+  '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
   '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/refund': typeof LegalRefundRoute
+  '/legal/shipping': typeof LegalShippingRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
@@ -499,8 +536,12 @@ export interface FileRouteTypes {
     | '/dashboard/intake'
     | '/dashboard/orders'
     | '/dashboard/refills'
+    | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
+    | '/legal/physician-code-of-conduct'
     | '/legal/privacy'
+    | '/legal/refund'
+    | '/legal/shipping'
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
@@ -548,8 +589,12 @@ export interface FileRouteTypes {
     | '/dashboard/intake'
     | '/dashboard/orders'
     | '/dashboard/refills'
+    | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
+    | '/legal/physician-code-of-conduct'
     | '/legal/privacy'
+    | '/legal/refund'
+    | '/legal/shipping'
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
@@ -598,8 +643,12 @@ export interface FileRouteTypes {
     | '/dashboard/intake'
     | '/dashboard/orders'
     | '/dashboard/refills'
+    | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
+    | '/legal/physician-code-of-conduct'
     | '/legal/privacy'
+    | '/legal/refund'
+    | '/legal/shipping'
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
@@ -646,8 +695,12 @@ export interface RootRouteChildren {
   VerifyEmailRoute: typeof VerifyEmailRouteWithChildren
   WaitlistRoute: typeof WaitlistRoute
   WeightLossRoute: typeof WeightLossRoute
+  LegalHipaaRoute: typeof LegalHipaaRoute
   LegalIntakeAcknowledgmentsRoute: typeof LegalIntakeAcknowledgmentsRoute
+  LegalPhysicianCodeOfConductRoute: typeof LegalPhysicianCodeOfConductRoute
   LegalPrivacyRoute: typeof LegalPrivacyRoute
+  LegalRefundRoute: typeof LegalRefundRoute
+  LegalShippingRoute: typeof LegalShippingRoute
   LegalTelehealthConsentRoute: typeof LegalTelehealthConsentRoute
   LegalTermsRoute: typeof LegalTermsRoute
   LpSlugRoute: typeof LpSlugRoute
@@ -928,6 +981,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalTelehealthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/shipping': {
+      id: '/legal/shipping'
+      path: '/legal/shipping'
+      fullPath: '/legal/shipping'
+      preLoaderRoute: typeof LegalShippingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/refund': {
+      id: '/legal/refund'
+      path: '/legal/refund'
+      fullPath: '/legal/refund'
+      preLoaderRoute: typeof LegalRefundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legal/privacy': {
       id: '/legal/privacy'
       path: '/legal/privacy'
@@ -935,11 +1002,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalPrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/physician-code-of-conduct': {
+      id: '/legal/physician-code-of-conduct'
+      path: '/legal/physician-code-of-conduct'
+      fullPath: '/legal/physician-code-of-conduct'
+      preLoaderRoute: typeof LegalPhysicianCodeOfConductRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legal/intake-acknowledgments': {
       id: '/legal/intake-acknowledgments'
       path: '/legal/intake-acknowledgments'
       fullPath: '/legal/intake-acknowledgments'
       preLoaderRoute: typeof LegalIntakeAcknowledgmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/hipaa': {
+      id: '/legal/hipaa'
+      path: '/legal/hipaa'
+      fullPath: '/legal/hipaa'
+      preLoaderRoute: typeof LegalHipaaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/refills': {
@@ -1125,8 +1206,12 @@ const rootRouteChildren: RootRouteChildren = {
   VerifyEmailRoute: VerifyEmailRouteWithChildren,
   WaitlistRoute: WaitlistRoute,
   WeightLossRoute: WeightLossRoute,
+  LegalHipaaRoute: LegalHipaaRoute,
   LegalIntakeAcknowledgmentsRoute: LegalIntakeAcknowledgmentsRoute,
+  LegalPhysicianCodeOfConductRoute: LegalPhysicianCodeOfConductRoute,
   LegalPrivacyRoute: LegalPrivacyRoute,
+  LegalRefundRoute: LegalRefundRoute,
+  LegalShippingRoute: LegalShippingRoute,
   LegalTelehealthConsentRoute: LegalTelehealthConsentRoute,
   LegalTermsRoute: LegalTermsRoute,
   LpSlugRoute: LpSlugRoute,

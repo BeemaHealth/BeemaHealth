@@ -56,6 +56,10 @@ const MARKETING_PATHS = [
   "/contact/",
   "/legal/privacy/",
   "/legal/terms/",
+  "/legal/refund/",
+  "/legal/shipping/",
+  "/legal/physician-code-of-conduct/",
+  "/legal/hipaa/",
   "/legal/telehealth-consent/",
 ] as const;
 
