@@ -26,4 +26,8 @@ Key facts:
 
 - [Privacy policy](https://beemahealth.com/legal/privacy/)
 - [Terms of service](https://beemahealth.com/legal/terms/)
+- [Refund policy](https://beemahealth.com/legal/refund/)
+- [Shipping policy](https://beemahealth.com/legal/shipping/)
+- [Physician code of conduct](https://beemahealth.com/legal/physician-code-of-conduct/)
+- [HIPAA privacy policy](https://beemahealth.com/legal/hipaa/)
 - [Telehealth consent](https://beemahealth.com/legal/telehealth-consent/)
