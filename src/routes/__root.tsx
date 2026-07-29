@@ -178,7 +178,7 @@ function RootComponent() {
     capturePageUtms();
   }, []);
 
-  // Meta Pixel / Google Ads / GA4 — no-op when VITE_* IDs are unset (local/dev).
+  // Meta Pixel / Google Ads / GA4 / GTM — no-op when VITE_* IDs are unset (local/dev).
   useEffect(() => {
     initAdPixels();
   }, []);

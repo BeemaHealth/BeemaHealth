@@ -32,6 +32,24 @@ trackWaitlistSubmit(page?)                       // waitlist success → FunnelE
 
 Events are sent via `POST /api/analytics/events/` — public endpoint, rate-limited by `AnalyticsEventThrottle`.
 
+## Bask GTM integration (questionnaire / checkout)
+
+Bask (the third-party storefront/checkout/questionnaire platform) loads your GTM container on questionnaire pages when you paste the container ID into Bask admin. The **same** container is also loaded on the Beema marketing site via `VITE_GTM_CONTAINER_ID` (so you can use GTM Preview / Conversion Linker across both domains).
+
+| Item | Value |
+|------|-------|
+| GTM container ID (Bask Integrations **and** `VITE_GTM_CONTAINER_ID`) | `GTM-MHHJ44GF` |
+| GTM account | Beema Health (account `6368696783`) |
+| GTM container | Beema Health Questionnaire (container `259765761`) |
+| GA4 destination reused inside GTM tags | `G-03PMCCSD3R` (same GA4 property as the marketing site) |
+
+Setup:
+1. Paste `GTM-MHHJ44GF` into Bask → **Settings → Integrations → Google Tag Manager → Save**.
+2. Marketing site loads the container from `VITE_GTM_CONTAINER_ID` in `src/lib/ad-conversions.ts` (`ensureGtmContainer` on app mount) — equivalent to Google’s `<head>` / `<body>` install snippets.
+3. Optionally import Bask’s GTM template into this container, then replace placeholder GA/Ads IDs with real ones. Avoid adding a second GA4 **page_view** tag that duplicates `VITE_GA_MEASUREMENT_ID` or you will double-count marketing-site hits.
+
+Bask data layer notes: `sessionId`, `eventModel.screen_name`, `eventModel.userId`, `ecommerce.transaction_id`; `purchase` fires on the Thank You page. See Bask’s GTM guide for the event catalog.
+
 ## Ad conversions & frontend-only analytics (Meta + Google)
 
 Pre-launch waitlist lives at **`/waitlist/`** (legacy `/qualify/` redirects there and keeps query params). Paid-media + visitor analytics run via `src/lib/ad-conversions.ts` (loaded from `__root.tsx` with `initAdPixels()`). **No backend required** for these.
@@ -39,6 +57,7 @@ Pre-launch waitlist lives at **`/waitlist/`** (legacy `/qualify/` redirects ther
 | Env var | Purpose |
 |---------|---------|
 | `VITE_GA_MEASUREMENT_ID` | **GA4** (`G-…`) — all page views + UTM/session source (including visitors who never join the waitlist) |
+| `VITE_GTM_CONTAINER_ID` | **GTM** (`GTM-…`) — Bask container also loaded on the marketing site for Preview / Conversion Linker |
 | `VITE_META_PIXEL_ID` | Meta Pixel ID — fires `PageView` on load + `Lead` on successful waitlist submit |
 | `VITE_GOOGLE_ADS_ID` | Google Ads tag ID (`AW-…`) |
 | `VITE_GOOGLE_ADS_CONVERSION_LABEL` | Conversion label — with Ads ID, fires `gtag('event','conversion')` on submit |

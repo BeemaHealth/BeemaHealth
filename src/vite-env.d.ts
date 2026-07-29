@@ -9,6 +9,8 @@ interface ImportMetaEnv {
   readonly VITE_GOOGLE_ADS_CONVERSION_LABEL?: string;
   /** GA4 measurement ID, e.g. G-XXXXXXXX — visitor analytics without a backend. */
   readonly VITE_GA_MEASUREMENT_ID?: string;
+  /** GTM container ID, e.g. GTM-XXXXXXX — Bask questionnaire + marketing Preview. */
+  readonly VITE_GTM_CONTAINER_ID?: string;
   /** Optional override for waitlist-page social-proof count. */
   readonly VITE_WAITLIST_DISPLAY_COUNT?: string;
 }
