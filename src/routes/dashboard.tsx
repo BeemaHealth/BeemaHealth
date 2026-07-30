@@ -1,16 +1,18 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { PatientPortalLayout } from "@/components/portal/PatientPortalLayout";
-import { requireAuth } from "@/lib/auth";
 import { loadDashboardData } from "@/lib/dashboard-loader";
 import type { DashboardData } from "@/lib/types/mvp";
 
+/**
+ * In-house patient portal retired — real patient login/dashboard is the
+ * Hive portal (see src/lib/cta-ids.ts). Blocking beforeLoad here covers
+ * every /dashboard/* child route without touching those files individually;
+ * component kept dormant, not deleted.
+ */
 export const Route = createFileRoute("/dashboard")({
   ssr: false,
-  beforeLoad: async ({ location }) => {
-    await requireAuth({
-      redirectTo: "/login",
-      redirectPath: location.pathname,
-    });
+  beforeLoad: () => {
+    throw redirect({ to: "/", replace: true });
   },
   loader: async (): Promise<DashboardData> => loadDashboardData(),
   component: DashboardLayout,

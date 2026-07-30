@@ -1,8 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-/** Legacy alias — eligibility / qualify entry now lands on the waitlist. */
+/** Legacy alias — in-house funnel retired in favor of Bask; redirect home. */
 export const Route = createFileRoute("/eligibility")({
   beforeLoad: () => {
-    throw redirect({ to: "/waitlist/", replace: true });
+    throw redirect({ to: "/", replace: true });
   },
 });

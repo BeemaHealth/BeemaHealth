@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { CheckCircle2, Loader2, Mail, Users } from "lucide-react";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
@@ -49,6 +49,17 @@ export const Route = createFileRoute("/waitlist")({
       if (typeof val === "string" && val.trim()) out[key] = val;
     }
     return out;
+  },
+  /**
+   * In-house waitlist retired in favor of Bask (see docs/BACKEND-DEFERRED.md
+   * and docs/features/treatment-pages.md). Implementation below is kept
+   * intact — not deleted — in case the in-house funnel is ever revived;
+   * this beforeLoad just makes the route unreachable in the meantime.
+   * Preserve ?cta_id= / UTM query on the redirect so old shared links keep
+   * attribution.
+   */
+  beforeLoad: ({ search }) => {
+    throw redirect({ to: "/", search, replace: true });
   },
   head: () => ({
     meta: [

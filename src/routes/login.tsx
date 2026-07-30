@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { loginMfa, loginUser } from "@/lib/api/client";
 import { storeLoginCredentials } from "@/lib/credential-storage";
@@ -14,11 +14,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 
+/**
+ * In-house login retired — real patient login is the Hive portal
+ * (HIVE_LOGIN_URL in src/lib/cta-ids.ts, linked from SiteHeader). This
+ * in-app login/MFA form is dormant, not deleted, in case it's revived.
+ */
 export const Route = createFileRoute("/login")({
   component: LoginPage,
   validateSearch: (s: Record<string, unknown>) => ({
     redirect: (s.redirect as string) || "/dashboard",
   }),
+  beforeLoad: () => {
+    throw redirect({ to: "/", replace: true });
+  },
 });
 
 function redirectAfterLogin(session: SessionUser, redirect: string) {

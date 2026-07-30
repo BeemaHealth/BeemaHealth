@@ -14,26 +14,17 @@ import {
   syncConsent,
   syncIntake,
 } from "@/lib/api/client";
-import { requireAuth } from "@/lib/auth";
 import { computeSafetyFlags } from "@/lib/safety-flags";
 import { getEligibility, getIntake, saveSafetyFlags } from "@/lib/storage";
 import type { ConsentRecord } from "@/lib/types/mvp";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 
+/** In-house consent step retired in favor of Bask; component kept dormant, not deleted. */
 export const Route = createFileRoute("/consent")({
   ssr: false,
   beforeLoad: async () => {
-    const session = await requireAuth({
-      redirectTo: "/waitlist",
-      redirectPath: "/consent",
-    });
-    if (isApiEnabled()) {
-      const intake = await fetchIntakeMe();
-      if (!intake) throw redirect({ to: "/intake" });
-      return;
-    }
-    if (!getIntake(session.user.id)) throw redirect({ to: "/intake" });
+    throw redirect({ to: "/", replace: true });
   },
   component: ConsentPage,
 });

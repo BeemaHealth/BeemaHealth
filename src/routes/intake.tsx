@@ -1,18 +1,13 @@
 import { useEffect } from "react";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { IntakeFlow } from "@/components/intake/IntakeFlow";
-import { requireAuth } from "@/lib/auth";
 import { trackPageViewed } from "@/lib/analytics";
 
+/** In-house intake retired in favor of Bask; component kept dormant, not deleted. */
 export const Route = createFileRoute("/intake")({
   ssr: false,
   beforeLoad: async () => {
-    const session = await requireAuth({
-      redirectTo: "/waitlist",
-      redirectPath: "/intake",
-    });
-    if (!session.user.email_verified)
-      throw redirect({ to: "/verify-email/pending" });
+    throw redirect({ to: "/", replace: true });
   },
   component: IntakeFunnelPage,
 });

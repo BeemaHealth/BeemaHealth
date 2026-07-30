@@ -1,9 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { CheckCircle2 } from "lucide-react";
 import { FlowLayout } from "@/components/quiz/FlowLayout";
 import { Button } from "@/components/ui/button";
 
+/** In-house intake confirmation retired along with /intake; redirect home. */
 export const Route = createFileRoute("/submitted")({
+  beforeLoad: () => {
+    throw redirect({ to: "/", replace: true });
+  },
   component: SubmittedPage,
 });
 
