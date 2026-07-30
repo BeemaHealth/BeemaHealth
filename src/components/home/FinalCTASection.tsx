@@ -32,9 +32,9 @@ export function FinalCTASection() {
             </h2>
 
             <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-primary-foreground/80 md:text-lg">
-              Join the waitlist in about a minute. {earlyAdopterIncentiveLine()}{" "}
-              when we launch. No payment required to start, and no prescription
-              is guaranteed.
+              Start your online visit in about a minute.{" "}
+              {earlyAdopterIncentiveLine()}. No payment required to start, and
+              no prescription is guaranteed.
             </p>
 
             <MagneticButton className="mt-8">
@@ -50,7 +50,7 @@ export function FinalCTASection() {
               </Button>
             </MagneticButton>
             <p className="mt-4 text-sm font-semibold text-primary-foreground">
-              Waitlist perk: {EARLY_ADOPTER_DISCOUNT}
+              Early-adopter perk: {EARLY_ADOPTER_DISCOUNT}
             </p>
           </div>
         </div>

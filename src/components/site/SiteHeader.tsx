@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ChevronDown, Phone } from "lucide-react";
+import { ChevronDown, Hexagon, Phone } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { CircleRevealMenu } from "@/components/site/CircleRevealMenu";
 import { EASE_OUT } from "@/components/home/home-motion";
-import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
+import { CTA_IDS, HIVE_LOGIN_URL, resolveCta } from "@/lib/cta-ids";
 import { EARLY_ADOPTER_DISCOUNT_SHORT } from "@/lib/marketing-copy";
 import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
 import { SOCIAL_LINKS } from "@/lib/social-links";
@@ -202,6 +202,22 @@ function SocialIconRow({
   );
 }
 
+/** Login link to the Hive patient portal — a separate app, so a plain anchor rather than a router `<Link>`. */
+function HiveLoginLink({ className }: { className?: string }) {
+  return (
+    <a
+      href={HIVE_LOGIN_URL}
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-soft transition-colors hover:bg-primary/90 hover:shadow-lift",
+        className,
+      )}
+    >
+      Log In
+      <Hexagon className="size-4 text-background" aria-hidden />
+    </a>
+  );
+}
+
 /** Pointy-top hexagon menu trigger — matches HexMotif / logo geometry. */
 function HexMenuButton({ className, ...props }: ComponentProps<"button">) {
   return (
@@ -245,7 +261,6 @@ function HexMenuButton({ className, ...props }: ComponentProps<"button">) {
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const headerCta = resolveCta(CTA_IDS.nav_header);
   const mobileCta = resolveCta(CTA_IDS.nav_mobile);
 
   return (
@@ -275,8 +290,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:ml-auto lg:flex">
-          {/* Log in / Dashboard link disabled — site in pre-launch waitlist mode.
-              Early-adopter discount lives in the hero, marquee, and mobile
+          {/* Early-adopter discount lives in the hero, marquee, and mobile
               menu — dropped here so phone + socials have room without wrapping
               (veya-container caps at 1200px; there isn't space for all five). */}
           <div className="hidden items-center gap-4 border-r border-border pr-4 xl:flex">
@@ -290,11 +304,7 @@ export function SiteHeader() {
             <SocialIconRow />
           </div>
 
-          <Button asChild>
-            <Link to={headerCta.to} search={headerCta.search}>
-              {headerCta.label}
-            </Link>
-          </Button>
+          <HiveLoginLink />
         </div>
 
         {/* Mobile header: hamburger left, centered stacked lockup, phone button right. */}
@@ -319,7 +329,13 @@ export function SiteHeader() {
                   {item.label}
                 </Link>
               ))}
-              {/* Log in / Dashboard link disabled — site in pre-launch waitlist mode */}
+              <a
+                href={HIVE_LOGIN_URL}
+                className="flex items-center gap-2 rounded-xl px-1 py-2.5 text-xl font-semibold text-ink-foreground transition-colors hover:text-primary"
+              >
+                Log In
+                <Hexagon className="size-5" aria-hidden />
+              </a>
             </div>
             <div className="space-y-4 px-8 pb-8">
               <Button asChild size="lg" className="w-full">

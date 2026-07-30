@@ -49,22 +49,24 @@ Add new medication pages to `WEIGHT_LOSS_ITEMS` (and to `SiteFooter.tsx`'s `COLU
 
 `compoundedMonthlyPricingSentence(label, pricing)` is the shared long-form sentence used across FAQ answers and route copy (e.g. "Compounded semaglutide is $199/month, billed monthly with no long-term contract. A one-time $100 promo code brings your first month to $99 when you purchase a 3-month plan; it can't be combined with a 1-month purchase and can only be used once per patient."). `formatCompoundedPriceLine()` and `dualCompoundedHeroPricingLine()` are the shorter card/hero variants of the same structure. **Never hand-write a pricing or promo-code sentence — always route through one of these helpers** so the flat-rate-plus-3-month-promo framing stays consistent if the numbers or wording change again.
 
-## CTA switchboard (waitlist → live portal cutover)
+## CTA switchboard (live — Bask questionnaire)
 
-Beema is pre-launch: every marketing CTA sitewide sends visitors to `/waitlist/`. The patient portal (intake, payment, dashboard) is a **separate system** being built independently of this marketing site — when it's ready, CTAs need to point there instead, possibly per-CTA rather than all at once.
+Beema is live: every marketing CTA sitewide sends visitors to Bask's hosted questionnaire (`https://q.beemahealth.com/start-online-visit/weightloss`). The in-house waitlist/qualify/intake funnel (`/waitlist/`, `/qualify/`, `/intake/`, `/consent/`, `/eligibility/`) is dormant and unlinked from any button — see `docs/BACKEND-DEFERRED.md`.
 
-**`resolveCta(ctaId)` in `src/lib/cta-ids.ts` is the single place that decision is made.** Every CTA button/link in the app calls it instead of hardcoding `WAITLIST_PATH` or a label:
+**`resolveCta(ctaId)` in `src/lib/cta-ids.ts` is the single place that decision is made.** Every CTA button/link in the app calls it instead of hardcoding a URL or a label:
 
 ```tsx
 const cta = resolveCta(CTA_IDS.tirzepatide_hero);
 <Link to={cta.to} search={cta.search}>{cta.label}</Link>
 ```
 
-- All `CtaId`s default to `DEFAULT_CTA_TARGET` (`"Join waitlist"` → `/waitlist/`).
-- To repoint one CTA (or a few), add an entry to `CTA_OVERRIDES` keyed by `CtaId` — `to` can be an internal path or a full external URL (the portal may live on a different domain).
+- All `CtaId`s default to `DEFAULT_CTA_TARGET` (`"Get Started"` → the Bask questionnaire URL).
+- To repoint one CTA (or a few) — e.g. a medication-specific intake URL — add an entry to `CTA_OVERRIDES` keyed by `CtaId`. `to` can be an internal path or a full external URL (Bask lives on a different domain).
 - To repoint everything at once, change `DEFAULT_CTA_TARGET`.
 
-**When adding any new CTA button anywhere on the site: add a `CtaId` to `CTA_IDS` and call `resolveCta()` — never hardcode `WAITLIST_PATH`, `WAITLIST_CTA_LABEL`, or a literal href/label on a marketing CTA.** This is what keeps the waitlist→live cutover a one-file change instead of a site-wide hunt.
+**When adding any new CTA button anywhere on the site: add a `CtaId` to `CTA_IDS` and call `resolveCta()` — never hardcode a URL or label on a marketing CTA.** This is what keeps repointing the funnel a one-file change instead of a site-wide hunt.
+
+**Login is separate from the CTA switchboard.** The header's "Log In" link goes straight to the Hive patient portal (`HIVE_LOGIN_URL` in `src/lib/cta-ids.ts`, currently `https://hive.beemahealth.com`) via a plain `<a>` — it's an account action on a different app, not a funnel-conversion click, so it doesn't go through `resolveCta`/`CTA_IDS`.
 
 ## Key files
 

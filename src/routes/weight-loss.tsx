@@ -267,7 +267,7 @@ function WeightLossPage() {
           <HexMotif className="float-slower pointer-events-none absolute -bottom-10 -right-8 z-0 w-48 text-primary-foreground/10 md:w-64" />
           <div className="relative z-10">
             <h2 className="text-3xl font-bold">
-              <LineReveal>Ready to join the waitlist?</LineReveal>
+              <LineReveal>Ready to get started?</LineReveal>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">
               The eligibility check takes about 5 minutes. No payment required

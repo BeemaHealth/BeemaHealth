@@ -139,7 +139,7 @@ function LandingPageRoute() {
         </Button>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          No commitment. Join the waitlist in minutes.
+          No commitment. Get started in minutes.
         </p>
       </main>
     </div>

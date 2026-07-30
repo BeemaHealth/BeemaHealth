@@ -234,7 +234,7 @@ export function HomeHero() {
             {earlyAdopterIncentiveLine()}.
             <span className="font-normal text-muted-foreground">
               {" "}
-              Join the waitlist before launch.
+              Start your online visit today.
             </span>
           </motion.p>
 

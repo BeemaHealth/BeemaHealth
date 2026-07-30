@@ -1,6 +1,5 @@
 /** Stable CTA identifiers for funnel / waitlist attribution (routing unchanged). */
 export const CTA_IDS = {
-  nav_header: "nav_header",
   nav_mobile: "nav_mobile",
   footer: "footer",
   home_hero: "home_hero",
@@ -25,6 +24,13 @@ export const CTA_IDS = {
 } as const;
 
 export type CtaId = (typeof CTA_IDS)[keyof typeof CTA_IDS];
+
+/**
+ * Patient portal login (Hive) — a separate app on its own subdomain, not
+ * part of this marketing site's routing. Not a CTA_IDS entry: it's an
+ * account action, not a funnel-conversion click.
+ */
+export const HIVE_LOGIN_URL = "https://hive.beemahealth.com" as const;
 
 /** Waitlist route — trailing slash matches sitemap-style canonical URLs. */
 export const WAITLIST_PATH = "/waitlist/" as const;
@@ -55,31 +61,30 @@ export const qualifyHref = waitlistHref;
  * ---------------------------------------------------------------------
  * CTA switchboard
  * ---------------------------------------------------------------------
- * Beema is currently pre-launch: every marketing CTA sitewide sends
- * visitors to the waitlist. Once the patient portal (intake, payment,
- * dashboard — built separately from this marketing site) is live, CTAs
- * need to start pointing there instead — possibly a different URL per
- * CTA (e.g. a medication-specific intake link).
+ * Beema is live: every marketing CTA sitewide sends visitors to Bask's
+ * hosted questionnaire (the in-house waitlist/qualify/intake funnel is
+ * dormant — see docs/BACKEND-DEFERRED.md). If a different intake URL is
+ * ever needed per medication, that's still a per-CTA override below.
  *
  * `resolveCta(id)` is the ONLY place that decision should be made.
  * Every CTA button/link in the app calls this instead of hardcoding
- * WAITLIST_PATH or a label — so flipping the site from waitlist mode to
- * live mode (fully or one CTA at a time) is a one-file edit here, not a
- * hunt through every route/component.
+ * WAITLIST_PATH or a label — so repointing the site (fully or one CTA
+ * at a time) is a one-file edit here, not a hunt through every
+ * route/component.
  *
  * To change what a CTA does:
  *   - Change every CTA at once → edit DEFAULT_CTA_TARGET.
- *   - Change one CTA (e.g. tirzepatide_hero → a live intake URL) → add
- *     an entry to CTA_OVERRIDES keyed by the CtaId. `to` may be an
- *     internal path ("/intake/") or a full external URL (the portal
- *     may live on a different domain) — both render correctly via
+ *   - Change one CTA (e.g. tirzepatide_hero → a medication-specific
+ *     intake URL) → add an entry to CTA_OVERRIDES keyed by the CtaId.
+ *     `to` may be an internal path ("/intake/") or a full external URL
+ *     (Bask lives on a different domain) — both render correctly via
  *     TanStack Router's <Link>.
  */
 type CtaTarget = { label: string; to: string };
 
 const DEFAULT_CTA_TARGET: CtaTarget = {
-  label: "Join waitlist",
-  to: WAITLIST_PATH,
+  label: "Get Started",
+  to: "https://q.beemahealth.com/start-online-visit/weightloss",
 };
 
 /** Per-CTA overrides. Empty today — every CtaId falls back to DEFAULT_CTA_TARGET. */
