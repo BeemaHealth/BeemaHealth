@@ -38,7 +38,7 @@ const SEMA_VIAL = resolveVialImagery("semaglutide");
 const CHECKLIST_ITEMS = [
   "Licensed USA physician network",
   "Private & secure encrypted intake",
-  "USA 503A/B pharmacies",
+  "USA 503A pharmacies",
   dualCompoundedPromoShortPricingLine(),
 ] as const;
 
@@ -46,7 +46,7 @@ const CHECKLIST_ITEMS = [
 const HERO_BADGE_MESSAGES = [
   "GLP-1 weight-loss care",
   "Licensed USA physician network",
-  "USA 503A/B pharmacies",
+  "USA 503A pharmacies",
   FIRST_MONTH_PROMO_SHORT,
 ] as const;
 
@@ -227,7 +227,7 @@ export function HomeHero() {
               server-rendered HTML/CSS with zero JS dependency.
             */}
           <p className="mt-5 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-            USA physicians, licensed and certified USA 503A/B pharmacies,
+            USA physicians, licensed and certified USA 503A pharmacies,
             transparent cash pricing: {dualCompoundedHeroPricingLine()}. No
             bait-and-switch, no surprises, and thoughtful medical care that
             doesn&apos;t stop at the first prescription.

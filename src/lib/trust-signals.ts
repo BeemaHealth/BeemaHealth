@@ -46,7 +46,7 @@ export const TRUST_SIGNALS: TrustSignal[] = [
   },
   {
     icon: Factory,
-    label: "USA 503A/B pharmacies",
+    label: "USA 503A pharmacies",
     detail:
       "Medication is compounded and shipped from licensed USA pharmacies.",
   },
