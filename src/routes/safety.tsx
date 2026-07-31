@@ -134,36 +134,41 @@ function SafetyPage() {
         </div>
       </Section>
 
+      {/*
+          LCP-critical: this card's bio paragraph is now the largest text
+          block on the page (added in an earlier round), so it became the
+          measured LCP element — a whileInView reveal (via useCardMotion)
+          delays first paint on IntersectionObserver + JS hydration timing,
+          same root cause already fixed on the hero text. Unanimated here;
+          the other cards on this page keep their reveal.
+        */}
       <Section className="pt-0">
-        <motion.div {...useCardMotion(Boolean(reduceMotion), 0)}>
-          <SurfaceCard className="border-primary/30 bg-primary-soft/30">
-            <div className="flex gap-4">
-              <Stethoscope className="size-6 shrink-0 text-accent-foreground" />
-              <div>
-                <h2 className="text-lg font-semibold text-foreground">
-                  Clinical oversight
-                </h2>
-                <p className="mt-2 text-sm font-semibold text-foreground">
-                  {SEAN_ARORA_PROVIDER.displayName},{" "}
-                  {SEAN_ARORA_PROVIDER.credentials} · {SEAN_ARORA_PROVIDER.role}
-                  , {CLINICAL_PROVIDER_LEGAL_NAME} · NPI{" "}
-                  {SEAN_ARORA_PROVIDER.npi}
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {SEAN_ARORA_PROVIDER.bio} {CLINICAL_PROVIDER_LEGAL_NAME} is
-                  Beema Health's clinical provider group and provides clinical
-                  leadership over the group of licensed providers who deliver
-                  care through Beema. Licensed clinicians make all medical
-                  decisions independently. The clinician assigned to your care
-                  may vary based on state licensure and availability.
-                </p>
-                <p className="mt-2 text-xs text-muted-foreground/80">
-                  Medically reviewed on July 31, 2026
-                </p>
-              </div>
+        <SurfaceCard className="border-primary/30 bg-primary-soft/30">
+          <div className="flex gap-4">
+            <Stethoscope className="size-6 shrink-0 text-accent-foreground" />
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">
+                Clinical oversight
+              </h2>
+              <p className="mt-2 text-sm font-semibold text-foreground">
+                {SEAN_ARORA_PROVIDER.displayName},{" "}
+                {SEAN_ARORA_PROVIDER.credentials} · {SEAN_ARORA_PROVIDER.role},{" "}
+                {CLINICAL_PROVIDER_LEGAL_NAME} · NPI {SEAN_ARORA_PROVIDER.npi}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {SEAN_ARORA_PROVIDER.bio} {CLINICAL_PROVIDER_LEGAL_NAME} is
+                Beema Health's clinical provider group and provides clinical
+                leadership over the group of licensed providers who deliver care
+                through Beema. Licensed clinicians make all medical decisions
+                independently. The clinician assigned to your care may vary
+                based on state licensure and availability.
+              </p>
+              <p className="mt-2 text-xs text-muted-foreground/80">
+                Medically reviewed on July 31, 2026
+              </p>
             </div>
-          </SurfaceCard>
-        </motion.div>
+          </div>
+        </SurfaceCard>
       </Section>
 
       <Section className="pt-0">

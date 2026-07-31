@@ -175,19 +175,21 @@ function HowItWorksPage() {
         </motion.div>
 
         <div ref={stepsRef} className="relative z-10">
-          <motion.p
-            className="mx-auto max-w-2xl text-center text-base leading-relaxed text-muted-foreground"
-            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: reduceMotion ? 0 : 0.5, ease: EASE_OUT }}
-          >
+          {/*
+              LCP-critical: this became the page's largest text block after
+              an earlier round's content expansion, so it's the measured LCP
+              element. A whileInView reveal delays first paint on
+              IntersectionObserver + JS hydration timing — same fix already
+              applied to the hero text and to safety.tsx's clinical-oversight
+              card. Unanimated here.
+            */}
+          <p className="mx-auto max-w-2xl text-center text-base leading-relaxed text-muted-foreground">
             Getting started with Beema Health follows {STEPS_TOTAL} steps, from
             your first eligibility check to ongoing care after treatment begins.
             Here&rsquo;s exactly what happens at each stage, in the order it
             happens — no platform membership fee, no hidden steps, and no
             guaranteed prescription along the way.
-          </motion.p>
+          </p>
 
           <ol className="mt-10 grid w-full gap-5 md:grid-cols-2 lg:grid-cols-4">
             {STEPS.map((s, i) => (
