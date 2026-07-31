@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { CircleRevealMenu } from "@/components/site/CircleRevealMenu";
 import { EASE_OUT } from "@/components/home/home-motion";
 import { CTA_IDS, HIVE_LOGIN_URL, resolveCta } from "@/lib/cta-ids";
-import { EARLY_ADOPTER_DISCOUNT_SHORT } from "@/lib/marketing-copy";
+import { FIRST_MONTH_PROMO_SHORT } from "@/lib/marketing-copy";
 import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
 import { SOCIAL_LINKS } from "@/lib/social-links";
 import { cn } from "@/lib/utils";
@@ -290,8 +290,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:ml-auto lg:flex">
-          {/* Early-adopter discount lives in the hero, marquee, and mobile
-              menu — dropped here so phone + socials have room without wrapping
+          {/* Promo line lives in the hero, marquee, and mobile menu —
+              dropped here so phone + socials have room without wrapping
               (veya-container caps at 1200px; there isn't space for all five). */}
           <div className="hidden items-center gap-4 border-r border-border pr-4 xl:flex">
             <a
@@ -348,7 +348,7 @@ export function SiteHeader() {
                 </Link>
               </Button>
               <p className="text-center text-xs font-medium text-ink-foreground/60">
-                {EARLY_ADOPTER_DISCOUNT_SHORT} for early adopters
+                {FIRST_MONTH_PROMO_SHORT}
               </p>
               <div className="flex items-center justify-between border-t border-ink-foreground/15 pt-4">
                 <a

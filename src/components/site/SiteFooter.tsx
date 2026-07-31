@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/brand/Logo";
 import { InfinityMotif } from "@/components/site/primitives";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
-import { EARLY_ADOPTER_DISCOUNT } from "@/lib/marketing-copy";
+import { FIRST_MONTH_PROMO_LINE } from "@/lib/marketing-copy";
 import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
 import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
 import { SOCIAL_LINKS } from "@/lib/social-links";
@@ -81,7 +81,7 @@ export function SiteFooter() {
               {cta.label}
             </Link>
             <p className="mt-3 text-xs font-medium text-primary">
-              Early adopters: {EARLY_ADOPTER_DISCOUNT}
+              Offer: {FIRST_MONTH_PROMO_LINE}
             </p>
 
             <div className="mt-6 flex items-center gap-5 border-t border-ink-foreground/15 pt-6">

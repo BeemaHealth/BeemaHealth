@@ -178,7 +178,7 @@ These are mutually exclusive per event — `FunnelEventCreateView` sets exactly 
 |------|------|
 | `src/lib/analytics.ts` | All frontend tracking functions |
 | `src/lib/ad-conversions.ts` | Meta Pixel + Google Ads init / Lead conversion |
-| `src/lib/marketing-copy.ts` | Early-adopter discount + waitlist social-proof constants |
+| `src/lib/marketing-copy.ts` | First-month promo + waitlist social-proof constants |
 | `src/lib/utm.ts` | UTM capture from URL → funnel session |
 | `scripts/generate-utm-url.mjs` | CLI to mint unique social/ad UTM URLs |
 | `scripts/utm-url-agent-prompt.txt` | Prompt for an AI / phone agent to mint URLs |

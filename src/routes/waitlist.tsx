@@ -13,7 +13,7 @@ import { trackPageViewed, trackWaitlistSubmit } from "@/lib/analytics";
 import { canonicalUrl } from "@/lib/seo";
 import { getAttributionForSubmit } from "@/lib/utm";
 import {
-  EARLY_ADOPTER_DISCOUNT,
+  FIRST_MONTH_PROMO_LINE,
   WAITLIST_CTA_LABEL,
   waitlistIncentiveBody,
   waitlistSocialProofLine,
@@ -66,7 +66,7 @@ export const Route = createFileRoute("/waitlist")({
       { title: "Join the waitlist | Beema Health" },
       {
         name: "description",
-        content: `Beema Health is getting ready to launch. Join the waitlist for ${EARLY_ADOPTER_DISCOUNT} on medical weight-loss care.`,
+        content: `Beema Health is getting ready to launch. Join the waitlist for ${FIRST_MONTH_PROMO_LINE} on medical weight-loss care.`,
       },
       { name: "robots", content: "noindex" },
     ],
@@ -187,7 +187,7 @@ function WaitlistPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE_OUT }}
           >
-            <Eyebrow>Coming soon · {EARLY_ADOPTER_DISCOUNT}</Eyebrow>
+            <Eyebrow>Coming soon · {FIRST_MONTH_PROMO_LINE}</Eyebrow>
           </motion.div>
 
           <h1 className="mt-4 max-w-2xl text-balance text-center text-4xl font-bold leading-[1.05] text-foreground md:text-5xl">
@@ -347,7 +347,7 @@ function WaitlistPage() {
                       )}
                     </Button>
                     <p className="text-center text-xs text-muted-foreground">
-                      Includes {EARLY_ADOPTER_DISCOUNT} when we launch.
+                      Includes {FIRST_MONTH_PROMO_LINE} when we launch.
                     </p>
                   </motion.form>
                 )}

@@ -5,8 +5,8 @@ import { LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
-  EARLY_ADOPTER_DISCOUNT,
-  earlyAdopterIncentiveLine,
+  FIRST_MONTH_PROMO_LINE,
+  promoIncentiveLine,
 } from "@/lib/marketing-copy";
 
 /**
@@ -32,9 +32,8 @@ export function FinalCTASection() {
             </h2>
 
             <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-primary-foreground/80 md:text-lg">
-              Start your online visit in about a minute.{" "}
-              {earlyAdopterIncentiveLine()}. No payment required to start, and
-              no prescription is guaranteed.
+              Start your online visit in about a minute. {promoIncentiveLine()}.
+              No payment required to start, and no prescription is guaranteed.
             </p>
 
             <MagneticButton className="mt-8">
@@ -50,7 +49,7 @@ export function FinalCTASection() {
               </Button>
             </MagneticButton>
             <p className="mt-4 text-sm font-semibold text-primary-foreground">
-              Early-adopter perk: {EARLY_ADOPTER_DISCOUNT}
+              Offer: {FIRST_MONTH_PROMO_LINE}
             </p>
           </div>
         </div>

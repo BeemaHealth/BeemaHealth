@@ -18,8 +18,8 @@ import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { cn } from "@/lib/utils";
 import {
-  EARLY_ADOPTER_DISCOUNT,
-  earlyAdopterIncentiveLine,
+  FIRST_MONTH_PROMO_LINE,
+  promoIncentiveLine,
 } from "@/lib/marketing-copy";
 import {
   dualCompoundedHeroPricingLine,
@@ -43,7 +43,7 @@ const MARQUEE_ITEMS = [
   "USA licensed pharmacies",
   "Private & secure encrypted intake",
   "HIPAA-compliant care",
-  EARLY_ADOPTER_DISCOUNT,
+  FIRST_MONTH_PROMO_LINE,
   "5-minute eligibility check",
 ] as const;
 
@@ -87,7 +87,10 @@ function useHeroColumnStagger(reduceMotion: boolean) {
  * the checklist row and scroll cue below the fold on laptop-height windows
  * (~1280x700 after browser chrome). Vertical rhythm (margin-top and
  * padding-y utilities) and the headline's fluid clamp() size are tuned
- * against that same budget.
+ * against that same budget. It's capped at 50rem (800px) via `min()` so it
+ * stops growing past that on very tall/large monitors — uncapped, the
+ * content (vertically centered in the grid) ended up stranded in a wall of
+ * empty space above and below on e.g. 1600px+-tall viewports.
  *
  * The marquee band (replacing the old animated "Scroll" cue in that same
  * spot) is viewport-fixed rather than positioned against the hero section's
@@ -158,7 +161,7 @@ export function HomeHero() {
   return (
     <section
       ref={heroRef}
-      className="relative overflow-hidden bg-grad-hero lg:min-h-[calc(100svh-4rem)]"
+      className="relative overflow-hidden bg-grad-hero lg:min-h-[min(calc(100svh-4rem),50rem)]"
     >
       <div
         aria-hidden
@@ -170,7 +173,7 @@ export function HomeHero() {
       />
       <FloatingHexagons className="z-0" />
 
-      <div className="veya-container relative z-10 grid min-h-0 items-center gap-10 py-10 pb-20 md:py-12 md:pb-24 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-2 lg:gap-12 lg:py-14 lg:pb-24">
+      <div className="veya-container relative z-10 grid min-h-0 items-center gap-10 py-10 pb-20 md:py-12 md:pb-24 lg:min-h-[min(calc(100svh-4rem),50rem)] lg:grid-cols-2 lg:gap-12 lg:py-14 lg:pb-24">
         <motion.div
           className="relative z-10"
           initial="hidden"
@@ -231,7 +234,7 @@ export function HomeHero() {
             variants={item}
             className="mt-3 text-sm font-medium text-foreground"
           >
-            {earlyAdopterIncentiveLine()}.
+            {promoIncentiveLine()}.
             <span className="font-normal text-muted-foreground">
               {" "}
               Start your online visit today.

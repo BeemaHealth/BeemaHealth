@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  EARLY_ADOPTER_DISCOUNT,
-  EARLY_ADOPTER_DISCOUNT_SHORT,
+  FIRST_MONTH_PROMO_LINE,
+  FIRST_MONTH_PROMO_SHORT,
   WAITLIST_CTA_LABEL,
   WAITLIST_DISPLAY_COUNT_FALLBACK,
-  earlyAdopterIncentiveLine,
+  promoIncentiveLine,
   getWaitlistDisplayCountSeed,
   waitlistIncentiveBody,
   waitlistSocialProofLine,
@@ -16,16 +16,14 @@ describe("marketing-copy", () => {
     vi.unstubAllEnvs();
   });
 
-  it("keeps a single concrete early-adopter amount", () => {
-    expect(EARLY_ADOPTER_DISCOUNT).toBe(
+  it("keeps a single concrete first-month promo amount", () => {
+    expect(FIRST_MONTH_PROMO_LINE).toBe(
       "a one-time $100 promo code for your first month on a 3-month plan",
     );
-    expect(EARLY_ADOPTER_DISCOUNT_SHORT).toBe(
-      "$100 off with a 3-month promo code",
-    );
-    expect(earlyAdopterIncentiveLine()).toContain(EARLY_ADOPTER_DISCOUNT);
-    expect(waitlistIncentiveBody()).toContain(EARLY_ADOPTER_DISCOUNT);
-    expect(waitlistSuccessIncentiveLine()).toContain(EARLY_ADOPTER_DISCOUNT);
+    expect(FIRST_MONTH_PROMO_SHORT).toBe("$100 off with a 3-month promo code");
+    expect(promoIncentiveLine()).toContain(FIRST_MONTH_PROMO_LINE);
+    expect(waitlistIncentiveBody()).toContain(FIRST_MONTH_PROMO_LINE);
+    expect(waitlistSuccessIncentiveLine()).toContain(FIRST_MONTH_PROMO_LINE);
   });
 
   it("exposes one waitlist CTA label for sitewide buttons", () => {

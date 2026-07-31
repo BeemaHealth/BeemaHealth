@@ -179,10 +179,17 @@
 }
 
 @layer components {
+  /*
+   * max-width scales with the viewport above 75rem (1200px, the design
+   * baseline for laptop/desktop) instead of staying fixed, so large and
+   * ultra-wide monitors (1920px+) don't strand the whole site in a narrow
+   * center column with huge empty gutters. Caps at 100rem (1600px) so line
+   * lengths and layout still stay composed on very large displays.
+   */
   .veya-container {
     width: 100%;
     margin-inline: auto;
-    max-width: 75rem;
+    max-width: clamp(75rem, 68vw, 100rem);
     padding-inline: 1.25rem;
   }
 }
