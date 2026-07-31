@@ -6,8 +6,8 @@
      On any domain change, update together with SITE_URL in src/lib/seo.ts,
      public/CNAME, public/robots.txt, and public/llms.txt.
      lastmod is tied to each route file's last content-significant commit
-     (git log -1 --format=%ad --date=short -- <route file>), not a build
-     timestamp — update it by hand when you next materially change a page.
+     (see git log for that route file's date), not a build timestamp —
+     update it by hand when you next materially change a page.
      Kept in sync by src/lib/__tests__/sitemap.test.ts. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
