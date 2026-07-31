@@ -188,6 +188,9 @@ function TreatmentCard({
         <img
           src={treatment.imagery.src}
           alt={treatment.imagery.alt}
+          width={treatment.imagery.width}
+          height={treatment.imagery.height}
+          loading="lazy"
           className={cn(
             "absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
             treatment.imagery.wideCropClass,

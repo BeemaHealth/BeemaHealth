@@ -259,6 +259,8 @@ function TirzepatidePage() {
               <img
                 src={VIAL_IMAGERY.src}
                 alt={VIAL_IMAGERY.alt}
+                width={VIAL_IMAGERY.width}
+                height={VIAL_IMAGERY.height}
                 className="absolute inset-0 h-full w-full object-cover object-center"
               />
             </motion.div>

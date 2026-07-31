@@ -205,6 +205,9 @@ function TreatmentCard({
         <motion.img
           src={treatment.imagery.src}
           alt={treatment.imagery.alt}
+          width={treatment.imagery.width}
+          height={treatment.imagery.height}
+          loading="lazy"
           style={reduceMotion ? undefined : { y: imageY }}
           className={cn(
             "absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105",
