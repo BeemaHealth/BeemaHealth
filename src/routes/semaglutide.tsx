@@ -261,6 +261,7 @@ function SemaglutidePage() {
                 alt={VIAL_IMAGERY.alt}
                 width={VIAL_IMAGERY.width}
                 height={VIAL_IMAGERY.height}
+                fetchPriority="high"
                 className="absolute inset-0 h-full w-full object-cover object-center"
               />
             </motion.div>
