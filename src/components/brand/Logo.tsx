@@ -28,8 +28,8 @@ export function Logo({
       <img
         src={beemaMark}
         alt="Beema Health"
-        width={592}
-        height={653}
+        width={136}
+        height={150}
         className={cn("h-10 w-auto object-contain", className)}
       />
       {/* Wordmark is visual; accessible name comes from the img alt (and any

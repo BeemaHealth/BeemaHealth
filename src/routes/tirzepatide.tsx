@@ -158,6 +158,7 @@ export const Route = createFileRoute("/tirzepatide")({
             path: "/tirzepatide",
             serviceType: "Medical weight-loss telehealth service",
             reviewedByClinicalLead: true,
+            dateModified: "2026-07-31",
             offer: {
               introPrice: 197,
               recurringPrice: 297,

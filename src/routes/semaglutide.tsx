@@ -161,6 +161,7 @@ export const Route = createFileRoute("/semaglutide")({
             path: "/semaglutide",
             serviceType: "Medical weight-loss telehealth service",
             reviewedByClinicalLead: true,
+            dateModified: "2026-07-31",
             offer: { introPrice: 99, recurringPrice: 199 },
           }),
         ),

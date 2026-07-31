@@ -141,6 +141,8 @@ export type MedicalWebPageJsonLdInput = {
   path: string;
   /** Set true to attach CLINICAL_REVIEWER_JSONLD as reviewedBy — use on pages presenting clinical/medical guidance (e.g. /safety). */
   reviewedByClinicalLead?: boolean;
+  /** ISO date (YYYY-MM-DD) of the last content-significant edit to this page — keep honest, matches any visible "reviewed on"/"updated" text on the page. */
+  dateModified?: string;
 };
 
 /**
@@ -153,6 +155,7 @@ export function medicalWebPageJsonLd({
   description,
   path,
   reviewedByClinicalLead,
+  dateModified,
 }: MedicalWebPageJsonLdInput) {
   return {
     "@context": "https://schema.org",
@@ -163,6 +166,7 @@ export function medicalWebPageJsonLd({
     isPartOf: { "@id": `${SITE_URL}/#website` },
     publisher: { "@id": `${SITE_URL}/#organization` },
     ...(reviewedByClinicalLead ? { reviewedBy: CLINICAL_REVIEWER_JSONLD } : {}),
+    ...(dateModified ? { dateModified } : {}),
   };
 }
 
@@ -190,6 +194,8 @@ export type ServiceJsonLdInput = {
    * without implying a purchasable drug listing.
    */
   offer?: ServiceOfferInput;
+  /** ISO date (YYYY-MM-DD) of the last content-significant edit to this page — keep honest, matches any visible "reviewed on"/"updated" text on the page. */
+  dateModified?: string;
 };
 
 /** Service JSON-LD for a page describing a service Beema Health offers (as opposed to an informational page — see medicalWebPageJsonLd()). */
@@ -200,6 +206,7 @@ export function serviceJsonLd({
   serviceType,
   reviewedByClinicalLead,
   offer,
+  dateModified,
 }: ServiceJsonLdInput) {
   return {
     "@context": "https://schema.org",
@@ -211,6 +218,7 @@ export function serviceJsonLd({
     provider: { "@id": `${SITE_URL}/#organization` },
     areaServed: { "@type": "Country", name: "United States" },
     ...(reviewedByClinicalLead ? { reviewedBy: CLINICAL_REVIEWER_JSONLD } : {}),
+    ...(dateModified ? { dateModified } : {}),
     ...(offer
       ? {
           offers: {

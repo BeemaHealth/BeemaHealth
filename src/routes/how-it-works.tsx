@@ -71,6 +71,7 @@ export const Route = createFileRoute("/how-it-works")({
             description: DESCRIPTION,
             path: "/how-it-works",
             reviewedByClinicalLead: true,
+            dateModified: "2026-07-31",
           }),
         ),
       },
