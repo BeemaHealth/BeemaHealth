@@ -1,5 +1,12 @@
-import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
+import {
+  AnimatePresence,
   animate,
   motion,
   useInView,
@@ -56,6 +63,65 @@ export function LineReveal({
         {children}
       </motion.span>
     </span>
+  );
+}
+
+/**
+ * Eyebrow-styled pill (mirrors `Eyebrow` in site/primitives.tsx) that rotates
+ * through a list of short trust-signal claims, sliding the current one out
+ * and the next one in every `interval` ms. `layout` on the outer pill
+ * smooths the width change as message lengths differ. Rotation pauses on
+ * hover/focus so a reader isn't fighting the swap mid-read, and freezes on
+ * the first message under reduced motion — the same settled-state
+ * convention as `Marquee`/`CountUp` above.
+ */
+export function RotatingBadge({
+  messages,
+  interval = 2000,
+  className,
+}: {
+  messages: readonly string[];
+  /** Milliseconds between rotations. */
+  interval?: number;
+  className?: string;
+}) {
+  const reduceMotion = useReducedMotion();
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (reduceMotion || paused || messages.length <= 1) return;
+    const id = setInterval(() => {
+      setIndex((i) => (i + 1) % messages.length);
+    }, interval);
+    return () => clearInterval(id);
+  }, [reduceMotion, paused, messages.length, interval]);
+
+  return (
+    <motion.span
+      layout
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+      className={cn(
+        "inline-flex items-center gap-2 overflow-hidden rounded-full border border-primary/30 bg-primary-soft px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-foreground",
+        className,
+      )}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={messages[index]}
+          initial={reduceMotion ? false : { y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={reduceMotion ? undefined : { y: -10, opacity: 0 }}
+          transition={{ duration: 0.35, ease: EASE_OUT }}
+          className="whitespace-nowrap"
+        >
+          {messages[index]}
+        </motion.span>
+      </AnimatePresence>
+    </motion.span>
   );
 }
 

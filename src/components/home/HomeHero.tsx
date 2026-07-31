@@ -8,17 +8,22 @@ import {
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, CheckCircle2, ClipboardCheck } from "lucide-react";
 import {
-  Eyebrow,
   FloatingHexagons,
   HexMotif,
   MagneticButton,
 } from "@/components/site/primitives";
-import { EASE_OUT, LineReveal, Marquee } from "@/components/home/home-motion";
+import {
+  EASE_OUT,
+  LineReveal,
+  Marquee,
+  RotatingBadge,
+} from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { cn } from "@/lib/utils";
 import {
   FIRST_MONTH_PROMO_LINE,
+  FIRST_MONTH_PROMO_SHORT,
   promoIncentiveLine,
 } from "@/lib/marketing-copy";
 import {
@@ -33,8 +38,16 @@ const SEMA_VIAL = resolveVialImagery("semaglutide");
 const CHECKLIST_ITEMS = [
   "Licensed USA physician network",
   "Private & secure encrypted intake",
-  "USA compounding pharmacies",
+  "USA 503A/B pharmacies",
   dualCompoundedPromoShortPricingLine(),
+] as const;
+
+/** Hero badge rotation — reuses the same approved trust claims shown elsewhere on this page (checklist row, promo line) rather than inventing new copy. */
+const HERO_BADGE_MESSAGES = [
+  "GLP-1 weight-loss care",
+  "Licensed USA physician network",
+  "USA 503A/B pharmacies",
+  FIRST_MONTH_PROMO_SHORT,
 ] as const;
 
 const MARQUEE_ITEMS = [
@@ -186,7 +199,7 @@ export function HomeHero() {
           }
         >
           <motion.div variants={item}>
-            <Eyebrow>GLP-1 weight-loss care</Eyebrow>
+            <RotatingBadge messages={HERO_BADGE_MESSAGES} interval={4000} />
           </motion.div>
 
           <h1 className="mt-4 text-[clamp(2rem,4.5vw,4rem)] font-bold leading-[1.1] tracking-tight text-foreground">
@@ -204,28 +217,21 @@ export function HomeHero() {
 
           {/*
               LCP-critical: this is the largest text block painted on initial
-              load, so it deliberately opts out of the column's `container`/
-              `item` stagger (which doesn't start until `delayChildren: 0.6`
-              and would push this element's fade-in past ~1.3s, inflating
-              LCP). It gets its own near-instant reveal instead — still a
-              fade-up for visual consistency with the rest of the column, but
-              with a delay close to 0 so it paints almost immediately.
+              load. A prior version gave it a fast (duration:0.4, delay:0.05)
+              opacity fade instead of the column's full stagger — but Lighthouse
+              still measured it as render-delayed, because ANY Motion-driven
+              opacity transition can't start until the Motion library's JS has
+              hydrated, so the delay isn't really about duration, it's about
+              waiting on JS at all. Rendered as a plain, unanimated <p> instead
+              (same fix that worked for safety.tsx) so it paints as part of the
+              server-rendered HTML/CSS with zero JS dependency.
             */}
-          <motion.p
-            initial={{ opacity: 0, y: reduceMotion ? 0 : 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: reduceMotion ? 0 : 0.4,
-              ease: EASE_OUT,
-              delay: reduceMotion ? 0 : 0.05,
-            }}
-            className="mt-5 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground"
-          >
-            USA physicians, licensed and certified USA compounding pharmacies,
+          <p className="mt-5 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
+            USA physicians, licensed and certified USA 503A/B pharmacies,
             transparent cash pricing: {dualCompoundedHeroPricingLine()}. No
             bait-and-switch, no surprises, and thoughtful medical care that
             doesn&apos;t stop at the first prescription.
-          </motion.p>
+          </p>
 
           <motion.div
             variants={item}
