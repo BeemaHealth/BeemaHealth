@@ -202,8 +202,23 @@ export function HomeHero() {
             </LineReveal>
           </h1>
 
+          {/*
+              LCP-critical: this is the largest text block painted on initial
+              load, so it deliberately opts out of the column's `container`/
+              `item` stagger (which doesn't start until `delayChildren: 0.6`
+              and would push this element's fade-in past ~1.3s, inflating
+              LCP). It gets its own near-instant reveal instead — still a
+              fade-up for visual consistency with the rest of the column, but
+              with a delay close to 0 so it paints almost immediately.
+            */}
           <motion.p
-            variants={item}
+            initial={{ opacity: 0, y: reduceMotion ? 0 : 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: reduceMotion ? 0 : 0.4,
+              ease: EASE_OUT,
+              delay: reduceMotion ? 0 : 0.05,
+            }}
             className="mt-5 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground"
           >
             USA physicians, licensed and certified USA compounding pharmacies,

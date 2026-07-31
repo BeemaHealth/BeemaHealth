@@ -1,4 +1,8 @@
 import { SUPPORT_EMAIL, SUPPORT_PHONE_E164 } from "@/lib/contact-info";
+import {
+  CLINICAL_PROVIDER_LEGAL_NAME,
+  SEAN_ARORA_PROVIDER,
+} from "@/lib/provider-info";
 
 /**
  * Canonical production origin — single source of truth for absolute URLs in
@@ -102,5 +106,141 @@ export function breadcrumbJsonLd(items: readonly BreadcrumbJsonLdItem[]) {
       name: item.name,
       item: canonicalUrl(item.path),
     })),
+  };
+}
+
+/**
+ * Named clinical reviewer, for schema.org `reviewedBy` on medical content.
+ *
+ * Sourced from src/lib/provider-info.ts (the same NPI-verified data already
+ * disclosed in the FAQ) — never invent a reviewer name/credential that isn't
+ * backed by that file. Framing intentionally matches its FAQ answers:
+ * clinicians decide independently, so this names clinical leadership/oversight
+ * rather than claiming Dr. Arora personally reviews every page or patient.
+ */
+export const CLINICAL_REVIEWER_JSONLD = {
+  "@type": "Physician",
+  name: SEAN_ARORA_PROVIDER.displayName,
+  honorificSuffix: SEAN_ARORA_PROVIDER.credentials,
+  identifier: {
+    "@type": "PropertyValue",
+    propertyID: "NPI",
+    value: SEAN_ARORA_PROVIDER.npi,
+  },
+  jobTitle: SEAN_ARORA_PROVIDER.role,
+  medicalSpecialty: "Family Medicine",
+  worksFor: {
+    "@type": "MedicalOrganization",
+    name: CLINICAL_PROVIDER_LEGAL_NAME,
+  },
+} as const;
+
+export type MedicalWebPageJsonLdInput = {
+  name: string;
+  description: string;
+  path: string;
+  /** Set true to attach CLINICAL_REVIEWER_JSONLD as reviewedBy — use on pages presenting clinical/medical guidance (e.g. /safety). */
+  reviewedByClinicalLead?: boolean;
+};
+
+/**
+ * MedicalWebPage JSON-LD for informational pages that have no visible FAQ
+ * accordion (so faqPageJsonLd() doesn't apply — see its docstring). Use for
+ * pages that explain medical/process content rather than offer a service.
+ */
+export function medicalWebPageJsonLd({
+  name,
+  description,
+  path,
+  reviewedByClinicalLead,
+}: MedicalWebPageJsonLdInput) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    name,
+    description,
+    url: canonicalUrl(path),
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    ...(reviewedByClinicalLead ? { reviewedBy: CLINICAL_REVIEWER_JSONLD } : {}),
+  };
+}
+
+export type ServiceOfferInput = {
+  /** Introductory/first-month price, in whole USD (e.g. 99 for $99). */
+  introPrice: number;
+  /** Ongoing recurring monthly price, in whole USD (e.g. 199 for $199/mo). */
+  recurringPrice: number;
+};
+
+export type ServiceJsonLdInput = {
+  name: string;
+  description: string;
+  path: string;
+  serviceType: string;
+  /** Set true to attach CLINICAL_REVIEWER_JSONLD as reviewedBy. */
+  reviewedByClinicalLead?: boolean;
+  /**
+   * Pricing for the clinical service itself — deliberately modeled as a
+   * Service + Offer, never as schema.org Product/Drug. This is a prescription
+   * -gated telehealth service (intake does not guarantee a prescription), and
+   * Google's Merchant/Product structured-data policies prohibit shoppable
+   * Product markup for prescription medications. An Offer nested under
+   * Service describes "access to evaluation + fulfillment if prescribed"
+   * without implying a purchasable drug listing.
+   */
+  offer?: ServiceOfferInput;
+};
+
+/** Service JSON-LD for a page describing a service Beema Health offers (as opposed to an informational page — see medicalWebPageJsonLd()). */
+export function serviceJsonLd({
+  name,
+  description,
+  path,
+  serviceType,
+  reviewedByClinicalLead,
+  offer,
+}: ServiceJsonLdInput) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name,
+    description,
+    serviceType,
+    url: canonicalUrl(path),
+    provider: { "@id": `${SITE_URL}/#organization` },
+    areaServed: { "@type": "Country", name: "United States" },
+    ...(reviewedByClinicalLead ? { reviewedBy: CLINICAL_REVIEWER_JSONLD } : {}),
+    ...(offer
+      ? {
+          offers: {
+            "@type": "Offer",
+            url: canonicalUrl(path),
+            priceCurrency: "USD",
+            price: offer.recurringPrice,
+            priceSpecification: [
+              {
+                "@type": "UnitPriceSpecification",
+                price: offer.introPrice,
+                priceCurrency: "USD",
+                billingIncrement: 1,
+                unitText: "MONTH",
+                description: "First month (promotional price)",
+              },
+              {
+                "@type": "UnitPriceSpecification",
+                price: offer.recurringPrice,
+                priceCurrency: "USD",
+                billingIncrement: 1,
+                unitText: "MONTH",
+                description: "Recurring monthly price after the first month",
+              },
+            ],
+            availability: "https://schema.org/InStock",
+            eligibleRegion: { "@type": "Country", name: "United States" },
+            seller: { "@id": `${SITE_URL}/#organization` },
+          },
+        }
+      : {}),
   };
 }

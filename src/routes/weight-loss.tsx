@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { canonicalUrl } from "@/lib/seo";
+import { breadcrumbJsonLd, canonicalUrl, serviceJsonLd } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   motion,
@@ -17,6 +17,7 @@ import {
 import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { TreatmentLineup } from "@/components/site/TreatmentLineup";
+import { TreatmentBreadcrumb } from "@/components/site/TreatmentPageBlocks";
 import {
   FloatingHexagons,
   HexBadge,
@@ -34,22 +35,52 @@ import {
   dualCompoundedShortPricingLine,
 } from "@/lib/medication-pricing";
 
+const TITLE = "Weight Loss | Beema Health";
+const DESCRIPTION =
+  "Medical weight-loss care with Zepbound, Wegovy, and affordable compounded options when clinically appropriate. Reviewed by licensed providers.";
+
 export const Route = createFileRoute("/weight-loss")({
   head: () => ({
     meta: [
-      { title: "Weight Loss | Beema Health" },
-      {
-        name: "description",
-        content:
-          "Medical weight-loss care with Zepbound, Wegovy, and affordable compounded options when clinically appropriate. Reviewed by licensed providers.",
-      },
-      { property: "og:title", content: "Weight Loss | Beema Health" },
+      { title: TITLE },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: TITLE },
       {
         property: "og:description",
         content: `Provider-reviewed GLP-1 weight-loss options with transparent cash pricing: ${dualCompoundedShortPricingLine()}.`,
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/weight-loss") }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Weight Loss", path: "/weight-loss" },
+          ]),
+        ),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          serviceJsonLd({
+            name: "Medical Weight-Loss Program",
+            // Deliberately not the meta DESCRIPTION above — that copy pairs
+            // branded-drug names (Zepbound, Wegovy) with "compounded
+            // options" in one sentence with no disclaimer attached. LLM/AI
+            // crawlers and structured-data parsers lift this string with
+            // none of the page's surrounding compounded-vs-FDA-approved
+            // context, so it needs to stand on its own. See LegitScript /
+            // NAD guardrails in docs/marketing/SEO-AEO-GEO-PLAN.md (F2).
+            description:
+              "Telehealth medical weight-loss program from Beema Health. Licensed providers review every patient and may prescribe compounded Semaglutide or Tirzepatide when clinically appropriate; these compounded medications are not FDA-approved, and prescribing is never guaranteed.",
+            path: "/weight-loss",
+            serviceType: "Medical weight-loss telehealth program",
+          }),
+        ),
+      },
+    ],
   }),
   component: WeightLossPage,
 });
@@ -107,6 +138,9 @@ function WeightLossPage() {
         />
         <FloatingHexagons className="z-0" />
         <div className="relative z-10">
+          <div className="mb-6 flex justify-center">
+            <TreatmentBreadcrumb current="Weight Loss" />
+          </div>
           <SectionHeading
             as="h1"
             eyebrow="Medical weight loss"

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { canonicalUrl } from "@/lib/seo";
+import { breadcrumbJsonLd, canonicalUrl, faqPageJsonLd } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import {
@@ -49,17 +49,20 @@ export const Route = createFileRoute("/faq")({
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: FAQ_GROUPS.flatMap((g) =>
-            g.items.map((i) => ({
-              "@type": "Question",
-              name: i.q,
-              acceptedAnswer: { "@type": "Answer", text: i.a },
-            })),
+        children: JSON.stringify(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "FAQ", path: "/faq" },
+          ]),
+        ),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          faqPageJsonLd(
+            FAQ_GROUPS.flatMap((g) => g.items.map((i) => ({ q: i.q, a: i.a }))),
           ),
-        }),
+        ),
       },
     ],
   }),

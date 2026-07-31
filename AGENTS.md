@@ -85,6 +85,7 @@ Read the relevant doc(s):
 | **Analytics & event tracking** | **`docs/features/analytics.md`** |
 | **Landing pages** | **`docs/features/landing-pages.md`** |
 | **Treatment pages (per-medication SEO pages, CTA switchboard)** | **`docs/features/treatment-pages.md`** |
+| **SEO / GEO audits & tooling** | **`claude-seo` Claude Code plugin** — see "SEO tooling" below |
 | Backend (dormant — DB ownership, run-backend, patient funnel, medical intake, staff CRM, medications, dynamic questionnaire, LifeFile/Beluga vendor APIs) | **`docs/BACKEND-DEFERRED.md`** |
 
 Match existing patterns in surrounding code. Prefer minimal, focused diffs. If discrepancies between the documentation and the code exist, then ask the user if they would like the documentation changed or the code changed and explain the differences and give a recommendation.
@@ -101,6 +102,18 @@ Match existing patterns in surrounding code. Prefer minimal, focused diffs. If d
 Do not silently fix either side. Wait for the user to decide.
 
 **Missing doc:** Before finishing any task that adds or significantly changes a feature area, check whether a `docs/features/` doc exists for it. If not, ask: **"Should I create a feature doc for [feature name] in `docs/features/`?"** Do not create it without asking first.
+
+### SEO tooling
+
+This repo is currently mostly a marketing/SEO surface (see "Where most work happens now" above), so SEO work is common. Claude Code has the [`claude-seo`](https://github.com/AgriciDaniel/claude-seo) plugin installed (globally, not scoped to this repo) — use it instead of ad hoc audits:
+
+- `/seo audit <url>` — full site audit (technical SEO, schema, E-E-A-T content quality, Core Web Vitals, GEO/AI-search readiness)
+- `/seo page <url>` — single-page deep dive (e.g. `/seo page https://beemahealth.com/semaglutide`)
+- `/seo schema <url>` — Schema.org / JSON-LD detection, validation, generation
+- `/seo sitemap` — validates `public/sitemap.xml` structure (kept in sync by `src/lib/__tests__/sitemap.test.ts`)
+- `/seo geo <url>` — AI Overviews / ChatGPT / Perplexity citability (GEO)
+
+Point it only at **public marketing routes** (`/`, `/how-it-works`, `/safety`, `/semaglutide`, `/tirzepatide`, `/weight-loss`, treatment pages). Never run it against authenticated portal routes (`/qualify`, `/intake`, `/consent`, `/dashboard`) — those aren't SEO surfaces, and even though `claude-seo` only reads public HTML, there's no reason to crawl PHI-adjacent, non-indexed pages. Treat its recommendations as input to a normal PR, not something to auto-apply — schema/copy changes still go through the usual test gate below.
 
 ### 2. Implement with defense in depth
 

@@ -1,6 +1,11 @@
 import { useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { canonicalUrl } from "@/lib/seo";
+import {
+  breadcrumbJsonLd,
+  canonicalUrl,
+  medicalWebPageJsonLd,
+} from "@/lib/seo";
+import { SEAN_ARORA_PROVIDER } from "@/lib/provider-info";
 import {
   motion,
   useReducedMotion,
@@ -13,6 +18,7 @@ import {
   RefreshCcw,
   ShieldCheck,
   Sparkles,
+  Stethoscope,
   Target,
   Users,
 } from "lucide-react";
@@ -32,6 +38,9 @@ import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { US_STATES } from "@/lib/us-states";
 
+const DESCRIPTION =
+  "The story behind Beema Health's bee, infinity wings, and hexagon, the values behind our telehealth weight-loss care, and the physician leading our clinical program.";
+
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
@@ -49,6 +58,28 @@ export const Route = createFileRoute("/about")({
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/about") }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "About", path: "/about" },
+          ]),
+        ),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          medicalWebPageJsonLd({
+            name: "About Beema Health",
+            description: DESCRIPTION,
+            path: "/about",
+            reviewedByClinicalLead: true,
+          }),
+        ),
+      },
+    ],
   }),
   component: AboutPage,
 });
@@ -126,13 +157,9 @@ function AboutPage() {
           </h1>
           <motion.p
             className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg"
-            initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: reduceMotion ? 0 : 0.6,
-              delay: reduceMotion ? 0 : 0.3,
-              ease: EASE_OUT,
-            }}
+            transition={{ duration: 0 }}
           >
             The bee with its infinity wings, and the hexagon: every piece of our
             logo speaks to how we believe healthcare should function.
@@ -362,6 +389,48 @@ function AboutPage() {
             </p>
           </motion.div>
         </div>
+      </Section>
+
+      {/* Clinical leadership */}
+      <Section className="pt-0">
+        <motion.div
+          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE_OUT }}
+        >
+          <SectionHeading
+            eyebrow="Clinical leadership"
+            title="Physician-led, from day one"
+          />
+        </motion.div>
+        <motion.div
+          className="mt-10"
+          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{
+            duration: reduceMotion ? 0 : 0.6,
+            delay: reduceMotion ? 0 : 0.1,
+            ease: EASE_OUT,
+          }}
+        >
+          <SurfaceCard className="mx-auto max-w-2xl text-center">
+            <HexBadge className="mx-auto size-14">
+              <Stethoscope className="size-6" />
+            </HexBadge>
+            <h3 className="mt-4 text-lg font-semibold text-foreground">
+              {SEAN_ARORA_PROVIDER.displayName},{" "}
+              {SEAN_ARORA_PROVIDER.credentials}
+            </h3>
+            <p className="text-sm font-medium text-accent-foreground">
+              {SEAN_ARORA_PROVIDER.role}
+            </p>
+            <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground">
+              {SEAN_ARORA_PROVIDER.bio}
+            </p>
+          </SurfaceCard>
+        </motion.div>
       </Section>
 
       {/* CTA */}

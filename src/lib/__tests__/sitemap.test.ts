@@ -17,8 +17,8 @@ const EXPECTED_PATHS = [
   "/",
   "/tirzepatide/",
   "/semaglutide/",
-  "/weight-loss/",
   "/how-it-works/",
+  "/weight-loss/",
   "/about/",
   "/safety/",
   "/faq/",
@@ -54,6 +54,16 @@ describe("public/sitemap.xml", () => {
       expect(loc.startsWith(`${SITE_URL}/`) || loc === `${SITE_URL}/`).toBe(
         true,
       );
+    }
+  });
+
+  it("has a lastmod for every URL, in YYYY-MM-DD form", () => {
+    const lastmods = [
+      ...sitemapXml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g),
+    ].map((m) => m[1]);
+    expect(lastmods).toHaveLength(EXPECTED_PATHS.length);
+    for (const lastmod of lastmods) {
+      expect(lastmod).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
   });
 

@@ -6,11 +6,16 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import { canonicalUrl } from "@/lib/seo";
+import {
+  breadcrumbJsonLd,
+  canonicalUrl,
+  medicalWebPageJsonLd,
+} from "@/lib/seo";
 import {
   ArrowRight,
   ClipboardCheck,
   MessageCircle,
+  Pill,
   RefreshCcw,
   Send,
   Stethoscope,
@@ -26,20 +31,21 @@ import {
   SectionHeading,
   SurfaceCard,
 } from "@/components/site/primitives";
+import { TreatmentBreadcrumb } from "@/components/site/TreatmentPageBlocks";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 
+const TITLE = "How it works | Beema Health";
+const DESCRIPTION =
+  "From a 5-minute eligibility check to licensed provider review: how Beema Health telehealth weight-loss care works, step by step.";
+
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
-      { title: "How it works | Beema Health" },
-      {
-        name: "description",
-        content:
-          "From a 5-minute eligibility check to licensed provider review: how Beema Health telehealth weight-loss care works, step by step.",
-      },
-      { property: "og:title", content: "How it works | Beema Health" },
+      { title: TITLE },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: TITLE },
       {
         property: "og:description",
         content:
@@ -47,25 +53,53 @@ export const Route = createFileRoute("/how-it-works")({
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/how-it-works") }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "How It Works", path: "/how-it-works" },
+          ]),
+        ),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          medicalWebPageJsonLd({
+            name: "How Beema Health's Telehealth Weight-Loss Care Works",
+            description: DESCRIPTION,
+            path: "/how-it-works",
+          }),
+        ),
+      },
+    ],
   }),
   component: HowItWorksPage,
 });
+
+const STEPS_TOTAL = 5;
 
 const STEPS = [
   {
     icon: ClipboardCheck,
     title: "Complete your eligibility check",
-    text: "Answer a few brief questions about your health, location, and health goals. This takes about 5 minutes.",
+    text: "Answer a short set of questions about your health history, weight-loss goals, and where you live. This eligibility check takes about 5 minutes and screens for factors that could make GLP-1 treatment inadvisable, before you create an account or share more detailed medical information. There's no payment required and no commitment to continue — it's the fastest way to find out whether telehealth weight-loss care through Beema Health is a realistic option based on your state, your goals, and basics like your BMI. If your initial answers indicate treatment likely isn't a fit, or Beema doesn't yet serve your state, we'll let you know clearly rather than routing you further into a process that isn't right for you.",
   },
   {
     icon: Send,
     title: "Submit your medical intake",
-    text: "Create an account and complete a secure medical questionnaire. Save at any point and continue at your convenience.",
+    text: "If the eligibility check suggests you may be a fit, create a secure account and complete a more detailed medical questionnaire covering your health history, current medications, allergies, and any prior weight-loss treatment. Save your progress at any point and finish at your own pace. Expect questions about medication dosages, known allergies, and any conditions that could affect eligibility — because your provider's decision is based entirely on what you submit here, complete and accurate answers matter more than speed.",
   },
   {
     icon: Stethoscope,
-    title: "Provider review",
-    text: "A licensed provider reviews your intake and determines recommended treatment. Prescribing is never guaranteed.",
+    title: "Licensed provider review",
+    text: "An independently licensed provider — never an algorithm — reviews your intake and evaluates your health history, medications, and eligibility factors like BMI to decide whether a GLP-1 treatment plan may be clinically appropriate for you. This is an individualized medical judgment, and it's never guaranteed: some patients aren't good candidates, and a provider may decline to prescribe or ask for more information. If they need anything else from you, they'll ask directly through your dashboard rather than declining outright. See our safety and eligibility page for more on what's reviewed.",
+  },
+  {
+    icon: Pill,
+    title: "Prescription decision and pharmacy fulfillment",
+    text: "If your provider determines treatment is clinically appropriate, your prescription moves to a licensed pharmacy for fulfillment. For compounded medications like compounded semaglutide or compounded tirzepatide, a licensed compounding pharmacy prepares your specific dose; other medications ship from a licensed dispensing pharmacy. Expedited shipping means your medication typically arrives without you having to coordinate separate deliveries, and you'll see the status move from provider approval to pharmacy processing to shipment in your dashboard. Exact timing depends on your provider's review and pharmacy processing, so we can't promise a specific delivery date — and, as with every step here, prescribing is never guaranteed.",
   },
 ];
 
@@ -73,12 +107,12 @@ const AFTER = [
   {
     icon: MessageCircle,
     title: "Stay connected",
-    text: "Clear communication tracks your status and provides updates to your dashboard.",
+    text: "Clear communication tracks your status and provides updates to your dashboard, so you always know where things stand — whether your intake is under review, your prescription is being filled, or your next refill is on the way. If your provider needs more information or your circumstances change, you'll hear from your care team directly rather than being left to guess.",
   },
   {
     icon: RefreshCcw,
-    title: "Timely Refills",
-    text: "As treatment continues, refill coordination keeps your progress moving forward.",
+    title: "Timely refills",
+    text: "As treatment continues, refill coordination keeps your progress moving forward instead of leaving you to track pharmacy timing yourself. Your provider can also reassess your plan over time — adjusting dosage or addressing side effects — based on how you're responding, so care stays personalized rather than a one-time prescription with nothing after.",
   },
 ];
 
@@ -112,6 +146,9 @@ function HowItWorksPage() {
         />
         <FloatingHexagons className="z-0" />
         <div className="relative z-10">
+          <div className="mb-6 flex justify-center">
+            <TreatmentBreadcrumb current="How It Works" />
+          </div>
           <SectionHeading
             as="h1"
             eyebrow="How it works"
@@ -136,7 +173,21 @@ function HowItWorksPage() {
         </motion.div>
 
         <div ref={stepsRef} className="relative z-10">
-          <ol className="grid w-full gap-5 md:grid-cols-3">
+          <motion.p
+            className="mx-auto max-w-2xl text-center text-base leading-relaxed text-muted-foreground"
+            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: reduceMotion ? 0 : 0.5, ease: EASE_OUT }}
+          >
+            Getting started with Beema Health follows {STEPS_TOTAL} steps, from
+            your first eligibility check to ongoing care after treatment begins.
+            Here&rsquo;s exactly what happens at each stage, in the order it
+            happens — no platform membership fee, no hidden steps, and no
+            guaranteed prescription along the way.
+          </motion.p>
+
+          <ol className="mt-10 grid w-full gap-5 md:grid-cols-2 lg:grid-cols-4">
             {STEPS.map((s, i) => (
               <li key={s.title} className="h-full">
                 <motion.div
@@ -159,15 +210,15 @@ function HowItWorksPage() {
                 >
                   <SurfaceCard className="flex h-full flex-col p-6 transition-shadow hover:shadow-lift">
                     <p className="text-sm font-semibold text-muted-foreground">
-                      Step {i + 1}
+                      Step {i + 1} of {STEPS_TOTAL}
                     </p>
                     <div className="mt-3 flex items-center gap-3">
                       <HexBadge>
                         <s.icon className="size-5" />
                       </HexBadge>
-                      <h3 className="text-lg font-semibold text-foreground">
+                      <h2 className="text-lg font-semibold text-foreground">
                         {s.title}
-                      </h3>
+                      </h2>
                     </div>
                     <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                       {s.text}
@@ -178,7 +229,48 @@ function HowItWorksPage() {
             ))}
           </ol>
 
-          <div className="relative mt-10 overflow-hidden rounded-4xl bg-grad-ink px-6 py-10 text-ink-foreground md:px-12">
+          <motion.div
+            className="mt-8"
+            initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: reduceMotion ? 0 : 0.5, ease: EASE_OUT }}
+          >
+            <SurfaceCard className="mx-auto max-w-3xl p-6 md:p-8">
+              <p className="text-base font-semibold text-foreground">
+                How long does this take?
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                It depends. The eligibility check itself takes about 5 minutes,
+                but some patients also finish the medical intake in one sitting
+                while others take longer to gather medication and health history
+                details first. Provider review and pharmacy fulfillment happen
+                after that, and both depend on factors outside our control —
+                provider volume, your state&rsquo;s requirements, and how
+                quickly a pharmacy can prepare your medication. We intentionally
+                don&rsquo;t promise a specific number of days for the whole
+                process, because doing so before a licensed provider has
+                evaluated your case would get ahead of a medical decision that
+                has to stay independent.
+              </p>
+            </SurfaceCard>
+          </motion.div>
+
+          <motion.div
+            className="mt-10"
+            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: reduceMotion ? 0 : 0.55, ease: EASE_OUT }}
+          >
+            <SectionHeading
+              eyebrow={`Step ${STEPS_TOTAL} of ${STEPS_TOTAL}`}
+              title="Ongoing follow-up care"
+              description="Treatment doesn't stop once your first prescription ships. Your care team and dashboard keep working with you as your treatment continues — tracking status, coordinating refills, and staying available if your provider needs to check in or adjust your plan."
+            />
+          </motion.div>
+
+          <div className="relative mt-6 overflow-hidden rounded-4xl bg-grad-ink px-6 py-10 text-ink-foreground md:px-12">
             <div
               aria-hidden
               className="bg-mesh-glow-dark mesh-drift-reverse pointer-events-none absolute inset-0 z-0"
@@ -224,8 +316,10 @@ function HowItWorksPage() {
               </Button>
             </MagneticButton>
             <p className="mx-auto mt-4 max-w-md text-xs leading-relaxed text-muted-foreground">
-              A licensed provider makes every clinical decision independently.
-              Completing intake does not guarantee a prescription.
+              A licensed provider makes every clinical decision independently,
+              based on your intake and applicable state law. Completing intake
+              does not guarantee a prescription, and Beema does not influence or
+              override any provider&rsquo;s clinical judgment.
             </p>
           </div>
         </div>

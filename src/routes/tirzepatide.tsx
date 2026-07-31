@@ -9,7 +9,12 @@ import {
   ShieldCheck,
   Stethoscope,
 } from "lucide-react";
-import { canonicalUrl, breadcrumbJsonLd, faqPageJsonLd } from "@/lib/seo";
+import {
+  canonicalUrl,
+  breadcrumbJsonLd,
+  faqPageJsonLd,
+  serviceJsonLd,
+} from "@/lib/seo";
 import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import {
@@ -38,6 +43,10 @@ import {
 } from "@/lib/medication-pricing";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
+import {
+  CLINICAL_PROVIDER_GROUP,
+  SEAN_ARORA_PROVIDER,
+} from "@/lib/provider-info";
 
 const VIAL_IMAGERY = resolveVialImagery("tirzepatide");
 
@@ -47,35 +56,35 @@ const DESCRIPTION = `Compounded tirzepatide for medical weight loss, reviewed by
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
     q: "What is compounded tirzepatide?",
-    a: "Compounded tirzepatide is tirzepatide prepared by a licensed compounding pharmacy rather than sold under a brand name. It's considered in medical weight-management care only when legally available and clinically appropriate, and it is not the same product as an FDA-approved branded medication.",
+    a: "Tirzepatide is a GLP-1/GIP medication used in medical weight-management care. It's available both as an FDA-approved branded medication and, separately, as a compounded version prepared by a licensed compounding pharmacy rather than sold under a brand name. Compounded tirzepatide is not the same product as the branded version: it is not FDA-approved, and it's considered as part of care only when it is legally available and clinically appropriate for the specific patient. A licensed provider decides, on a case-by-case basis, whether compounded tirzepatide may be an appropriate option, based on your BMI, health history, current medications, and applicable state law. Completing an eligibility check and medical intake does not guarantee that compounded tirzepatide, or any treatment, will ultimately be prescribed for you.",
   },
   {
     q: "Is tirzepatide right for me?",
-    a: "That depends on your BMI, health history, current medications, and a licensed provider's independent clinical judgment. Completing an eligibility check and intake doesn't guarantee that tirzepatide, or any treatment, will be prescribed.",
+    a: "Whether tirzepatide is right for you depends on your BMI, health history, current medications, and a licensed provider's independent clinical judgment, not a fixed checklist. Beema Health's tirzepatide care is intended for adults 18 and older, and eligibility also depends on applicable state law where you live. During the process, you complete a brief eligibility check, create an account, and submit a medical intake describing your health history, current medications, and goals. A licensed provider reviews that information and decides, on a case-by-case basis, whether tirzepatide specifically, or another approach, may be appropriate for your situation. Completing an eligibility check and intake does not guarantee that tirzepatide, or any treatment, will be prescribed. If you're unsure, our BMI calculator and weight-loss program overview can help you think through whether it's worth starting a conversation with a provider.",
   },
   {
     q: "How does online tirzepatide care through Beema work?",
-    a: "You complete a brief eligibility check, create an account and submit a medical intake, and a licensed provider reviews your information to decide whether treatment may be appropriate for you.",
+    a: "Care starts with a brief eligibility check covering your health, location, and goals, which takes about 5 minutes. If you appear to be a potential fit, you create an account and complete a secure medical intake questionnaire at your own pace, covering your health history, current medications, and weight-loss goals in more depth. A licensed provider then reviews your intake and independently decides whether tirzepatide, or another treatment, may be appropriate for you; prescribing is never guaranteed. If a provider does prescribe treatment, care includes the doctor consultation and visit, the prescription medication itself, ongoing doctor follow-up, and supplies like syringes and alcohol pads, along with expedited shipping to your door. Beema Health connects patients nationwide with independently licensed providers, though medication availability and eligibility still depend on your state's requirements.",
   },
   {
     q: "How much does tirzepatide cost through Beema?",
-    a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide through Beema", COMPOUNDED_TIRZEPATIDE_PRICING)} It's medication-only cash pricing with no platform membership fee. Final cost can depend on your provider's dosage recommendation.`,
+    a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide through Beema", COMPOUNDED_TIRZEPATIDE_PRICING)} This is medication-only cash pricing with no separate platform membership fee, and your final cost can vary based on the dosage your provider recommends. Doctor visits, prescription medication, ongoing doctor follow-up care, and supplies like syringes and alcohol pads are included, along with expedited shipping, and any additional costs like labs would be shown separately before you're charged. Because compounded tirzepatide is a prescription medication, a licensed provider must review your medical intake and independently decide it's appropriate before treatment begins; completing intake never guarantees a prescription.`,
   },
   {
     q: "Does Beema serve patients nationwide?",
-    a: "Yes, Beema Health is available to patients in all 50 U.S. states, connecting patients with independently licensed providers. Medication availability and eligibility still depend on your state's requirements and your provider's clinical decision.",
+    a: "Yes. Beema Health is available to patients in all 50 U.S. states, connecting you with independently licensed providers as part of a nationwide telehealth model. That said, medication availability and eligibility still depend on your state's specific requirements, since compounding regulations and prescribing rules vary by location. They also depend on your assigned provider's independent clinical decision after reviewing your medical intake, health history, current medications, and BMI. The clinician who reviews your case may vary based on state licensure and availability, but every provider in Beema's network is independently licensed and makes treatment decisions using their own clinical judgment. Completing an eligibility check and intake from anywhere in the country does not guarantee that tirzepatide, or any other treatment, will ultimately be prescribed for you.",
   },
   {
     q: "Is compounded tirzepatide FDA-approved?",
-    a: "No. Compounded tirzepatide is not FDA-approved. It's considered only when legally available and clinically appropriate, and it is not identical to an FDA-approved branded medication.",
+    a: "No. Compounded tirzepatide is not an FDA-approved medication the way branded tirzepatide is; it's prepared individually by a licensed compounding pharmacy rather than manufactured and approved as a standardized branded drug. Because of that, it is not the same product as an FDA-approved branded medication, and it's considered as part of care only when it is legally available and clinically appropriate for a given patient. A licensed provider weighs your BMI, health history, current medications, and applicable state law before deciding, on a case-by-case basis, whether compounded tirzepatide may be an appropriate option, or whether another approach makes more sense. If you would rather stick with an FDA-approved branded medication, discuss that preference with your provider during your intake review so they can factor it into their independent clinical decision.",
   },
   {
     q: "How quickly can treatment begin?",
-    a: "Timing depends on how quickly you complete intake, your provider's review, and pharmacy fulfillment. We can't promise a specific start date, and prescribing is never guaranteed.",
+    a: "How quickly you can start depends on a few factors: how fast you complete the roughly 5-minute eligibility check and the more detailed medical intake questionnaire, how quickly a licensed provider reviews your information and makes an independent clinical decision, and how quickly the pharmacy can fulfill and ship your prescription if one is issued. Because intake is self-paced and provider review takes real clinical judgment rather than an automatic approval, we cannot promise a specific start date for any individual patient. Shipping is expedited once a prescription is issued, but pharmacy timelines can still vary. It's also worth remembering that prescribing is never guaranteed: a licensed provider may determine that tirzepatide, or any treatment, is not appropriate for you based on your health history, current medications, or applicable state law, regardless of how quickly you move through intake.",
   },
   {
     q: "Can I switch to Beema if I'm already on tirzepatide elsewhere?",
-    a: "Yes. Tell us about your current provider and dose during intake, and your Beema provider will factor that history into their review, with the goal of keeping you on a comparable dose rather than restarting from scratch. Give accurate details in your intake, since your intake answers directly shape the dose your provider considers appropriate.",
+    a: "Yes. If you're already taking tirzepatide with another provider, tell us about your current provider, dose, and how long you've been on treatment during your medical intake. Your Beema provider will factor that history into their independent clinical review, generally with the goal of keeping you on a comparable dose rather than having you restart from scratch, though the final decision is always theirs based on your full health history and current medications. It's important to give accurate, complete details in your intake, since your answers directly shape the dose and treatment plan your provider considers appropriate for you. As with any new patient, completing an eligibility check and intake doesn't guarantee that tirzepatide, or any specific dose, will be prescribed; a licensed provider makes that call after reviewing your case.",
   },
 ];
 
@@ -139,6 +148,21 @@ export const Route = createFileRoute("/tirzepatide")({
       {
         type: "application/ld+json",
         children: JSON.stringify(faqPageJsonLd(FAQ_ITEMS)),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          serviceJsonLd({
+            name: "Compounded Tirzepatide Weight-Loss Telehealth Care",
+            description: DESCRIPTION,
+            path: "/tirzepatide",
+            serviceType: "Medical weight-loss telehealth service",
+            offer: {
+              introPrice: 197,
+              recurringPrice: 297,
+            },
+          }),
+        ),
       },
     ],
   }),
@@ -266,6 +290,13 @@ function TirzepatidePage() {
             available and clinically appropriate. A licensed provider decides,
             on a case-by-case basis, whether it may be an appropriate option as
             part of your care.
+          </p>
+          <p>
+            Not sure tirzepatide is the right fit? Learn about our{" "}
+            <Link to="/weight-loss/" className="text-primary underline">
+              weight-loss program
+            </Link>{" "}
+            to see the full range of options.
           </p>
         </div>
       </Section>
@@ -465,6 +496,16 @@ function TirzepatidePage() {
           }
           className="mx-0 max-w-2xl"
         />
+        <p className="mt-3 flex max-w-2xl items-start gap-2 text-xs leading-relaxed text-muted-foreground">
+          <Stethoscope className="mt-0.5 size-3.5 shrink-0 text-accent-foreground" />
+          <span>
+            Clinical oversight: {SEAN_ARORA_PROVIDER.displayName},{" "}
+            {SEAN_ARORA_PROVIDER.credentials}, {SEAN_ARORA_PROVIDER.role} of{" "}
+            {CLINICAL_PROVIDER_GROUP}, oversees Beema Health's clinical provider
+            network. Every licensed provider makes treatment decisions
+            independently.
+          </span>
+        </p>
         <div className="mt-8">
           <TreatmentFaqSection items={FAQ_ITEMS} />
         </div>

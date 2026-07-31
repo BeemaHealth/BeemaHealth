@@ -15,15 +15,13 @@ import { TRUST_SIGNALS } from "@/lib/trust-signals";
 
 /**
  * Trailing-slash paths — match sitemap.xml / canonicalUrl / GitHub Pages 200
- * URLs. No direct "Weight Loss" link — /weight-loss/ is kept live and
- * indexable (see public/sitemap.xml) but intentionally has no internal
- * links pointing at it while the per-medication pages below are the
- * primary entry points.
+ * URLs. See docs/features/treatment-pages.md for the Care column's link set.
  */
 const COLUMNS = [
   {
     title: "Care",
     links: [
+      { label: "Weight Loss Program", to: "/weight-loss/" },
       { label: "Compounded Tirzepatide", to: "/tirzepatide/" },
       { label: "Compounded Semaglutide", to: "/semaglutide/" },
       { label: "How it works", to: "/how-it-works/" },

@@ -467,11 +467,23 @@ function DoseScene({ progress }: { progress: MotionValue<number> }) {
             className="fill-accent"
             style={{ y: c.vialLiquidY, height: c.vialLiquidHeight }}
           />
+          {/*
+              `rx` is a recognized SVG-animatable value, so Motion routes it
+              through its own MotionValue system rather than forwarding the
+              literal JSX attribute once an `animate` prop targets the same
+              key — on first paint (SSR and the pre-hydration client render)
+              that MotionValue hasn't initialized yet, so the DOM briefly got
+              `rx="undefined"`, which the browser logs as a console error
+              (`<ellipse> attribute rx: Expected length, "undefined"`).
+              Declaring the starting value via `initial` (instead of a bare
+              `rx={40}` prop) guarantees a real numeric value is rendered on
+              every pass, before any animation runs.
+            */}
           <motion.ellipse
             cx={250}
-            rx={40}
             ry={5}
             className="fill-accent-foreground"
+            initial={{ rx: 40 }}
             style={{ y: c.vialLiquidY, opacity: c.vialLiquidWobbleOpacity }}
             animate={{ rx: [40, 36, 40], opacity: [0.35, 0.55, 0.35] }}
             transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}

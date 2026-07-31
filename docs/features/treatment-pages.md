@@ -1,6 +1,6 @@
 # Treatment pages
 
-Each medication Beema offers gets its own indexable, SEO-focused landing page (`/tirzepatide`, `/semaglutide`, more to come as branded medications are added) rather than one shared "weight loss" page — this targets each drug's own search terms without diluting them, and gives each page its own FAQPage/BreadcrumbList JSON-LD.
+Each medication Beema offers gets its own indexable, SEO-focused landing page (`/tirzepatide`, `/semaglutide`, more to come as branded medications are added) — this targets each drug's own brand-aware search terms without diluting them, and gives each page its own FAQPage/BreadcrumbList JSON-LD. `/weight-loss` sits alongside them as a broader, non-brand overview page targeting head-term searches ("medical weight loss," "GLP-1 weight loss program") that the drug-specific pages can't rank for — see below.
 
 ## Routes
 
@@ -8,27 +8,27 @@ Each medication Beema offers gets its own indexable, SEO-focused landing page (`
 |-------|------|-------|
 | `/tirzepatide` | `src/routes/tirzepatide.tsx` | Compounded tirzepatide landing page |
 | `/semaglutide` | `src/routes/semaglutide.tsx` | Compounded semaglutide landing page |
-| `/weight-loss` | `src/routes/weight-loss.tsx` | **Orphaned on purpose** — see below |
+| `/weight-loss` | `src/routes/weight-loss.tsx` | Program overview page — linked from nav/footer, see below |
 
 Shared building blocks (pricing card, comparison table, FAQ accordion, breadcrumb) live in `src/components/site/TreatmentPageBlocks.tsx`. Copy/data (steps, FAQ items, eligibility bullets) stays local to each route file — do not extract it into a shared data file, the two pages are meant to have genuinely distinct copy.
 
 `faqPageJsonLd()` and `breadcrumbJsonLd()` (in `src/lib/seo.ts`) generate JSON-LD from the same arrays that render the visible FAQ/breadcrumb — keep them in sync if you edit either.
 
-## `/weight-loss` is intentionally an orphan page
+## `/weight-loss` is a linked overview page
 
-As of the tirzepatide/semaglutide launch, **no internal link anywhere on the site points at `/weight-loss`** — not the nav, not the footer, not any card. It's kept:
+Previously `/weight-loss` was kept as a deliberate orphan (no internal links anywhere on the site) while still being sitemapped at priority 0.9, on the reasoning that it would be retired once the tirzepatide/semaglutide pages fully replaced it. That left it as a genuine orphan page at a high sitemap priority — a real inconsistency for an SEO-focused site, since Google's crawl/ranking signals come from internal link equity, not sitemap presence alone.
 
-- Live and rendering accurate, up-to-date info (still uses the shared pricing constants)
-- In `public/sitemap.xml`, `public/robots.txt` (unblocked), and `public/llms.txt`
-- Reachable by direct URL
+As of the 2026-07-30 SEO pass, that decision was reversed: `/weight-loss` is real, unique, non-duplicate content (its own hero, benefits, "who this is for" section, and CTA — not a stub) that targets broader, higher-volume, non-brand search intent than the drug pages can. It is now:
 
-This is deliberate: Google can still crawl and index it via the sitemap, but visitors never land there through site navigation. The nav's "Weight Loss" entry is a dropdown *label*, not a link — see below.
+- Linked from primary nav (`WEIGHT_LOSS_ITEMS` in `SiteHeader.tsx`, first item) and the footer `COLUMNS[0].links` in `SiteFooter.tsx`
+- Linked contextually from `/semaglutide` and `/tirzepatide` ("Learn about our weight-loss program")
+- Down-ranked in `public/sitemap.xml` to priority `0.7` (below the two drug pages at `0.9`, which remain the primary conversion targets, and `/how-it-works` at `0.8`)
 
-**Do not add a link to `/weight-loss` anywhere** without checking with the team first — it's expected to be fully retired once more medication pages exist, at which point the dropdown items replace it entirely. If a future change needs to route people through a multi-medication overview page again, that's a deliberate reversal, not an oversight to "fix."
+If a future change needs to re-orphan or retire this page, that's a deliberate call to make with the team, not a default to restore — update this doc and the `WEIGHT_LOSS_ITEMS`/`COLUMNS` comments together with the code.
 
 ## Nav: "Weight Loss" dropdown
 
-`SiteHeader.tsx` renders "Weight Loss" as a dropdown listing `WEIGHT_LOSS_ITEMS` — currently Compounded Tirzepatide and Compounded Semaglutide — via two separate components since hover and tap don't behave the same way:
+`SiteHeader.tsx` renders "Weight Loss" as a dropdown listing `WEIGHT_LOSS_ITEMS` — currently the `/weight-loss` overview plus Compounded Tirzepatide and Compounded Semaglutide — via two separate components since hover and tap don't behave the same way:
 
 - **Desktop** — `WeightLossNavDropdown`, a hand-rolled hover dropdown (deliberately not Radix `DropdownMenu`; see the comment above it for why Radix's Popper positioning caused an open/close flicker).
 - **Mobile** — `MobileWeightLossDropdown`, a tap-to-expand disclosure inside the mobile menu (see `docs/features/homepage.md` for the `CircleRevealMenu` shell it lives in). Local `expanded` state collapses it back down every time the mobile menu reopens; the reveal/collapse is animated (Motion `AnimatePresence` + height/opacity), matching the site's other transitions.
@@ -37,7 +37,17 @@ Add new medication pages to `WEIGHT_LOSS_ITEMS` (and to `SiteFooter.tsx`'s `COLU
 
 ## Medication cards
 
-`TreatmentShowcase.tsx` (homepage) and `TreatmentLineup.tsx` (`/weight-loss` page) each render one card per medication. Both cards are full-card `<Link>`s (not nested interactive elements) pointing at that medication's own page (`/tirzepatide/`, `/semaglutide/`) — never at `/weight-loss/`. CTA copy is `Explore {treatment.name}` (e.g. "Explore Compounded Tirzepatide"). These two files still duplicate their own local `TREATMENTS` array (pre-existing pattern) — add a new medication to both when it gets its own page.
+`TreatmentShowcase.tsx` (homepage) and `TreatmentLineup.tsx` (`/weight-loss` page) each render one card per medication. Both cards are full-card `<Link>`s (not nested interactive elements) pointing at that medication's own page (`/tirzepatide/`, `/semaglutide/`) — never at `/weight-loss/` itself (that would be a self-link on the `/weight-loss` page and redundant elsewhere). CTA copy is `Explore {treatment.name}` (e.g. "Explore Compounded Tirzepatide"). These two files still duplicate their own local `TREATMENTS` array (pre-existing pattern) — add a new medication to both when it gets its own page.
+
+## Structured data
+
+All three treatment-adjacent pages now carry page-specific JSON-LD alongside the sitewide `MedicalOrganization`/`WebSite` schema (`ORGANIZATION_JSONLD`/`WEBSITE_JSONLD` in `src/lib/seo.ts`, rendered in the root layout):
+
+- `/tirzepatide`, `/semaglutide` — `BreadcrumbList` + `FAQPage` (unchanged; matches the visible `TreatmentBreadcrumb` and FAQ accordion on each page)
+- `/weight-loss` — `BreadcrumbList` + `serviceJsonLd()` (a `Service` describing the program itself; no visible FAQ content, so no `FAQPage`)
+- `/how-it-works`, `/safety` — `BreadcrumbList` + `medicalWebPageJsonLd()` (a `MedicalWebPage` describing the informational content; no visible FAQ content, so no `FAQPage`)
+
+`breadcrumbJsonLd()`, `faqPageJsonLd()`, `serviceJsonLd()`, and `medicalWebPageJsonLd()` all live in `src/lib/seo.ts`. Never add `FAQPage` JSON-LD without a matching visible FAQ accordion on the page — Google's structured-data guidelines require the two to match, and `faqPageJsonLd()`'s docstring says the same.
 
 ## Pricing model: flat monthly rate, with a 3-month-only promo code
 
@@ -76,8 +86,8 @@ const cta = resolveCta(CTA_IDS.tirzepatide_hero);
 | `src/components/site/TreatmentPageBlocks.tsx` | Shared breadcrumb, pricing card, comparison table, FAQ accordion |
 | `src/lib/medication-pricing.ts` | Single source of truth for pricing — never hardcode `$` amounts elsewhere |
 | `src/lib/cta-ids.ts` | `CTA_IDS`, `resolveCta()` — the CTA switchboard |
-| `src/lib/seo.ts` | `faqPageJsonLd()`, `breadcrumbJsonLd()`, `canonicalUrl()` |
-| `src/components/site/SiteHeader.tsx`, `SiteFooter.tsx` | Weight Loss dropdown (`WeightLossNavDropdown` desktop, `MobileWeightLossDropdown` mobile) / Care links |
+| `src/lib/seo.ts` | `faqPageJsonLd()`, `breadcrumbJsonLd()`, `serviceJsonLd()`, `medicalWebPageJsonLd()`, `canonicalUrl()` |
+| `src/components/site/SiteHeader.tsx`, `SiteFooter.tsx` | Weight Loss dropdown (`WeightLossNavDropdown` desktop, `MobileWeightLossDropdown` mobile, includes `/weight-loss/`) / Care links |
 | `src/lib/marketing-copy.ts` | `FIRST_MONTH_PROMO_LINE` — the one-time, 3-month-only promo code promoted alongside pricing |
 | `src/components/home/TreatmentShowcase.tsx`, `src/components/site/TreatmentLineup.tsx` | Medication cards (home / `/weight-loss`) |
 | `public/sitemap.xml`, `public/llms.txt`, `src/lib/__tests__/sitemap.test.ts` | Keep in sync when adding a page |

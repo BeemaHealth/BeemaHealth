@@ -86,6 +86,45 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
+        // Security headers, best-effort: this site is static-hosted on
+        // GitHub Pages (custom domain, no custom server-header support), so
+        // there is no way to send real HTTP response headers. `<meta
+        // http-equiv>` is the only lever available here, and it cannot set
+        // everything a proper security header set would:
+        //   - HSTS (Strict-Transport-Security) CANNOT be set via <meta> at
+        //     all — the spec only allows it as a real HTTP response header.
+        //   - X-Frame-Options CANNOT be set via <meta> either (browsers
+        //     ignore it there); `frame-ancestors` in CSP is the meta-tag
+        //     equivalent, but GitHub Pages' static tier still can't set the
+        //     header-only fallback some older browsers rely on.
+        //   - Getting real HSTS / X-Frame-Options would require putting a
+        //     proxy (e.g. Cloudflare) in front of GitHub Pages to inject
+        //     response headers — out of scope for this change; do not treat
+        //     either as "fixed" by what's below.
+        // The CSP below is intentionally on the permissive side — it allows
+        // every external origin this app currently loads (Google Fonts,
+        // GTM/gtag.js, Meta Pixel, Formspree, Nominatim) plus 'unsafe-inline'
+        // for script/style because this is a static SPA with no server to
+        // mint per-request nonces, and both React's SSR'd inline `style`
+        // attributes and the app's inline bootstrap scripts (GTM snippet,
+        // gtag stub) rely on it. Tighten this (nonces/hashes, narrower
+        // img-src, drop 'unsafe-inline') and test every page + the ad
+        // pixels/GTM/Formspree flows manually before trusting it fully.
+        {
+          httpEquiv: "Content-Security-Policy",
+          content:
+            "default-src 'self'; " +
+            "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net; " +
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+            "font-src 'self' https://fonts.gstatic.com data:; " +
+            "img-src 'self' data: https:; " +
+            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com; " +
+            "frame-src https://www.googletagmanager.com; " +
+            "form-action 'self' https://formspree.io; " +
+            "base-uri 'self'; " +
+            "object-src 'none'",
+        },
+        { name: "referrer", content: "strict-origin-when-cross-origin" },
         { title: "Beema Health | Medical weight-loss care" },
         {
           name: "description",

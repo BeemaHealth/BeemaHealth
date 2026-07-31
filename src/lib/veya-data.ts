@@ -135,23 +135,23 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "How much does Beema Health cost?",
-        a: dualCompoundedFaqPricingParagraph(),
+        a: `${dualCompoundedFaqPricingParagraph()} We also send a reminder before every recurring charge and email a receipt for every payment, so you always know exactly what you're being billed and when.`,
       },
       {
         q: "What is the price for compounded semaglutide?",
-        a: `${compoundedMonthlyPricingSentence("Compounded semaglutide", COMPOUNDED_SEMAGLUTIDE_PRICING)} That's if prescribed and you continue treatment; final cost can depend on dosage and clinical decisions.`,
+        a: `${compoundedMonthlyPricingSentence("Compounded semaglutide", COMPOUNDED_SEMAGLUTIDE_PRICING)} That price applies only if a clinician determines compounded semaglutide is appropriate for you and you choose to continue treatment; your actual monthly cost can vary depending on your prescribed dose and any clinical adjustments your provider makes over time. This is medication-only, cash-pay pricing — Beema Health does not charge a separate monthly platform or membership fee on top of it. Shipping and any recommended labs are billed separately and shown to you clearly before you're charged, never bundled invisibly into the medication price. Because completing intake does not guarantee a prescription, this price reflects what you'd pay for compounded semaglutide specifically, if your clinician prescribes it after reviewing your medical history.`,
       },
       {
         q: "What is the price for compounded tirzepatide?",
-        a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide", COMPOUNDED_TIRZEPATIDE_PRICING)} That's if prescribed and you continue treatment; final cost can depend on dosage and clinical decisions.`,
+        a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide", COMPOUNDED_TIRZEPATIDE_PRICING)} That price applies only if a clinician determines compounded tirzepatide is appropriate for you and you choose to continue treatment; your actual monthly cost can vary depending on your prescribed dose and any clinical adjustments your provider makes over time. This is medication-only, cash-pay pricing — Beema Health does not charge a separate monthly platform or membership fee on top of it. Shipping and any recommended labs are billed separately and shown to you clearly before you're charged, never bundled invisibly into the medication price. Because completing intake does not guarantee a prescription, this price reflects what you'd pay for compounded tirzepatide specifically, if your clinician prescribes it after reviewing your medical history.`,
       },
       {
         q: "Is there a monthly membership fee?",
-        a: "No. Beema Health uses medication-only pricing. Your cost is the medication your clinician prescribes, if appropriate. We do not charge a separate monthly platform or care-coordination membership on top of that.",
+        a: `No. Beema Health uses medication-only pricing rather than a subscription or care-coordination membership model. Your cost is simply the medication your clinician prescribes, if treatment is appropriate for you — for example, compounded semaglutide is $${COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd}/month and compounded tirzepatide is $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/month, each billed monthly with no long-term contract. We do not layer a separate platform fee, membership fee, or coordination fee on top of that medication price. Shipping and any labs you need are billed separately and disclosed clearly before you're ever charged, so there are no bundled or hidden recurring charges. Because there's no membership locking you in, you can stop requesting refills at any time without needing to cancel a subscription — you only pay when medication is prescribed and you choose to fill it. A one-time promo code can also reduce your first month's cost when you purchase a three-month plan, though it never applies to a one-month purchase.`,
       },
       {
         q: "Are there hidden fees?",
-        a: "No. Medication, shipping, and labs are listed separately. We send a reminder before every charge and email a receipt for every payment.",
+        a: `No. Beema Health lists medication, shipping, and labs as separate, clearly disclosed line items rather than folding them into one opaque charge, so you always know exactly what you're paying for and why. There is no monthly membership or platform fee hidden behind the medication price, and any promotional discount — such as the one-time code available on a three-month plan — is applied transparently at checkout, never as a rate that changes on you later. Before every recurring charge, we send a reminder so nothing hits your card as a surprise, and we email a receipt for every payment so you have a running record of what you've been billed. If a shipment is delayed, a refill needs adjusting, or your dose changes, any resulting price difference is shown to you before it's charged, not discovered afterward. If you ever see a charge you don't recognize, our support team will explain it in plain language.`,
       },
     ],
   },
@@ -160,15 +160,15 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "Will I be guaranteed a prescription?",
-        a: "No. A licensed clinician independently reviews your intake and decides whether treatment is appropriate. Completing intake does not guarantee a prescription.",
+        a: "No. A licensed clinician independently reviews your medical intake and makes the final decision about whether treatment is appropriate for you — Beema Health itself never makes or influences that clinical judgment. Your clinician looks at your medical history, current health, and any conditions that could affect the safety of a given medication, including things like a personal or family history of certain thyroid cancers, pancreatitis, gallbladder issues, pregnancy or breastfeeding, or a history of eating disorders. Completing intake, paying for the visit, or having a BMI in a particular range does not guarantee you'll receive a prescription; it simply starts the clinical review process. If your clinician determines that a GLP-1 medication isn't safe or appropriate for you, they'll explain why and, where relevant, discuss alternatives or next steps rather than leaving you without guidance. This independent review is part of why intake questions matter — thorough, accurate answers help your clinician make a safe, well-informed decision more quickly.",
       },
       {
         q: "Which medications does Beema Health support?",
-        a: "Beema Health supports clinically appropriate weight-management options. Your clinician will discuss what's right for you. We don't claim any product is equivalent to a specific branded medication.",
+        a: "Beema Health's clinical provider group offers clinically appropriate weight-management medications, most commonly compounded semaglutide and compounded tirzepatide, prescribed based on your individual medical history and your clinician's independent evaluation. These are compounded formulations, and Beema Health does not claim that any compounded product is equivalent to, or interchangeable with, a specific FDA-approved branded medication — your clinician will explain the differences and help you understand what's being prescribed. Which medication, if any, is right for you depends on factors like your health history, current medications, prior treatment experience, and any contraindications identified during intake; your clinician will discuss the options with you directly rather than you simply picking a product off a menu. If you're switching from another provider, your clinician will also factor in your existing prescription and dose so your treatment can continue as consistently as possible. Pricing for compounded semaglutide and compounded tirzepatide is listed separately in the pricing answers above.",
       },
       {
         q: "Can I switch from another provider to Beema Health?",
-        a: "Yes. If you're currently being treated elsewhere, your medical intake will ask about your existing prescription and dose so a Beema provider can review your history and aim to keep your treatment consistent rather than starting over. Filling out that part of intake carefully matters, since it's what your provider uses to land on the right dose for you.",
+        a: "Yes. If you're currently being treated elsewhere, your medical intake will ask about your existing prescription, current dose, how long you've been on treatment, and any side effects you've experienced, so a Beema provider can review your history and aim to keep your treatment consistent rather than restarting you from the beginning. Filling out that part of intake carefully matters a great deal, since it's the information your clinician uses to land on the right medication and dose for you and to avoid unsafe gaps or jumps in treatment. As with any new patient, a licensed clinician independently reviews your case and makes the final call — switching providers doesn't guarantee your previous prescription or dose will simply carry over unchanged, but continuity of care is the goal whenever it's clinically appropriate. If you have current labs from your previous provider, you can upload them so your new clinician has as complete a picture as possible before making treatment decisions.",
       },
     ],
   },
@@ -177,11 +177,11 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "How is medication shipped?",
-        a: "Through cold-chain shipping with tracking, typically 1-3 business days nationwide.",
+        a: "Through cold-chain shipping with tracking, typically 1-3 business days nationwide. Cold-chain handling matters for GLP-1 medications like compounded semaglutide and compounded tirzepatide because they need to stay within a safe temperature range from the pharmacy to your door; our partner pharmacy packages each shipment accordingly and provides a tracking number so you can follow it the whole way. Because Beema Health's clinical provider group and pharmacy partners are licensed and authorized nationwide, this shipping timeline generally applies wherever in the U.S. you're located. Once you're an active patient, you'll be able to see your shipment status, along with days of medication remaining and your refill window, in one place, so you're never guessing where an order stands. If a delivery seems delayed beyond the expected window, or the packaging looks compromised on arrival, don't use the medication — report it to our support team right away so we can escalate it with the pharmacy.",
       },
       {
         q: "What if my shipment is delayed or lost?",
-        a: `Please report it to ${SUPPORT_EMAIL} immediately. Refill reliability is our core promise: we urgently escalate all cold-chain and lost-shipment issues.`,
+        a: `Please report it to ${SUPPORT_EMAIL} immediately, including your name and, if you have it, your tracking number, so our team can look into it right away. Refill reliability is our core promise: we treat every cold-chain and lost-shipment issue as urgent, since GLP-1 medications like compounded semaglutide and compounded tirzepatide can be affected by extended time outside a safe temperature range. If your package appears to have been exposed to extreme heat or cold, was left out for an unusually long time, or simply doesn't arrive within the expected 1-3 business day window, don't use it — we'll work with our pharmacy partner to investigate and arrange a replacement or reshipment where appropriate rather than leaving you without medication. Your Refills screen also tracks days of medication remaining and flags refill risk in advance, so a delayed shipment is less likely to catch you completely out. We aim to acknowledge any report like this within one business day, consistent with our general refill response promise.`,
       },
       {
         q: "Who is Beema Health's partner pharmacy?",
@@ -194,11 +194,11 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "How do refills work?",
-        a: "Your Refills screen shows days remaining, refill window, pharmacy status, and a refill-risk level (green / yellow / red). You can quickly and easily request a refill and track your order and shipment status every step along the way.",
+        a: "Your Refills screen shows days of medication remaining, your refill window, current pharmacy status, and a simple refill-risk level (green, yellow, or red), so you always know where you stand at a glance without having to guess. When it's time, you can request a refill in just a few steps, and from there you can track your order and shipment status every step along the way, from pharmacy processing through cold-chain shipping to delivery. Refills go through the same kind of clinical review as your original prescription — a licensed clinician confirms it's still appropriate to continue your current medication and dose before it ships, rather than refilling automatically without any oversight. If your refill risk moves into yellow or red, we proactively flag it so you have time to act before you run low, and if anything about your shipment looks delayed or off, you can report it right from the same screen.",
       },
       {
         q: "What's your refill response promise?",
-        a: "We aim to acknowledge refill requests within one business day and proactively flag refill risk before you run out.",
+        a: "We aim to acknowledge refill requests within one business day, so you're never left wondering whether your request went through or is being worked on. Beyond just responding quickly, we proactively flag refill risk before you run out — your Refills screen surfaces a green, yellow, or red risk level based on your days of medication remaining and refill window, so you can request your next refill with enough lead time rather than discovering you're almost out at the last minute. If a refill needs additional clinical review, or there's a delay on the pharmacy or shipping side, we'll communicate that to you rather than leaving the request silent. Refill reliability is one of our core promises, alongside cold-chain shipping and tracking, because running out of a GLP-1 medication partway through treatment can affect both your results and how your body tolerates restarting. If your refill ever seems to be taking longer than expected, you can reach out and we'll look into the status for you.",
       },
     ],
   },
@@ -207,11 +207,11 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "Can I stop treatment anytime?",
-        a: "Yes. You can stop requesting refills at any time. Because there is no platform membership fee, you are not locked into a separate monthly subscription; you only pay when medication is prescribed and you choose to fill it.",
+        a: "Yes. You can stop requesting refills at any time, for any reason, without needing to go through a formal cancellation process for a subscription you were never locked into in the first place. Because Beema Health uses medication-only pricing rather than a monthly membership or platform fee, there's no separate recurring subscription to cancel — you only pay when a clinician has prescribed medication and you choose to fill that specific order. If you decide to stop, simply don't request your next refill; there's no penalty, no cancellation fee, and no obligation to explain your reasoning. If you change your mind later, you can typically resume care by going through intake again so a clinician can confirm treatment is still appropriate given any changes in your health since your last prescription. This flexibility is intentional: we'd rather you stay because the care is working, not because you feel stuck in a contract.",
       },
       {
         q: "Can I pause refills?",
-        a: "Yes. If you need a break, you can pause refills and resume when you're ready. We'll show you any upcoming medication charges clearly before they occur.",
+        a: "Yes. If you need a break, whether for cost, side effects, travel, or any other reason, you can pause refills and pick back up when you're ready, without losing your account or having to restart the entire intake process from scratch in most cases. Pausing is different from a hard cancellation: it simply means you're not actively requesting your next refill right now, and your Refills screen will reflect that paused status rather than showing an active refill-risk countdown. We'll always show you any upcoming medication charges clearly before they occur, so pausing also protects you from being billed for a refill you didn't ask for. When you're ready to resume, your clinician will confirm that continuing your previous medication and dose is still clinically appropriate given any changes in your health, weight, or medications since your pause began, since ongoing prescribing decisions are always made independently based on your current situation rather than assumed to carry over automatically.",
       },
     ],
   },
@@ -220,7 +220,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "Who is eligible?",
-        a: "Eligibility depends on your medical history and a clinician's independent evaluation. Some conditions will disqualify you for some prescriptions. We explain eligibility in plain language during the intake process.",
+        a: "Eligibility depends on your medical history, current health, and a licensed clinician's independent evaluation — there's no single number or checkbox that automatically qualifies or disqualifies you. During intake, we'll calculate your BMI and ask about conditions that can affect the safety of a given medication, such as a personal or family history of medullary thyroid cancer or MEN2, pancreatitis, certain gallbladder issues, pregnancy or breastfeeding, or a history of eating disorders; any of these can make a particular prescription unsafe even if you'd otherwise be a good candidate. Some conditions will disqualify you from certain prescriptions specifically, rather than from care altogether, and your clinician will explain what that means for you rather than leaving you with just a rejection. We explain eligibility in plain language throughout the intake process so you understand why each question is being asked. Completing intake and appearing eligible on paper still doesn't guarantee a prescription — the final clinical decision is always made independently by your reviewing clinician.",
       },
       {
         q: "Which states is Beema Health available in?",
@@ -233,7 +233,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "Do I need labs?",
-        a: "Sometimes. If you have recent labs you can upload them; if not, we'll show lab options. Labs, when needed, are billed separately and disclosed up front.",
+        a: "Sometimes. Whether you need labs depends on your medical history, the medication being considered, and your clinician's independent judgment about what's necessary to prescribe safely — it isn't a blanket requirement for every patient. If you already have recent lab results from another provider, you can upload them during intake so your clinician can review your existing values instead of requiring a brand-new draw. If you don't have recent labs, or your clinician determines updated labs are needed, we'll show you lab options so you can complete them before treatment moves forward. Labs, when needed, are billed separately from your medication and are disclosed clearly up front, the same way shipping costs are, so nothing is added to your bill after the fact. Your clinician may also request labs later in treatment, not just at the start, if it becomes clinically relevant to monitor how you're responding to a medication or to check in on your overall health while you continue care.",
       },
     ],
   },
@@ -242,7 +242,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "How is my health data protected?",
-        a: "We are always within strict compliance with all HIPAA requirements. We use encryption in transit and at rest, role-based access, as well as audit logs for clinical and administrative actions. We never expose any of your health data in logs.",
+        a: "We maintain strict compliance with HIPAA requirements for handling your protected health information, both in how our systems are built and in how our team is allowed to access your data. Your health information is encrypted in transit and at rest, and access is role-based, meaning only the people who actually need to see your information for your care, such as your reviewing clinician, are able to. Clinical and administrative actions on your records are tracked with audit logs, so there's an accountable record of who accessed or changed what, and when. We never expose your health data in logs or error messages, and pre-account information collected before you create an account is never stored in your browser's local storage the way some other sites might handle form data — it stays protected on our servers instead. If you ever have questions about how your specific information is used, our support team can point you to our full privacy policy and notice of privacy practices.",
       },
     ],
   },

@@ -55,9 +55,22 @@ Before writing any code for a new feature, run `/start-feature` (branch setup) t
 | **Landing pages** | `docs/features/landing-pages.md` |
 | **Treatment pages (per-medication SEO pages, CTA switchboard)** | `docs/features/treatment-pages.md` |
 | **BMI calculator (treatment pages)** | `docs/features/bmi-calculator.md` |
+| **SEO / GEO audits & tooling** | `claude-seo` plugin — see "SEO tooling" below |
 | Backend (dormant — Django, patient funnel, medical intake, staff CRM, medications, dynamic questionnaire, LifeFile/Beluga vendor APIs) | `docs/BACKEND-DEFERRED.md` |
 
 Match existing patterns. Prefer minimal, focused diffs. If docs and code disagree, tell the user — do not silently fix either side.
+
+### SEO tooling
+
+The [`claude-seo`](https://github.com/AgriciDaniel/claude-seo) plugin is installed globally in Claude Code (not scoped to this repo — available across all your Claude Code projects). Use it for SEO/GEO work instead of ad hoc checks:
+
+- `/seo audit <url>` — full site audit (technical SEO, schema, E-E-A-T, Core Web Vitals, GEO/AI-search readiness)
+- `/seo page <url>` — single-page deep dive
+- `/seo schema <url>` — Schema.org / JSON-LD validation
+- `/seo sitemap` — validates `public/sitemap.xml`
+- `/seo geo <url>` — AI Overviews / ChatGPT / Perplexity citability
+
+Only point it at public marketing routes (`/`, `/how-it-works`, `/safety`, treatment pages) — never at authenticated portal routes (`/qualify`, `/intake`, `/consent`, `/dashboard`). Treat its output as PR input, not something to auto-apply.
 
 ### Feature docs
 

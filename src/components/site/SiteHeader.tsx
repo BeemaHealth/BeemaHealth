@@ -16,10 +16,8 @@ type NavItem = { label: string; to: string };
 
 /**
  * Trailing-slash paths — match sitemap.xml / canonicalUrl / GitHub Pages 200
- * URLs. No direct "Weight Loss" link — it's a dropdown label (below) over
- * the per-medication pages, not a page of its own in the clickable nav.
- * /weight-loss/ itself stays live and indexable but unlinked; see
- * public/sitemap.xml.
+ * URLs. "Weight Loss" is a dropdown label (below) over the program overview
+ * plus the per-medication pages, see docs/features/treatment-pages.md.
  */
 const NAV: NavItem[] = [
   { label: "How it works", to: "/how-it-works/" },
@@ -31,6 +29,7 @@ const NAV: NavItem[] = [
 
 /** "Weight Loss" nav dropdown items. Add branded-medication pages here later. */
 const WEIGHT_LOSS_ITEMS: NavItem[] = [
+  { label: "Weight Loss Program", to: "/weight-loss/" },
   { label: "Compounded Tirzepatide", to: "/tirzepatide/" },
   { label: "Compounded Semaglutide", to: "/semaglutide/" },
 ];
@@ -331,10 +330,10 @@ export function SiteHeader() {
               ))}
               <a
                 href={HIVE_LOGIN_URL}
-                className="flex items-center gap-2 rounded-xl px-1 py-2.5 text-xl font-semibold text-ink-foreground transition-colors hover:text-primary"
+                className="mt-2 flex items-center justify-center gap-2 rounded-full border-2 border-primary px-4 py-3 text-lg font-semibold text-ink-foreground transition-colors hover:bg-primary/10"
               >
                 Log In
-                <Hexagon className="size-5" aria-hidden />
+                <Hexagon className="size-5 text-primary" aria-hidden />
               </a>
             </div>
             <div className="space-y-4 px-8 pb-8">
