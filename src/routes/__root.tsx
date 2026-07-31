@@ -102,21 +102,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         //     response headers — out of scope for this change; do not treat
         //     either as "fixed" by what's below.
         // The CSP below is intentionally on the permissive side — it allows
-        // every external origin this app currently loads (Google Fonts,
-        // GTM/gtag.js, Meta Pixel, Formspree, Nominatim) plus 'unsafe-inline'
-        // for script/style because this is a static SPA with no server to
-        // mint per-request nonces, and both React's SSR'd inline `style`
-        // attributes and the app's inline bootstrap scripts (GTM snippet,
-        // gtag stub) rely on it. Tighten this (nonces/hashes, narrower
-        // img-src, drop 'unsafe-inline') and test every page + the ad
+        // every external origin this app currently loads (GTM/gtag.js, Meta
+        // Pixel, Formspree, Nominatim) plus 'unsafe-inline' for script/style
+        // because this is a static SPA with no server to mint per-request
+        // nonces, and both React's SSR'd inline `style` attributes and the
+        // app's inline bootstrap scripts (GTM snippet, gtag stub) rely on it.
+        // Fonts (Outfit/Figtree) are self-hosted now — no fonts.googleapis.com
+        // /fonts.gstatic.com allowance needed. Tighten further (nonces/hashes,
+        // narrower img-src, drop 'unsafe-inline') and test every page + the ad
         // pixels/GTM/Formspree flows manually before trusting it fully.
         {
           httpEquiv: "Content-Security-Policy",
           content:
             "default-src 'self'; " +
             "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net; " +
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-            "font-src 'self' https://fonts.gstatic.com data:; " +
+            "style-src 'self' 'unsafe-inline'; " +
+            "font-src 'self' data:; " +
             "img-src 'self' data: https:; " +
             "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com; " +
             "frame-src https://www.googletagmanager.com; " +
@@ -165,16 +166,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       ],
       links: [
         { rel: "icon", href: "/favicon-beema.png", type: "image/png" },
-        { rel: "preconnect", href: "https://fonts.googleapis.com" },
-        {
-          rel: "preconnect",
-          href: "https://fonts.gstatic.com",
-          crossOrigin: "anonymous",
-        },
-        {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap",
-        },
+        // Outfit/Figtree are self-hosted via @fontsource, imported into
+        // styles.css — see the comment there. No external font origins to
+        // preconnect/fetch from anymore.
         {
           rel: "stylesheet",
           href: appCss,

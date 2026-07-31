@@ -156,6 +156,9 @@ function SafetyPage() {
                   decisions independently. The clinician assigned to your care
                   may vary based on state licensure and availability.
                 </p>
+                <p className="mt-2 text-xs text-muted-foreground/80">
+                  Medically reviewed on July 31, 2026
+                </p>
               </div>
             </div>
           </SurfaceCard>

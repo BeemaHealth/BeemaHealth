@@ -70,6 +70,7 @@ export const Route = createFileRoute("/how-it-works")({
             name: "How Beema Health's Telehealth Weight-Loss Care Works",
             description: DESCRIPTION,
             path: "/how-it-works",
+            reviewedByClinicalLead: true,
           }),
         ),
       },
