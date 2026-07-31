@@ -7,6 +7,7 @@ import { FIRST_MONTH_PROMO_LINE } from "@/lib/marketing-copy";
 import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
 import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
 import { SOCIAL_LINKS } from "@/lib/social-links";
+import { cn } from "@/lib/utils";
 import {
   JURISDICTIONAL_NOTICE_BODY,
   JURISDICTIONAL_NOTICE_TITLE,
@@ -91,14 +92,17 @@ export function SiteFooter() {
                 {SUPPORT_PHONE_DISPLAY}
               </a>
               <div className="flex items-center gap-4">
-                {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+                {SOCIAL_LINKS.map(({ label, href, Icon, colorClassName }) => (
                   <a
                     key={label}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Beema Health on ${label}`}
-                    className="text-ink-foreground/70 transition-colors hover:text-ink-foreground"
+                    className={cn(
+                      "text-ink-foreground/70 transition-all hover:scale-110 hover:text-ink-foreground",
+                      colorClassName,
+                    )}
                   >
                     <Icon className="size-4" />
                   </a>

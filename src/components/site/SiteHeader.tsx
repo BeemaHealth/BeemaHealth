@@ -177,7 +177,7 @@ function MobileWeightLossDropdown({ onNavigate }: { onNavigate: () => void }) {
 }
 
 function SocialIconRow({
-  linkClassName = "text-muted-foreground transition-colors hover:text-foreground",
+  linkClassName = "text-muted-foreground transition-all hover:scale-110 hover:text-foreground",
   iconClassName = "size-4",
 }: {
   linkClassName?: string;
@@ -185,14 +185,14 @@ function SocialIconRow({
 }) {
   return (
     <div className="flex items-center gap-3">
-      {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+      {SOCIAL_LINKS.map(({ label, href, Icon, colorClassName }) => (
         <a
           key={label}
           href={href}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Beema Health on ${label}`}
-          className={linkClassName}
+          className={cn(linkClassName, colorClassName)}
         >
           <Icon className={iconClassName} />
         </a>
@@ -297,7 +297,7 @@ export function SiteHeader() {
               href={SUPPORT_PHONE_HREF}
               className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
-              <Phone className="size-4" aria-hidden />
+              <Phone className="size-4 text-success" aria-hidden />
               {SUPPORT_PHONE_DISPLAY}
             </a>
             <SocialIconRow />
@@ -354,18 +354,21 @@ export function SiteHeader() {
                   href={SUPPORT_PHONE_HREF}
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-foreground"
                 >
-                  <Phone className="size-4" aria-hidden />
+                  <Phone className="size-4 text-success" aria-hidden />
                   {SUPPORT_PHONE_DISPLAY}
                 </a>
                 <div className="flex items-center gap-4">
-                  {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+                  {SOCIAL_LINKS.map(({ label, href, Icon, colorClassName }) => (
                     <a
                       key={label}
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`Beema Health on ${label}`}
-                      className="text-ink-foreground/70 transition-colors hover:text-ink-foreground"
+                      className={cn(
+                        "text-ink-foreground/70 transition-all hover:scale-110 hover:text-ink-foreground",
+                        colorClassName,
+                      )}
                     >
                       <Icon className="size-4" />
                     </a>

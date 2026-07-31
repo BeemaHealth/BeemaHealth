@@ -10,6 +10,7 @@ import {
 import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { Section } from "@/components/site/primitives";
+import { LEGAL_BUSINESS_NAME } from "@/lib/contact-info";
 
 export const Route = createFileRoute("/legal/telehealth-consent")({
   head: () => ({
@@ -42,7 +43,7 @@ const SECTIONS: LegalSection[] = [
           other qualified clinicians (&quot;Providers&quot;).
         </LegalP>
         <LegalP>
-          Beema Health, Inc. (&quot;Beema Health,&quot; &quot;we,&quot; or
+          {LEGAL_BUSINESS_NAME} (&quot;Beema Health,&quot; &quot;we,&quot; or
           &quot;us&quot;) operates the Beema Health platform (the
           &quot;Service&quot;). Beema Health is a technology and
           care-coordination platform, not a medical practice. Clinical decisions
