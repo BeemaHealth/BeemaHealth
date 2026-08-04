@@ -35,6 +35,7 @@ const COLUMNS = [
       { label: "About Beema Health", to: "/about/" },
       { label: "Safety & eligibility", to: "/safety/" },
       { label: "FAQ", to: "/faq/" },
+      { label: "Learn", to: "/learn/" },
       { label: "Contact", to: "/contact/" },
     ],
   },

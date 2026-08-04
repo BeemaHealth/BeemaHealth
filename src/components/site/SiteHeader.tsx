@@ -21,8 +21,9 @@ type NavItem = { label: string; to: string };
  */
 const NAV: NavItem[] = [
   { label: "How it works", to: "/how-it-works/" },
-  // { label: "Pricing", to: "/pricing/" }, // disabled — pricing model not finalized yet
+  // { label: "Pricing", to: "/pricing/" }, // disabled - pricing model not finalized yet
   { label: "FAQ", to: "/faq/" },
+  { label: "Learn", to: "/learn/" },
   { label: "About", to: "/about/" },
   { label: "Contact", to: "/contact/" },
 ];

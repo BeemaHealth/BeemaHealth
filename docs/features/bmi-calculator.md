@@ -1,6 +1,6 @@
 # BMI calculator
 
-A client-side, informational-only BMI calculator embedded on the two treatment pages (`/tirzepatide`, `/semaglutide`). It is **not** part of medical intake — no data it collects is submitted to the backend, stored, or attached to a patient record. It exists purely to give visitors a quick, self-serve reference point before they decide whether to start an eligibility check.
+A client-side, informational-only BMI calculator embedded on the treatment pages (`/tirzepatide`, `/semaglutide`) and the educational guide (`/learn/initial-research`). It is **not** part of medical intake — no data it collects is submitted to the backend, stored, or attached to a patient record. It exists purely to give visitors a quick, self-serve reference point before they decide whether to start an eligibility check.
 
 ## Why this design
 
@@ -22,14 +22,14 @@ Tests: `src/lib/__tests__/bmi.test.ts`.
 
 ## Component
 
-`src/components/site/BmiCalculator.tsx` — `<BmiCalculator ctaId={...} medicationLabel="tirzepatide" />`:
+`src/components/site/BmiCalculator.tsx` — `<BmiCalculator ctaId={...} medicationLabel="tirzepatide" />` (omit `medicationLabel` on educational pages for medication-neutral CTA copy):
 
 - Left: height (ft/in) + weight (lb) inputs, validated with the same `validateHeightFt` / `validateHeightIn` / `validateWeightLbs` used by the qualify/intake flow (`src/lib/form-validation.ts`) — kept in sync automatically since it imports them rather than reimplementing bounds.
 - Right: an SVG semicircle gauge (hand-built polar-to-cartesian arc math, no charting library) showing a needle position, the numeric BMI, and the four category rows. When BMI ≥ `BMI_CTA_THRESHOLD`, a callout + "Get started" button appears, wired through `resolveCta(ctaId)` per the CTA switchboard rules in `docs/features/treatment-pages.md` — never a hardcoded link.
 
 ## CTA ids
 
-Added to `CTA_IDS` in `src/lib/cta-ids.ts`: `tirzepatide_bmi`, `semaglutide_bmi`. Both fall back to `DEFAULT_CTA_TARGET` (waitlist) like every other CTA until the Bask cutover happens.
+Added to `CTA_IDS` in `src/lib/cta-ids.ts`: `tirzepatide_bmi`, `semaglutide_bmi`, `learn_initial_research_bmi`. All fall back to `DEFAULT_CTA_TARGET` like every other CTA.
 
 ## Key files
 
@@ -38,5 +38,6 @@ Added to `CTA_IDS` in `src/lib/cta-ids.ts`: `tirzepatide_bmi`, `semaglutide_bmi`
 | `src/lib/bmi.ts` | BMI formula, category thresholds, CTA threshold |
 | `src/lib/__tests__/bmi.test.ts` | Formula + category boundary tests |
 | `src/components/site/BmiCalculator.tsx` | The calculator UI (form + gauge + conditional CTA) |
-| `src/routes/tirzepatide.tsx`, `src/routes/semaglutide.tsx` | Each renders its own `<BmiCalculator>` with its own `ctaId` and `medicationLabel` |
+| `src/routes/tirzepatide.tsx`, `src/routes/semaglutide.tsx` | Each renders `<BmiCalculator>` with its own `ctaId` and `medicationLabel` |
+| `src/routes/learn.initial-research.tsx` | Educational guide embeds the same calculator (no `medicationLabel`) |
 | `src/lib/form-validation.ts` | Shared height/weight validators (reused, not reimplemented) |

@@ -19,6 +19,8 @@ export const CTA_IDS = {
   safety: "safety",
   contact: "contact",
   about: "about",
+  learn_initial_research: "learn_initial_research",
+  learn_initial_research_bmi: "learn_initial_research_bmi",
   landing_page: "landing_page",
   login_prompt: "login_prompt",
 } as const;

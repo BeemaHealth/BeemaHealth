@@ -55,18 +55,21 @@ const GAUGE_STROKE = 14;
 const GAUGE_TICKS = [BMI_SCALE_MIN, 18.5, 25, 30, BMI_SCALE_MAX];
 
 type BmiCalculatorProps = {
-  /** CTA id from CTA_IDS — resolved via resolveCta() so this stays a switchboard-safe link. */
+  /** CTA id from CTA_IDS. Resolved via resolveCta() so this stays a switchboard-safe link. */
   ctaId: (typeof CTA_IDS)[keyof typeof CTA_IDS];
-  /** Lowercase medication name used in the CTA callout copy, e.g. "tirzepatide". */
-  medicationLabel: string;
+  /**
+   * Lowercase medication name used in the CTA callout copy, e.g. "tirzepatide".
+   * Omit on general educational pages for medication-neutral copy.
+   */
+  medicationLabel?: string;
   className?: string;
 };
 
 /**
- * Client-side, informational-only BMI calculator for treatment pages. Numbers
- * never leave the browser — no API call, no PHI storage. Deliberately uses a
- * single brand hue across the whole gauge (no red/yellow/green "shaming"
- * color-coding) — the categories are shown as plain, evenly-styled rows.
+ * Client-side, informational-only BMI calculator for treatment and learn pages.
+ * Numbers never leave the browser: no API call, no PHI storage. Deliberately
+ * uses a single brand hue across the whole gauge (no red/yellow/green "shaming"
+ * color-coding). Categories are shown as plain, evenly-styled rows.
  */
 export function BmiCalculator({
   ctaId,
@@ -111,7 +114,7 @@ export function BmiCalculator({
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           Body Mass Index estimates whether your weight falls in a typical range
-          for your height. It&apos;s a starting point, not a diagnosis — your
+          for your height. It&apos;s a starting point, not a diagnosis. Your
           provider looks at your full health picture.
         </p>
 
@@ -264,7 +267,7 @@ export function BmiCalculator({
 
             <p className="text-sm text-ink-foreground/60">Your BMI</p>
             <p className="text-5xl font-bold text-primary">
-              {bmi != null ? bmi.toFixed(1) : "—"}
+              {bmi != null ? bmi.toFixed(1) : "-"}
             </p>
 
             <div className="mt-6 space-y-1.5 text-left">
@@ -287,8 +290,9 @@ export function BmiCalculator({
             {showCta && (
               <div className="mt-6 rounded-2xl bg-ink-foreground/10 p-5 text-left">
                 <p className="text-sm leading-relaxed text-ink-foreground/85">
-                  Based on your BMI, compounded {medicationLabel} through Beema
-                  Health may be worth exploring with a licensed provider.
+                  {medicationLabel
+                    ? `Based on your BMI, compounded ${medicationLabel} through Beema Health may be worth exploring with a licensed provider.`
+                    : "Based on your BMI, GLP-1 care through Beema Health may be worth exploring with a licensed provider."}
                 </p>
                 <MagneticButton className="mt-4 block">
                   <Button

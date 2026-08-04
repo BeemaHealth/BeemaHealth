@@ -1,8 +1,10 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-/** MVP: learn/blog removed — redirect home. */
+/** Layout shell for /learn and nested educational articles. */
 export const Route = createFileRoute("/learn")({
-  beforeLoad: () => {
-    throw redirect({ to: "/" });
-  },
+  component: LearnLayout,
 });
+
+function LearnLayout() {
+  return <Outlet />;
+}

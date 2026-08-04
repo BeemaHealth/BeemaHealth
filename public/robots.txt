@@ -69,7 +69,6 @@ Disallow: /legal/intake-acknowledgments
 # Retired marketing stubs that only 301 → home (save crawl budget)
 Disallow: /pricing
 Disallow: /clinicians
-Disallow: /learn
 Disallow: /insurance
 Disallow: /switch
 
@@ -95,7 +94,6 @@ Disallow: /lp/
 Disallow: /legal/intake-acknowledgments
 Disallow: /pricing
 Disallow: /clinicians
-Disallow: /learn
 Disallow: /insurance
 Disallow: /switch
 

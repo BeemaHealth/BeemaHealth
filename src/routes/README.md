@@ -34,12 +34,14 @@ list is maintained in `public/sitemap.xml` and guarded by
 | How it works | `/how-it-works` | Live |
 | About | `/about` | Live |
 | FAQ | `/faq` | Live |
+| Learn | `/learn` | Live (educational hub) |
+| Learn article | `/learn/initial-research` | Live |
 | Safety | `/safety` | Live |
 | Contact | `/contact` | Live |
 | Pricing | `/pricing` | Archived (redirect → `/`) |
 
-Also archived: `/switch`, `/insurance`, `/clinicians`, and `/learn`. Full source
-and restore instructions:
+Also archived: `/switch`, `/insurance`, and `/clinicians`. Full source and restore
+instructions:
 **[docs/archived-marketing-pages.md](../../docs/archived-marketing-pages.md)**.
 
 ## Patient funnel routes (Steps 2–6)

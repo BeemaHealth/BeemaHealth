@@ -22,6 +22,8 @@ const EXPECTED_PATHS = [
   "/about/",
   "/safety/",
   "/faq/",
+  "/learn/",
+  "/learn/initial-research/",
   "/contact/",
   "/legal/privacy/",
   "/legal/terms/",
@@ -124,13 +126,16 @@ describe("public/robots.txt", () => {
       "/lp/",
       "/pricing",
       "/clinicians",
-      "/learn",
       "/insurance",
       "/switch",
       "/legal/intake-acknowledgments",
     ]) {
       expect(robotsTxt).toContain(`Disallow: ${path}`);
     }
+  });
+
+  it("allows the live /learn educational section to be crawled", () => {
+    expect(robotsTxt).not.toContain("Disallow: /learn");
   });
 
   it("does not sitewide-block any bot, including scrapers — everyone can read/cite the site", () => {
