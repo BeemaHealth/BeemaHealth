@@ -6,10 +6,10 @@ import { createFunnelSession } from "@/lib/api/client";
 import { getPendingUtms, clearPendingUtms } from "@/lib/utm";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { ScrollProgressBar } from "@/components/site/primitives";
+import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
 import { HomeHero } from "@/components/home/HomeHero";
 import { TrustSignals } from "@/components/home/TrustSignals";
 import { DoseJourney } from "@/components/home/DoseJourney";
-import { HowItWorksScrolly } from "@/components/home/HowItWorksScrolly";
 import { TreatmentShowcase } from "@/components/home/TreatmentShowcase";
 import { MissionSection } from "@/components/home/MissionSection";
 import { FinalCTASection } from "@/components/home/FinalCTASection";
@@ -64,7 +64,7 @@ function HomePage() {
       <MarketingLayout>
         <HomeHero />
         <TrustSignals />
-        <HowItWorksScrolly />
+        <HowItWorksSteps />
         <DoseJourney />
         <TreatmentShowcase />
         <MissionSection />
