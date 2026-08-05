@@ -1,6 +1,6 @@
 # Medications
 
-The medication catalog is the source of truth for what treatments Aretide offers. Each medication can have its own qualify questionnaire and intake questionnaire, enabling different question sets per drug without code changes.
+The medication catalog is the source of truth for what treatments Beema Health offers. Each medication can have its own qualify questionnaire and intake questionnaire, enabling different question sets per drug without code changes.
 
 ## Data model
 

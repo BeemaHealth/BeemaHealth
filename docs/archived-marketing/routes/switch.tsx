@@ -7,13 +7,13 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/switch")({
   head: () => ({
     meta: [
-      { title: "Switch to Aretide — Transfer from another provider" },
+      { title: "Switch to Beema Health — Transfer from another provider" },
       {
         name: "description",
         content:
           "Frustrated with Hims, Ro, Noom, WeightWatchers, Medvi, or a local clinic? Transfer your records and get a clear next-step plan. Transfer does not guarantee prescribing.",
       },
-      { property: "og:title", content: "Switch to Aretide" },
+      { property: "og:title", content: "Switch to Beema Health" },
       { property: "og:description", content: "A switch-and-rescue lane for people frustrated by refill delays and unclear pricing." },
     ],
     links: [{ rel: "canonical", href: "/switch" }],

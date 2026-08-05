@@ -56,9 +56,9 @@ From the repo root:
 npm install
 ```
 
-Create or edit `.env.dev` at the repo root (`ARETIDE_ENV=dev` is the default):
+Create or edit `.env.dev` at the repo root (`BEEMAHEALTH_ENV=dev` is the default):
 
-- `ARETIDE_ENV=dev`
+- `BEEMAHEALTH_ENV=dev`
 - `VITE_API_URL=/api` (proxied to the API in dev)
 - `FERNET_KEY` — generate with:
   ```bash
@@ -165,7 +165,7 @@ Confirm `.env.dev` has `VITE_API_URL=/api` and restart `npm run dev` after chang
 
 ### `FERNET_KEY` / encryption errors
 
-Ensure `FERNET_KEY` is set in the repo root `.env.dev`. `npm run dev:backend` passes it via `--env-file .env.dev` (when `ARETIDE_ENV=dev`).
+Ensure `FERNET_KEY` is set in the repo root `.env.dev`. `npm run dev:backend` passes it via `--env-file .env.dev` (when `BEEMAHEALTH_ENV=dev`).
 
 ### Email verification during signup
 

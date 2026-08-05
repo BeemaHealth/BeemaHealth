@@ -13,7 +13,7 @@ import {
 const NAV = [
   { label: "How it works", to: "/how-it-works" },
   { label: "Pricing", to: "/pricing" },
-  { label: "Switch to Aretide", to: "/switch" },
+  { label: "Switch to Beema Health", to: "/switch" },
   { label: "Insurance & Pharmacy", to: "/insurance" },
   { label: "Clinicians", to: "/clinicians" },
   { label: "Safety", to: "/safety" },
@@ -25,7 +25,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
       <div className="veya-container flex h-16 items-center justify-between gap-4">
-        <Link to="/" className="shrink-0" aria-label="Aretide home">
+        <Link to="/" className="shrink-0" aria-label="Beema Health home">
           <Logo />
         </Link>
 

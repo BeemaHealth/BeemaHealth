@@ -1,6 +1,6 @@
 # Beluga Health Integration
 
-Aretide routes clinical review and prescription fulfillment through Beluga Health. Outbound calls go to Beluga only — LifeFile/MediVera adapters exist for reference but are not wired to live outbound flows.
+Beema Health routes clinical review and prescription fulfillment through Beluga Health. Outbound calls go to Beluga only — LifeFile/MediVera adapters exist for reference but are not wired to live outbound flows.
 
 Vendor API reference: `docs/vendor/BELUGA_API.md` (gitignored). Pointer: `docs/BELUGA_API.md`.
 
@@ -8,7 +8,7 @@ Vendor API reference: `docs/vendor/BELUGA_API.md` (gitignored). Pointer: `docs/B
 
 ## What it does
 
-Beluga provides the provider network, visit review, prescription writing, and pharmacy routing for cash-pay telehealth. Aretide builds the patient questionnaire, freezes a Beluga `formObj` at intake submission, POSTs visits to Beluga, and processes inbound webhooks to update review status, prescriptions, shipping timeline, and patient notifications.
+Beluga provides the provider network, visit review, prescription writing, and pharmacy routing for cash-pay telehealth. Beema Health builds the patient questionnaire, freezes a Beluga `formObj` at intake submission, POSTs visits to Beluga, and processes inbound webhooks to update review status, prescriptions, shipping timeline, and patient notifications.
 
 ---
 
@@ -39,7 +39,7 @@ Diagrams are **rendered PNGs** (same Mermaid style as `.claude/plans/staff_crm_a
 
 ### Overview
 
-![Beluga integration overview — patient actions, Aretide POSTs, Beluga webhooks](./diagrams/overview.png)
+![Beluga integration overview — patient actions, Beema Health POSTs, Beluga webhooks](./diagrams/overview.png)
 
 ---
 
@@ -55,7 +55,7 @@ Outbound visit creation is **not wired yet**. Payload is built at consent and fr
 
 ![New patient sequence diagram](./diagrams/new-patient-sequence.png)
 
-| Phase | Aretide outbound POST | Beluga inbound webhooks |
+| Phase | Beema Health outbound POST | Beluga inbound webhooks |
 |-------|----------------------|-------------------------|
 | Intake + consent | — | — |
 | Submit to Beluga | `POST {BELUGA_CREATION_PATH}` | — |
@@ -81,7 +81,7 @@ No consult webhooks — approval/denial comes back **synchronously** in the POST
 
 ![Same-dose refill sequence](./diagrams/same-dose-sequence.png)
 
-| Step | Aretide outbound POST | Response / webhooks |
+| Step | Beema Health outbound POST | Response / webhooks |
 |------|----------------------|---------------------|
 | Patient requests refill | `POST {BELUGA_REFILL_ENDPOINT}` | Sync: `NEW_RX_SENT`, `RX_TIME_OUT_OF_RANGE`, `NEEDS_CHECKIN`, … |
 | After `NEW_RX_SENT` | — | `PHARMACY_ORDER_*`, `PACKAGE_*` on **original** `masterId` |
@@ -99,7 +99,7 @@ Full async provider review on a **new** `masterId` per check-in.
 
 ![Titration check-in sequence](./diagrams/titration-sequence.png)
 
-| Phase | Aretide outbound POST | Beluga inbound webhooks |
+| Phase | Beema Health outbound POST | Beluga inbound webhooks |
 |-------|----------------------|-------------------------|
 | Patient submits check-in | `POST {BELUGA_CREATION_PATH}` | — |
 | Photo (optional) | `POST {BELUGA_PHOTO_ENDPOINT}` | — |
@@ -109,7 +109,7 @@ Full async provider review on a **new** `masterId` per check-in.
 
 #### C. AutoRx — 6-month protocol (not wired)
 
-| Step | Aretide outbound POST | Response / webhooks |
+| Step | Beema Health outbound POST | Response / webhooks |
 |------|----------------------|---------------------|
 | Trigger shipment | `POST {BELUGA_AUTORX_ENDPOINT}` | Sync: `NEW_RX_SENT`, `NEEDS_CHECKIN`, `MAX_MONTHS_REACHED`, `RX_TIME_OUT_OF_RANGE`, … |
 | After `NEW_RX_SENT` | — | `PHARMACY_ORDER_*`, `PACKAGE_*` |
@@ -178,7 +178,7 @@ JPEG, ≤1000px wide or &lt;3MB, base64-encoded.
 
 Receiver: `POST /api/webhooks/beluga/` → `apply_beluga_webhook()`.
 
-| Event | Aretide behavior |
+| Event | Beema Health behavior |
 |-------|------------------|
 | `RX_WRITTEN` | Creates `PatientPrescription`, review → `prescription_sent`, emails patient |
 | `CONSULT_CONCLUDED` | `visitOutcome: prescribed` → approved; `referred` → not approved |
@@ -193,7 +193,7 @@ Receiver: `POST /api/webhooks/beluga/` → `apply_beluga_webhook()`.
 
 ## Refills
 
-Beluga supports three refill mechanisms. Aretide implements two today.
+Beluga supports three refill mechanisms. Beema Health implements two today.
 
 ### A. Same-dose refill (implemented)
 
@@ -215,7 +215,7 @@ POST {BELUGA_BASE_URL}/{BELUGA_REFILL_ENDPOINT}
 
 Response is **synchronous** — no async doctor-review webhook for approval.
 
-| Beluga status | Aretide `RefillRequest.status` |
+| Beluga status | Beema Health `RefillRequest.status` |
 |---------------|-------------------------------|
 | `NEW_RX_SENT` | `approved` |
 | `NO_MORE_REFILLS`, `RX_ERROR`, `RX_MISMATCH`, etc. | `denied` |
@@ -242,7 +242,7 @@ Shipping webhooks still arrive on the same `masterId` after success.
 POST {BELUGA_BASE_URL}/{BELUGA_AUTORX_ENDPOINT}
 ```
 
-Aretide controls each shipment trigger — only call after payment succeeds (hard payment gate). Statuses include `NEW_RX_SENT`, `NEEDS_CHECKIN`, `MAX_MONTHS_REACHED`, `RX_TIME_OUT_OF_RANGE`.
+Beema Health controls each shipment trigger — only call after payment succeeds (hard payment gate). Statuses include `NEW_RX_SENT`, `NEEDS_CHECKIN`, `MAX_MONTHS_REACHED`, `RX_TIME_OUT_OF_RANGE`.
 
 **Refill windows (production):**
 
@@ -253,7 +253,7 @@ Aretide controls each shipment trigger — only call after payment succeeds (har
 
 ---
 
-## Other Beluga endpoints (vendor docs — not wired in Aretide)
+## Other Beluga endpoints (vendor docs — not wired in Beema Health)
 
 | Endpoint | Purpose |
 |----------|---------|

@@ -7,13 +7,13 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/safety")({
   head: () => ({
     meta: [
-      { title: "Safety & Eligibility — Aretide" },
+      { title: "Safety & Eligibility — Beema Health" },
       {
         name: "description",
         content:
           "Eligibility, contraindications, side effects, and emergency warning signs explained in plain language. Clinicians make independent medical decisions.",
       },
-      { property: "og:title", content: "Safety & Eligibility — Aretide" },
+      { property: "og:title", content: "Safety & Eligibility — Beema Health" },
       { property: "og:description", content: "Plain-language safety information for weight-management care." },
     ],
     links: [{ rel: "canonical", href: "/safety" }],
@@ -89,7 +89,7 @@ function SafetyPage() {
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Clinical decisions are made independently by licensed providers based
                 on a clinical evaluation. Completing intake does not guarantee a
-                prescription, and Aretide does not influence medical judgment.
+                prescription, and Beema Health does not influence medical judgment.
               </p>
             </div>
           </div>

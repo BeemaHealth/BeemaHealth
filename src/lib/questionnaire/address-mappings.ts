@@ -22,7 +22,7 @@ export type AddressSubFieldMapping = {
   beluga: string;
 };
 
-/** Aretide intake / profile targets for address sub-fields. */
+/** Beema Health intake / profile targets for address sub-fields. */
 export const ADDRESS_BACKEND_FIELD_OPTIONS = [
   { value: "", label: "— none —" },
   { value: "intake.identity.address", label: "Intake · identity · street" },

@@ -1,6 +1,6 @@
 # Input validation test suite
 
-This document explains how Aretide validates user input in the qualify and intake flows, how we test for common attack payloads, and what to do when adding new fields.
+This document explains how Beema Health validates user input in the qualify and intake flows, how we test for common attack payloads, and what to do when adding new fields.
 
 ## Quick start
 

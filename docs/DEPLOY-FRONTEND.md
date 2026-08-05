@@ -57,7 +57,7 @@ This builds the site and pushes `dist/client` to a new `gh-pages` branch on GitH
 
 ### 4. Enable GitHub Pages (after step 3)
 
-1. Open **GitHub → Aretide/Aretide → Settings → Pages**
+1. Open **GitHub → BeemaHealth/BeemaHealth → Settings → Pages**
 2. Under **Build and deployment**:
    - **Source:** Deploy from a branch
    - **Branch:** `gh-pages` / `/ (root)` — only available after step 3
@@ -112,7 +112,7 @@ The script:
 Verify:
 
 - https://beemahealth
-- https://beemahealth.github.io/Aretide/ (works before DNS propagates)
+- https://beemahealth.github.io/BeemaHealth/ (works before DNS propagates)
 
 ---
 

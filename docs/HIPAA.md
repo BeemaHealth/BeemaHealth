@@ -1,8 +1,8 @@
-# HIPAA compliance guide for Aretide agents
+# HIPAA compliance guide for Beema Health agents
 
-**Purpose:** Give AI agents a checklist to evaluate whether code and infrastructure changes are **HIPAA-compliant** for Aretide — a telehealth platform that stores **PHI** (Protected Health Information).
+**Purpose:** Give AI agents a checklist to evaluate whether code and infrastructure changes are **HIPAA-compliant** for Beema Health — a telehealth platform that stores **PHI** (Protected Health Information).
 
-> **This is not legal advice.** Aretide implements technical safeguards in code, but full HIPAA compliance also requires signed **BAAs** (Business Associate Agreements), policies, training, and legal review. When in doubt, flag the issue to the user rather than assuming compliance.
+> **This is not legal advice.** Beema Health implements technical safeguards in code, but full HIPAA compliance also requires signed **BAAs** (Business Associate Agreements), policies, training, and legal review. When in doubt, flag the issue to the user rather than assuming compliance.
 
 **Related docs:** [AGENTS.md](../AGENTS.md) · [backend/HOSTING.md](../backend/HOSTING.md) · [backend/README.md](../backend/README.md) · [backend/DATABASE.md](../backend/DATABASE.md) · [docs/INPUT_VALIDATION_TESTS.md](./INPUT_VALIDATION_TESTS.md)
 
@@ -29,7 +29,7 @@ If any answer is wrong, **stop and fix** or explain the risk to the user before 
 
 ## What counts as PHI in this project
 
-**PHI** = health information that identifies a person. In Aretide, treat all of the following as PHI:
+**PHI** = health information that identifies a person. In Beema Health, treat all of the following as PHI:
 
 | Category | Examples in this codebase |
 |----------|---------------------------|
@@ -46,9 +46,9 @@ When unsure, **treat it as PHI**.
 
 ---
 
-## HIPAA Security Rule — how Aretide maps to code
+## HIPAA Security Rule — how Beema Health maps to code
 
-HIPAA’s Security Rule has three safeguard categories. Below: what Aretide requires and what is **already implemented** vs **still required**.
+HIPAA’s Security Rule has three safeguard categories. Below: what Beema Health requires and what is **already implemented** vs **still required**.
 
 ### Administrative safeguards (policies & process)
 

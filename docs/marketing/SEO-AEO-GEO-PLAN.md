@@ -48,7 +48,7 @@ Realistic organic timeline: long-tail rankings in 3–6 months, mid-tail in 6–
 | G6 | `lp.$slug.tsx` has no `head()` at all — no title, no description, and critically no `noindex`. Paid LPs duplicating organic pages can trigger duplicate-content problems. | `src/routes/lp.$slug.tsx` | High |
 | G7 | ~~`clinicians.tsx`, `insurance.tsx`, `switch.tsx`, and `learn.tsx` all **redirect to `/`** (MVP removals) yet are still listed in the sitemap.~~ **Done July 2026** — `public/sitemap.xml` lists only live marketing pages (redirecting routes and unshipped `/pricing` excluded). | `public/sitemap.xml` | ✅ |
 | G8 | Structured data is FAQ-only. Missing: `Organization`/`MedicalOrganization`, `WebSite`, `MedicalWebPage`, `Physician`, `Product`/`Offer` (pricing), `BreadcrumbList`. AI engines lean heavily on schema. | site-wide | High |
-| G9 | **Brand + domain decided (July 2026): Beema Health at beemahealth.com** (domain purchased). Production still serves from beemahealth until cutover — see the migration checklist below. Internal docs/copy still say Aretide in places; that rebrand is a separate low-cost cleanup task, **not part of this plan's execution**. | site-wide | Cutover pending |
+| G9 | **Brand + domain decided (July 2026): Beema Health at beemahealth.com** (domain purchased). Production still serves from beemahealth until cutover — see the migration checklist below. ~~Internal docs/copy still referenced the pre-rebrand legal name~~ **Done August 2026** — legacy-name cleanup across docs/copy completed; no remaining references. | site-wide | Cutover pending |
 | G10 | Google Fonts loaded from CDN render-blocking; hurts LCP/CWV. | `__root.tsx` | Med |
 | G11 | ~~No `llms.txt`~~ (**shipped July 2026** — `public/llms.txt`); still missing: author/medical-reviewer bylines and an editorial policy page — table stakes for YMYL E-E-A-T and GEO. | site-wide | High |
 
@@ -347,7 +347,7 @@ North-star: **qualified intake completions from organic + AI channels per month*
 1. **Domain cutover timing** — beemahealth.com is purchased (July 2026); schedule the cutover (G9 checklist) before any link building, PR, or entity/GEO work begins. Hosting stays on GitHub Pages.
 2. **Budget tier** (§F4) — recommend Growth if CAC math holds; Lean is viable but pushes head-term visibility mostly into paid-only.
 3. **Medical reviewer** — who is the named, licensed reviewer for content? Required before the first article ships.
-4. **Deferred: docs/copy rebrand Aretide → Beema Health** — mechanical find-and-review pass across docs and remaining UI copy; suitable for a cheaper model. Keep `llms.txt`, robots.txt, and all meta consistent when it runs.
+4. ~~**Deferred: docs/copy legacy-name cleanup**~~ **Done August 2026** — mechanical find-and-review pass across docs and remaining UI copy completed; `llms.txt`, robots.txt, and all meta remain consistent.
 5. **Deferred: Bask CTA wiring** — backend/frontend button integration pending; no SEO action until it lands (then re-verify the funnel stays noindexed and GA events fire).
 
 ---

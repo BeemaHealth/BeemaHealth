@@ -1,4 +1,4 @@
-# Aretide Database Schema & Design Decisions
+# Beema Health Database Schema & Design Decisions
 
 > **Acronyms:** See [../README.md](../README.md#glossary-acronyms-used-in-this-repo) for the full glossary. Key terms here: **MVP** (Minimum Viable Product), **API** (Application Programming Interface), **HIPAA** (Health Insurance Portability and Accountability Act), **PHI** (Protected Health Information), **EHR** (Electronic Health Record), **JSON** (JavaScript Object Notation), **RBAC** (Role-Based Access Control), **UUID** (Universally Unique Identifier).
 
