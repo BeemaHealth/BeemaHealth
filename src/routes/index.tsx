@@ -21,7 +21,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Medical weight-loss care reviewed by a licensed provider. Secure intake for Zepbound, Wegovy, and affordable alternatives when appropriate.",
+          "Medical weight-loss care reviewed by a licensed provider. Compounded semaglutide and compounded tirzepatide when clinically appropriate and legally available. Compounded medications are not FDA-approved.",
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/") }],

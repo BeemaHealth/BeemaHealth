@@ -1,6 +1,18 @@
 # Treatment pages
 
-Each medication Beema offers gets its own indexable, SEO-focused landing page (`/tirzepatide`, `/semaglutide`, more to come as branded medications are added) — this targets each drug's own brand-aware search terms without diluting them, and gives each page its own FAQPage/BreadcrumbList JSON-LD. `/weight-loss` sits alongside them as a broader, non-brand overview page targeting head-term searches ("medical weight loss," "GLP-1 weight loss program") that the drug-specific pages can't rank for — see below.
+Each medication Beema offers gets its own indexable, SEO-focused landing page (`/tirzepatide`, `/semaglutide`) — this targets each drug's search terms without diluting them, and gives each page its own FAQPage/BreadcrumbList JSON-LD. Beema’s patient-facing offering is **compounded only** (compounded semaglutide and compounded tirzepatide). Do not add branded-medication pages (Wegovy, Zepbound, Ozempic, Mounjaro) or describe those brands as Beema offerings. `/weight-loss` sits alongside the compounded pages as a broader overview targeting head-term searches ("medical weight loss," "GLP-1 weight loss program") — see below.
+
+## Compliance (LegitScript + FDA)
+
+Canonical long-form rules live in `docs/marketing/SEO-AEO-GEO-PLAN.md` **§F1.1**. Hard constraints for these pages and related marketing copy:
+
+1. **Compounded-only offering.** Never list or imply Beema sells Wegovy, Zepbound, Ozempic, Mounjaro, or other FDA-approved branded GLP‑1s.
+2. **FDA (Feb 6, 2026):** do not claim compounded products are generic / the same as FDA-approved drugs; do not state they use the same active ingredient; do not state they are clinically proven to produce results. https://www.fda.gov/news-events/press-announcements/fda-intends-take-action-against-non-fda-approved-glp-1-drugs
+3. **Price ≠ medical necessity.** Lower price alone does not establish that a compounded drug is not essentially a copy of a commercial product.
+4. **Required sentence** (reuse verbatim where the page explains compounded status): "Compounded {drug} is not FDA-approved and is considered only when legally available and clinically appropriate."
+5. No outcome guarantees; prescribing is never guaranteed; provider decides case-by-case.
+
+Product photography during LegitScript review: colour vials without Beema wordmark — see `src/lib/treatment-imagery.ts` and `docs/features/homepage.md`.
 
 ## Routes
 

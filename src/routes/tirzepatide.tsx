@@ -41,6 +41,8 @@ import {
   COMPOUNDED_TIRZEPATIDE_PRICING,
   compoundedMonthlyPricingSentence,
 } from "@/lib/medication-pricing";
+import { patientQuestionsGuidance } from "@/lib/marketing-copy";
+import { SUPPORT_EMAIL } from "@/lib/contact-info";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 import {
@@ -68,7 +70,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "How much does tirzepatide cost through Beema?",
-    a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide through Beema", COMPOUNDED_TIRZEPATIDE_PRICING)} This is medication-only cash pricing with no separate platform membership fee, and your final cost can vary based on the dosage your provider recommends. Doctor visits, prescription medication, ongoing doctor follow-up care, and supplies like syringes and alcohol pads are included, along with expedited shipping, and any additional costs like labs would be shown separately before you're charged. Because compounded tirzepatide is a prescription medication, a licensed provider must review your medical intake and independently decide it's appropriate before treatment begins; completing intake never guarantees a prescription. If cost is a concern, ask about promo code eligibility and plan-length options during your medical intake.`,
+    a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide through Beema", COMPOUNDED_TIRZEPATIDE_PRICING)} That listed rate is all-inclusive cash-pay pricing with no separate platform membership fee: it covers doctor visits, prescription medication, ongoing doctor follow-up care, supplies like syringes and alcohol pads, and expedited shipping. Dose adjustments within compounded tirzepatide do not change the monthly price. Because compounded tirzepatide is a prescription medication, a licensed provider must review your medical intake and independently decide it's appropriate before treatment begins; completing intake never guarantees a prescription. Questions about promo codes or plan length? ${patientQuestionsGuidance()}`,
   },
   {
     q: "Does Beema serve patients nationwide?",
@@ -76,7 +78,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "Is compounded tirzepatide FDA-approved?",
-    a: "No. Compounded tirzepatide is not an FDA-approved medication the way branded tirzepatide is; it's prepared individually by a licensed compounding pharmacy rather than manufactured and approved as a standardized branded drug. Because of that, it is not the same product as an FDA-approved branded medication, and it's considered as part of care only when it is legally available and clinically appropriate for a given patient. A licensed provider weighs your BMI, health history, current medications, and applicable state law before deciding, on a case-by-case basis, whether compounded tirzepatide may be an appropriate option, or whether another approach, such as compounded semaglutide, makes more sense. If you would rather stick with an FDA-approved branded medication, discuss that preference with your provider during your intake review so they can factor it into their independent clinical decision. For more detail on eligibility, contraindications, and warning signs, see Beema's safety and eligibility information.",
+    a: `No. Compounded tirzepatide is not an FDA-approved medication the way branded tirzepatide is; it's prepared individually by a licensed compounding pharmacy rather than manufactured and approved as a standardized branded drug. Because of that, it is not the same product as an FDA-approved branded medication, and it's considered as part of care only when it is legally available and clinically appropriate for a given patient. A licensed provider weighs your BMI, health history, current medications, and applicable state law before deciding, on a case-by-case basis, whether compounded tirzepatide may be an appropriate option, or whether another approach, such as compounded semaglutide, makes more sense. If you would rather stick with an FDA-approved branded medication, note that preference in your intake answers so your provider can factor it into their independent clinical decision. ${patientQuestionsGuidance()} For more detail on eligibility, contraindications, and warning signs, see Beema's safety and eligibility information.`,
   },
   {
     q: "How quickly can treatment begin?",
@@ -451,10 +453,19 @@ function TirzepatidePage() {
                   Talk to your provider
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Discuss your full medical history, potential
+                  Include your full medical history, potential
                   contraindications, side effects, and any medication
-                  interactions with your provider. For more detail on
-                  eligibility, contraindications, and warning signs, see{" "}
+                  interactions in your intake questionnaire. After you complete
+                  intake and pay, you can ask follow-up questions. Before then,
+                  email{" "}
+                  <a
+                    href={`mailto:${SUPPORT_EMAIL}`}
+                    className="text-primary underline"
+                  >
+                    {SUPPORT_EMAIL}
+                  </a>
+                  . For more detail on eligibility, contraindications, and
+                  warning signs, see{" "}
                   <Link to="/safety/" className="text-primary underline">
                     Safety &amp; eligibility
                   </Link>

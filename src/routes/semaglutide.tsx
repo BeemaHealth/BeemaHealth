@@ -46,6 +46,8 @@ import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   compoundedMonthlyPricingSentence,
 } from "@/lib/medication-pricing";
+import { patientQuestionsGuidance } from "@/lib/marketing-copy";
+import { SUPPORT_EMAIL } from "@/lib/contact-info";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 
@@ -71,7 +73,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "How much does semaglutide cost through Beema?",
-    a: `${compoundedMonthlyPricingSentence("Compounded semaglutide through Beema", COMPOUNDED_SEMAGLUTIDE_PRICING)} It's medication-only cash pricing with no platform membership fee, and your provider's dosage recommendation can affect the final cost. Your plan is designed to cover everything needed for standard care: prescription medication, ongoing doctor care, alcohol pads, a doctor consultation and visit, syringes, and expedited shipping, so there typically aren't unexpected add-on fees. Because dosage is determined individually by your provider based on your health history and treatment response, some patients may see a different total cost than another patient at a different dose. If cost is a concern, ask about promo code eligibility and plan-length options during your medical intake.`,
+    a: `${compoundedMonthlyPricingSentence("Compounded semaglutide through Beema", COMPOUNDED_SEMAGLUTIDE_PRICING)} That listed rate is all-inclusive cash-pay pricing with no platform membership fee: it covers your provider consultation and ongoing doctor care, prescription medication, supplies like alcohol pads and syringes, and expedited shipping. Dose adjustments within compounded semaglutide do not change the monthly price. Questions about promo codes or plan length? ${patientQuestionsGuidance()}`,
   },
   {
     q: "Does Beema serve patients nationwide?",
@@ -87,7 +89,9 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "Can I switch to Beema if I'm already on semaglutide elsewhere?",
-    a: "Yes. If you're already taking semaglutide through another provider, your medical intake questionnaire asks about your current provider, medication, and dose so your Beema provider can review your treatment history as part of their independent clinical evaluation. The goal is to help your provider aim to continue you at a comparable dose rather than starting your titration over from the beginning, though the final dosing decision always rests with your licensed provider based on your full health picture. Accuracy matters here: the dose and history you report is the information your provider relies on to determine what's appropriate for you going forward, so double-check those details before submitting your intake. As with any new patient, your provider will also review your broader health history, current medications, and any contraindications before confirming your plan. If you have questions about switching, you can also review Beema's safety and eligibility information for more context on how transitions are evaluated.",
+    a:
+      "Yes. If you're already taking semaglutide through another provider, your medical intake questionnaire asks about your current provider, medication, and dose so your Beema provider can review your treatment history as part of their independent clinical evaluation. The goal is to help your provider aim to continue you at a comparable dose rather than starting your titration over from the beginning, though the final dosing decision always rests with your licensed provider based on your full health picture. Accuracy matters here: the dose and history you report is the information your provider relies on to determine what's appropriate for you going forward, so double-check those details before submitting your intake. As with any new patient, your provider will also review your broader health history, current medications, and any contraindications before confirming your plan. For more context on how transitions are evaluated, see Beema's safety and eligibility information. " +
+      patientQuestionsGuidance(),
   },
 ];
 
@@ -451,10 +455,18 @@ function SemaglutidePage() {
                   Talk to your provider
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Share your full medical history, possible contraindications,
-                  side effects, and any medication interactions with your
-                  provider. For more on eligibility, contraindications, and
-                  warning signs, see{" "}
+                  Include your full medical history, possible contraindications,
+                  side effects, and any medication interactions in your intake
+                  questionnaire. After you complete intake and pay, you can ask
+                  follow-up questions. Before then, email{" "}
+                  <a
+                    href={`mailto:${SUPPORT_EMAIL}`}
+                    className="text-primary underline"
+                  >
+                    {SUPPORT_EMAIL}
+                  </a>
+                  . For more on eligibility, contraindications, and warning
+                  signs, see{" "}
                   <Link to="/safety/" className="text-primary underline">
                     Safety &amp; eligibility
                   </Link>

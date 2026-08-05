@@ -5,6 +5,8 @@
  * Beema reads as an established provider, not a startup still filling seats.
  */
 
+import { SUPPORT_EMAIL } from "@/lib/contact-info";
+
 /**
  * Concrete first-month promo incentive shown next to marketing CTAs.
  * One-time use, first month only, and only valid on a 3-month plan
@@ -27,6 +29,15 @@ export const FIRST_MONTH_PROMO_SHORT =
  * Links still go to `/qualify` with `cta_id`; only the display text lives here.
  */
 export const WAITLIST_CTA_LABEL = "Join waitlist" as const;
+
+/**
+ * How patients get answers: intake is a questionnaire only (no live Q&A
+ * inside it). Follow-up questions open after intake + payment; before that,
+ * email support.
+ */
+export function patientQuestionsGuidance(): string {
+  return `The medical intake is a questionnaire only; you can't ask questions inside it. After you complete intake and pay, you can ask us additional questions. If you'd like to chat before then, email us at ${SUPPORT_EMAIL}.`;
+}
 
 /** @see WAITLIST_DISPLAY_COUNT_FALLBACK in waitlist-count.ts */
 export {

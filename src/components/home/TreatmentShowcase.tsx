@@ -111,14 +111,13 @@ export function TreatmentShowcase() {
         </div>
 
         <p className="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">
-          <span className="font-medium">†</span> Listed prices are medication
-          only (cash-pay), if prescribed. Final cost depends on your provider
-          decision as well as dosage recommendation. Treatment availability
-          depends on your intake, clinical eligibility, and a licensed
-          provider&apos;s independent decision. Compounded semaglutide and
-          compounded tirzepatide are not FDA-approved and are only considered
-          when legally available and clinically appropriate. Completing intake
-          does not guarantee a prescription.
+          <span className="font-medium">†</span> Listed prices are all-inclusive
+          cash-pay rates (provider care, medication, supplies, and shipping), if
+          prescribed. Treatment availability depends on your intake, clinical
+          eligibility, and a licensed provider&apos;s independent decision.
+          Compounded semaglutide and compounded tirzepatide are not FDA-approved
+          and are only considered when legally available and clinically
+          appropriate. Completing intake does not guarantee a prescription.
         </p>
       </div>
     </section>

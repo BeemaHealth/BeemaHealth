@@ -233,11 +233,42 @@ Google (and Meta/Microsoft/TikTok) require LegitScript certification to run tele
 - Cost: application + annual monitoring, roughly **$2,000–$5,000/yr** depending on tier (confirm current pricing at legitscript.com).
 - Also unlocks the LegitScript seal for the site footer (trust/E-E-A-T signal).
 
+### F1.1 Compounded GLP‑1 website & marketing content rules (LegitScript + FDA)
+
+LegitScript reviews **website content** (not only ads) when certifying telemedicine / Rx businesses that offer compounded semaglutide or tirzepatide. Their questionnaire asks how we document patient clinical need, how the pharmacy receives patient-specific documentation, and how site copy complies with FDA statements on non–FDA-approved GLP‑1 drugs. Treat the rules below as **hard sitewide copy constraints** for marketing pages, FAQs, JSON-LD/meta descriptions, ads, and learn/content surfaces — not optional legal footer language.
+
+**Beema offering (product truth):** Beema sells **only compounded** semaglutide and tirzepatide (when legally available and a licensed provider finds them clinically appropriate). We do **not** sell Wegovy, Zepbound, Ozempic, Mounjaro, or other FDA-approved branded GLP‑1 products. Marketing must never present branded drugs as Beema offerings, “options we provide,” or intake alternatives alongside compounded products.
+
+**FDA (Feb 6, 2026) — non–FDA-approved GLP‑1 drugs.** Companies must not:
+
+1. Claim that non–FDA-approved compounded products are **generic versions** of, or **the same as**, drugs approved by the FDA.
+2. State that compounded drugs **use the same active ingredient** as the FDA-approved drugs.
+3. State that compounded drugs are **clinically proven** to produce results for the patient.
+
+Source: https://www.fda.gov/news-events/press-announcements/fda-intends-take-action-against-non-fda-approved-glp-1-drugs
+
+**Related FDA compounding principle (essentially a copy):** other factors, such as a **lower price**, are **not sufficient** to establish that a compounded drug is not essentially a copy of a commercially available drug product. Price may be disclosed transparently, but must never be framed as the clinical justification for compounding, and must not stand alone next to branded trial outcomes in a way that implies compounded products deliver those results.
+
+**Required framing on Beema surfaces:**
+
+| Do | Do not |
+|---|---|
+| Describe Beema’s offering as **compounded semaglutide / compounded tirzepatide** only; say they are **not FDA-approved** and are considered only when **legally available** and a licensed provider finds them **clinically appropriate** | Name Wegovy, Zepbound, Ozempic, or Mounjaro as products Beema sells, offers, or “also provides” |
+| If educational content cites STEP / SURMOUNT (or similar), attribute figures to **FDA-approved branded products studied in those trials**, with an explicit disclaimer that results do **not** apply to compounded products — and do not use that content to position Beema as selling those brands | Call compounded products “generic,” “the same as,” “identical to,” “equivalent to,” or “interchangeable with” branded drugs; say they use the “same active ingredient”; claim they are “clinically proven” |
+| Keep price copy as cash-pay transparency; pair with provider-review / clinical-appropriateness language | Use “affordable alternative [to Wegovy/Zepbound],” “same active ingredient,” or price-alone messaging as the reason compounding is appropriate |
+| Keep prescribing never guaranteed; provider decides case-by-case | Promise outcomes or present compounded options as drop-in substitutes for branded drugs |
+
+**Ops answers LegitScript also expects (not website marketing copy, but certification Qs):** protocols for identifying and documenting medical necessity for compounded medications, and how patient-specific clinical documentation is provided to the fulfilling pharmacy. Site copy should stay consistent with those protocols (provider review of intake / history; no price-as-necessity framing).
+
+**Code / copy checkpoints (current):** meta and hero language on `/`, `/weight-loss`, and root layout must describe **compounded-only** offerings (no branded product names as Beema options); no “affordable alternatives” or “Proven GLP‑1 pathways” framing. Treatment pages and legal terms already carry not-FDA-approved / not-the-same-product language. When `/learn` educational pages ship, FAQs and trial sections must never say compounded products use the “same active ingredient,” must wall off branded trial data from compounded CTAs, and must not imply Beema sells branded drugs.
+
+See also the **Compliance** section in `docs/features/treatment-pages.md` (living rules for treatment marketing pages) and product-imagery notes in `src/lib/treatment-imagery.ts` / `docs/features/homepage.md` (LegitScript prefers colour product photography without Beema wordmark during review).
+
 ### F2. Google Ads
 - **Search campaigns** on high-intent terms: "semaglutide online prescription", "tirzepatide telehealth", "GLP‑1 online doctor", competitor-adjacent and "switch/transfer" terms, plus branded defense.
 - Expected CPCs in this category commonly run **$8–$30+**; healthcare search averages ~$66 per lead (LocaliQ benchmark). Model CAC accordingly: at a $15 avg CPC and 10% LP→qualify conversion, a qualified lead ≈ $150 before intake completion.
 - Land traffic on `lp.$slug` pages (noindexed, A4) with message match per ad group; A/B via the existing experiments system (`staff.experiments.tsx`).
-- **Compliance guardrails:** no before/after imagery or specific weight-loss-amount claims (Google policy + FTC), no "Ozempic" brand-jacking in ad copy for compounded products (NAD has been actively going after compounded-GLP‑1 advertisers), clear compounded-vs-FDA-approved disclosure.
+- **Compliance guardrails:** follow **§F1.1** in full. Additionally for ads: no before/after imagery or specific weight-loss-amount claims (Google policy + FTC); no "Ozempic" / branded brand-jacking in ad copy for compounded products (NAD has been actively going after compounded-GLP‑1 advertisers); clear compounded-vs-FDA-approved disclosure on every landing page ads hit.
 
 ### F3. Meta / TikTok
 Weight-management ads are restricted (18+ targeting, policy review, LegitScript for Rx). Use for brand/education creative and retargeting of **anonymous marketing-page** visitors only — see F5.
@@ -326,10 +357,12 @@ North-star: **qualified intake completions from organic + AI channels per month*
 - Google healthcare ads policy: https://support.google.com/adspolicy/answer/176031
 - LegitScript telemedicine certification: https://www.legitscript.com/certification/telemedicine/
 - LegitScript ↔ Google Ads guide: https://stubgroup.com/blog/how-to-get-legitscript-certified-for-google-ads/
+- FDA — Status of Compounded GLP-1 Drugs: https://www.fda.gov/drugs/human-drug-compounding/status-compounded-glp-1-drugs
+- FDA (Feb 6, 2026) — FDA intends to take action against non–FDA-approved GLP-1 drugs (no “generic” / “same as” / “same active ingredient” / “clinically proven” claims for compounded products): https://www.fda.gov/news-events/press-announcements/fda-intends-take-action-against-non-fda-approved-glp-1-drugs — apply §F1.1 sitewide.
+- NAD action on compounded GLP‑1 advertising: https://www.polsinelli.com/publications/nad-compounded-glp-1-advertising-diet
 - GLP‑1 PPC/DTC ad-spend study (Ozempic, $7.5M/15k keywords): https://pmc.ncbi.nlm.nih.gov/articles/PMC12579337/
 - GLP‑1 category marketing benchmarks: https://targetpatientsmd.com/medical-weight-loss-marketing-in-the-glp-1-era-that-works/
 - Meta/Google weight-loss ad restrictions overview: https://videnglobe.com/blog/glp-1-products-digital-marketing-how-to-advertise-weight-loss-products-across-meta-and-google
-- NAD action on compounded GLP‑1 advertising: https://www.polsinelli.com/publications/nad-compounded-glp-1-advertising-diet
 - GLP‑1 cash-pay price landscape: https://teledirectmd.com/cost/weight-loss-glp1-cost/
 
 *Cost figures are planning estimates from public benchmarks as of July 2026 — validate CPCs with a Google Keyword Planner pull and LegitScript pricing directly before budgeting.*

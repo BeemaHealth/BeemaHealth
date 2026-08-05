@@ -85,10 +85,12 @@ export function TreatmentPricingCard({
         code brings your first month to ${promoFirstMonthUsd(pricing)},
         available only on a {PROMO_CODE_MIN_MONTHS}-month plan purchase and
         redeemable once per patient. A 1-month purchase bills at the full $
-        {pricing.monthlyUsd}/mo rate with no promo code discount.
-        Medication-only cash pricing, with no platform membership fee. Pricing
-        and treatment availability may vary based on clinical appropriateness,
-        prescription, pharmacy fulfillment, and state requirements.
+        {pricing.monthlyUsd}/mo rate with no promo code discount. All-inclusive
+        cash-pay pricing: provider care, medication, supplies, and expedited
+        shipping are included. No separate platform membership fee. Dose does
+        not change the monthly rate. Treatment availability may vary based on
+        clinical appropriateness, prescription, pharmacy fulfillment, and state
+        requirements.
       </p>
     </SurfaceCard>
   );

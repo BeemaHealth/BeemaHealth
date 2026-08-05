@@ -2,9 +2,11 @@
  * Cash-pay list prices for compounded GLP-1 options shown on marketing pages.
  * Keep FAQ copy and treatment cards in sync via these values.
  *
- * Pricing structure: `monthlyUsd` is the flat, standard cash-pay rate that
- * applies from month 1 for any purchase length, including a 1-month
- * purchase. There is no automatic discount.
+ * Pricing structure: `monthlyUsd` is the flat, all-inclusive cash-pay rate
+ * (provider care, medication, supplies, and expedited shipping) that applies
+ * from month 1 for any purchase length, including a 1-month purchase. Dose
+ * adjustments within the same medication do not change this rate. There is no
+ * automatic discount and no separate platform membership fee.
  *
  * The only discount is a one-time $100 promo code (`PROMO_CODE_DISCOUNT_USD`),
  * redeemable once per patient, and only when purchasing a 3-month plan
@@ -101,5 +103,5 @@ export function compoundedMonthlyPricingSentence(
 export function dualCompoundedFaqPricingParagraph(): string {
   const sema = COMPOUNDED_SEMAGLUTIDE_PRICING;
   const tirz = COMPOUNDED_TIRZEPATIDE_PRICING;
-  return `Beema Health uses transparent cash-pay medication pricing with no platform membership fee. ${compoundedMonthlyPricingSentence("Compounded semaglutide", sema)} ${compoundedMonthlyPricingSentence("Compounded tirzepatide", tirz)} Shipping and labs, when applicable, are shown separately before any charge. A prescription is never guaranteed: a licensed clinician decides whether treatment is appropriate.`;
+  return `Beema Health uses transparent all-inclusive cash-pay pricing with no platform membership fee. ${compoundedMonthlyPricingSentence("Compounded semaglutide", sema)} ${compoundedMonthlyPricingSentence("Compounded tirzepatide", tirz)} Each listed rate covers provider care, medication, supplies, and expedited shipping; dose adjustments within the same medication do not change the monthly price. A prescription is never guaranteed: a licensed clinician decides whether treatment is appropriate.`;
 }

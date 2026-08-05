@@ -68,7 +68,7 @@ describe("medication-pricing", () => {
     expect(sentence).not.toMatch(/[—–]/);
   });
 
-  it("keeps FAQ pricing paragraph dual-med and em-dash free", () => {
+  it("keeps FAQ pricing paragraph dual-med, all-inclusive, and em-dash free", () => {
     const paragraph = dualCompoundedFaqPricingParagraph();
     expect(paragraph).toContain("$199");
     expect(paragraph).toContain("$99");
@@ -77,6 +77,11 @@ describe("medication-pricing", () => {
     expect(paragraph).toMatch(/3-month plan/);
     expect(paragraph).toMatch(/semaglutide/i);
     expect(paragraph).toMatch(/tirzepatide/i);
+    expect(paragraph).toMatch(/all-inclusive/i);
+    expect(paragraph).toMatch(/provider care/i);
+    expect(paragraph).toMatch(/expedited shipping/i);
+    expect(paragraph).not.toMatch(/medication-only/i);
+    expect(paragraph).not.toMatch(/Shipping and labs/i);
     expect(paragraph).not.toMatch(/[—–]/);
   });
 });

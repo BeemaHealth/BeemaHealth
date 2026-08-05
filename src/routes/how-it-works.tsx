@@ -35,6 +35,7 @@ import { TreatmentBreadcrumb } from "@/components/site/TreatmentPageBlocks";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
+import { patientQuestionsGuidance } from "@/lib/marketing-copy";
 
 const TITLE = "How it works | Beema Health";
 const DESCRIPTION =
@@ -91,7 +92,7 @@ const STEPS = [
   {
     icon: Send,
     title: "Submit your medical intake",
-    text: "If the eligibility check suggests you may be a fit, create a secure account and complete a more detailed medical questionnaire covering your health history, current medications, allergies, and any prior weight-loss treatment. Save your progress at any point and finish at your own pace. Expect questions about medication dosages, known allergies, and any conditions that could affect eligibility — because your provider's decision is based entirely on what you submit here, complete and accurate answers matter more than speed.",
+    text: `If the eligibility check suggests you may be a fit, create a secure account and complete a more detailed medical questionnaire covering your health history, current medications, allergies, and any prior weight-loss treatment. Save your progress at any point and finish at your own pace. ${patientQuestionsGuidance()} Expect questions about medication dosages, known allergies, and any conditions that could affect eligibility — because your provider's decision is based entirely on what you submit here, complete and accurate answers matter more than speed.`,
   },
   {
     icon: Stethoscope,
@@ -109,7 +110,7 @@ const AFTER = [
   {
     icon: MessageCircle,
     title: "Stay connected",
-    text: "Clear communication tracks your status and provides updates to your dashboard, so you always know where things stand — whether your intake is under review, your prescription is being filled, or your next refill is on the way. If your provider needs more information or your circumstances change, you'll hear from your care team directly rather than being left to guess.",
+    text: `Clear communication tracks your status and provides updates to your dashboard, so you always know where things stand — whether your intake is under review, your prescription is being filled, or your next refill is on the way. ${patientQuestionsGuidance()} If your provider needs more information or your circumstances change, you'll hear from your care team directly rather than being left to guess.`,
   },
   {
     icon: RefreshCcw,
@@ -160,7 +161,7 @@ function HowItWorksPage() {
                 <LineReveal delay={0.1}>to provider review</LineReveal>
               </>
             }
-            description="Medication-only pricing with no platform membership fee, just the essentials from eligibility to provider review."
+            description="All-inclusive cash-pay pricing with no platform membership fee, just the essentials from eligibility to provider review."
           />
         </div>
       </Section>

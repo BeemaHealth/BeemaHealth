@@ -37,7 +37,7 @@ import {
 
 const TITLE = "Weight Loss | Beema Health";
 const DESCRIPTION =
-  "Medical weight-loss care with Zepbound, Wegovy, and affordable compounded options when clinically appropriate. Reviewed by licensed providers.";
+  "Provider-reviewed medical weight-loss care with compounded semaglutide and compounded tirzepatide prescribed by a licensed provider when clinically appropriate and legally available. Compounded medications are not FDA-approved.";
 
 export const Route = createFileRoute("/weight-loss")({
   head: () => ({
@@ -66,13 +66,10 @@ export const Route = createFileRoute("/weight-loss")({
         children: JSON.stringify(
           serviceJsonLd({
             name: "Medical Weight-Loss Program",
-            // Deliberately not the meta DESCRIPTION above — that copy pairs
-            // branded-drug names (Zepbound, Wegovy) with "compounded
-            // options" in one sentence with no disclaimer attached. LLM/AI
-            // crawlers and structured-data parsers lift this string with
-            // none of the page's surrounding compounded-vs-FDA-approved
-            // context, so it needs to stand on its own. See LegitScript /
-            // NAD guardrails in docs/marketing/SEO-AEO-GEO-PLAN.md (F2).
+            // Standalone for crawlers: compounded-only offering + not-FDA-approved.
+            // Never name branded products as offerings. See LegitScript / FDA
+            // guardrails in docs/marketing/SEO-AEO-GEO-PLAN.md (§F1.1) and
+            // docs/features/treatment-pages.md.
             description:
               "Telehealth medical weight-loss program from Beema Health. Licensed providers review every patient and may prescribe compounded Semaglutide or Tirzepatide when clinically appropriate; these compounded medications are not FDA-approved, and prescribing is never guaranteed.",
             path: "/weight-loss",
@@ -93,8 +90,8 @@ const BENEFITS = [
   },
   {
     icon: Syringe,
-    title: "Proven GLP-1 pathways",
-    text: "Compounded Semaglutide and Compounded Tirzepatide when clinically appropriate and legally available.",
+    title: "Provider-guided medication options",
+    text: "Compounded Semaglutide and Compounded Tirzepatide are prescribed by a licensed provider only when clinically appropriate and legally available. Compounded medications are not FDA-approved.",
   },
   {
     icon: Scale,
@@ -150,7 +147,7 @@ function WeightLossPage() {
                 <LineReveal delay={0.1}>medical professionals</LineReveal>
               </>
             }
-            description={`Beema Health focuses on evidence-based weight-loss treatments, reviewed by licensed providers, with transparent cash pricing: ${dualCompoundedHeroPricingLine()}.`}
+            description={`Beema Health focuses on provider-reviewed weight-loss care, with transparent cash pricing: ${dualCompoundedHeroPricingLine()}. Compounded medications are not FDA-approved.`}
           />
           <motion.div
             className="mt-10 text-center"

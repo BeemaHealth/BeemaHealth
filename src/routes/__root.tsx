@@ -130,7 +130,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         {
           name: "description",
           content:
-            "Medical weight-loss care reviewed by a licensed provider. Secure intake for Zepbound, Wegovy, and affordable alternatives when appropriate.",
+            "Medical weight-loss care reviewed by a licensed provider. Compounded semaglutide and compounded tirzepatide when clinically appropriate and legally available. Compounded medications are not FDA-approved.",
         },
         { name: "author", content: "Beema Health" },
         {
@@ -165,6 +165,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
       ],
       links: [
+        // Root /favicon.ico is the classic crawler fallback (Google still
+        // probes it). Keep the PNG as the preferred high-res icon.
+        { rel: "icon", href: "/favicon.ico", sizes: "any" },
         { rel: "icon", href: "/favicon-beema.png", type: "image/png" },
         // Outfit/Figtree are self-hosted via @fontsource, imported into
         // styles.css — see the comment there. No external font origins to

@@ -6,10 +6,12 @@ import {
   WAITLIST_DISPLAY_COUNT_FALLBACK,
   promoIncentiveLine,
   getWaitlistDisplayCountSeed,
+  patientQuestionsGuidance,
   waitlistIncentiveBody,
   waitlistSocialProofLine,
   waitlistSuccessIncentiveLine,
 } from "@/lib/marketing-copy";
+import { SUPPORT_EMAIL } from "@/lib/contact-info";
 
 describe("marketing-copy", () => {
   afterEach(() => {
@@ -24,6 +26,14 @@ describe("marketing-copy", () => {
     expect(promoIncentiveLine()).toContain(FIRST_MONTH_PROMO_LINE);
     expect(waitlistIncentiveBody()).toContain(FIRST_MONTH_PROMO_LINE);
     expect(waitlistSuccessIncentiveLine()).toContain(FIRST_MONTH_PROMO_LINE);
+  });
+
+  it("explains questionnaire-only intake and when patients can ask questions", () => {
+    const guidance = patientQuestionsGuidance();
+    expect(guidance).toMatch(/questionnaire only/i);
+    expect(guidance).toMatch(/can't ask questions inside it/i);
+    expect(guidance).toMatch(/After you complete intake and pay/i);
+    expect(guidance).toContain(SUPPORT_EMAIL);
   });
 
   it("exposes one waitlist CTA label for sitewide buttons", () => {
