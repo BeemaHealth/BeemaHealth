@@ -12,6 +12,7 @@ import {
   HexMotif,
   MagneticButton,
 } from "@/components/site/primitives";
+import { FloatingLegitScriptSeal } from "@/components/home/FloatingLegitScriptSeal";
 import {
   EASE_OUT,
   LineReveal,
@@ -202,7 +203,17 @@ export function HomeHero() {
             <RotatingBadge messages={HERO_BADGE_MESSAGES} interval={4000} />
           </motion.div>
 
-          <h1 className="mt-4 text-[clamp(2rem,4.5vw,4rem)] font-bold leading-[1.1] tracking-tight text-foreground">
+          {/*
+              Mobile/stacked LegitScript seal — floats beside the headline.
+              Hidden once the two-column hero kicks in (lg), where the
+              image-column seal takes over so only one seal is ever visible.
+            */}
+          <FloatingLegitScriptSeal
+            className="right-0 top-12 lg:hidden"
+            sealClassName="-rotate-6"
+          />
+
+          <h1 className="mt-4 pr-[6.75rem] text-[clamp(2rem,4.5vw,4rem)] font-bold leading-[1.1] tracking-tight text-foreground lg:pr-0">
             <LineReveal delay={0}>Weight-loss care </LineReveal>
             <LineReveal delay={0.1}>
               {"that's "}
@@ -367,6 +378,15 @@ export function HomeHero() {
               Self-paced online intake
             </motion.div>
           </motion.div>
+
+          {/*
+              Desktop-only LegitScript seal — top-left of the hexagon photo.
+              Paired with `lg:hidden` on the text-column seal so only one shows.
+            */}
+          <FloatingLegitScriptSeal
+            className="-left-2 top-4 hidden lg:-left-4 lg:top-6 lg:block"
+            sealClassName="-rotate-3"
+          />
         </motion.div>
 
         {/*

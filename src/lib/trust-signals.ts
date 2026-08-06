@@ -13,7 +13,9 @@ import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
  * Canonical, honest trust claims — single source of truth for header,
  * footer, homepage, and waitlist trust rows. No invented credentials,
  * certifications, or review scores: only claims that are true today.
- * LegitScript is deliberately absent — certification hasn't started yet.
+ * LegitScript certification is live — the official seal lives on the
+ * homepage hero (`LegitScriptSeal`); keep this list to short icon-card
+ * claims unless product asks to promote LegitScript into the grid too.
  */
 export type TrustSignal = {
   icon: LucideIcon;
