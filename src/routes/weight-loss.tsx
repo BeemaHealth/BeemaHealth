@@ -244,7 +244,7 @@ function WeightLossPage() {
             </h3>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Beema Health is here for adults seeking medical weight-loss
-              support. During your eligibility check, we review BMI, health
+              support. During your medical intake, we review BMI, health
               history, and any factors that might make a GLP-1 treatment plan
               inadvisable. A licensed provider decides whether treatment may be
               appropriate; prescribing is never guaranteed.
@@ -301,8 +301,7 @@ function WeightLossPage() {
               <LineReveal>Ready to get started?</LineReveal>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">
-              The eligibility check takes about 5 minutes. No payment required
-              to start.
+              Complete your medical intake online. No payment required to start.
             </p>
             <MagneticButton className="mt-8">
               <Button

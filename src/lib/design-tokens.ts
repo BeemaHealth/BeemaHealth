@@ -24,6 +24,7 @@ export const SEMANTIC_COLORS = [
   "success",
   "warning",
   "destructive",
+  "trust",
   "ink",
   "border",
   "card",

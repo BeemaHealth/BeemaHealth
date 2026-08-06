@@ -34,7 +34,7 @@ import { patientQuestionsGuidance } from "@/lib/marketing-copy";
 
 const TITLE = "How it works | Beema Health";
 const DESCRIPTION =
-  "From a 5-minute eligibility check to prescription delivery: how Beema Health telehealth weight-loss care works, step by step.";
+  "From medical intake to prescription delivery: how Beema Health telehealth weight-loss care works, step by step.";
 
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/how-it-works")({
       {
         property: "og:description",
         content:
-          "A direct path from eligibility to prescription delivery. No membership fee, no prescription guarantees.",
+          "A direct path from intake to prescription delivery. No membership fee, no prescription guarantees.",
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/how-it-works") }],
@@ -132,7 +132,7 @@ function HowItWorksPage() {
                 <LineReveal delay={0.1}>to your door</LineReveal>
               </>
             }
-            description="All-inclusive cash-pay pricing with no platform membership fee, from your first eligibility check to prescription delivery, when treatment is appropriate."
+            description="All-inclusive cash-pay pricing with no platform membership fee, from your medical intake to prescription delivery, when treatment is appropriate."
           />
         </div>
       </Section>
@@ -145,25 +145,6 @@ function HowItWorksPage() {
         >
           <HexMotif className="w-full" />
         </motion.div>
-
-        <Section className="relative overflow-hidden pb-0 pt-0">
-          {/*
-              LCP-critical: this became the page's largest text block after
-              an earlier round's content expansion, so it's the measured LCP
-              element. A whileInView reveal delays first paint on
-              IntersectionObserver + JS hydration timing — same fix already
-              applied to the hero text and to safety.tsx's clinical-oversight
-              card. Unanimated here.
-            */}
-          <p className="relative z-10 mx-auto max-w-2xl text-center text-base leading-relaxed text-muted-foreground">
-            Getting started with Beema Health follows {HOW_IT_WORKS_STEPS_TOTAL}{" "}
-            steps, from your first eligibility check to your prescription
-            shipping to your door, if a provider decides treatment is
-            appropriate. Here&rsquo;s exactly what happens at each stage, in the
-            order it happens: no platform membership fee, no hidden steps, and
-            no guaranteed prescription along the way.
-          </p>
-        </Section>
 
         <HowItWorksSteps />
 
@@ -180,17 +161,16 @@ function HowItWorksPage() {
                 How long does this take?
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                It depends. The eligibility check itself takes about 5 minutes,
-                but some patients also finish the medical intake in one sitting
-                while others take longer to gather medication and health history
-                details first. Provider review and pharmacy fulfillment happen
-                after that, and both depend on factors outside our control:
-                provider volume, your state&rsquo;s requirements, and how
-                quickly a pharmacy can prepare your medication. We intentionally
-                don&rsquo;t promise a specific number of days for the whole
-                process, because doing so before a licensed provider has
-                evaluated your case would get ahead of a medical decision that
-                has to stay independent.
+                It depends. Some patients finish the medical intake in one
+                sitting, while others take longer to gather medication and
+                health history details first. Provider review and pharmacy
+                fulfillment happen after that, and both depend on factors
+                outside our control: provider volume, your state&rsquo;s
+                requirements, and how quickly a pharmacy can prepare your
+                medication. We intentionally don&rsquo;t promise a specific
+                number of days for the whole process, because doing so before a
+                licensed provider has evaluated your case would get ahead of a
+                medical decision that has to stay independent.
               </p>
             </SurfaceCard>
           </motion.div>

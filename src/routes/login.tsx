@@ -217,7 +217,7 @@ function LoginPage() {
             search={loginPromptCta.search}
             className="text-primary underline"
           >
-            Start eligibility check
+            Start your intake
           </Link>
         </p>
       </QuizShell>

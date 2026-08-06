@@ -25,29 +25,26 @@ export const TRUST_SIGNALS: TrustSignal[] = [
   {
     icon: ShieldCheck,
     label: "HIPAA-compliant & encrypted",
-    detail: "Every intake and message is encrypted, end to end.",
+    detail: "End-to-end encrypted, always.",
   },
   {
     icon: CheckCircle2,
     label: "Licensed providers, verified per state",
-    detail:
-      "Every prescriber is licensed and verified in the state you're treated in.",
+    detail: "Verified in your state.",
   },
   {
     icon: MapPin,
     label: "Available in all 50 states",
-    detail:
-      "Beema Health serves patients nationwide, subject to your state's requirements and clinical eligibility.",
+    detail: "Nationwide, per state eligibility.",
   },
   {
     icon: BadgeDollarSign,
     label: "Transparent pricing",
-    detail: `No hidden fees, no bait-and-switch. All of our products have clear, honest, and transparent pricing.`,
+    detail: "No hidden fees, ever.",
   },
   {
     icon: Factory,
     label: "USA 503A pharmacies",
-    detail:
-      "Medication is compounded and shipped from licensed USA pharmacies.",
+    detail: "Compounded in licensed U.S. pharmacies.",
   },
 ];

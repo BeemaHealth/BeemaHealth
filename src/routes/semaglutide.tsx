@@ -6,7 +6,6 @@ import {
   CheckCircle2,
   ClipboardCheck,
   HeartPulse,
-  Send,
   ShieldCheck,
   Stethoscope,
 } from "lucide-react";
@@ -61,15 +60,15 @@ const SERVICE_DESCRIPTION =
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
     q: "What is compounded semaglutide?",
-    a: "Compounded semaglutide is a GLP-1 medication prepared by a licensed compounding pharmacy rather than manufactured and sold under a brand name. It's used in medical weight-management care, and because it isn't reviewed and approved by the FDA the same way a branded drug is, its formulation, strength, and preparation can differ from an FDA-approved branded medication. Beema only makes compounded semaglutide available when it's legally permitted in your state and a licensed provider determines it's clinically appropriate for your individual case. To be considered, you'll complete a short eligibility check, create a secure account, and finish a medical intake questionnaire covering your health history, current medications, and goals. A licensed provider then reviews that information and independently decides whether compounded semaglutide, compounded tirzepatide, or another option makes sense for you. Because it's a prescription medication, your provider's individual judgment always determines eligibility, dosage, and whether treatment is appropriate at all.",
+    a: "Compounded semaglutide is a GLP-1 medication prepared by a licensed compounding pharmacy rather than manufactured and sold under a brand name. It's used in medical weight-management care, and because it isn't reviewed and approved by the FDA the same way a branded drug is, its formulation, strength, and preparation can differ from an FDA-approved branded medication. Beema only makes compounded semaglutide available when it's legally permitted in your state and a licensed provider determines it's clinically appropriate for your individual case. To be considered, you'll create a secure account and complete a medical intake questionnaire covering your health history, current medications, and goals. A licensed provider then reviews that information and independently decides whether compounded semaglutide, compounded tirzepatide, or another option makes sense for you. Because it's a prescription medication, your provider's individual judgment always determines eligibility, dosage, and whether treatment is appropriate at all.",
   },
   {
     q: "Is semaglutide right for me?",
-    a: "Whether semaglutide is right for you depends on several factors your licensed provider reviews individually: your BMI, health history, current medications, and any potential contraindications or interactions. During your medical intake questionnaire, you'll share detailed information about your health so your provider can make an informed, independent clinical decision, prescribing is never guaranteed, and not everyone who applies will be approved. Provider approval also depends on applicable state law, since medication availability can vary by state. If semaglutide isn't the right fit for you, your provider may discuss compounded tirzepatide or another approach as part of Beema's broader weight-loss program instead. The most reliable way to find out if semaglutide is appropriate for your situation is to complete the short eligibility check and full intake so a licensed provider can evaluate your case directly.",
+    a: "Whether semaglutide is right for you depends on several factors your licensed provider reviews individually: your BMI, health history, current medications, and any potential contraindications or interactions. During your medical intake questionnaire, you'll share detailed information about your health so your provider can make an informed, independent clinical decision, prescribing is never guaranteed, and not everyone who applies will be approved. Provider approval also depends on applicable state law, since medication availability can vary by state. If semaglutide isn't the right fit for you, your provider may discuss compounded tirzepatide or another approach as part of Beema's broader weight-loss program instead. The most reliable way to find out if semaglutide is appropriate for your situation is to complete your intake so a licensed provider can evaluate your case directly.",
   },
   {
     q: "How does online semaglutide care through Beema work?",
-    a: "Care starts with a short eligibility check, about five minutes, covering your health, location, and weight-loss goals. If you appear eligible, you'll create a secure account and complete a medical intake questionnaire that asks about your health history, current medications, and treatment goals in more depth; you can save your progress and return to it anytime. A licensed provider then reviews your intake and makes an independent clinical decision about whether compounded semaglutide is appropriate for you, prescribing is never guaranteed. Beema's clinical provider network is led by Dr. Sean Arora, MD, of Arora Health & Aesthetics, though the specific clinician assigned to your case may vary by state licensure and availability. If approved, your plan includes prescription medication, ongoing doctor care, supplies like alcohol pads and syringes, and expedited shipping, with follow-up visits so your provider can monitor your progress and adjust care as needed.",
+    a: "Care starts with creating a secure account and completing a medical intake questionnaire covering your health, location, weight-loss goals, health history, and current medications; you can save your progress and return to it anytime. A licensed provider then reviews your intake and makes an independent clinical decision about whether compounded semaglutide is appropriate for you, prescribing is never guaranteed. Beema's clinical provider network is led by Dr. Sean Arora, MD, of Arora Health & Aesthetics, though the specific clinician assigned to your case may vary by state licensure and availability. If approved, your plan includes prescription medication, ongoing doctor care, supplies like alcohol pads and syringes, and expedited shipping, with follow-up visits so your provider can monitor your progress and adjust care as needed.",
   },
   {
     q: "How much does semaglutide cost through Beema?",
@@ -77,7 +76,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "Does Beema serve patients nationwide?",
-    a: "Yes, Beema Health is available to patients in all 50 U.S. states, so you can start your eligibility check and medical intake no matter where you live. That said, whether compounded semaglutide specifically is available to you still depends on your state's rules around compounded medications and on pharmacy fulfillment in your area, since compounding regulations and sourcing can vary from state to state. Even where compounded semaglutide is available, eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history, current medications, and BMI, it isn't guaranteed just because you're in a covered state. If compounded semaglutide isn't an option where you live or for your specific case, your provider may discuss compounded tirzepatide or another approach as part of Beema's broader weight-loss program. Completing the short eligibility check is the fastest way to find out what's available to you.",
+    a: "Yes, Beema Health is available to patients in all 50 U.S. states, so you can start your medical intake no matter where you live. That said, whether compounded semaglutide specifically is available to you still depends on your state's rules around compounded medications and on pharmacy fulfillment in your area, since compounding regulations and sourcing can vary from state to state. Even where compounded semaglutide is available, eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history, current medications, and BMI, it isn't guaranteed just because you're in a covered state. If compounded semaglutide isn't an option where you live or for your specific case, your provider may discuss compounded tirzepatide or another approach as part of Beema's broader weight-loss program. Completing your intake is the fastest way to find out what's available to you.",
   },
   {
     q: "Is compounded semaglutide FDA-approved?",
@@ -85,7 +84,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "How quickly can treatment begin?",
-    a: "How quickly treatment can begin depends on a few things you influence and a few your provider and pharmacy control. On your end, it depends on how quickly you complete the short eligibility check and the full medical intake questionnaire, since incomplete or inaccurate information can slow provider review. From there, timing depends on how fast a licensed provider can review your case and make an independent clinical decision, and, if approved, how quickly the pharmacy can fulfill and ship your prescription with expedited shipping. Because prescribing is never guaranteed and depends on your individual health history, current medications, and applicable state law, Beema can't guarantee a specific start date or that treatment will be approved at all. If you're switching from another provider, sharing your current dose accurately can also help your provider determine your correct starting dose without unnecessary delay.",
+    a: "How quickly treatment can begin depends on a few things you influence and a few your provider and pharmacy control. On your end, it depends on how quickly you complete your full medical intake questionnaire, since incomplete or inaccurate information can slow provider review. From there, timing depends on how fast a licensed provider can review your case and make an independent clinical decision, and, if approved, how quickly the pharmacy can fulfill and ship your prescription with expedited shipping. Because prescribing is never guaranteed and depends on your individual health history, current medications, and applicable state law, Beema can't guarantee a specific start date or that treatment will be approved at all. If you're switching from another provider, sharing your current dose accurately can also help your provider determine your correct starting dose without unnecessary delay.",
   },
   {
     q: "Can I switch to Beema if I'm already on semaglutide elsewhere?",
@@ -98,13 +97,8 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
 const STEPS = [
   {
     icon: ClipboardCheck,
-    title: "See if you qualify",
-    text: "A short set of questions about your health, location, and goals, about 5 minutes.",
-  },
-  {
-    icon: Send,
     title: "Complete your medical intake",
-    text: "Create your account and fill out a secure questionnaire, save your progress anytime.",
+    text: "Create your account and fill out a secure questionnaire covering your health, medications, and goals, save your progress anytime.",
   },
   {
     icon: Stethoscope,
@@ -537,11 +531,12 @@ function SemaglutidePage() {
           />
           <div className="relative z-10">
             <h2 className="text-3xl font-bold">
-              <LineReveal>Start with a quick eligibility check.</LineReveal>
+              <LineReveal>Start with your medical intake.</LineReveal>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">
-              Takes about 5 minutes. A licensed provider makes every clinical
-              decision independently, prescribing is never guaranteed.
+              Save your progress and finish at your own pace. A licensed
+              provider makes every clinical decision independently, prescribing
+              is never guaranteed.
             </p>
             <MagneticButton className="mt-8">
               <Button

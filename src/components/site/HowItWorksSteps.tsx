@@ -28,7 +28,7 @@ const STEPS: Step[] = [
     icon: ClipboardCheck,
     title: "Complete your medical intake",
     blurb:
-      "A short eligibility check, creating a secure account and going through a medical intake, at your own pace.",
+      "Create a secure account and complete a full medical intake covering your health history, medications, and goals, at your own pace.",
   },
   {
     icon: Stethoscope,

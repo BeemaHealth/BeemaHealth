@@ -57,7 +57,7 @@ const MARQUEE_ITEMS = [
   "Private & secure encrypted intake",
   "HIPAA-compliant care",
   FIRST_MONTH_PROMO_LINE,
-  "5-minute eligibility check",
+  "Self-paced online intake",
 ] as const;
 
 /**
@@ -364,7 +364,7 @@ export function HomeHero() {
               }
             >
               <ClipboardCheck className="size-4 shrink-0 text-accent-foreground" />
-              5-minute eligibility check
+              Self-paced online intake
             </motion.div>
           </motion.div>
         </motion.div>
