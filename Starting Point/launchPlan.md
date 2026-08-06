@@ -1,5 +1,7 @@
 # Beema Health MVP Launch Plan
 
+> **Status (August 2026):** Marketing site + Bask questionnaire are **launched**. **LegitScript certified** — paid ads unblocked. See [docs/features/legitscript.md](../docs/features/legitscript.md). This plan remains useful as historical build order / optimization backlog; do not treat “required to launch” steps as still blocking go-live.
+
 > **Acronyms:** See [../README.md](../README.md#glossary-acronyms-used-in-this-repo) for infrastructure terms. This doc also uses **MVP** (Minimum Viable Product), **FDA** (U.S. Food and Drug Administration), **HIPAA** (Health Insurance Portability and Accountability Act), **MSO** (Management Services Organization), **LLC** (Limited Liability Company), **PC** (Professional Corporation), **MD** (Doctor of Medicine), **DO** (Doctor of Osteopathic Medicine), **NP** (Nurse Practitioner), **CAC** (Customer Acquisition Cost), **SEO** (Search Engine Optimization).
 
 Matt builds the software. Charlie finds suppliers (turnkey clinical partners, pharmacies, growth).

@@ -1,4 +1,4 @@
-/** Stable CTA identifiers for funnel / waitlist attribution (routing unchanged). */
+/** Stable CTA identifiers for funnel / conversion attribution. */
 export const CTA_IDS = {
   nav_mobile: "nav_mobile",
   footer: "footer",
@@ -62,9 +62,9 @@ export const qualifyHref = waitlistHref;
  * CTA switchboard
  * ---------------------------------------------------------------------
  * Beema is live: every marketing CTA sitewide sends visitors to Bask's
- * hosted questionnaire (the in-house waitlist/qualify/intake funnel is
- * dormant — see docs/BACKEND-DEFERRED.md). If a different intake URL is
- * ever needed per medication, that's still a per-CTA override below.
+ * hosted intake (one questionnaire — not a separate eligibility product).
+ * Leftover in-repo waitlist/qualify/intake routes are legacy — see
+ * docs/BACKEND-DEFERRED.md.
  *
  * `resolveCta(id)` is the ONLY place that decision should be made.
  * Every CTA button/link in the app calls this instead of hardcoding
@@ -76,9 +76,9 @@ export const qualifyHref = waitlistHref;
  *   - Change every CTA at once → edit DEFAULT_CTA_TARGET.
  *   - Change one CTA (e.g. tirzepatide_hero → a medication-specific
  *     intake URL) → add an entry to CTA_OVERRIDES keyed by the CtaId.
- *     `to` may be an internal path ("/intake/") or a full external URL
- *     (Bask lives on a different domain) — both render correctly via
- *     TanStack Router's <Link>.
+ *     `to` may be an internal path or a full external URL (Bask lives
+ *     on a different domain) — both render correctly via TanStack
+ *     Router's <Link>.
  */
 type CtaTarget = { label: string; to: string };
 

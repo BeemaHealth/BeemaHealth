@@ -2,6 +2,8 @@
 
 Telehealth medical weight-loss intake platform. This repo contains the **React frontend** (TanStack Start) and **Django REST (Representational State Transfer) API (Application Programming Interface) backend**.
 
+**Status (August 2026):** Marketing site is **launched**. **Intake**, checkout, backend, and patient portal run on **Bask** (one intake questionnaire — not a separate eligibility product). **LegitScript certified** — ready for paid advertising. See [docs/features/legitscript.md](docs/features/legitscript.md). Leftover Django / old funnel code: [docs/BACKEND-DEFERRED.md](docs/BACKEND-DEFERRED.md).
+
 Use this file as the **documentation index** — for humans and AI agents. When looking something up, start here, then follow the link to the right doc.
 
 ---
@@ -71,6 +73,7 @@ Full local dev guide (identical setup on every machine): **[docs/LOCAL-DEV.md](d
 |------|-------------|
 | Local dev setup (Docker, prerequisites) | [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md) |
 | HIPAA compliance (agents) | [docs/HIPAA.md](docs/HIPAA.md) |
+| LegitScript / launched / ads readiness | [docs/features/legitscript.md](docs/features/legitscript.md) |
 | Input validation & security tests | [docs/INPUT_VALIDATION_TESTS.md](docs/INPUT_VALIDATION_TESTS.md) |
 | LifeFile / MediVera pharmacy API (agents) | [docs/LIFEFILE_MEDIVERA_API.md](docs/LIFEFILE_MEDIVERA_API.md) → `docs/vendor/LIFEFILE_MEDIVERA_API.md` (local, gitignored) |
 | MediVera onboarding call prep | [docs/MEDIVERA_ONBOARDING_QUESTIONS.md](docs/MEDIVERA_ONBOARDING_QUESTIONS.md) |
@@ -135,16 +138,7 @@ Beema Health/
 | [src/lib/api/client.ts](src/lib/api/client.ts) | API client — calls Django when `VITE_API_URL` is set |
 | [src/lib/safety-flags.ts](src/lib/safety-flags.ts) | Client-side safety flag logic (mirrored in backend) |
 
-**Key frontend routes:** See [src/routes/README.md](src/routes/README.md) for the Step 1–8 route map (`/`, `/qualify`, `/intake`, `/consent`, `/dashboard`, `/admin`).
-
-### Backend (Django + DRF)
-
-| File | Contents |
-|------|----------|
-| [backend/README.md](backend/README.md) | **How to run the backend** (Docker), API endpoints, roles, HIPAA technical safeguards |
-| [backend/DATABASE.md](backend/DATABASE.md) | **All database tables**, relationships, design decisions, JSON vs columns, API/type mapping |
-| [backend/HOSTING.md](backend/HOSTING.md) | **Production hosting** — Heroku Shield (pending BAA) vs AWS EC2 |
-| [backend/deploy/aws.md](backend/deploy/aws.md) | AWS EC2 production deployment (RDS, S3, ALB, BAA) |
+**Key frontend routes:** Marketing pages (`/`, `/how-it-works`, treatment pages, legal, etc.) — see [src/routes/README.md](src/routes/README.md). Live **intake** / checkout / portal are on Bask (not in-repo `/qualify` → `/intake` → `/dashboard`).
 
 ### Configuration
 
@@ -238,51 +232,34 @@ Production: **AWS EC2** ([backend/deploy/aws.md](backend/deploy/aws.md)) or **He
 
 **Environment switching:** `BEEMAHEALTH_ENV` selects `.env.dev`, `.env.staging`, or `.env.production`. Frontend npm scripts map to Vite modes: `npm run dev` → dev, `npm run build:staging` → staging, `npm run build` → production.
 
-PHI must **never** be stored in `localStorage` or `sessionStorage`. When `VITE_API_URL` is set, the frontend sends PHI to the API. A temporary `localStorage` fallback in the prototype will be removed.
+PHI must **never** be stored in `localStorage` or `sessionStorage` on the marketing site. Patient **intake** PHI is collected and stored by Bask, not by this marketing frontend.
 
-**Pre-account eligibility:** Visitors answer several quiz steps before registering. Progress is persisted **server-side** and tied to the browser via an `HttpOnly` funnel cookie — not `localStorage`, not IP address. Registration claims that draft and attaches it to the new user. Full requirements: [backend/DATABASE.md — Anonymous funnel session](backend/DATABASE.md#anonymous-funnel-session-pre-account).
+**Live intake:** Bask hosts one long **intake** questionnaire (eligibility is not a separate Beema product step). Marketing CTAs use `resolveCta()` → Bask. See [docs/features/legitscript.md](docs/features/legitscript.md).
 
 ---
 
-## Where to deploy the backend (PHI — Protected Health Information)
+## Legacy Django backend (not live)
 
-**PHI** means patient-identifying health data: names, contact info, dates of birth, questionnaire answers, uploaded documents, and similar records. **Do not use standard Heroku for real patient data.**
-
-| Option | PHI-safe? (Protected Health Information) | Summary |
-|--------|-----------|---------|
-| **Local Docker** | No | Development and fake data only — [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md) |
-| **Heroku Shield + BAA** | Yes, if contracted | Alternate if Salesforce confirms Shield + BAA |
-| **Standard Heroku** | **No** | Not permitted for PHI (Protected Health Information) |
-| **AWS EC2 + RDS + S3 + BAA** | Yes | **Planned production path** — [backend/deploy/aws.md](backend/deploy/aws.md) |
-
-Full research and go/no-go checklist: **[backend/HOSTING.md](backend/HOSTING.md)**
-
-**Current plan:** Develop locally with Docker. Complete Heroku BAA inquiry in parallel. **Default production to AWS EC2** unless Heroku Shield + BAA is confirmed and preferred.
+In-repo `backend/` and old funnel docs are **legacy** — Beema does not run that stack for patients today. Index: **[docs/BACKEND-DEFERRED.md](docs/BACKEND-DEFERRED.md)**. Hosting notes below apply only if that stack were ever resumed for real PHI.
 
 ---
 
 ## For AI agents
 
-**Start here:** **[AGENTS.md](AGENTS.md)** — production mindset, architecture, testing requirements, security checklist, and workflow.
+**Start here:** **[AGENTS.md](AGENTS.md)** — production mindset, Bask intake model, testing, security.
 
 | Topic | Read first |
 |-------|------------|
-| Agent engineering guide (tests, validation, PHI) | **`AGENTS.md`** |
-| HIPAA compliance checklist for agents | **`docs/HIPAA.md`** |
-| Input validation & attack-payload tests | `docs/INPUT_VALIDATION_TESTS.md` |
-| Database schema / tables / why JSON | `backend/DATABASE.md` |
-| Canonical field ownership (no duplicate storage) | `backend/DATABASE.md#canonical-field-ownership-no-duplicates` |
-| Pre-account funnel session (cookie + server draft) | `backend/DATABASE.md#anonymous-funnel-session-pre-account` |
-| Run backend, API routes, auth | `backend/README.md`, `docs/LOCAL-DEV.md` |
-| Production hosting, HIPAA infra | `backend/HOSTING.md` |
-| AWS EC2 deploy | `backend/deploy/aws.md` |
-| Frontend routes | `src/routes/README.md` |
-| API ↔ frontend types | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |
-| MVP launch plan (build order, success criteria) | `Starting Point/launchPlan.md` |
+| Agent engineering guide | **`AGENTS.md`** |
+| Launch / LegitScript / Bask intake architecture | **`docs/features/legitscript.md`** |
+| HIPAA (marketing site + PHI boundaries) | **`docs/HIPAA.md`** |
+| Marketing input validation tests | `docs/INPUT_VALIDATION_TESTS.md` |
+| Treatment pages + CTA → Bask | `docs/features/treatment-pages.md` |
+| Frontend marketing routes | `src/routes/README.md` |
+| Legacy Django / old funnel (not live) | **`docs/BACKEND-DEFERRED.md`** |
 | Restore archived marketing pages / nav | `docs/archived-marketing-pages.md` |
-| Env vars | `.env.dev`, `.env.staging`, `.env.production` — `backend/README.md` |
 
-**Do not** treat local Docker or browser `localStorage` as HIPAA-compliant storage for PHI (Protected Health Information).
+**Do not** store PHI in browser storage. Patient intake PHI lives on Bask.
 
 ---
 

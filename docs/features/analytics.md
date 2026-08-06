@@ -52,16 +52,16 @@ Bask data layer notes: `sessionId`, `eventModel.screen_name`, `eventModel.userId
 
 ## Ad conversions & frontend-only analytics (Meta + Google)
 
-Pre-launch waitlist lives at **`/waitlist/`** (legacy `/qualify/` redirects there and keeps query params). Paid-media + visitor analytics run via `src/lib/ad-conversions.ts` (loaded from `__root.tsx` with `initAdPixels()`). **No backend required** for these.
+**Site is launched** (Bask questionnaire via `resolveCta()`). Legacy **`/waitlist/`** still exists (and `/qualify/` redirects there) for older links/social-proof tooling, but it is **not** the primary conversion path. Paid-media + visitor analytics run via `src/lib/ad-conversions.ts` (loaded from `__root.tsx` with `initAdPixels()`). **No backend required** for these. LegitScript certified / ads-ready: `docs/features/legitscript.md`.
 
 | Env var | Purpose |
 |---------|---------|
-| `VITE_GA_MEASUREMENT_ID` | **GA4** (`G-…`) — all page views + UTM/session source (including visitors who never join the waitlist) |
+| `VITE_GA_MEASUREMENT_ID` | **GA4** (`G-…`) — all page views + UTM/session source |
 | `VITE_GTM_CONTAINER_ID` | **GTM** (`GTM-…`) — Bask container also loaded on the marketing site for Preview / Conversion Linker |
-| `VITE_META_PIXEL_ID` | Meta Pixel ID — fires `PageView` on load + `Lead` on successful waitlist submit |
+| `VITE_META_PIXEL_ID` | Meta Pixel ID — fires `PageView` on load (+ `Lead` on legacy waitlist submit if used) |
 | `VITE_GOOGLE_ADS_ID` | Google Ads tag ID (`AW-…`) |
 | `VITE_GOOGLE_ADS_CONVERSION_LABEL` | Conversion label — with Ads ID, fires `gtag('event','conversion')` on submit |
-| `VITE_WAITLIST_DISPLAY_COUNT` | Optional override for the waitlist social-proof number |
+| `VITE_WAITLIST_DISPLAY_COUNT` | Optional override for legacy waitlist social-proof number |
 
 If IDs are unset, helpers no-op (safe for local/dev). Do **not** send email, name, or other PHI to pixel/gtag calls. Pixel IDs are public client config — still do not commit production secrets adjacent to them in shared docs.
 
@@ -69,7 +69,7 @@ After a successful Formspree waitlist submit, `trackWaitlistSubmit("waitlist")` 
 
 ## CTA attribution
 
-Marketing CTAs use stable ids (`src/lib/cta-ids.ts`), passed as `?cta_id=` on links to `/waitlist/`.
+Marketing CTAs use stable ids (`src/lib/cta-ids.ts`) via `resolveCta()` (default → Bask). Legacy waitlist links may still carry `?cta_id=`.
 
 | Storage | Field |
 |---------|--------|

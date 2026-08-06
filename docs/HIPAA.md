@@ -203,9 +203,9 @@ Does it touch patient health or identifying data?
 
 ---
 
-## Pre-launch compliance gate (real patients)
+## Production PHI gate (Beema-hosted backend)
 
-Before accepting real patient PHI in production, confirm with the user that these are done:
+Marketing launch + Bask intake does **not** mean Beema’s own Django stack is cleared for real patient PHI. Before accepting real patient PHI **in Beema-hosted production**, confirm with the user that these are done:
 
 - [ ] AWS BAA (or Heroku Shield BAA) signed
 - [ ] BAAs for email, document storage, and any other subprocessors

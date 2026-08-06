@@ -7,11 +7,11 @@ import unbrandedTirzepatide from "@/assets/treatments/unbranded-tirzepatide-vial
  * ---------------------------------------------------------------------
  * Vial imagery switchboard
  * ---------------------------------------------------------------------
- * LegitScript prefers colour-branded product photography without a brand
- * name or logo on the vial, so while our application is under review the
- * site ships the unbranded product shots. The branded Beema vial renders
- * are untouched and still imported here, ready to go back up once we're
- * approved.
+ * During LegitScript review we shipped colour product photography without
+ * a brand name/logo on the vial. Certification is complete (August 2026);
+ * the site still defaults to unbranded shots until product flips
+ * `VIAL_IMAGERY_MODE` to `"branded"`. Branded Beema vial renders remain
+ * imported and ready.
  *
  * `resolveVialImagery(id)` is the ONLY place that decision is made. Every
  * component that shows a vial calls this instead of importing an asset
@@ -29,7 +29,7 @@ export type MedicationId = "semaglutide" | "tirzepatide";
 
 export type VialImageryMode = "unbranded" | "branded";
 
-/** Flip to "branded" once LegitScript has reviewed us. */
+/** Flip to "branded" when product wants Beema-wordmark vials (LegitScript already certified). */
 export const VIAL_IMAGERY_MODE: VialImageryMode = "unbranded";
 
 export type VialImagery = {

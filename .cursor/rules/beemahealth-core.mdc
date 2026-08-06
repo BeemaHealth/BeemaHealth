@@ -5,27 +5,27 @@ alwaysApply: true
 
 # Beema Health core standards
 
-**Company:** Beema Health ([beemahealth](https://beemahealth/)) — HIPAA-aligned telehealth weight-loss intake.
+**Company:** Beema Health ([beemahealth](https://beemahealth/)) — HIPAA-aligned telehealth weight-loss.
 
 **Mindset:** Senior SWE + QA. Nothing is a prototype. Ship production-quality code, validation, and tests on every change.
 
-**Current phase:** Beema is not hosting/running its own backend for the foreseeable future — Bask is the storefront/checkout/questionnaire platform instead. The Django backend is intact but dormant — see `docs/BACKEND-DEFERRED.md` before touching it.
+**Current phase:** **Launched.** This repo = **marketing/SEO site**. [Bask](https://bask.co/) owns **intake** (one questionnaire — not separate eligibility + intake), checkout, backend, and patient portal (Hive). CTAs → Bask via `resolveCta()`. **LegitScript certified** — ads ready. See `docs/features/legitscript.md`. Leftover Django/`/qualify`/`/intake` code is **legacy** — `docs/BACKEND-DEFERRED.md`; do not orient product work there unless the user asks.
 
-**After code changes:** run `npm test` (frontend Vitest) — the default. Only run `npm run test:all` (adds backend `smoke_clinical_flow` integration smoke) if the task explicitly touches `backend/`. Fix failures; explain them in chat. Add tests when behavior is new or uncovered.
+**After code changes:** run `npm test` (frontend Vitest). Fix failures; explain them in chat. Add tests when behavior is new or uncovered.
 
 **Lint:** ESLint on **changed** `.ts`/`.tsx` files only (`npx eslint <paths>` or git-diff pipe). Do **not** run `npm run lint` on the whole repo.
 
 **TypeScript:** run `npx tsc --noEmit` whenever you change TS/TSX — **required**, not optional. ESLint does not catch missing imports in route files; Vitest does not typecheck `src/routes/`.
 
-**New user input (frontend; backend only if resuming backend work):**
-1. Validators in frontend (`src/lib/form-validation.ts`, step files) — plus backend (`backend/apps/common/validation/` + serializer) only if the task explicitly resumes backend work
+**New user input (marketing site):**
+1. Validators in frontend (`src/lib/form-validation.ts`, etc.) as applicable
 2. Tests with SQL injection, XSS, path traversal, command injection, overflow — see `docs/INPUT_VALIDATION_TESTS.md`
-3. Backend API test returning 400 on malicious payloads — dormant, only if backend work resumes
+3. Never store PHI in localStorage/sessionStorage; no PHI in logs or ad pixels
 
-**PHI:** never in localStorage/sessionStorage. Parameterized DB queries only. See **`docs/HIPAA.md`** for full compliance checklist.
+**PHI:** Bask handles patient intake PHI. This marketing site must not collect or store PHI. See **`docs/HIPAA.md`**.
 
-**Colors / portal UI:** raw palette in `src/styles.css`; usage in **`src/lib/design-tokens.ts`**. Use `AccountSectionCard` + `SectionTone` — see **`AGENTS.md` § Design system & color scheme**. Never ad hoc colors.
+**Colors:** raw palette in `src/styles.css`; usage in **`src/lib/design-tokens.ts`**. See **`AGENTS.md` § Design system**. Never ad hoc colors.
 
 **Agent docs:** read `AGENTS.md` first. If agent docs disagree with the codebase, propose the fix to the user — do not edit `AGENTS.md` or rules without approval.
 
-**Authoritative docs:** `AGENTS.md`, `docs/INPUT_VALIDATION_TESTS.md`, `docs/BACKEND-DEFERRED.md`
+**Authoritative docs:** `AGENTS.md`, `docs/features/legitscript.md`, `docs/INPUT_VALIDATION_TESTS.md` (frontend), `docs/BACKEND-DEFERRED.md` (legacy only)

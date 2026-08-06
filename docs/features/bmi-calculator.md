@@ -29,7 +29,7 @@ Tests: `src/lib/__tests__/bmi.test.ts`.
 
 ## CTA ids
 
-Added to `CTA_IDS` in `src/lib/cta-ids.ts`: `tirzepatide_bmi`, `semaglutide_bmi`. Both fall back to `DEFAULT_CTA_TARGET` (waitlist) like every other CTA until the Bask cutover happens.
+Added to `CTA_IDS` in `src/lib/cta-ids.ts`: `tirzepatide_bmi`, `semaglutide_bmi`. Both fall back to `DEFAULT_CTA_TARGET` (Bask **intake**) like every other marketing CTA.
 
 ## Key files
 

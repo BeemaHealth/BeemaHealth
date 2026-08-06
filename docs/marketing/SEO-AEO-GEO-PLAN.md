@@ -63,7 +63,7 @@ Only static, prerendered marketing pages get indexed — everything else is a cr
 
 ### Bask integration note
 
-Frontend CTAs will link into the Bask flow on the backend side; that wiring is pending and **out of scope for SEO work** — nothing in the funnel needs search visibility. When the Bask hookup lands, the only SEO touchpoint is confirming CTA destinations stay excluded from indexing (robots + `noindex`) and that GA conversion events keep firing.
+**Done.** Marketing CTAs link to Bask’s hosted questionnaire/checkout via `resolveCta()` (`src/lib/cta-ids.ts`). Funnel/questionnaire destinations stay excluded from indexing (robots + `noindex` on non-marketing routes); keep GA/GTM conversion events firing. See `docs/features/treatment-pages.md` and `docs/features/legitscript.md`.
 
 ---
 
@@ -153,7 +153,7 @@ Long-tail spokes, one article each. Examples of target queries where telehealth 
 
 ### B3. E-E-A-T requirements (non-negotiable for YMYL)
 - Named medical reviewer(s) with license/NPI-verifiable credentials on every clinical page; reviewer bio pages linked from bylines.
-- `/about` expanded: leadership, medical team, LegitScript seal once certified.
+- `/about` expanded: leadership, medical team, LegitScript seal (**certified August 2026** — seal also on homepage hero; see `docs/features/legitscript.md`).
 - Editorial policy + medical review policy pages (WebMD/Healthline pattern).
 - Cite primary sources inline; never make claims the FDA label or trials don't support.
 - Real business footprint: consistent NAP, privacy/terms (done), visible support contact.
@@ -227,11 +227,11 @@ Target: 10–20 quality referring domains/month by month 6.
 
 ## 7. Workstream F — Paid acquisition (fills the organic gap)
 
-### F1. Prerequisite: LegitScript Healthcare/Telemedicine Certification
-Google (and Meta/Microsoft/TikTok) require LegitScript certification to run telehealth/prescription-drug ads. Without it, no paid search on our core terms — full stop.
-- Timeline: typically 4–8 weeks. Start immediately.
-- Cost: application + annual monitoring, roughly **$2,000–$5,000/yr** depending on tier (confirm current pricing at legitscript.com).
-- Also unlocks the LegitScript seal for the site footer (trust/E-E-A-T signal).
+### F1. LegitScript Healthcare/Telemedicine Certification — ✅ complete (August 2026)
+
+Google (and Meta/Microsoft/TikTok) require LegitScript certification to run telehealth/prescription-drug ads. **Beema Health is certified** — paid acquisition on core terms is unblocked. Official seal + verify URL: `docs/features/legitscript.md` / `src/lib/legitscript.ts` (hero seal live).
+
+Ongoing: keep annual monitoring current; seal and ads creative must stay aligned with §F1.1 content rules below.
 
 ### F1.1 Compounded GLP‑1 website & marketing content rules (LegitScript + FDA)
 
@@ -262,7 +262,7 @@ Source: https://www.fda.gov/news-events/press-announcements/fda-intends-take-act
 
 **Code / copy checkpoints (current):** meta and hero language on `/`, `/weight-loss`, and root layout must describe **compounded-only** offerings (no branded product names as Beema options); no “affordable alternatives” or “Proven GLP‑1 pathways” framing. Treatment pages and legal terms already carry not-FDA-approved / not-the-same-product language. When `/learn` educational pages ship, FAQs and trial sections must never say compounded products use the “same active ingredient,” must wall off branded trial data from compounded CTAs, and must not imply Beema sells branded drugs.
 
-See also the **Compliance** section in `docs/features/treatment-pages.md` (living rules for treatment marketing pages) and product-imagery notes in `src/lib/treatment-imagery.ts` / `docs/features/homepage.md` (LegitScript prefers colour product photography without Beema wordmark during review).
+See also the **Compliance** section in `docs/features/treatment-pages.md` (living rules for treatment marketing pages), `docs/features/legitscript.md` (certification + seal), and product-imagery notes in `src/lib/treatment-imagery.ts` / `docs/features/homepage.md`.
 
 ### F2. Google Ads
 - **Search campaigns** on high-intent terms: "semaglutide online prescription", "tirzepatide telehealth", "GLP‑1 online doctor", competitor-adjacent and "switch/transfer" terms, plus branded defense.
@@ -293,8 +293,8 @@ Industry benchmark for GLP‑1 practices is $1,000–$15,000+/mo in ad spend eve
 
 ### F5. HIPAA tracking guardrail (critical)
 OCR's guidance on tracking technologies makes third-party pixels on pages handling PHI a breach risk. Rules for all marketing instrumentation:
-- Ad pixels (Google, Meta, TikTok) may fire **only** on public marketing pages and `lp.$slug` — never on `/qualify`, `/intake`, `/consent`, `/dashboard`, `/verify-email`, or any authenticated route.
-- Conversion tracking past qualify-start uses server-side, de-identified events (Google Enhanced Conversions / Meta CAPI with hashed values reviewed by compliance, or aggregate-only reporting from our own analytics).
+- Ad pixels (Google, Meta, TikTok) may fire **only** on public marketing pages and `lp.$slug` — never on Bask intake/checkout/portal surfaces or any page that collects PHI.
+- Conversion tracking past marketing CTAs uses Bask/GTM and/or server-side, de-identified events reviewed by compliance — not PHI in browser pixels.
 - Any new pixel goes through the same review as a code change touching PHI. Document each approved pixel + allowed routes in `docs/features/analytics.md`.
 
 ---
@@ -304,12 +304,12 @@ OCR's guidance on tracking technologies makes third-party pixels on pages handli
 **Weeks 1–3 — Foundation**
 - Resolve the brand/domain decision (G9). Everything else keys off this.
 - Ship Workstream A (A1–A7). Verify GSC + Bing Webmaster Tools; submit sitemap.
-- Start LegitScript application.
+- ~~Start LegitScript application.~~ **Done August 2026** — certified; seal on homepage hero (`docs/features/legitscript.md`).
 - Keyword research pass to finalize the first 30 article briefs (Ahrefs/Semrush).
 
 **Months 1–3 — Engine on**
 - `/learn` rebuilt; publish 8–12 articles/month starting with Cluster 2 (switching) and cost/comparison queries — fastest to rank, highest intent.
-- Launch Google Ads (once LegitScript clears) on high-intent + branded terms → LP pages.
+- Launch Google Ads on high-intent + branded terms → LP pages (**LegitScript cleared** — ads ready).
 - First digital-PR campaign. Start review generation. Baseline GEO audit (the 20-prompt spreadsheet).
 
 **Months 4–6 — Compound**
@@ -348,7 +348,7 @@ North-star: **qualified intake completions from organic + AI channels per month*
 2. **Budget tier** (§F4) — recommend Growth if CAC math holds; Lean is viable but pushes head-term visibility mostly into paid-only.
 3. **Medical reviewer** — who is the named, licensed reviewer for content? Required before the first article ships.
 4. ~~**Deferred: docs/copy legacy-name cleanup**~~ **Done August 2026** — mechanical find-and-review pass across docs and remaining UI copy completed; `llms.txt`, robots.txt, and all meta remain consistent.
-5. **Deferred: Bask CTA wiring** — backend/frontend button integration pending; no SEO action until it lands (then re-verify the funnel stays noindexed and GA events fire).
+5. ~~**Deferred: Bask CTA wiring**~~ **Done** — marketing CTAs → Bask questionnaire via `resolveCta()`; keep funnel routes noindexed and conversion events firing.
 
 ---
 

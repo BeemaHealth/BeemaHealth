@@ -2,6 +2,8 @@
 
 Homepage-specific sections that don't fit neatly under another feature doc, plus the mobile nav shell (`CircleRevealMenu`) they — and every other page — share via `SiteHeader.tsx`.
 
+**Launch status:** the marketing site is **live**. CTAs → Bask **intake** via `resolveCta()`. **LegitScript certified** — see `docs/features/legitscript.md`. Bask owns intake/checkout/portal (not an in-house qualify → intake → dashboard funnel).
+
 ## Hero (`src/components/home/HomeHero.tsx`)
 
 Full-viewport two-column hero with scroll-linked parallax (headline, photo, floating vial) via `motion/react`'s `useScroll`/`useTransform`, keyed off `heroRef`.
@@ -12,11 +14,15 @@ It fades out (`marqueeOpacity`, a `useTransform` off the same `scrollYProgress`)
 
 If you need to change hero copy/layout again and something ends up positioned "at the bottom of the hero," default to viewport-relative (`fixed`) rather than section-relative (`absolute` against the hero's own box) unless you're certain the hero's height is stable across breakpoints.
 
+### LegitScript seal on the hero
+
+Official certification seal floats on the hero (mobile: beside the headline; desktop: top-left of the hexagon photo). Shared float animation: `FloatingLegitScriptSeal`. Verify URL / image / size: **`src/lib/legitscript.ts` only** — see `docs/features/legitscript.md`.
+
 ## Trust signals (`src/components/home/TrustSignals.tsx`, `src/lib/trust-signals.ts`)
 
-Icon-card grid rendered right after the hero, sourced from `TRUST_SIGNALS` in `trust-signals.ts` — the single source of truth for trust claims shown across header/footer/homepage/waitlist.
+Icon-card grid rendered right after the hero, sourced from `TRUST_SIGNALS` in `trust-signals.ts` — the single source of truth for short icon-card trust claims shown across header/footer/homepage.
 
-**Only add claims that are true today.** The file's own comment is explicit: no invented credentials, certifications, or review scores. LegitScript is deliberately absent because certification hasn't started — don't add it preemptively.
+**Only add claims that are true today.** No invented credentials, certifications, or review scores. LegitScript **is** certified — the official seal lives on the hero (`LegitScriptSeal`); keep this grid to short icon-card claims unless product asks to promote LegitScript into the grid too.
 
 ## Mobile nav shell: `CircleRevealMenu` (`src/components/site/CircleRevealMenu.tsx`)
 
@@ -28,7 +34,9 @@ Built directly on Radix `Dialog` (`forceMount` + `AnimatePresence`) rather than 
 
 | File | Role |
 |------|------|
-| `src/components/home/HomeHero.tsx` | Hero, viewport-fixed marquee |
+| `src/components/home/HomeHero.tsx` | Hero, viewport-fixed marquee, LegitScript seal placement |
+| `src/components/home/FloatingLegitScriptSeal.tsx` | Shared seal float animation |
+| `src/lib/legitscript.ts` | Seal verify URL / asset / display size |
 | `src/components/home/TrustSignals.tsx`, `src/lib/trust-signals.ts` | Trust claims band |
 | `src/components/site/CircleRevealMenu.tsx` | Full-screen mobile menu shell (sitewide) |
 | `src/components/site/SiteHeader.tsx` | Mobile menu content, incl. `MobileWeightLossDropdown` |
