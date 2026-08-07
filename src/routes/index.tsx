@@ -9,7 +9,6 @@ import { ScrollProgressBar } from "@/components/site/primitives";
 import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
 import { HomeHero } from "@/components/home/HomeHero";
 import { TrustSignals } from "@/components/home/TrustSignals";
-import { DoseJourney } from "@/components/home/DoseJourney";
 import { TreatmentShowcase } from "@/components/home/TreatmentShowcase";
 import { MissionSection } from "@/components/home/MissionSection";
 import { FinalCTASection } from "@/components/home/FinalCTASection";
@@ -65,7 +64,6 @@ function HomePage() {
         <HomeHero />
         <TrustSignals />
         <HowItWorksSteps />
-        <DoseJourney />
         <TreatmentShowcase />
         <MissionSection />
         <FinalCTASection />
