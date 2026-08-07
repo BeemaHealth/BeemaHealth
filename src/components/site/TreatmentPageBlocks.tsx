@@ -97,8 +97,9 @@ export function TreatmentPricingCard({
             <span className="font-semibold text-foreground">
               Standard / maintenance
             </span>
-            : ${pricing.monthlyUsd}/mo. If you&apos;re on maintenance or not
-            taking the starter pack, promo code{" "}
+            : ${pricing.monthlyUsd}/mo monthly after the starter (6-month,
+            annual, and quarterly rates in the ? details). If you&apos;re on
+            maintenance or not taking the starter pack, promo code{" "}
             <span className="font-bold text-foreground">
               {pricing.promoCode}
             </span>{" "}

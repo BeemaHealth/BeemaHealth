@@ -13,6 +13,7 @@ import {
   promoFirstMonthUsd,
   PROMO_CODE_DISCOUNT_USD,
   PROMO_CODE_MIN_MONTHS,
+  tirzepatidePricingDetailsCopy,
 } from "@/lib/medication-pricing";
 
 describe("medication-pricing", () => {
@@ -98,12 +99,38 @@ describe("medication-pricing", () => {
     expect(tirzSentence).not.toMatch(/offer/i);
     expect(tirzSentence).toContain("3-month starter pack");
     expect(tirzSentence).toContain("over 3 months");
-    expect(tirzSentence).toContain("Standard or maintenance");
+    expect(tirzSentence).toContain("typically one-time");
+    expect(tirzSentence).toContain("maintenance is $297/mo");
+    expect(tirzSentence).toContain("$285/mo");
+    expect(tirzSentence).toContain("$776/mo");
+    expect(tirzSentence).toContain("$791");
     expect(tirzSentence).toContain("doses 1 → 2 → 3 (2.5mg → 5mg → 7.5mg)");
     expect(tirzSentence).toContain("$597");
     expect(tirzSentence).toContain("Tirz100");
     expect(tirzSentence).toContain("$197");
     expect(tirzSentence).toContain("can't be used together");
+  });
+
+  it("exposes tirzepatide continuation rates and details copy", () => {
+    expect(COMPOUNDED_TIRZEPATIDE_PRICING.continuation).toEqual({
+      sixMonthMonthlyUsd: 285,
+      annualMonthlyUsd: 776,
+      quarterlyTotalUsd: 791,
+    });
+    expect(COMPOUNDED_TIRZEPATIDE_PRICING.continuation.quarterlyTotalUsd).toBe(
+      COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd * 3 - PROMO_CODE_DISCOUNT_USD,
+    );
+
+    const details = tirzepatidePricingDetailsCopy();
+    expect(details.starter).toContain("$199/mo");
+    expect(details.starter).toContain("$597");
+    expect(details.starter).toContain("Typically one-time");
+    expect(details.starter).toContain("2.5mg → 5mg → 7.5mg");
+    expect(details.continuation).toContain("$297/mo");
+    expect(details.continuation).toContain("$285/mo");
+    expect(details.continuation).toContain("$776/mo");
+    expect(details.quarterly).toContain("$791");
+    expect(details.quarterly).not.toMatch(/[—–]/);
   });
 
   it("keeps FAQ pricing paragraph dual-med, all-inclusive, and em-dash free", () => {

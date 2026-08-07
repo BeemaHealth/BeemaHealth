@@ -1,3 +1,4 @@
+import { CircleHelp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   hasStarterPack,
@@ -5,8 +6,14 @@ import {
   PROMO_CODE_DISCOUNT_USD,
   PROMO_CODE_MIN_MONTHS,
   starterPackTitle,
+  tirzepatidePricingDetailsCopy,
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 type CompoundedPriceLockupProps = {
   pricing: CompoundedMedicationPricing;
@@ -22,8 +29,8 @@ type CompoundedPriceLockupProps = {
  * Cash-pay lockup for medication cards.
  *
  * - Default (semaglutide): big promo first-month price + checkout code.
- * - With `starterPack` (tirzepatide): starter pack (doses 1→2→3) and
- *   standard/maintenance ($297/mo + Tirz100) shown as separate paths.
+ * - With `starterPack` (tirzepatide): compact starter + maintenance cards,
+ *   with a "?" popover for the full quarterly / continuation explanation.
  */
 export function CompoundedPriceLockup({
   pricing,
@@ -38,6 +45,48 @@ export function CompoundedPriceLockup({
 
   return (
     <PromoCodeLockup pricing={pricing} className={className} size={size} />
+  );
+}
+
+function TirzPricingDetailsButton() {
+  const details = tirzepatidePricingDetailsCopy();
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex size-5 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label="How tirzepatide pricing works"
+        >
+          <CircleHelp className="size-3.5" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        className="w-[min(100vw-2rem,22rem)] space-y-3 p-4 text-xs leading-relaxed text-muted-foreground"
+      >
+        <p className="text-sm font-semibold text-foreground">
+          How tirzepatide pricing works
+        </p>
+        <div className="space-y-2">
+          <p>
+            <span className="font-medium text-foreground">Starter pack.</span>{" "}
+            {details.starter}
+          </p>
+          <p>
+            <span className="font-medium text-foreground">
+              After the starter.
+            </span>{" "}
+            {details.continuation}
+          </p>
+          <p>
+            <span className="font-medium text-foreground">Quarterly.</span>{" "}
+            {details.quarterly}
+          </p>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -58,10 +107,13 @@ function TirzPricingLockup({
   return (
     <div className={cn("space-y-3 text-left", className)}>
       <div className="rounded-xl bg-background/80 px-3.5 py-3 ring-1 ring-border/70">
-        <div className="flex items-baseline justify-between gap-3">
-          <p className="text-sm font-semibold text-foreground">
-            {starterPackTitle(pack)}
-          </p>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-1.5">
+            <p className="text-sm font-semibold text-foreground">
+              {starterPackTitle(pack)}
+            </p>
+            <TirzPricingDetailsButton />
+          </div>
           <p className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
             New patients
           </p>
@@ -81,11 +133,10 @@ function TirzPricingLockup({
           </span>
         </div>
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-          {pack.dosePathLabel}
+          ${pack.monthlyEquivalentUsd}/mo · {pack.dosePathLabel}
         </p>
         <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-          ${pack.monthlyEquivalentUsd}/mo for {pack.months} months. For
-          brand-new patients beginning tirzepatide, not maintenance.
+          Typically one-time for brand-new patients beginning tirzepatide.
         </p>
       </div>
 
@@ -95,7 +146,7 @@ function TirzPricingLockup({
             Standard / maintenance
           </p>
           <p className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-            ${monthly}/mo
+            From ${monthly}/mo
           </p>
         </div>
         <div className="mt-2 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
@@ -117,10 +168,10 @@ function TirzPricingLockup({
           <span className="font-bold tracking-wide">{pricing.promoCode}</span>
         </p>
         <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-          ${PROMO_CODE_DISCOUNT_USD} off your first month on a{" "}
-          {PROMO_CODE_MIN_MONTHS}-month plan, then ${monthly}/mo. For
-          maintenance dosing, or if you&apos;re not taking the starter pack.
-          Can&apos;t be combined with the starter pack.
+          ${PROMO_CODE_DISCOUNT_USD} off first month on a{" "}
+          {PROMO_CODE_MIN_MONTHS}-month plan, then ${monthly}/mo. Longer plans
+          and quarterly fills are in the ? details. Can&apos;t be combined with
+          the starter pack.
         </p>
       </div>
     </div>

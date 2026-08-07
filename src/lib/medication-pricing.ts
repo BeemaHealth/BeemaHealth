@@ -9,11 +9,12 @@
  * automatic discount and no separate platform membership fee.
  *
  * Tirzepatide pricing paths (not stacked):
- * 1. **Starter pack** (`starterPack`): $597 covering doses 1 → 2 → 3 for
- *    brand-new patients beginning tirzepatide ($199/mo equivalent).
- * 2. **Standard / maintenance** (`monthlyUsd`): $297/mo. Patients on
- *    maintenance — or anyone not taking the starter pack — can use promo
- *    code `Tirz100` for $100 off the first month on a 3-month plan only.
+ * 1. **Starter pack** (`starterPack`): $597 ($199/mo × 3) for new patients,
+ *    typically one-time, covering doses 1 → 2 → 3 (2.5mg → 5mg → 7.5mg).
+ * 2. **Standard / maintenance** after the starter (or instead of it):
+ *    monthly $297/mo; 6-month $285/mo; annual $776/mo; quarterly (3-month)
+ *    fill $791 total ($100 off vs 3 × $297). Promo code `Tirz100` is the
+ *    first-month $100-off path on a 3-month plan (same $791 quarterly math).
  *
  * Semaglutide uses only the promo-code path (`sema-off100`).
  */
@@ -21,7 +22,7 @@ export const PROMO_CODE_DISCOUNT_USD = 100;
 export const PROMO_CODE_MIN_MONTHS = 3;
 
 export type NewPatientStarterPack = {
-  /** Prepaid total for the starter pack (e.g. 597). */
+  /** Prepaid total for the starter pack (e.g. 597 = 199 × 3). */
   totalUsd: number;
   /** Effective monthly rate during the pack (e.g. 199). */
   monthlyEquivalentUsd: number;
@@ -30,9 +31,24 @@ export type NewPatientStarterPack = {
   /**
    * Short dose-path label for UI, including strengths.
    * e.g. "doses 1 → 2 → 3 (2.5mg → 5mg → 7.5mg)".
-   * Starter packs cover the initial titration sequence, not maintenance.
    */
   dosePathLabel: string;
+};
+
+/**
+ * Ongoing tirzepatide rates after the new-patient starter pack
+ * (or when the starter pack is not used).
+ */
+export type TirzepatideContinuationPricing = {
+  /** Per-month rate on a 6-month plan. */
+  sixMonthMonthlyUsd: number;
+  /** Per-month rate on an annual plan. */
+  annualMonthlyUsd: number;
+  /**
+   * Prepaid total for a continuing 3-month (quarterly) fill.
+   * Equals `3 × monthlyUsd − PROMO_CODE_DISCOUNT_USD` ($100 off vs monthly).
+   */
+  quarterlyTotalUsd: number;
 };
 
 export const COMPOUNDED_SEMAGLUTIDE_PRICING = {
@@ -49,6 +65,11 @@ export const COMPOUNDED_TIRZEPATIDE_PRICING = {
     months: 3,
     dosePathLabel: "doses 1 → 2 → 3 (2.5mg → 5mg → 7.5mg)",
   },
+  continuation: {
+    sixMonthMonthlyUsd: 285,
+    annualMonthlyUsd: 776,
+    quarterlyTotalUsd: 791,
+  },
 } as const satisfies CompoundedMedicationPricing;
 
 export type CompoundedMedicationPricing = {
@@ -56,6 +77,8 @@ export type CompoundedMedicationPricing = {
   promoCode: string;
   /** New-patient starter titration pack; currently tirzepatide only. */
   starterPack?: NewPatientStarterPack;
+  /** Post-starter / maintenance plan rates; tirzepatide only. */
+  continuation?: TirzepatideContinuationPricing;
 };
 
 /** Discounted month-1 price when the one-time, 3-month-only promo code is applied. */
@@ -76,6 +99,29 @@ export function hasStarterPack(
 /** e.g. "3-month starter pack" */
 export function starterPackTitle(pack: NewPatientStarterPack): string {
   return `${pack.months}-month starter pack`;
+}
+
+/**
+ * Full tirzepatide pricing explanation for the card "?" disclosure.
+ * Keep the on-card UI short; put the complete story here.
+ */
+export function tirzepatidePricingDetailsCopy(
+  pricing: typeof COMPOUNDED_TIRZEPATIDE_PRICING = COMPOUNDED_TIRZEPATIDE_PRICING,
+): {
+  starter: string;
+  continuation: string;
+  quarterly: string;
+} {
+  const pack = pricing.starterPack;
+  const cont = pricing.continuation;
+  const monthlyTimesQuarter =
+    pricing.monthlyUsd * pack.months - PROMO_CODE_DISCOUNT_USD;
+
+  return {
+    starter: `New-patient ${starterPackTitle(pack)}: $${pack.monthlyEquivalentUsd}/mo for ${pack.months} months ($${pack.totalUsd} total). Typically one-time. Covers ${pack.dosePathLabel}.`,
+    continuation: `After the starter pack (or if you don't take it): $${pricing.monthlyUsd}/mo billed monthly; $${cont.sixMonthMonthlyUsd}/mo on a 6-month plan; or $${cont.annualMonthlyUsd}/mo on an annual plan.`,
+    quarterly: `Staying on a quarterly (${pack.months}-month) plan after the starter is $${cont.quarterlyTotalUsd} for ${pack.months} months - $${PROMO_CODE_DISCOUNT_USD} off versus ${pack.months} × $${pricing.monthlyUsd} ($${monthlyTimesQuarter} matches promo code ${pricing.promoCode} on a ${PROMO_CODE_MIN_MONTHS}-month plan). The starter pack and that promo code can't be used together.`,
+  };
 }
 
 /**
@@ -158,7 +204,11 @@ export function compoundedMonthlyPricingSentence(
 
   if (pricing.starterPack) {
     const pack = pricing.starterPack;
-    return `${medicationLabel} pricing: ${starterPackTitle(pack)} - brand-new patients beginning tirzepatide can get ${pack.dosePathLabel} for $${pack.totalUsd} over ${pack.months} months ($${pack.monthlyEquivalentUsd}/month). Standard or maintenance - $${pricing.monthlyUsd}/month, billed monthly with no long-term contract. If you're on maintenance or not taking the starter pack, ${promoSentence} The starter pack and the $${PROMO_CODE_DISCOUNT_USD}-off promo code can't be used together.`;
+    const cont = pricing.continuation;
+    const contLine = cont
+      ? ` After that, maintenance is $${pricing.monthlyUsd}/mo monthly, $${cont.sixMonthMonthlyUsd}/mo on a 6-month plan, $${cont.annualMonthlyUsd}/mo annually, or $${cont.quarterlyTotalUsd} for a continuing ${pack.months}-month (quarterly) fill.`
+      : "";
+    return `${medicationLabel} pricing: ${starterPackTitle(pack)} - brand-new patients beginning tirzepatide can get ${pack.dosePathLabel} for $${pack.totalUsd} over ${pack.months} months ($${pack.monthlyEquivalentUsd}/month); typically one-time.${contLine} If you're on maintenance or not taking the starter pack, ${promoSentence} The starter pack and the $${PROMO_CODE_DISCOUNT_USD}-off promo code can't be used together.`;
   }
 
   return `${medicationLabel} is $${pricing.monthlyUsd}/month, billed monthly with no long-term contract. ${promoSentence}`;
