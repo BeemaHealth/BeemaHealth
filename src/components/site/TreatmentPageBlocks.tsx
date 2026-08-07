@@ -98,8 +98,11 @@ export function TreatmentPricingCard({
               Standard / maintenance
             </span>
             : ${pricing.monthlyUsd}/mo monthly after the starter (6-month,
-            annual, and quarterly rates in the ? details). If you&apos;re on
-            maintenance or not taking the starter pack, promo code{" "}
+            annual, and quarterly rates in the ? details). Continuing on a
+            quarterly plan after the starter is $
+            {PROMO_CODE_DISCOUNT_USD} less than three months at the standard
+            monthly rate. If you&apos;re on maintenance or not taking the
+            starter pack, promo code{" "}
             <span className="font-bold text-foreground">
               {pricing.promoCode}
             </span>{" "}
