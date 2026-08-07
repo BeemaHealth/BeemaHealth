@@ -4,10 +4,8 @@ import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   CheckCircle2,
-  ClipboardCheck,
   HeartPulse,
   ShieldCheck,
-  Stethoscope,
 } from "lucide-react";
 import {
   canonicalUrl,
@@ -23,7 +21,6 @@ import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import {
   FloatingHexagons,
-  HexBadge,
   MagneticButton,
   Section,
   SectionHeading,
@@ -37,6 +34,7 @@ import {
   TreatmentPricingCard,
   type TreatmentFaqItem,
 } from "@/components/site/TreatmentPageBlocks";
+import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
 import { BmiCalculator } from "@/components/site/BmiCalculator";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
@@ -91,19 +89,6 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a:
       "Yes. If you're already taking semaglutide through another provider, your medical intake questionnaire asks about your current provider, medication, and dose so your Beema provider can review your treatment history as part of their independent clinical evaluation. The goal is to help your provider aim to continue you at a comparable dose rather than starting your titration over from the beginning, though the final dosing decision always rests with your licensed provider based on your full health picture. Accuracy matters here: the dose and history you report is the information your provider relies on to determine what's appropriate for you going forward, so double-check those details before submitting your intake. As with any new patient, your provider will also review your broader health history, current medications, and any contraindications before confirming your plan. For more context on how transitions are evaluated, see Beema's safety and eligibility information. " +
       patientQuestionsGuidance(),
-  },
-];
-
-const STEPS = [
-  {
-    icon: ClipboardCheck,
-    title: "Complete your medical intake",
-    text: "Create your account and fill out a secure questionnaire covering your health, medications, and goals, save your progress anytime.",
-  },
-  {
-    icon: Stethoscope,
-    title: "Your provider reviews your case",
-    text: "A licensed provider independently decides whether semaglutide may be appropriate for you.",
   },
 ];
 
@@ -239,10 +224,6 @@ function SemaglutidePage() {
                 Medication eligibility and availability are determined by a
                 licensed provider and applicable law.
               </p>
-              <TreatmentIncludedDropdown
-                items={WHATS_INCLUDED}
-                className="mt-6 max-w-md"
-              />
             </div>
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
@@ -252,15 +233,21 @@ function SemaglutidePage() {
                 delay: reduceMotion ? 0 : 0.2,
                 ease: EASE_OUT,
               }}
-              className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-4xl bg-primary-soft shadow-lift"
+              className="mx-auto w-full max-w-sm"
             >
-              <img
-                src={VIAL_IMAGERY.src}
-                alt={VIAL_IMAGERY.alt}
-                width={VIAL_IMAGERY.width}
-                height={VIAL_IMAGERY.height}
-                fetchPriority="high"
-                className="absolute inset-0 h-full w-full object-cover object-center"
+              <div className="relative aspect-square overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
+                <img
+                  src={VIAL_IMAGERY.src}
+                  alt={VIAL_IMAGERY.alt}
+                  width={VIAL_IMAGERY.width}
+                  height={VIAL_IMAGERY.height}
+                  fetchPriority="high"
+                  className="absolute inset-0 h-full w-full object-cover object-center"
+                />
+              </div>
+              <TreatmentIncludedDropdown
+                items={WHATS_INCLUDED}
+                className="mt-6 w-full"
               />
             </motion.div>
           </div>
@@ -319,54 +306,13 @@ function SemaglutidePage() {
         </div>
       </Section>
 
-      <Section className="bg-muted/40 pt-0">
-        <SectionHeading
-          align="left"
-          title="How Beema's semaglutide care works"
-          className="mx-0 max-w-2xl"
-        />
-        <ol className="mt-10 grid gap-5 md:grid-cols-3">
-          {STEPS.map((s, i) => (
-            <li key={s.title} className="h-full">
-              <motion.div
-                className="h-full"
-                initial={
-                  reduceMotion
-                    ? false
-                    : { opacity: 0, y: 32, rotate: i % 2 === 0 ? -1.5 : 1.5 }
-                }
-                whileInView={
-                  reduceMotion ? undefined : { opacity: 1, y: 0, rotate: 0 }
-                }
-                viewport={{ once: true, amount: 0.3 }}
-                whileHover={reduceMotion ? undefined : { y: -6 }}
-                transition={{
-                  duration: reduceMotion ? 0 : 0.55,
-                  delay: reduceMotion ? 0 : i * 0.1,
-                  ease: EASE_OUT,
-                }}
-              >
-                <SurfaceCard className="flex h-full flex-col p-6 transition-shadow hover:shadow-lift">
-                  <p className="text-sm font-semibold text-muted-foreground">
-                    Step {i + 1}
-                  </p>
-                  <div className="mt-3 flex items-center gap-3">
-                    <HexBadge>
-                      <s.icon className="size-5" />
-                    </HexBadge>
-                    <h3 className="text-lg font-semibold text-foreground">
-                      {s.title}
-                    </h3>
-                  </div>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {s.text}
-                  </p>
-                </SurfaceCard>
-              </motion.div>
-            </li>
-          ))}
-        </ol>
-      </Section>
+      <HowItWorksSteps
+        id="semaglutide-how-it-works"
+        className="bg-muted/40"
+        eyebrow="How it works"
+        title="How Beema's semaglutide care works"
+        showCareFollowUpNote
+      />
 
       <Section className="pt-0">
         <div className="grid gap-10 lg:grid-cols-2">

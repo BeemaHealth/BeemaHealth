@@ -37,7 +37,7 @@ describe("medication-pricing", () => {
       "$199/mo, or $99 your first month with promo code sema-off100 ($100 off on a 3-month plan)",
     );
     expect(formatCompoundedPriceLine(COMPOUNDED_TIRZEPATIDE_PRICING)).toBe(
-      "New-patient starter pack $599 ($199/mo for 3 months), then $297/mo; or $197 your first month with promo code Tirz100 ($100 off on a 3-month plan)",
+      "3-month starter pack $597 for doses 1 → 2 → 3 (2.5mg → 5mg → 7.5mg) ($199/mo); standard / maintenance $297/mo, or $197 your first month with promo code Tirz100 ($100 off on a 3-month plan)",
     );
     expect(formatStartingAtPerMonth(COMPOUNDED_TIRZEPATIDE_PRICING)).toBe(
       "$199/mo",
@@ -51,14 +51,19 @@ describe("medication-pricing", () => {
     expect(COMPOUNDED_TIRZEPATIDE_PRICING.promoCode).toBe("Tirz100");
   });
 
-  it("defines a new-patient tirzepatide starter pack at $599 ($199/mo)", () => {
+  it("defines tirzepatide starter pack and standard/maintenance pricing", () => {
     expect(hasStarterPack(COMPOUNDED_SEMAGLUTIDE_PRICING)).toBe(false);
     expect(hasStarterPack(COMPOUNDED_TIRZEPATIDE_PRICING)).toBe(true);
     expect(COMPOUNDED_TIRZEPATIDE_PRICING.starterPack).toEqual({
-      totalUsd: 599,
+      totalUsd: 597,
       monthlyEquivalentUsd: 199,
       months: 3,
+      dosePathLabel: "doses 1 → 2 → 3 (2.5mg → 5mg → 7.5mg)",
     });
+    expect(COMPOUNDED_TIRZEPATIDE_PRICING.starterPack.totalUsd).toBe(
+      COMPOUNDED_TIRZEPATIDE_PRICING.starterPack.monthlyEquivalentUsd *
+        COMPOUNDED_TIRZEPATIDE_PRICING.starterPack.months,
+    );
   });
 
   it("balances both medications in short and hero dual lines", () => {
@@ -66,10 +71,10 @@ describe("medication-pricing", () => {
       "Semaglutide $199/mo · Tirzepatide from $199/mo",
     );
     expect(dualCompoundedPromoShortPricingLine()).toBe(
-      "Semaglutide $99 then $199/mo · Tirzepatide starter $199/mo ($599)",
+      "Semaglutide $99 then $199/mo · Tirzepatide 3-mo starter $597 or $297/mo",
     );
     expect(dualCompoundedHeroPricingLine()).toBe(
-      "Semaglutide $99 first month then $199/mo (code sema-off100), Tirzepatide new-patient starter pack $599 ($199/mo for 3 months), then $297/mo",
+      "Semaglutide $99 first month then $199/mo (code sema-off100), Tirzepatide 3-month starter pack $597 for doses 1 → 2 → 3 (2.5mg → 5mg → 7.5mg), or standard / maintenance $297/mo (code Tirz100 for $100 off first month on a 3-month plan)",
     );
     expect(dualCompoundedShortPricingLine()).not.toMatch(/[—–]/);
     expect(dualCompoundedPromoShortPricingLine()).not.toMatch(/[—–]/);
@@ -90,12 +95,15 @@ describe("medication-pricing", () => {
       "Compounded tirzepatide",
       COMPOUNDED_TIRZEPATIDE_PRICING,
     );
-    expect(tirzSentence).toContain("starter pack");
-    expect(tirzSentence).toContain("$599");
-    expect(tirzSentence).toContain("$199/month");
+    expect(tirzSentence).not.toMatch(/offer/i);
+    expect(tirzSentence).toContain("3-month starter pack");
+    expect(tirzSentence).toContain("over 3 months");
+    expect(tirzSentence).toContain("Standard or maintenance");
+    expect(tirzSentence).toContain("doses 1 → 2 → 3 (2.5mg → 5mg → 7.5mg)");
+    expect(tirzSentence).toContain("$597");
     expect(tirzSentence).toContain("Tirz100");
     expect(tirzSentence).toContain("$197");
-    expect(tirzSentence).toContain("Brand-new patients");
+    expect(tirzSentence).toContain("can't be used together");
   });
 
   it("keeps FAQ pricing paragraph dual-med, all-inclusive, and em-dash free", () => {
@@ -104,8 +112,10 @@ describe("medication-pricing", () => {
     expect(paragraph).toContain("$99");
     expect(paragraph).toContain("$297");
     expect(paragraph).toContain("$197");
-    expect(paragraph).toContain("$599");
-    expect(paragraph).toContain("starter pack");
+    expect(paragraph).toContain("$597");
+    expect(paragraph).not.toMatch(/two separate offers/i);
+    expect(paragraph).toContain("3-month starter pack");
+    expect(paragraph).toContain("doses 1 → 2 → 3 (2.5mg → 5mg → 7.5mg)");
     expect(paragraph).toContain("sema-off100");
     expect(paragraph).toContain("Tirz100");
     expect(paragraph).toMatch(/3-month plan/);

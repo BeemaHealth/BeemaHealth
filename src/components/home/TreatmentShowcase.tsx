@@ -98,10 +98,9 @@ export function TreatmentShowcase() {
         </h2>
         <p className="mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
           Transparent cash pricing on every card. Semaglutide starts with a
-          first-month promo; tirzepatide offers a new-patient starter pack at $
-          {TIRZ_STARTER.monthlyEquivalentUsd}/mo ($
-          {TIRZ_STARTER.totalUsd} for {TIRZ_STARTER.months} months), then the
-          standard monthly rate, with no membership fee.
+          first-month promo. Tirzepatide: {TIRZ_STARTER.months}-month starter
+          pack ${TIRZ_STARTER.totalUsd} for {TIRZ_STARTER.dosePathLabel}, or $
+          {COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo for maintenance.
         </p>
 
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">

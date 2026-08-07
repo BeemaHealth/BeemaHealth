@@ -8,20 +8,21 @@
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
 
 /**
- * Dual-med offer line shown next to marketing CTAs.
+ * Dual-med pricing line shown next to marketing CTAs.
  * Semaglutide: one-time $100 promo code on a 3-month plan.
- * Tirzepatide: new-patient starter pack ($599 / $199/mo) leads; Tirz100
- * remains an alternate path. Numbers live in `medication-pricing.ts`.
+ * Tirzepatide: 3-month starter pack ($597 for doses 1→2→3) or
+ * standard/maintenance ($297/mo, Tirz100 for $100 off first month on a
+ * 3-month plan). Numbers live in `medication-pricing.ts`.
  */
 export const FIRST_MONTH_PROMO_LINE =
-  "sema-off100 for $100 off semaglutide, or a $599 tirzepatide new-patient starter pack ($199/mo)" as const;
+  "sema-off100 for semaglutide, or tirzepatide 3-month starter $597 / maintenance $297/mo with Tirz100" as const;
 
 /**
  * Short label for tight UI (nav chip, button microcopy).
  * Keep in sync with {@link FIRST_MONTH_PROMO_LINE}.
  */
 export const FIRST_MONTH_PROMO_SHORT =
-  "Tirz starter $199/mo · sema-off100" as const;
+  "Tirz: 3-mo starter $597 or $297/mo" as const;
 
 /**
  * Primary waitlist CTA button label sitewide (nav, hero, footer, mid-page).

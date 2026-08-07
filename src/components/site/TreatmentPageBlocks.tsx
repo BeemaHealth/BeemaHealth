@@ -33,6 +33,7 @@ import {
   promoFirstMonthUsd,
   PROMO_CODE_DISCOUNT_USD,
   PROMO_CODE_MIN_MONTHS,
+  starterPackTitle,
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
 
@@ -77,29 +78,35 @@ export function TreatmentPricingCard({
       )}
     >
       <p className="text-xs font-semibold uppercase tracking-wide text-accent-foreground">
-        {hasStarterPack(pricing)
-          ? "New-patient starter pricing"
-          : "Transparent pricing"}
+        Transparent pricing
       </p>
       <CompoundedPriceLockup className="mt-5" pricing={pricing} size="lg" />
       <p className="mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
         {hasStarterPack(pricing) ? (
           <>
-            Brand-new patients can start with a {pricing.starterPack.months}
-            -month starter pack for{" "}
+            <span className="font-semibold text-foreground">
+              {starterPackTitle(pricing.starterPack)}
+            </span>
+            : brand-new patients beginning tirzepatide get{" "}
+            {pricing.starterPack.dosePathLabel} for{" "}
             <span className="font-bold text-foreground">
               ${pricing.starterPack.totalUsd}
             </span>{" "}
-            (${pricing.starterPack.monthlyEquivalentUsd}/mo), then continue at $
-            {pricing.monthlyUsd}/mo. The standard cash-pay rate is $
-            {pricing.monthlyUsd}/mo with no long-term contract. Promo code{" "}
+            over {pricing.starterPack.months} months ($
+            {pricing.starterPack.monthlyEquivalentUsd}/mo).{" "}
+            <span className="font-semibold text-foreground">
+              Standard / maintenance
+            </span>
+            : ${pricing.monthlyUsd}/mo. If you&apos;re on maintenance or not
+            taking the starter pack, promo code{" "}
             <span className="font-bold text-foreground">
               {pricing.promoCode}
             </span>{" "}
-            is an alternate one-time ${PROMO_CODE_DISCOUNT_USD} discount that
-            brings your first month to ${promoFirstMonthUsd(pricing)} on a{" "}
-            {PROMO_CODE_MIN_MONTHS}-month plan, redeemable once per patient. A
-            1-month purchase bills at the full ${pricing.monthlyUsd}/mo rate.
+            takes ${PROMO_CODE_DISCOUNT_USD} off your first month (to $
+            {promoFirstMonthUsd(pricing)}) on a {PROMO_CODE_MIN_MONTHS}-month
+            plan, once per patient. The starter pack and promo code can&apos;t
+            be used together. A 1-month purchase bills at the full $
+            {pricing.monthlyUsd}/mo rate.
           </>
         ) : (
           <>

@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "motion/react";
+import type { ReactNode } from "react";
 import {
   ArrowDown,
   ArrowRight,
@@ -9,6 +10,8 @@ import {
 } from "lucide-react";
 import { Eyebrow, HexBadge, HexMotif } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
+import { SUPPORT_EMAIL } from "@/lib/contact-info";
+import { cn } from "@/lib/utils";
 
 export const HOW_IT_WORKS_STEPS_TOTAL = 3;
 
@@ -20,8 +23,8 @@ type Step = {
 
 /**
  * The single source of truth for Beema's 3-step journey. Used verbatim by
- * both the home page and /how-it-works via <HowItWorksSteps /> so the two
- * pages never drift out of sync with each other.
+ * the home page, /how-it-works, and the tirzepatide/semaglutide treatment
+ * pages via <HowItWorksSteps /> so those surfaces never drift out of sync.
  */
 const STEPS: Step[] = [
   {
@@ -222,17 +225,33 @@ function StepConnector({
 
 /**
  * Self-contained "how it works" section: eyebrow, heading, and the 3-step
- * diagram. Rendered identically on the home page and on /how-it-works so
- * the two pages never show different steps or different copy for the same
- * journey — this is the one component both import.
+ * diagram. Rendered on the home page, /how-it-works, and treatment pages so
+ * the journey copy never drifts. Treatment pages can override the heading
+ * and show a care follow-up note under the steps.
  */
-export function HowItWorksSteps() {
+export function HowItWorksSteps({
+  eyebrow = "How it works",
+  title,
+  showCareFollowUpNote = false,
+  className,
+  id = "how-it-works",
+}: {
+  eyebrow?: string;
+  title?: ReactNode;
+  /** Support / doctor follow-up note under the steps (treatment pages). */
+  showCareFollowUpNote?: boolean;
+  className?: string;
+  id?: string;
+} = {}) {
   const reduceMotion = useReducedMotion();
 
   return (
     <section
-      id="how-it-works"
-      className="relative overflow-hidden bg-background py-16 md:py-24"
+      id={id}
+      className={cn(
+        "relative overflow-hidden bg-background py-16 md:py-24",
+        className,
+      )}
     >
       <div
         aria-hidden
@@ -243,9 +262,9 @@ export function HowItWorksSteps() {
 
       <div className="veya-container relative">
         <div className="mx-auto max-w-2xl text-center">
-          <Eyebrow>How it works</Eyebrow>
+          <Eyebrow>{eyebrow}</Eyebrow>
           <h2 className="mt-4 text-balance text-3xl font-bold text-foreground md:text-4xl">
-            <LineReveal>Three simple steps</LineReveal>
+            {title ?? <LineReveal>Three simple steps</LineReveal>}
           </h2>
         </div>
 
@@ -268,6 +287,19 @@ export function HowItWorksSteps() {
             </li>
           ))}
         </ol>
+
+        {showCareFollowUpNote && (
+          <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
+            For any follow-ups or questions, reach out to{" "}
+            <a
+              href={`mailto:${SUPPORT_EMAIL}`}
+              className="font-medium text-primary underline"
+            >
+              support
+            </a>{" "}
+            or your doctor during your visit.
+          </p>
+        )}
       </div>
     </section>
   );

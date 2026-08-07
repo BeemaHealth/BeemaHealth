@@ -4,7 +4,6 @@ import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   CheckCircle2,
-  ClipboardCheck,
   ShieldCheck,
   Stethoscope,
 } from "lucide-react";
@@ -18,7 +17,6 @@ import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import {
   FloatingHexagons,
-  HexBadge,
   MagneticButton,
   Section,
   SectionHeading,
@@ -32,6 +30,7 @@ import {
   TreatmentPricingCard,
   type TreatmentFaqItem,
 } from "@/components/site/TreatmentPageBlocks";
+import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
 import { BmiCalculator } from "@/components/site/BmiCalculator";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
@@ -53,7 +52,7 @@ const VIAL_IMAGERY = resolveVialImagery("tirzepatide");
 
 const TITLE = "Compounded Tirzepatide for Weight Loss | Beema Health";
 const STARTER = COMPOUNDED_TIRZEPATIDE_PRICING.starterPack!;
-const DESCRIPTION = `Compounded tirzepatide for medical weight loss, reviewed by licensed providers. New-patient starter pack $${STARTER.totalUsd} ($${STARTER.monthlyEquivalentUsd}/mo for ${STARTER.months} months), then $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Compounded tirzepatide for medical weight loss, reviewed by licensed providers. ${STARTER.months}-month starter pack $${STARTER.totalUsd} for ${STARTER.dosePathLabel}, or standard/maintenance $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo (promo code ${COMPOUNDED_TIRZEPATIDE_PRICING.promoCode} for $100 off first month on a 3-month plan). Prescribing is never guaranteed.`;
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
@@ -87,19 +86,6 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
     q: "Can I switch to Beema if I'm already on tirzepatide elsewhere?",
     a: "Yes. If you're already taking tirzepatide with another provider, tell us about your current provider, dose, and how long you've been on treatment during your medical intake. Your Beema provider will factor that history into their independent clinical review, generally with the goal of keeping you on a comparable dose rather than having you restart from scratch, though the final decision is always theirs based on your full health history and current medications. It's important to give accurate, complete details in your intake, since your answers directly shape the dose and treatment plan your provider considers appropriate for you. As with any new patient, completing intake doesn't guarantee that tirzepatide, or any specific dose, will be prescribed; a licensed provider makes that call after independently reviewing your case, health history, current medications, and applicable state law where you live. Beema serves patients nationwide, though your assigned provider may vary by state licensure.",
-  },
-];
-
-const STEPS = [
-  {
-    icon: ClipboardCheck,
-    title: "Submit your medical intake",
-    text: "Create an account and complete a secure medical questionnaire covering your health, location, and goals, at your own pace.",
-  },
-  {
-    icon: Stethoscope,
-    title: "Licensed provider review",
-    text: "A licensed provider reviews your intake and decides whether tirzepatide may be appropriate. Prescribing is never guaranteed.",
   },
 ];
 
@@ -205,7 +191,7 @@ function TirzepatidePage() {
                     </LineReveal>
                   </>
                 }
-                description={`Beema Health connects eligible adults with independent licensed providers for personalized medical weight-management care. Brand-new patients can start tirzepatide with a $${STARTER.totalUsd} starter pack ($${STARTER.monthlyEquivalentUsd}/mo for ${STARTER.months} months). Completing intake does not guarantee a prescription.`}
+                description={`Beema Health connects eligible adults with independent licensed providers for personalized medical weight-management care. ${STARTER.months}-month starter pack $${STARTER.totalUsd} for ${STARTER.dosePathLabel}, or $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo for maintenance (with promo code ${COMPOUNDED_TIRZEPATIDE_PRICING.promoCode} for $100 off the first month on a 3-month plan). Completing intake does not guarantee a prescription.`}
                 className="mx-0 max-w-xl text-left"
               />
               <motion.div
@@ -235,14 +221,10 @@ function TirzepatidePage() {
                 size="lg"
               />
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">
-                Starter pack is for brand-new patients only. Medication
+                Starter pack and Tirz100 can&apos;t be used together. Medication
                 eligibility and availability are determined by a licensed
                 provider and applicable law.
               </p>
-              <TreatmentIncludedDropdown
-                items={WHATS_INCLUDED}
-                className="mt-6 max-w-md"
-              />
             </div>
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
@@ -252,15 +234,21 @@ function TirzepatidePage() {
                 delay: reduceMotion ? 0 : 0.2,
                 ease: EASE_OUT,
               }}
-              className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-4xl bg-primary-soft shadow-lift"
+              className="mx-auto w-full max-w-sm"
             >
-              <img
-                src={VIAL_IMAGERY.src}
-                alt={VIAL_IMAGERY.alt}
-                width={VIAL_IMAGERY.width}
-                height={VIAL_IMAGERY.height}
-                fetchPriority="high"
-                className="absolute inset-0 h-full w-full object-cover object-center"
+              <div className="relative aspect-square overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
+                <img
+                  src={VIAL_IMAGERY.src}
+                  alt={VIAL_IMAGERY.alt}
+                  width={VIAL_IMAGERY.width}
+                  height={VIAL_IMAGERY.height}
+                  fetchPriority="high"
+                  className="absolute inset-0 h-full w-full object-cover object-center"
+                />
+              </div>
+              <TreatmentIncludedDropdown
+                items={WHATS_INCLUDED}
+                className="mt-6 w-full"
               />
             </motion.div>
           </div>
@@ -319,54 +307,13 @@ function TirzepatidePage() {
         </div>
       </Section>
 
-      <Section className="bg-muted/40 pt-0">
-        <SectionHeading
-          align="left"
-          title="How Beema's tirzepatide care works"
-          className="mx-0 max-w-2xl"
-        />
-        <ol className="mt-10 grid gap-5 md:grid-cols-3">
-          {STEPS.map((s, i) => (
-            <li key={s.title} className="h-full">
-              <motion.div
-                className="h-full"
-                initial={
-                  reduceMotion
-                    ? false
-                    : { opacity: 0, y: 32, rotate: i % 2 === 0 ? -1.5 : 1.5 }
-                }
-                whileInView={
-                  reduceMotion ? undefined : { opacity: 1, y: 0, rotate: 0 }
-                }
-                viewport={{ once: true, amount: 0.3 }}
-                whileHover={reduceMotion ? undefined : { y: -6 }}
-                transition={{
-                  duration: reduceMotion ? 0 : 0.55,
-                  delay: reduceMotion ? 0 : i * 0.1,
-                  ease: EASE_OUT,
-                }}
-              >
-                <SurfaceCard className="flex h-full flex-col p-6 transition-shadow hover:shadow-lift">
-                  <p className="text-sm font-semibold text-muted-foreground">
-                    Step {i + 1}
-                  </p>
-                  <div className="mt-3 flex items-center gap-3">
-                    <HexBadge>
-                      <s.icon className="size-5" />
-                    </HexBadge>
-                    <h3 className="text-lg font-semibold text-foreground">
-                      {s.title}
-                    </h3>
-                  </div>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {s.text}
-                  </p>
-                </SurfaceCard>
-              </motion.div>
-            </li>
-          ))}
-        </ol>
-      </Section>
+      <HowItWorksSteps
+        id="tirzepatide-how-it-works"
+        className="bg-muted/40"
+        eyebrow="How it works"
+        title="How Beema's tirzepatide care works"
+        showCareFollowUpNote
+      />
 
       <Section className="pt-0">
         <div className="grid gap-10 lg:grid-cols-2">
