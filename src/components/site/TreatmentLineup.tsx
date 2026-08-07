@@ -17,6 +17,8 @@ import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { Reveal } from "@/components/site/primitives";
 import { resolveVialImagery, type VialImagery } from "@/lib/treatment-imagery";
 
+const TIRZ_STARTER = COMPOUNDED_TIRZEPATIDE_PRICING.starterPack!;
+
 type Treatment = {
   id: string;
   name: string;
@@ -61,9 +63,11 @@ export function TreatmentLineup() {
             GLP-1 weight-loss options
           </h2>
           <p className="mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-            Transparent cash pricing on every option: a discounted first month,
-            then the standard monthly rate for months 2 and 3, with no
-            membership fee.
+            Transparent cash pricing on every option. Semaglutide starts with a
+            first-month promo; tirzepatide offers a new-patient starter pack at
+            ${TIRZ_STARTER.monthlyEquivalentUsd}/mo ($
+            {TIRZ_STARTER.totalUsd} for {TIRZ_STARTER.months} months), then the
+            standard monthly rate, with no membership fee.
           </p>
         </Reveal>
 

@@ -52,7 +52,8 @@ import {
 const VIAL_IMAGERY = resolveVialImagery("tirzepatide");
 
 const TITLE = "Compounded Tirzepatide for Weight Loss | Beema Health";
-const DESCRIPTION = `Compounded tirzepatide for medical weight loss, reviewed by licensed providers. Nationwide telehealth care at $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo. Prescribing is never guaranteed.`;
+const STARTER = COMPOUNDED_TIRZEPATIDE_PRICING.starterPack!;
+const DESCRIPTION = `Compounded tirzepatide for medical weight loss, reviewed by licensed providers. New-patient starter pack $${STARTER.totalUsd} ($${STARTER.monthlyEquivalentUsd}/mo for ${STARTER.months} months), then $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo. Prescribing is never guaranteed.`;
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
@@ -156,8 +157,8 @@ export const Route = createFileRoute("/tirzepatide")({
             reviewedByClinicalLead: true,
             dateModified: "2026-07-31",
             offer: {
-              introPrice: 197,
-              recurringPrice: 297,
+              introPrice: STARTER.monthlyEquivalentUsd,
+              recurringPrice: COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd,
             },
           }),
         ),
@@ -204,7 +205,7 @@ function TirzepatidePage() {
                     </LineReveal>
                   </>
                 }
-                description="Beema Health connects eligible adults with independent licensed providers for personalized medical weight-management care. Completing intake does not guarantee a prescription."
+                description={`Beema Health connects eligible adults with independent licensed providers for personalized medical weight-management care. Brand-new patients can start tirzepatide with a $${STARTER.totalUsd} starter pack ($${STARTER.monthlyEquivalentUsd}/mo for ${STARTER.months} months). Completing intake does not guarantee a prescription.`}
                 className="mx-0 max-w-xl text-left"
               />
               <motion.div
@@ -234,8 +235,9 @@ function TirzepatidePage() {
                 size="lg"
               />
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">
-                Medication eligibility and availability are determined by a
-                licensed provider and applicable law.
+                Starter pack is for brand-new patients only. Medication
+                eligibility and availability are determined by a licensed
+                provider and applicable law.
               </p>
               <TreatmentIncludedDropdown
                 items={WHATS_INCLUDED}

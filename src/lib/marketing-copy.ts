@@ -8,21 +8,20 @@
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
 
 /**
- * Concrete first-month promo incentive shown next to marketing CTAs.
- * One-time use, first month only, and only valid on a 3-month plan
- * purchase. Never automatic, and never available on a 1-month purchase.
- * See `PROMO_CODE_DISCOUNT_USD` / `PROMO_CODE_MIN_MONTHS` in
- * `medication-pricing.ts`.
+ * Dual-med offer line shown next to marketing CTAs.
+ * Semaglutide: one-time $100 promo code on a 3-month plan.
+ * Tirzepatide: new-patient starter pack ($599 / $199/mo) leads; Tirz100
+ * remains an alternate path. Numbers live in `medication-pricing.ts`.
  */
 export const FIRST_MONTH_PROMO_LINE =
-  "a one-time $100 promo code for your first month on a 3-month plan" as const;
+  "sema-off100 for $100 off semaglutide, or a $599 tirzepatide new-patient starter pack ($199/mo)" as const;
 
 /**
  * Short label for tight UI (nav chip, button microcopy).
  * Keep in sync with {@link FIRST_MONTH_PROMO_LINE}.
  */
 export const FIRST_MONTH_PROMO_SHORT =
-  "$100 off with a 3-month promo code" as const;
+  "Tirz starter $199/mo · sema-off100" as const;
 
 /**
  * Primary waitlist CTA button label sitewide (nav, hero, footer, mid-page).

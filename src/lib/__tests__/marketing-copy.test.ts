@@ -20,9 +20,9 @@ describe("marketing-copy", () => {
 
   it("keeps a single concrete first-month promo amount", () => {
     expect(FIRST_MONTH_PROMO_LINE).toBe(
-      "a one-time $100 promo code for your first month on a 3-month plan",
+      "sema-off100 for $100 off semaglutide, or a $599 tirzepatide new-patient starter pack ($199/mo)",
     );
-    expect(FIRST_MONTH_PROMO_SHORT).toBe("$100 off with a 3-month promo code");
+    expect(FIRST_MONTH_PROMO_SHORT).toBe("Tirz starter $199/mo · sema-off100");
     expect(promoIncentiveLine()).toContain(FIRST_MONTH_PROMO_LINE);
     expect(waitlistIncentiveBody()).toContain(FIRST_MONTH_PROMO_LINE);
     expect(waitlistSuccessIncentiveLine()).toContain(FIRST_MONTH_PROMO_LINE);

@@ -29,6 +29,7 @@ import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   COMPOUNDED_TIRZEPATIDE_PRICING,
   formatCompoundedPriceLine,
+  hasStarterPack,
   promoFirstMonthUsd,
   PROMO_CODE_DISCOUNT_USD,
   PROMO_CODE_MIN_MONTHS,
@@ -76,21 +77,49 @@ export function TreatmentPricingCard({
       )}
     >
       <p className="text-xs font-semibold uppercase tracking-wide text-accent-foreground">
-        Transparent pricing
+        {hasStarterPack(pricing)
+          ? "New-patient starter pricing"
+          : "Transparent pricing"}
       </p>
       <CompoundedPriceLockup className="mt-5" pricing={pricing} size="lg" />
       <p className="mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
-        ${pricing.monthlyUsd}/mo is the standard cash-pay rate, billed monthly
-        with no long-term contract. A one-time ${PROMO_CODE_DISCOUNT_USD} promo
-        code brings your first month to ${promoFirstMonthUsd(pricing)},
-        available only on a {PROMO_CODE_MIN_MONTHS}-month plan purchase and
-        redeemable once per patient. A 1-month purchase bills at the full $
-        {pricing.monthlyUsd}/mo rate with no promo code discount. All-inclusive
-        cash-pay pricing: provider care, medication, supplies, and expedited
-        shipping are included. No separate platform membership fee. Dose does
-        not change the monthly rate. Treatment availability may vary based on
-        clinical appropriateness, prescription, pharmacy fulfillment, and state
-        requirements.
+        {hasStarterPack(pricing) ? (
+          <>
+            Brand-new patients can start with a {pricing.starterPack.months}
+            -month starter pack for{" "}
+            <span className="font-bold text-foreground">
+              ${pricing.starterPack.totalUsd}
+            </span>{" "}
+            (${pricing.starterPack.monthlyEquivalentUsd}/mo), then continue at $
+            {pricing.monthlyUsd}/mo. The standard cash-pay rate is $
+            {pricing.monthlyUsd}/mo with no long-term contract. Promo code{" "}
+            <span className="font-bold text-foreground">
+              {pricing.promoCode}
+            </span>{" "}
+            is an alternate one-time ${PROMO_CODE_DISCOUNT_USD} discount that
+            brings your first month to ${promoFirstMonthUsd(pricing)} on a{" "}
+            {PROMO_CODE_MIN_MONTHS}-month plan, redeemable once per patient. A
+            1-month purchase bills at the full ${pricing.monthlyUsd}/mo rate.
+          </>
+        ) : (
+          <>
+            ${pricing.monthlyUsd}/mo is the standard cash-pay rate, billed
+            monthly with no long-term contract. Promo code{" "}
+            <span className="font-bold text-foreground">
+              {pricing.promoCode}
+            </span>{" "}
+            is a one-time ${PROMO_CODE_DISCOUNT_USD} discount that brings your
+            first month to ${promoFirstMonthUsd(pricing)}, available only on a{" "}
+            {PROMO_CODE_MIN_MONTHS}-month plan purchase and redeemable once per
+            patient. A 1-month purchase bills at the full ${pricing.monthlyUsd}
+            /mo rate with no promo code discount.
+          </>
+        )}{" "}
+        All-inclusive cash-pay pricing: provider care, medication, supplies, and
+        expedited shipping are included. No separate platform membership fee.
+        Dose does not change the monthly rate. Treatment availability may vary
+        based on clinical appropriateness, prescription, pharmacy fulfillment,
+        and state requirements.
       </p>
     </SurfaceCard>
   );
