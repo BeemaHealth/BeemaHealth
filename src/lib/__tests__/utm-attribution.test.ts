@@ -31,6 +31,17 @@ describe("utm / attribution (frontend-only)", () => {
     });
   });
 
+  it("reads utm_term, fbclid, and gclid when present", () => {
+    expect(
+      readUtmsFromUrl("?utm_source=google&utm_term=glp1&fbclid=Fb.1&gclid=G.1"),
+    ).toMatchObject({
+      utm_source: "google",
+      utm_term: "glp1",
+      fbclid: "Fb.1",
+      gclid: "G.1",
+    });
+  });
+
   it("captures first-touch referrer and landing path into sessionStorage", () => {
     vi.stubGlobal("window", {
       location: {

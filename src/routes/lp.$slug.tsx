@@ -133,7 +133,10 @@ function LandingPageRoute() {
           onClick={() => {
             const cta = resolveCta(CTA_IDS.landing_page);
             cta.onClick();
-            void navigate({ to: cta.to, search: cta.search });
+            // Bask destinations bake attribution into `to` (TanStack Link/navigate
+            // ignore `search` on absolute http(s) URLs). Assign so fbclid/gclid/utm_*
+            // reach q.beemahealth.com → Bask signUpSearchParams.
+            window.location.assign(cta.to);
           }}
         >
           Get started

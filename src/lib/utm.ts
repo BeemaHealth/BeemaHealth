@@ -1,10 +1,31 @@
 const SESSION_KEY = "beemahealth_pending_utms";
 
+/**
+ * Query keys Bask copies into `signUpSearchParams` for ad attribution.
+ * Must survive the marketing-site → q.beemahealth.com hop via resolveCta().
+ */
+export const BASK_HANDOFF_PARAM_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+  "fbclid",
+  "gclid",
+] as const;
+
+export type BaskHandoffParamKey = (typeof BASK_HANDOFF_PARAM_KEYS)[number];
+
 export type UtmParams = {
   utm_source: string;
   utm_medium: string;
   utm_campaign: string;
+  utm_term: string;
   utm_content: string;
+  /** Meta click id — not PHI. */
+  fbclid: string;
+  /** Google click id — not PHI. */
+  gclid: string;
   landing_page_slug: string;
   /** On-site CTA that led here (e.g. home_hero) — not PHI. */
   cta_id: string;
@@ -18,6 +39,9 @@ export type AttributionSnapshot = Partial<UtmParams> & {
   /** Current path at submit time. */
   page_path?: string;
 };
+
+/** Max length per handoff / UTM value stored in sessionStorage. */
+const ATTR_VALUE_MAX = 256;
 
 /**
  * Gmail (and some “copy link” UIs) sometimes percent-encode the entire UTM
@@ -89,22 +113,42 @@ export function repairMangledUtmLocation(): boolean {
 }
 
 export function readUtmsFromUrl(
-  search: string = window.location.search,
+  search: string = typeof window !== "undefined" ? window.location.search : "",
 ): Partial<UtmParams> {
   const params = new URLSearchParams(repairMangledUtmSearch(search));
   const result: Partial<UtmParams> = {};
-  for (const key of [
-    "utm_source",
-    "utm_medium",
-    "utm_campaign",
-    "utm_content",
-  ] as const) {
+  for (const key of BASK_HANDOFF_PARAM_KEYS) {
     const val = params.get(key);
-    if (val) result[key] = val.slice(0, 128);
+    if (val) result[key] = val.slice(0, ATTR_VALUE_MAX);
   }
   const cta = params.get("cta_id");
   if (cta) result.cta_id = cta.slice(0, 64);
   return result;
+}
+
+/**
+ * Params to append on Bask intake links: click IDs + all five utm_* keys.
+ * Merges sessionStorage (survives in-site navigation) with the current URL
+ * (covers the landing page before/without a prior capture).
+ * Never includes PHI — only public ad/attribution query keys.
+ */
+export function getBaskHandoffParams(): Partial<
+  Record<BaskHandoffParamKey, string>
+> {
+  const pending = getPendingUtms();
+  const fromUrl =
+    typeof window !== "undefined"
+      ? readUtmsFromUrl()
+      : ({} as Partial<UtmParams>);
+  // URL overlays pending so a fresh land with new click ids wins; navigating
+  // away (no params in URL) keeps session values from pending.
+  const merged: Partial<UtmParams> = { ...pending, ...fromUrl };
+  const out: Partial<Record<BaskHandoffParamKey, string>> = {};
+  for (const key of BASK_HANDOFF_PARAM_KEYS) {
+    const val = merged[key];
+    if (val) out[key] = val;
+  }
+  return out;
 }
 
 export function storePendingUtms(utms: Partial<UtmParams>): void {
@@ -178,7 +222,10 @@ export function getAttributionForSubmit(): AttributionSnapshot {
     utm_source: pending.utm_source,
     utm_medium: pending.utm_medium,
     utm_campaign: pending.utm_campaign,
+    utm_term: pending.utm_term,
     utm_content: pending.utm_content,
+    fbclid: pending.fbclid,
+    gclid: pending.gclid,
     cta_id: pending.cta_id,
     referrer: pending.referrer,
     landing_path: pending.landing_path,

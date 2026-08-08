@@ -85,10 +85,14 @@ describe("gtm", () => {
 
   it("resolveCta onClick fires handoff for Bask destinations", () => {
     const dataLayer: unknown[] = [];
-    vi.stubGlobal("window", { dataLayer });
+    vi.stubGlobal("window", {
+      dataLayer,
+      location: { search: "", pathname: "/" },
+    });
 
     const cta = resolveCta(CTA_IDS.home_hero);
-    expect(isBaskIntakeUrl(cta.to)).toBe(true);
+    expect(cta.to.startsWith("https://q.beemahealth.com/")).toBe(true);
+    expect(new URL(cta.to).searchParams.get("cta_id")).toBe("home_hero");
     cta.onClick();
 
     expect(dataLayer[0]).toEqual({

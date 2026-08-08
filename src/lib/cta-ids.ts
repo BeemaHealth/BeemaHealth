@@ -1,4 +1,5 @@
 import { isBaskIntakeUrl, trackIntakeHandoff } from "@/lib/gtm";
+import { getBaskHandoffParams } from "@/lib/utm";
 
 /** Stable CTA identifiers for funnel / conversion attribution. */
 export const CTA_IDS = {
@@ -92,19 +93,67 @@ const DEFAULT_CTA_TARGET: CtaTarget = {
 /** Per-CTA overrides. Empty today — every CtaId falls back to DEFAULT_CTA_TARGET. */
 const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {};
 
+/** CTA search params: stable cta_id plus Bask attribution handoff keys. */
+export type CtaSearchParams = { cta_id: CtaId } & Record<string, string>;
+
+function isAbsoluteHttpUrl(to: string): boolean {
+  try {
+    const parsed = new URL(to);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Append attribution query params onto an absolute URL.
+ * TanStack <Link> ignores the `search` prop for absolute http(s) hrefs and
+ * uses `to` verbatim — so Bask handoff params must live on `to` itself.
+ */
+export function appendQueryParams(
+  url: string,
+  params: Record<string, string>,
+): string {
+  const parsed = new URL(url);
+  for (const [key, value] of Object.entries(params)) {
+    if (value) parsed.searchParams.set(key, value);
+  }
+  return parsed.toString();
+}
+
+/**
+ * Build the query object forwarded into Bask (and internal waitlist links):
+ * cta_id + fbclid/gclid + all five utm_* params captured on the marketing site.
+ */
+export function buildCtaSearch(ctaId: CtaId): CtaSearchParams {
+  return {
+    cta_id: ctaId,
+    ...getBaskHandoffParams(),
+  };
+}
+
 /**
  * Resolve a CTA id to its current label, destination, attribution search
  * params, and click handler. `onClick` pushes `intake_handoff` to the GTM
  * dataLayer (event + cta_location only — no PHI) when the destination is
  * Bask intake (`q.beemahealth.com`). Wire it on every marketing CTA Link.
+ *
+ * For Bask (absolute) destinations, attribution params are baked into `to`
+ * because TanStack Link does not apply `search` to external hrefs.
  */
 export function resolveCta(
   ctaId: CtaId,
-): CtaTarget & { search: { cta_id: CtaId }; onClick: () => void } {
+): CtaTarget & { search: CtaSearchParams; onClick: () => void } {
   const target = CTA_OVERRIDES[ctaId] ?? DEFAULT_CTA_TARGET;
+  const search = buildCtaSearch(ctaId);
+  const to = isAbsoluteHttpUrl(target.to)
+    ? appendQueryParams(target.to, search)
+    : target.to;
+
   return {
-    ...target,
-    search: { cta_id: ctaId },
+    label: target.label,
+    to,
+    search,
     onClick: () => {
       if (isBaskIntakeUrl(target.to)) {
         // cta_location uses the stable CtaId (e.g. home_hero, footer, pricing_hero).
