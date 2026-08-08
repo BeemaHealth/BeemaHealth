@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   breadcrumbJsonLd,
@@ -42,6 +42,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
+import { trackPageViewed } from "@/lib/analytics";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { US_STATES } from "@/lib/us-states";
 
@@ -123,6 +124,10 @@ const PILLARS = [
 function AboutPage() {
   const cta = resolveCta(CTA_IDS.about);
   const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    trackPageViewed("about");
+  }, []);
 
   // Single decorative scroll-parallax accent for the page: the infinity
   // motif in the "Infinity wings" section drifts slightly as it scrolls

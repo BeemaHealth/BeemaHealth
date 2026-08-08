@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   motion,
@@ -29,6 +29,7 @@ import {
 import { TreatmentBreadcrumb } from "@/components/site/TreatmentPageBlocks";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
+import { trackPageViewed } from "@/lib/analytics";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
 
@@ -93,6 +94,10 @@ const AFTER = [
 function HowItWorksPage() {
   const cta = resolveCta(CTA_IDS.how_it_works);
   const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    trackPageViewed("how_it_works");
+  }, []);
 
   // The page's one scroll-parallax accent: a faint hexagon drifting behind
   // the intro text as it scrolls through the viewport.
