@@ -341,7 +341,10 @@ export function SiteHeader() {
                 <Link
                   to={mobileCta.to}
                   search={mobileCta.search}
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    mobileCta.onClick();
+                    setOpen(false);
+                  }}
                 >
                   {mobileCta.label}
                 </Link>

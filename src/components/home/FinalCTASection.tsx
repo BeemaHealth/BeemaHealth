@@ -42,7 +42,7 @@ export function FinalCTASection() {
                 size="xl"
                 className="bg-ink text-ink-foreground hover:bg-ink/85"
               >
-                <Link to={cta.to} search={cta.search}>
+                <Link to={cta.to} search={cta.search} onClick={cta.onClick}>
                   {cta.label}
                   <ArrowRight className="size-4" />
                 </Link>

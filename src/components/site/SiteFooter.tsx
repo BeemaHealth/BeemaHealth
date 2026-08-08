@@ -75,6 +75,7 @@ export function SiteFooter() {
             <Link
               to={cta.to}
               search={cta.search}
+              onClick={cta.onClick}
               className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition-colors hover:bg-primary/90"
             >
               {cta.label}

@@ -161,7 +161,11 @@ function WeightLossPage() {
           >
             <MagneticButton>
               <Button asChild size="xl">
-                <Link to={heroCta.to} search={heroCta.search}>
+                <Link
+                  to={heroCta.to}
+                  search={heroCta.search}
+                  onClick={heroCta.onClick}
+                >
                   {heroCta.label} <ArrowRight />
                 </Link>
               </Button>
@@ -309,7 +313,11 @@ function WeightLossPage() {
                 size="xl"
                 className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
               >
-                <Link to={footerCta.to} search={footerCta.search}>
+                <Link
+                  to={footerCta.to}
+                  search={footerCta.search}
+                  onClick={footerCta.onClick}
+                >
                   {footerCta.label} <ArrowRight />
                 </Link>
               </Button>

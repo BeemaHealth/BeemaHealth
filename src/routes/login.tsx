@@ -215,6 +215,7 @@ function LoginPage() {
           <Link
             to={loginPromptCta.to}
             search={loginPromptCta.search}
+            onClick={loginPromptCta.onClick}
             className="text-primary underline"
           >
             Start your intake

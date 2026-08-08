@@ -250,7 +250,11 @@ export function HomeHero() {
           >
             <MagneticButton>
               <Button asChild size="xl">
-                <Link to={heroCta.to} search={heroCta.search}>
+                <Link
+                  to={heroCta.to}
+                  search={heroCta.search}
+                  onClick={heroCta.onClick}
+                >
                   {heroCta.label} <ArrowRight />
                 </Link>
               </Button>

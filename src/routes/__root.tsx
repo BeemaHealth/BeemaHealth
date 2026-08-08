@@ -10,6 +10,11 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { capturePageUtms } from "@/lib/utm";
 import { initAdPixels } from "@/lib/ad-conversions";
+import {
+  GOOGLE_ADS_HEAD_SCRIPT,
+  GTM_CONTAINER_ID,
+  GTM_HEAD_SCRIPT,
+} from "@/lib/gtm";
 import { absoluteUrl, ORGANIZATION_JSONLD } from "@/lib/seo";
 import { duplicateHomepageRedirectTarget } from "@/lib/canonicalize-url";
 
@@ -192,12 +197,32 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 );
 
 function RootShell({ children }: { children: ReactNode }) {
+  // No root index.html in TanStack Start — this shell is the HTML document.
+  // GTM + Google Ads gtag: standard head installs (hostname-gated) + GTM noscript.
   return (
     <html lang="en">
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: GTM_HEAD_SCRIPT,
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: GOOGLE_ADS_HEAD_SCRIPT,
+          }}
+        />
         <HeadContent />
       </head>
       <body>
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_CONTAINER_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         {children}
         <Scripts />
       </body>
@@ -214,7 +239,8 @@ function RootComponent() {
     capturePageUtms();
   }, []);
 
-  // Meta Pixel / Google Ads / GA4 / GTM — no-op when VITE_* IDs are unset (local/dev).
+  // Meta Pixel / GA4 — no-op when VITE_* IDs are unset (local/dev).
+  // GTM + Google Ads AW tag load from RootShell (hostname-gated), not here.
   useEffect(() => {
     initAdPixels();
   }, []);

@@ -132,6 +132,7 @@ function LandingPageRoute() {
           className="mt-10"
           onClick={() => {
             const cta = resolveCta(CTA_IDS.landing_page);
+            cta.onClick();
             void navigate({ to: cta.to, search: cta.search });
           }}
         >

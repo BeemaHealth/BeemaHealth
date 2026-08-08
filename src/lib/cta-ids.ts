@@ -1,3 +1,5 @@
+import { isBaskIntakeUrl, trackIntakeHandoff } from "@/lib/gtm";
+
 /** Stable CTA identifiers for funnel / conversion attribution. */
 export const CTA_IDS = {
   nav_mobile: "nav_mobile",
@@ -90,10 +92,24 @@ const DEFAULT_CTA_TARGET: CtaTarget = {
 /** Per-CTA overrides. Empty today — every CtaId falls back to DEFAULT_CTA_TARGET. */
 const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {};
 
-/** Resolve a CTA id to its current label, destination, and attribution search params. */
+/**
+ * Resolve a CTA id to its current label, destination, attribution search
+ * params, and click handler. `onClick` pushes `intake_handoff` to the GTM
+ * dataLayer (event + cta_location only — no PHI) when the destination is
+ * Bask intake (`q.beemahealth.com`). Wire it on every marketing CTA Link.
+ */
 export function resolveCta(
   ctaId: CtaId,
-): CtaTarget & { search: { cta_id: CtaId } } {
+): CtaTarget & { search: { cta_id: CtaId }; onClick: () => void } {
   const target = CTA_OVERRIDES[ctaId] ?? DEFAULT_CTA_TARGET;
-  return { ...target, search: { cta_id: ctaId } };
+  return {
+    ...target,
+    search: { cta_id: ctaId },
+    onClick: () => {
+      if (isBaskIntakeUrl(target.to)) {
+        // cta_location uses the stable CtaId (e.g. home_hero, footer, pricing_hero).
+        trackIntakeHandoff(ctaId);
+      }
+    },
+  };
 }

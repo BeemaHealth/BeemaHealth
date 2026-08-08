@@ -229,7 +229,7 @@ function HowItWorksPage() {
           <div className="mt-10 text-center">
             <MagneticButton>
               <Button asChild size="lg">
-                <Link to={cta.to} search={cta.search}>
+                <Link to={cta.to} search={cta.search} onClick={cta.onClick}>
                   {cta.label} <ArrowRight />
                 </Link>
               </Button>
