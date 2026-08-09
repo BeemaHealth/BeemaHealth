@@ -446,7 +446,9 @@ describe("recipe compliance and SEO markup", () => {
     expect(recipeBlocks).not.toContain(
       "Illustrative, digitally generated image; not a photograph of the prepared recipe.",
     );
-    expect(recipeBlocks).not.toContain("Illustrative image of");
+    expect(`${recipeBlocks}\n${hubRoute}\n${detailRoute}`).not.toContain(
+      "Illustrative image of",
+    );
     expect(`${hubRoute}\n${detailRoute}`).toContain("Published August 9, 2026");
     expect(hubRoute).toContain("www.obesity.org/nutritional-priorities");
     expect(hubRoute).toContain("niddk.nih.gov/health-information");

@@ -75,7 +75,7 @@ export const Route = createFileRoute("/recipes/$slug")({
         },
         {
           property: "og:image:alt",
-          content: `Illustrative image of ${recipe.imageAlt.charAt(0).toLowerCase()}${recipe.imageAlt.slice(1)}`,
+          content: recipe.imageAlt,
         },
         { name: "twitter:card", content: "summary_large_image" },
         {
