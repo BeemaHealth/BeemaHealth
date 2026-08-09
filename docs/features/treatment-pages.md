@@ -1,6 +1,18 @@
 # Treatment pages
 
-Each medication Beema offers gets its own indexable, SEO-focused landing page (`/tirzepatide`, `/semaglutide`, more to come as branded medications are added) — this targets each drug's own brand-aware search terms without diluting them, and gives each page its own FAQPage/BreadcrumbList JSON-LD. `/weight-loss` sits alongside them as a broader, non-brand overview page targeting head-term searches ("medical weight loss," "GLP-1 weight loss program") that the drug-specific pages can't rank for — see below.
+Each medication Beema offers gets its own indexable, SEO-focused landing page (`/tirzepatide`, `/semaglutide`) — this targets each drug's search terms without diluting them, and gives each page its own FAQPage/BreadcrumbList JSON-LD. Beema’s patient-facing offering is **compounded only** (compounded semaglutide and compounded tirzepatide). Do not add branded-medication pages (Wegovy, Zepbound, Ozempic, Mounjaro) or describe those brands as Beema offerings. `/weight-loss` sits alongside the compounded pages as a broader overview targeting head-term searches ("medical weight loss," "GLP-1 weight loss program") — see below.
+
+## Compliance (LegitScript + FDA)
+
+Canonical long-form rules live in `docs/marketing/SEO-AEO-GEO-PLAN.md` **§F1.1**. Hard constraints for these pages and related marketing copy:
+
+1. **Compounded-only offering.** Never list or imply Beema sells Wegovy, Zepbound, Ozempic, Mounjaro, or other FDA-approved branded GLP‑1s.
+2. **FDA (Feb 6, 2026):** do not claim compounded products are generic / the same as FDA-approved drugs; do not state they use the same active ingredient; do not state they are clinically proven to produce results. https://www.fda.gov/news-events/press-announcements/fda-intends-take-action-against-non-fda-approved-glp-1-drugs
+3. **Price ≠ medical necessity.** Lower price alone does not establish that a compounded drug is not essentially a copy of a commercial product.
+4. **Required sentence** (reuse verbatim where the page explains compounded status): "Compounded {drug} is not FDA-approved and is considered only when legally available and clinically appropriate."
+5. No outcome guarantees; prescribing is never guaranteed; provider decides case-by-case.
+
+Product photography: LegitScript review preferred colour vials without a Beema wordmark. Certification is **complete** (August 2026); the site still defaults to unbranded vial imagery via `VIAL_IMAGERY_MODE` in `src/lib/treatment-imagery.ts` until product flips that switchboard to `"branded"`. See `docs/features/legitscript.md` and `docs/features/homepage.md`.
 
 ## Routes
 
@@ -59,9 +71,9 @@ All three treatment-adjacent pages now carry page-specific JSON-LD alongside the
 
 `compoundedMonthlyPricingSentence(label, pricing)` is the shared long-form sentence used across FAQ answers and route copy (e.g. "Compounded semaglutide is $199/month, billed monthly with no long-term contract. A one-time $100 promo code brings your first month to $99 when you purchase a 3-month plan; it can't be combined with a 1-month purchase and can only be used once per patient."). `formatCompoundedPriceLine()` and `dualCompoundedHeroPricingLine()` are the shorter card/hero variants of the same structure. **Never hand-write a pricing or promo-code sentence — always route through one of these helpers** so the flat-rate-plus-3-month-promo framing stays consistent if the numbers or wording change again.
 
-## CTA switchboard (live — Bask questionnaire)
+## CTA switchboard (live — Bask intake)
 
-Beema is live: every marketing CTA sitewide sends visitors to Bask's hosted questionnaire (`https://q.beemahealth.com/start-online-visit/weightloss`). The in-house waitlist/qualify/intake funnel (`/waitlist/`, `/qualify/`, `/intake/`, `/consent/`, `/eligibility/`) is dormant and unlinked from any button — see `docs/BACKEND-DEFERRED.md`.
+Beema is live: every marketing CTA sitewide sends visitors to Bask’s hosted **intake** questionnaire (`https://q.beemahealth.com/start-online-visit/weightloss`) — one long questionnaire (not a separate Beema “eligibility” then “intake” product). Checkout and the patient portal also run on Bask/Hive. Leftover in-repo `/waitlist/`, `/qualify/`, `/intake/`, `/consent/` routes are **legacy** and unlinked from primary CTAs — see `docs/BACKEND-DEFERRED.md`.
 
 **`resolveCta(ctaId)` in `src/lib/cta-ids.ts` is the single place that decision is made.** Every CTA button/link in the app calls it instead of hardcoding a URL or a label:
 
@@ -70,13 +82,13 @@ const cta = resolveCta(CTA_IDS.tirzepatide_hero);
 <Link to={cta.to} search={cta.search}>{cta.label}</Link>
 ```
 
-- All `CtaId`s default to `DEFAULT_CTA_TARGET` (`"Get Started"` → the Bask questionnaire URL).
+- All `CtaId`s default to `DEFAULT_CTA_TARGET` (`"Get Started"` → the Bask **intake** URL).
 - To repoint one CTA (or a few) — e.g. a medication-specific intake URL — add an entry to `CTA_OVERRIDES` keyed by `CtaId`. `to` can be an internal path or a full external URL (Bask lives on a different domain).
 - To repoint everything at once, change `DEFAULT_CTA_TARGET`.
 
 **When adding any new CTA button anywhere on the site: add a `CtaId` to `CTA_IDS` and call `resolveCta()` — never hardcode a URL or label on a marketing CTA.** This is what keeps repointing the funnel a one-file change instead of a site-wide hunt.
 
-**Login is separate from the CTA switchboard.** The header's "Log In" link goes straight to the Hive patient portal (`HIVE_LOGIN_URL` in `src/lib/cta-ids.ts`, currently `https://hive.beemahealth.com`) via a plain `<a>` — it's an account action on a different app, not a funnel-conversion click, so it doesn't go through `resolveCta`/`CTA_IDS`.
+**Login is separate from the CTA switchboard.** The header's "Log In" link goes straight to the Hive patient portal (`HIVE_LOGIN_URL` in `src/lib/cta-ids.ts`, currently `https://hive.beemahealth.com`) via a plain `<a>` — it's an account action on Bask’s portal, not a marketing-conversion click, so it doesn't go through `resolveCta`/`CTA_IDS`.
 
 ## Key files
 

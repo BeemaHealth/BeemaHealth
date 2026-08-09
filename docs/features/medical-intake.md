@@ -51,7 +51,7 @@ Legacy patients without dynamic data keep the hardcoded `IntakeSubmissionViewer`
 
 ## External API integration — Beluga Health only
 
-**Aretide calls Beluga Health exclusively. No outbound calls are made to LifeFile/MediVera.**
+**Beema Health calls Beluga Health exclusively. No outbound calls are made to LifeFile/MediVera.**
 
 | Stage | What happens |
 |-------|-------------|

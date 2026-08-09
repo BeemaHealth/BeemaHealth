@@ -3,7 +3,7 @@ flowchart TB
     P1["POST /api/refills/titration/"]
   end
 
-  subgraph aretide [Beema Health backend]
+  subgraph beema [Beema Health backend]
     A1[refill_views.py]
     WebhookRx["POST /api/webhooks/beluga/"]
   end

@@ -7,13 +7,13 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
-      { title: "How it works — Aretide" },
+      { title: "How it works — Beema Health" },
       {
         name: "description",
         content:
-          "Five clear steps: complete online intake, a licensed clinician reviews, prescription is routed if appropriate, and Aretide handles pharmacy, insurance, and refills.",
+          "Five clear steps: complete online intake, a licensed clinician reviews, prescription is routed if appropriate, and Beema Health handles pharmacy, insurance, and refills.",
       },
-      { property: "og:title", content: "How Aretide works" },
+      { property: "og:title", content: "How Beema Health works" },
       { property: "og:description", content: "From intake to refills — calm, clear, and always knowing what's next." },
     ],
     links: [{ rel: "canonical", href: "/how-it-works" }],

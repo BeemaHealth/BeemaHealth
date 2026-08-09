@@ -6,11 +6,11 @@ import { createFunnelSession } from "@/lib/api/client";
 import { getPendingUtms, clearPendingUtms } from "@/lib/utm";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { ScrollProgressBar } from "@/components/site/primitives";
+import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
 import { HomeHero } from "@/components/home/HomeHero";
 import { TrustSignals } from "@/components/home/TrustSignals";
-import { DoseJourney } from "@/components/home/DoseJourney";
-import { HowItWorksScrolly } from "@/components/home/HowItWorksScrolly";
 import { TreatmentShowcase } from "@/components/home/TreatmentShowcase";
+import { RecipeSpotlight } from "@/components/home/RecipeSpotlight";
 import { MissionSection } from "@/components/home/MissionSection";
 import { FinalCTASection } from "@/components/home/FinalCTASection";
 
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Medical weight-loss care reviewed by a licensed provider. Secure intake for Zepbound, Wegovy, and affordable alternatives when appropriate.",
+          "Medical weight-loss care reviewed by a licensed provider. Compounded semaglutide and compounded tirzepatide when clinically appropriate and legally available. Compounded medications are not FDA-approved.",
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/") }],
@@ -64,9 +64,9 @@ function HomePage() {
       <MarketingLayout>
         <HomeHero />
         <TrustSignals />
-        <HowItWorksScrolly />
-        <DoseJourney />
+        <HowItWorksSteps />
         <TreatmentShowcase />
+        <RecipeSpotlight />
         <MissionSection />
         <FinalCTASection />
       </MarketingLayout>

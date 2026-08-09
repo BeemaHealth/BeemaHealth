@@ -300,7 +300,7 @@ export function BmiCalculator({
                     size="lg"
                     className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                   >
-                    <Link to={cta.to} search={cta.search}>
+                    <Link to={cta.to} search={cta.search} onClick={cta.onClick}>
                       {cta.label} <ArrowRight />
                     </Link>
                   </Button>

@@ -29,9 +29,11 @@ import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   COMPOUNDED_TIRZEPATIDE_PRICING,
   formatCompoundedPriceLine,
+  hasStarterPack,
   promoFirstMonthUsd,
   PROMO_CODE_DISCOUNT_USD,
   PROMO_CODE_MIN_MONTHS,
+  starterPackTitle,
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
 
@@ -80,15 +82,55 @@ export function TreatmentPricingCard({
       </p>
       <CompoundedPriceLockup className="mt-5" pricing={pricing} size="lg" />
       <p className="mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
-        ${pricing.monthlyUsd}/mo is the standard cash-pay rate, billed monthly
-        with no long-term contract. A one-time ${PROMO_CODE_DISCOUNT_USD} promo
-        code brings your first month to ${promoFirstMonthUsd(pricing)},
-        available only on a {PROMO_CODE_MIN_MONTHS}-month plan purchase and
-        redeemable once per patient. A 1-month purchase bills at the full $
-        {pricing.monthlyUsd}/mo rate with no promo code discount.
-        Medication-only cash pricing, with no platform membership fee. Pricing
-        and treatment availability may vary based on clinical appropriateness,
-        prescription, pharmacy fulfillment, and state requirements.
+        {hasStarterPack(pricing) ? (
+          <>
+            <span className="font-semibold text-foreground">
+              {starterPackTitle(pricing.starterPack)}
+            </span>
+            : brand-new patients beginning tirzepatide get{" "}
+            {pricing.starterPack.dosePathLabel} for{" "}
+            <span className="font-bold text-foreground">
+              ${pricing.starterPack.totalUsd}
+            </span>{" "}
+            over {pricing.starterPack.months} months ($
+            {pricing.starterPack.monthlyEquivalentUsd}/mo).{" "}
+            <span className="font-semibold text-foreground">
+              Standard / maintenance
+            </span>
+            : ${pricing.monthlyUsd}/mo monthly after the starter (6-month,
+            annual, and quarterly rates in the ? details). Continuing on a
+            quarterly plan after the starter is $
+            {PROMO_CODE_DISCOUNT_USD} less than three months at the standard
+            monthly rate. If you&apos;re on maintenance or not taking the
+            starter pack, promo code{" "}
+            <span className="font-bold text-foreground">
+              {pricing.promoCode}
+            </span>{" "}
+            takes ${PROMO_CODE_DISCOUNT_USD} off your first month (to $
+            {promoFirstMonthUsd(pricing)}) on a {PROMO_CODE_MIN_MONTHS}-month
+            plan, once per patient. The starter pack and promo code can&apos;t
+            be used together. A 1-month purchase bills at the full $
+            {pricing.monthlyUsd}/mo rate.
+          </>
+        ) : (
+          <>
+            ${pricing.monthlyUsd}/mo is the standard cash-pay rate, billed
+            monthly with no long-term contract. Promo code{" "}
+            <span className="font-bold text-foreground">
+              {pricing.promoCode}
+            </span>{" "}
+            is a one-time ${PROMO_CODE_DISCOUNT_USD} discount that brings your
+            first month to ${promoFirstMonthUsd(pricing)}, available only on a{" "}
+            {PROMO_CODE_MIN_MONTHS}-month plan purchase and redeemable once per
+            patient. A 1-month purchase bills at the full ${pricing.monthlyUsd}
+            /mo rate with no promo code discount.
+          </>
+        )}{" "}
+        All-inclusive cash-pay pricing: provider care, medication, supplies, and
+        expedited shipping are included. No separate platform membership fee.
+        Dose does not change the monthly rate. Treatment availability may vary
+        based on clinical appropriateness, prescription, pharmacy fulfillment,
+        and state requirements.
       </p>
     </SurfaceCard>
   );

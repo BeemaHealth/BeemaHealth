@@ -281,7 +281,7 @@ function PricingPage() {
             No surprises. Ever.
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-primary-foreground/85">
-            Start with a quick eligibility check. You'll see medication pricing
+            Start with your medical intake. You'll see medication pricing
             before paying anything.
           </p>
           <Button
@@ -290,7 +290,7 @@ function PricingPage() {
             className="mt-6 bg-ink text-ink-foreground hover:bg-ink/85"
           >
             <Link to={WAITLIST_PATH} search={waitlistSearch(CTA_IDS.pricing_footer)}>
-              See if you qualify <ArrowRight />
+              Start your intake <ArrowRight />
             </Link>
           </Button>
         </div>

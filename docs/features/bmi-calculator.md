@@ -29,7 +29,7 @@ Tests: `src/lib/__tests__/bmi.test.ts`.
 
 ## CTA ids
 
-Added to `CTA_IDS` in `src/lib/cta-ids.ts`: `tirzepatide_bmi`, `semaglutide_bmi`, `learn_initial_research_bmi`. All fall back to `DEFAULT_CTA_TARGET` like every other CTA.
+Added to `CTA_IDS` in `src/lib/cta-ids.ts`: `tirzepatide_bmi`, `semaglutide_bmi`, `learn_initial_research_bmi`. All fall back to `DEFAULT_CTA_TARGET` (Bask **intake**) like every other marketing CTA.
 
 ## Key files
 

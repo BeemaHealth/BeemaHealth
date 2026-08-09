@@ -1,0 +1,814 @@
+{
+  "exportFormatVersion": 2,
+  "exportTime": "2026-08-08 21:00:00",
+  "containerVersion": {
+    "path": "accounts/6368696783/containers/259765761/versions/0",
+    "accountId": "6368696783",
+    "containerId": "259765761",
+    "containerVersionId": "0",
+    "name": "Beema Health — PHI-safe funnel draft (DO NOT PUBLISH until verified)",
+    "description": "Workspace import only. Purchase + Ads conversion tags are paused until Bask purchase dataLayer event is confirmed. Never map userId/email/phone/form fields. See docs/analytics/02-gtm-tag-specification.md.",
+    "container": {
+      "path": "accounts/6368696783/containers/259765761",
+      "accountId": "6368696783",
+      "containerId": "259765761",
+      "name": "Beema Health Questionnaire",
+      "publicId": "GTM-MHHJ44GF",
+      "usageContext": ["WEB"],
+      "fingerprint": "1760000000000",
+      "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6368696783/containers/259765761/workspaces/0"
+    },
+    "builtInVariable": [
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "type": "PAGE_URL",
+        "name": "Page URL"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "type": "PAGE_HOSTNAME",
+        "name": "Page Hostname"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "type": "PAGE_PATH",
+        "name": "Page Path"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "type": "EVENT",
+        "name": "Event"
+      }
+    ],
+    "variable": [
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "1",
+        "name": "Const - GA4 Measurement ID",
+        "type": "c",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "value",
+            "value": "G-03PMCCSD3R"
+          }
+        ],
+        "fingerprint": "1760000000001"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "2",
+        "name": "Const - Google Ads Conversion ID",
+        "type": "c",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "value",
+            "value": "18301765593"
+          }
+        ],
+        "fingerprint": "1760000000002"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "3",
+        "name": "Const - Google Ads Purchase Conversion Label",
+        "type": "c",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "value",
+            "value": "REPLACE_ME_AFTER_ADS_SETUP"
+          }
+        ],
+        "fingerprint": "1760000000003"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "4",
+        "name": "DLV - cta_location",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "cta_location"
+          }
+        ],
+        "fingerprint": "1760000000004"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "5",
+        "name": "DLV - questionnaire_name",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "questionnaire_name"
+          }
+        ],
+        "fingerprint": "1760000000005"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "6",
+        "name": "DLV - screen_name",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "screen_name"
+          }
+        ],
+        "fingerprint": "1760000000006"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "7",
+        "name": "DLV - eventModel.questionnaire_name",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "eventModel.questionnaire_name"
+          }
+        ],
+        "fingerprint": "1760000000007"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "8",
+        "name": "DLV - eventModel.screen_name",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "eventModel.screen_name"
+          }
+        ],
+        "fingerprint": "1760000000008"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "9",
+        "name": "DLV - ecommerce.transaction_id",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "ecommerce.transaction_id"
+          }
+        ],
+        "fingerprint": "1760000000009"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "10",
+        "name": "DLV - ecommerce.value",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "ecommerce.value"
+          }
+        ],
+        "fingerprint": "1760000000010"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "11",
+        "name": "DLV - ecommerce.currency",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "true"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "defaultValue",
+            "value": "USD"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "ecommerce.currency"
+          }
+        ],
+        "fingerprint": "1760000000011"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "12",
+        "name": "CJS - questionnaire_name resolved",
+        "type": "jsm",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "javascript",
+            "value": "function() {\n  var flat = {{DLV - questionnaire_name}};\n  if (flat) return flat;\n  return {{DLV - eventModel.questionnaire_name}} || undefined;\n}"
+          }
+        ],
+        "fingerprint": "1760000000012"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "variableId": "13",
+        "name": "CJS - screen_name resolved",
+        "type": "jsm",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "javascript",
+            "value": "function() {\n  var flat = {{DLV - screen_name}};\n  if (flat) return flat;\n  return {{DLV - eventModel.screen_name}} || undefined;\n}"
+          }
+        ],
+        "fingerprint": "1760000000013"
+      }
+    ],
+    "trigger": [
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "triggerId": "1",
+        "name": "All Pages",
+        "type": "PAGEVIEW",
+        "fingerprint": "1760000000101"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "triggerId": "2",
+        "name": "Bask Hostname - All Pages",
+        "type": "PAGEVIEW",
+        "filter": [
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Page Hostname}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "q.beemahealth.com"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760000000102"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "triggerId": "3",
+        "name": "CE - intake_handoff",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{_event}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "intake_handoff"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760000000103"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "triggerId": "4",
+        "name": "CE - screen_view (Bask)",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{_event}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "screen_view"
+              }
+            ]
+          }
+        ],
+        "filter": [
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Page Hostname}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "q.beemahealth.com"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760000000104"
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "triggerId": "5",
+        "name": "CE - purchase (Bask)",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "EQUALS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{_event}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "purchase"
+              }
+            ]
+          }
+        ],
+        "filter": [
+          {
+            "type": "CONTAINS",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{Page Hostname}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "q.beemahealth.com"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760000000105"
+      }
+    ],
+    "tag": [
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "tagId": "1",
+        "name": "T1 - Conversion Linker",
+        "type": "gclidw",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "enableCookieOverrides",
+            "value": "false"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableUrlPassthrough",
+            "value": "true"
+          }
+        ],
+        "fingerprint": "1760000000201",
+        "firingTriggerId": ["1"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        }
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "tagId": "2",
+        "name": "T2 - GA4 Config (Bask only)",
+        "type": "googtag",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "tagId",
+            "value": "{{Const - GA4 Measurement ID}}"
+          },
+          {
+            "type": "LIST",
+            "key": "configSettingsTable",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "send_page_view"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "true"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "fingerprint": "1760000000202",
+        "firingTriggerId": ["2"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        }
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "tagId": "3",
+        "name": "T3 - GA4 Event - intake_handoff",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "intake_handoff"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "cta_location"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{DLV - cta_location}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "{{Const - GA4 Measurement ID}}"
+          }
+        ],
+        "fingerprint": "1760000000203",
+        "firingTriggerId": ["3"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        }
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "tagId": "4",
+        "name": "T4 - GA4 Event - questionnaire_screen_view",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "questionnaire_screen_view"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "questionnaire_name"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{CJS - questionnaire_name resolved}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "screen_name"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{CJS - screen_name resolved}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "{{Const - GA4 Measurement ID}}"
+          }
+        ],
+        "fingerprint": "1760000000204",
+        "firingTriggerId": ["4"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "monitoringMetadata": {
+          "type": "MAP"
+        }
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "tagId": "5",
+        "name": "T5 - GA4 Event - purchase (PAUSED — unconfirmed DL event)",
+        "type": "gaawe",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "sendEcommerceData",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventName",
+            "value": "purchase"
+          },
+          {
+            "type": "LIST",
+            "key": "eventParameters",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "transaction_id"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{DLV - ecommerce.transaction_id}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "value"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{DLV - ecommerce.value}}"
+                  }
+                ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "name",
+                    "value": "currency"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "value",
+                    "value": "{{DLV - ecommerce.currency}}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "measurementIdOverride",
+            "value": "{{Const - GA4 Measurement ID}}"
+          }
+        ],
+        "fingerprint": "1760000000205",
+        "firingTriggerId": ["5"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "paused": true,
+        "monitoringMetadata": {
+          "type": "MAP"
+        }
+      },
+      {
+        "accountId": "6368696783",
+        "containerId": "259765761",
+        "tagId": "6",
+        "name": "T6 - Google Ads Conversion - Purchase (PAUSED)",
+        "type": "awct",
+        "parameter": [
+          {
+            "type": "BOOLEAN",
+            "key": "enableNewCustomerReporting",
+            "value": "false"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableProductReporting",
+            "value": "false"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableEnhancedConversion",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "conversionCookiePrefix",
+            "value": "_gcl"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "rdv",
+            "value": "false"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableShippingData",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "conversionId",
+            "value": "{{Const - Google Ads Conversion ID}}"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "conversionLabel",
+            "value": "{{Const - Google Ads Purchase Conversion Label}}"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "conversionValue",
+            "value": "{{DLV - ecommerce.value}}"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "currencyCode",
+            "value": "{{DLV - ecommerce.currency}}"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "eventSettingsTable",
+            "value": ""
+          }
+        ],
+        "fingerprint": "1760000000206",
+        "firingTriggerId": ["5"],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "paused": true,
+        "monitoringMetadata": {
+          "type": "MAP"
+        }
+      }
+    ],
+    "fingerprint": "1760000000999",
+    "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6368696783/containers/259765761/versions/0?apiLink=version"
+  }
+}

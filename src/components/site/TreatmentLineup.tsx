@@ -17,6 +17,8 @@ import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { Reveal } from "@/components/site/primitives";
 import { resolveVialImagery, type VialImagery } from "@/lib/treatment-imagery";
 
+const TIRZ_STARTER = COMPOUNDED_TIRZEPATIDE_PRICING.starterPack!;
+
 type Treatment = {
   id: string;
   name: string;
@@ -61,9 +63,10 @@ export function TreatmentLineup() {
             GLP-1 weight-loss options
           </h2>
           <p className="mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-            Transparent cash pricing on every option: a discounted first month,
-            then the standard monthly rate for months 2 and 3, with no
-            membership fee.
+            Transparent cash pricing on every option. Semaglutide starts with a
+            first-month promo. Tirzepatide: {TIRZ_STARTER.months}-month starter
+            pack ${TIRZ_STARTER.totalUsd} for {TIRZ_STARTER.dosePathLabel}, or $
+            {COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo for maintenance.
           </p>
         </Reveal>
 
@@ -75,14 +78,14 @@ export function TreatmentLineup() {
 
         <Reveal delay={200}>
           <p className="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">
-            <span className="font-medium">†</span> Listed prices are medication
-            only (cash-pay), if prescribed. Final cost depends on your provider
-            decision as well as dosage recommendation. Treatment availability
-            depends on your intake, clinical eligibility, and a licensed
-            provider&apos;s independent decision. Compounded semaglutide and
-            compounded tirzepatide are not FDA-approved and are only considered
-            when legally available and clinically appropriate. Completing intake
-            does not guarantee a prescription.
+            <span className="font-medium">†</span> Listed prices are
+            all-inclusive cash-pay rates (provider care, medication, supplies,
+            and shipping), if prescribed. Treatment availability depends on your
+            intake, clinical eligibility, and a licensed provider&apos;s
+            independent decision. Compounded semaglutide and compounded
+            tirzepatide are not FDA-approved and are only considered when
+            legally available and clinically appropriate. Completing intake does
+            not guarantee a prescription.
           </p>
         </Reveal>
       </div>

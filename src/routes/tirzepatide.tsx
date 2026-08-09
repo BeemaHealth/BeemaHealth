@@ -4,8 +4,6 @@ import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   CheckCircle2,
-  ClipboardCheck,
-  Send,
   ShieldCheck,
   Stethoscope,
 } from "lucide-react";
@@ -19,7 +17,6 @@ import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import {
   FloatingHexagons,
-  HexBadge,
   MagneticButton,
   Section,
   SectionHeading,
@@ -33,6 +30,7 @@ import {
   TreatmentPricingCard,
   type TreatmentFaqItem,
 } from "@/components/site/TreatmentPageBlocks";
+import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
 import { BmiCalculator } from "@/components/site/BmiCalculator";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
@@ -41,6 +39,8 @@ import {
   COMPOUNDED_TIRZEPATIDE_PRICING,
   compoundedMonthlyPricingSentence,
 } from "@/lib/medication-pricing";
+import { patientQuestionsGuidance } from "@/lib/marketing-copy";
+import { SUPPORT_EMAIL } from "@/lib/contact-info";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 import {
@@ -51,58 +51,41 @@ import {
 const VIAL_IMAGERY = resolveVialImagery("tirzepatide");
 
 const TITLE = "Compounded Tirzepatide for Weight Loss | Beema Health";
-const DESCRIPTION = `Compounded tirzepatide for medical weight loss, reviewed by licensed providers. Nationwide telehealth care at $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo. Prescribing is never guaranteed.`;
+const STARTER = COMPOUNDED_TIRZEPATIDE_PRICING.starterPack!;
+const DESCRIPTION = `Compounded tirzepatide for medical weight loss, reviewed by licensed providers. ${STARTER.months}-month starter pack $${STARTER.totalUsd} for ${STARTER.dosePathLabel}, or standard/maintenance $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo (promo code ${COMPOUNDED_TIRZEPATIDE_PRICING.promoCode} for $100 off first month on a 3-month plan). Prescribing is never guaranteed.`;
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
     q: "What is compounded tirzepatide?",
-    a: "Tirzepatide is a GLP-1/GIP medication used in medical weight-management care. It's available both as an FDA-approved branded medication and, separately, as a compounded version prepared by a licensed compounding pharmacy rather than sold under a brand name. Compounded tirzepatide is not the same product as the branded version: it is not FDA-approved, and it's considered as part of care only when it is legally available and clinically appropriate for the specific patient. A licensed provider decides, on a case-by-case basis, whether compounded tirzepatide may be an appropriate option, based on your BMI, health history, current medications, and applicable state law. To be considered, you'll complete a brief eligibility check and medical intake, which a licensed provider reviews before making that decision. Completing an eligibility check and medical intake does not guarantee that compounded tirzepatide, or any treatment, will ultimately be prescribed for you.",
+    a: "Tirzepatide is a GLP-1/GIP medication used in medical weight-management care. It's available both as an FDA-approved branded medication and, separately, as a compounded version prepared by a licensed compounding pharmacy rather than sold under a brand name. Compounded tirzepatide is not the same product as the branded version: it is not FDA-approved, and it's considered as part of care only when it is legally available and clinically appropriate for the specific patient. A licensed provider decides, on a case-by-case basis, whether compounded tirzepatide may be an appropriate option, based on your BMI, health history, current medications, and applicable state law. To be considered, you'll complete a medical intake, which a licensed provider reviews before making that decision. Completing a medical intake does not guarantee that compounded tirzepatide, or any treatment, will ultimately be prescribed for you.",
   },
   {
     q: "Is tirzepatide right for me?",
-    a: "Whether tirzepatide is right for you depends on your BMI, health history, current medications, and a licensed provider's independent clinical judgment, not a fixed checklist. Beema Health's tirzepatide care is intended for adults 18 and older, and eligibility also depends on applicable state law where you live. During the process, you complete a brief eligibility check, create an account, and submit a medical intake describing your health history, current medications, and goals. A licensed provider reviews that information and decides, on a case-by-case basis, whether tirzepatide specifically, or another approach like compounded semaglutide, may be appropriate for your situation. Completing an eligibility check and intake does not guarantee that tirzepatide, or any treatment, will be prescribed, and not everyone who applies will be approved. If you're unsure, our BMI calculator and weight-loss program overview can help you think through whether it's worth starting a conversation with a provider.",
+    a: "Whether tirzepatide is right for you depends on your BMI, health history, current medications, and a licensed provider's independent clinical judgment, not a fixed checklist. Beema Health's tirzepatide care is intended for adults 18 and older, and eligibility also depends on applicable state law where you live. During the process, you create an account and submit a medical intake describing your health history, current medications, and goals. A licensed provider reviews that information and decides, on a case-by-case basis, whether tirzepatide specifically, or another approach like compounded semaglutide, may be appropriate for your situation. Completing intake does not guarantee that tirzepatide, or any treatment, will be prescribed, and not everyone who applies will be approved. If you're unsure, our BMI calculator and weight-loss program overview can help you think through whether it's worth starting a conversation with a provider.",
   },
   {
     q: "How does online tirzepatide care through Beema work?",
-    a: "Care starts with a brief eligibility check covering your health, location, and goals, which takes about 5 minutes. If you appear to be a potential fit, you create an account and complete a secure medical intake questionnaire at your own pace, covering your health history, current medications, and weight-loss goals in more depth. A licensed provider then reviews your intake and independently decides whether tirzepatide, or another treatment, may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability. If a provider does prescribe treatment, care includes the doctor consultation and visit, the prescription medication, ongoing doctor follow-up, and supplies like syringes and alcohol pads, along with expedited shipping to your door. Beema Health connects patients nationwide with independently licensed providers, though medication availability and eligibility still depend on your state's requirements.",
+    a: "Care starts with creating an account and completing a secure medical intake questionnaire at your own pace, covering your health, location, weight-loss goals, health history, and current medications. A licensed provider then reviews your intake and independently decides whether tirzepatide, or another treatment, may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability. If a provider does prescribe treatment, care includes the doctor consultation and visit, the prescription medication, ongoing doctor follow-up, and supplies like syringes and alcohol pads, along with expedited shipping to your door. Beema Health connects patients nationwide with independently licensed providers, though medication availability and eligibility still depend on your state's requirements.",
   },
   {
     q: "How much does tirzepatide cost through Beema?",
-    a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide through Beema", COMPOUNDED_TIRZEPATIDE_PRICING)} This is medication-only cash pricing with no separate platform membership fee, and your final cost can vary based on the dosage your provider recommends. Doctor visits, prescription medication, ongoing doctor follow-up care, and supplies like syringes and alcohol pads are included, along with expedited shipping, and any additional costs like labs would be shown separately before you're charged. Because compounded tirzepatide is a prescription medication, a licensed provider must review your medical intake and independently decide it's appropriate before treatment begins; completing intake never guarantees a prescription. If cost is a concern, ask about promo code eligibility and plan-length options during your medical intake.`,
+    a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide through Beema", COMPOUNDED_TIRZEPATIDE_PRICING)} That listed rate is all-inclusive cash-pay pricing with no separate platform membership fee: it covers doctor visits, prescription medication, ongoing doctor follow-up care, supplies like syringes and alcohol pads, and expedited shipping. Dose adjustments within compounded tirzepatide do not change the monthly price. Because compounded tirzepatide is a prescription medication, a licensed provider must review your medical intake and independently decide it's appropriate before treatment begins; completing intake never guarantees a prescription. Questions about promo codes or plan length? ${patientQuestionsGuidance()}`,
   },
   {
     q: "Does Beema serve patients nationwide?",
-    a: "Yes. Beema Health is available to patients in all 50 U.S. states, connecting you with independently licensed providers as part of a nationwide telehealth model. That said, medication availability and eligibility still depend on your state's specific requirements, since compounding regulations and prescribing rules vary by location. They also depend on your assigned provider's independent clinical decision after reviewing your medical intake, health history, current medications, and BMI. The clinician who reviews your case may vary based on state licensure and availability, but every provider in Beema's network is independently licensed and makes treatment decisions using their own clinical judgment, whether that decision concerns tirzepatide, compounded semaglutide, or another approach entirely. Completing an eligibility check and intake from anywhere in the country does not guarantee that tirzepatide, or any other treatment, will ultimately be prescribed for you.",
+    a: "Yes. Beema Health is available to patients in all 50 U.S. states, connecting you with independently licensed providers as part of a nationwide telehealth model. That said, medication availability and eligibility still depend on your state's specific requirements, since compounding regulations and prescribing rules vary by location. They also depend on your assigned provider's independent clinical decision after reviewing your medical intake, health history, current medications, and BMI. The clinician who reviews your case may vary based on state licensure and availability, but every provider in Beema's network is independently licensed and makes treatment decisions using their own clinical judgment, whether that decision concerns tirzepatide, compounded semaglutide, or another approach entirely. Completing intake from anywhere in the country does not guarantee that tirzepatide, or any other treatment, will ultimately be prescribed for you.",
   },
   {
     q: "Is compounded tirzepatide FDA-approved?",
-    a: "No. Compounded tirzepatide is not an FDA-approved medication the way branded tirzepatide is; it's prepared individually by a licensed compounding pharmacy rather than manufactured and approved as a standardized branded drug. Because of that, it is not the same product as an FDA-approved branded medication, and it's considered as part of care only when it is legally available and clinically appropriate for a given patient. A licensed provider weighs your BMI, health history, current medications, and applicable state law before deciding, on a case-by-case basis, whether compounded tirzepatide may be an appropriate option, or whether another approach, such as compounded semaglutide, makes more sense. If you would rather stick with an FDA-approved branded medication, discuss that preference with your provider during your intake review so they can factor it into their independent clinical decision. For more detail on eligibility, contraindications, and warning signs, see Beema's safety and eligibility information.",
+    a: `No. Compounded tirzepatide is not an FDA-approved medication the way branded tirzepatide is; it's prepared individually by a licensed compounding pharmacy rather than manufactured and approved as a standardized branded drug. Because of that, it is not the same product as an FDA-approved branded medication, and it's considered as part of care only when it is legally available and clinically appropriate for a given patient. A licensed provider weighs your BMI, health history, current medications, and applicable state law before deciding, on a case-by-case basis, whether compounded tirzepatide may be an appropriate option, or whether another approach, such as compounded semaglutide, makes more sense. If you would rather stick with an FDA-approved branded medication, note that preference in your intake answers so your provider can factor it into their independent clinical decision. ${patientQuestionsGuidance()} For more detail on eligibility, contraindications, and warning signs, see Beema's safety and eligibility information.`,
   },
   {
     q: "How quickly can treatment begin?",
-    a: "How quickly you can start depends on a few factors: how fast you complete the roughly 5-minute eligibility check and the more detailed medical intake questionnaire, how quickly a licensed provider reviews your information and makes an independent clinical decision, and how quickly the pharmacy can fulfill and ship your prescription if one is issued. Because intake is self-paced and provider review takes real clinical judgment rather than an automatic approval, we cannot promise a specific start date for any individual patient. Shipping is expedited once a prescription is issued as part of your included care, but pharmacy timelines can still vary. It's also worth remembering that prescribing is never guaranteed: a licensed provider may determine that tirzepatide, or any treatment, is not appropriate for you based on your health history, current medications, or applicable state law, regardless of how quickly you move through intake. If you're unsure how long to expect, our how-it-works overview walks through each stage in more detail.",
+    a: "How quickly you can start depends on a few factors: how fast you complete your medical intake questionnaire, how quickly a licensed provider reviews your information and makes an independent clinical decision, and how quickly the pharmacy can fulfill and ship your prescription if one is issued. Because intake is self-paced and provider review takes real clinical judgment rather than an automatic approval, we cannot promise a specific start date for any individual patient. Shipping is expedited once a prescription is issued as part of your included care, but pharmacy timelines can still vary. It's also worth remembering that prescribing is never guaranteed: a licensed provider may determine that tirzepatide, or any treatment, is not appropriate for you based on your health history, current medications, or applicable state law, regardless of how quickly you move through intake. If you're unsure how long to expect, our how-it-works overview walks through each stage in more detail.",
   },
   {
     q: "Can I switch to Beema if I'm already on tirzepatide elsewhere?",
-    a: "Yes. If you're already taking tirzepatide with another provider, tell us about your current provider, dose, and how long you've been on treatment during your medical intake. Your Beema provider will factor that history into their independent clinical review, generally with the goal of keeping you on a comparable dose rather than having you restart from scratch, though the final decision is always theirs based on your full health history and current medications. It's important to give accurate, complete details in your intake, since your answers directly shape the dose and treatment plan your provider considers appropriate for you. As with any new patient, completing an eligibility check and intake doesn't guarantee that tirzepatide, or any specific dose, will be prescribed; a licensed provider makes that call after independently reviewing your case, health history, current medications, and applicable state law where you live. Beema serves patients nationwide, though your assigned provider may vary by state licensure.",
-  },
-];
-
-const STEPS = [
-  {
-    icon: ClipboardCheck,
-    title: "Complete a brief eligibility check",
-    text: "Answer a few questions about your health, location, and goals. Takes about 5 minutes.",
-  },
-  {
-    icon: Send,
-    title: "Submit your medical intake",
-    text: "Create an account and complete a secure medical questionnaire at your own pace.",
-  },
-  {
-    icon: Stethoscope,
-    title: "Licensed provider review",
-    text: "A licensed provider reviews your intake and decides whether tirzepatide may be appropriate. Prescribing is never guaranteed.",
+    a: "Yes. If you're already taking tirzepatide with another provider, tell us about your current provider, dose, and how long you've been on treatment during your medical intake. Your Beema provider will factor that history into their independent clinical review, generally with the goal of keeping you on a comparable dose rather than having you restart from scratch, though the final decision is always theirs based on your full health history and current medications. It's important to give accurate, complete details in your intake, since your answers directly shape the dose and treatment plan your provider considers appropriate for you. As with any new patient, completing intake doesn't guarantee that tirzepatide, or any specific dose, will be prescribed; a licensed provider makes that call after independently reviewing your case, health history, current medications, and applicable state law where you live. Beema serves patients nationwide, though your assigned provider may vary by state licensure.",
   },
 ];
 
@@ -160,8 +143,8 @@ export const Route = createFileRoute("/tirzepatide")({
             reviewedByClinicalLead: true,
             dateModified: "2026-07-31",
             offer: {
-              introPrice: 197,
-              recurringPrice: 297,
+              introPrice: STARTER.monthlyEquivalentUsd,
+              recurringPrice: COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd,
             },
           }),
         ),
@@ -208,7 +191,7 @@ function TirzepatidePage() {
                     </LineReveal>
                   </>
                 }
-                description="Beema Health connects eligible adults with independent licensed providers for personalized medical weight-management care. Completing intake does not guarantee a prescription."
+                description={`Beema Health connects eligible adults with independent licensed providers for personalized medical weight-management care. ${STARTER.months}-month starter pack $${STARTER.totalUsd} for ${STARTER.dosePathLabel}, or $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo for maintenance (with promo code ${COMPOUNDED_TIRZEPATIDE_PRICING.promoCode} for $100 off the first month on a 3-month plan). Completing intake does not guarantee a prescription.`}
                 className="mx-0 max-w-xl text-left"
               />
               <motion.div
@@ -223,7 +206,11 @@ function TirzepatidePage() {
               >
                 <MagneticButton>
                   <Button asChild size="xl">
-                    <Link to={heroCta.to} search={heroCta.search}>
+                    <Link
+                      to={heroCta.to}
+                      search={heroCta.search}
+                      onClick={heroCta.onClick}
+                    >
                       {heroCta.label} <ArrowRight />
                     </Link>
                   </Button>
@@ -238,13 +225,10 @@ function TirzepatidePage() {
                 size="lg"
               />
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">
-                Medication eligibility and availability are determined by a
-                licensed provider and applicable law.
+                Starter pack and Tirz100 can&apos;t be used together. Medication
+                eligibility and availability are determined by a licensed
+                provider and applicable law.
               </p>
-              <TreatmentIncludedDropdown
-                items={WHATS_INCLUDED}
-                className="mt-6 max-w-md"
-              />
             </div>
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
@@ -254,15 +238,21 @@ function TirzepatidePage() {
                 delay: reduceMotion ? 0 : 0.2,
                 ease: EASE_OUT,
               }}
-              className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-4xl bg-primary-soft shadow-lift"
+              className="mx-auto w-full max-w-sm"
             >
-              <img
-                src={VIAL_IMAGERY.src}
-                alt={VIAL_IMAGERY.alt}
-                width={VIAL_IMAGERY.width}
-                height={VIAL_IMAGERY.height}
-                fetchPriority="high"
-                className="absolute inset-0 h-full w-full object-cover object-center"
+              <div className="relative aspect-square overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
+                <img
+                  src={VIAL_IMAGERY.src}
+                  alt={VIAL_IMAGERY.alt}
+                  width={VIAL_IMAGERY.width}
+                  height={VIAL_IMAGERY.height}
+                  fetchPriority="high"
+                  className="absolute inset-0 h-full w-full object-cover object-center"
+                />
+              </div>
+              <TreatmentIncludedDropdown
+                items={WHATS_INCLUDED}
+                className="mt-6 w-full"
               />
             </motion.div>
           </div>
@@ -321,54 +311,13 @@ function TirzepatidePage() {
         </div>
       </Section>
 
-      <Section className="bg-muted/40 pt-0">
-        <SectionHeading
-          align="left"
-          title="How Beema's tirzepatide care works"
-          className="mx-0 max-w-2xl"
-        />
-        <ol className="mt-10 grid gap-5 md:grid-cols-3">
-          {STEPS.map((s, i) => (
-            <li key={s.title} className="h-full">
-              <motion.div
-                className="h-full"
-                initial={
-                  reduceMotion
-                    ? false
-                    : { opacity: 0, y: 32, rotate: i % 2 === 0 ? -1.5 : 1.5 }
-                }
-                whileInView={
-                  reduceMotion ? undefined : { opacity: 1, y: 0, rotate: 0 }
-                }
-                viewport={{ once: true, amount: 0.3 }}
-                whileHover={reduceMotion ? undefined : { y: -6 }}
-                transition={{
-                  duration: reduceMotion ? 0 : 0.55,
-                  delay: reduceMotion ? 0 : i * 0.1,
-                  ease: EASE_OUT,
-                }}
-              >
-                <SurfaceCard className="flex h-full flex-col p-6 transition-shadow hover:shadow-lift">
-                  <p className="text-sm font-semibold text-muted-foreground">
-                    Step {i + 1}
-                  </p>
-                  <div className="mt-3 flex items-center gap-3">
-                    <HexBadge>
-                      <s.icon className="size-5" />
-                    </HexBadge>
-                    <h3 className="text-lg font-semibold text-foreground">
-                      {s.title}
-                    </h3>
-                  </div>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {s.text}
-                  </p>
-                </SurfaceCard>
-              </motion.div>
-            </li>
-          ))}
-        </ol>
-      </Section>
+      <HowItWorksSteps
+        id="tirzepatide-how-it-works"
+        className="bg-muted/40"
+        eyebrow="How it works"
+        title="How Beema's tirzepatide care works"
+        showCareFollowUpNote
+      />
 
       <Section className="pt-0">
         <div className="grid gap-10 lg:grid-cols-2">
@@ -451,10 +400,19 @@ function TirzepatidePage() {
                   Talk to your provider
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Discuss your full medical history, potential
+                  Include your full medical history, potential
                   contraindications, side effects, and any medication
-                  interactions with your provider. For more detail on
-                  eligibility, contraindications, and warning signs, see{" "}
+                  interactions in your intake questionnaire. After you complete
+                  intake and pay, you can ask follow-up questions. Before then,
+                  email{" "}
+                  <a
+                    href={`mailto:${SUPPORT_EMAIL}`}
+                    className="text-primary underline"
+                  >
+                    {SUPPORT_EMAIL}
+                  </a>
+                  . For more detail on eligibility, contraindications, and
+                  warning signs, see{" "}
                   <Link to="/safety/" className="text-primary underline">
                     Safety &amp; eligibility
                   </Link>
@@ -496,7 +454,11 @@ function TirzepatidePage() {
               <Link to="/faq/" className="text-primary underline">
                 FAQ
               </Link>
-              .
+              , or explore our{" "}
+              <Link to="/recipes/" className="text-primary underline">
+                free practical meal ideas
+              </Link>
+              —available to everyone with no intake required.
             </>
           }
           className="mx-0 max-w-2xl"
@@ -527,11 +489,12 @@ function TirzepatidePage() {
           />
           <div className="relative z-10">
             <h2 className="text-3xl font-bold">
-              <LineReveal>Start with a quick eligibility check.</LineReveal>
+              <LineReveal>Start with your medical intake.</LineReveal>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">
-              Takes about 5 minutes. A licensed provider makes every clinical
-              decision independently, prescribing is never guaranteed.
+              Save your progress and finish at your own pace. A licensed
+              provider makes every clinical decision independently, prescribing
+              is never guaranteed.
             </p>
             <MagneticButton className="mt-8">
               <Button
@@ -539,7 +502,11 @@ function TirzepatidePage() {
                 size="xl"
                 className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
               >
-                <Link to={footerCta.to} search={footerCta.search}>
+                <Link
+                  to={footerCta.to}
+                  search={footerCta.search}
+                  onClick={footerCta.onClick}
+                >
                   {footerCta.label} <ArrowRight />
                 </Link>
               </Button>

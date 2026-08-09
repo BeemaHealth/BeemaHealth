@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { capturePageUtms } from "@/lib/utm";
 import { initAdPixels } from "@/lib/ad-conversions";
+import { GTM_CONTAINER_ID, GTM_HEAD_SCRIPT } from "@/lib/gtm";
 import { absoluteUrl, ORGANIZATION_JSONLD } from "@/lib/seo";
 import { duplicateHomepageRedirectTarget } from "@/lib/canonicalize-url";
 
@@ -119,7 +120,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             "style-src 'self' 'unsafe-inline'; " +
             "font-src 'self' data:; " +
             "img-src 'self' data: https:; " +
-            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com; " +
+            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com; " +
             "frame-src https://www.googletagmanager.com; " +
             "form-action 'self' https://formspree.io; " +
             "base-uri 'self'; " +
@@ -130,7 +131,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         {
           name: "description",
           content:
-            "Medical weight-loss care reviewed by a licensed provider. Secure intake for Zepbound, Wegovy, and affordable alternatives when appropriate.",
+            "Medical weight-loss care reviewed by a licensed provider. Compounded semaglutide and compounded tirzepatide when clinically appropriate and legally available. Compounded medications are not FDA-approved.",
         },
         { name: "author", content: "Beema Health" },
         {
@@ -165,6 +166,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
       ],
       links: [
+        // Root /favicon.ico is the classic crawler fallback (Google still
+        // probes it). Keep the PNG as the preferred high-res icon.
+        { rel: "icon", href: "/favicon.ico", sizes: "any" },
         { rel: "icon", href: "/favicon-beema.png", type: "image/png" },
         // Outfit/Figtree are self-hosted via @fontsource, imported into
         // styles.css — see the comment there. No external font origins to
@@ -189,12 +193,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 );
 
 function RootShell({ children }: { children: ReactNode }) {
+  // No root index.html in TanStack Start — this shell is the HTML document.
+  // GTM uses the standard head install + noscript fallback. GA4 and Google Ads
+  // share one gtag.js loader from initAdPixels after hydration.
   return (
     <html lang="en">
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: GTM_HEAD_SCRIPT,
+          }}
+        />
         <HeadContent />
       </head>
       <body>
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_CONTAINER_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         {children}
         <Scripts />
       </body>
@@ -211,7 +231,8 @@ function RootComponent() {
     capturePageUtms();
   }, []);
 
-  // Meta Pixel / Google Ads / GA4 / GTM — no-op when VITE_* IDs are unset (local/dev).
+  // Meta Pixel / GA4 / Ads — Google destinations share one gtag.js request.
+  // GTM remains in RootShell for the conversion linker and Bask handoff.
   useEffect(() => {
     initAdPixels();
   }, []);

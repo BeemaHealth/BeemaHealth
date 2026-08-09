@@ -35,6 +35,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerifyEmailIndexRouteImport } from './routes/verify-email.index'
 import { Route as StaffIndexRouteImport } from './routes/staff.index'
+import { Route as RecipesIndexRouteImport } from './routes/recipes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pending'
@@ -46,6 +47,7 @@ import { Route as StaffLandingPagesRouteImport } from './routes/staff.landing-pa
 import { Route as StaffExperimentsRouteImport } from './routes/staff.experiments'
 import { Route as StaffDevRouteImport } from './routes/staff.dev'
 import { Route as StaffAnalyticsRouteImport } from './routes/staff.analytics'
+import { Route as RecipesSlugRouteImport } from './routes/recipes/$slug'
 import { Route as LpSlugRouteImport } from './routes/lp.$slug'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
@@ -196,6 +198,11 @@ const StaffIndexRoute = StaffIndexRouteImport.update({
   path: '/',
   getParentRoute: () => StaffRoute,
 } as any)
+const RecipesIndexRoute = RecipesIndexRouteImport.update({
+  id: '/recipes/',
+  path: '/recipes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnIndexRoute = LearnIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -250,6 +257,11 @@ const StaffAnalyticsRoute = StaffAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
   getParentRoute: () => StaffRoute,
+} as any)
+const RecipesSlugRoute = RecipesSlugRouteImport.update({
+  id: '/recipes/$slug',
+  path: '/recipes/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const LpSlugRoute = LpSlugRouteImport.update({
   id: '/lp/$slug',
@@ -392,6 +404,7 @@ export interface FileRoutesByFullPath {
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
+  '/recipes/$slug': typeof RecipesSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
   '/staff/dev': typeof StaffDevRoute
   '/staff/experiments': typeof StaffExperimentsRoute
@@ -403,6 +416,7 @@ export interface FileRoutesByFullPath {
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/learn/': typeof LearnIndexRoute
+  '/recipes/': typeof RecipesIndexRoute
   '/staff/': typeof StaffIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
   '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugRouteWithChildren
@@ -446,6 +460,7 @@ export interface FileRoutesByTo {
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
+  '/recipes/$slug': typeof RecipesSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
   '/staff/dev': typeof StaffDevRoute
   '/staff/experiments': typeof StaffExperimentsRoute
@@ -456,6 +471,7 @@ export interface FileRoutesByTo {
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard': typeof DashboardIndexRoute
   '/learn': typeof LearnIndexRoute
+  '/recipes': typeof RecipesIndexRoute
   '/staff': typeof StaffIndexRoute
   '/verify-email': typeof VerifyEmailIndexRoute
   '/staff/questionnaires': typeof StaffQuestionnairesIndexRoute
@@ -503,6 +519,7 @@ export interface FileRoutesById {
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
+  '/recipes/$slug': typeof RecipesSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
   '/staff/dev': typeof StaffDevRoute
   '/staff/experiments': typeof StaffExperimentsRoute
@@ -514,6 +531,7 @@ export interface FileRoutesById {
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/learn/': typeof LearnIndexRoute
+  '/recipes/': typeof RecipesIndexRoute
   '/staff/': typeof StaffIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
   '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugRouteWithChildren
@@ -563,6 +581,7 @@ export interface FileRouteTypes {
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
+    | '/recipes/$slug'
     | '/staff/analytics'
     | '/staff/dev'
     | '/staff/experiments'
@@ -574,6 +593,7 @@ export interface FileRouteTypes {
     | '/verify-email/pending'
     | '/dashboard/'
     | '/learn/'
+    | '/recipes/'
     | '/staff/'
     | '/verify-email/'
     | '/staff/questionnaires/$slug'
@@ -617,6 +637,7 @@ export interface FileRouteTypes {
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
+    | '/recipes/$slug'
     | '/staff/analytics'
     | '/staff/dev'
     | '/staff/experiments'
@@ -627,6 +648,7 @@ export interface FileRouteTypes {
     | '/verify-email/pending'
     | '/dashboard'
     | '/learn'
+    | '/recipes'
     | '/staff'
     | '/verify-email'
     | '/staff/questionnaires'
@@ -673,6 +695,7 @@ export interface FileRouteTypes {
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
+    | '/recipes/$slug'
     | '/staff/analytics'
     | '/staff/dev'
     | '/staff/experiments'
@@ -684,6 +707,7 @@ export interface FileRouteTypes {
     | '/verify-email/pending'
     | '/dashboard/'
     | '/learn/'
+    | '/recipes/'
     | '/staff/'
     | '/verify-email/'
     | '/staff/questionnaires/$slug'
@@ -726,6 +750,8 @@ export interface RootRouteChildren {
   LegalTelehealthConsentRoute: typeof LegalTelehealthConsentRoute
   LegalTermsRoute: typeof LegalTermsRoute
   LpSlugRoute: typeof LpSlugRoute
+  RecipesSlugRoute: typeof RecipesSlugRoute
+  RecipesIndexRoute: typeof RecipesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -912,6 +938,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaffIndexRouteImport
       parentRoute: typeof StaffRoute
     }
+    '/recipes/': {
+      id: '/recipes/'
+      path: '/recipes'
+      fullPath: '/recipes/'
+      preLoaderRoute: typeof RecipesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/': {
       id: '/learn/'
       path: '/'
@@ -988,6 +1021,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/staff/analytics'
       preLoaderRoute: typeof StaffAnalyticsRouteImport
       parentRoute: typeof StaffRoute
+    }
+    '/recipes/$slug': {
+      id: '/recipes/$slug'
+      path: '/recipes/$slug'
+      fullPath: '/recipes/$slug'
+      preLoaderRoute: typeof RecipesSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/lp/$slug': {
       id: '/lp/$slug'
@@ -1263,6 +1303,8 @@ const rootRouteChildren: RootRouteChildren = {
   LegalTelehealthConsentRoute: LegalTelehealthConsentRoute,
   LegalTermsRoute: LegalTermsRoute,
   LpSlugRoute: LpSlugRoute,
+  RecipesSlugRoute: RecipesSlugRoute,
+  RecipesIndexRoute: RecipesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,4 +1,6 @@
-# Aretide MVP Launch Plan
+# Beema Health MVP Launch Plan
+
+> **Status (August 2026):** Marketing site + Bask questionnaire are **launched**. **LegitScript certified** — paid ads unblocked. See [docs/features/legitscript.md](../docs/features/legitscript.md). This plan remains useful as historical build order / optimization backlog; do not treat “required to launch” steps as still blocking go-live.
 
 > **Acronyms:** See [../README.md](../README.md#glossary-acronyms-used-in-this-repo) for infrastructure terms. This doc also uses **MVP** (Minimum Viable Product), **FDA** (U.S. Food and Drug Administration), **HIPAA** (Health Insurance Portability and Accountability Act), **MSO** (Management Services Organization), **LLC** (Limited Liability Company), **PC** (Professional Corporation), **MD** (Doctor of Medicine), **DO** (Doctor of Osteopathic Medicine), **NP** (Nurse Practitioner), **CAC** (Customer Acquisition Cost), **SEO** (Search Engine Optimization).
 
@@ -104,7 +106,7 @@ Assume a **turnkey provider/pharmacy partner** first (OpenLoop, Wheel, SteadyMD,
 
 **Success criteria:** Intake can be submitted.
 
-**Codebase:** `/intake`. Schema reference: [docs/ARETIDE_INTAKE_SCHEMA_V2.md](../docs/ARETIDE_INTAKE_SCHEMA_V2.md).
+**Codebase:** `/intake`. Schema reference: [docs/BEEMAHEALTH_INTAKE_SCHEMA_V2.md](../docs/BEEMAHEALTH_INTAKE_SCHEMA_V2.md).
 
 ---
 
@@ -317,7 +319,7 @@ Almost everything except compliance-critical systems:
 
 ## Appendix A — MVP offerings
 
-Aretide's MVP intentionally focuses on a small number of high-demand treatments. The objective is not every medication — it is proving intake → provider review → prescription → fulfillment.
+Beema Health's MVP intentionally focuses on a small number of high-demand treatments. The objective is not every medication — it is proving intake → provider review → prescription → fulfillment.
 
 | Offering | Type | Why |
 |----------|------|-----|
@@ -413,6 +415,6 @@ Profit ≈ **$125/month** before marketing. Break-even around Month 2 if CAC ≈
 | Restore marketing pages (Step 1) | [docs/archived-marketing-pages.md](../docs/archived-marketing-pages.md) |
 | Qualify flow design notes (Step 2) | [docs/Modifying step by step process.md](../docs/Modifying%20step%20by%20step%20process.md) |
 | Database schema | [backend/DATABASE.md](../backend/DATABASE.md) |
-| Intake schema v2 (Step 4) | [docs/ARETIDE_INTAKE_SCHEMA_V2.md](../docs/ARETIDE_INTAKE_SCHEMA_V2.md) |
+| Intake schema v2 (Step 4) | [docs/BEEMAHEALTH_INTAKE_SCHEMA_V2.md](../docs/BEEMAHEALTH_INTAKE_SCHEMA_V2.md) |
 | Frontend routes | [src/routes/README.md](../src/routes/README.md) |
 | HIPAA hosting | [backend/HOSTING.md](../backend/HOSTING.md) |

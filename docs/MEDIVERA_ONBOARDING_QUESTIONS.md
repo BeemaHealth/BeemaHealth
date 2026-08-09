@@ -4,7 +4,7 @@ Bring this doc to the call. Check items off and fill the notes table at the bott
 
 **Full API spec (local, gitignored):** [`docs/vendor/LIFEFILE_MEDIVERA_API.md`](vendor/LIFEFILE_MEDIVERA_API.md) — copy answers from the call into that doc's "Open questions" section when resolved.
 
-**Context:** Aretide is DTC (Direct-to-consumer) telehealth. Patients intake on our site → separate physician network prescribes → we send approved Rx to MediVera/LifeFile for mail-order fulfillment. Patients only see Aretide.
+**Context:** Beema Health is DTC (Direct-to-consumer) telehealth. Patients intake on our site → separate physician network prescribes → we send approved Rx to MediVera/LifeFile for mail-order fulfillment. Patients only see Beema Health.
 
 **Already confirmed (email — do not re-ask):**
 - MediVera = pharmacy fulfillment only; no clinician network

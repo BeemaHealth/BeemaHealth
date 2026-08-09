@@ -7,13 +7,13 @@ import { LEARN_POSTS } from "@/lib/veya-data";
 export const Route = createFileRoute("/learn")({
   head: () => ({
     meta: [
-      { title: "Learn — Weight care education from Aretide" },
+      { title: "Learn — Weight care education from Beema Health" },
       {
         name: "description",
         content:
           "Plain-language guides on GLP-1 basics, insurance, prior authorizations, side effects, protein and strength training, switching providers, and cost.",
       },
-      { property: "og:title", content: "Learn — Aretide" },
+      { property: "og:title", content: "Learn — Beema Health" },
       { property: "og:description", content: "Trustworthy, judgment-free education about weight-management care." },
     ],
     links: [{ rel: "canonical", href: "/learn" }],

@@ -66,6 +66,8 @@
   --color-warning-foreground: var(--warning-foreground);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
+  --color-trust: var(--trust);
+  --color-trust-foreground: var(--trust-foreground);
   --color-ink: var(--ink);
   --color-ink-foreground: var(--ink-foreground);
   --color-border: var(--border);
@@ -120,6 +122,10 @@
   --success: oklch(0.6 0.11 152);
   --success-foreground: oklch(0.99 0.01 155);
 
+  /* trust blue — security/compliance accent (HIPAA badge, etc.) */
+  --trust: oklch(0.55 0.16 255);
+  --trust-foreground: oklch(0.98 0.012 255);
+
   /* black contrast bands (hero, footer, Mission) */
   --ink: oklch(0.19 0.012 270);
   --ink-foreground: oklch(0.985 0.002 95);
@@ -160,6 +166,8 @@
   --warning-foreground: oklch(0.22 0.04 78);
   --success: oklch(0.66 0.11 152);
   --success-foreground: oklch(0.15 0.02 155);
+  --trust: oklch(0.68 0.14 255);
+  --trust-foreground: oklch(0.16 0.03 255);
   --ink: oklch(0.14 0.01 270);
   --ink-foreground: oklch(0.985 0.002 95);
   --border: oklch(1 0 0 / 10%);

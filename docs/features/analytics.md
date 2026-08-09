@@ -5,6 +5,7 @@ All user behaviour across the site — page views, funnel steps, and conversion 
 ## Event model
 
 **`FunnelEvent`** (`funnel_events` table):
+
 - `event_name` — must be in `ALLOWED_EVENT_NAMES` (server-side allowlist):
   - `page_viewed`, `page_reloaded`
   - `step_viewed`, `step_completed`
@@ -36,32 +37,33 @@ Events are sent via `POST /api/analytics/events/` — public endpoint, rate-limi
 
 Bask (the third-party storefront/checkout/questionnaire platform) loads your GTM container on questionnaire pages when you paste the container ID into Bask admin. The **same** container is also loaded on the Beema marketing site via `VITE_GTM_CONTAINER_ID` (so you can use GTM Preview / Conversion Linker across both domains).
 
-| Item | Value |
-|------|-------|
-| GTM container ID (Bask Integrations **and** `VITE_GTM_CONTAINER_ID`) | `GTM-MHHJ44GF` |
-| GTM account | Beema Health (account `6368696783`) |
-| GTM container | Beema Health Questionnaire (container `259765761`) |
-| GA4 destination reused inside GTM tags | `G-03PMCCSD3R` (same GA4 property as the marketing site) |
+| Item                                                                 | Value                                                    |
+| -------------------------------------------------------------------- | -------------------------------------------------------- |
+| GTM container ID (Bask Integrations **and** `VITE_GTM_CONTAINER_ID`) | `GTM-MHHJ44GF`                                           |
+| GTM account                                                          | Beema Health (account `6368696783`)                      |
+| GTM container                                                        | Beema Health Questionnaire (container `259765761`)       |
+| GA4 destination reused inside GTM tags                               | `G-03PMCCSD3R` (same GA4 property as the marketing site) |
 
 Setup:
+
 1. Paste `GTM-MHHJ44GF` into Bask → **Settings → Integrations → Google Tag Manager → Save**.
-2. Marketing site loads the container from `VITE_GTM_CONTAINER_ID` in `src/lib/ad-conversions.ts` (`ensureGtmContainer` on app mount) — equivalent to Google’s `<head>` / `<body>` install snippets.
+2. Marketing site loads the hardcoded public container ID from the document shell in `src/routes/__root.tsx`. `src/lib/ad-conversions.ts` uses one shared `gtag.js` request for the GA4 and Google Ads destinations, avoiding a duplicate script injection per destination.
 3. Optionally import Bask’s GTM template into this container, then replace placeholder GA/Ads IDs with real ones. Avoid adding a second GA4 **page_view** tag that duplicates `VITE_GA_MEASUREMENT_ID` or you will double-count marketing-site hits.
 
 Bask data layer notes: `sessionId`, `eventModel.screen_name`, `eventModel.userId`, `ecommerce.transaction_id`; `purchase` fires on the Thank You page. See Bask’s GTM guide for the event catalog.
 
 ## Ad conversions & frontend-only analytics (Meta + Google)
 
-Pre-launch waitlist lives at **`/waitlist/`** (legacy `/qualify/` redirects there and keeps query params). Paid-media + visitor analytics run via `src/lib/ad-conversions.ts` (loaded from `__root.tsx` with `initAdPixels()`). **No backend required** for these.
+**Site is launched** (Bask questionnaire via `resolveCta()`). Legacy **`/waitlist/`** still exists (and `/qualify/` redirects there) for older links/social-proof tooling, but it is **not** the primary conversion path. Paid-media + visitor analytics run via `src/lib/ad-conversions.ts` (loaded from `__root.tsx` with `initAdPixels()`). **No backend required** for these. LegitScript certified / ads-ready: `docs/features/legitscript.md`.
 
-| Env var | Purpose |
-|---------|---------|
-| `VITE_GA_MEASUREMENT_ID` | **GA4** (`G-…`) — all page views + UTM/session source (including visitors who never join the waitlist) |
-| `VITE_GTM_CONTAINER_ID` | **GTM** (`GTM-…`) — Bask container also loaded on the marketing site for Preview / Conversion Linker |
-| `VITE_META_PIXEL_ID` | Meta Pixel ID — fires `PageView` on load + `Lead` on successful waitlist submit |
-| `VITE_GOOGLE_ADS_ID` | Google Ads tag ID (`AW-…`) |
-| `VITE_GOOGLE_ADS_CONVERSION_LABEL` | Conversion label — with Ads ID, fires `gtag('event','conversion')` on submit |
-| `VITE_WAITLIST_DISPLAY_COUNT` | Optional override for the waitlist social-proof number |
+| Env var                            | Purpose                                                                                                 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `VITE_GA_MEASUREMENT_ID`           | **GA4** (`G-…`) — all page views + UTM/session source                                                   |
+| `VITE_GTM_CONTAINER_ID`            | Legacy/unused configuration; the production-host-gated public GTM ID is centralized in `src/lib/gtm.ts` |
+| `VITE_META_PIXEL_ID`               | Meta Pixel ID — fires `PageView` on load (+ `Lead` on legacy waitlist submit if used)                   |
+| `VITE_GOOGLE_ADS_ID`               | Google Ads tag ID (`AW-…`)                                                                              |
+| `VITE_GOOGLE_ADS_CONVERSION_LABEL` | Conversion label — with Ads ID, fires `gtag('event','conversion')` on submit                            |
+| `VITE_WAITLIST_DISPLAY_COUNT`      | Optional override for legacy waitlist social-proof number                                               |
 
 If IDs are unset, helpers no-op (safe for local/dev). Do **not** send email, name, or other PHI to pixel/gtag calls. Pixel IDs are public client config — still do not commit production secrets adjacent to them in shared docs.
 
@@ -69,14 +71,14 @@ After a successful Formspree waitlist submit, `trackWaitlistSubmit("waitlist")` 
 
 ## CTA attribution
 
-Marketing CTAs use stable ids (`src/lib/cta-ids.ts`), passed as `?cta_id=` on links to `/waitlist/`.
+Marketing CTAs use stable ids (`src/lib/cta-ids.ts`) via `resolveCta()` (default → Bask). Legacy waitlist links may still carry `?cta_id=`.
 
-| Storage | Field |
-|---------|--------|
-| URL query | `cta_id` — which on-site button was clicked |
-| `sessionStorage` (non-PHI) | first-touch UTMs + `cta_id` + referrer + landing path |
-| Formspree submission | same fields attached on waitlist join |
-| GA4 `page_view` | optional `cta_id` event param when present |
+| Storage                         | Field                                                         |
+| ------------------------------- | ------------------------------------------------------------- |
+| URL query                       | `cta_id` — which on-site button was clicked                   |
+| `sessionStorage` (non-PHI)      | first-touch UTMs + `cta_id` + referrer + landing path         |
+| Formspree submission            | same fields attached on waitlist join                         |
+| GA4 `page_view`                 | optional `cta_id` event param when present                    |
 | `FunnelSession` / `FunnelEvent` | only when the API is live (optional; not required for launch) |
 
 Staff analytics can compare conversion by CTA placement when the API exists. For a **frontend-only** site, use GA4 Explorations + Formspree fields instead.
@@ -85,12 +87,12 @@ Staff analytics can compare conversion by CTA placement when the API exists. For
 
 Use unique UTM params on every published post so GA4 (visits) and Formspree (signups) can attribute traffic. Do **not** put `ga_debug=1` on public links.
 
-| Tool | Path |
-|------|------|
-| CLI | `npm run utm -- waitlist --source instagram` · `npm run utm -- home -s x` · `npm run utm -- daily-pack` |
-| Script | `scripts/generate-utm-url.mjs` |
-| Phone / AI agent prompt | `scripts/utm-url-agent-prompt.txt` (`npm run utm -- prompt`) |
-| Daily social Gmail-draft prompt | `scripts/daily-beema-social-posts-prompt.txt` |
+| Tool                            | Path                                                                                                    |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| CLI                             | `npm run utm -- waitlist --source instagram` · `npm run utm -- home -s x` · `npm run utm -- daily-pack` |
+| Script                          | `scripts/generate-utm-url.mjs`                                                                          |
+| Phone / AI agent prompt         | `scripts/utm-url-agent-prompt.txt` (`npm run utm -- prompt`)                                            |
+| Daily social Gmail-draft prompt | `scripts/daily-beema-social-posts-prompt.txt`                                                           |
 
 Pattern:
 
@@ -106,32 +108,34 @@ Cross-posts of the same creative (IG/FB/Threads): same bio CTA — no per-post `
 
 Accessible at `/staff/analytics`. Six aggregated views served by `backend/apps/analytics/staff_views.py`:
 
-| View | What it shows |
-|------|--------------|
-| Funnel | Step-by-step conversion counts |
-| Drop-off | Where users exit the funnel |
-| Timeline | Events over time |
-| Traffic | Session counts by UTM source/medium |
+| View                     | What it shows                         |
+| ------------------------ | ------------------------------------- |
+| Funnel                   | Step-by-step conversion counts        |
+| Drop-off                 | Where users exit the funnel           |
+| Timeline                 | Events over time                      |
+| Traffic                  | Session counts by UTM source/medium   |
 | Landing page performance | Conversion rate per landing page slug |
-| Page views | Raw page view counts by route |
+| Page views               | Raw page view counts by route         |
 
 ## Page tracking
 
 `trackPageViewed(page)` fires on mount in each route. Pages and their names:
 
-| Route | Page name |
-|-------|-----------|
-| `/` | `home` |
-| `/waitlist` | `waitlist` |
-| `/qualify` | redirects → `/waitlist` |
-| `/intake` | `intake` |
-| `/consent` | `consent` |
-| `/lp/:slug` | `lp:{slug}` |
-| `/pricing` | `pricing` |
-| `/contact` | `contact` |
-| `/faq` | `faq` |
-| `/weight-loss` | `weight_loss` |
-| `/safety` | `safety` |
+| Route            | Page name               |
+| ---------------- | ----------------------- |
+| `/`              | `home`                  |
+| `/waitlist`      | `waitlist`              |
+| `/qualify`       | redirects → `/waitlist` |
+| `/intake`        | `intake`                |
+| `/consent`       | `consent`               |
+| `/lp/:slug`      | `lp:{slug}`             |
+| `/pricing`       | `pricing`               |
+| `/contact`       | `contact`               |
+| `/faq`           | `faq`                   |
+| `/weight-loss`   | `weight_loss`           |
+| `/safety`        | `safety`                |
+| `/recipes`       | `recipes`               |
+| `/recipes/:slug` | `recipe_detail`         |
 
 The browser's `PerformanceNavigationTiming.type` determines `page_viewed` vs `page_reloaded`.
 
@@ -155,36 +159,36 @@ Implementation: `session_last_steps()` in `services.py` uses a single raw SQL qu
 
 ### Participant identity
 
-| Event source | Identity field used |
-|-------------|---------------------|
-| Anonymous (pre-account) | `funnel_session_id` (HttpOnly cookie) |
-| Authenticated (post-account) | `user_id` (auth token) |
+| Event source                 | Identity field used                   |
+| ---------------------------- | ------------------------------------- |
+| Anonymous (pre-account)      | `funnel_session_id` (HttpOnly cookie) |
+| Authenticated (post-account) | `user_id` (auth token)                |
 
 These are mutually exclusive per event — `FunnelEventCreateView` sets exactly one per request.
 
 ## Common edge cases
 
-| Scenario | How it's handled |
-|----------|-----------------|
-| User goes back to a previous step | Counted once per step (distinct participant) |
-| Page reload mid-funnel | Component remounts → `step_viewed` fires; 1-second backend dedup prevents double-counting for rapid reloads |
-| React StrictMode double-fire | 1-second dedup window on the backend |
-| Multiple rapid reloads < 1 second | Deduplicated — only the first event is stored |
-| Session expires | New funnel session created; old one appears abandoned |
+| Scenario                          | How it's handled                                                                                            |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| User goes back to a previous step | Counted once per step (distinct participant)                                                                |
+| Page reload mid-funnel            | Component remounts → `step_viewed` fires; 1-second backend dedup prevents double-counting for rapid reloads |
+| React StrictMode double-fire      | 1-second dedup window on the backend                                                                        |
+| Multiple rapid reloads < 1 second | Deduplicated — only the first event is stored                                                               |
+| Session expires                   | New funnel session created; old one appears abandoned                                                       |
 
 ## Key files
 
-| File | Role |
-|------|------|
-| `src/lib/analytics.ts` | All frontend tracking functions |
-| `src/lib/ad-conversions.ts` | Meta Pixel + Google Ads init / Lead conversion |
-| `src/lib/marketing-copy.ts` | First-month promo + waitlist social-proof constants |
-| `src/lib/utm.ts` | UTM capture from URL → funnel session |
-| `scripts/generate-utm-url.mjs` | CLI to mint unique social/ad UTM URLs |
-| `scripts/utm-url-agent-prompt.txt` | Prompt for an AI / phone agent to mint URLs |
-| `scripts/daily-beema-social-posts-prompt.txt` | Daily social Gmail draft prompt (includes UTM rules) |
-| `backend/apps/analytics/models.py` | FunnelEvent, LandingPage |
-| `backend/apps/analytics/views.py` | Public event ingestion endpoint |
-| `backend/apps/analytics/services.py` | Aggregation logic: step counts, dropoff, stopped sessions |
-| `backend/apps/analytics/staff_views.py` | Aggregated staff analytics + LP CRUD |
-| `src/routes/staff.analytics.tsx` | Staff analytics dashboard UI |
+| File                                          | Role                                                      |
+| --------------------------------------------- | --------------------------------------------------------- |
+| `src/lib/analytics.ts`                        | All frontend tracking functions                           |
+| `src/lib/ad-conversions.ts`                   | Meta Pixel + Google Ads init / Lead conversion            |
+| `src/lib/marketing-copy.ts`                   | First-month promo + waitlist social-proof constants       |
+| `src/lib/utm.ts`                              | UTM capture from URL → funnel session                     |
+| `scripts/generate-utm-url.mjs`                | CLI to mint unique social/ad UTM URLs                     |
+| `scripts/utm-url-agent-prompt.txt`            | Prompt for an AI / phone agent to mint URLs               |
+| `scripts/daily-beema-social-posts-prompt.txt` | Daily social Gmail draft prompt (includes UTM rules)      |
+| `backend/apps/analytics/models.py`            | FunnelEvent, LandingPage                                  |
+| `backend/apps/analytics/views.py`             | Public event ingestion endpoint                           |
+| `backend/apps/analytics/services.py`          | Aggregation logic: step counts, dropoff, stopped sessions |
+| `backend/apps/analytics/staff_views.py`       | Aggregated staff analytics + LP CRUD                      |
+| `src/routes/staff.analytics.tsx`              | Staff analytics dashboard UI                              |

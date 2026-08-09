@@ -173,7 +173,7 @@ function FaqPage() {
           <div className="mt-12 text-center">
             <MagneticButton>
               <Button asChild size="xl">
-                <Link to={cta.to} search={cta.search}>
+                <Link to={cta.to} search={cta.search} onClick={cta.onClick}>
                   {cta.label} <ArrowRight />
                 </Link>
               </Button>

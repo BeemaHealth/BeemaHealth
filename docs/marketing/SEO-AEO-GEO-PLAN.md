@@ -48,7 +48,7 @@ Realistic organic timeline: long-tail rankings in 3–6 months, mid-tail in 6–
 | G6 | `lp.$slug.tsx` has no `head()` at all — no title, no description, and critically no `noindex`. Paid LPs duplicating organic pages can trigger duplicate-content problems. | `src/routes/lp.$slug.tsx` | High |
 | G7 | ~~`clinicians.tsx`, `insurance.tsx`, `switch.tsx`, and `learn.tsx` all **redirect to `/`** (MVP removals) yet are still listed in the sitemap.~~ **Done July 2026** — `public/sitemap.xml` lists only live marketing pages (redirecting routes and unshipped `/pricing` excluded). | `public/sitemap.xml` | ✅ |
 | G8 | Structured data is FAQ-only. Missing: `Organization`/`MedicalOrganization`, `WebSite`, `MedicalWebPage`, `Physician`, `Product`/`Offer` (pricing), `BreadcrumbList`. AI engines lean heavily on schema. | site-wide | High |
-| G9 | **Brand + domain decided (July 2026): Beema Health at beemahealth.com** (domain purchased). Production still serves from beemahealth until cutover — see the migration checklist below. Internal docs/copy still say Aretide in places; that rebrand is a separate low-cost cleanup task, **not part of this plan's execution**. | site-wide | Cutover pending |
+| G9 | **Brand + domain decided (July 2026): Beema Health at beemahealth.com** (domain purchased). Production still serves from beemahealth until cutover — see the migration checklist below. ~~Internal docs/copy still referenced the pre-rebrand legal name~~ **Done August 2026** — legacy-name cleanup across docs/copy completed; no remaining references. | site-wide | Cutover pending |
 | G10 | Google Fonts loaded from CDN render-blocking; hurts LCP/CWV. | `__root.tsx` | Med |
 | G11 | ~~No `llms.txt`~~ (**shipped July 2026** — `public/llms.txt`); still missing: author/medical-reviewer bylines and an editorial policy page — table stakes for YMYL E-E-A-T and GEO. | site-wide | High |
 
@@ -63,7 +63,7 @@ Only static, prerendered marketing pages get indexed — everything else is a cr
 
 ### Bask integration note
 
-Frontend CTAs will link into the Bask flow on the backend side; that wiring is pending and **out of scope for SEO work** — nothing in the funnel needs search visibility. When the Bask hookup lands, the only SEO touchpoint is confirming CTA destinations stay excluded from indexing (robots + `noindex`) and that GA conversion events keep firing.
+**Done.** Marketing CTAs link to Bask’s hosted questionnaire/checkout via `resolveCta()` (`src/lib/cta-ids.ts`). Funnel/questionnaire destinations stay excluded from indexing (robots + `noindex` on non-marketing routes); keep GA/GTM conversion events firing. See `docs/features/treatment-pages.md` and `docs/features/legitscript.md`.
 
 ---
 
@@ -153,7 +153,7 @@ Long-tail spokes, one article each. Examples of target queries where telehealth 
 
 ### B3. E-E-A-T requirements (non-negotiable for YMYL)
 - Named medical reviewer(s) with license/NPI-verifiable credentials on every clinical page; reviewer bio pages linked from bylines.
-- `/about` expanded: leadership, medical team, LegitScript seal once certified.
+- `/about` expanded: leadership, medical team, LegitScript seal (**certified August 2026** — seal also on homepage hero; see `docs/features/legitscript.md`).
 - Editorial policy + medical review policy pages (WebMD/Healthline pattern).
 - Cite primary sources inline; never make claims the FDA label or trials don't support.
 - Real business footprint: consistent NAP, privacy/terms (done), visible support contact.
@@ -227,17 +227,48 @@ Target: 10–20 quality referring domains/month by month 6.
 
 ## 7. Workstream F — Paid acquisition (fills the organic gap)
 
-### F1. Prerequisite: LegitScript Healthcare/Telemedicine Certification
-Google (and Meta/Microsoft/TikTok) require LegitScript certification to run telehealth/prescription-drug ads. Without it, no paid search on our core terms — full stop.
-- Timeline: typically 4–8 weeks. Start immediately.
-- Cost: application + annual monitoring, roughly **$2,000–$5,000/yr** depending on tier (confirm current pricing at legitscript.com).
-- Also unlocks the LegitScript seal for the site footer (trust/E-E-A-T signal).
+### F1. LegitScript Healthcare/Telemedicine Certification — ✅ complete (August 2026)
+
+Google (and Meta/Microsoft/TikTok) require LegitScript certification to run telehealth/prescription-drug ads. **Beema Health is certified** — paid acquisition on core terms is unblocked. Official seal + verify URL: `docs/features/legitscript.md` / `src/lib/legitscript.ts` (hero seal live).
+
+Ongoing: keep annual monitoring current; seal and ads creative must stay aligned with §F1.1 content rules below.
+
+### F1.1 Compounded GLP‑1 website & marketing content rules (LegitScript + FDA)
+
+LegitScript reviews **website content** (not only ads) when certifying telemedicine / Rx businesses that offer compounded semaglutide or tirzepatide. Their questionnaire asks how we document patient clinical need, how the pharmacy receives patient-specific documentation, and how site copy complies with FDA statements on non–FDA-approved GLP‑1 drugs. Treat the rules below as **hard sitewide copy constraints** for marketing pages, FAQs, JSON-LD/meta descriptions, ads, and learn/content surfaces — not optional legal footer language.
+
+**Beema offering (product truth):** Beema sells **only compounded** semaglutide and tirzepatide (when legally available and a licensed provider finds them clinically appropriate). We do **not** sell Wegovy, Zepbound, Ozempic, Mounjaro, or other FDA-approved branded GLP‑1 products. Marketing must never present branded drugs as Beema offerings, “options we provide,” or intake alternatives alongside compounded products.
+
+**FDA (Feb 6, 2026) — non–FDA-approved GLP‑1 drugs.** Companies must not:
+
+1. Claim that non–FDA-approved compounded products are **generic versions** of, or **the same as**, drugs approved by the FDA.
+2. State that compounded drugs **use the same active ingredient** as the FDA-approved drugs.
+3. State that compounded drugs are **clinically proven** to produce results for the patient.
+
+Source: https://www.fda.gov/news-events/press-announcements/fda-intends-take-action-against-non-fda-approved-glp-1-drugs
+
+**Related FDA compounding principle (essentially a copy):** other factors, such as a **lower price**, are **not sufficient** to establish that a compounded drug is not essentially a copy of a commercially available drug product. Price may be disclosed transparently, but must never be framed as the clinical justification for compounding, and must not stand alone next to branded trial outcomes in a way that implies compounded products deliver those results.
+
+**Required framing on Beema surfaces:**
+
+| Do | Do not |
+|---|---|
+| Describe Beema’s offering as **compounded semaglutide / compounded tirzepatide** only; say they are **not FDA-approved** and are considered only when **legally available** and a licensed provider finds them **clinically appropriate** | Name Wegovy, Zepbound, Ozempic, or Mounjaro as products Beema sells, offers, or “also provides” |
+| If educational content cites STEP / SURMOUNT (or similar), attribute figures to **FDA-approved branded products studied in those trials**, with an explicit disclaimer that results do **not** apply to compounded products — and do not use that content to position Beema as selling those brands | Call compounded products “generic,” “the same as,” “identical to,” “equivalent to,” or “interchangeable with” branded drugs; say they use the “same active ingredient”; claim they are “clinically proven” |
+| Keep price copy as cash-pay transparency; pair with provider-review / clinical-appropriateness language | Use “affordable alternative [to Wegovy/Zepbound],” “same active ingredient,” or price-alone messaging as the reason compounding is appropriate |
+| Keep prescribing never guaranteed; provider decides case-by-case | Promise outcomes or present compounded options as drop-in substitutes for branded drugs |
+
+**Ops answers LegitScript also expects (not website marketing copy, but certification Qs):** protocols for identifying and documenting medical necessity for compounded medications, and how patient-specific clinical documentation is provided to the fulfilling pharmacy. Site copy should stay consistent with those protocols (provider review of intake / history; no price-as-necessity framing).
+
+**Code / copy checkpoints (current):** meta and hero language on `/`, `/weight-loss`, and root layout must describe **compounded-only** offerings (no branded product names as Beema options); no “affordable alternatives” or “Proven GLP‑1 pathways” framing. Treatment pages and legal terms already carry not-FDA-approved / not-the-same-product language. When `/learn` educational pages ship, FAQs and trial sections must never say compounded products use the “same active ingredient,” must wall off branded trial data from compounded CTAs, and must not imply Beema sells branded drugs.
+
+See also the **Compliance** section in `docs/features/treatment-pages.md` (living rules for treatment marketing pages), `docs/features/legitscript.md` (certification + seal), and product-imagery notes in `src/lib/treatment-imagery.ts` / `docs/features/homepage.md`.
 
 ### F2. Google Ads
 - **Search campaigns** on high-intent terms: "semaglutide online prescription", "tirzepatide telehealth", "GLP‑1 online doctor", competitor-adjacent and "switch/transfer" terms, plus branded defense.
 - Expected CPCs in this category commonly run **$8–$30+**; healthcare search averages ~$66 per lead (LocaliQ benchmark). Model CAC accordingly: at a $15 avg CPC and 10% LP→qualify conversion, a qualified lead ≈ $150 before intake completion.
 - Land traffic on `lp.$slug` pages (noindexed, A4) with message match per ad group; A/B via the existing experiments system (`staff.experiments.tsx`).
-- **Compliance guardrails:** no before/after imagery or specific weight-loss-amount claims (Google policy + FTC), no "Ozempic" brand-jacking in ad copy for compounded products (NAD has been actively going after compounded-GLP‑1 advertisers), clear compounded-vs-FDA-approved disclosure.
+- **Compliance guardrails:** follow **§F1.1** in full. Additionally for ads: no before/after imagery or specific weight-loss-amount claims (Google policy + FTC); no "Ozempic" / branded brand-jacking in ad copy for compounded products (NAD has been actively going after compounded-GLP‑1 advertisers); clear compounded-vs-FDA-approved disclosure on every landing page ads hit.
 
 ### F3. Meta / TikTok
 Weight-management ads are restricted (18+ targeting, policy review, LegitScript for Rx). Use for brand/education creative and retargeting of **anonymous marketing-page** visitors only — see F5.
@@ -262,8 +293,8 @@ Industry benchmark for GLP‑1 practices is $1,000–$15,000+/mo in ad spend eve
 
 ### F5. HIPAA tracking guardrail (critical)
 OCR's guidance on tracking technologies makes third-party pixels on pages handling PHI a breach risk. Rules for all marketing instrumentation:
-- Ad pixels (Google, Meta, TikTok) may fire **only** on public marketing pages and `lp.$slug` — never on `/qualify`, `/intake`, `/consent`, `/dashboard`, `/verify-email`, or any authenticated route.
-- Conversion tracking past qualify-start uses server-side, de-identified events (Google Enhanced Conversions / Meta CAPI with hashed values reviewed by compliance, or aggregate-only reporting from our own analytics).
+- Ad pixels (Google, Meta, TikTok) may fire **only** on public marketing pages and `lp.$slug` — never on Bask intake/checkout/portal surfaces or any page that collects PHI.
+- Conversion tracking past marketing CTAs uses Bask/GTM and/or server-side, de-identified events reviewed by compliance — not PHI in browser pixels.
 - Any new pixel goes through the same review as a code change touching PHI. Document each approved pixel + allowed routes in `docs/features/analytics.md`.
 
 ---
@@ -273,12 +304,12 @@ OCR's guidance on tracking technologies makes third-party pixels on pages handli
 **Weeks 1–3 — Foundation**
 - Resolve the brand/domain decision (G9). Everything else keys off this.
 - Ship Workstream A (A1–A7). Verify GSC + Bing Webmaster Tools; submit sitemap.
-- Start LegitScript application.
+- ~~Start LegitScript application.~~ **Done August 2026** — certified; seal on homepage hero (`docs/features/legitscript.md`).
 - Keyword research pass to finalize the first 30 article briefs (Ahrefs/Semrush).
 
 **Months 1–3 — Engine on**
 - `/learn` rebuilt; publish 8–12 articles/month starting with Cluster 2 (switching) and cost/comparison queries — fastest to rank, highest intent.
-- Launch Google Ads (once LegitScript clears) on high-intent + branded terms → LP pages.
+- Launch Google Ads on high-intent + branded terms → LP pages (**LegitScript cleared** — ads ready).
 - First digital-PR campaign. Start review generation. Baseline GEO audit (the 20-prompt spreadsheet).
 
 **Months 4–6 — Compound**
@@ -316,8 +347,8 @@ North-star: **qualified intake completions from organic + AI channels per month*
 1. **Domain cutover timing** — beemahealth.com is purchased (July 2026); schedule the cutover (G9 checklist) before any link building, PR, or entity/GEO work begins. Hosting stays on GitHub Pages.
 2. **Budget tier** (§F4) — recommend Growth if CAC math holds; Lean is viable but pushes head-term visibility mostly into paid-only.
 3. **Medical reviewer** — who is the named, licensed reviewer for content? Required before the first article ships.
-4. **Deferred: docs/copy rebrand Aretide → Beema Health** — mechanical find-and-review pass across docs and remaining UI copy; suitable for a cheaper model. Keep `llms.txt`, robots.txt, and all meta consistent when it runs.
-5. **Deferred: Bask CTA wiring** — backend/frontend button integration pending; no SEO action until it lands (then re-verify the funnel stays noindexed and GA events fire).
+4. ~~**Deferred: docs/copy legacy-name cleanup**~~ **Done August 2026** — mechanical find-and-review pass across docs and remaining UI copy completed; `llms.txt`, robots.txt, and all meta remain consistent.
+5. ~~**Deferred: Bask CTA wiring**~~ **Done** — marketing CTAs → Bask questionnaire via `resolveCta()`; keep funnel routes noindexed and conversion events firing.
 
 ---
 
@@ -326,10 +357,12 @@ North-star: **qualified intake completions from organic + AI channels per month*
 - Google healthcare ads policy: https://support.google.com/adspolicy/answer/176031
 - LegitScript telemedicine certification: https://www.legitscript.com/certification/telemedicine/
 - LegitScript ↔ Google Ads guide: https://stubgroup.com/blog/how-to-get-legitscript-certified-for-google-ads/
+- FDA — Status of Compounded GLP-1 Drugs: https://www.fda.gov/drugs/human-drug-compounding/status-compounded-glp-1-drugs
+- FDA (Feb 6, 2026) — FDA intends to take action against non–FDA-approved GLP-1 drugs (no “generic” / “same as” / “same active ingredient” / “clinically proven” claims for compounded products): https://www.fda.gov/news-events/press-announcements/fda-intends-take-action-against-non-fda-approved-glp-1-drugs — apply §F1.1 sitewide.
+- NAD action on compounded GLP‑1 advertising: https://www.polsinelli.com/publications/nad-compounded-glp-1-advertising-diet
 - GLP‑1 PPC/DTC ad-spend study (Ozempic, $7.5M/15k keywords): https://pmc.ncbi.nlm.nih.gov/articles/PMC12579337/
 - GLP‑1 category marketing benchmarks: https://targetpatientsmd.com/medical-weight-loss-marketing-in-the-glp-1-era-that-works/
 - Meta/Google weight-loss ad restrictions overview: https://videnglobe.com/blog/glp-1-products-digital-marketing-how-to-advertise-weight-loss-products-across-meta-and-google
-- NAD action on compounded GLP‑1 advertising: https://www.polsinelli.com/publications/nad-compounded-glp-1-advertising-diet
 - GLP‑1 cash-pay price landscape: https://teledirectmd.com/cost/weight-loss-glp1-cost/
 
 *Cost figures are planning estimates from public benchmarks as of July 2026 — validate CPCs with a Google Keyword Planner pull and LegitScript pricing directly before budgeting.*

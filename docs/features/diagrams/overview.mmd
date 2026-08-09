@@ -5,7 +5,7 @@ flowchart TB
     TitrationFlow["POST /api/refills/titration/"]
   end
 
-  subgraph aretide [Beema Health backend]
+  subgraph beema [Beema Health backend]
     Payload["beluga_payload.py + refill_views.py"]
     WebhookRx["POST /api/webhooks/beluga/"]
   end

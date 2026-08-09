@@ -34,7 +34,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Questions about eligibility, pricing, or your care? Reach the Beema Health support team. For emergencies, call 911.",
+          "Questions before you start? Email Beema Health support. After you complete intake and pay, you can ask additional questions. For emergencies, call 911.",
       },
       { property: "og:title", content: "Contact | Beema Health" },
       {
@@ -51,7 +51,7 @@ const CONTACT_OPTIONS = [
   {
     icon: Mail,
     title: "Email support",
-    text: "For questions about eligibility, pricing, account access, or your intake.",
+    text: `Questions before intake and payment? Email us. After you complete intake and pay, you can ask additional questions. The medical intake itself is a questionnaire only.`,
     action: SUPPORT_EMAIL,
     href: SUPPORT_EMAIL_HREF,
   },
@@ -110,7 +110,7 @@ function ContactPage() {
             as="h1"
             eyebrow="Contact"
             title={<LineReveal>We&apos;re here to help</LineReveal>}
-            description="Questions before you start? Reach out, or begin your eligibility check to see if Beema Health may be a fit."
+            description={`Questions before you complete intake and pay? Email ${SUPPORT_EMAIL}. After you submit and pay, you can ask us additional questions. The medical intake is a questionnaire only.`}
           />
         </div>
       </section>
@@ -210,7 +210,7 @@ function ContactPage() {
               </MagneticButton>
               <MagneticButton>
                 <Button asChild size="xl">
-                  <Link to={cta.to} search={cta.search}>
+                  <Link to={cta.to} search={cta.search} onClick={cta.onClick}>
                     {cta.label} <ArrowRight />
                   </Link>
                 </Button>

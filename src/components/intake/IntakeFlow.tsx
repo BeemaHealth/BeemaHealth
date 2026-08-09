@@ -736,7 +736,7 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
         <div className="grid gap-4">
           <p className="rounded-2xl bg-primary-soft/50 px-4 py-3 text-sm text-muted-foreground">
             Height, weight, and goal weight are already on file from your
-            eligibility check
+            account
             {summaryBmi != null ? ` (BMI ${summaryBmi})` : ""}.
           </p>
           {(
@@ -875,8 +875,8 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
       {step === 3 && (
         <div className="grid gap-4 max-h-[50vh] overflow-y-auto pr-1">
           <p className="text-sm text-muted-foreground">
-            Conditions from your eligibility screening are already on file and
-            not shown again.
+            Conditions from earlier in your intake are already on file and not
+            shown again.
           </p>
           {intakeConditions.map(([k, label]) => (
             <div key={k}>
@@ -1063,8 +1063,8 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
       {step === 7 && isIntakeStepApplicable(7, intakeEligibility) && (
         <div className="grid gap-4">
           <p className="text-sm text-muted-foreground">
-            Pregnancy and breastfeeding status were captured during your
-            eligibility screening.
+            Pregnancy and breastfeeding status were captured earlier in your
+            intake.
           </p>
           {[
             ["lmp", "Date of last menstrual period (optional)"],

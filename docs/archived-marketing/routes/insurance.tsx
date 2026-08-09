@@ -8,13 +8,13 @@ import { PHARMACY_PARTNERS } from "@/lib/veya-data";
 export const Route = createFileRoute("/insurance")({
   head: () => ({
     meta: [
-      { title: "Insurance & Pharmacy Help — Aretide" },
+      { title: "Insurance & Pharmacy Help — Beema Health" },
       {
         name: "description",
         content:
-          "Prior-authorization support, local pharmacy routing, stock checks, and refill escalation. We're clear about what Aretide can and cannot control.",
+          "Prior-authorization support, local pharmacy routing, stock checks, and refill escalation. We're clear about what Beema Health can and cannot control.",
       },
-      { property: "og:title", content: "Insurance & Pharmacy Help — Aretide" },
+      { property: "og:title", content: "Insurance & Pharmacy Help — Beema Health" },
       { property: "og:description", content: "Find the cheapest, fastest path to your medication." },
     ],
     links: [{ rel: "canonical", href: "/insurance" }],
@@ -91,7 +91,7 @@ function InsurancePage() {
       <Section>
         <div className="grid gap-6 md:grid-cols-2">
           <SurfaceCard className="border-success/30 bg-success/5">
-            <h3 className="text-lg font-semibold text-foreground">What Aretide can do</h3>
+            <h3 className="text-lg font-semibold text-foreground">What Beema Health can do</h3>
             <ul className="mt-4 space-y-2 text-sm text-foreground">
               {[
                 "Help find cheaper or faster medication paths",
@@ -107,7 +107,7 @@ function InsurancePage() {
             </ul>
           </SurfaceCard>
           <SurfaceCard className="border-border bg-muted/30">
-            <h3 className="text-lg font-semibold text-foreground">What Aretide can't control</h3>
+            <h3 className="text-lg font-semibold text-foreground">What Beema Health can't control</h3>
             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
               {[
                 "Whether your insurance covers a medication",

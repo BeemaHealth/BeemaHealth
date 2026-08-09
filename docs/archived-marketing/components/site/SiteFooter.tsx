@@ -7,7 +7,7 @@ const COLUMNS = [
     links: [
       { label: "How it works", to: "/how-it-works" },
       { label: "Pricing", to: "/pricing" },
-      { label: "Switch to Aretide", to: "/switch" },
+      { label: "Switch to Beema Health", to: "/switch" },
       { label: "Insurance & Pharmacy", to: "/insurance" },
     ],
   },
@@ -67,7 +67,7 @@ export function SiteFooter() {
             <strong className="font-semibold text-foreground">
               Important:
             </strong>{" "}
-            Aretide is a telehealth platform that connects patients with
+            Beema Health is a telehealth platform that connects patients with
             independently licensed clinicians. Completing intake or transferring
             records does not guarantee a prescription. Clinicians make all
             medical decisions independently based on a clinical evaluation.
@@ -76,11 +76,11 @@ export function SiteFooter() {
           </p>
           <p>
             If you are experiencing a medical emergency, call 911. This site does
-            not provide emergency care. Aretide does not claim its services are
+            not provide emergency care. Beema Health does not claim its services are
             equivalent to any specific branded medication.
           </p>
           <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:items-center sm:justify-between">
-            <span>© {new Date().getFullYear()} Aretide Health, Inc.</span>
+            <span>© {new Date().getFullYear()} Beema Health Health, Inc.</span>
             <div className="flex flex-wrap gap-4">
               <Link to="/legal/privacy" className="hover:text-foreground">
                 Privacy Policy

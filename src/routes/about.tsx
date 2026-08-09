@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   breadcrumbJsonLd,
@@ -6,6 +6,12 @@ import {
   medicalWebPageJsonLd,
 } from "@/lib/seo";
 import { SEAN_ARORA_PROVIDER } from "@/lib/provider-info";
+import {
+  PARTNER_PHARMACY_ADDRESS_LINE1,
+  PARTNER_PHARMACY_ADDRESS_LINE2,
+  PARTNER_PHARMACY_NAME,
+  PARTNER_PHARMACY_PHONE_DISPLAY,
+} from "@/lib/partner-pharmacy";
 import {
   motion,
   useReducedMotion,
@@ -15,6 +21,7 @@ import {
 import {
   ArrowRight,
   Heart,
+  Pill,
   RefreshCcw,
   ShieldCheck,
   Sparkles,
@@ -35,6 +42,7 @@ import {
 } from "@/components/site/primitives";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
+import { trackPageViewed } from "@/lib/analytics";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { US_STATES } from "@/lib/us-states";
 
@@ -116,6 +124,10 @@ const PILLARS = [
 function AboutPage() {
   const cta = resolveCta(CTA_IDS.about);
   const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    trackPageViewed("about");
+  }, []);
 
   // Single decorative scroll-parallax accent for the page: the infinity
   // motif in the "Infinity wings" section drifts slightly as it scrolls
@@ -386,7 +398,7 @@ function AboutPage() {
             <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
               Hexagons tile perfectly with zero wasted space. We apply the same
               principle to your care: minimal steps, no unnecessary friction,
-              from eligibility check to provider review to success.
+              from medical intake to provider review to success.
             </p>
           </motion.div>
         </div>
@@ -434,6 +446,51 @@ function AboutPage() {
         </motion.div>
       </Section>
 
+      {/* Pharmacy partner */}
+      <Section className="pt-0">
+        <motion.div
+          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE_OUT }}
+        >
+          <SectionHeading
+            eyebrow="Pharmacy partner"
+            title="Fulfillment you can trust"
+          />
+        </motion.div>
+        <motion.div
+          className="mt-10"
+          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{
+            duration: reduceMotion ? 0 : 0.6,
+            delay: reduceMotion ? 0 : 0.1,
+            ease: EASE_OUT,
+          }}
+        >
+          <SurfaceCard className="mx-auto max-w-2xl text-center">
+            <HexBadge className="mx-auto size-14">
+              <Pill className="size-6" />
+            </HexBadge>
+            <h3 className="mt-4 text-lg font-semibold text-foreground">
+              {PARTNER_PHARMACY_NAME}
+            </h3>
+            <p className="text-sm font-medium text-accent-foreground">
+              Partner pharmacy, nationwide fulfillment
+            </p>
+            <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground">
+              {PARTNER_PHARMACY_NAME} is Beema Health&apos;s participating
+              pharmacy partner, located at {PARTNER_PHARMACY_ADDRESS_LINE1},{" "}
+              {PARTNER_PHARMACY_ADDRESS_LINE2}. Licensed by state boards of
+              pharmacy nationwide, they support prescription fulfillment in all
+              50 states. Phone: {PARTNER_PHARMACY_PHONE_DISPLAY}.
+            </p>
+          </SurfaceCard>
+        </motion.div>
+      </Section>
+
       {/* CTA */}
       <Section className="pt-0">
         <motion.div
@@ -454,8 +511,8 @@ function AboutPage() {
                 Ready to start your journey?
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-primary-foreground/80">
-                The eligibility check takes about 5 minutes. No payment
-                required, and no prescription is guaranteed.
+                Complete your medical intake online. No payment required, and no
+                prescription is guaranteed.
               </p>
               <MagneticButton className="mt-8">
                 <Button
@@ -463,7 +520,7 @@ function AboutPage() {
                   size="xl"
                   className="bg-ink text-ink-foreground hover:bg-ink/85"
                 >
-                  <Link to={cta.to} search={cta.search}>
+                  <Link to={cta.to} search={cta.search} onClick={cta.onClick}>
                     {cta.label} <ArrowRight />
                   </Link>
                 </Button>

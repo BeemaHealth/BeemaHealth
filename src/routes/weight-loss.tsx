@@ -10,6 +10,7 @@ import {
 import {
   ArrowRight,
   CheckCircle2,
+  ChefHat,
   Scale,
   Stethoscope,
   Syringe,
@@ -37,7 +38,7 @@ import {
 
 const TITLE = "Weight Loss | Beema Health";
 const DESCRIPTION =
-  "Medical weight-loss care with Zepbound, Wegovy, and affordable compounded options when clinically appropriate. Reviewed by licensed providers.";
+  "Provider-reviewed medical weight-loss care with compounded semaglutide and compounded tirzepatide prescribed by a licensed provider when clinically appropriate and legally available. Compounded medications are not FDA-approved.";
 
 export const Route = createFileRoute("/weight-loss")({
   head: () => ({
@@ -66,13 +67,10 @@ export const Route = createFileRoute("/weight-loss")({
         children: JSON.stringify(
           serviceJsonLd({
             name: "Medical Weight-Loss Program",
-            // Deliberately not the meta DESCRIPTION above — that copy pairs
-            // branded-drug names (Zepbound, Wegovy) with "compounded
-            // options" in one sentence with no disclaimer attached. LLM/AI
-            // crawlers and structured-data parsers lift this string with
-            // none of the page's surrounding compounded-vs-FDA-approved
-            // context, so it needs to stand on its own. See LegitScript /
-            // NAD guardrails in docs/marketing/SEO-AEO-GEO-PLAN.md (F2).
+            // Standalone for crawlers: compounded-only offering + not-FDA-approved.
+            // Never name branded products as offerings. See LegitScript / FDA
+            // guardrails in docs/marketing/SEO-AEO-GEO-PLAN.md (§F1.1) and
+            // docs/features/treatment-pages.md.
             description:
               "Telehealth medical weight-loss program from Beema Health. Licensed providers review every patient and may prescribe compounded Semaglutide or Tirzepatide when clinically appropriate; these compounded medications are not FDA-approved, and prescribing is never guaranteed.",
             path: "/weight-loss",
@@ -93,8 +91,8 @@ const BENEFITS = [
   },
   {
     icon: Syringe,
-    title: "Proven GLP-1 pathways",
-    text: "Compounded Semaglutide and Compounded Tirzepatide when clinically appropriate and legally available.",
+    title: "Provider-guided medication options",
+    text: "Compounded Semaglutide and Compounded Tirzepatide are prescribed by a licensed provider only when clinically appropriate and legally available. Compounded medications are not FDA-approved.",
   },
   {
     icon: Scale,
@@ -150,7 +148,7 @@ function WeightLossPage() {
                 <LineReveal delay={0.1}>medical professionals</LineReveal>
               </>
             }
-            description={`Beema Health focuses on evidence-based weight-loss treatments, reviewed by licensed providers, with transparent cash pricing: ${dualCompoundedHeroPricingLine()}.`}
+            description={`Beema Health focuses on provider-reviewed weight-loss care, with transparent cash pricing: ${dualCompoundedHeroPricingLine()}. Compounded medications are not FDA-approved.`}
           />
           <motion.div
             className="mt-10 text-center"
@@ -164,7 +162,11 @@ function WeightLossPage() {
           >
             <MagneticButton>
               <Button asChild size="xl">
-                <Link to={heroCta.to} search={heroCta.search}>
+                <Link
+                  to={heroCta.to}
+                  search={heroCta.search}
+                  onClick={heroCta.onClick}
+                >
                   {heroCta.label} <ArrowRight />
                 </Link>
               </Button>
@@ -247,7 +249,7 @@ function WeightLossPage() {
             </h3>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Beema Health is here for adults seeking medical weight-loss
-              support. During your eligibility check, we review BMI, health
+              support. During your medical intake, we review BMI, health
               history, and any factors that might make a GLP-1 treatment plan
               inadvisable. A licensed provider decides whether treatment may be
               appropriate; prescribing is never guaranteed.
@@ -292,6 +294,30 @@ function WeightLossPage() {
       </Section>
 
       <Section className="pt-0">
+        <SurfaceCard className="grid items-center gap-8 bg-primary-soft/60 lg:grid-cols-[1fr_auto]">
+          <div>
+            <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground">
+              <ChefHat className="size-5" aria-hidden />
+              Free recipe collection
+            </p>
+            <h2 className="mt-3 text-3xl font-bold text-foreground">
+              Practical meal ideas, available to everyone
+            </h2>
+            <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
+              A practical educational resource we provide as part of the Beema
+              experience—free to browse whether or not you&apos;re a patient. No
+              intake is required to access all 12 recipes.
+            </p>
+          </div>
+          <Button asChild size="lg" variant="outline">
+            <Link to="/recipes/">
+              Browse free recipes <ArrowRight aria-hidden />
+            </Link>
+          </Button>
+        </SurfaceCard>
+      </Section>
+
+      <Section className="pt-0">
         <div className="relative overflow-hidden rounded-4xl bg-primary px-6 py-14 text-center text-primary-foreground md:px-12">
           <div
             aria-hidden
@@ -304,8 +330,7 @@ function WeightLossPage() {
               <LineReveal>Ready to get started?</LineReveal>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">
-              The eligibility check takes about 5 minutes. No payment required
-              to start.
+              Complete your medical intake online. No payment required to start.
             </p>
             <MagneticButton className="mt-8">
               <Button
@@ -313,7 +338,11 @@ function WeightLossPage() {
                 size="xl"
                 className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
               >
-                <Link to={footerCta.to} search={footerCta.search}>
+                <Link
+                  to={footerCta.to}
+                  search={footerCta.search}
+                  onClick={footerCta.onClick}
+                >
                   {footerCta.label} <ArrowRight />
                 </Link>
               </Button>

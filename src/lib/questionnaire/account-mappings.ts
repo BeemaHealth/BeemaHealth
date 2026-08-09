@@ -20,7 +20,7 @@ export type AccountSubFieldMapping = {
   beluga: string;
 };
 
-/** Aretide backend targets for account signup / user profile fields. */
+/** Beema Health backend targets for account signup / user profile fields. */
 export const BACKEND_FIELD_OPTIONS = [
   { value: "", label: "— none —" },
   { value: "register.first_name", label: "Register API · first name" },

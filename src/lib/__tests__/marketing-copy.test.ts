@@ -6,10 +6,12 @@ import {
   WAITLIST_DISPLAY_COUNT_FALLBACK,
   promoIncentiveLine,
   getWaitlistDisplayCountSeed,
+  patientQuestionsGuidance,
   waitlistIncentiveBody,
   waitlistSocialProofLine,
   waitlistSuccessIncentiveLine,
 } from "@/lib/marketing-copy";
+import { SUPPORT_EMAIL } from "@/lib/contact-info";
 
 describe("marketing-copy", () => {
   afterEach(() => {
@@ -18,12 +20,20 @@ describe("marketing-copy", () => {
 
   it("keeps a single concrete first-month promo amount", () => {
     expect(FIRST_MONTH_PROMO_LINE).toBe(
-      "a one-time $100 promo code for your first month on a 3-month plan",
+      "sema-off100 for semaglutide, or tirzepatide 3-month starter $597 / maintenance $297/mo with Tirz100",
     );
-    expect(FIRST_MONTH_PROMO_SHORT).toBe("$100 off with a 3-month promo code");
+    expect(FIRST_MONTH_PROMO_SHORT).toBe("Tirz: 3-mo starter $597 or $297/mo");
     expect(promoIncentiveLine()).toContain(FIRST_MONTH_PROMO_LINE);
     expect(waitlistIncentiveBody()).toContain(FIRST_MONTH_PROMO_LINE);
     expect(waitlistSuccessIncentiveLine()).toContain(FIRST_MONTH_PROMO_LINE);
+  });
+
+  it("explains questionnaire-only intake and when patients can ask questions", () => {
+    const guidance = patientQuestionsGuidance();
+    expect(guidance).toMatch(/questionnaire only/i);
+    expect(guidance).toMatch(/can't ask questions inside it/i);
+    expect(guidance).toMatch(/After you complete intake and pay/i);
+    expect(guidance).toContain(SUPPORT_EMAIL);
   });
 
   it("exposes one waitlist CTA label for sitewide buttons", () => {

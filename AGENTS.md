@@ -9,17 +9,17 @@
 | | |
 |---|---|
 | **Company** | **Beema Health** — [beemahealth](https://beemahealth/) |
-| **Product** | Telehealth **medical weight-loss intake** platform |
-| **What we ship** | Patient qualification → account → medical intake → consent → provider review → perscription routed → patient dashboard updated with this information |
-| **Compliance context** | **HIPAA**-aligned design; handles **PHI** (Protected Health Information). Treat all patient data as real and sensitive — even in local dev. |
-| **Current phase** | Beema is not hosting or running its own backend for the foreseeable future — [Bask](https://bask.co/) is the storefront/checkout/questionnaire platform for this phase. The Django backend in this repo is intact and accurate but **dormant** — see `docs/BACKEND-DEFERRED.md` before touching it or routing work through its docs. |
+| **Product** | Telehealth **medical weight-loss** — marketing site in this repo; **intake, checkout, and patient portal run on [Bask](https://bask.co/)** |
+| **What we ship (live)** | Marketing/SEO site → CTA → Bask **intake** (one long questionnaire; not a separate “eligibility” vs “intake” split) → Bask checkout → Bask/Hive patient portal |
+| **Compliance context** | **HIPAA**-aligned; treat any patient data as **PHI**. **LegitScript certified** (August 2026) — see `docs/features/legitscript.md`. |
+| **Current phase** | **Launched.** This repo is the **marketing/SEO surface**. Bask owns backend, intake, eligibility-as-part-of-intake, checkout, and patient portal. Paid ads unblocked (LegitScript). |
 
 ### Production mindset (non-negotiable)
 
 - **Nothing is a prototype.** Do not label code, UX, validation, or tests as “MVP-only”, “temporary”, or “we’ll fix later” unless the user explicitly asks for a throwaway spike.
 - **Write as if this ships to production today** — error handling, validation, tests, security, and copy quality included.
-- **Local Docker is not HIPAA-compliant** for real patient data, but **code standards are still production standards**.
-- **Never store PHI in `localStorage` or `sessionStorage`.** Pre-account funnel data lives server-side behind an HttpOnly cookie.
+- **Never store PHI in `localStorage` or `sessionStorage` on this marketing site.** Patient PHI is collected and stored by Bask (intake + portal), not by Beema’s marketing frontend.
+- Do **not** describe Beema as running an in-house `/qualify` → `/intake` → `/consent` → `/dashboard` funnel. That model is obsolete. Refer to Bask’s questionnaire as **intake** only.
 
 ---
 
@@ -29,32 +29,29 @@
 Beema Health/
 ├── AGENTS.md                    ← You are here
 ├── README.md                    ← Human + agent doc index
-├── src/                         ← React 19 + TanStack Start frontend
-│   ├── routes/                  ← File-based routes (/qualify, /intake, …)
-│   └── lib/                     ← API client, validators, types, step logic
-│       └── design-tokens.ts     ← Semantic color usage (portal UI) — see below
+├── src/                         ← React 19 + TanStack Start — marketing/SEO site
+│   ├── routes/                  ← Marketing routes (/, /how-it-works, treatments, …)
+│   └── lib/                     ← CTA switchboard, validators used by marketing UI, SEO helpers
+│       └── design-tokens.ts     ← Semantic color usage — see below
 ├── src/styles.css               ← Raw brand oklch values (`:root`)
-├── backend/                     ← Django 5 + DRF + PostgreSQL — DORMANT, see docs/BACKEND-DEFERRED.md
-│   ├── apps/                    ← Domain apps (accounts, eligibility, intakes, …)
-│   └── apps/common/validation/  ← Shared backend input validators
-├── docs/                        ← Deep dives (LOCAL-DEV, INPUT_VALIDATION_TESTS, …)
-│   └── vendor/                  ← Vendor API specs (gitignored; see pointer files in docs/)
-└── scripts/                     ← dev-backend.sh, test-backend.sh
+├── backend/                     ← LEGACY Django API — not the live product; see docs/BACKEND-DEFERRED.md
+├── docs/                        ← Feature + marketing docs
+└── scripts/                     ← legacy backend helpers (not day-to-day)
 ```
 
 ### Stack
 
-| Layer | Tech |
-|-------|------|
-| Frontend | React 19, TanStack Start/Router, Tailwind, shadcn/ui, Vitest |
-| Backend | Django 5, DRF, PostgreSQL 16 (Docker locally), Token auth — **dormant, see `docs/BACKEND-DEFERRED.md`** |
-| Types | `src/lib/types/mvp.ts` mirrors API shapes — keep in sync |
+| Layer | Tech | Role today |
+|-------|------|------------|
+| Marketing frontend | React 19, TanStack Start/Router, Tailwind, shadcn/ui, Vitest | **Live** — this repo’s primary work |
+| Intake / checkout / portal | Bask (+ Hive login URL) | **Live** — outside this repo |
+| `backend/` Django | Django 5, DRF, PostgreSQL | **Legacy code only** — do not orient product work here |
 
 ### Where most work happens now
 
-This is a **marketing/SEO site** whose CTAs link out to Bask, a third-party storefront/checkout/questionnaire platform — not to an in-house funnel. The CTA switchboard (`resolveCta()` in `src/lib/cta-ids.ts`, documented in `docs/features/treatment-pages.md`) is the single place that decision is made.
+This is a **live marketing/SEO site**. CTAs link to Bask’s hosted **intake** + checkout via `resolveCta()` in `src/lib/cta-ids.ts` (documented in `docs/features/treatment-pages.md`). **LegitScript certified** — see `docs/features/legitscript.md`. Keep compounded GLP‑1 copy inside compliance rules in that doc and `docs/features/treatment-pages.md`.
 
-The in-house patient funnel this repo also contains (`/qualify` → `/intake` → `/consent` → `/dashboard`, backed by the Django API) is real, intact, and documented — but dormant. See `docs/BACKEND-DEFERRED.md` (which points to `docs/features/patient-funnel.md`, `docs/features/medical-intake.md`, and `backend/DATABASE.md` for canonical data ownership) before working in it.
+**Do not** plan features around an in-house patient funnel, separate eligibility vs intake steps, or Beema-hosted portal pages. Bask handles those as one **intake** questionnaire plus portal. Leftover `/qualify`, `/intake`, `/consent`, `/dashboard`, and `backend/` code in this repo is **legacy** — see `docs/BACKEND-DEFERRED.md`. Only touch it if the user explicitly asks.
 
 ---
 
@@ -77,16 +74,17 @@ Read the relevant doc(s):
 
 | Topic | Doc |
 |-------|-----|
-| Frontend routes | `src/routes/README.md` |
-| Input validation & security tests (frontend) | `docs/INPUT_VALIDATION_TESTS.md` |
-| API types & client | `src/lib/types/mvp.ts`, `src/lib/api/client.ts` |
-| **Color scheme / portal UI** | **`src/lib/design-tokens.ts`**, `src/styles.css`, `src/components/portal/AccountSectionCard.tsx` |
+| Frontend routes (marketing) | `src/routes/README.md` |
+| Input validation & security tests (marketing UI) | `docs/INPUT_VALIDATION_TESTS.md` |
+| **Color scheme** | **`src/lib/design-tokens.ts`**, `src/styles.css` |
 | Compliance / PHI / HIPAA | **`docs/HIPAA.md`** |
+| **LegitScript / ads / launch architecture** | **`docs/features/legitscript.md`** |
 | **Analytics & event tracking** | **`docs/features/analytics.md`** |
 | **Landing pages** | **`docs/features/landing-pages.md`** |
-| **Treatment pages (per-medication SEO pages, CTA switchboard)** | **`docs/features/treatment-pages.md`** |
+| **Treatment pages + CTA → Bask intake** | **`docs/features/treatment-pages.md`** |
+| **Homepage / hero** | **`docs/features/homepage.md`** |
 | **SEO / GEO audits & tooling** | **`claude-seo` Claude Code plugin** — see "SEO tooling" below |
-| Backend (dormant — DB ownership, run-backend, patient funnel, medical intake, staff CRM, medications, dynamic questionnaire, LifeFile/Beluga vendor APIs) | **`docs/BACKEND-DEFERRED.md`** |
+| Legacy in-repo Django / old funnel routes (not live product) | **`docs/BACKEND-DEFERRED.md`** — only if the user asks |
 
 Match existing patterns in surrounding code. Prefer minimal, focused diffs. If discrepancies between the documentation and the code exist, then ask the user if they would like the documentation changed or the code changed and explain the differences and give a recommendation.
 
@@ -113,28 +111,25 @@ This repo is currently mostly a marketing/SEO surface (see "Where most work happ
 - `/seo sitemap` — validates `public/sitemap.xml` structure (kept in sync by `src/lib/__tests__/sitemap.test.ts`)
 - `/seo geo <url>` — AI Overviews / ChatGPT / Perplexity citability (GEO)
 
-Point it only at **public marketing routes** (`/`, `/how-it-works`, `/safety`, `/semaglutide`, `/tirzepatide`, `/weight-loss`, treatment pages). Never run it against authenticated portal routes (`/qualify`, `/intake`, `/consent`, `/dashboard`) — those aren't SEO surfaces, and even though `claude-seo` only reads public HTML, there's no reason to crawl PHI-adjacent, non-indexed pages. Treat its recommendations as input to a normal PR, not something to auto-apply — schema/copy changes still go through the usual test gate below.
+Point it only at **public marketing routes** (`/`, `/how-it-works`, `/safety`, `/semaglutide`, `/tirzepatide`, `/weight-loss`, treatment pages). Never run it against Bask/Hive, checkout, or leftover non-marketing routes in this repo. Treat its recommendations as input to a normal PR, not something to auto-apply — schema/copy changes still go through the usual test gate below.
 
 ### 2. Implement with defense in depth
 
-User input is validated at **three layers**:
+This marketing site does **not** host the patient intake. New user input on **marketing** surfaces (contact forms, BMI calculator, etc.) is validated in the frontend layers that input actually passes through:
 
 ```
-UI route (qualify.tsx / intake.tsx)
-  → step validators (qualify-steps.ts / intake-steps.ts)
-  → field validators (form-validation.ts / address-validation.ts)
-  → API POST/PATCH/PUT
-  → Django serializer + apps/common/validation/*
-  → parameterized ORM / JSON storage
+UI (marketing route/component)
+  → field validators (form-validation.ts / address-validation.ts as applicable)
+  → external destination if any (e.g. Formspree, analytics — never Bask PHI APIs from this repo)
 ```
 
-Both frontend **and** backend must reject malicious input on strict fields.
+Bask owns intake validation and PHI storage. Do **not** wire new product intake fields through legacy `qualify-steps.ts` / `intake-steps.ts` or Django serializers unless the user explicitly asks to work on that leftover code (`docs/BACKEND-DEFERRED.md`).
 
 ### 3. Test before you finish
 
 **After every code change**, before marking the task done:
 
-1. **Run the frontend suite** — `npm test` (Vitest) is the default. Backend is dormant (`docs/BACKEND-DEFERRED.md`): only run `npm run test:all` / `npm run test:backend` (frontend Vitest + backend Django unit tests + clinical integration smoke flow) if the task explicitly touches `backend/`.
+1. **Run the frontend suite** — `npm test` (Vitest) is the default. Only run `npm run test:all` / `npm run test:backend` if the user explicitly asked you to touch `backend/`.
 2. **Run static checks on changed `.ts` / `.tsx` files** — both are required when you touch TypeScript; ESLint alone is **not** enough:
    - **ESLint (changed files only)** — do **not** run `npm run lint` project-wide (thousands of pre-existing issues). Lint your diff:
      ```bash
@@ -143,8 +138,8 @@ Both frontend **and** backend must reject malicious input on strict fields.
      ```
      Or pass explicit paths: `npx eslint src/lib/foo.ts src/routes/bar.tsx`
    - **`npx tsc --noEmit` (required)** — catches missing imports, undefined names, and type errors that ESLint often misses (especially in `src/routes/*.tsx`). Vitest does **not** typecheck route files. Fix errors in **files you touched**; pre-existing errors elsewhere do not block your task, but you must not introduce new TS errors in your diff.
-   - Optionally spot-check: `npx vitest run src/lib/__tests__/qualify-steps.test.ts` (or the specific test file you edited).
-3. **Report results in chat** — state explicitly that frontend and backend tests ran, plus **both** ESLint and `tsc` outcomes on changed files (e.g. “569 tests passed; ESLint clean on qualify.tsx; `tsc --noEmit` clean — no errors in changed files”).
+   - Optionally spot-check: `npx vitest run path/to/changed.test.ts`.
+3. **Report results in chat** — frontend tests + **both** ESLint and `tsc` outcomes on changed files (e.g. “898 tests passed; ESLint clean; `tsc --noEmit` clean — no errors in changed files”).
 4. **Call out test changes** — if you add, update, or remove tests, say which test files changed and what they now assert (not only that the suite passed).
 5. **Ensure existing tests pass** — fix regressions; do not ignore or skip failures.
 6. **Decide if new tests are needed** — if behavior is new or the change could regress silently, add tests before finishing; if existing tests already cover it, say so in chat.
@@ -155,9 +150,9 @@ npm test             # frontend (Vitest) — preferred, default
 npx tsc --noEmit     # required when any TS/TSX changed — not optional
 npx vitest run path/to/changed.test.ts   # optional: single test file
 
-# Only if a task explicitly touches backend/ (dormant otherwise — docs/BACKEND-DEFERRED.md):
-npm run test:all      # frontend + backend (Django unit tests + smoke_clinical_flow)
-npm run test:backend  # backend unit tests + smoke_clinical_flow
+# Only if the user explicitly asked to touch backend/ (legacy — docs/BACKEND-DEFERRED.md):
+npm run test:all
+npm run test:backend
 ```
 
 If tests fail:
@@ -179,66 +174,28 @@ If you discover this file (or `.cursor/rules/*`) **does not match how the projec
 
 ## Testing reference
 
-Full guide: **`docs/INPUT_VALIDATION_TESTS.md`**
+Full guide for marketing-site validators: **`docs/INPUT_VALIDATION_TESTS.md`** (frontend half). Legacy Django test tables live under `docs/BACKEND-DEFERRED.md` — ignore unless the user asks you to work in `backend/`.
 
-Backend rows below (Backend unit, Backend API integration, Clinical integration smoke) are **dormant reference** — see `docs/BACKEND-DEFERRED.md`. Only run them if a task explicitly resumes backend work.
-
-### Test types in this repo
+### Test types in this repo (day-to-day)
 
 | Type | What it is | Where | Command |
 |------|------------|-------|---------|
-| **Frontend unit** | Validator & step logic in isolation | `src/lib/__tests/*.test.ts` | `npm test` |
+| **Frontend unit** | Validators, pricing helpers, SEO fixtures, etc. | `src/lib/__tests/*.test.ts` | `npm test` |
 | **Frontend fixtures** | Shared attack strings & valid test data | `src/lib/__tests/fixtures/`, `helpers/` | — |
-| **Backend unit** | Python validator functions | `backend/apps/common/tests/` | `npm run test:backend` |
-| **Backend API integration** | POST/PATCH returns 400 on attacks, 200/201 on valid | `backend/apps/*/tests/test_*_api.py` | `npm run test:backend` |
-| **Clinical integration smoke** | End-to-end mock flow: resubmit → doctor webhook → pharmacy order → LifeFile webhook | `backend/apps/integrations/management/commands/smoke_clinical_flow.py` | `npm run test:backend` (runs after unit tests) |
 
-There is **no separate E2E/browser test suite** today. API integration tests plus `smoke_clinical_flow` are our backend regression layer.
+There is **no separate E2E/browser test suite** for the marketing site today. Bask intake is outside this repo.
 
-### Frontend test files
-
-| File | Covers |
-|------|--------|
-| `form-validation.test.ts` | Email, phone, names, numbers, med/allergy rows, labs |
-| `address-validation.test.ts` | ZIP, street, city, verified address |
-| `qualify-steps.test.ts` | All qualify steps + account signup |
-| `intake-steps.test.ts` | All 12 intake steps |
-
-Config: `vitest.config.ts` — tests match `src/**/*.test.ts`.
-
-### Backend test files (dormant — see `docs/BACKEND-DEFERRED.md`)
-
-| File | Endpoint |
-|------|----------|
-| `accounts/tests/test_register_api.py` | `POST /api/auth/register/` |
-| `eligibility/tests/test_eligibility_api.py` | `PATCH /api/eligibility/me/` |
-| `eligibility/tests/test_funnel_eligibility_api.py` | `PATCH /api/funnel/eligibility/` |
-| `intakes/tests/test_intake_api.py` | `PATCH /api/medical-intakes/me/` |
-| `consents/tests/test_consent_api.py` | `POST /api/consent-records/me/` |
-| `common/tests/test_form_validation.py` | Shared Python validators |
-| `common/tests/test_address_validation.py` | Address validators |
-
-Runner: `scripts/test-backend.sh` — uses SQLite in-memory via `backend/config/settings_test.py`.
+Leftover `qualify-steps` / `intake-steps` tests and Django API/smoke tests exist for legacy code only — do not treat them as the live product funnel.
 
 ---
 
 ## Security & input validation requirements
 
-### When you add or change any user input
+### When you add or change user input on the **marketing site**
 
-Complete **all** of the following:
-
-#### Frontend
-- [ ] Validator in `src/lib/form-validation.ts` or `src/lib/address-validation.ts`
-- [ ] Step rule in `src/lib/qualify-steps.ts` or `src/lib/intake-steps.ts`
-- [ ] Success + failure + injection tests in `src/lib/__tests/`
-- [ ] Update `test-data.ts` helpers if needed
-
-#### Backend (dormant — only applies if a task explicitly resumes backend work; see `docs/BACKEND-DEFERRED.md`)
-- [ ] Validator in `backend/apps/common/validation/`
-- [ ] Hook in the relevant `serializers.py` (`validate()` or `validate_<field>()`)
-- [ ] API test in `backend/apps/<app>/tests/test_*_api.py`
-- [ ] Keep `payloads.py` in sync with frontend `malicious-payloads.ts`
+- [ ] Validator in `src/lib/form-validation.ts` or `src/lib/address-validation.ts` when the field type fits
+- [ ] Success + failure + injection tests in `src/lib/__tests/` for strict fields
+- [ ] No PHI in browser storage, logs, or analytics payloads
 
 #### Every strict field must test these attack categories
 
@@ -252,18 +209,11 @@ Use shared fixtures — do not invent one-off strings:
 | Command injection | `` `whoami` ``, `; ls -la` | **Reject** |
 | Overflow | 10,000+ char strings | **Reject** on numeric/short fields |
 
-**Strict fields:** email, phone, legal name, height, weight, ZIP, address, city, numeric labs.
+**Strict fields (marketing UI):** email, phone, legal name, height, weight, ZIP, address, city, numeric fields as applicable.
 
-**Free-text fields** (med dose, reactions, notes): test required/empty; SQL may pass as literal — backend must use parameterized queries; React must not render raw HTML.
+**Free-text fields:** test required/empty; React must not render raw HTML.
 
-### Backend security checklist (dormant — every new endpoint or serializer, only if backend work resumes)
-
-- [ ] Auth permission class correct (`AllowAny` vs `IsPatient` vs provider)
-- [ ] Input validated in serializer — never trust client-only checks
-- [ ] No raw SQL string concatenation with user input
-- [ ] No PHI logged to console or error messages
-- [ ] Rate limiting considered for public endpoints (auth throttle exists on register/login)
-- [ ] API test proves malicious payloads return **400 Bad Request**
+Patient **intake** fields are configured and validated in Bask — not in this repo’s step files.
 
 ---
 
@@ -275,60 +225,40 @@ Beema Health uses a **centralized semantic color system**. Do not invent one-off
 
 | File | Role |
 |------|------|
-| **`src/styles.css`** | **Raw brand palette** — oklch values in `:root` / `.dark` (`primary`, `secondary`, `warning`, `success`, `destructive`, `accent`, `muted`, …). Change base hues **here only**. |
-| **`src/lib/design-tokens.ts`** | **Master usage file** — semantic surface treatments, section tone mappings, badge/timeline/summary styles, and helper functions. **Import from here** when building UI. |
-| **`src/components/portal/AccountSectionCard.tsx`** | Reusable **portal section card** (colored header band, icon, title, optional edit/save). Used on account, intake, orders, refills. |
+| **`src/styles.css`** | **Raw brand palette** — oklch values in `:root` / `.dark`. Change base hues **here only**. |
+| **`src/lib/design-tokens.ts`** | **Master usage file** — semantic surfaces, section tones, badges, helpers. **Import from here** when building UI. |
 
-`styles.css` points to `design-tokens.ts`; keep both in sync when adding semantic colors.
+`styles.css` points to `design-tokens.ts`; keep both in sync when adding semantic colors. Leftover `src/components/portal/*` UI is from the old in-house portal — not the live Bask portal; only touch if the user asks.
 
 ### Rules for agents
 
 1. **Never** hardcode ad hoc colors in routes or components.
 2. **Tune softness/contrast** in `SEMANTIC_PALETTE_SURFACES` inside `design-tokens.ts` — not per page.
-3. **New portal section?** Use `AccountSectionCard` with a `tone` from `SectionTone` / `SECTION_TONE_PALETTE`.
+3. Marketing pages use site/home components + design tokens; do not invent a second palette.
 4. **New section tone slug?** Add it to `SECTION_TONE_PALETTE` in `design-tokens.ts` (map to an existing semantic palette entry).
-5. **Section titles** use `text-foreground`; descriptions use `text-muted-foreground` (defined in `SECTION_CARD_BASE`).
-6. **Dashboard chips/badges/timeline** — use `DASHBOARD_SUMMARY_ICON_STYLES`, `STATUS_BADGE_STYLES`, `TIMELINE_TONE_STYLES`, `NOTICE_BANNER_STYLES` from `design-tokens.ts`.
 
 ### Semantic palette (base colors)
 
 Defined in `styles.css`, referenced as Tailwind tokens: `primary`, `primary-soft`, `secondary`, `accent`, `accent-foreground`, `muted`, `foreground`, `success`, `warning`, `destructive`, `border`, `card`, `background`.
 
-### Section tones (`SECTION_TONE_PALETTE`)
-
-Portal sections map a **tone slug** → **semantic palette surface**:
-
-| Tone slug | Palette | Typical use |
-|-----------|---------|-------------|
-| `primary` | warning (yellow) | Account profile |
-| `contact` | neutral (gray) | Contact info, secondary info blocks |
-| `shipping` | secondary (blue) | Shipping address |
-| `communication` | accent (mint) | Notification preferences |
-| `consent` | success (green) | Consent records |
-| `security` | destructive (light red) | Security / side-effect check-ins |
-| `orders` | secondary (blue) | Orders, refill request history |
-| `refills` | success (green) | Prescription / refill content |
-
-Intake step colors/icons: `src/lib/intake-portal-ui.ts` (references `SectionTone` from `design-tokens.ts`).
-
 ### Key exports from `design-tokens.ts`
 
 - `getSectionToneStyles(tone)` — full class set for a section card
 - `sectionDividerClass`, `sectionBadgeOnClass`, `sectionRowIconClass`, `sectionNavIconClass`, `sectionNavActiveClass`
-- `DASHBOARD_SUMMARY_ICON_STYLES`, `STATUS_BADGE_STYLES`, `TIMELINE_TONE_STYLES`, `NOTICE_BANNER_STYLES`
+- `DASHBOARD_SUMMARY_ICON_STYLES`, `STATUS_BADGE_STYLES`, `TIMELINE_TONE_STYLES`, `NOTICE_BANNER_STYLES` (legacy portal leftovers — prefer marketing patterns for new work)
 
 ---
 
 ## Code conventions
 
-- **Frontend routes:** file-based in `src/routes/` — see `src/routes/README.md`. Do not create `src/pages/`.
-- **API client:** `src/lib/api/client.ts` — extend here for new endpoints.
-- **Types:** update `src/lib/types/mvp.ts` when API shapes change.
-- **Backend:** one Django app per domain under `backend/apps/` — dormant, see `docs/BACKEND-DEFERRED.md`.
-- **Dev-only logging:** diagnostic log lines that should only ever appear locally (mock payload previews, debug-path visibility, etc.) must go through `apps.common.dev_logging.dev_log()` instead of a raw `logger.info(...)` call — it's a no-op unless `DEBUG=True`, so it's silent in staging/production by construction. Use the standard logger directly for anything that should be observable in production (real errors/warnings).
+- **Frontend routes:** file-based marketing routes in `src/routes/` — see `src/routes/README.md`. Do not create `src/pages/`.
+- **CTAs:** always `resolveCta(CTA_IDS.x)` — default destination is Bask **intake**. Never hardcode waitlist/qualify paths for new CTAs.
+- **Terminology:** Bask’s questionnaire = **intake** (singular). Do not invent a separate “eligibility” product step for Beema.
+- **Patient portal login:** `HIVE_LOGIN_URL` in `src/lib/cta-ids.ts` (Hive) — not an in-repo `/dashboard`.
 - **Commits:** only when the user asks. No `--no-verify`, no force-push to main.
 - **Scope:** smallest correct diff. No drive-by refactors.
-- **Portal / dashboard UI colors:** use `src/lib/design-tokens.ts` and `AccountSectionCard` — see **Design system & color scheme** above.
+- **Colors:** `src/lib/design-tokens.ts` — see **Design system & color scheme** above.
+- **Legacy `backend/` / old funnel routes:** do not extend unless the user explicitly asks — `docs/BACKEND-DEFERRED.md`.
 
 ---
 
@@ -336,13 +266,12 @@ Intake step colors/icons: `src/lib/intake-portal-ui.ts` (references `SectionTone
 
 | Command | Purpose |
 |---------|---------|
-| `npm run dev` | Frontend → http://localhost:8080 |
-| `npm test` | Frontend validation/regression tests — preferred default |
+| `npm run dev` | Marketing frontend → http://localhost:8080 |
+| `npm test` | Frontend tests (Vitest) — default |
 | ESLint on changed `.ts`/`.tsx` only | See workflow §3 — `npx eslint <paths>` or git-diff pipe; not `npm run lint` |
-| `npx tsc --noEmit` | **Required** when any TS/TSX changed — catches errors ESLint/Vitest miss in routes |
-| `npm run dev:backend` | *(dormant)* Backend + Postgres via Docker → http://localhost:8000 |
-| `npm run test:all` | *(dormant)* All tests including backend/smoke |
-| `docker compose -f backend/docker-compose.yml exec api python manage.py migrate` | *(dormant)* Apply migrations |
+| `npx tsc --noEmit` | **Required** when any TS/TSX changed |
+
+Legacy (only if user asks to touch `backend/`): `npm run dev:backend`, `npm run test:all`, `npm run test:backend` — see `docs/BACKEND-DEFERRED.md`.
 
 ---
 
@@ -352,10 +281,10 @@ File-specific rules live in `.cursor/rules/`:
 
 | Rule | Scope |
 |------|-------|
-| `beemahealth-core.mdc` | Always apply — production mindset, test gate |
-| `input-validation-tests.mdc` | Validators, serializers, test files |
+| `beemahealth-core.mdc` | Always apply — production mindset, test gate, Bask/intake model |
+| `input-validation-tests.mdc` | Marketing validators / test files |
 
-Rules are **summaries**. This file and `docs/INPUT_VALIDATION_TESTS.md` are authoritative.
+Rules are **summaries**. This file, `docs/features/legitscript.md`, and `docs/INPUT_VALIDATION_TESTS.md` (frontend) are authoritative for day-to-day work.
 
 ---
 
@@ -363,10 +292,11 @@ Rules are **summaries**. This file and `docs/INPUT_VALIDATION_TESTS.md` are auth
 
 - Treat features as prototypes or defer validation/tests “for later”
 - Store PHI in browser storage
-- Skip tests after changing inputs, serializers, or validators
+- Describe Beema as running an in-house qualify/intake/consent/dashboard funnel
+- Split Bask’s flow into separate “eligibility” vs “intake” products — call it **intake**
+- Skip tests after changing marketing inputs or validators
 - Edit `AGENTS.md` or `.cursor/rules/*` without user approval when fixing doc drift
-- Use standard Heroku (non-Shield) for real PHI — see `backend/HOSTING.md`
-- Log request bodies containing PHI
+- Log or send PHI to ad pixels / analytics
 
 ---
 
@@ -374,9 +304,10 @@ Rules are **summaries**. This file and `docs/INPUT_VALIDATION_TESTS.md` are auth
 
 - [README.md](README.md) — doc index
 - [docs/HIPAA.md](docs/HIPAA.md) — HIPAA compliance checklist for agents
-- [docs/INPUT_VALIDATION_TESTS.md](docs/INPUT_VALIDATION_TESTS.md) — validation test bible (frontend half active)
-- [src/lib/design-tokens.ts](src/lib/design-tokens.ts) — semantic color scheme (portal UI)
+- [docs/features/legitscript.md](docs/features/legitscript.md) — LegitScript + launched architecture (Bask intake)
+- [docs/features/treatment-pages.md](docs/features/treatment-pages.md) — treatment SEO pages + CTA → Bask
+- [docs/INPUT_VALIDATION_TESTS.md](docs/INPUT_VALIDATION_TESTS.md) — marketing-site validation tests
+- [src/lib/design-tokens.ts](src/lib/design-tokens.ts) — semantic color scheme
 - [src/styles.css](src/styles.css) — raw brand oklch palette
-- [Starting Point/launchPlan.md](Starting%20Point/launchPlan.md) — product launch plan
 
-**Deferred (backend — see [docs/BACKEND-DEFERRED.md](docs/BACKEND-DEFERRED.md)):** [docs/LOCAL-DEV.md](docs/LOCAL-DEV.md), [backend/DATABASE.md](backend/DATABASE.md), [backend/README.md](backend/README.md)
+**Legacy only (not live product — [docs/BACKEND-DEFERRED.md](docs/BACKEND-DEFERRED.md)):** old Django API docs, in-house funnel feature docs, `backend/` tree.

@@ -215,9 +215,10 @@ function LoginPage() {
           <Link
             to={loginPromptCta.to}
             search={loginPromptCta.search}
+            onClick={loginPromptCta.onClick}
             className="text-primary underline"
           >
-            Start eligibility check
+            Start your intake
           </Link>
         </p>
       </QuizShell>

@@ -1,12 +1,15 @@
 /**
- * Meta Pixel + Google Ads + Google Analytics 4 + GTM helpers (frontend-only).
+ * Meta Pixel + Google Ads + Google Analytics 4 helpers (frontend-only).
  *
  * Required Vite env vars (public IDs only — never put access tokens here):
  *   VITE_META_PIXEL_ID                  — Meta Pixel ID (e.g. 1234567890)
  *   VITE_GOOGLE_ADS_ID                  — Google Ads tag ID (e.g. AW-123456789)
  *   VITE_GOOGLE_ADS_CONVERSION_LABEL    — conversion label (e.g. abCDEFghijkLmNoP)
  *   VITE_GA_MEASUREMENT_ID              — GA4 measurement ID (e.g. G-XXXXXXXX)
- *   VITE_GTM_CONTAINER_ID               — GTM container ID (e.g. GTM-XXXXXXX)
+ *
+ * GTM is installed via the document shell. GA4 and the Google Ads account
+ * destination share this module's single gtag.js loader so the same Google tag
+ * payload is not injected once per destination.
  *
  * When any ID is missing, helpers no-op (safe for local/dev).
  * Do not pass email, name, or other PHI into these events.
@@ -14,12 +17,9 @@
  * Without a backend, GA4 is how you see *all* visitors (including people who
  * never join the waitlist) and which UTM / social links drove them. Meta Pixel
  * and Google Ads conversion tags are for paid campaigns + Lead events.
- * GTM is the Bask questionnaire container — also loaded on the marketing site
- * for Preview / Conversion Linker cross-domain testing.
  */
 
-/** Public GTM container IDs look like GTM-ABC123 (6–8+ alphanumerics). */
-const GTM_CONTAINER_ID_RE = /^GTM-[A-Z0-9]{4,12}$/i;
+import { GOOGLE_ADS_ID, isGtmProductionHost } from "@/lib/gtm";
 
 declare global {
   interface Window {
@@ -38,17 +38,17 @@ export type AdPixelConfig = {
   googleAdsId: string;
   googleAdsConversionLabel: string;
   gaMeasurementId: string;
-  gtmContainerId: string;
 };
 
 export function readAdPixelConfig(): AdPixelConfig {
+  const configuredAdsId = import.meta.env.VITE_GOOGLE_ADS_ID?.trim() ?? "";
   return {
     metaPixelId: import.meta.env.VITE_META_PIXEL_ID?.trim() ?? "",
-    googleAdsId: import.meta.env.VITE_GOOGLE_ADS_ID?.trim() ?? "",
+    googleAdsId:
+      configuredAdsId || (isGtmProductionHost() ? GOOGLE_ADS_ID : ""),
     googleAdsConversionLabel:
       import.meta.env.VITE_GOOGLE_ADS_CONVERSION_LABEL?.trim() ?? "",
     gaMeasurementId: import.meta.env.VITE_GA_MEASUREMENT_ID?.trim() ?? "",
-    gtmContainerId: import.meta.env.VITE_GTM_CONTAINER_ID?.trim() ?? "",
   };
 }
 
@@ -62,26 +62,26 @@ export function isGoogleAdsConversionConfigured(
   return Boolean(config.googleAdsId && config.googleAdsConversionLabel);
 }
 
-export function isGaConfigured(config = readAdPixelConfig()): boolean {
-  return Boolean(config.gaMeasurementId);
+export function isGoogleAdsTagConfigured(
+  config = readAdPixelConfig(),
+): boolean {
+  return Boolean(config.googleAdsId);
 }
 
-export function isGtmConfigured(config = readAdPixelConfig()): boolean {
-  return GTM_CONTAINER_ID_RE.test(config.gtmContainerId);
+export function isGaConfigured(config = readAdPixelConfig()): boolean {
+  return Boolean(config.gaMeasurementId);
 }
 
 export function isAnyAdPixelConfigured(config = readAdPixelConfig()): boolean {
   return (
     isMetaPixelConfigured(config) ||
-    isGoogleAdsConversionConfigured(config) ||
-    isGaConfigured(config) ||
-    isGtmConfigured(config)
+    isGoogleAdsTagConfigured(config) ||
+    isGaConfigured(config)
   );
 }
 
 let metaBootstrapped = false;
 let googleBootstrapped = false;
-let gtmBootstrapped = false;
 
 function injectScript(src: string, id: string): void {
   if (typeof document === "undefined") return;
@@ -132,7 +132,7 @@ export function ensureMetaPixel(config = readAdPixelConfig()): void {
  */
 export function ensureGoogleTag(config = readAdPixelConfig()): void {
   if (typeof window === "undefined") return;
-  const needsAds = isGoogleAdsConversionConfigured(config);
+  const needsAds = isGoogleAdsTagConfigured(config);
   const needsGa = isGaConfigured(config);
   if ((!needsAds && !needsGa) || googleBootstrapped) return;
   googleBootstrapped = true;
@@ -158,56 +158,10 @@ export function ensureGoogleTag(config = readAdPixelConfig()): void {
 /** @deprecated Prefer ensureGoogleTag — kept for existing call sites/tests. */
 export const ensureGoogleAdsTag = ensureGoogleTag;
 
-/**
- * Load Google Tag Manager container (same snippet Google shows for install).
- * Used on the marketing site for GTM Preview + Conversion Linker; Bask also
- * injects this container ID on questionnaire pages via its Integrations setting.
- */
-export function ensureGtmContainer(config = readAdPixelConfig()): void {
-  if (typeof window === "undefined" || typeof document === "undefined") return;
-  if (!isGtmConfigured(config) || gtmBootstrapped) return;
-  gtmBootstrapped = true;
-
-  const containerId = config.gtmContainerId;
-
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-    "gtm.start": new Date().getTime(),
-    event: "gtm.js",
-  });
-
-  if (!document.getElementById("beema-gtm")) {
-    const script = document.createElement("script");
-    script.id = "beema-gtm";
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(containerId)}`;
-    const firstScript = document.getElementsByTagName("script")[0];
-    if (firstScript?.parentNode) {
-      firstScript.parentNode.insertBefore(script, firstScript);
-    } else {
-      document.head.appendChild(script);
-    }
-  }
-
-  // Noscript fallback (SPA still requires JS; included for install parity).
-  if (document.body && !document.getElementById("beema-gtm-noscript")) {
-    const noscript = document.createElement("noscript");
-    noscript.id = "beema-gtm-noscript";
-    const iframe = document.createElement("iframe");
-    iframe.src = `https://www.googletagmanager.com/ns.html?id=${encodeURIComponent(containerId)}`;
-    iframe.height = "0";
-    iframe.width = "0";
-    iframe.setAttribute("style", "display:none;visibility:hidden");
-    noscript.appendChild(iframe);
-    document.body.insertBefore(noscript, document.body.firstChild);
-  }
-}
-
-/** Call once on app mount so remarketing pixels / GA / GTM load when env is set. */
+/** Call once on app mount so remarketing pixels / GA load when env is set. */
 export function initAdPixels(): void {
   const config = readAdPixelConfig();
   if (!isAnyAdPixelConfigured(config)) return;
-  ensureGtmContainer(config);
   ensureMetaPixel(config);
   ensureGoogleTag(config);
 }
@@ -270,5 +224,4 @@ export function trackWaitlistLeadConversion(): void {
 export function __resetAdPixelBootstrapForTests(): void {
   metaBootstrapped = false;
   googleBootstrapped = false;
-  gtmBootstrapped = false;
 }

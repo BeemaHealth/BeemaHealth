@@ -8,13 +8,13 @@ import { CLINICIANS, LAUNCH_STATES } from "@/lib/veya-data";
 export const Route = createFileRoute("/clinicians")({
   head: () => ({
     meta: [
-      { title: "Our Clinicians — Aretide" },
+      { title: "Our Clinicians — Beema Health" },
       {
         name: "description",
         content:
-          "Meet Aretide's named, licensed clinicians. Real bios, licensure coverage, and clinical independence — no stock-photo doctors.",
+          "Meet Beema Health's named, licensed clinicians. Real bios, licensure coverage, and clinical independence — no stock-photo doctors.",
       },
-      { property: "og:title", content: "Our Clinicians — Aretide" },
+      { property: "og:title", content: "Our Clinicians — Beema Health" },
       { property: "og:description", content: "Real clinician identity and independent medical decision-making." },
     ],
     links: [{ rel: "canonical", href: "/clinicians" }],
@@ -65,7 +65,7 @@ function CliniciansPage() {
             <ShieldCheck className="size-7 text-primary" />
             <h3 className="mt-3 text-lg font-semibold text-foreground">Clinical independence</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Clinical decisions are made independently by licensed providers. Aretide
+              Clinical decisions are made independently by licensed providers. Beema Health
               supports clinicians with tools and coordination, but never directs
               medical judgment, and AI never makes clinical decisions.
             </p>

@@ -1,10 +1,19 @@
+import { CircleHelp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
+  hasStarterPack,
   promoFirstMonthUsd,
   PROMO_CODE_DISCOUNT_USD,
   PROMO_CODE_MIN_MONTHS,
+  starterPackTitle,
+  tirzepatidePricingDetailsCopy,
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 type CompoundedPriceLockupProps = {
   pricing: CompoundedMedicationPricing;
@@ -17,11 +26,159 @@ type CompoundedPriceLockupProps = {
 };
 
 /**
- * Good Life–style cash-pay lockup: big promo first-month price, strikethrough
- * list price, and a $100-off callout. Eligibility stays a 3-month plan —
- * that rule lives in the callout fine print, not in the headline math.
+ * Cash-pay lockup for medication cards.
+ *
+ * - Default (semaglutide): big promo first-month price + checkout code.
+ * - With `starterPack` (tirzepatide): compact starter + maintenance cards,
+ *   with a "?" popover for the full quarterly / continuation explanation.
  */
 export function CompoundedPriceLockup({
+  pricing,
+  className,
+  size = "default",
+}: CompoundedPriceLockupProps) {
+  if (hasStarterPack(pricing)) {
+    return (
+      <TirzPricingLockup pricing={pricing} className={className} size={size} />
+    );
+  }
+
+  return (
+    <PromoCodeLockup pricing={pricing} className={className} size={size} />
+  );
+}
+
+function TirzPricingDetailsButton() {
+  const details = tirzepatidePricingDetailsCopy();
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex size-5 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label="How tirzepatide pricing works"
+        >
+          <CircleHelp className="size-3.5" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        className="w-[min(100vw-2rem,22rem)] space-y-3 p-4 text-xs leading-relaxed text-muted-foreground"
+      >
+        <p className="text-sm font-semibold text-foreground">
+          How tirzepatide pricing works
+        </p>
+        <div className="space-y-2">
+          <p>
+            <span className="font-medium text-foreground">Starter pack.</span>{" "}
+            {details.starter}
+          </p>
+          <p>
+            <span className="font-medium text-foreground">
+              After the starter.
+            </span>{" "}
+            {details.continuation}
+          </p>
+          <p>
+            <span className="font-medium text-foreground">Quarterly.</span>{" "}
+            {details.quarterly}
+          </p>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function TirzPricingLockup({
+  pricing,
+  className,
+  size = "default",
+}: CompoundedPriceLockupProps & {
+  pricing: CompoundedMedicationPricing & {
+    starterPack: NonNullable<CompoundedMedicationPricing["starterPack"]>;
+  };
+}) {
+  const pack = pricing.starterPack;
+  const monthly = pricing.monthlyUsd;
+  const promo = promoFirstMonthUsd(pricing);
+  const large = size === "lg";
+
+  return (
+    <div className={cn("space-y-3 text-left", className)}>
+      <div className="rounded-xl bg-background/80 px-3.5 py-3 ring-1 ring-border/70">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-1.5">
+            <p className="text-sm font-semibold text-foreground">
+              {starterPackTitle(pack)}
+            </p>
+            <TirzPricingDetailsButton />
+          </div>
+          <p className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+            New patients
+          </p>
+        </div>
+        <div className="mt-2 flex flex-nowrap items-baseline gap-x-2">
+          <span
+            className={cn(
+              "font-bold tracking-tight text-foreground",
+              large ? "text-3xl md:text-4xl" : "text-2xl",
+            )}
+          >
+            ${pack.totalUsd}
+          </span>
+          <span className="shrink-0 text-sm text-muted-foreground">
+            for {pack.months} months
+            <span className="font-normal">†</span>
+          </span>
+        </div>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          ${pack.monthlyEquivalentUsd}/mo · {pack.dosePathLabel}
+        </p>
+        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+          Typically one-time for brand-new patients beginning tirzepatide.
+        </p>
+      </div>
+
+      <div className="rounded-xl bg-background/80 px-3.5 py-3 ring-1 ring-border/70">
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="text-sm font-semibold text-foreground">
+            Standard / maintenance
+          </p>
+          <p className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+            From ${monthly}/mo
+          </p>
+        </div>
+        <div className="mt-2 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+          <span
+            className={cn(
+              "font-bold tracking-tight text-foreground",
+              large ? "text-2xl md:text-3xl" : "text-xl",
+            )}
+          >
+            ${promo}
+          </span>
+          <span className="text-base font-medium text-muted-foreground line-through decoration-muted-foreground/70">
+            ${monthly}
+          </span>
+          <span className="text-sm text-muted-foreground">first month</span>
+        </div>
+        <p className="mt-2 text-sm leading-snug text-foreground">
+          Promo code:{" "}
+          <span className="font-bold tracking-wide">{pricing.promoCode}</span>
+        </p>
+        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+          ${PROMO_CODE_DISCOUNT_USD} off first month on a{" "}
+          {PROMO_CODE_MIN_MONTHS}-month plan, then ${monthly}/mo. Longer plans
+          and quarterly fills are in the ? details. Can&apos;t be combined with
+          the starter pack.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function PromoCodeLockup({
   pricing,
   className,
   size = "default",
@@ -64,9 +221,13 @@ export function CompoundedPriceLockup({
             Limited-time promo
           </p>
         </div>
+        <p className="mt-2 text-sm leading-snug text-foreground">
+          Promo code:{" "}
+          <span className="font-bold tracking-wide">{pricing.promoCode}</span>
+        </p>
         <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-          Then ${monthly}/mo. One-time promo code on a {PROMO_CODE_MIN_MONTHS}
-          -month plan, redeemable once per patient.
+          Use at checkout. Then ${monthly}/mo. One-time code on a{" "}
+          {PROMO_CODE_MIN_MONTHS}-month plan, redeemable once per patient.
         </p>
       </div>
     </div>

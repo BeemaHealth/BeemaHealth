@@ -22,7 +22,7 @@ export const SEAN_ARORA_PROVIDER = {
   name: "Sean Arora",
   displayName: "Dr. Sean Arora",
   credentials: "MD",
-  role: "Founder and CEO",
+  role: "Founder and CEO of Arora Health & Aesthetics",
   specialty: "Family Medicine — Adult Medicine",
   npi: "1841729449",
   bio: "Dr. Sean Arora, MD, is a board-certified physician and the founder and CEO of Arora Health & Aesthetics. His work focuses on family medicine, wellness, weight management, and telehealth clinical oversight.",

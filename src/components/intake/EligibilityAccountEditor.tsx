@@ -169,7 +169,7 @@ export function EligibilityAccountEditor({
               ? `On file at submission (version ${activeSubmission?.version ?? ""})`
               : screeningSummary
                 ? "On file for your medical intake"
-                : "Already on file from your account & eligibility check"}
+                : "Already on file from your account"}
           </p>
           {canEditSummary && (
             <Button

@@ -9,13 +9,13 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Pricing — Aretide" },
+      { title: "Pricing — Beema Health" },
       {
         name: "description",
         content:
           "Medication-only pricing: pay for your prescription when clinically appropriate. Shipping and labs shown separately before any charge.",
       },
-      { property: "og:title", content: "Pricing — Aretide" },
+      { property: "og:title", content: "Pricing — Beema Health" },
       {
         property: "og:description",
         content: "No platform membership fee. Estimate your monthly medication cost.",
@@ -70,7 +70,7 @@ function PricingPage() {
             <Eyebrow>Medication-only pricing</Eyebrow>
             <p className="mt-5 text-2xl font-bold text-foreground">Pay for your medication. That's it.</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Aretide does not charge a separate monthly membership or subscription fee.
+              Beema Health does not charge a separate monthly membership or subscription fee.
               Your cost is the medication your clinician prescribes, if appropriate.
             </p>
             <div className="mt-6 grid gap-6 sm:grid-cols-2">
