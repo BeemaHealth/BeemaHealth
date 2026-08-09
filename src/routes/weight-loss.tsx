@@ -10,6 +10,7 @@ import {
 import {
   ArrowRight,
   CheckCircle2,
+  ChefHat,
   Scale,
   Stethoscope,
   Syringe,
@@ -290,6 +291,30 @@ function WeightLossPage() {
             </div>
           </SurfaceCard>
         </motion.div>
+      </Section>
+
+      <Section className="pt-0">
+        <SurfaceCard className="grid items-center gap-8 bg-primary-soft/60 lg:grid-cols-[1fr_auto]">
+          <div>
+            <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground">
+              <ChefHat className="size-5" aria-hidden />
+              Free recipe collection
+            </p>
+            <h2 className="mt-3 text-3xl font-bold text-foreground">
+              Practical meal ideas, available to everyone
+            </h2>
+            <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
+              A practical educational resource we provide as part of the Beema
+              experience—free to browse whether or not you&apos;re a patient. No
+              intake is required to access all 12 recipes.
+            </p>
+          </div>
+          <Button asChild size="lg" variant="outline">
+            <Link to="/recipes/">
+              Browse free recipes <ArrowRight aria-hidden />
+            </Link>
+          </Button>
+        </SurfaceCard>
       </Section>
 
       <Section className="pt-0">

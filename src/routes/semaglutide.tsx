@@ -463,7 +463,11 @@ function SemaglutidePage() {
               <Link to="/faq/" className="text-primary underline">
                 FAQ
               </Link>
-              .
+              , or browse our{" "}
+              <Link to="/recipes/" className="text-primary underline">
+                free practical meal ideas
+              </Link>
+              —available to everyone with no intake required.
             </>
           }
           className="mx-0 max-w-2xl"

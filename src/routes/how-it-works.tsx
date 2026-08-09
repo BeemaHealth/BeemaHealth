@@ -11,7 +11,7 @@ import {
   canonicalUrl,
   medicalWebPageJsonLd,
 } from "@/lib/seo";
-import { ArrowRight, MessageCircle, RefreshCcw } from "lucide-react";
+import { ArrowRight, ChefHat, MessageCircle, RefreshCcw } from "lucide-react";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import {
   FloatingHexagons,
@@ -177,6 +177,39 @@ function HowItWorksPage() {
                 licensed provider has evaluated your case would get ahead of a
                 medical decision that has to stay independent.
               </p>
+            </SurfaceCard>
+          </motion.div>
+
+          <motion.div
+            className="mx-auto mt-8 max-w-3xl"
+            initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: reduceMotion ? 0 : 0.5, ease: EASE_OUT }}
+          >
+            <SurfaceCard className="bg-primary-soft/60 p-6 md:p-8">
+              <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground">
+                    <ChefHat className="size-5" aria-hidden />
+                    Free educational resource
+                  </p>
+                  <h2 className="mt-3 text-2xl font-semibold text-foreground">
+                    Practical meal ideas for anyone to browse
+                  </h2>
+                  <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                    Our 12-recipe collection is free to everyone whether or not
+                    you become a Beema patient. No intake is required, and the
+                    collection provides general educational ideas—not
+                    personalized nutrition care or treatment advice.
+                  </p>
+                </div>
+                <Button asChild variant="outline" className="shrink-0">
+                  <Link to="/recipes/">
+                    Browse free recipes <ArrowRight aria-hidden />
+                  </Link>
+                </Button>
+              </div>
             </SurfaceCard>
           </motion.div>
 
