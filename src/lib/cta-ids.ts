@@ -22,6 +22,8 @@ export const CTA_IDS = {
   safety: "safety",
   contact: "contact",
   about: "about",
+  recipes_hub: "recipes_hub",
+  recipe_detail: "recipe_detail",
   landing_page: "landing_page",
   login_prompt: "login_prompt",
 } as const;
@@ -90,8 +92,17 @@ const DEFAULT_CTA_TARGET: CtaTarget = {
   to: "https://q.beemahealth.com/start-online-visit/weightloss",
 };
 
-/** Per-CTA overrides. Empty today — every CtaId falls back to DEFAULT_CTA_TARGET. */
-const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {};
+/** Per-CTA overrides for context-specific, compliant labels. */
+const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
+  recipes_hub: {
+    label: "See if a GLP-1 treatment plan could be right for you",
+    to: DEFAULT_CTA_TARGET.to,
+  },
+  recipe_detail: {
+    label: "Start an online visit",
+    to: DEFAULT_CTA_TARGET.to,
+  },
+};
 
 /** CTA search params: stable cta_id plus Bask attribution handoff keys. */
 export type CtaSearchParams = { cta_id: CtaId } & Record<string, string>;

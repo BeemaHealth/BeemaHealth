@@ -19,6 +19,19 @@ const EXPECTED_PATHS = [
   "/semaglutide/",
   "/how-it-works/",
   "/weight-loss/",
+  "/recipes/",
+  "/recipes/pear-chia-oatmeal-cinnamon-cottage-cream/",
+  "/recipes/smoky-red-lentil-carrot-soup/",
+  "/recipes/turkey-black-bean-stuffed-sweet-potatoes/",
+  "/recipes/apple-blackberry-oat-bran-breakfast-bake/",
+  "/recipes/roasted-pepper-egg-feta-mini-frittatas/",
+  "/recipes/lemon-herb-chicken-hummus-cucumber-boats/",
+  "/recipes/miso-ginger-turkey-rice-cup/",
+  "/recipes/vanilla-lemon-ricotta-berry-bowl/",
+  "/recipes/herbed-turkey-cottage-cheese-breakfast-scramble/",
+  "/recipes/charred-lemon-chicken-quinoa-bowl/",
+  "/recipes/mustard-rosemary-pork-tenderloin-white-bean-mash/",
+  "/recipes/smoky-turkey-taco-stuffed-peppers/",
   "/about/",
   "/safety/",
   "/faq/",
@@ -65,6 +78,33 @@ describe("public/sitemap.xml", () => {
     for (const lastmod of lastmods) {
       expect(lastmod).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
+  });
+
+  it("lists exactly the recipe hub plus 12 details below treatment priority", () => {
+    const recipeLocs = sitemapLocs().filter((loc) =>
+      loc.startsWith(`${SITE_URL}/recipes/`),
+    );
+    expect(recipeLocs).toHaveLength(13);
+
+    const entries = [
+      ...sitemapXml.matchAll(
+        /<url>\s*<loc>([^<]+)<\/loc>[\s\S]*?<priority>([^<]+)<\/priority>\s*<\/url>/g,
+      ),
+    ].map((match) => ({ loc: match[1], priority: Number(match[2]) }));
+    const treatmentPriorities = entries
+      .filter(({ loc }) =>
+        [`${SITE_URL}/tirzepatide/`, `${SITE_URL}/semaglutide/`].includes(loc),
+      )
+      .map(({ priority }) => priority);
+    const recipePriorities = entries
+      .filter(({ loc }) => loc.startsWith(`${SITE_URL}/recipes/`))
+      .map(({ priority }) => priority);
+
+    expect(treatmentPriorities).toHaveLength(2);
+    expect(recipePriorities).toHaveLength(13);
+    expect(Math.max(...recipePriorities)).toBeLessThan(
+      Math.min(...treatmentPriorities),
+    );
   });
 
   it("never lists funnel, portal, staff, or auth routes", () => {
@@ -131,6 +171,12 @@ describe("public/robots.txt", () => {
     ]) {
       expect(robotsTxt).toContain(`Disallow: ${path}`);
     }
+  });
+
+  it("allows the public recipe collection without changing the learn block", () => {
+    expect(robotsTxt).not.toContain("Disallow: /recipes");
+    expect(robotsTxt).toContain("Allow: /");
+    expect(robotsTxt).toContain("Disallow: /learn");
   });
 
   it("does not sitewide-block any bot, including scrapers — everyone can read/cite the site", () => {
@@ -231,6 +277,16 @@ describe("public/llms.txt", () => {
     for (const url of absolute) {
       expect(url.startsWith(SITE_URL), `${url} is off-origin`).toBe(true);
     }
+  });
+
+  it("describes recipes without stale branded-offering or eligibility-flow claims", () => {
+    expect(llmsTxt).toContain(
+      "12 practical recipes organized around gradually adding fiber, smaller portions, and protein-rich eating",
+    );
+    expect(llmsTxt).not.toMatch(
+      /Zepbound|Wegovy|Ozempic|Mounjaro|online eligibility check/i,
+    );
+    expect(llmsTxt).toContain("online intake");
   });
 });
 

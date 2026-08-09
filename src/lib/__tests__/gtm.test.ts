@@ -100,4 +100,35 @@ describe("gtm", () => {
       cta_location: "home_hero",
     });
   });
+
+  it.each([
+    [CTA_IDS.recipes_hub, "recipes_hub"],
+    [CTA_IDS.recipe_detail, "recipe_detail"],
+  ] as const)(
+    "keeps recipe CTA attribution generic for %s",
+    (ctaId, expectedLocation) => {
+      const dataLayer: unknown[] = [];
+      vi.stubGlobal("window", {
+        dataLayer,
+        location: { search: "", pathname: "/recipes/" },
+      });
+
+      const cta = resolveCta(ctaId);
+      const target = new URL(cta.to);
+      expect(target.hostname).toBe("q.beemahealth.com");
+      expect(target.searchParams.get("cta_id")).toBe(expectedLocation);
+
+      cta.onClick();
+
+      expect(dataLayer).toEqual([
+        {
+          event: "intake_handoff",
+          cta_location: expectedLocation,
+        },
+      ]);
+      expect(JSON.stringify(dataLayer)).not.toMatch(
+        /servings|multiplier|category|symptom|nutrition|protein|fiber/i,
+      );
+    },
+  );
 });

@@ -132,6 +132,8 @@ Accessible at `/staff/analytics`. Six aggregated views served by `backend/apps/a
 | `/faq` | `faq` |
 | `/weight-loss` | `weight_loss` |
 | `/safety` | `safety` |
+| `/recipes` | `recipes` |
+| `/recipes/:slug` | `recipe_detail` |
 
 The browser's `PerformanceNavigationTiming.type` determines `page_viewed` vs `page_reloaded`.
 
