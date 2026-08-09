@@ -5,18 +5,23 @@ import {
   MAX_RECIPE_MULTIPLIER,
   MEAL_LABELS,
   MIN_RECIPE_MULTIPLIER,
+  RECIPE_IMAGE_WIDTHS,
+  RECIPE_MODIFIED_DATE,
+  RECIPE_PUBLISHED_DATE,
   RECIPES,
   RECIPE_CATEGORIES,
   RECIPE_SLUGS,
   closestRecipeMultiplier,
   closestRecipePeople,
   formatCulinaryQuantity,
+  formatRecipeMethodStep,
   formatScaledIngredient,
   getRecipeBySlug,
   getRecipesByCategory,
   parseRecipeMultiplier,
   parseRecipeServings,
   recipeImagePath,
+  recipeImageSrcSet,
   recipePath,
   scaleForPeople,
 } from "../recipes";
@@ -64,6 +69,13 @@ describe("recipe collection", () => {
     }
   });
 
+  it("uses explicit serving yields, including the special frittata yield", () => {
+    for (const recipe of RECIPES) {
+      expect(recipe.servings).toMatch(/servings?/);
+    }
+    expect(RECIPES[4].servings).toBe("3 servings (2 mini frittatas each)");
+  });
+
   it("keeps all recipe data immutable", () => {
     expect(Object.isFrozen(RECIPES)).toBe(true);
     for (const recipe of RECIPES) {
@@ -71,6 +83,9 @@ describe("recipe collection", () => {
       expect(Object.isFrozen(recipe.nutrition)).toBe(true);
       expect(Object.isFrozen(recipe.ingredients)).toBe(true);
       expect(Object.isFrozen(recipe.method)).toBe(true);
+      for (const step of recipe.method) {
+        if (typeof step !== "string") expect(Object.isFrozen(step)).toBe(true);
+      }
       for (const ingredient of recipe.ingredients) {
         expect(Object.isFrozen(ingredient)).toBe(true);
         if (ingredient.quantity) {
@@ -85,8 +100,11 @@ describe("recipe collection", () => {
       __dirname,
       "../../../public/images/recipes",
     );
-    const expectedImageNames = RECIPES.map(
-      (recipe) => `${recipe.imageSlug ?? recipe.slug}.webp`,
+    const expectedImageNames = RECIPES.flatMap((recipe) =>
+      RECIPE_IMAGE_WIDTHS.map((width) => {
+        const suffix = width === 1536 ? "" : `-${width}w`;
+        return `${recipe.imageSlug ?? recipe.slug}${suffix}.webp`;
+      }),
     ).sort();
 
     expect(readdirSync(recipeImagesDirectory).sort()).toEqual(
@@ -99,22 +117,19 @@ describe("recipe collection", () => {
       expect(recipeImagePath(recipe)).toBe(
         `/images/recipes/${recipe.imageSlug ?? recipe.slug}.webp`,
       );
-      expect(
-        existsSync(
-          resolve(__dirname, `../../../public${recipeImagePath(recipe)}`),
-        ),
-        recipeImagePath(recipe),
-      ).toBe(true);
-      expect(
-        statSync(
-          resolve(__dirname, `../../../public${recipeImagePath(recipe)}`),
-        ).size,
-      ).toBeGreaterThan(10_000);
-      expect(
-        statSync(
-          resolve(__dirname, `../../../public${recipeImagePath(recipe)}`),
-        ).size,
-      ).toBeLessThan(500_000);
+      for (const width of RECIPE_IMAGE_WIDTHS) {
+        const imagePath = recipeImagePath(recipe, width);
+        const diskPath = resolve(__dirname, `../../../public${imagePath}`);
+        expect(existsSync(diskPath), imagePath).toBe(true);
+        expect(statSync(diskPath).size, imagePath).toBeGreaterThan(5_000);
+        expect(statSync(diskPath).size, imagePath).toBeLessThan(500_000);
+      }
+      expect(recipeImageSrcSet(recipe)).toContain(
+        `${recipeImagePath(recipe, 480)} 480w`,
+      );
+      expect(recipeImageSrcSet(recipe)).toContain(
+        `${recipeImagePath(recipe)} 1536w`,
+      );
     }
   });
 
@@ -263,6 +278,8 @@ describe("recipe ingredient scaling", () => {
     expect(formatCulinaryQuantity(1.5)).toBe("1 1/2");
     expect(formatCulinaryQuantity(2.25)).toBe("2 1/4");
     expect(formatCulinaryQuantity(1 / 3)).toBe("1/3");
+    expect(formatCulinaryQuantity(4 / 9)).toBe("1/2");
+    expect(formatCulinaryQuantity(0.1)).toBe("1/8");
 
     const mixed = RECIPES[1].ingredients.find((ingredient) =>
       ingredient.original.startsWith("1 1/2 cups"),
@@ -293,6 +310,21 @@ describe("recipe ingredient scaling", () => {
     expect(formatScaledIngredient(singularUnit, 2)).toBe(
       "2 cups low-fat milk or fortified unsweetened soy milk",
     );
+  });
+
+  it("preserves base method wording and scales only explicit count tokens", () => {
+    for (const recipe of RECIPES) {
+      for (const step of recipe.method) {
+        expect(formatRecipeMethodStep(step, 1)).toBe(
+          typeof step === "string" ? step : step.baseText,
+        );
+      }
+    }
+
+    const frittataStep = RECIPES[4].method[0];
+    expect(formatRecipeMethodStep(frittataStep, 0.5)).toContain("Coat 3 cups");
+    expect(formatRecipeMethodStep(frittataStep, 2)).toContain("Coat 12 cups");
+    expect(formatRecipeMethodStep(frittataStep, 2)).toContain("350°F");
   });
 
   it("does not scale qualitative ingredients", () => {
@@ -405,6 +437,30 @@ describe("recipe compliance and SEO markup", () => {
     );
   });
 
+  it("includes provenance, dated content, sources, and care education links", () => {
+    expect(normalizedBlocks).toContain(
+      "Illustrative, digitally generated image; not a photograph of the prepared recipe.",
+    );
+    expect(`${hubRoute}\n${detailRoute}`).toContain("Published August 9, 2026");
+    expect(hubRoute).toContain("www.obesity.org/nutritional-priorities");
+    expect(hubRoute).toContain("niddk.nih.gov/health-information");
+    expect(hubRoute).toContain("fsis.usda.gov/food-safety");
+    for (const path of [
+      'to="/weight-loss/"',
+      'to="/semaglutide/"',
+      'to="/tirzepatide/"',
+    ]) {
+      expect(hubRoute).toContain(path);
+      expect(detailRoute).toContain(path);
+    }
+  });
+
+  it("uses USDA-aligned lentil soup leftover guidance", () => {
+    expect(getRecipeBySlug("smoky-red-lentil-carrot-soup")?.makeAhead).toBe(
+      "Divide into shallow containers and refrigerate promptly for up to 4 days, or freeze for up to 3 months. Reheat soup to a rolling boil.",
+    );
+  });
+
   it("labels generated assets as illustrative with explicit dimensions", () => {
     expect(recipeBlocks).toContain("Illustrative image of");
     expect(recipeBlocks).toContain("Illustrative image");
@@ -427,6 +483,11 @@ describe("recipe compliance and SEO markup", () => {
       expect(schema.url).toBe(`${SITE_URL}${recipePath(recipe)}`);
       expect(schema.mainEntityOfPage).toBe(schema.url);
       expect(schema.image).toEqual([`${SITE_URL}${recipeImagePath(recipe)}`]);
+      expect(schema.image.every((image) => image.startsWith("https://"))).toBe(
+        true,
+      );
+      expect(schema.datePublished).toBe(RECIPE_PUBLISHED_DATE);
+      expect(schema.dateModified).toBe(RECIPE_MODIFIED_DATE);
       expect(schema.author).toMatchObject({
         "@type": "Organization",
         name: "Beema Health",
@@ -444,7 +505,7 @@ describe("recipe compliance and SEO markup", () => {
         recipe.method.map((step, index) => ({
           "@type": "HowToStep",
           position: index + 1,
-          text: step,
+          text: formatRecipeMethodStep(step, 1),
         })),
       );
       expect(schema).not.toHaveProperty("nutrition");

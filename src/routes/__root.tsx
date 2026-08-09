@@ -10,11 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { capturePageUtms } from "@/lib/utm";
 import { initAdPixels } from "@/lib/ad-conversions";
-import {
-  GOOGLE_ADS_HEAD_SCRIPT,
-  GTM_CONTAINER_ID,
-  GTM_HEAD_SCRIPT,
-} from "@/lib/gtm";
+import { GTM_CONTAINER_ID, GTM_HEAD_SCRIPT } from "@/lib/gtm";
 import { absoluteUrl, ORGANIZATION_JSONLD } from "@/lib/seo";
 import { duplicateHomepageRedirectTarget } from "@/lib/canonicalize-url";
 
@@ -124,7 +120,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             "style-src 'self' 'unsafe-inline'; " +
             "font-src 'self' data:; " +
             "img-src 'self' data: https:; " +
-            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com; " +
+            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com; " +
             "frame-src https://www.googletagmanager.com; " +
             "form-action 'self' https://formspree.io; " +
             "base-uri 'self'; " +
@@ -198,18 +194,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   // No root index.html in TanStack Start — this shell is the HTML document.
-  // GTM + Google Ads gtag: standard head installs (hostname-gated) + GTM noscript.
+  // GTM uses the standard head install + noscript fallback. GA4 and Google Ads
+  // share one gtag.js loader from initAdPixels after hydration.
   return (
     <html lang="en">
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: GTM_HEAD_SCRIPT,
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: GOOGLE_ADS_HEAD_SCRIPT,
           }}
         />
         <HeadContent />
@@ -239,8 +231,8 @@ function RootComponent() {
     capturePageUtms();
   }, []);
 
-  // Meta Pixel / GA4 — no-op when VITE_* IDs are unset (local/dev).
-  // GTM + Google Ads AW tag load from RootShell (hostname-gated), not here.
+  // Meta Pixel / GA4 / Ads — Google destinations share one gtag.js request.
+  // GTM remains in RootShell for the conversion linker and Bask handoff.
   useEffect(() => {
     initAdPixels();
   }, []);

@@ -1,6 +1,7 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  GOOGLE_ADS_HEAD_SCRIPT,
   GOOGLE_ADS_ID,
   GTM_CONTAINER_ID,
   GTM_HEAD_SCRIPT,
@@ -12,6 +13,10 @@ import {
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 
 describe("gtm", () => {
+  const rootRoute = readFileSync(
+    resolve(__dirname, "../../routes/__root.tsx"),
+    "utf-8",
+  );
   beforeEach(() => {
     vi.unstubAllGlobals();
   });
@@ -28,6 +33,17 @@ describe("gtm", () => {
     expect(GOOGLE_ADS_ID).toBe("AW-18301765593");
   });
 
+  it("keeps one Google tag loader and required measurement CSP origins", () => {
+    expect(rootRoute).not.toContain("GOOGLE_ADS_HEAD_SCRIPT");
+    for (const origin of [
+      "https://www.google.com",
+      "https://googleads.g.doubleclick.net",
+      "https://ad.doubleclick.net",
+    ]) {
+      expect(rootRoute).toContain(origin);
+    }
+  });
+
   it("gates the head snippet to the production hostname only", () => {
     expect(GTM_HEAD_SCRIPT).toContain(
       `window.location.hostname === '${GTM_PRODUCTION_HOSTNAME}'`,
@@ -37,18 +53,6 @@ describe("gtm", () => {
     expect(GTM_HEAD_SCRIPT).toContain("gtm.start");
     expect(GTM_HEAD_SCRIPT).toContain(
       "https://www.googletagmanager.com/gtm.js?id=",
-    );
-  });
-
-  it("gates the Google Ads gtag install to production and configs the AW id", () => {
-    expect(GOOGLE_ADS_HEAD_SCRIPT).toContain(
-      `window.location.hostname === '${GTM_PRODUCTION_HOSTNAME}'`,
-    );
-    expect(GOOGLE_ADS_HEAD_SCRIPT).toContain(
-      `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`,
-    );
-    expect(GOOGLE_ADS_HEAD_SCRIPT).toContain(
-      `gtag('config', '${GOOGLE_ADS_ID}')`,
     );
   });
 

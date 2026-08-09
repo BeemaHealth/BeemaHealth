@@ -122,9 +122,9 @@ function RecipesPage() {
   return (
     <MarketingLayout>
       <section className="relative overflow-hidden bg-grad-hero">
-        <div className="veya-container grid min-h-[36rem] items-stretch gap-10 py-12 lg:grid-cols-[1.05fr_.95fr] lg:py-16">
-          <div className="flex flex-col justify-center">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary-soft px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-foreground">
+        <div className="veya-container grid min-h-[36rem] min-w-0 items-stretch gap-10 py-12 lg:grid-cols-[1.05fr_.95fr] lg:py-16">
+          <div className="flex min-w-0 max-w-full flex-col justify-center">
+            <span className="inline-flex max-w-full flex-wrap items-center gap-2 rounded-full border border-primary/30 bg-primary-soft px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-foreground">
               <ChefHat className="size-4" aria-hidden />
               Beema Health recipe collection
             </span>
@@ -136,13 +136,18 @@ function RecipesPage() {
               each with estimated nutrition, straightforward methods, and
               make-ahead notes.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex min-w-0 max-w-full flex-wrap gap-3">
               <Button asChild size="lg">
                 <a href="#browse-recipes">
                   Browse recipes <ArrowRight aria-hidden />
                 </a>
               </Button>
-              <Button asChild size="lg" variant="outline">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="h-auto min-h-12 max-w-full whitespace-normal py-3 text-center leading-snug"
+              >
                 <Link to={cta.to} search={cta.search} onClick={cta.onClick}>
                   {cta.label}
                 </Link>
@@ -152,12 +157,15 @@ function RecipesPage() {
               This educational collection is free and available to everyone. No
               intake or patient relationship is required to browse it.
             </p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Published August 9, 2026 · Last updated August 9, 2026
+            </p>
           </div>
           <RecipeImage
             recipe={RECIPES[9]}
             eager
             sizes="(min-width: 1024px) 50vw, 100vw"
-            className="min-h-80 rounded-[2rem] border border-border shadow-lift lg:min-h-full"
+            className="min-h-80 min-w-0 max-w-full rounded-[2rem] border border-border shadow-lift lg:min-h-full"
           />
         </div>
       </section>
@@ -232,7 +240,7 @@ function RecipesPage() {
                     replace: true,
                   });
                 }}
-                className="min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-28"
+                className="min-h-12 w-full rounded-xl border border-border bg-background px-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-28"
                 aria-describedby="global-recipe-servings-help"
               >
                 {Array.from({ length: 16 }, (_, index) => index + 1).map(
@@ -304,6 +312,85 @@ function RecipesPage() {
       <section className="bg-primary-soft/50 py-16">
         <div className="veya-container">
           <RecipeComplianceNotice scope="collection" />
+          <div className="mt-8 rounded-3xl border border-border bg-background p-6 md:p-8">
+            <h2 className="text-2xl font-semibold text-foreground">
+              Sources and evidence
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+              These sources support the limited category-level guidance above;
+              they do not mean the individual recipes were clinically reviewed.
+            </p>
+            <ul className="mt-5 space-y-3 text-sm leading-relaxed">
+              <li>
+                <a
+                  href="https://www.obesity.org/nutritional-priorities-to-support-glp-1-therapy-for-obesity/"
+                  className="font-semibold text-foreground underline underline-offset-4"
+                >
+                  The Obesity Society: Nutritional Priorities to Support GLP-1
+                  Therapy for Obesity (2025)
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.niddk.nih.gov/health-information/digestive-diseases/constipation/eating-diet-nutrition"
+                  className="font-semibold text-foreground underline underline-offset-4"
+                >
+                  NIDDK: Eating, Diet, &amp; Nutrition for Constipation
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.niddk.nih.gov/health-information/digestive-diseases/gastroparesis/eating-diet-nutrition"
+                  className="font-semibold text-foreground underline underline-offset-4"
+                >
+                  NIDDK: Eating, Diet, &amp; Nutrition for Gastroparesis
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
+                  className="font-semibold text-foreground underline underline-offset-4"
+                >
+                  USDA FSIS: Leftovers and Food Safety
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-border bg-background py-16">
+        <div className="veya-container">
+          <div className="rounded-3xl border border-border bg-card p-6 shadow-soft md:p-8">
+            <p className="text-sm font-semibold uppercase tracking-wide text-accent-foreground">
+              Learn about medical weight-loss care
+            </p>
+            <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
+              Recipes are general education and remain useful on their own. If
+              you are also exploring medical care, these pages explain the
+              program and treatment categories.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3">
+              <Link
+                to="/weight-loss/"
+                className="font-semibold text-foreground underline underline-offset-4"
+              >
+                Medical weight-loss care
+              </Link>
+              <Link
+                to="/semaglutide/"
+                className="font-semibold text-foreground underline underline-offset-4"
+              >
+                Semaglutide education
+              </Link>
+              <Link
+                to="/tirzepatide/"
+                className="font-semibold text-foreground underline underline-offset-4"
+              >
+                Tirzepatide education
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -319,7 +406,11 @@ function RecipesPage() {
             A licensed provider can evaluate your health history and determine
             whether prescription treatment is appropriate.
           </p>
-          <Button asChild size="xl" className="mt-8">
+          <Button
+            asChild
+            size="xl"
+            className="mt-8 h-auto min-h-14 max-w-full whitespace-normal py-3 text-center leading-snug"
+          >
             <Link to={cta.to} search={cta.search} onClick={cta.onClick}>
               {cta.label} <ArrowRight aria-hidden />
             </Link>
@@ -362,7 +453,7 @@ function FilterButton({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "min-h-11 rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "min-h-12 rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         active
           ? "border-foreground bg-foreground text-background"
           : "border-border bg-card text-muted-foreground hover:border-foreground/30 hover:text-foreground",

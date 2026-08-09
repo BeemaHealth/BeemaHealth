@@ -7,11 +7,9 @@
  *   VITE_GOOGLE_ADS_CONVERSION_LABEL    — conversion label (e.g. abCDEFghijkLmNoP)
  *   VITE_GA_MEASUREMENT_ID              — GA4 measurement ID (e.g. G-XXXXXXXX)
  *
- * GTM + the Google Ads account tag (AW-…) are installed via the document shell
- * in `__root.tsx` (plain constants in `src/lib/gtm.ts`, production-hostname
- * gated). Do not also set VITE_GOOGLE_ADS_ID to that same AW id here — that
- * would double-config the Ads tag. VITE_GOOGLE_ADS_* remains for optional
- * conversion-label Lead events (legacy waitlist) only when a label is set.
+ * GTM is installed via the document shell. GA4 and the Google Ads account
+ * destination share this module's single gtag.js loader so the same Google tag
+ * payload is not injected once per destination.
  *
  * When any ID is missing, helpers no-op (safe for local/dev).
  * Do not pass email, name, or other PHI into these events.
@@ -20,6 +18,8 @@
  * never join the waitlist) and which UTM / social links drove them. Meta Pixel
  * and Google Ads conversion tags are for paid campaigns + Lead events.
  */
+
+import { GOOGLE_ADS_ID, isGtmProductionHost } from "@/lib/gtm";
 
 declare global {
   interface Window {
@@ -41,9 +41,11 @@ export type AdPixelConfig = {
 };
 
 export function readAdPixelConfig(): AdPixelConfig {
+  const configuredAdsId = import.meta.env.VITE_GOOGLE_ADS_ID?.trim() ?? "";
   return {
     metaPixelId: import.meta.env.VITE_META_PIXEL_ID?.trim() ?? "",
-    googleAdsId: import.meta.env.VITE_GOOGLE_ADS_ID?.trim() ?? "",
+    googleAdsId:
+      configuredAdsId || (isGtmProductionHost() ? GOOGLE_ADS_ID : ""),
     googleAdsConversionLabel:
       import.meta.env.VITE_GOOGLE_ADS_CONVERSION_LABEL?.trim() ?? "",
     gaMeasurementId: import.meta.env.VITE_GA_MEASUREMENT_ID?.trim() ?? "",
@@ -60,6 +62,12 @@ export function isGoogleAdsConversionConfigured(
   return Boolean(config.googleAdsId && config.googleAdsConversionLabel);
 }
 
+export function isGoogleAdsTagConfigured(
+  config = readAdPixelConfig(),
+): boolean {
+  return Boolean(config.googleAdsId);
+}
+
 export function isGaConfigured(config = readAdPixelConfig()): boolean {
   return Boolean(config.gaMeasurementId);
 }
@@ -67,7 +75,7 @@ export function isGaConfigured(config = readAdPixelConfig()): boolean {
 export function isAnyAdPixelConfigured(config = readAdPixelConfig()): boolean {
   return (
     isMetaPixelConfigured(config) ||
-    isGoogleAdsConversionConfigured(config) ||
+    isGoogleAdsTagConfigured(config) ||
     isGaConfigured(config)
   );
 }
@@ -124,7 +132,7 @@ export function ensureMetaPixel(config = readAdPixelConfig()): void {
  */
 export function ensureGoogleTag(config = readAdPixelConfig()): void {
   if (typeof window === "undefined") return;
-  const needsAds = isGoogleAdsConversionConfigured(config);
+  const needsAds = isGoogleAdsTagConfigured(config);
   const needsGa = isGaConfigured(config);
   if ((!needsAds && !needsGa) || googleBootstrapped) return;
   googleBootstrapped = true;

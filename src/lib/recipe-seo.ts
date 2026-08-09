@@ -1,6 +1,9 @@
 import {
   MEAL_LABELS,
+  RECIPE_MODIFIED_DATE,
+  RECIPE_PUBLISHED_DATE,
   RECIPES,
+  formatRecipeMethodStep,
   recipeImagePath,
   recipePath,
   type Recipe,
@@ -33,6 +36,8 @@ export function recipeJsonLd(recipe: Recipe) {
     image: [absoluteUrl(recipeImagePath(recipe))],
     url: canonical,
     mainEntityOfPage: canonical,
+    datePublished: RECIPE_PUBLISHED_DATE,
+    dateModified: RECIPE_MODIFIED_DATE,
     author: {
       "@type": "Organization",
       "@id": `${SITE_URL}/#organization`,
@@ -51,7 +56,7 @@ export function recipeJsonLd(recipe: Recipe) {
     recipeInstructions: recipe.method.map((step, index) => ({
       "@type": "HowToStep",
       position: index + 1,
-      text: step,
+      text: formatRecipeMethodStep(step, 1),
     })),
   };
 }

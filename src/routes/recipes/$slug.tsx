@@ -27,6 +27,7 @@ import {
   RECIPE_MULTIPLIER_STEP,
   closestRecipeMultiplier,
   closestRecipePeople,
+  formatRecipeMethodStep,
   formatScaledIngredient,
   getRecipeBySlug,
   parseRecipeMultiplier,
@@ -40,9 +41,18 @@ import { recipeJsonLd } from "@/lib/recipe-seo";
 import { absoluteUrl, breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/recipes/$slug")({
-  validateSearch: (search: Record<string, unknown>): { servings?: number } => ({
-    servings: parseRecipeServings(search.servings) ?? undefined,
-  }),
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { servings?: number; multiplier?: number } => {
+    const servings = parseRecipeServings(search.servings) ?? undefined;
+    return {
+      servings,
+      multiplier:
+        servings === undefined
+          ? (parseRecipeMultiplier(search.multiplier) ?? undefined)
+          : undefined,
+    };
+  },
   loader: ({ params }) => {
     const recipe = getRecipeBySlug(params.slug);
     if (!recipe) throw notFound();
@@ -104,8 +114,16 @@ export const Route = createFileRoute("/recipes/$slug")({
 
 function RecipeDetailPage() {
   const recipe = Route.useLoaderData();
-  const { servings: requestedServings } = Route.useSearch();
-  const initialPeople = requestedServings ?? recipe.servingsCount;
+  const { servings: requestedServings, multiplier: requestedMultiplier } =
+    Route.useSearch();
+  const initialPeople =
+    requestedServings ??
+    (requestedMultiplier === undefined
+      ? recipe.servingsCount
+      : closestRecipePeople(requestedMultiplier, recipe.servingsCount));
+  const initialScale =
+    requestedMultiplier ?? scaleForPeople(initialPeople, recipe.servingsCount);
+  const [methodScale, setMethodScale] = useState(initialScale);
   const category = RECIPE_CATEGORIES[recipe.category];
   const cta = resolveCta(CTA_IDS.recipe_detail);
   const related = RECIPES.filter(
@@ -143,7 +161,7 @@ function RecipeDetailPage() {
             </nav>
 
             <div className="mt-8 grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-semibold uppercase tracking-wide text-accent-foreground">
                   {category.label} · {MEAL_LABELS[recipe.meal]}
                 </p>
@@ -152,6 +170,9 @@ function RecipeDetailPage() {
                 </h1>
                 <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">
                   {recipe.description}
+                </p>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  Published August 9, 2026 · Last updated August 9, 2026
                 </p>
                 <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
                   <QuickStat
@@ -196,6 +217,8 @@ function RecipeDetailPage() {
                 key={recipe.slug}
                 recipe={recipe}
                 initialPeople={initialPeople}
+                initialMultiplier={requestedMultiplier}
+                onScaleChange={setMethodScale}
               />
             </div>
 
@@ -203,12 +226,15 @@ function RecipeDetailPage() {
               <h2 className="text-3xl font-semibold text-foreground">Method</h2>
               <ol className="mt-8 space-y-8">
                 {recipe.method.map((step, index) => (
-                  <li key={step} className="flex gap-5">
+                  <li
+                    key={`${recipe.slug}-method-${index}`}
+                    className="flex gap-5"
+                  >
                     <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary font-semibold text-primary-foreground">
                       {index + 1}
                     </span>
                     <p className="pt-1 text-base leading-relaxed text-muted-foreground">
-                      {step}
+                      {formatRecipeMethodStep(step, methodScale)}
                     </p>
                   </li>
                 ))}
@@ -251,6 +277,22 @@ function RecipeDetailPage() {
                 <p className="mt-4 font-medium leading-relaxed text-foreground">
                   {category.cue}
                 </p>
+                <div className="mt-6 border-t border-border pt-5">
+                  <h2 className="text-xl font-semibold text-foreground">
+                    {recipe.category === "fiber"
+                      ? "Why is this fiber-forward?"
+                      : recipe.category === "smallVolume"
+                        ? "What makes this a smaller-portion meal?"
+                        : "How much protein and fiber are in one serving?"}
+                  </h2>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {recipe.category === "fiber"
+                      ? `The ingredients emphasize plant foods and provide an estimated ${recipe.nutrition.fiberGrams} g of fiber per serving. Increase fiber gradually if your usual intake is lower.`
+                      : recipe.category === "smallVolume"
+                        ? `The recipe uses a compact serving format while providing an estimated ${recipe.nutrition.proteinGrams} g of protein per serving. Save the rest if you feel comfortably full.`
+                        : `One serving is estimated to provide ${recipe.nutrition.proteinGrams} g of protein and ${recipe.nutrition.fiberGrams} g of fiber. Values vary by ingredient brand, portion, and preparation.`}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -304,6 +346,42 @@ function RecipeDetailPage() {
           </div>
         </section>
 
+        <section className="border-y border-border bg-background py-16">
+          <div className="veya-container">
+            <div className="rounded-3xl border border-border bg-card p-6 shadow-soft md:p-8">
+              <p className="text-sm font-semibold uppercase tracking-wide text-accent-foreground">
+                Learn about medical weight-loss care
+              </p>
+              <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
+                This recipe is general education and stands on its own. If you
+                are also exploring medical care, learn about the program and
+                treatment categories before deciding whether to start an online
+                visit.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3">
+                <Link
+                  to="/weight-loss/"
+                  className="font-semibold text-foreground underline underline-offset-4"
+                >
+                  Medical weight-loss care
+                </Link>
+                <Link
+                  to="/semaglutide/"
+                  className="font-semibold text-foreground underline underline-offset-4"
+                >
+                  Semaglutide education
+                </Link>
+                <Link
+                  to="/tirzepatide/"
+                  className="font-semibold text-foreground underline underline-offset-4"
+                >
+                  Tirzepatide education
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="bg-ink py-16 text-ink-foreground">
           <div className="veya-container text-center">
             <p className="text-sm font-semibold uppercase tracking-wide text-primary">
@@ -316,7 +394,11 @@ function RecipeDetailPage() {
               Start an online visit so a licensed provider can evaluate whether
               prescription treatment is appropriate.
             </p>
-            <Button asChild size="xl" className="mt-8">
+            <Button
+              asChild
+              size="xl"
+              className="mt-8 h-auto min-h-14 max-w-full whitespace-normal py-3 text-center leading-snug"
+            >
               <Link to={cta.to} search={cta.search} onClick={cta.onClick}>
                 {cta.label} <ArrowRight aria-hidden />
               </Link>
@@ -344,16 +426,25 @@ type ScaleMode = "people" | "multiplier";
 function RecipeQuantityPanel({
   recipe,
   initialPeople,
+  initialMultiplier,
+  onScaleChange,
 }: {
   recipe: Recipe;
   initialPeople: number;
+  initialMultiplier?: number;
+  onScaleChange: (scale: number) => void;
 }) {
-  const [mode, setMode] = useState<ScaleMode>("people");
+  const navigate = Route.useNavigate();
+  const [mode, setMode] = useState<ScaleMode>(
+    initialMultiplier === undefined ? "people" : "multiplier",
+  );
   const [people, setPeople] = useState(initialPeople);
-  const [multiplier, setMultiplier] = useState(() =>
-    closestRecipeMultiplier(
-      scaleForPeople(initialPeople, recipe.servingsCount),
-    ),
+  const [multiplier, setMultiplier] = useState(
+    () =>
+      initialMultiplier ??
+      closestRecipeMultiplier(
+        scaleForPeople(initialPeople, recipe.servingsCount),
+      ),
   );
   const scale =
     mode === "people"
@@ -374,11 +465,31 @@ function RecipeQuantityPanel({
   function changeMode(nextMode: ScaleMode) {
     if (nextMode === mode) return;
     if (nextMode === "multiplier") {
-      setMultiplier(
-        closestRecipeMultiplier(scaleForPeople(people, recipe.servingsCount)),
+      const nextMultiplier = closestRecipeMultiplier(
+        scaleForPeople(people, recipe.servingsCount),
       );
+      setMultiplier(nextMultiplier);
+      onScaleChange(nextMultiplier);
+      void navigate({
+        search: (current) => ({
+          ...current,
+          servings: undefined,
+          multiplier: nextMultiplier,
+        }),
+        replace: true,
+      });
     } else {
-      setPeople(closestRecipePeople(multiplier, recipe.servingsCount));
+      const nextPeople = closestRecipePeople(multiplier, recipe.servingsCount);
+      setPeople(nextPeople);
+      onScaleChange(scaleForPeople(nextPeople, recipe.servingsCount));
+      void navigate({
+        search: (current) => ({
+          ...current,
+          servings: nextPeople,
+          multiplier: undefined,
+        }),
+        replace: true,
+      });
     }
     setMode(nextMode);
   }
@@ -397,7 +508,7 @@ function RecipeQuantityPanel({
               type="button"
               aria-pressed={mode === option}
               onClick={() => changeMode(option)}
-              className={`min-h-11 rounded-full border px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              className={`min-h-12 rounded-full border px-4 py-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 mode === option
                   ? "border-foreground bg-foreground text-background"
                   : "border-border bg-background text-muted-foreground"
@@ -423,9 +534,19 @@ function RecipeQuantityPanel({
               value={people}
               onChange={(event) => {
                 const nextPeople = parseRecipeServings(event.target.value);
-                if (nextPeople != null) setPeople(nextPeople);
+                if (nextPeople == null) return;
+                setPeople(nextPeople);
+                onScaleChange(scaleForPeople(nextPeople, recipe.servingsCount));
+                void navigate({
+                  search: (current) => ({
+                    ...current,
+                    servings: nextPeople,
+                    multiplier: undefined,
+                  }),
+                  replace: true,
+                });
               }}
-              className="mt-2 min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="mt-2 min-h-12 w-full rounded-xl border border-border bg-background px-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {Array.from({ length: 16 }, (_, index) => index + 1).map(
                 (count) => (
@@ -451,9 +572,19 @@ function RecipeQuantityPanel({
                 const nextMultiplier = parseRecipeMultiplier(
                   event.target.value,
                 );
-                if (nextMultiplier != null) setMultiplier(nextMultiplier);
+                if (nextMultiplier == null) return;
+                setMultiplier(nextMultiplier);
+                onScaleChange(nextMultiplier);
+                void navigate({
+                  search: (current) => ({
+                    ...current,
+                    servings: undefined,
+                    multiplier: nextMultiplier,
+                  }),
+                  replace: true,
+                });
               }}
-              className="mt-2 min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="mt-2 min-h-12 w-full rounded-xl border border-border bg-background px-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {Array.from(
                 {

@@ -9,11 +9,7 @@
 /** Public GTM container — same ID pasted into Bask → Integrations. */
 export const GTM_CONTAINER_ID = "GTM-MHHJ44GF" as const;
 
-/**
- * Google Ads account tag (gtag.js). From Google Ads → Tag setup.
- * Install once in the document shell — do not also set VITE_GOOGLE_ADS_ID to
- * this same ID or `ensureGoogleTag` will double-config it.
- */
+/** Google Ads destination configured by the shared gtag.js loader. */
 export const GOOGLE_ADS_ID = "AW-18301765593" as const;
 
 /** Only this host loads GTM / Ads / should be treated as live production traffic. */
@@ -36,22 +32,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 }
 `.trim();
 
-/**
- * Google Ads gtag.js install (Nikki / Google Ads tag setup).
- * Hostname-gated; async script + config match Google's standard snippet.
- */
-export const GOOGLE_ADS_HEAD_SCRIPT = `
-if (window.location.hostname === '${GTM_PRODUCTION_HOSTNAME}') {
-var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}';document.head.appendChild(s);
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${GOOGLE_ADS_ID}');
-}
-`.trim();
-
 export function isGtmProductionHost(
-  hostname = typeof window !== "undefined" ? window.location.hostname : "",
+  hostname = typeof window !== "undefined"
+    ? (window.location?.hostname ?? "")
+    : "",
 ): boolean {
   return hostname === GTM_PRODUCTION_HOSTNAME;
 }

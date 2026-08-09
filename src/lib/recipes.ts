@@ -57,6 +57,14 @@ export type RecipeIngredient = Readonly<{
   original: string;
 }>;
 
+export type ScalableMethodStep = Readonly<{
+  baseText: string;
+  scaledTemplate: string;
+  baseCount: number;
+}>;
+
+export type RecipeMethodStep = string | ScalableMethodStep;
+
 export type Recipe = Readonly<{
   slug: string;
   imageSlug?: string;
@@ -72,7 +80,7 @@ export type Recipe = Readonly<{
   cookMinutes: number;
   nutrition: RecipeNutrition;
   ingredients: readonly RecipeIngredient[];
-  method: readonly string[];
+  method: readonly RecipeMethodStep[];
   chefNote: string;
   makeAhead: string;
   imageAlt: string;
@@ -83,6 +91,9 @@ export const MAX_RECIPE_SERVINGS = 16;
 export const MIN_RECIPE_MULTIPLIER = 0.5;
 export const MAX_RECIPE_MULTIPLIER = 16;
 export const RECIPE_MULTIPLIER_STEP = 0.5;
+export const RECIPE_PUBLISHED_DATE = "2026-08-09";
+export const RECIPE_MODIFIED_DATE = "2026-08-09";
+export const RECIPE_IMAGE_WIDTHS = [480, 768, 1024, 1536] as const;
 
 const FRACTION_RE = String.raw`\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:\.\d+)?`;
 const INGREDIENT_QUANTITY_RE = new RegExp(
@@ -176,38 +187,31 @@ export function closestRecipePeople(
   );
 }
 
-function greatestCommonDivisor(a: number, b: number): number {
-  return b === 0 ? a : greatestCommonDivisor(b, a % b);
-}
-
 export function formatCulinaryQuantity(value: number): string {
   if (!Number.isFinite(value) || value <= 0) return "0";
 
   const whole = Math.floor(value);
   const remainder = value - whole;
-  if (remainder < 1 / 64) return String(whole);
-  if (1 - remainder < 1 / 64) return String(whole + 1);
-
-  let bestNumerator = 0;
-  let bestDenominator = 1;
-  let bestDifference = Number.POSITIVE_INFINITY;
-  for (let denominator = 2; denominator <= 16; denominator += 1) {
-    const numerator = Math.round(remainder * denominator);
-    const difference = Math.abs(remainder - numerator / denominator);
-    if (difference < bestDifference) {
-      bestNumerator = numerator;
-      bestDenominator = denominator;
-      bestDifference = difference;
-    }
-  }
-
-  if (bestDifference <= 1 / 64 && bestNumerator > 0) {
-    const divisor = greatestCommonDivisor(bestNumerator, bestDenominator);
-    const fraction = `${bestNumerator / divisor}/${bestDenominator / divisor}`;
-    return whole > 0 ? `${whole} ${fraction}` : fraction;
-  }
-
-  return Number(value.toFixed(2)).toString();
+  const conventionalFractions = [
+    { value: 0, label: "" },
+    { value: 1 / 8, label: "1/8" },
+    { value: 1 / 4, label: "1/4" },
+    { value: 1 / 3, label: "1/3" },
+    { value: 1 / 2, label: "1/2" },
+    { value: 2 / 3, label: "2/3" },
+    { value: 3 / 4, label: "3/4" },
+    { value: 1, label: "" },
+  ] as const;
+  const nearest = conventionalFractions.reduce((best, candidate) =>
+    Math.abs(candidate.value - remainder) < Math.abs(best.value - remainder)
+      ? candidate
+      : best,
+  );
+  const adjustedWhole = whole + (nearest.value === 1 ? 1 : 0);
+  if (!nearest.label) return String(adjustedWhole);
+  return adjustedWhole > 0
+    ? `${adjustedWhole} ${nearest.label}`
+    : nearest.label;
 }
 
 export function formatScaledIngredient(
@@ -235,6 +239,18 @@ export function formatScaledIngredient(
   return `${minimum}${maximum} ${text}`;
 }
 
+export function formatRecipeMethodStep(
+  step: RecipeMethodStep,
+  scale: number,
+): string {
+  if (typeof step === "string") return step;
+  if (!Number.isFinite(scale) || scale <= 0 || scale === 1) {
+    return step.baseText;
+  }
+  const count = Math.max(1, Math.round(step.baseCount * scale));
+  return step.scaledTemplate.replace("{{count}}", String(count));
+}
+
 const SCALABLE_SINGULAR_WORD_RE =
   /\b(cup|tablespoon|teaspoon|pound|ounce|can|scoop|egg|onion|apple|cucumber|lemon|pear)\b/;
 
@@ -253,7 +269,7 @@ const RECIPE_DATA = [
       "Warm oats and pear with chia, topped by a cool cinnamon protein cream.",
     category: "fiber",
     meal: "breakfast",
-    servings: "1",
+    servings: "1 serving",
     servingsCount: 1,
     prep: "5 min",
     cook: "8 min",
@@ -289,7 +305,7 @@ const RECIPE_DATA = [
       "A velvety one-pot soup with red lentils, sweet carrots, cumin, and smoked paprika.",
     category: "fiber",
     meal: "lunch",
-    servings: "4",
+    servings: "4 servings",
     servingsCount: 4,
     prep: "12 min",
     cook: "30 min",
@@ -319,7 +335,8 @@ const RECIPE_DATA = [
     ],
     chefNote:
       "Blending only part of the pot creates body without cream. Red lentils thicken as they stand, so loosen leftovers with broth or water.",
-    makeAhead: "Refrigerate up to 5 days or freeze up to 3 months.",
+    makeAhead:
+      "Divide into shallow containers and refrigerate promptly for up to 4 days, or freeze for up to 3 months. Reheat soup to a rolling boil.",
     imageAlt: "Smoky red lentil and carrot soup finished with chopped parsley",
   },
   {
@@ -329,7 +346,7 @@ const RECIPE_DATA = [
       "Crisp-skinned sweet potatoes filled with cumin turkey, black beans, spinach, and salsa.",
     category: "fiber",
     meal: "dinner",
-    servings: "4",
+    servings: "4 servings",
     servingsCount: 4,
     prep: "15 min",
     cook: "50 min",
@@ -369,7 +386,7 @@ const RECIPE_DATA = [
       "A soft, spoonable oat-bran bake loaded with fruit but balanced by egg and cottage cheese.",
     category: "fiber",
     meal: "light-meal",
-    servings: "4",
+    servings: "4 servings",
     servingsCount: 4,
     prep: "12 min",
     cook: "30 min",
@@ -395,7 +412,13 @@ const RECIPE_DATA = [
       "Whisk the oat bran, baking powder, cinnamon, and salt in a large bowl.",
       "In a second bowl, whisk the eggs, milk, cottage cheese, vanilla, and maple syrup. Stir the wet mixture into the dry ingredients.",
       "Fold in the apple and blackberries. Pour into the baking dish and smooth the top.",
-      "Bake 25 to 30 minutes, until the center is set but still moist. Rest 10 minutes before cutting into four portions.",
+      {
+        baseText:
+          "Bake 25 to 30 minutes, until the center is set but still moist. Rest 10 minutes before cutting into four portions.",
+        scaledTemplate:
+          "Bake 25 to 30 minutes, until the center is set but still moist. Rest 10 minutes before cutting into {{count}} portions.",
+        baseCount: 4,
+      },
     ],
     chefNote:
       "Oat bran absorbs liquid quickly. Bake as soon as the batter is mixed, and pull it while the center remains tender rather than dry.",
@@ -410,7 +433,7 @@ const RECIPE_DATA = [
       "Two compact, tender egg cakes with sweet pepper, spinach, and briny feta.",
     category: "smallVolume",
     meal: "breakfast",
-    servings: "3 (2 mini frittatas each)",
+    servings: "3 servings (2 mini frittatas each)",
     servingsCount: 3,
     prep: "10 min",
     cook: "18 min",
@@ -431,7 +454,13 @@ const RECIPE_DATA = [
       "Cooking spray",
     ],
     method: [
-      "Heat the oven to 350°F. Coat six cups of a standard muffin tin with cooking spray.",
+      {
+        baseText:
+          "Heat the oven to 350°F. Coat six cups of a standard muffin tin with cooking spray.",
+        scaledTemplate:
+          "Heat the oven to 350°F. Coat {{count}} cups of a standard muffin tin with cooking spray.",
+        baseCount: 6,
+      },
       "Blend the eggs, egg whites, cottage cheese, garlic powder, salt, and a few grinds of pepper until smooth and lightly foamy.",
       "Divide the roasted pepper, spinach, feta, and chives among the prepared cups.",
       "Pour in the egg mixture, filling each cup about three-quarters full. Gently stir each cup once so the vegetables are suspended.",
@@ -451,7 +480,7 @@ const RECIPE_DATA = [
       "Cool cucumber carries a concentrated chicken-and-hummus filling with almost no fuss.",
     category: "smallVolume",
     meal: "lunch",
-    servings: "2",
+    servings: "2 servings",
     servingsCount: 2,
     prep: "15 min",
     cook: "0 min with cooked chicken",
@@ -486,7 +515,7 @@ const RECIPE_DATA = [
       "A compact savory bowl with glossy turkey, edamame, and just enough rice.",
     category: "smallVolume",
     meal: "dinner",
-    servings: "4",
+    servings: "4 servings",
     servingsCount: 4,
     prep: "15 min",
     cook: "15 min",
@@ -512,7 +541,13 @@ const RECIPE_DATA = [
       "Heat the neutral oil in a wide skillet over medium-high. Add the turkey and cook, breaking it into small crumbles, for 5 to 6 minutes.",
       "Add the mushrooms and zucchini. Cook 4 minutes, until their moisture evaporates and the turkey begins to brown.",
       "Stir in the edamame and miso mixture. Cook 1 to 2 minutes, until glossy and hot.",
-      "Divide the rice among four small bowls or cups. Spoon the turkey mixture on top and finish with scallions.",
+      {
+        baseText:
+          "Divide the rice among four small bowls or cups. Spoon the turkey mixture on top and finish with scallions.",
+        scaledTemplate:
+          "Divide the rice among {{count}} small bowls or cups. Spoon the turkey mixture on top and finish with scallions.",
+        baseCount: 4,
+      },
     ],
     chefNote:
       "Chopping the vegetables finely keeps the portion compact and gives every bite the same balance. Use a small bowl; visual scale helps the meal feel complete.",
@@ -527,7 +562,7 @@ const RECIPE_DATA = [
       "A spoonable, cheesecake-like bowl with whey protein and a bright berry finish.",
     category: "smallVolume",
     meal: "light-meal",
-    servings: "1",
+    servings: "1 serving",
     servingsCount: 1,
     prep: "5 min",
     cook: "0 min",
@@ -562,7 +597,7 @@ const RECIPE_DATA = [
       "Soft curds, browned turkey, and fresh chives in a breakfast that puts protein first.",
     category: "highProtein",
     meal: "breakfast",
-    servings: "1",
+    servings: "1 serving",
     servingsCount: 1,
     prep: "8 min",
     cook: "8 min",
@@ -601,7 +636,7 @@ const RECIPE_DATA = [
       "Smoky-edged chicken, warm quinoa, chickpeas, and a bright herb vinaigrette.",
     category: "highProtein",
     meal: "lunch",
-    servings: "4",
+    servings: "4 servings",
     servingsCount: 4,
     prep: "20 min",
     cook: "18 min",
@@ -628,7 +663,13 @@ const RECIPE_DATA = [
       "Cook the chicken for 5 to 7 minutes per side, or until the thickest part reaches 165°F. Transfer to a board and rest for 5 minutes.",
       "Add the zucchini to the same pan and cook for 4 to 5 minutes, turning occasionally, until browned but not mushy.",
       "Zest the lemon into a small bowl. Add 2 tablespoons lemon juice, the remaining olive oil, remaining salt, parsley, and mint; whisk into a loose vinaigrette.",
-      "Divide the quinoa, chickpeas, and zucchini among four bowls. Slice the chicken and arrange it on top. Spoon over the herb vinaigrette and finish with feta.",
+      {
+        baseText:
+          "Divide the quinoa, chickpeas, and zucchini among four bowls. Slice the chicken and arrange it on top. Spoon over the herb vinaigrette and finish with feta.",
+        scaledTemplate:
+          "Divide the quinoa, chickpeas, and zucchini among {{count}} bowls. Slice the chicken and arrange it on top. Spoon over the herb vinaigrette and finish with feta.",
+        baseCount: 4,
+      },
     ],
     chefNote:
       "Resting the chicken is not optional: it keeps the juices in the meat instead of on the cutting board. For meal prep, pack the vinaigrette separately.",
@@ -645,7 +686,7 @@ const RECIPE_DATA = [
       "A restaurant-style lean roast with a silky, fiber-rich bean puree and crisp green beans.",
     category: "highProtein",
     meal: "dinner",
-    servings: "4",
+    servings: "4 servings",
     servingsCount: 4,
     prep: "15 min",
     cook: "28 min",
@@ -687,7 +728,7 @@ const RECIPE_DATA = [
       "Lean turkey, black beans, and salsa baked into sweet pepper shells.",
     category: "highProtein",
     meal: "light-meal",
-    servings: "4",
+    servings: "4 servings",
     servingsCount: 4,
     prep: "15 min",
     cook: "25 min",
@@ -729,7 +770,11 @@ export const RECIPES: readonly Recipe[] = Object.freeze(
       ...recipe,
       nutrition: Object.freeze({ ...recipe.nutrition }),
       ingredients: Object.freeze(recipe.ingredients.map(parseIngredient)),
-      method: Object.freeze([...recipe.method]),
+      method: Object.freeze(
+        recipe.method.map((step) =>
+          typeof step === "string" ? step : Object.freeze({ ...step }),
+        ),
+      ),
     }),
   ),
 );
@@ -742,8 +787,18 @@ export function recipePath(recipe: Pick<Recipe, "slug">): string {
 
 export function recipeImagePath(
   recipe: Pick<Recipe, "slug" | "imageSlug">,
+  width: (typeof RECIPE_IMAGE_WIDTHS)[number] = 1536,
 ): string {
-  return `/images/recipes/${recipe.imageSlug ?? recipe.slug}.webp`;
+  const suffix = width === 1536 ? "" : `-${width}w`;
+  return `/images/recipes/${recipe.imageSlug ?? recipe.slug}${suffix}.webp`;
+}
+
+export function recipeImageSrcSet(
+  recipe: Pick<Recipe, "slug" | "imageSlug">,
+): string {
+  return RECIPE_IMAGE_WIDTHS.map(
+    (width) => `${recipeImagePath(recipe, width)} ${width}w`,
+  ).join(", ");
 }
 
 export function getRecipeBySlug(slug: string): Recipe | undefined {

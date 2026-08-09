@@ -5,6 +5,7 @@ import {
   isAnyAdPixelConfigured,
   isGaConfigured,
   isGoogleAdsConversionConfigured,
+  isGoogleAdsTagConfigured,
   isMetaPixelConfigured,
   readAdPixelConfig,
   trackGaPageView,
@@ -75,6 +76,7 @@ describe("ad-conversions", () => {
     const config = readAdPixelConfig();
     expect(isMetaPixelConfigured(config)).toBe(false);
     expect(isGoogleAdsConversionConfigured(config)).toBe(false);
+    expect(isGoogleAdsTagConfigured(config)).toBe(false);
     expect(isGaConfigured(config)).toBe(false);
     expect(isAnyAdPixelConfigured(config)).toBe(false);
   });
@@ -107,6 +109,25 @@ describe("ad-conversions", () => {
     const gtagArgs = JSON.stringify(gtag.mock.calls);
     expect(fbqArgs).not.toMatch(/@/);
     expect(gtagArgs).not.toMatch(/@/);
+  });
+
+  it("shares one Google tag loader across GA4 and Ads destinations", () => {
+    vi.stubEnv("VITE_GA_MEASUREMENT_ID", "G-TEST123");
+    vi.stubEnv("VITE_GOOGLE_ADS_ID", "AW-999888777");
+    const { scripts } = installDomStubs({ dataLayer: [] });
+
+    initAdPixels();
+
+    expect(scripts.size).toBe(1);
+    expect(scripts.get("beema-google-tag")?.src).toBe(
+      "https://www.googletagmanager.com/gtag/js?id=G-TEST123",
+    );
+    expect((window.dataLayer ?? []).filter(Array.isArray)).toEqual(
+      expect.arrayContaining([
+        ["config", "G-TEST123", { send_page_view: false }],
+        ["config", "AW-999888777"],
+      ]),
+    );
   });
 
   it("fires GA4 generate_lead and page_view with optional cta_id", () => {

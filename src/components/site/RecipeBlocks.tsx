@@ -19,6 +19,7 @@ import {
   RECIPE_CATEGORIES,
   nutritionEstimate,
   recipeImagePath,
+  recipeImageSrcSet,
   recipePath,
   type Recipe,
 } from "@/lib/recipes";
@@ -40,7 +41,12 @@ export function RecipeImage({
     recipe.imageAlt.charAt(0).toLowerCase() + recipe.imageAlt.slice(1);
 
   return (
-    <div className={cn("relative overflow-hidden bg-primary-soft", className)}>
+    <div
+      className={cn(
+        "relative min-w-0 max-w-full overflow-hidden bg-primary-soft",
+        className,
+      )}
+    >
       {failed ? (
         <div className="absolute inset-0 grid place-items-center bg-grad-hero p-6 text-center">
           <div>
@@ -54,21 +60,30 @@ export function RecipeImage({
           </div>
         </div>
       ) : (
-        <img
-          src={recipeImagePath(recipe)}
-          alt={`Illustrative image of ${imageDescription}`}
-          width={1536}
-          height={1024}
-          loading={eager ? "eager" : "lazy"}
-          fetchPriority={eager ? "high" : "auto"}
-          sizes={sizes}
-          className="h-full w-full object-cover"
-          onError={() => setFailed(true)}
-        />
+        <picture className="block h-full w-full">
+          <source
+            type="image/webp"
+            srcSet={recipeImageSrcSet(recipe)}
+            sizes={sizes}
+          />
+          <img
+            src={recipeImagePath(recipe)}
+            srcSet={recipeImageSrcSet(recipe)}
+            alt={`Illustrative image of ${imageDescription}`}
+            width={1536}
+            height={1024}
+            loading={eager ? "eager" : "lazy"}
+            fetchPriority={eager ? "high" : "auto"}
+            sizes={sizes}
+            className="h-full w-full object-cover"
+            onError={() => setFailed(true)}
+          />
+        </picture>
       )}
       {!failed && (
-        <span className="absolute bottom-3 right-3 rounded-full bg-background/90 px-3 py-1 text-xs font-medium text-foreground shadow-soft backdrop-blur-sm">
-          Illustrative image
+        <span className="absolute bottom-3 left-3 right-3 rounded-2xl bg-background/90 px-3 py-2 text-center text-xs font-medium leading-snug text-foreground shadow-soft backdrop-blur-sm sm:left-auto">
+          Illustrative, digitally generated image; not a photograph of the
+          prepared recipe.
         </span>
       )}
     </div>
@@ -88,7 +103,7 @@ export function RecipeCard({
     <Link
       to={recipePath(recipe)}
       search={servings === undefined ? {} : { servings }}
-      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-soft transition-all hover:-translate-y-1 hover:shadow-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="group flex h-full min-w-0 max-w-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-soft transition-all hover:-translate-y-1 hover:shadow-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <RecipeImage
         recipe={recipe}
@@ -136,7 +151,7 @@ function Notice({
     <div className="rounded-2xl border border-border bg-background/70 p-5">
       <div className="flex gap-3">
         <span className="mt-0.5 text-accent-foreground">{icon}</span>
-        <div>
+        <div className="min-w-0">
           <h3 className="font-semibold text-foreground">{title}</h3>
           <div className="mt-1 text-sm leading-relaxed text-muted-foreground">
             {children}
