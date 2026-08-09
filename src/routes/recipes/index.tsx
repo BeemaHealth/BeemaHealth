@@ -15,11 +15,12 @@ import {
   RECIPES,
   RECIPE_CATEGORIES,
   parseRecipeServings,
-  recipePath,
+  recipeImagePath,
   type MealType,
   type RecipeCategoryKey,
 } from "@/lib/recipes";
-import { breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
+import { recipeCollectionJsonLd } from "@/lib/recipe-seo";
+import { absoluteUrl, breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/recipes/")({
@@ -43,6 +44,30 @@ export const Route = createFileRoute("/recipes/")({
         content:
           "An illustrated collection of breakfast, lunch, dinner, and light-meal recipes for everyday nutrition needs.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: canonicalUrl("/recipes") },
+      {
+        property: "og:image",
+        content: absoluteUrl(recipeImagePath(RECIPES[9])),
+      },
+      {
+        property: "og:image:alt",
+        content: `Illustrative image of ${RECIPES[9].imageAlt.charAt(0).toLowerCase()}${RECIPES[9].imageAlt.slice(1)}`,
+      },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:title",
+        content: "Beema Health Recipe Collection",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Explore 12 practical breakfast, lunch, dinner, and light-meal recipes.",
+      },
+      {
+        name: "twitter:image",
+        content: absoluteUrl(recipeImagePath(RECIPES[9])),
+      },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/recipes") }],
     scripts: [
@@ -57,18 +82,7 @@ export const Route = createFileRoute("/recipes/")({
       },
       {
         type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "ItemList",
-          name: "Beema Health recipe collection",
-          numberOfItems: RECIPES.length,
-          itemListElement: RECIPES.map((recipe, index) => ({
-            "@type": "ListItem",
-            position: index + 1,
-            name: recipe.title,
-            url: canonicalUrl(recipePath(recipe)),
-          })),
-        }),
+        children: JSON.stringify(recipeCollectionJsonLd()),
       },
     ],
   }),

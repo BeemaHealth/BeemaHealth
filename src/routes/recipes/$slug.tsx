@@ -36,12 +36,8 @@ import {
   scaleForPeople,
   type Recipe,
 } from "@/lib/recipes";
-import {
-  SITE_URL,
-  absoluteUrl,
-  breadcrumbJsonLd,
-  canonicalUrl,
-} from "@/lib/seo";
+import { recipeJsonLd } from "@/lib/recipe-seo";
+import { absoluteUrl, breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/recipes/$slug")({
   validateSearch: (search: Record<string, unknown>): { servings?: number } => ({
@@ -60,8 +56,27 @@ export const Route = createFileRoute("/recipes/$slug")({
         { name: "description", content: recipe.description },
         { property: "og:title", content: recipe.title },
         { property: "og:description", content: recipe.description },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: canonicalUrl(recipePath(recipe)) },
         {
           property: "og:image",
+          content: absoluteUrl(recipeImagePath(recipe)),
+        },
+        {
+          property: "og:image:alt",
+          content: `Illustrative image of ${recipe.imageAlt.charAt(0).toLowerCase()}${recipe.imageAlt.slice(1)}`,
+        },
+        { name: "twitter:card", content: "summary_large_image" },
+        {
+          name: "twitter:title",
+          content: `${recipe.title} | Beema Health Recipes`,
+        },
+        {
+          name: "twitter:description",
+          content: recipe.description,
+        },
+        {
+          name: "twitter:image",
           content: absoluteUrl(recipeImagePath(recipe)),
         },
       ],
@@ -86,32 +101,6 @@ export const Route = createFileRoute("/recipes/$slug")({
   },
   component: RecipeDetailPage,
 });
-
-function recipeJsonLd(recipe: Recipe) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Recipe",
-    name: recipe.title,
-    description: recipe.description,
-    image: [absoluteUrl(recipeImagePath(recipe))],
-    url: canonicalUrl(recipePath(recipe)),
-    author: { "@id": `${SITE_URL}/#organization` },
-    publisher: { "@id": `${SITE_URL}/#organization` },
-    recipeCategory: MEAL_LABELS[recipe.meal],
-    recipeYield: recipe.servings,
-    prepTime: `PT${recipe.prepMinutes}M`,
-    cookTime: `PT${recipe.cookMinutes}M`,
-    totalTime: `PT${recipe.prepMinutes + recipe.cookMinutes}M`,
-    recipeIngredient: recipe.ingredients.map(
-      (ingredient) => ingredient.original,
-    ),
-    recipeInstructions: recipe.method.map((step, index) => ({
-      "@type": "HowToStep",
-      position: index + 1,
-      text: step,
-    })),
-  };
-}
 
 function RecipeDetailPage() {
   const recipe = Route.useLoaderData();

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
@@ -20,6 +20,8 @@ import {
   recipePath,
   scaleForPeople,
 } from "../recipes";
+import { recipeCollectionJsonLd, recipeJsonLd } from "../recipe-seo";
+import { SITE_URL } from "../seo";
 import { OVERFLOW, STRICT_FIELD_ATTACKS } from "./fixtures/malicious-payloads";
 
 describe("recipe collection", () => {
@@ -79,6 +81,18 @@ describe("recipe collection", () => {
   });
 
   it("uses canonical paths and predictable image filenames", () => {
+    const recipeImagesDirectory = resolve(
+      __dirname,
+      "../../../public/images/recipes",
+    );
+    const expectedImageNames = RECIPES.map(
+      (recipe) => `${recipe.imageSlug ?? recipe.slug}.webp`,
+    ).sort();
+
+    expect(readdirSync(recipeImagesDirectory).sort()).toEqual(
+      expectedImageNames,
+    );
+
     for (const recipe of RECIPES) {
       expect(recipe.slug).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
       expect(recipePath(recipe)).toBe(`/recipes/${recipe.slug}/`);
@@ -96,6 +110,11 @@ describe("recipe collection", () => {
           resolve(__dirname, `../../../public${recipeImagePath(recipe)}`),
         ).size,
       ).toBeGreaterThan(10_000);
+      expect(
+        statSync(
+          resolve(__dirname, `../../../public${recipeImagePath(recipe)}`),
+        ).size,
+      ).toBeLessThan(500_000);
     }
   });
 
@@ -366,6 +385,9 @@ describe("recipe compliance and SEO markup", () => {
     expect(detailRoute).toContain('trackPageViewed("recipe_detail")');
     expect(detailRoute).not.toMatch(/trackPageViewed\(`recipe:/);
     expect(hubRoute).toContain('trackPageViewed("recipes")');
+    expect(`${detailRoute}\n${hubRoute}`).not.toMatch(
+      /trackPageViewed\([^)]*(servings|multiplier|category|symptom|nutrition)/i,
+    );
   });
 
   it("includes the required review and symptom disclosures", () => {
@@ -391,15 +413,65 @@ describe("recipe compliance and SEO markup", () => {
   });
 
   it("uses ItemList and Recipe schema without unsupported clinical or nutrition claims", () => {
-    expect(hubRoute).toContain('"@type": "ItemList"');
-    expect(detailRoute).toContain('"@type": "Recipe"');
-    expect(detailRoute).toContain('"@type": "HowToStep"');
+    const collectionSchema = recipeCollectionJsonLd();
+    expect(collectionSchema["@type"]).toBe("ItemList");
+    expect(collectionSchema.numberOfItems).toBe(12);
+    expect(collectionSchema.itemListElement).toHaveLength(12);
+    expect(collectionSchema.itemListElement.map((item) => item.name)).toEqual(
+      RECIPES.map((recipe) => recipe.title),
+    );
+
+    for (const recipe of RECIPES) {
+      const schema = recipeJsonLd(recipe);
+      expect(schema["@type"]).toBe("Recipe");
+      expect(schema.url).toBe(`${SITE_URL}${recipePath(recipe)}`);
+      expect(schema.mainEntityOfPage).toBe(schema.url);
+      expect(schema.image).toEqual([`${SITE_URL}${recipeImagePath(recipe)}`]);
+      expect(schema.author).toMatchObject({
+        "@type": "Organization",
+        name: "Beema Health",
+      });
+      expect(schema.prepTime).toBe(`PT${recipe.prepMinutes}M`);
+      expect(schema.cookTime).toBe(`PT${recipe.cookMinutes}M`);
+      expect(schema.totalTime).toBe(
+        `PT${recipe.prepMinutes + recipe.cookMinutes}M`,
+      );
+      expect(schema.recipeYield).toBe(recipe.servings);
+      expect(schema.recipeIngredient).toEqual(
+        recipe.ingredients.map((ingredient) => ingredient.original),
+      );
+      expect(schema.recipeInstructions).toEqual(
+        recipe.method.map((step, index) => ({
+          "@type": "HowToStep",
+          position: index + 1,
+          text: step,
+        })),
+      );
+      expect(schema).not.toHaveProperty("nutrition");
+      expect(schema).not.toHaveProperty("aggregateRating");
+      expect(schema).not.toHaveProperty("review");
+      expect(schema).not.toHaveProperty("reviewedBy");
+    }
 
     const structuredDataSources = `${hubRoute}\n${detailRoute}`;
     expect(structuredDataSources).not.toContain("MedicalWebPage");
     expect(structuredDataSources).not.toContain("reviewedBy");
     expect(structuredDataSources).not.toContain("aggregateRating");
     expect(detailRoute).not.toMatch(/\bnutrition:\s*\{/);
+  });
+
+  it("sets base canonicals and route-specific social metadata", () => {
+    expect(hubRoute).toContain(
+      '{ property: "og:url", content: canonicalUrl("/recipes") }',
+    );
+    expect(hubRoute).toContain('name: "twitter:title"');
+    expect(detailRoute).toContain(
+      '{ property: "og:url", content: canonicalUrl(recipePath(recipe)) }',
+    );
+    expect(detailRoute).toContain('name: "twitter:title"');
+    expect(detailRoute).toContain(
+      'links: [{ rel: "canonical", href: canonicalUrl(recipePath(recipe)) }]',
+    );
   });
 
   it("keeps discovery contextual and clearly free to everyone", () => {
