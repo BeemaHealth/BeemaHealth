@@ -438,9 +438,15 @@ describe("recipe compliance and SEO markup", () => {
   });
 
   it("includes provenance, dated content, sources, and care education links", () => {
-    expect(normalizedBlocks).toContain(
+    expect(recipeBlocks).toContain(
+      "This collection may contain illustrative, digitally generated images.",
+    );
+    expect(hubRoute).toContain("RecipeImageDisclosure");
+    expect(detailRoute).toContain("RecipeImageDisclosure");
+    expect(recipeBlocks).not.toContain(
       "Illustrative, digitally generated image; not a photograph of the prepared recipe.",
     );
+    expect(recipeBlocks).not.toContain("Illustrative image of");
     expect(`${hubRoute}\n${detailRoute}`).toContain("Published August 9, 2026");
     expect(hubRoute).toContain("www.obesity.org/nutritional-priorities");
     expect(hubRoute).toContain("niddk.nih.gov/health-information");
@@ -461,11 +467,16 @@ describe("recipe compliance and SEO markup", () => {
     );
   });
 
-  it("labels generated assets as illustrative with explicit dimensions", () => {
-    expect(recipeBlocks).toContain("Illustrative image of");
-    expect(recipeBlocks).toContain("Illustrative image");
+  it("keeps descriptive dish alt text and explicit image dimensions", () => {
+    expect(recipeBlocks).toContain("alt={recipe.imageAlt}");
     expect(recipeBlocks).toContain("width={1536}");
     expect(recipeBlocks).toContain("height={1024}");
+    for (const recipe of RECIPES) {
+      expect(recipe.imageAlt.toLowerCase()).not.toContain("illustrative");
+      expect(recipe.imageAlt.toLowerCase()).not.toContain(
+        "digitally generated",
+      );
+    }
   });
 
   it("uses ItemList and Recipe schema without unsupported clinical or nutrition claims", () => {

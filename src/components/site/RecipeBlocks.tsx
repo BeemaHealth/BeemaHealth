@@ -37,8 +37,6 @@ export function RecipeImage({
   eager?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
-  const imageDescription =
-    recipe.imageAlt.charAt(0).toLowerCase() + recipe.imageAlt.slice(1);
 
   return (
     <div
@@ -69,7 +67,7 @@ export function RecipeImage({
           <img
             src={recipeImagePath(recipe)}
             srcSet={recipeImageSrcSet(recipe)}
-            alt={`Illustrative image of ${imageDescription}`}
+            alt={recipe.imageAlt}
             width={1536}
             height={1024}
             loading={eager ? "eager" : "lazy"}
@@ -80,13 +78,15 @@ export function RecipeImage({
           />
         </picture>
       )}
-      {!failed && (
-        <span className="absolute bottom-3 left-3 right-3 rounded-2xl bg-background/90 px-3 py-2 text-center text-xs font-medium leading-snug text-foreground shadow-soft backdrop-blur-sm sm:left-auto">
-          Illustrative, digitally generated image; not a photograph of the
-          prepared recipe.
-        </span>
-      )}
     </div>
+  );
+}
+
+export function RecipeImageDisclosure() {
+  return (
+    <p className="text-xs leading-relaxed text-muted-foreground">
+      This collection may contain illustrative, digitally generated images.
+    </p>
   );
 }
 

@@ -14,6 +14,7 @@ import {
   NutritionEstimate,
   RecipeComplianceNotice,
   RecipeImage,
+  RecipeImageDisclosure,
 } from "@/components/site/RecipeBlocks";
 import { Button } from "@/components/ui/button";
 import { trackPageViewed } from "@/lib/analytics";
@@ -415,6 +416,9 @@ function RecipeDetailPage() {
             <ArrowLeft className="size-4" aria-hidden />
             Back to all recipes
           </Link>
+          <div className="mt-6 border-t border-border pt-4">
+            <RecipeImageDisclosure />
+          </div>
         </div>
       </article>
     </MarketingLayout>

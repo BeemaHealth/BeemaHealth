@@ -6,6 +6,7 @@ import {
   RecipeCard,
   RecipeComplianceNotice,
   RecipeImage,
+  RecipeImageDisclosure,
 } from "@/components/site/RecipeBlocks";
 import { Button } from "@/components/ui/button";
 import { trackPageViewed } from "@/lib/analytics";
@@ -417,6 +418,9 @@ function RecipesPage() {
           </Button>
         </div>
       </section>
+      <div className="veya-container py-4">
+        <RecipeImageDisclosure />
+      </div>
     </MarketingLayout>
   );
 }
