@@ -142,7 +142,8 @@ function HowItWorksPage() {
         </div>
       </Section>
 
-      <div ref={stepsRef} className="relative">
+      {/* Clip parallax HexMotif (-right-16) so it can't widen the document. */}
+      <div ref={stepsRef} className="relative overflow-hidden">
         <motion.div
           aria-hidden
           className="pointer-events-none absolute -right-16 top-0 z-0 hidden w-72 text-primary/10 md:block md:w-96"
