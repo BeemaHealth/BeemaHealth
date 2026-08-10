@@ -86,7 +86,7 @@ function LearnIndexPage() {
           as="h1"
           eyebrow="Learn"
           title="Clear, judgment-free education"
-          description="Cited guides to help you understand lifestyle and medication approaches to weight management. Educational only, not medical advice."
+          description="Cited guides to help you understand lifestyle and medication approaches to weight management. Free to browse whether or not you're a Beema patient — no intake is required. Educational only, not medical advice."
         />
       </Section>
 
@@ -123,6 +123,16 @@ function LearnIndexPage() {
         <p className="mt-10 text-center text-sm text-muted-foreground">
           Educational content is for general information only and is not medical
           advice. Talk to a licensed clinician about your specific situation.
+        </p>
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          Also free:{" "}
+          <Link
+            to="/recipes/"
+            className="font-semibold text-foreground underline underline-offset-4"
+          >
+            our recipe collection
+          </Link>
+          .
         </p>
       </Section>
     </MarketingLayout>

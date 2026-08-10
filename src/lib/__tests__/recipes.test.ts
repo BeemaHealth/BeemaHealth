@@ -385,7 +385,7 @@ describe("recipe compliance and SEO markup", () => {
     "utf-8",
   );
   const homepageResource = readFileSync(
-    resolve(__dirname, "../../components/home/RecipeSpotlight.tsx"),
+    resolve(__dirname, "../../components/home/FreeResourcesSection.tsx"),
     "utf-8",
   );
   const faqRoute = readFileSync(
@@ -553,6 +553,12 @@ describe("recipe compliance and SEO markup", () => {
     expect(footer).not.toContain('to: "/recipes/"');
     expect(faqRoute).not.toContain('to="/recipes/"');
 
+    // Learn follows the same free-resource pattern: no primary-nav slot,
+    // discovered via the homepage spotlight and cross-links instead.
+    expect(header).not.toContain('to: "/learn/"');
+    expect(footer).not.toContain('to: "/learn/"');
+    expect(homepageResource).toContain('to="/learn/"');
+
     for (const source of [
       homepageResource,
       semaglutideRoute,
@@ -564,6 +570,7 @@ describe("recipe compliance and SEO markup", () => {
     }
 
     expect(normalizedHomepageResource).toContain("Free recipe collection");
+    expect(normalizedHomepageResource).toContain("Free educational guides");
     expect(normalizedHomepageResource).toContain("No intake is required");
     expect(normalizedWeightLossRoute).toContain(
       "free to browse whether or not",

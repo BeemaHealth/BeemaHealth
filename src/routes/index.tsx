@@ -10,7 +10,7 @@ import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
 import { HomeHero } from "@/components/home/HomeHero";
 import { TrustSignals } from "@/components/home/TrustSignals";
 import { TreatmentShowcase } from "@/components/home/TreatmentShowcase";
-import { RecipeSpotlight } from "@/components/home/RecipeSpotlight";
+import { FreeResourcesSection } from "@/components/home/FreeResourcesSection";
 import { MissionSection } from "@/components/home/MissionSection";
 import { FinalCTASection } from "@/components/home/FinalCTASection";
 
@@ -66,7 +66,7 @@ function HomePage() {
         <TrustSignals />
         <HowItWorksSteps />
         <TreatmentShowcase />
-        <RecipeSpotlight />
+        <FreeResourcesSection />
         <MissionSection />
         <FinalCTASection />
       </MarketingLayout>

@@ -302,6 +302,9 @@ function RecipeDetailPage() {
         <section className="bg-primary-soft/50 py-16">
           <div className="veya-container">
             <RecipeComplianceNotice />
+            <div className="mt-6">
+              <RecipeImageDisclosure />
+            </div>
           </div>
         </section>
 
@@ -379,6 +382,14 @@ function RecipeDetailPage() {
                   Tirzepatide education
                 </Link>
               </div>
+              <Link
+                to="/recipes/"
+                search={{ servings: initialPeople }}
+                className="mt-8 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground"
+              >
+                <ArrowLeft className="size-4" aria-hidden />
+                Back to all recipes
+              </Link>
             </div>
           </div>
         </section>
@@ -406,20 +417,6 @@ function RecipeDetailPage() {
             </Button>
           </div>
         </section>
-
-        <div className="veya-container py-8">
-          <Link
-            to="/recipes/"
-            search={{ servings: initialPeople }}
-            className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground"
-          >
-            <ArrowLeft className="size-4" aria-hidden />
-            Back to all recipes
-          </Link>
-          <div className="mt-6 border-t border-border pt-4">
-            <RecipeImageDisclosure />
-          </div>
-        </div>
       </article>
     </MarketingLayout>
   );

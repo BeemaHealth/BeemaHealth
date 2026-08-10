@@ -19,6 +19,7 @@ type FakeWindow = {
   };
   gtag?: (...args: unknown[]) => void;
   dataLayer?: unknown[];
+  location?: { href: string; pathname: string; search: string };
 };
 
 function installDomStubs(win: FakeWindow) {
@@ -52,6 +53,8 @@ function installDomStubs(win: FakeWindow) {
       insertBefore: (el: unknown) => el,
       prepend: (el: unknown) => el,
     },
+    referrer: "",
+    title: "",
   };
 
   vi.stubGlobal("window", win);
@@ -114,7 +117,14 @@ describe("ad-conversions", () => {
   it("shares one Google tag loader across GA4 and Ads destinations", () => {
     vi.stubEnv("VITE_GA_MEASUREMENT_ID", "G-TEST123");
     vi.stubEnv("VITE_GOOGLE_ADS_ID", "AW-999888777");
-    const { scripts } = installDomStubs({ dataLayer: [] });
+    const { scripts } = installDomStubs({
+      dataLayer: [],
+      location: {
+        href: "https://beemahealth.com/",
+        pathname: "/",
+        search: "",
+      },
+    });
 
     initAdPixels();
 
@@ -122,22 +132,34 @@ describe("ad-conversions", () => {
     expect(scripts.get("beema-google-tag")?.src).toBe(
       "https://www.googletagmanager.com/gtag/js?id=G-TEST123",
     );
-    expect((window.dataLayer ?? []).filter(Array.isArray)).toEqual(
+    const queued = (window.dataLayer ?? []).map((entry) =>
+      Array.from(entry as ArrayLike<unknown>),
+    );
+    expect(queued).toEqual(
       expect.arrayContaining([
-        ["config", "G-TEST123", { send_page_view: false }],
+        expect.arrayContaining([
+          "config",
+          "G-TEST123",
+          expect.objectContaining({ send_page_view: false }),
+        ]),
         ["config", "AW-999888777"],
       ]),
     );
   });
 
-  it("fires GA4 generate_lead and page_view with optional cta_id", () => {
+  it("fires GA4 page_view with path title, UTMs, and campaign_landing", () => {
     vi.stubEnv("VITE_GA_MEASUREMENT_ID", "G-TEST123");
 
     const gtag = vi.fn();
     installDomStubs({
       gtag,
-      location: { pathname: "/waitlist/", search: "?cta_id=nav_header" },
-    } as FakeWindow & { location: { pathname: string; search: string } });
+      location: {
+        href: "https://beemahealth.com/waitlist/?utm_source=instagram&utm_medium=social&utm_campaign=test_manual&utm_content=ig_post_test&cta_id=nav_header",
+        pathname: "/waitlist/",
+        search:
+          "?utm_source=instagram&utm_medium=social&utm_campaign=test_manual&utm_content=ig_post_test&cta_id=nav_header",
+      },
+    });
 
     trackGaPageView("waitlist", "nav_header");
     trackWaitlistLeadConversion();
@@ -146,8 +168,25 @@ describe("ad-conversions", () => {
       "event",
       "page_view",
       expect.objectContaining({
-        page_title: "waitlist",
+        page_title: "/waitlist/",
+        page_path: "/waitlist/",
+        screen_name: "waitlist",
+        page_location: expect.stringContaining("utm_source=instagram"),
+        utm_source: "instagram",
+        utm_medium: "social",
+        utm_campaign: "test_manual",
+        utm_content: "ig_post_test",
         cta_id: "nav_header",
+      }),
+    );
+    expect(gtag).toHaveBeenCalledWith(
+      "event",
+      "campaign_landing",
+      expect.objectContaining({
+        utm_source: "instagram",
+        utm_content: "ig_post_test",
+        landing_page: "waitlist",
+        page_path: "/waitlist/",
       }),
     );
     expect(gtag).toHaveBeenCalledWith("event", "generate_lead", {

@@ -14,9 +14,12 @@
  * When any ID is missing, helpers no-op (safe for local/dev).
  * Do not pass email, name, or other PHI into these events.
  *
- * Without a backend, GA4 is how you see *all* visitors (including people who
- * never join the waitlist) and which UTM / social links drove them. Meta Pixel
- * and Google Ads conversion tags are for paid campaigns + Lead events.
+ * Browser reality (cannot be "fixed" in app JS alone):
+ *   - Brave Shields / DuckDuckGo / Safari Private often block googletagmanager.com
+ *     entirely — no page_view will appear in GA for those visits.
+ *   - Chrome (and Safari non-private, often) will record normally.
+ *   - For near-complete coverage without a backend API, put Cloudflare in front
+ *     and proxy GA first-party, or add a privacy analytics tool (e.g. Plausible).
  */
 
 import { GOOGLE_ADS_ID, isGtmProductionHost } from "@/lib/gtm";
@@ -96,8 +99,10 @@ function injectScript(src: string, id: string): void {
 function ensureGtagStub(): void {
   window.dataLayer = window.dataLayer || [];
   if (!window.gtag) {
-    window.gtag = function gtag(...args: unknown[]) {
-      window.dataLayer!.push(args);
+    // Must push Arguments (not a rest-array) so gtag.js can replay the queue.
+    window.gtag = function gtag() {
+      // eslint-disable-next-line prefer-rest-params -- Google gtag queue contract
+      window.dataLayer!.push(arguments);
     };
   }
 }
@@ -127,8 +132,62 @@ export function ensureMetaPixel(config = readAdPixelConfig()): void {
 }
 
 /**
+ * Map utm_* query params into gtag campaign / event fields.
+ */
+export function readCampaignFromLocation(
+  search: string = typeof window !== "undefined" ? window.location.search : "",
+): {
+  source?: string;
+  medium?: string;
+  name?: string;
+  content?: string;
+} {
+  const params = new URLSearchParams(search);
+  const pick = (key: string) => {
+    const val = params.get(key)?.trim();
+    return val ? val.slice(0, 100) : undefined;
+  };
+  return {
+    source: pick("utm_source"),
+    medium: pick("utm_medium"),
+    name: pick("utm_campaign"),
+    content: pick("utm_content"),
+  };
+}
+
+function campaignFieldsForGtag(search?: string) {
+  const c = readCampaignFromLocation(search);
+  if (!c.source && !c.medium && !c.name && !c.content) return {};
+  return {
+    source: c.source,
+    medium: c.medium,
+    campaign: c.name,
+    content: c.content,
+    utm_source: c.source,
+    utm_medium: c.medium,
+    utm_campaign: c.name,
+    utm_content: c.content,
+    campaign_source: c.source,
+    campaign_medium: c.medium,
+    campaign_name: c.name,
+    campaign_content: c.content,
+  };
+}
+
+function applyCampaignToGtag(): void {
+  const c = readCampaignFromLocation();
+  if (!c.source && !c.medium && !c.name && !c.content) return;
+  if (typeof window.gtag !== "function") return;
+  window.gtag("set", "campaign", {
+    ...(c.source ? { source: c.source } : {}),
+    ...(c.medium ? { medium: c.medium } : {}),
+    ...(c.name ? { name: c.name } : {}),
+    ...(c.content ? { content: c.content } : {}),
+  });
+}
+
+/**
  * Load gtag.js once for Google Ads and/or GA4.
- * Both share the same stub; each ID gets its own gtag('config', …).
  */
 export function ensureGoogleTag(config = readAdPixelConfig()): void {
   if (typeof window === "undefined") return;
@@ -147,8 +206,17 @@ export function ensureGoogleTag(config = readAdPixelConfig()): void {
   window.gtag!("js", new Date());
 
   if (needsGa) {
-    // send_page_view: false — SPA routes fire page_view via trackGaPageView
-    window.gtag!("config", config.gaMeasurementId, { send_page_view: false });
+    applyCampaignToGtag();
+    const campaign = campaignFieldsForGtag();
+    const debugMode =
+      new URLSearchParams(window.location.search).get("ga_debug") === "1";
+    window.gtag!("config", config.gaMeasurementId, {
+      send_page_view: false,
+      page_location: window.location.href,
+      page_path: window.location.pathname,
+      ...(debugMode ? { debug_mode: true } : {}),
+      ...campaign,
+    });
   }
   if (needsAds) {
     window.gtag!("config", config.googleAdsId);
@@ -167,9 +235,11 @@ export function initAdPixels(): void {
 }
 
 /**
- * SPA page view for GA4. Pass optional cta_id so on-site button attribution
- * shows up in Explorations. UTMs are attributed automatically by GA from the
- * landing URL — you do not need a backend for that.
+ * SPA page view for GA4.
+ *
+ * `page_title` is the URL path (`/` or `/waitlist/`) so Realtime is readable.
+ * Logical route key stays in `screen_name` (home, waitlist, …).
+ * UTM fields are sent explicitly for DebugView / campaign_landing.
  */
 export function trackGaPageView(page: string, ctaId?: string): void {
   const config = readAdPixelConfig();
@@ -177,16 +247,31 @@ export function trackGaPageView(page: string, ctaId?: string): void {
   ensureGoogleTag(config);
   if (typeof window.gtag !== "function") return;
 
-  const path =
-    typeof window !== "undefined"
-      ? `${window.location.pathname}${window.location.search}`
-      : `/${page}`;
+  applyCampaignToGtag();
+  const campaign = campaignFieldsForGtag();
+  const pathOnly = window.location.pathname || "/";
 
   window.gtag("event", "page_view", {
-    page_title: page,
-    page_path: path,
+    page_title: pathOnly,
+    page_location: window.location.href,
+    page_path: pathOnly,
+    page_referrer: document.referrer || undefined,
+    screen_name: page,
+    ...campaign,
     ...(ctaId ? { cta_id: ctaId } : {}),
   });
+
+  // Easy to find under Realtime → Event count (all recent users, not DebugView-only).
+  if (campaign.utm_source || campaign.utm_medium) {
+    window.gtag("event", "campaign_landing", {
+      utm_source: campaign.utm_source ?? "(none)",
+      utm_medium: campaign.utm_medium ?? "(none)",
+      utm_campaign: campaign.utm_campaign ?? "(none)",
+      utm_content: campaign.utm_content ?? "(none)",
+      landing_page: page,
+      page_path: pathOnly,
+    });
+  }
 }
 
 /**

@@ -313,6 +313,9 @@ function RecipesPage() {
       <section className="bg-primary-soft/50 py-16">
         <div className="veya-container">
           <RecipeComplianceNotice scope="collection" />
+          <div className="mt-6">
+            <RecipeImageDisclosure />
+          </div>
           <div className="mt-8 rounded-3xl border border-border bg-background p-6 md:p-8">
             <h2 className="text-2xl font-semibold text-foreground">
               Sources and evidence
@@ -373,6 +376,12 @@ function RecipesPage() {
             </p>
             <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3">
               <Link
+                to="/learn/"
+                className="font-semibold text-foreground underline underline-offset-4"
+              >
+                Free educational guides
+              </Link>
+              <Link
                 to="/weight-loss/"
                 className="font-semibold text-foreground underline underline-offset-4"
               >
@@ -418,9 +427,6 @@ function RecipesPage() {
           </Button>
         </div>
       </section>
-      <div className="veya-container py-4">
-        <RecipeImageDisclosure />
-      </div>
     </MarketingLayout>
   );
 }

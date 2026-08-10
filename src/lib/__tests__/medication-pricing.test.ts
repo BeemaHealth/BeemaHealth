@@ -69,7 +69,7 @@ describe("medication-pricing", () => {
 
   it("balances both medications in short and hero dual lines", () => {
     expect(dualCompoundedShortPricingLine()).toBe(
-      "Semaglutide $199/mo · Tirzepatide from $199/mo",
+      "Semaglutide from $99/mo · Tirzepatide from $199/mo",
     );
     expect(dualCompoundedPromoShortPricingLine()).toBe(
       "Semaglutide $99 then $199/mo · Tirzepatide 3-mo starter $597 or $297/mo",

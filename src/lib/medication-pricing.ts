@@ -154,14 +154,17 @@ export function formatStartingAtPerMonth(
 
 /**
  * Concise dual-med teaser for checklist / marquee / footer chips.
- * e.g. "Semaglutide $199/mo · Tirzepatide from $199/mo"
+ * Semaglutide leads with the promo first-month rate ($99 with code on a
+ * 3-month plan); tirzepatide leads with the starter-pack monthly rate.
+ * e.g. "Semaglutide from $99/mo · Tirzepatide from $199/mo"
  */
 export function dualCompoundedShortPricingLine(): string {
+  const sema = COMPOUNDED_SEMAGLUTIDE_PRICING;
   const tirz = COMPOUNDED_TIRZEPATIDE_PRICING;
   const tirzLead = tirz.starterPack
     ? `from $${tirz.starterPack.monthlyEquivalentUsd}/mo`
     : `$${tirz.monthlyUsd}/mo`;
-  return `Semaglutide $${COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd}/mo · Tirzepatide ${tirzLead}`;
+  return `Semaglutide from $${promoFirstMonthUsd(sema)}/mo · Tirzepatide ${tirzLead}`;
 }
 
 /**

@@ -65,9 +65,28 @@ Bask data layer notes: `sessionId`, `eventModel.screen_name`, `eventModel.userId
 | `VITE_GOOGLE_ADS_CONVERSION_LABEL` | Conversion label — with Ads ID, fires `gtag('event','conversion')` on submit                            |
 | `VITE_WAITLIST_DISPLAY_COUNT`      | Optional override for legacy waitlist social-proof number                                               |
 
-If IDs are unset, helpers no-op (safe for local/dev). Do **not** send email, name, or other PHI to pixel/gtag calls. Pixel IDs are public client config — still do not commit production secrets adjacent to them in shared docs.
+If IDs are unset, helpers no-op (safe for local/dev). Do **not** send email, name, or other PHI to pixel/gtag calls.
 
-After a successful Formspree waitlist submit, `trackWaitlistSubmit("waitlist")` records a first-party event (no-ops without API), fires Meta `Lead` / Google Ads conversion / GA4 `generate_lead`, and Formspree receives hidden attribution fields (`utm_*`, `cta_id`, `referrer`, `landing_path`) from `getAttributionForSubmit()`.
+### Browser coverage (important)
+
+GA loads from `googletagmanager.com` / `google-analytics.com`. Privacy browsers **block those domains by design** — app code cannot force the hit through:
+
+| Browser | Typical GA result |
+|---------|-------------------|
+| Chrome (normal / Incognito) | Works |
+| Safari (normal) | Often works; ITP limits cookies |
+| Safari Private / Advanced Tracking Protection | Often **blocked entirely** |
+| Brave (Shields up) | **Blocked** unless user disables Shields for the site |
+| DuckDuckGo browser app | **Blocked** by default |
+
+For near-complete visit counts across those browsers (frontend-only), use a **first-party proxy** (e.g. Cloudflare Worker / Zaraz in front of `beemahealth.com`) or a privacy analytics product (e.g. Plausible) alongside GA. Formspree still captures **waitlist joiners** with UTMs regardless of GA blocking.
+
+### What GA page titles mean
+
+`trackGaPageView` sets `page_title` / `page_path` to the URL path (`/` or `/waitlist/`) so Realtime is readable. Logical route keys (`home`, `waitlist`) go in `screen_name`. With UTMs present, a `campaign_landing` event also fires (`utm_source`, `utm_content`, …) — use Realtime → Event count → `campaign_landing` (or DebugView with `?ga_debug=1`) to inspect them. Prefer turning **off** Enhanced measurement “Page changes based on browser history” for this SPA to avoid duplicate page_views.
+
+After a successful Formspree waitlist submit, `trackWaitlistSubmit("waitlist")` records a first-party event (no-ops without API), fires Meta `Lead` / Google Ads conversion / GA4 `generate_lead`, and Formspree receives attribution fields from `getAttributionForSubmit()`.
+
 
 ## CTA attribution
 

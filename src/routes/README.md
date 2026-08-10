@@ -34,7 +34,7 @@ list is maintained in `public/sitemap.xml` and guarded by
 | How it works | `/how-it-works` | Live |
 | About | `/about` | Live |
 | FAQ | `/faq` | Live |
-| Learn | `/learn` | Live (educational hub) |
+| Learn | `/learn` | Live (educational hub) — not in header/footer nav; discovered via the homepage free-resources spotlight, cross-links from `/recipes`, and SEO, same pattern as recipes |
 | Learn article | `/learn/initial-research` | Live |
 | Safety | `/safety` | Live |
 | Contact | `/contact` | Live |
