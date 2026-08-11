@@ -32,6 +32,8 @@ Key facts:
 - [How it works](https://beemahealth.com/how-it-works/): step-by-step care process
 - [Safety](https://beemahealth.com/safety/): side effects, contraindications, and clinical safeguards
 - [FAQ](https://beemahealth.com/faq/): common questions about pricing, eligibility, medications, shipping, and refills
+- [Learn](https://beemahealth.com/learn/): educational guides on weight management
+- [Traditional vs. GLP-1 weight loss](https://beemahealth.com/learn/initial-research/): evidence-based comparison of lifestyle and GLP-1-assisted approaches
 - [About](https://beemahealth.com/about/): company and clinical approach
 - [Contact](https://beemahealth.com/contact/): support channels
 
