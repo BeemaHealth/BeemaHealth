@@ -19,7 +19,7 @@
 | Native size | 73×79 (LegitScript: don’t shrink below this) |
 | Display size | See `LEGITSCRIPT_SEAL_WIDTH` / `HEIGHT` in `src/lib/legitscript.ts` (~1.25× native on the hero) |
 
-Placement today: floating seal on the homepage hero (beside the headline on mobile; top-left of the hexagon photo on desktop). Reusable anywhere via `LegitScriptSeal`.
+Placement today: floating seal on the homepage hero (beside the headline on mobile; top-left of the hexagon photo on desktop), and static seal on the `/glp-1` ads landing hero. Reusable anywhere via `LegitScriptSeal`.
 
 ## Launch architecture
 

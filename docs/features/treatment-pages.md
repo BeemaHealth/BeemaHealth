@@ -20,6 +20,7 @@ Product photography: LegitScript review preferred colour vials without a Beema w
 |-------|------|-------|
 | `/tirzepatide` | `src/routes/tirzepatide.tsx` | Compounded tirzepatide landing page |
 | `/semaglutide` | `src/routes/semaglutide.tsx` | Compounded semaglutide landing page |
+| `/glp-1` | `src/routes/glp-1.tsx` | Category/ads landing — Houston + cash-pay GLP-1 overview; LegitScript seal on hero; links to both drug pages |
 | `/weight-loss` | `src/routes/weight-loss.tsx` | Program overview page — linked from nav/footer, see below |
 
 Shared building blocks (pricing card, comparison table, FAQ accordion, breadcrumb) live in `src/components/site/TreatmentPageBlocks.tsx`. Copy/data (steps, FAQ items, eligibility bullets) stays local to each route file — do not extract it into a shared data file, the two pages are meant to have genuinely distinct copy.
@@ -40,7 +41,7 @@ If a future change needs to re-orphan or retire this page, that's a deliberate c
 
 ## Nav: "Weight Loss" dropdown
 
-`SiteHeader.tsx` renders "Weight Loss" as a dropdown listing `WEIGHT_LOSS_ITEMS` — currently the `/weight-loss` overview plus Compounded Tirzepatide and Compounded Semaglutide — via two separate components since hover and tap don't behave the same way:
+`SiteHeader.tsx` renders "Weight Loss" as a dropdown listing `WEIGHT_LOSS_ITEMS` — currently the `/weight-loss` overview, `/glp-1` category page, Compounded Tirzepatide, and Compounded Semaglutide — via two separate components since hover and tap don't behave the same way:
 
 - **Desktop** — `WeightLossNavDropdown`, a hand-rolled hover dropdown (deliberately not Radix `DropdownMenu`; see the comment above it for why Radix's Popper positioning caused an open/close flicker).
 - **Mobile** — `MobileWeightLossDropdown`, a tap-to-expand disclosure inside the mobile menu (see `docs/features/homepage.md` for the `CircleRevealMenu` shell it lives in). Local `expanded` state collapses it back down every time the mobile menu reopens; the reveal/collapse is animated (Motion `AnimatePresence` + height/opacity), matching the site's other transitions.
@@ -49,13 +50,14 @@ Add new medication pages to `WEIGHT_LOSS_ITEMS` (and to `SiteFooter.tsx`'s `COLU
 
 ## Medication cards
 
-`TreatmentShowcase.tsx` (homepage) and `TreatmentLineup.tsx` (`/weight-loss` page) each render one card per medication. Both cards are full-card `<Link>`s (not nested interactive elements) pointing at that medication's own page (`/tirzepatide/`, `/semaglutide/`) — never at `/weight-loss/` itself (that would be a self-link on the `/weight-loss` page and redundant elsewhere). CTA copy is `Explore {treatment.name}` (e.g. "Explore Compounded Tirzepatide"). These two files still duplicate their own local `TREATMENTS` array (pre-existing pattern) — add a new medication to both when it gets its own page.
+`TreatmentShowcase.tsx` (homepage) and `TreatmentLineup.tsx` (`/weight-loss` page) each render one card per medication. Both cards are full-card `<Link>`s (not nested interactive elements) pointing at that medication's own page (`/tirzepatide/`, `/semaglutide/`) — never at `/weight-loss/` itself (that would be a self-link on the `/weight-loss` page and redundant elsewhere). CTA copy is `Explore {treatment.name}` (e.g. "Explore Compounded Tirzepatide"). These two files still duplicate their own local `TREATMENTS` array (pre-existing pattern) — add a new medication to both when it gets its own page. The homepage TreatmentShowcase also links contextually to `/glp-1/` ("Explore GLP-1 care for Houston").
 
 ## Structured data
 
 All three treatment-adjacent pages now carry page-specific JSON-LD alongside the sitewide `MedicalOrganization`/`WebSite` schema (`ORGANIZATION_JSONLD`/`WEBSITE_JSONLD` in `src/lib/seo.ts`, rendered in the root layout):
 
 - `/tirzepatide`, `/semaglutide` — `BreadcrumbList` + `FAQPage` (unchanged; matches the visible `TreatmentBreadcrumb` and FAQ accordion on each page)
+- `/glp-1` — `BreadcrumbList` + `FAQPage` + `serviceJsonLd()` (Houston/cash-pay GLP-1 category page for ads + SEO; visible FAQ matches JSON-LD)
 - `/weight-loss` — `BreadcrumbList` + `serviceJsonLd()` (a `Service` describing the program itself; no visible FAQ content, so no `FAQPage`)
 - `/how-it-works`, `/safety` — `BreadcrumbList` + `medicalWebPageJsonLd()` (a `MedicalWebPage` describing the informational content; no visible FAQ content, so no `FAQPage`)
 
@@ -95,6 +97,7 @@ const cta = resolveCta(CTA_IDS.tirzepatide_hero);
 | File | Role |
 |------|------|
 | `src/routes/tirzepatide.tsx`, `src/routes/semaglutide.tsx` | The two treatment pages |
+| `src/routes/glp-1.tsx` | Houston / cash-pay GLP-1 category page (ads + SEO) |
 | `src/components/site/TreatmentPageBlocks.tsx` | Shared breadcrumb, pricing card, comparison table, FAQ accordion |
 | `src/lib/medication-pricing.ts` | Single source of truth for pricing — never hardcode `$` amounts elsewhere |
 | `src/lib/cta-ids.ts` | `CTA_IDS`, `resolveCta()` — the CTA switchboard |

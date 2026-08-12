@@ -23,6 +23,7 @@ const COLUMNS = [
     title: "Care",
     links: [
       { label: "Weight Loss Program", to: "/weight-loss/" },
+      { label: "GLP-1 Care", to: "/glp-1/" },
       { label: "Compounded Tirzepatide", to: "/tirzepatide/" },
       { label: "Compounded Semaglutide", to: "/semaglutide/" },
       { label: "How it works", to: "/how-it-works/" },

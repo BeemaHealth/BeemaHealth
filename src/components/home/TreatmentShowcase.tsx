@@ -102,6 +102,15 @@ export function TreatmentShowcase() {
           pack ${TIRZ_STARTER.totalUsd} for {TIRZ_STARTER.dosePathLabel}, or $
           {COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo for maintenance.
         </p>
+        <p className="mt-4">
+          <Link
+            to="/glp-1/"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-foreground underline-offset-4 hover:underline"
+          >
+            Explore GLP-1 care for Houston
+            <ArrowRight className="size-4" aria-hidden />
+          </Link>
+        </p>
 
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
           {TREATMENTS.map((treatment, index) => (

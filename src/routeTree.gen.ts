@@ -25,6 +25,7 @@ import { Route as LearnRouteImport } from './routes/learn'
 import { Route as IntakeRouteImport } from './routes/intake'
 import { Route as InsuranceRouteImport } from './routes/insurance'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as Glp1RouteImport } from './routes/glp-1'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -146,6 +147,11 @@ const InsuranceRoute = InsuranceRouteImport.update({
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Glp1Route = Glp1RouteImport.update({
+  id: '/glp-1',
+  path: '/glp-1',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -373,6 +379,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
+  '/glp-1': typeof Glp1Route
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
   '/intake': typeof IntakeRoute
@@ -432,6 +439,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
+  '/glp-1': typeof Glp1Route
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
   '/intake': typeof IntakeRoute
@@ -488,6 +496,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
+  '/glp-1': typeof Glp1Route
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
   '/intake': typeof IntakeRoute
@@ -550,6 +559,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/eligibility'
     | '/faq'
+    | '/glp-1'
     | '/how-it-works'
     | '/insurance'
     | '/intake'
@@ -609,6 +619,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/eligibility'
     | '/faq'
+    | '/glp-1'
     | '/how-it-works'
     | '/insurance'
     | '/intake'
@@ -664,6 +675,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/eligibility'
     | '/faq'
+    | '/glp-1'
     | '/how-it-works'
     | '/insurance'
     | '/intake'
@@ -725,6 +737,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   EligibilityRoute: typeof EligibilityRoute
   FaqRoute: typeof FaqRoute
+  Glp1Route: typeof Glp1Route
   HowItWorksRoute: typeof HowItWorksRoute
   InsuranceRoute: typeof InsuranceRoute
   IntakeRoute: typeof IntakeRoute
@@ -866,6 +879,13 @@ declare module '@tanstack/react-router' {
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glp-1': {
+      id: '/glp-1'
+      path: '/glp-1'
+      fullPath: '/glp-1'
+      preLoaderRoute: typeof Glp1RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -1278,6 +1298,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRouteWithChildren,
   EligibilityRoute: EligibilityRoute,
   FaqRoute: FaqRoute,
+  Glp1Route: Glp1Route,
   HowItWorksRoute: HowItWorksRoute,
   InsuranceRoute: InsuranceRoute,
   IntakeRoute: IntakeRoute,

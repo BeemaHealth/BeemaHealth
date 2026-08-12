@@ -17,6 +17,7 @@ const EXPECTED_PATHS = [
   "/",
   "/tirzepatide/",
   "/semaglutide/",
+  "/glp-1/",
   "/how-it-works/",
   "/weight-loss/",
   "/recipes/",

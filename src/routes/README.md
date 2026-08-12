@@ -31,6 +31,9 @@ list is maintained in `public/sitemap.xml` and guarded by
 |------|-------|--------|
 | Home | `/` | Live |
 | Weight Loss | `/weight-loss` | Live |
+| GLP-1 Care | `/glp-1` | Live (Houston / cash-pay ads + SEO category page) |
+| Compounded Tirzepatide | `/tirzepatide` | Live |
+| Compounded Semaglutide | `/semaglutide` | Live |
 | How it works | `/how-it-works` | Live |
 | About | `/about` | Live |
 | FAQ | `/faq` | Live |

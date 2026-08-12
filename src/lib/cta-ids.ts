@@ -11,7 +11,11 @@ export const CTA_IDS = {
   pricing_footer: "pricing_footer",
   weight_loss_hero: "weight_loss_hero",
   weight_loss_footer: "weight_loss_footer",
+  glp1_hero: "glp1_hero",
+  glp1_mid: "glp1_mid",
+  glp1_footer: "glp1_footer",
   tirzepatide_hero: "tirzepatide_hero",
+
   tirzepatide_footer: "tirzepatide_footer",
   tirzepatide_bmi: "tirzepatide_bmi",
   semaglutide_hero: "semaglutide_hero",
