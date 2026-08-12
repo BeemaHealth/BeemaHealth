@@ -34,7 +34,7 @@ function mockLocalStorage(initial: Record<string, string> = {}): {
       store.clear();
     }),
   };
-  // Vitest uses environment: "node" — stub a minimal window for storage APIs.
+  // Vitest uses environment: "node" - stub a minimal window for storage APIs.
   vi.stubGlobal("window", { localStorage: localStorageMock });
   return { store, localStorageMock };
 }

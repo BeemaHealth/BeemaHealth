@@ -103,7 +103,7 @@ function LandingPageRoute() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      {/* Minimal nav — no distractions on a landing page */}
+      {/* Minimal nav - no distractions on a landing page */}
       <header className="border-b border-border bg-background px-6 py-4">
         <Link to="/" className="text-xl font-bold text-foreground">
           Beema <span className="text-accent-foreground">Health</span>

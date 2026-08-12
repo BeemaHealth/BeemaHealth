@@ -72,7 +72,7 @@ export function LineReveal({
  * and the next one in every `interval` ms. `layout` on the outer pill
  * smooths the width change as message lengths differ. Rotation pauses on
  * hover/focus so a reader isn't fighting the swap mid-read, and freezes on
- * the first message under reduced motion — the same settled-state
+ * the first message under reduced motion - the same settled-state
  * convention as `Marquee`/`CountUp` above.
  */
 export function RotatingBadge({
@@ -167,7 +167,7 @@ export function Marquee({
 /**
  * Animated count-up that runs once when scrolled into view. Renders the
  * final value immediately under reduced motion. Use only for numbers that
- * already exist in approved copy — never invent stats.
+ * already exist in approved copy - never invent stats.
  */
 export function CountUp({
   to,

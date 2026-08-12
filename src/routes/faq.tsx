@@ -77,7 +77,7 @@ function FaqPage() {
 
   const reduceMotion = useReducedMotion();
 
-  // Single scroll-linked decorative accent for the list section — a lone
+  // Single scroll-linked decorative accent for the list section - a lone
   // hexagon drifting a little slower than the page scrolls.
   const listRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({

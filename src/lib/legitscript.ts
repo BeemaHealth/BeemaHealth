@@ -1,6 +1,6 @@
 /**
  * Single source of truth for LegitScript certification seal data.
- * Change the verify URL, seal image, or display size here — consumers
+ * Change the verify URL, seal image, or display size here - consumers
  * (`LegitScriptSeal`, tests) all read from this module.
  *
  * Native asset is 73×79; we display a modest step up for hero prominence.

@@ -234,7 +234,7 @@ function IntakeFlowInner({ mode }: { mode: "funnel" | "portal" }) {
           });
         }
       } catch {
-        // Non-blocking — user can still upload on this visit.
+        // Non-blocking - user can still upload on this visit.
       }
     })();
     return () => {

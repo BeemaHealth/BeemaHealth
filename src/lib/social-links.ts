@@ -3,9 +3,9 @@ import { Facebook, Instagram } from "lucide-react";
 import { RedditGlyph, XGlyph } from "@/components/site/primitives";
 
 /**
- * Real, active Beema Health accounts — mirrors ORGANIZATION_JSONLD.sameAs in
+ * Real, active Beema Health accounts - mirrors ORGANIZATION_JSONLD.sameAs in
  * `src/lib/seo.ts`. LinkedIn is intentionally absent: the current account may
- * be a private personal profile rather than a public company page — re-add
+ * be a private personal profile rather than a public company page - re-add
  * once a proper company page exists. TikTok is asserted in sameAs for
  * schema/GEO purposes but left off this list: lucide has no brand glyph for
  * it, and a mismatched icon style would look worse than omitting it.
@@ -17,7 +17,7 @@ export type SocialLink = {
   /**
    * Brand-accurate color, hardcoded on purpose: these are fixed external
    * brand identities (not part of Beema's own palette), so they don't
-   * belong in design-tokens.ts. Applied at rest, not just on hover — omitted
+   * belong in design-tokens.ts. Applied at rest, not just on hover - omitted
    * for X, whose current mark is monochrome, so it keeps the row's neutral
    * default instead of an inaccurate tint.
    */

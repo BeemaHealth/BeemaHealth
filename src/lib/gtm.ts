@@ -1,12 +1,12 @@
 /**
- * Google Tag Manager + Google Ads tag — marketing site installs and Bask
+ * Google Tag Manager + Google Ads tag - marketing site installs and Bask
  * intake handoff events.
  *
  * Container / Ads IDs are public by design (visible in page source). Not secrets.
  * Loads only on the production hostname so local/preview never fire real tags.
  */
 
-/** Public GTM container — same ID pasted into Bask → Integrations. */
+/** Public GTM container - same ID pasted into Bask → Integrations. */
 export const GTM_CONTAINER_ID = "GTM-MHHJ44GF" as const;
 
 /** Google Ads destination configured by the shared gtag.js loader. */
@@ -51,7 +51,7 @@ export function isBaskIntakeUrl(url: string): boolean {
 
 /**
  * Push intake_handoff to dataLayer immediately before navigating to Bask.
- * Only `event` + `cta_location` — never email, phone, name, or form values.
+ * Only `event` + `cta_location` - never email, phone, name, or form values.
  */
 export function trackIntakeHandoff(ctaLocation: string): void {
   if (typeof window === "undefined") return;

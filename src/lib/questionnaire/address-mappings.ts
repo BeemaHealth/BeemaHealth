@@ -24,7 +24,7 @@ export type AddressSubFieldMapping = {
 
 /** Beema Health intake / profile targets for address sub-fields. */
 export const ADDRESS_BACKEND_FIELD_OPTIONS = [
-  { value: "", label: "— none —" },
+  { value: "", label: " - none - " },
   { value: "intake.identity.address", label: "Intake · identity · street" },
   { value: "intake.identity.city", label: "Intake · identity · city" },
   { value: "intake.identity.state", label: "Intake · identity · state" },
@@ -183,5 +183,5 @@ export function addressBackendLabelForValue(value: string): string {
 
 export function belugaLabelForValue(value: string): string {
   const match = BELUGA_FIELD_OPTIONS.find((o) => o.value === value)?.label;
-  return match ?? (value || "— none —");
+  return match ?? (value || " - none - ");
 }

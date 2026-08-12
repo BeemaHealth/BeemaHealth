@@ -2,7 +2,7 @@
  * Live production redirect matrix for beemahealth.com.
  *
  * Run: `npm run test:seo-live`
- * (Skipped during normal `npm test` — needs network to GitHub Pages.)
+ * (Skipped during normal `npm test` - needs network to GitHub Pages.)
  *
  * Asserts:
  * - Canonical HTTPS apex returns 200 with no Location (never a self-redirect)

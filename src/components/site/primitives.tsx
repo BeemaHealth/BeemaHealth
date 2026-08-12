@@ -177,7 +177,7 @@ export function RedditGlyph(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-/** Hexagon-clipped icon chip — nature's most efficient shape, brand motif. */
+/** Hexagon-clipped icon chip - nature's most efficient shape, brand motif. */
 export function HexBadge({
   children,
   className,
@@ -198,7 +198,7 @@ export function HexBadge({
 }
 
 /**
- * Infinity linework motif (the bee's wings) — decorative only.
+ * Infinity linework motif (the bee's wings) - decorative only.
  * Inherits `currentColor`; size with width/height classes.
  *
  * `animateDraw` traces the stroke in as it scrolls into view (Motion
@@ -246,7 +246,7 @@ export function InfinityMotif({
   );
 }
 
-/** Hexagon outline motif — decorative only. Inherits `currentColor`. */
+/** Hexagon outline motif - decorative only. Inherits `currentColor`. */
 export function HexMotif({
   className,
   style,
@@ -285,9 +285,9 @@ type FloatingHex = {
  * Add/remove entries or tweak values here to change how many hexagons drift
  * through <FloatingHexagons> and how they look:
  * - top: vertical position as a % of the container's height
- * - size: Tailwind width class (w-*) — height follows automatically (svg is square-ish)
- * - duration: seconds for one full left-to-right pass — smaller is faster
- * - delay: seconds before this hexagon starts its first pass — stagger these
+ * - size: Tailwind width class (w-*) - height follows automatically (svg is square-ish)
+ * - duration: seconds for one full left-to-right pass - smaller is faster
+ * - delay: seconds before this hexagon starts its first pass - stagger these
  *   so hexagons don't all cross the screen at once
  * - opacity: peak opacity while fully on-screen (fades to 0 at the edges)
  */
@@ -308,7 +308,7 @@ const DEFAULT_FLOATING_HEXES: FloatingHex[] = [
 
 /**
  * A handful of hexagon outlines that drift left-to-right and fade in/out at
- * the edges, each on its own size/speed/delay — occasional accents on a
+ * the edges, each on its own size/speed/delay - occasional accents on a
  * clean background, not a dense tiled pattern. Respects reduced motion via
  * the `.hex-drift` CSS (see styles.css), which falls back to a static
  * position when motion is disabled.

@@ -39,7 +39,7 @@ import {
 
 /**
  * Shared building blocks for the per-medication treatment pages
- * (/tirzepatide, /semaglutide). Kept together like site/primitives.tsx —
+ * (/tirzepatide, /semaglutide). Kept together like site/primitives.tsx -
  * small, page-agnostic pieces; copy/data stays local to each route file.
  */
 
@@ -98,8 +98,8 @@ export function TreatmentPricingCard({
               Standard / maintenance
             </span>
             : ${pricing.monthlyUsd}/mo monthly after the starter (6-month,
-            annual, and quarterly rates in the ? details). Continuing on a
-            quarterly plan after the starter is $
+            annual, and quarterly rates in the ? next to Standard /
+            maintenance). Continuing on a quarterly plan after the starter is $
             {PROMO_CODE_DISCOUNT_USD} less than three months at the standard
             monthly rate. If you&apos;re on maintenance or not taking the
             starter pack, promo code{" "}
@@ -138,7 +138,7 @@ export function TreatmentPricingCard({
 
 /**
  * Single-item "What's included" dropdown for the treatment page hero. Each
- * page passes its own item order (see WHATS_INCLUDED in the route files) —
+ * page passes its own item order (see WHATS_INCLUDED in the route files) -
  * deliberately not a shared constant, so the two pages don't render an
  * identical list in an identical order.
  */

@@ -22,16 +22,16 @@ export type UtmParams = {
   utm_campaign: string;
   utm_term: string;
   utm_content: string;
-  /** Meta click id — not PHI. */
+  /** Meta click id - not PHI. */
   fbclid: string;
-  /** Google click id — not PHI. */
+  /** Google click id - not PHI. */
   gclid: string;
   landing_page_slug: string;
-  /** On-site CTA that led here (e.g. home_hero) — not PHI. */
+  /** On-site CTA that led here (e.g. home_hero) - not PHI. */
   cta_id: string;
-  /** document.referrer at first capture (truncated) — not PHI. */
+  /** document.referrer at first capture (truncated) - not PHI. */
   referrer: string;
-  /** First path seen this session (e.g. /, /waitlist/) — not PHI. */
+  /** First path seen this session (e.g. /, /waitlist/) - not PHI. */
   landing_path: string;
 };
 
@@ -130,7 +130,7 @@ export function readUtmsFromUrl(
  * Params to append on Bask intake links: click IDs + all five utm_* keys.
  * Merges sessionStorage (survives in-site navigation) with the current URL
  * (covers the landing page before/without a prior capture).
- * Never includes PHI — only public ad/attribution query keys.
+ * Never includes PHI - only public ad/attribution query keys.
  */
 export function getBaskHandoffParams(): Partial<
   Record<BaskHandoffParamKey, string>
@@ -159,7 +159,7 @@ export function storePendingUtms(utms: Partial<UtmParams>): void {
     const merged = { ...existing, ...utms };
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(merged));
   } catch {
-    // sessionStorage unavailable — ignore
+    // sessionStorage unavailable - ignore
   }
 }
 
@@ -183,7 +183,7 @@ export function clearPendingUtms(): void {
 
 /**
  * Capture UTMs + cta_id from the URL, and first-touch referrer / landing path.
- * Safe for sessionStorage (no PHI). Works without a backend — Formspree / GA
+ * Safe for sessionStorage (no PHI). Works without a backend - Formspree / GA
  * read these later.
  */
 export function capturePageUtms(): void {
@@ -209,7 +209,7 @@ export function capturePageUtms(): void {
 
 /**
  * Fields to attach to Formspree (or similar) on waitlist submit so each
- * lead row shows where the visitor came from — no backend required.
+ * lead row shows where the visitor came from - no backend required.
  */
 export function getAttributionForSubmit(): AttributionSnapshot {
   const pending = getPendingUtms();

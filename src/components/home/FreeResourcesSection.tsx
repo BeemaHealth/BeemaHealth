@@ -7,7 +7,7 @@ import { RECIPES } from "@/lib/recipes";
 /**
  * Homepage spotlight for the two free, no-account-required resource
  * collections (recipes + educational guides). Neither lives in the primary
- * nav — both are meant to be discovered here, via SEO, and via cross-links
+ * nav - both are meant to be discovered here, via SEO, and via cross-links
  * between the two, not via a persistent nav slot.
  */
 export function FreeResourcesSection() {
@@ -64,7 +64,7 @@ export function FreeResourcesSection() {
             </h3>
             <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
               Cited, plain-language comparisons of lifestyle and GLP-1-assisted
-              approaches to weight loss — grounded in peer-reviewed trials and
+              approaches to weight loss - grounded in peer-reviewed trials and
               clinical guidelines.
             </p>
             <Button asChild className="mt-6 w-fit">

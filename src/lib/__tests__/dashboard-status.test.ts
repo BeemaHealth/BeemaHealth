@@ -409,7 +409,7 @@ describe("hasUnresolvedDeliveryIssue", () => {
         order_id: "order-2",
       },
     ];
-    // Re-shipment doesn't resolve the issue — only a delivery success does.
+    // Re-shipment doesn't resolve the issue - only a delivery success does.
     expect(hasUnresolvedDeliveryIssue(events)).toBe(true);
   });
 });

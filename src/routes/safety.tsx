@@ -137,7 +137,7 @@ function SafetyPage() {
       {/*
           LCP-critical: this card's bio paragraph is now the largest text
           block on the page (added in an earlier round), so it became the
-          measured LCP element — a whileInView reveal (via useCardMotion)
+          measured LCP element - a whileInView reveal (via useCardMotion)
           delays first paint on IntersectionObserver + JS hydration timing,
           same root cause already fixed on the hero text. Unanimated here;
           the other cards on this page keep their reveal.

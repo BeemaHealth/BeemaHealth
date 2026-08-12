@@ -86,7 +86,7 @@ function LearnIndexPage() {
           as="h1"
           eyebrow="Learn"
           title="Clear, judgment-free education"
-          description="Cited guides to help you understand lifestyle and medication approaches to weight management. Free to browse whether or not you're a Beema patient — no intake is required. Educational only, not medical advice."
+          description="Cited guides to help you understand lifestyle and medication approaches to weight management. Free to browse whether or not you're a Beema patient - no intake is required. Educational only, not medical advice."
         />
       </Section>
 

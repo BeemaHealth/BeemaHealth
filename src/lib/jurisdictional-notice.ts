@@ -1,5 +1,5 @@
 /**
- * Jurisdictional / state-availability compliance notice — single source of
+ * Jurisdictional / state-availability compliance notice - single source of
  * truth for footer, Terms, FAQ, and other marketing/compliance surfaces.
  */
 

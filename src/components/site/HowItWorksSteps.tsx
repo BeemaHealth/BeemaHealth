@@ -93,7 +93,7 @@ function StepDiagramCard({
         </span>
         <h3 className="mt-1 text-lg font-bold text-foreground">{step.title}</h3>
 
-        <div className="mt-3 h-1 w-10 overflow-hidden rounded-full bg-border">
+        <div className="mt-3 h-1 w-[85%] overflow-hidden rounded-full bg-border">
           <motion.div
             className="h-full origin-left rounded-full bg-gradient-to-r from-primary to-accent-foreground"
             initial={reduceMotion ? false : { scaleX: 0 }}

@@ -73,7 +73,7 @@ export function QualifyDynamicFlow() {
             (await fetchFunnelEligibility()) ??
             (await createFunnelSession(ctaId ? { cta_id: ctaId } : undefined));
           // Attribution may re-pin the qualify version to the one this CTA
-          // maps to (only before any answers exist) — use its fresh result.
+          // maps to (only before any answers exist) - use its fresh result.
           if (ctaId) {
             const attributed = await patchFunnelSessionAttribution({
               cta_id: ctaId,

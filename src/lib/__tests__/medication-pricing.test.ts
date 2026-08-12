@@ -77,9 +77,9 @@ describe("medication-pricing", () => {
     expect(dualCompoundedHeroPricingLine()).toBe(
       "Semaglutide $99 first month then $199/mo (code sema-off100), Tirzepatide 3-month starter pack $597 for doses 1 → 2 → 3 (2.5mg → 5mg → 7.5mg), or standard / maintenance $297/mo (code Tirz100 for $100 off first month on a 3-month plan)",
     );
-    expect(dualCompoundedShortPricingLine()).not.toMatch(/[—–]/);
-    expect(dualCompoundedPromoShortPricingLine()).not.toMatch(/[—–]/);
-    expect(dualCompoundedHeroPricingLine()).not.toMatch(/[—–]/);
+    expect(dualCompoundedShortPricingLine()).not.toMatch(/[\u2014\u2013]/);
+    expect(dualCompoundedPromoShortPricingLine()).not.toMatch(/[\u2014\u2013]/);
+    expect(dualCompoundedHeroPricingLine()).not.toMatch(/[\u2014\u2013]/);
   });
 
   it("states the flat monthly rate and the 3-month-only promo code per medication", () => {
@@ -90,7 +90,7 @@ describe("medication-pricing", () => {
     expect(sentence).toBe(
       "Compounded semaglutide is $199/month, billed monthly with no long-term contract. Promo code sema-off100 is a one-time $100 discount that brings your first month to $99 when you purchase a 3-month plan; it can't be combined with a 1-month purchase and can only be used once per patient.",
     );
-    expect(sentence).not.toMatch(/[—–]/);
+    expect(sentence).not.toMatch(/[\u2014\u2013]/);
 
     const tirzSentence = compoundedMonthlyPricingSentence(
       "Compounded tirzepatide",
@@ -130,7 +130,7 @@ describe("medication-pricing", () => {
     expect(details.continuation).toContain("$285/mo");
     expect(details.continuation).toContain("$776/mo");
     expect(details.quarterly).toContain("$791");
-    expect(details.quarterly).not.toMatch(/[—–]/);
+    expect(details.quarterly).not.toMatch(/[\u2014\u2013]/);
   });
 
   it("keeps FAQ pricing paragraph dual-med, all-inclusive, and em-dash free", () => {
@@ -153,6 +153,6 @@ describe("medication-pricing", () => {
     expect(paragraph).toMatch(/expedited shipping/i);
     expect(paragraph).not.toMatch(/medication-only/i);
     expect(paragraph).not.toMatch(/Shipping and labs/i);
-    expect(paragraph).not.toMatch(/[—–]/);
+    expect(paragraph).not.toMatch(/[\u2014\u2013]/);
   });
 });

@@ -1,5 +1,5 @@
 /**
- * Medical intake step field definitions — keeps intake route readable.
+ * Medical intake step field definitions - keeps intake route readable.
  */
 
 import { isIdentityAddressComplete } from "@/lib/address-validation";
@@ -182,7 +182,7 @@ export const GOAL_OPTIONS = [
   "Other",
 ] as const;
 
-/** Conditions already captured in eligibility.safety_screen — not re-collected in intake. */
+/** Conditions already captured in eligibility.safety_screen - not re-collected in intake. */
 export const INTAKE_EXCLUDED_CONDITION_KEYS = new Set([
   "thyroid_cancer",
   "men2",
@@ -538,7 +538,7 @@ export function usesDifferentShippingAddress(
   return prefs.use_different_shipping_address === true;
 }
 
-/** MVP: shipping-only fulfillment — migrate pickup drafts and drop stale pharmacy fields. */
+/** MVP: shipping-only fulfillment - migrate pickup drafts and drop stale pharmacy fields. */
 function normalizeMedicationPreferences(
   prefs: MedicalIntake["medication_preferences"] | undefined,
 ): Record<string, string | boolean> {

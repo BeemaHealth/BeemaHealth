@@ -4,7 +4,7 @@
  * GitHub Pages serves the prerendered homepage at both `/` and `/index.html`
  * (both HTTP 200). Search tools can treat those as separate URLs and
  * occasionally report confusing redirect/canonical choices. We only rewrite
- * the non-canonical path — never `/` → `/` (that would be a self-redirect).
+ * the non-canonical path - never `/` → `/` (that would be a self-redirect).
  */
 export function duplicateHomepageRedirectTarget(
   pathname: string,

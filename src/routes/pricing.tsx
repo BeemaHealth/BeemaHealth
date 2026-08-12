@@ -2,7 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { canonicalUrl } from "@/lib/seo";
 
 /**
- * Pricing page disabled — the pricing model isn't finalized yet.
+ * Pricing page disabled - the pricing model isn't finalized yet.
  * Original implementation commented out below for easy restoration once
  * real pricing is ready.
  */

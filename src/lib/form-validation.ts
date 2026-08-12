@@ -126,7 +126,7 @@ export function isValidPersonName(name: string): boolean {
 
 const PREFERRED_FIRST_NAME_RE = /^[A-Za-z]{1,40}$/;
 
-/** Optional display first name — letters only. */
+/** Optional display first name - letters only. */
 export function sanitizePreferredFirstName(value: string): string {
   return value.replace(/[^A-Za-z]/g, "").slice(0, 40);
 }

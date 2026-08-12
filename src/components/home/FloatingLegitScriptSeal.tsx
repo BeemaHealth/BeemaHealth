@@ -28,7 +28,7 @@ const BOB_TRANSITION = (reduceMotion: boolean): Transition | undefined =>
 
 /**
  * Shared floating seal for the homepage hero. Position/visibility and
- * optional tilt are the only per-placement knobs — animation comes from
+ * optional tilt are the only per-placement knobs - animation comes from
  * here; link/size/asset come from `@/lib/legitscript` via `LegitScriptSeal`.
  */
 export function FloatingLegitScriptSeal({

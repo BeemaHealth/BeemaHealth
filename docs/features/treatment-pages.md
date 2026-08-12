@@ -20,7 +20,7 @@ Product photography: LegitScript review preferred colour vials without a Beema w
 |-------|------|-------|
 | `/tirzepatide` | `src/routes/tirzepatide.tsx` | Compounded tirzepatide landing page |
 | `/semaglutide` | `src/routes/semaglutide.tsx` | Compounded semaglutide landing page |
-| `/glp-1` | `src/routes/glp-1.tsx` | Category/ads landing — Houston + cash-pay GLP-1 overview; LegitScript seal on hero; links to both drug pages |
+| `/glp-1` | `src/routes/glp-1.tsx` | Houston cash-pay GLP-1 ads landing (not in primary nav/footer; linked from homepage TreatmentShowcase). Future cities: prefer `/glp-1/{city}` under a shared template - see "City GLP-1 pages" below |
 | `/weight-loss` | `src/routes/weight-loss.tsx` | Program overview page — linked from nav/footer, see below |
 
 Shared building blocks (pricing card, comparison table, FAQ accordion, breadcrumb) live in `src/components/site/TreatmentPageBlocks.tsx`. Copy/data (steps, FAQ items, eligibility bullets) stays local to each route file — do not extract it into a shared data file, the two pages are meant to have genuinely distinct copy.
@@ -41,16 +41,27 @@ If a future change needs to re-orphan or retire this page, that's a deliberate c
 
 ## Nav: "Weight Loss" dropdown
 
-`SiteHeader.tsx` renders "Weight Loss" as a dropdown listing `WEIGHT_LOSS_ITEMS` — currently the `/weight-loss` overview, `/glp-1` category page, Compounded Tirzepatide, and Compounded Semaglutide — via two separate components since hover and tap don't behave the same way:
+`SiteHeader.tsx` renders "Weight Loss" as a dropdown listing `WEIGHT_LOSS_ITEMS` - currently the `/weight-loss` overview plus Compounded Tirzepatide and Compounded Semaglutide - via two separate components since hover and tap don't behave the same way:
 
-- **Desktop** — `WeightLossNavDropdown`, a hand-rolled hover dropdown (deliberately not Radix `DropdownMenu`; see the comment above it for why Radix's Popper positioning caused an open/close flicker).
-- **Mobile** — `MobileWeightLossDropdown`, a tap-to-expand disclosure inside the mobile menu (see `docs/features/homepage.md` for the `CircleRevealMenu` shell it lives in). Local `expanded` state collapses it back down every time the mobile menu reopens; the reveal/collapse is animated (Motion `AnimatePresence` + height/opacity), matching the site's other transitions.
+- **Desktop** - `WeightLossNavDropdown`, a hand-rolled hover dropdown (deliberately not Radix `DropdownMenu`; see the comment above it for why Radix's Popper positioning caused an open/close flicker).
+- **Mobile** - `MobileWeightLossDropdown`, a tap-to-expand disclosure inside the mobile menu (see `docs/features/homepage.md` for the `CircleRevealMenu` shell it lives in). Local `expanded` state collapses it back down every time the mobile menu reopens; the reveal/collapse is animated (Motion `AnimatePresence` + height/opacity), matching the site's other transitions.
 
-Add new medication pages to `WEIGHT_LOSS_ITEMS` (and to `SiteFooter.tsx`'s `COLUMNS[0].links`) rather than adding a new top-level nav entry.
+Add new **medication** pages to `WEIGHT_LOSS_ITEMS` (and to `SiteFooter.tsx`'s `COLUMNS[0].links`) rather than adding a new top-level nav entry. Do **not** add city/geo GLP-1 ads landers (`/glp-1`, future `/glp-1/{city}`) to primary nav or footer - those stay ad/SEO entry points plus contextual in-page links (homepage TreatmentShowcase today).
+
+## City GLP-1 pages (planned)
+
+Charlie’s Google Ads will expand beyond Houston. Recommended shape when that happens:
+
+| URL | Role |
+|-----|------|
+| `/glp-1` | National/category hub **or** keep as Houston until a hub ships (Charlie already has this URL) |
+| `/glp-1/houston`, `/glp-1/austin`, … | City-specific ads LPs sharing one template (city name, local phrasing, same compliance + pricing blocks) |
+
+Keep city pages out of the Weight Loss dropdown so nav does not grow with every market. Ads land on the city URL; organic/internal links stay light (homepage, hub, sitemap). When implementing, extract shared sections from `glp-1.tsx` into a city-aware template rather than copy-pasting routes.
 
 ## Medication cards
 
-`TreatmentShowcase.tsx` (homepage) and `TreatmentLineup.tsx` (`/weight-loss` page) each render one card per medication. Both cards are full-card `<Link>`s (not nested interactive elements) pointing at that medication's own page (`/tirzepatide/`, `/semaglutide/`) — never at `/weight-loss/` itself (that would be a self-link on the `/weight-loss` page and redundant elsewhere). CTA copy is `Explore {treatment.name}` (e.g. "Explore Compounded Tirzepatide"). These two files still duplicate their own local `TREATMENTS` array (pre-existing pattern) — add a new medication to both when it gets its own page. The homepage TreatmentShowcase also links contextually to `/glp-1/` ("Explore GLP-1 care for Houston").
+`TreatmentShowcase.tsx` (homepage) and `TreatmentLineup.tsx` (`/weight-loss` page) each render one card per medication. Both cards are full-card `<Link>`s (not nested interactive elements) pointing at that medication's own page (`/tirzepatide/`, `/semaglutide/`) - never at `/weight-loss/` itself (that would be a self-link on the `/weight-loss` page and redundant elsewhere). CTA copy is `Explore {treatment.name}` (e.g. "Explore Compounded Tirzepatide"). These two files still duplicate their own local `TREATMENTS` array (pre-existing pattern) - add a new medication to both when it gets its own page. The homepage TreatmentShowcase also links contextually to `/glp-1/` ("Explore GLP-1 care for Houston").
 
 ## Structured data
 

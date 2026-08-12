@@ -184,7 +184,7 @@ describe("public/robots.txt", () => {
     expect(robotsTxt).toContain("Allow: /");
   });
 
-  it("does not sitewide-block any bot, including scrapers — everyone can read/cite the site", () => {
+  it("does not sitewide-block any bot, including scrapers - everyone can read/cite the site", () => {
     expect(robotsTxt).not.toMatch(/User-agent:\s*Bytespider/);
     expect(robotsTxt).not.toMatch(/User-agent:\s*CCBot/);
     expect(robotsTxt).not.toMatch(/User-agent:\s*Diffbot/);
@@ -194,7 +194,7 @@ describe("public/robots.txt", () => {
 
   it("repeats path Disallows in the named AI group (bots may not merge with *)", () => {
     // Slice from the first named agent through the trailing catch-all group
-    // so we assert the shared AI group — not only `User-agent: *` itself.
+    // so we assert the shared AI group - not only `User-agent: *` itself.
     const namedGroup = robotsTxt.slice(
       robotsTxt.indexOf("User-agent: OAI-SearchBot"),
       robotsTxt.lastIndexOf("User-agent: *"),

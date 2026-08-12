@@ -19,7 +19,7 @@ const SEED_SIZE = 24;
  * dismisses, then the circle collapses back to the trigger).
  *
  * Built directly on Radix Dialog (forceMount + AnimatePresence) rather than
- * the shared Sheet primitive — that keeps focus trap / ESC / scroll lock
+ * the shared Sheet primitive - that keeps focus trap / ESC / scroll lock
  * intact while the entire visual transition is bespoke.
  */
 export function CircleRevealMenu({
@@ -46,7 +46,7 @@ export function CircleRevealMenu({
     const coverRadius = Math.hypot(maxX, maxY);
     setOrigin({ x, y });
     // 2.1x buffer so the circle's edge clears the farthest viewport corner
-    // with room to spare — no visible seam mid-animation.
+    // with room to spare - no visible seam mid-animation.
     setTargetScale((coverRadius * 2.1) / SEED_SIZE);
   }
 

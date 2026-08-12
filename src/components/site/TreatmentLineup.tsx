@@ -27,7 +27,7 @@ type Treatment = {
   badge?: string;
   fdaApproved: boolean;
   imagery: VialImagery;
-  /** Own indexable landing page — see docs/features/ (treatment pages). */
+  /** Own indexable landing page - see docs/features/ (treatment pages). */
   to: string;
 };
 
@@ -94,7 +94,7 @@ export function TreatmentLineup() {
 }
 
 /**
- * Motion-wrapped router Link — defined once at module scope so its identity
+ * Motion-wrapped router Link - defined once at module scope so its identity
  * is stable across renders (recreating it per-render would remount the
  * card and drop the tilt/reveal animation state).
  */
@@ -104,7 +104,7 @@ const MotionLink = motion.create(Link);
  * Cursor-driven tilt (rotateX/rotateY via pointer position) layered on top
  * of the existing lift/shadow treatment. No-ops under reduced motion and on
  * touch (no mousemove without a real pointer), so it only ever adds polish.
- * The whole card is a single Link — no interactive elements nested inside.
+ * The whole card is a single Link - no interactive elements nested inside.
  */
 function TreatmentCard({
   treatment,

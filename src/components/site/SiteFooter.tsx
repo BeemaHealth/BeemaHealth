@@ -15,7 +15,7 @@ import {
 import { TRUST_SIGNALS } from "@/lib/trust-signals";
 
 /**
- * Trailing-slash paths — match sitemap.xml / canonicalUrl / GitHub Pages 200
+ * Trailing-slash paths - match sitemap.xml / canonicalUrl / GitHub Pages 200
  * URLs. See docs/features/treatment-pages.md for the Care column's link set.
  */
 const COLUMNS = [
@@ -23,11 +23,10 @@ const COLUMNS = [
     title: "Care",
     links: [
       { label: "Weight Loss Program", to: "/weight-loss/" },
-      { label: "GLP-1 Care", to: "/glp-1/" },
       { label: "Compounded Tirzepatide", to: "/tirzepatide/" },
       { label: "Compounded Semaglutide", to: "/semaglutide/" },
       { label: "How it works", to: "/how-it-works/" },
-      // { label: "Pricing", to: "/pricing/" }, // disabled — pricing model not finalized yet
+      // { label: "Pricing", to: "/pricing/" }, // disabled - pricing model not finalized yet
     ],
   },
   {

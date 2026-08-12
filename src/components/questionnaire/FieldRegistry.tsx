@@ -51,16 +51,16 @@ export type FieldRenderContext = {
   error?: string;
   /** Read-only display (e.g. patient portal). Inputs are disabled. */
   readOnly?: boolean;
-  /** Patient account / qualify state — used to validate home addresses. */
+  /** Patient account / qualify state - used to validate home addresses. */
   expectedState?: string | null;
   /** Account signup fields when the step includes an account component. */
   registration?: {
     value: RegistrationFields;
     onChange: (next: RegistrationFields) => void;
   };
-  /** Patient already has a session — account field shows a short note. */
+  /** Patient already has a session - account field shows a short note. */
   signedIn?: boolean;
-  /** Full version + answers — used by the review component to summarize. */
+  /** Full version + answers - used by the review component to summarize. */
   schema?: QuestionnaireVersionSchema;
   allResponses?: Record<string, unknown>;
   qualifySchema?: QuestionnaireVersionSchema | null;

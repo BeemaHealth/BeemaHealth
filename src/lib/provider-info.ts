@@ -1,5 +1,5 @@
 /**
- * Public clinical-provider disclosure (Option A — Arora Health & Aesthetics).
+ * Public clinical-provider disclosure (Option A - Arora Health & Aesthetics).
  *
  * Verify changes against the provider group's materials and the official CMS
  * NPI Registry before publishing:
@@ -23,7 +23,7 @@ export const SEAN_ARORA_PROVIDER = {
   displayName: "Dr. Sean Arora",
   credentials: "MD",
   role: "Founder and CEO of Arora Health & Aesthetics",
-  specialty: "Family Medicine — Adult Medicine",
+  specialty: "Family Medicine - Adult Medicine",
   npi: "1841729449",
   bio: "Dr. Sean Arora, MD, is a board-certified physician and the founder and CEO of Arora Health & Aesthetics. His work focuses on family medicine, wellness, weight management, and telehealth clinical oversight.",
 } as const;

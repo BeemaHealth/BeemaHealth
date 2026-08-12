@@ -38,14 +38,14 @@ const TREATMENT_LABELS: Record<string, string> = {
   wegovy_inj: "Wegovy injection",
   wegovy_pill: "Wegovy pill, if available",
   compounded_sema: "Compounded semaglutide injection, if legally available",
-  provider_choice: "Not sure — provider to recommend",
+  provider_choice: "Not sure - provider to recommend",
 };
 
 function displayValue(value: unknown): string {
-  if (value === null || value === undefined || value === "") return "—";
+  if (value === null || value === undefined || value === "") return " - ";
   if (typeof value === "boolean") return value ? "Yes" : "No";
   if (Array.isArray(value)) {
-    if (value.length === 0) return "—";
+    if (value.length === 0) return " - ";
     return value.map((item) => displayValue(item)).join(", ");
   }
   return String(value);
@@ -79,30 +79,30 @@ function accountSummaryRows(
   const summary = snapshot.account_summary;
   if (!summary) return [];
   return [
-    { label: "Name", value: summary.full_name || "—" },
-    { label: "Email", value: summary.email || "—" },
-    { label: "Phone", value: summary.phone || "—" },
-    { label: "Date of birth", value: summary.dob || "—" },
-    { label: "State", value: summary.state || "—" },
+    { label: "Name", value: summary.full_name || " - " },
+    { label: "Email", value: summary.email || " - " },
+    { label: "Phone", value: summary.phone || " - " },
+    { label: "Date of birth", value: summary.dob || " - " },
+    { label: "State", value: summary.state || " - " },
     {
       label: "Height",
       value:
         summary.height_ft != null
           ? `${summary.height_ft}' ${summary.height_in ?? 0}"`
-          : "—",
+          : " - ",
     },
     {
       label: "Weight",
-      value: summary.weight_lbs != null ? `${summary.weight_lbs} lb` : "—",
+      value: summary.weight_lbs != null ? `${summary.weight_lbs} lb` : " - ",
     },
     {
       label: "Goal weight",
       value:
-        summary.goal_weight_lbs != null ? `${summary.goal_weight_lbs} lb` : "—",
+        summary.goal_weight_lbs != null ? `${summary.goal_weight_lbs} lb` : " - ",
     },
     {
       label: "BMI",
-      value: summary.bmi != null ? String(summary.bmi) : "—",
+      value: summary.bmi != null ? String(summary.bmi) : " - ",
     },
   ];
 }
@@ -180,7 +180,7 @@ export function snapshotRowsForStep(
         const detail = details[med];
         if (!detail) continue;
         for (const [field, label] of PRIOR_MED_DETAIL_FIELDS) {
-          pushRow(rows, `${med} — ${label}`, detail[field]);
+          pushRow(rows, `${med} - ${label}`, detail[field]);
         }
       }
       return rows;

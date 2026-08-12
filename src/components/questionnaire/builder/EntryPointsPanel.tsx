@@ -50,7 +50,7 @@ export function EntryPointsPanel({
         const data = await fetchStaffQualifyCtaOwnership();
         if (!cancelled) setOwnership(data.ownership);
       } catch {
-        // Non-blocking — warnings are informational only.
+        // Non-blocking - warnings are informational only.
       }
     })();
     return () => {

@@ -52,6 +52,6 @@ export async function storeLoginCredentials(
     });
     await navigator.credentials.store(credential);
   } catch {
-    // User declined, unsupported browser, or policy block — non-fatal.
+    // User declined, unsupported browser, or policy block - non-fatal.
   }
 }

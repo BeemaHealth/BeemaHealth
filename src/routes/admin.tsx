@@ -1,5 +1,5 @@
 /**
- * DISABLED — Provider admin list route (/admin) is not implemented yet.
+ * DISABLED - Provider admin list route (/admin) is not implemented yet.
  * To restore: uncomment the block below.
  */
 

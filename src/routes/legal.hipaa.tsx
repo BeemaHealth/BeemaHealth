@@ -348,7 +348,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "california",
-    title: "Rights of Specific Jurisdictions — California Residents",
+    title: "Rights of Specific Jurisdictions - California Residents",
     content: (
       <>
         <LegalP>
@@ -429,7 +429,7 @@ const SECTIONS: LegalSection[] = [
       <>
         <LegalP>
           {LEGAL_BUSINESS_NAME} Privacy Policy: Notice of Privacy Practices for
-          Protected Health Information (PHI) — State-Specific Provisions
+          Protected Health Information (PHI) - State-Specific Provisions
         </LegalP>
         <LegalP>
           In addition to the privacy practices described in our Notice of

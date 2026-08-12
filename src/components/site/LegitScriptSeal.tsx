@@ -14,7 +14,7 @@ type LegitScriptSealProps = {
 
 /**
  * Official LegitScript certification seal. Markup, href, and dimensions all
- * come from `@/lib/legitscript` — update that module to change the verify
+ * come from `@/lib/legitscript` - update that module to change the verify
  * link, asset, or display size sitewide.
  */
 export function LegitScriptSeal({ className }: LegitScriptSealProps) {

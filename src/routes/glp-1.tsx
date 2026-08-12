@@ -46,7 +46,7 @@ import {
 } from "@/lib/medication-pricing";
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
 
-/** §F1.1 required sentences — reuse verbatim where compounded status is explained. */
+/** §F1.1 required sentences - reuse verbatim where compounded status is explained. */
 const COMPOUNDED_SEMA_REQUIRED =
   "Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate.";
 const COMPOUNDED_TIRZ_REQUIRED =
@@ -64,7 +64,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "Does Beema Health serve Houston?",
-    a: "Yes. Beema Health serves adults in Houston and across all 50 U.S. states through telehealth. You complete intake online from home; a licensed provider reviews your case remotely. Medication availability still depends on applicable state rules and pharmacy fulfillment, and eligibility is always an individual clinical decision—never guaranteed just because you live in Houston.",
+    a: "Yes. Beema Health serves adults in Houston and across all 50 U.S. states through telehealth. You complete intake online from home; a licensed provider reviews your case remotely. Medication availability still depends on applicable state rules and pharmacy fulfillment, and eligibility is always an individual clinical decision - never guaranteed just because you live in Houston.",
   },
   {
     q: "How much does cash-pay GLP-1 treatment cost?",
@@ -72,7 +72,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "How does online GLP-1 care work?",
-    a: "You start with a free online medical intake—no payment required to begin. A licensed provider reviews your answers and decides whether treatment may be appropriate. If approved and a compounded medication is prescribed, your plan includes provider care, medication, supplies, and expedited shipping, with follow-up as your care continues. Prescribing is never guaranteed.",
+    a: "You start with a free online medical intake - no payment required to begin. A licensed provider reviews your answers and decides whether treatment may be appropriate. If approved and a compounded medication is prescribed, your plan includes provider care, medication, supplies, and expedited shipping, with follow-up as your care continues. Prescribing is never guaranteed.",
   },
   {
     q: "What is the difference between compounded semaglutide and tirzepatide?",
@@ -85,7 +85,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
 ];
 
 const CASH_PAY_POINTS = [
-  "Transparent cash pricing—no insurance hoop-jumping to begin intake",
+  "Transparent cash pricing - no insurance hoop-jumping to begin intake",
   "All-inclusive monthly rates cover provider care, medication, supplies, and expedited shipping when prescribed",
   "No platform membership fee; prescribing is never guaranteed",
 ];
@@ -212,7 +212,7 @@ function Glp1Page() {
           <SectionHeading
             eyebrow="GLP-1 cash pricing"
             title="Clear cash-pay rates for compounded options"
-            description="No membership fee. Your licensed provider decides whether compounded semaglutide or compounded tirzepatide is appropriate—pricing below is cash-pay when prescribed."
+            description="No membership fee. Your licensed provider decides whether compounded semaglutide or compounded tirzepatide is appropriate - pricing below is cash-pay when prescribed."
           />
         </motion.div>
         <div className="mt-10 grid gap-5 lg:grid-cols-2">
@@ -295,12 +295,12 @@ function Glp1Page() {
                 Cash-pay GLP-1 care without a clinic visit
               </h2>
               <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-base">
-                If you&apos;re in Houston—or anywhere in Texas—you can complete
-                Beema Health&apos;s medical intake online. A licensed provider
-                reviews your case by telehealth. When clinically appropriate and
-                legally available, compounded GLP-1 options may be prescribed
-                and shipped to you. Beema Health serves patients nationwide,
-                including Houston.
+                If you&apos;re in Houston, or anywhere in Texas, you can
+                complete Beema Health&apos;s medical intake online. A licensed
+                provider reviews your case by telehealth. When clinically
+                appropriate and legally available, compounded GLP-1 options may
+                be prescribed and shipped to you. Beema Health serves patients
+                nationwide, including Houston.
               </p>
               <ul className="mt-5 space-y-2">
                 {[

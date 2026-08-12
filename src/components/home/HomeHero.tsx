@@ -43,7 +43,7 @@ const CHECKLIST_ITEMS = [
   dualCompoundedPromoShortPricingLine(),
 ] as const;
 
-/** Hero badge rotation — reuses the same approved trust claims shown elsewhere on this page (checklist row, promo line) rather than inventing new copy. */
+/** Hero badge rotation - reuses the same approved trust claims shown elsewhere on this page (checklist row, promo line) rather than inventing new copy. */
 const HERO_BADGE_MESSAGES = [
   "GLP-1 weight-loss care",
   "Licensed USA physician network",
@@ -97,18 +97,18 @@ function useHeroColumnStagger(reduceMotion: boolean) {
  * full-width infinite marquee band anchored to its bottom edge.
  *
  * The lg min-height is deliberately `calc(100svh-4rem)` rather than a full
- * `100svh` — that headroom is what keeps the fixed site header from pushing
+ * `100svh` - that headroom is what keeps the fixed site header from pushing
  * the checklist row and scroll cue below the fold on laptop-height windows
  * (~1280x700 after browser chrome). Vertical rhythm (margin-top and
  * padding-y utilities) and the headline's fluid clamp() size are tuned
  * against that same budget. It's capped at 50rem (800px) via `min()` so it
- * stops growing past that on very tall/large monitors — uncapped, the
+ * stops growing past that on very tall/large monitors - uncapped, the
  * content (vertically centered in the grid) ended up stranded in a wall of
  * empty space above and below on e.g. 1600px+-tall viewports.
  *
  * The marquee band (replacing the old animated "Scroll" cue in that same
  * spot) is viewport-fixed rather than positioned against the hero section's
- * own box — the headline's fluid clamp() can wrap to extra lines at some
+ * own box - the headline's fluid clamp() can wrap to extra lines at some
  * widths, which grows the section past its `100svh-4rem` target, so
  * anchoring the marquee to the section's bottom edge would just push it
  * off-screen again along with that overflow. Fixing it to the viewport
@@ -204,7 +204,7 @@ export function HomeHero() {
           </motion.div>
 
           {/*
-              Mobile/stacked LegitScript seal — floats beside the headline.
+              Mobile/stacked LegitScript seal - floats beside the headline.
               Hidden once the two-column hero kicks in (lg), where the
               image-column seal takes over so only one seal is ever visible.
             */}
@@ -229,7 +229,7 @@ export function HomeHero() {
           {/*
               LCP-critical: this is the largest text block painted on initial
               load. A prior version gave it a fast (duration:0.4, delay:0.05)
-              opacity fade instead of the column's full stagger — but Lighthouse
+              opacity fade instead of the column's full stagger - but Lighthouse
               still measured it as render-delayed, because ANY Motion-driven
               opacity transition can't start until the Motion library's JS has
               hydrated, so the delay isn't really about duration, it's about
@@ -384,7 +384,7 @@ export function HomeHero() {
           </motion.div>
 
           {/*
-              Desktop-only LegitScript seal — top-left of the hexagon photo.
+              Desktop-only LegitScript seal - top-left of the hexagon photo.
               Paired with `lg:hidden` on the text-column seal so only one shows.
             */}
           <FloatingLegitScriptSeal
@@ -394,7 +394,7 @@ export function HomeHero() {
         </motion.div>
 
         {/*
-            Floating medication vial — the "something moving" centerpiece.
+            Floating medication vial - the "something moving" centerpiece.
             Uses the same product photo as the treatment cards
             (`resolveVialImagery().src`), so there is one vial image per
             medication sitewide. It overlaps the seam between the two columns

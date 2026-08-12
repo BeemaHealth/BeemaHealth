@@ -1,6 +1,6 @@
 import type { IntakeStatus } from "@/lib/types/mvp";
 
-/** Mirror of backend INTAKE_PORTAL_EDITING_ENABLED — UI hints only; API `can_edit` is authoritative. */
+/** Mirror of backend INTAKE_PORTAL_EDITING_ENABLED - UI hints only; API `can_edit` is authoritative. */
 export const INTAKE_PORTAL_EDITING_ENABLED = false;
 
 export function canEditIntake(

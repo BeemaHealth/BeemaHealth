@@ -283,7 +283,7 @@ function WeightLossPage() {
                   <Link to="/safety/">Safety & eligibility</Link>
                 </Button>
               </MagneticButton>
-              {/* Pricing page disabled — pricing model not finalized yet.
+              {/* Pricing page disabled - pricing model not finalized yet.
               <Button asChild variant="outline">
                 <Link to="/pricing/">See pricing</Link>
               </Button>
@@ -305,7 +305,7 @@ function WeightLossPage() {
             </h2>
             <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
               A practical educational resource we provide as part of the Beema
-              experience—free to browse whether or not you&apos;re a patient. No
+              experience - free to browse whether or not you&apos;re a patient. No
               intake is required to access all 12 recipes.
             </p>
           </div>

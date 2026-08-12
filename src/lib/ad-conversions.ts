@@ -1,11 +1,11 @@
 /**
  * Meta Pixel + Google Ads + Google Analytics 4 helpers (frontend-only).
  *
- * Required Vite env vars (public IDs only — never put access tokens here):
- *   VITE_META_PIXEL_ID                  — Meta Pixel ID (e.g. 1234567890)
- *   VITE_GOOGLE_ADS_ID                  — Google Ads tag ID (e.g. AW-123456789)
- *   VITE_GOOGLE_ADS_CONVERSION_LABEL    — conversion label (e.g. abCDEFghijkLmNoP)
- *   VITE_GA_MEASUREMENT_ID              — GA4 measurement ID (e.g. G-XXXXXXXX)
+ * Required Vite env vars (public IDs only - never put access tokens here):
+ *   VITE_META_PIXEL_ID - Meta Pixel ID (e.g. 1234567890)
+ *   VITE_GOOGLE_ADS_ID - Google Ads tag ID (e.g. AW-123456789)
+ *   VITE_GOOGLE_ADS_CONVERSION_LABEL - conversion label (e.g. abCDEFghijkLmNoP)
+ *   VITE_GA_MEASUREMENT_ID - GA4 measurement ID (e.g. G-XXXXXXXX)
  *
  * GTM is installed via the document shell. GA4 and the Google Ads account
  * destination share this module's single gtag.js loader so the same Google tag
@@ -15,10 +15,10 @@
  * Do not pass email, name, or other PHI into these events.
  *
  * Browser reality (cannot be "fixed" in app JS alone):
- *   - Brave Shields / DuckDuckGo / Safari Private often block googletagmanager.com
- *     entirely — no page_view will appear in GA for those visits.
- *   - Chrome (and Safari non-private, often) will record normally.
- *   - For near-complete coverage without a backend API, put Cloudflare in front
+ * - Brave Shields / DuckDuckGo / Safari Private often block googletagmanager.com
+ *     entirely - no page_view will appear in GA for those visits.
+ * - Chrome (and Safari non-private, often) will record normally.
+ * - For near-complete coverage without a backend API, put Cloudflare in front
  *     and proxy GA first-party, or add a privacy analytics tool (e.g. Plausible).
  */
 
@@ -223,7 +223,7 @@ export function ensureGoogleTag(config = readAdPixelConfig()): void {
   }
 }
 
-/** @deprecated Prefer ensureGoogleTag — kept for existing call sites/tests. */
+/** @deprecated Prefer ensureGoogleTag - kept for existing call sites/tests. */
 export const ensureGoogleAdsTag = ensureGoogleTag;
 
 /** Call once on app mount so remarketing pixels / GA load when env is set. */
@@ -276,7 +276,7 @@ export function trackGaPageView(page: string, ctaId?: string): void {
 
 /**
  * Fire lead conversion events after a successful waitlist submit.
- * No PHI — event name / conversion ping only.
+ * No PHI - event name / conversion ping only.
  */
 export function trackWaitlistLeadConversion(): void {
   const config = readAdPixelConfig();

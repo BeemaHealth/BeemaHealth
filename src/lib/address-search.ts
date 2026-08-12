@@ -1,6 +1,6 @@
 /**
  * US home address search via OpenStreetMap Nominatim (free, no API key).
- * Used for intake identity — single-field autocomplete with selectable results.
+ * Used for intake identity - single-field autocomplete with selectable results.
  */
 
 import {

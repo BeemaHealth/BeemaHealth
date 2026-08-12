@@ -1,6 +1,6 @@
 /**
  * Common attack strings for input validation tests.
- * Use with typed validators (email, phone, name, numeric) — expect rejection.
+ * Use with typed validators (email, phone, name, numeric) - expect rejection.
  * Free-text fields may accept these as literal strings; storage must use parameterized queries + output encoding.
  */
 
@@ -60,7 +60,7 @@ export const STRICT_FIELD_ATTACKS = [
   ...COMMAND_INJECTION,
 ] as const;
 
-/** Passes person-name regex but is a known SQLi probe — safe only with parameterized storage. */
+/** Passes person-name regex but is a known SQLi probe - safe only with parameterized storage. */
 export const KNOWN_NAME_FORMAT_PASSES = ["admin'--"] as const;
 
 /** Email local-part probes appended to @evil.com for account-step tests. */

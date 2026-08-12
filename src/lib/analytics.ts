@@ -19,7 +19,7 @@ export function trackFunnelEvent(payload: FunnelEventPayload) {
   void trackFunnelEventApi(payload);
 }
 
-// Captured once at module init — reflects whether the browser's *initial* hard
+// Captured once at module init - reflects whether the browser's *initial* hard
 // load (not a SPA route change) was triggered by a reload.
 const _initialLoadWasReload =
   (
@@ -34,7 +34,7 @@ export function trackPageViewed(
   extra?: { landing_page_slug?: string },
 ) {
   capturePageUtms();
-  // Only the very first call in this JS session can be a page_reloaded — and
+  // Only the very first call in this JS session can be a page_reloaded - and
   // only if the browser's initial load was a hard reload.  All subsequent SPA
   // route changes (useEffect fires on component mount) are always page_viewed.
   const isReload = !_firstPageViewFired && _initialLoadWasReload;

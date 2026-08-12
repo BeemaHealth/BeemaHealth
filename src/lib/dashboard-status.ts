@@ -307,7 +307,7 @@ function refillLeadingEvent(refill: RefillRequest): CareTimelineEvent {
     title: REFILL_STATUS_TITLE[refill.status] ?? "Refill requested",
     description:
       refill.status === "more_info_needed"
-        ? "Your provider needs more information before deciding on this dose change — check your care team messages."
+        ? "Your provider needs more information before deciding on this dose change - check your care team messages."
         : refill.request_type === "titration"
           ? "Dose change request submitted for provider review."
           : "Refill request submitted.",
@@ -360,8 +360,8 @@ export function buildGroupedCareTimeline(
   // beluga_order_id once a fulfillment event has linked them (merging with
   // real events already in orderMap), or a synthetic per-refill key so it
   // renders immediately, before any fulfillment webhook has fired. Track
-  // every key touched by a refill request — whether synthetic or a real,
-  // now-linked order_id — so it's never mistaken for the account's original
+  // every key touched by a refill request - whether synthetic or a real,
+  // now-linked order_id - so it's never mistaken for the account's original
   // (non-refill) fulfillment cycle below, even if it happens to sort first.
   const refillKeys = new Set<string>();
   for (const refill of refillRequests) {
@@ -383,7 +383,7 @@ export function buildGroupedCareTimeline(
   const groups: CareTimelineGroup[] = [];
   const initialEvents: CareTimelineEvent[] = [...intakeEvents];
 
-  // The chronologically-first group merges into "Initial consultation" —
+  // The chronologically-first group merges into "Initial consultation" - 
   // unless it belongs to a refill request (a refill must never be mistaken
   // for the account's original prescription cycle, even if its own
   // fulfillment events happen to sort earliest, e.g. in mock testing).

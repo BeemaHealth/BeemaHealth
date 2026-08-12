@@ -41,7 +41,7 @@ function VerifyEmailPendingPage() {
   // navigating here from elsewhere (e.g. going back from intake).
   useEffect(() => {
     void resendVerificationEmail().catch(() => {
-      // fail silently — user can click the resend button if needed
+      // fail silently - user can click the resend button if needed
     });
   }, []);
 

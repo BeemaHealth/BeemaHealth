@@ -1,14 +1,14 @@
 /**
  * Django DRF API client.
  *
- * All frontend API calls must go through this module — never call fetch() for
+ * All frontend API calls must go through this module - never call fetch() for
  * backend endpoints from route or component files.
  *
  * Pre-account PHI is stored server-side via HttpOnly funnel cookie. After login,
  * authenticated /me/ endpoints are used. localStorage fallback exists only when
  * VITE_API_URL is unset (dev without backend).
  *
- * Local dev: set VITE_API_URL=/api so Vite proxies to the backend — required for
+ * Local dev: set VITE_API_URL=/api so Vite proxies to the backend - required for
  * cross-port funnel cookies (8080 frontend → 8000 API).
  */
 

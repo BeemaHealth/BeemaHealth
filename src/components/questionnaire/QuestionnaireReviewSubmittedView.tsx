@@ -17,7 +17,7 @@ function formatConfirmedDate(iso: string): string {
   }
 }
 
-/** Read-only portal view after intake submission — no live gate recompute. */
+/** Read-only portal view after intake submission - no live gate recompute. */
 export function QuestionnaireReviewSubmittedView({
   confirmedAt,
   belugaPayload,

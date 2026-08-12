@@ -51,7 +51,7 @@ export function getSortedSteps(
   return [...steps].sort((a, b) => a.sort_order - b.sort_order);
 }
 
-/** First visible step by sort order — where a flow begins. */
+/** First visible step by sort order - where a flow begins. */
 export function getEntryStep(
   steps: QuestionnaireStepSchema[],
   responses: Record<string, unknown>,
@@ -73,7 +73,7 @@ export function resolveNextStep(
   steps: QuestionnaireStepSchema[],
 ): QuestionnaireStepSchema | null {
   // The account/registration step is where every qualify branch converges and
-  // the flow ends — the patient then continues into the medical intake. It is
+  // the flow ends - the patient then continues into the medical intake. It is
   // terminal even though a later step may sort after it (e.g. compounding).
   if (stepHasAccountField(step)) return null;
 
@@ -95,7 +95,7 @@ export function resolveNextStep(
     return steps.find((s) => s.step_key === defaultRule.next_step_key) ?? null;
   }
 
-  // 3. Implicit default — fall through to the natural next visible step. This is
+  // 3. Implicit default - fall through to the natural next visible step. This is
   // how steps that branch only on some answers (e.g. step_1 "pills") reach the
   // next step for the unmatched answers without an explicit default edge.
   const visible = getVisibleSteps(getSortedSteps(steps), responses);

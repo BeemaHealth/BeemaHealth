@@ -51,7 +51,7 @@ export type NewQuestionPayload = {
 type AddQuestionModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** All field keys across the whole version — keys are global to the answers map. */
+  /** All field keys across the whole version - keys are global to the answers map. */
   existingFieldKeys: string[];
   stepHasAccountField: boolean;
   onAdd: (payload: NewQuestionPayload) => Promise<void>;

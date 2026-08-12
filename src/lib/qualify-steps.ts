@@ -115,7 +115,7 @@ export const WEIGHT_LOSS_GOAL_OPTIONS = [
   { value: "16_50" as const, label: "About 16–50 lbs" },
   { value: "51_100" as const, label: "About 51–100 lbs" },
   { value: "100_plus" as const, label: "More than 100 lbs" },
-  { value: "not_sure" as const, label: "I'm not sure yet — still exploring" },
+  { value: "not_sure" as const, label: "I'm not sure yet - still exploring" },
 ] as const;
 
 export const SEX_OPTIONS = [
@@ -186,7 +186,7 @@ export const STEP_TITLES: Record<QualifyStepId, string> = {
 export const STEP_SUBTITLES: Partial<Record<QualifyStepId, string>> = {
   treatment_interest:
     "Your answer helps us align you with an appropriate care pathway.",
-  primary_goal: "Everyone's journey is different — choose what fits you best.",
+  primary_goal: "Everyone's journey is different - choose what fits you best.",
   treatment_priority:
     "There is no one-size-fits-all approach. A clinician makes the final treatment decision.",
   weight_loss_goal:

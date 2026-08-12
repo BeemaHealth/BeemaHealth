@@ -300,7 +300,7 @@ function FieldPreview({
                 </span>
                 <span className="size-3 rounded-full border border-muted-foreground/40 shrink-0" />
               </button>
-              {/* Source handle — React Flow reads actual DOM position for edge routing */}
+              {/* Source handle - React Flow reads actual DOM position for edge routing */}
               <Handle
                 type="source"
                 position={Position.Right}
@@ -539,7 +539,7 @@ function StepNode({ data, id }: NodeProps<Node<StepNodeData>>) {
         isPendingSourceNode ? "border-primary/40 opacity-60" : "",
       ].join(" ")}
     >
-      {/* Incoming handles — top and left */}
+      {/* Incoming handles - top and left */}
       <Handle
         type="target"
         position={Position.Top}
@@ -612,7 +612,7 @@ function StepNode({ data, id }: NodeProps<Node<StepNodeData>>) {
         )}
       </div>
 
-      {/* Incoming handle — bottom (for backward upper-left loops) */}
+      {/* Incoming handle - bottom (for backward upper-left loops) */}
       <Handle
         type="target"
         position={Position.Bottom}
@@ -621,7 +621,7 @@ function StepNode({ data, id }: NodeProps<Node<StepNodeData>>) {
         className="!size-2 !bg-muted-foreground/40 !border !border-card"
       />
 
-      {/* Outgoing handles — right and bottom */}
+      {/* Outgoing handles - right and bottom */}
       <Handle
         type="source"
         position={Position.Right}
@@ -974,7 +974,7 @@ function EdgePanel({
               </select>
             </div>
 
-            {/* From option — field */}
+            {/* From option - field */}
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground w-16 shrink-0">
                 When field
@@ -1000,7 +1000,7 @@ function EdgePanel({
               )}
             </div>
 
-            {/* From option — value */}
+            {/* From option - value */}
             {effFieldDef && (
               <div className="flex items-center gap-2">
                 <span className="text-muted-foreground w-16 shrink-0">
@@ -1074,7 +1074,7 @@ function EdgePanel({
                     next_step_key: effTarget,
                   };
                   if (effFromStep === stepKey) {
-                    // Same source step — update rule in place
+                    // Same source step - update rule in place
                     const step = schema.steps.find(
                       (s) => s.step_key === stepKey,
                     )!;
@@ -1090,7 +1090,7 @@ function EdgePanel({
                       },
                     );
                   } else {
-                    // Source step changed — remove from original, add to new step
+                    // Source step changed - remove from original, add to new step
                     const origStep = schema.steps.find(
                       (s) => s.step_key === stepKey,
                     )!;
@@ -1159,7 +1159,7 @@ function EdgePanel({
                         const step = schema.steps.find(
                           (s) => s.step_key === stepKey,
                         )!;
-                        // Match by content, not array index — ruleIndex is from
+                        // Match by content, not array index - ruleIndex is from
                         // the filtered (conditional-only) array and would be
                         // misaligned if __default__ rules precede it.
                         const newRules = (step.routing_rules ?? []).filter(
@@ -3147,7 +3147,7 @@ export function FlowchartBuilder({
         JSON.stringify(Object.fromEntries(auxPositions.current)),
       );
     } catch {
-      // localStorage may be unavailable (private mode / quota) — layout is
+      // localStorage may be unavailable (private mode / quota) - layout is
       // non-critical, so fall back to in-memory only.
     }
   }, [auxPositionsKey]);
@@ -3225,7 +3225,7 @@ export function FlowchartBuilder({
         setAnalyticsMap(dropMap);
       })
       .catch(() => {
-        // analytics unavailable — edges simply won't show drop-off
+        // analytics unavailable - edges simply won't show drop-off
       });
     return () => {
       cancelled = true;
@@ -3391,7 +3391,7 @@ export function FlowchartBuilder({
         setVendorMismatchSlugs(mismatches);
         if (mismatches.length > 0) setShowVendorMismatchDialog(true);
       } catch {
-        // informational only — ignore errors
+        // informational only - ignore errors
       }
     })();
 
@@ -3787,7 +3787,7 @@ export function FlowchartBuilder({
 
     // Connect mode: clicking a step toggles it as the pending source. This lets
     // steps without answer options (e.g. account signup) start a default route
-    // to an intake or another step — same click flow as answer-based routing.
+    // to an intake or another step - same click flow as answer-based routing.
     if (activeTool === "connect") {
       if (schema?.status !== "draft") return;
       if (pendingSource?.stepKey === node.id) {

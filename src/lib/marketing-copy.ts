@@ -1,7 +1,7 @@
 /**
  * Shared marketing / promo copy: single source of truth so homepage, nav,
  * and footer never invent conflicting incentive amounts. Deliberately
- * framed as a standing promo, not a "new company" / early-adopter pitch —
+ * framed as a standing promo, not a "new company" / early-adopter pitch - 
  * Beema reads as an established provider, not a startup still filling seats.
  */
 

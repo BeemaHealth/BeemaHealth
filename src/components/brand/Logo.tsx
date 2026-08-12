@@ -8,7 +8,7 @@ type LogoProps = {
   tone?: "default" | "ink";
   /** Hide the text wordmark and show only the hexagon bee mark. */
   markOnly?: boolean;
-  /** Icon above wordmark instead of side-by-side — compact centered mobile header lockup. */
+  /** Icon above wordmark instead of side-by-side - compact centered mobile header lockup. */
   stacked?: boolean;
 };
 

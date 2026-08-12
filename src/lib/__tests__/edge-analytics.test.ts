@@ -144,7 +144,7 @@ describe("edge-analytics", () => {
   it("derives the default-path pool from step views minus branchers", () => {
     // Default path is the only route to step_2. With the new logic the source
     // pool is view-based (step_1 views minus participants who branched away),
-    // NOT answer-distribution-based — so it can never be smaller than the
+    // NOT answer-distribution-based - so it can never be smaller than the
     // number who actually reached step_2 via this edge.
     const result = computeEdgeDropoff(
       {

@@ -178,7 +178,7 @@ const LEGACY_LIFESTYLE_VALUE_MAP: Record<string, Record<string, string>> = {
 };
 
 export function lifestyleOptionLabel(field: string, value: unknown): string {
-  if (value === null || value === undefined || value === "") return "—";
+  if (value === null || value === undefined || value === "") return " - ";
   const str = String(value);
   const options = LIFESTYLE_OPTION_LOOKUP[field];
   const match = options?.find((option) => option.value === str);

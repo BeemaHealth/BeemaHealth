@@ -10,7 +10,7 @@ type AccountRegistrationFieldsProps = {
   value: RegistrationFields;
   onChange: (next: RegistrationFields) => void;
   readOnly?: boolean;
-  /** Flowchart node preview — flat, borderless inputs. */
+  /** Flowchart node preview - flat, borderless inputs. */
   embedded?: boolean;
   error?: string;
 };

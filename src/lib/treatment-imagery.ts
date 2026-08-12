@@ -18,9 +18,9 @@ import unbrandedTirzepatide from "@/assets/treatments/unbranded-tirzepatide-vial
  * directly, so switching the whole site back to branded imagery is a
  * one-line edit to VIAL_IMAGERY_MODE below.
  *
- * The two sets are framed differently — the branded render is a 3:2
+ * The two sets are framed differently - the branded render is a 3:2
  * canvas with a transparent background and the vial centred, the
- * unbranded shot is a square photo of a vial on a plinth — so each set
+ * unbranded shot is a square photo of a vial on a plinth - so each set
  * carries its own `wideCropClass` and intrinsic `width`/`height`. That
  * keeps the whole vial inside the letterboxed image area of the treatment
  * cards without either set needing per-component overrides.
@@ -38,11 +38,11 @@ export type VialImagery = {
    * page heroes, and the homepage hero's floating vial.
    */
   src: string;
-  /** Intrinsic size of `src` — the two sets have different canvases. */
+  /** Intrinsic size of `src` - the two sets have different canvases. */
   width: number;
   height: number;
   alt: string;
-  /** `object-position` for wide crops — keeps the vial fully in frame. */
+  /** `object-position` for wide crops - keeps the vial fully in frame. */
   wideCropClass: string;
 };
 

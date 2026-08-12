@@ -1,5 +1,5 @@
 /**
- * Partner pharmacy disclosure — single source of truth for FAQ, Terms,
+ * Partner pharmacy disclosure - single source of truth for FAQ, Terms,
  * and any other compliance surfaces that name The Pharmacy Hub.
  */
 

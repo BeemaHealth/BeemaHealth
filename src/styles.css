@@ -1,11 +1,11 @@
 /*
  * Fonts (Outfit + Figtree) are self-hosted via @fontsource, bundled into
- * this same-origin stylesheet — previously loaded from fonts.googleapis.com
+ * this same-origin stylesheet - previously loaded from fonts.googleapis.com
  * (CSS) -> fonts.gstatic.com (font files), a cross-origin two-hop chain that
  * Lighthouse traced as the real cause of ~9s LCP on most pages (the font
  * swap after that chain resolved was the final repaint, not the entrance
  * animations fixed in the prior round). Self-hosting collapses it to zero
- * extra origins/requests — the font files ship as part of the app's own
+ * extra origins/requests - the font files ship as part of the app's own
  * static assets. Weights matched to what was previously requested from
  * Google Fonts (Outfit 400/500/600/700/800, Figtree 400/500/600/700).
  */
@@ -26,10 +26,10 @@
 
 /*
  * Beema Health design system.
- * Brand: trust, community, health, consistency — inspired by the
+ * Brand: trust, community, health, consistency - inspired by the
  * honey bee. Clean white backgrounds, near-black ink, warm honey-yellow
  * primary, black contrast bands (hero/footer/Mission), cool neutral borders.
- * All colors use oklch. Use semantic tokens only — never ad hoc colors.
+ * All colors use oklch. Use semantic tokens only - never ad hoc colors.
  * TypeScript usage patterns: see src/lib/design-tokens.ts
  */
 
@@ -104,7 +104,7 @@
   --primary-foreground: oklch(0.23 0.03 84);
   --primary-soft: oklch(0.96 0.045 92);
 
-  /* deep ink slate — secondary surfaces */
+  /* deep ink slate - secondary surfaces */
   --secondary: oklch(0.33 0.015 265);
   --secondary-foreground: oklch(0.98 0.003 95);
 
@@ -122,7 +122,7 @@
   --success: oklch(0.6 0.11 152);
   --success-foreground: oklch(0.99 0.01 155);
 
-  /* trust blue — security/compliance accent (HIPAA badge, etc.) */
+  /* trust blue - security/compliance accent (HIPAA badge, etc.) */
   --trust: oklch(0.55 0.16 255);
   --trust-foreground: oklch(0.98 0.012 255);
 
@@ -230,7 +230,7 @@
   );
 }
 
-/* Black band with a soft honey glow — hero/Mission/footer surfaces */
+/* Black band with a soft honey glow - hero/Mission/footer surfaces */
 @utility bg-grad-ink {
   background-color: var(--ink);
   background-image:
@@ -246,10 +246,10 @@
 }
 
 /*
- * Layered honey-glow mesh — a bigger, multi-blob version of bg-grad-hero's
+ * Layered honey-glow mesh - a bigger, multi-blob version of bg-grad-hero's
  * single glow, for sections that need more depth (hero, mission, final CTA
  * on the premium homepage treatment). Same hue anchors as the rest of the
- * palette (84 honey / 270 ink) — no new colors introduced.
+ * palette (84 honey / 270 ink) - no new colors introduced.
  */
 @utility bg-mesh-glow {
   background-image:
@@ -271,7 +271,7 @@
     radial-gradient(34rem 30rem at 96% 122%, oklch(0.19 0.012 270 / 0.22), transparent 60%);
 }
 
-/* Frosted panel built from semantic tokens — never raw hex. */
+/* Frosted panel built from semantic tokens - never raw hex. */
 @utility glass-panel {
   background-color: color-mix(in oklch, var(--background) 82%, transparent);
   backdrop-filter: blur(18px) saturate(140%);
@@ -294,7 +294,7 @@
   border: 1px solid color-mix(in oklch, var(--ink-foreground) 14%, transparent);
 }
 
-/* Faint dot-grid texture — reads as premium grain without a raster asset. */
+/* Faint dot-grid texture - reads as premium grain without a raster asset. */
 @utility bg-grain {
   background-image: radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0);
   background-size: 20px 20px;

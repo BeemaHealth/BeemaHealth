@@ -10,10 +10,10 @@ import {
 import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
 
 /**
- * Canonical, honest trust claims — single source of truth for header,
+ * Canonical, honest trust claims - single source of truth for header,
  * footer, and homepage trust rows. No invented credentials, certifications,
  * or review scores: only claims that are true today. LegitScript is
- * certified — official seal on the homepage hero (`docs/features/legitscript.md`);
+ * certified - official seal on the homepage hero (`docs/features/legitscript.md`);
  * keep this list to short icon-card claims unless product asks to promote
  * LegitScript into the grid too.
  */

@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
  * cycled mechanically: trust blue for HIPAA/security, green for
  * "verified/value" claims, brand gold for the flagship verification
  * checkmark, warm brown for "place/sourcing" claims. Kept local to this
- * component — the shared `TrustSignal` type has no color field, since
+ * component - the shared `TrustSignal` type has no color field, since
  * footer/waitlist render these icons monochrome.
  */
 const ICON_COLOR_CLASSES = [
@@ -25,7 +25,7 @@ const ICON_COLOR_CLASSES = [
 ] as const;
 
 /**
- * Homepage trust band — the honest, verifiable claims from
+ * Homepage trust band - the honest, verifiable claims from
  * `lib/trust-signals.ts` rendered as a prominent icon-card grid. Sits
  * right after the hero so trust signals land before any deeper page
  * scroll, per the site-wide "stronger trust signals" ask.

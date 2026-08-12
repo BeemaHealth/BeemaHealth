@@ -10,7 +10,7 @@ import {
 } from "@/lib/marketing-copy";
 
 /**
- * Closing homepage CTA — a solid-honey band with a vignette mesh and two
+ * Closing homepage CTA - a solid-honey band with a vignette mesh and two
  * floating hexagon outlines behind an oversized "Ready to start?" reveal.
  */
 export function FinalCTASection() {

@@ -24,7 +24,7 @@ function pickWaitlistSearch(search: Record<string, unknown>): WaitlistSearch {
 }
 
 /**
- * Legacy path — in-house funnel retired in favor of Bask; redirect home.
+ * Legacy path - in-house funnel retired in favor of Bask; redirect home.
  * Preserve ?cta_id= / UTM query so old shared links keep attribution.
  */
 export const Route = createFileRoute("/qualify")({

@@ -9,7 +9,7 @@ import { LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 
 /**
- * Dark "why the bee" band — a full-width bg-grad-ink surface inside the
+ * Dark "why the bee" band - a full-width bg-grad-ink surface inside the
  * homepage's contained width, with a drifting mesh glow and a large
  * scroll-traced infinity motif (the bee's wings) behind the copy.
  */

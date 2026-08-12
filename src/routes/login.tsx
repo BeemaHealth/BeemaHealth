@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 
 /**
- * In-house login retired — real patient login is the Hive portal
+ * In-house login retired - real patient login is the Hive portal
  * (HIVE_LOGIN_URL in src/lib/cta-ids.ts, linked from SiteHeader). This
  * in-app login/MFA form is dormant, not deleted, in case it's revived.
  */

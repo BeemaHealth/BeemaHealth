@@ -1,4 +1,4 @@
-/** US state names and abbreviations — shared by qualify funnel and address validation. */
+/** US state names and abbreviations - shared by qualify funnel and address validation. */
 
 export const US_STATE_ENTRIES = [
   ["AL", "Alabama"],
@@ -95,7 +95,7 @@ export function formatUsStateName(value: string): string {
   return DISPLAY_BY_NORM.get(norm) ?? value.trim();
 }
 
-/** Beema Health is available in all 50 states — this only confirms the value is a recognized state. */
+/** Beema Health is available in all 50 states - this only confirms the value is a recognized state. */
 export function isStateEligible(value: string): boolean {
   return normalizeUsState(value) !== null;
 }

@@ -1,5 +1,5 @@
 /**
- * Canonical support / legal contact details — single source of truth so
+ * Canonical support / legal contact details - single source of truth so
  * phone, email, and business address never drift across header, footer,
  * contact page, policy pages, and schema.
  */

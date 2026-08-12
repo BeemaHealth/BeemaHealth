@@ -53,7 +53,7 @@ export const Route = createFileRoute("/waitlist")({
   /**
    * In-house waitlist retired in favor of Bask (see docs/BACKEND-DEFERRED.md
    * and docs/features/treatment-pages.md). Implementation below is kept
-   * intact — not deleted — in case the in-house funnel is ever revived;
+   * intact - not deleted - in case the in-house funnel is ever revived;
    * this beforeLoad just makes the route unreachable in the meantime.
    * Preserve ?cta_id= / UTM query on the redirect so old shared links keep
    * attribution.
@@ -79,7 +79,7 @@ type FormState = {
   name: string;
   email: string;
   location: string;
-  company: string; // honeypot — real users never fill this in
+  company: string; // honeypot - real users never fill this in
 };
 
 const initial: FormState = { name: "", email: "", location: "", company: "" };
@@ -126,7 +126,7 @@ function WaitlistPage() {
     setError("");
     if (validationError) return;
     if (data.company) {
-      // Honeypot tripped — pretend success without submitting or firing ads.
+      // Honeypot tripped - pretend success without submitting or firing ads.
       setConfirmedEmail(data.email.trim());
       setSubmitted(true);
       return;
@@ -145,7 +145,7 @@ function WaitlistPage() {
           email: data.email.trim(),
           location: data.location,
           _subject: "New Beema Health waitlist signup",
-          // Attribution — shows in Formspree; no backend required.
+          // Attribution - shows in Formspree; no backend required.
           // Empty strings omitted so the dashboard stays readable.
           ...Object.fromEntries(
             Object.entries(getAttributionForSubmit()).filter(

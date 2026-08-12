@@ -5,15 +5,15 @@ import {
 } from "@/lib/provider-info";
 
 /**
- * Canonical production origin — single source of truth for absolute URLs in
+ * Canonical production origin - single source of truth for absolute URLs in
  * canonicals, OG tags, and the sitemap.
  *
  * On any domain change, update together in one release:
- *   - SITE_URL (here)
- *   - public/CNAME
- *   - public/robots.txt (Sitemap: line)
- *   - public/sitemap.xml (all URLs)
- *   - public/llms.txt (all URLs)
+ * - SITE_URL (here)
+ * - public/CNAME
+ * - public/robots.txt (Sitemap: line)
+ * - public/sitemap.xml (all URLs)
+ * - public/llms.txt (all URLs)
  * See docs/marketing/SEO-AEO-GEO-PLAN.md (G9 cutover checklist).
  */
 export const SITE_URL = "https://beemahealth.com";
@@ -28,7 +28,7 @@ export function absoluteUrl(path: string): string {
  *
  * GitHub Pages serves prerendered pages as directory indexes and 301s the
  * bare path to the trailing-slash form (/weight-loss → /weight-loss/), so
- * canonicals and public/sitemap.xml must use the trailing-slash URL — it is
+ * canonicals and public/sitemap.xml must use the trailing-slash URL - it is
  * the one that returns 200. Use absoluteUrl() for assets, never this.
  */
 export function canonicalUrl(path: string): string {
@@ -40,7 +40,7 @@ export function canonicalUrl(path: string): string {
  *
  * GEO note: search and AI retrieval pipelines use this to resolve the
  * "Beema Health" entity. The description must stay factually consistent
- * with public/llms.txt and page copy — LLMs favor sources whose facts
+ * with public/llms.txt and page copy - LLMs favor sources whose facts
  * never contradict each other.
  */
 export const ORGANIZATION_JSONLD = {
@@ -80,7 +80,7 @@ export const WEBSITE_JSONLD = {
 
 export type FaqJsonLdItem = { q: string; a: string };
 
-/** FAQPage JSON-LD — pass exactly the Q&A items rendered visibly on the page. */
+/** FAQPage JSON-LD - pass exactly the Q&A items rendered visibly on the page. */
 export function faqPageJsonLd(items: readonly FaqJsonLdItem[]) {
   return {
     "@context": "https://schema.org",
@@ -95,7 +95,7 @@ export function faqPageJsonLd(items: readonly FaqJsonLdItem[]) {
 
 export type BreadcrumbJsonLdItem = { name: string; path: string };
 
-/** BreadcrumbList JSON-LD — pass items matching the visible breadcrumb trail exactly. */
+/** BreadcrumbList JSON-LD - pass items matching the visible breadcrumb trail exactly. */
 export function breadcrumbJsonLd(items: readonly BreadcrumbJsonLdItem[]) {
   return {
     "@context": "https://schema.org",
@@ -113,7 +113,7 @@ export function breadcrumbJsonLd(items: readonly BreadcrumbJsonLdItem[]) {
  * Named clinical reviewer, for schema.org `reviewedBy` on medical content.
  *
  * Sourced from src/lib/provider-info.ts (the same NPI-verified data already
- * disclosed in the FAQ) — never invent a reviewer name/credential that isn't
+ * disclosed in the FAQ) - never invent a reviewer name/credential that isn't
  * backed by that file. Framing intentionally matches its FAQ answers:
  * clinicians decide independently, so this names clinical leadership/oversight
  * rather than claiming Dr. Arora personally reviews every page or patient.
@@ -139,15 +139,15 @@ export type MedicalWebPageJsonLdInput = {
   name: string;
   description: string;
   path: string;
-  /** Set true to attach CLINICAL_REVIEWER_JSONLD as reviewedBy — use on pages presenting clinical/medical guidance (e.g. /safety). */
+  /** Set true to attach CLINICAL_REVIEWER_JSONLD as reviewedBy - use on pages presenting clinical/medical guidance (e.g. /safety). */
   reviewedByClinicalLead?: boolean;
-  /** ISO date (YYYY-MM-DD) of the last content-significant edit to this page — keep honest, matches any visible "reviewed on"/"updated" text on the page. */
+  /** ISO date (YYYY-MM-DD) of the last content-significant edit to this page - keep honest, matches any visible "reviewed on"/"updated" text on the page. */
   dateModified?: string;
 };
 
 /**
  * MedicalWebPage JSON-LD for informational pages that have no visible FAQ
- * accordion (so faqPageJsonLd() doesn't apply — see its docstring). Use for
+ * accordion (so faqPageJsonLd() doesn't apply - see its docstring). Use for
  * pages that explain medical/process content rather than offer a service.
  */
 export function medicalWebPageJsonLd({
@@ -185,7 +185,7 @@ export type ServiceJsonLdInput = {
   /** Set true to attach CLINICAL_REVIEWER_JSONLD as reviewedBy. */
   reviewedByClinicalLead?: boolean;
   /**
-   * Pricing for the clinical service itself — deliberately modeled as a
+   * Pricing for the clinical service itself - deliberately modeled as a
    * Service + Offer, never as schema.org Product/Drug. This is a prescription
    * -gated telehealth service (intake does not guarantee a prescription), and
    * Google's Merchant/Product structured-data policies prohibit shoppable
@@ -194,11 +194,11 @@ export type ServiceJsonLdInput = {
    * without implying a purchasable drug listing.
    */
   offer?: ServiceOfferInput;
-  /** ISO date (YYYY-MM-DD) of the last content-significant edit to this page — keep honest, matches any visible "reviewed on"/"updated" text on the page. */
+  /** ISO date (YYYY-MM-DD) of the last content-significant edit to this page - keep honest, matches any visible "reviewed on"/"updated" text on the page. */
   dateModified?: string;
 };
 
-/** Service JSON-LD for a page describing a service Beema Health offers (as opposed to an informational page — see medicalWebPageJsonLd()). */
+/** Service JSON-LD for a page describing a service Beema Health offers (as opposed to an informational page - see medicalWebPageJsonLd()). */
 export function serviceJsonLd({
   name,
   description,

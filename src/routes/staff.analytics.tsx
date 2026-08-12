@@ -566,7 +566,7 @@ function StaffAnalyticsPage() {
     );
   }, [qType, range, rangeParams]);
 
-  // Step analytics — load when a version is selected
+  // Step analytics - load when a version is selected
   useEffect(() => {
     if (!versionId) return;
     setStepLoading(true);
@@ -904,7 +904,7 @@ function StaffAnalyticsPage() {
         </AccountSectionCard>
       )}
 
-      {/* Funnel drop-off — version picker */}
+      {/* Funnel drop-off - version picker */}
       <AccountSectionCard
         tone="orders"
         title="Funnel drop-off"
@@ -945,7 +945,7 @@ function StaffAnalyticsPage() {
         </p>
       </AccountSectionCard>
 
-      {/* Step analytics detail — shown when version is selected */}
+      {/* Step analytics detail - shown when version is selected */}
       {selectedVersion && (
         <div ref={detailRef}>
           {/* Selection banner */}

@@ -1,13 +1,13 @@
 /**
- * Beema Health design tokens — single TypeScript source for semantic color usage.
+ * Beema Health design tokens - single TypeScript source for semantic color usage.
  *
  * Raw oklch values live in `src/styles.css` (`:root` and `.dark`).
  * Brand system: white/near-white surfaces, near-black ink, honey-yellow
  * primary, black `ink` contrast bands for marketing hero/footer/Mission.
  * Components must reference semantic tokens from this file (or Tailwind
- * classes that map to those CSS variables) — never ad hoc hex/rgb/oklch.
+ * classes that map to those CSS variables) - never ad hoc hex/rgb/oklch.
  *
- * @see src/styles.css — brand palette definitions
+ * @see src/styles.css - brand palette definitions
  */
 
 import { cn } from "@/lib/utils";
@@ -43,7 +43,7 @@ export const SECTION_CARD_BASE = {
 
 /**
  * Surface treatments per semantic palette color.
- * Tune softness/contrast here — section tones map to these entries.
+ * Tune softness/contrast here - section tones map to these entries.
  */
 export const SEMANTIC_PALETTE_SURFACES = {
   warning: {
@@ -120,21 +120,21 @@ export type SectionToneSurface = typeof SECTION_CARD_BASE & {
  * mapped to a semantic palette entry above.
  */
 export const SECTION_TONE_PALETTE = {
-  /** Profile — yellow */
+  /** Profile - yellow */
   primary: "warning",
-  /** Contact — gray */
+  /** Contact - gray */
   contact: "neutral",
-  /** Shipping — blue */
+  /** Shipping - blue */
   shipping: "secondary",
-  /** Communication — mint */
+  /** Communication - mint */
   communication: "accent",
-  /** Consent — green */
+  /** Consent - green */
   consent: "success",
-  /** Security — light red */
+  /** Security - light red */
   security: "destructive",
-  /** Orders — blue */
+  /** Orders - blue */
   orders: "secondary",
-  /** Refills — green */
+  /** Refills - green */
   refills: "success",
 } as const satisfies Record<string, SemanticPalette>;
 

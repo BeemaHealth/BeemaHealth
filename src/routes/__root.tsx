@@ -92,23 +92,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         // there is no way to send real HTTP response headers. `<meta
         // http-equiv>` is the only lever available here, and it cannot set
         // everything a proper security header set would:
-        //   - HSTS (Strict-Transport-Security) CANNOT be set via <meta> at
-        //     all — the spec only allows it as a real HTTP response header.
-        //   - X-Frame-Options CANNOT be set via <meta> either (browsers
+        // - HSTS (Strict-Transport-Security) CANNOT be set via <meta> at
+        //     all - the spec only allows it as a real HTTP response header.
+        // - X-Frame-Options CANNOT be set via <meta> either (browsers
         //     ignore it there); `frame-ancestors` in CSP is the meta-tag
         //     equivalent, but GitHub Pages' static tier still can't set the
         //     header-only fallback some older browsers rely on.
-        //   - Getting real HSTS / X-Frame-Options would require putting a
+        // - Getting real HSTS / X-Frame-Options would require putting a
         //     proxy (e.g. Cloudflare) in front of GitHub Pages to inject
-        //     response headers — out of scope for this change; do not treat
+        //     response headers - out of scope for this change; do not treat
         //     either as "fixed" by what's below.
-        // The CSP below is intentionally on the permissive side — it allows
+        // The CSP below is intentionally on the permissive side - it allows
         // every external origin this app currently loads (GTM/gtag.js, Meta
         // Pixel, Formspree, Nominatim) plus 'unsafe-inline' for script/style
         // because this is a static SPA with no server to mint per-request
         // nonces, and both React's SSR'd inline `style` attributes and the
         // app's inline bootstrap scripts (GTM snippet, gtag stub) rely on it.
-        // Fonts (Outfit/Figtree) are self-hosted now — no fonts.googleapis.com
+        // Fonts (Outfit/Figtree) are self-hosted now - no fonts.googleapis.com
         // /fonts.gstatic.com allowance needed. Tighten further (nonces/hashes,
         // narrower img-src, drop 'unsafe-inline') and test every page + the ad
         // pixels/GTM/Formspree flows manually before trusting it fully.
@@ -171,7 +171,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { rel: "icon", href: "/favicon.ico", sizes: "any" },
         { rel: "icon", href: "/favicon-beema.png", type: "image/png" },
         // Outfit/Figtree are self-hosted via @fontsource, imported into
-        // styles.css — see the comment there. No external font origins to
+        // styles.css - see the comment there. No external font origins to
         // preconnect/fetch from anymore.
         {
           rel: "stylesheet",
@@ -193,7 +193,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 );
 
 function RootShell({ children }: { children: ReactNode }) {
-  // No root index.html in TanStack Start — this shell is the HTML document.
+  // No root index.html in TanStack Start - this shell is the HTML document.
   // GTM uses the standard head install + noscript fallback. GA4 and Google Ads
   // share one gtag.js loader from initAdPixels after hydration.
   return (
@@ -231,14 +231,14 @@ function RootComponent() {
     capturePageUtms();
   }, []);
 
-  // Meta Pixel / GA4 / Ads — Google destinations share one gtag.js request.
+  // Meta Pixel / GA4 / Ads - Google destinations share one gtag.js request.
   // GTM remains in RootShell for the conversion linker and Bask handoff.
   useEffect(() => {
     initAdPixels();
   }, []);
 
   // GitHub Pages also serves the homepage at /index.html (HTTP 200). That is
-  // a duplicate of /. Rewrite once to the canonical path — never when already
+  // a duplicate of /. Rewrite once to the canonical path - never when already
   // on `/` (avoids the intermittent self-redirect class of bugs).
   useEffect(() => {
     const target = duplicateHomepageRedirectTarget(

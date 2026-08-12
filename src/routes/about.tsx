@@ -180,7 +180,7 @@ function AboutPage() {
         </div>
       </Section>
 
-      {/* Mission — black band, honey accents */}
+      {/* Mission - black band, honey accents */}
       <Section className="pt-0">
         <motion.div
           initial={reduceMotion ? undefined : { opacity: 0, y: 28 }}
@@ -363,7 +363,7 @@ function AboutPage() {
         </div>
       </Section>
 
-      {/* Hexagon — efficiency */}
+      {/* Hexagon - efficiency */}
       <Section className="pt-0">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <motion.div

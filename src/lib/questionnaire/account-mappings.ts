@@ -22,7 +22,7 @@ export type AccountSubFieldMapping = {
 
 /** Beema Health backend targets for account signup / user profile fields. */
 export const BACKEND_FIELD_OPTIONS = [
-  { value: "", label: "— none —" },
+  { value: "", label: " - none - " },
   { value: "register.first_name", label: "Register API · first name" },
   { value: "register.last_name", label: "Register API · last name" },
   { value: "register.email", label: "Register API · email" },
@@ -38,7 +38,7 @@ const ACCOUNT_SUB_FIELD_KEYS = new Set<string>(
   ACCOUNT_SUB_FIELDS.map((f) => f.key),
 );
 
-/** Fixed Django register API targets — not staff-configurable. */
+/** Fixed Django register API targets - not staff-configurable. */
 const ACCOUNT_BACKEND_DEFAULTS: Record<AccountSubFieldKey, string> = {
   first_name: "register.first_name",
   last_name: "register.last_name",
@@ -117,10 +117,10 @@ export function serializeAccountMappings(
 
 export function belugaLabelForValue(value: string): string {
   const match = BELUGA_FIELD_OPTIONS.find((o) => o.value === value)?.label;
-  return match ?? (value || "— none —");
+  return match ?? (value || " - none - ");
 }
 
 export function backendLabelForValue(value: string): string {
   const match = BACKEND_FIELD_OPTIONS.find((o) => o.value === value)?.label;
-  return match ?? (value || "— none —");
+  return match ?? (value || " - none - ");
 }

@@ -574,7 +574,7 @@ export function buildBelugaFormObjPreview(
   return out;
 }
 
-/** Local dev only — never show Beluga payload debug UI in production builds. */
+/** Local dev only - never show Beluga payload debug UI in production builds. */
 export function isBelugaReviewDebugEnabled(): boolean {
   return import.meta.env.DEV;
 }

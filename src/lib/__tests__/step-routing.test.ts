@@ -106,7 +106,7 @@ describe("resolveNextStep", () => {
 
   it("treats the account step as terminal despite a later sort_order", () => {
     // The account step is where branches converge and qualify ends; step_5 is
-    // only on the compounding branch but sorts after it — account must not auto-
+    // only on the compounding branch but sorts after it - account must not auto-
     // advance to it.
     const step1 = step("step_1", 0, {
       routing_rules: [
@@ -143,7 +143,7 @@ describe("resolveNextStep", () => {
 
   it("falls through to the natural next when an answer matches no rule and no default exists", () => {
     // step_1 branches only on injections; "pills" matches nothing and there is
-    // no default rule — it must fall through to the natural next (step_2).
+    // no default rule - it must fall through to the natural next (step_2).
     const step1 = step("step_1", 0, {
       routing_rules: [
         {

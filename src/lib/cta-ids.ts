@@ -37,16 +37,16 @@ export const CTA_IDS = {
 export type CtaId = (typeof CTA_IDS)[keyof typeof CTA_IDS];
 
 /**
- * Patient portal login (Hive) — a separate app on its own subdomain, not
+ * Patient portal login (Hive) - a separate app on its own subdomain, not
  * part of this marketing site's routing. Not a CTA_IDS entry: it's an
  * account action, not a funnel-conversion click.
  */
 export const HIVE_LOGIN_URL = "https://hive.beemahealth.com" as const;
 
-/** Waitlist route — trailing slash matches sitemap-style canonical URLs. */
+/** Waitlist route - trailing slash matches sitemap-style canonical URLs. */
 export const WAITLIST_PATH = "/waitlist/" as const;
 
-/** @deprecated Prefer WAITLIST_PATH — alias kept so old imports keep working. */
+/** @deprecated Prefer WAITLIST_PATH - alias kept so old imports keep working. */
 export const QUALIFY_PATH = WAITLIST_PATH;
 
 /** Search object for `<Link to={WAITLIST_PATH} search={waitlistSearch(id)} />`. */
@@ -73,22 +73,22 @@ export const qualifyHref = waitlistHref;
  * CTA switchboard
  * ---------------------------------------------------------------------
  * Beema is live: every marketing CTA sitewide sends visitors to Bask's
- * hosted intake (one questionnaire — not a separate eligibility product).
- * Leftover in-repo waitlist/qualify/intake routes are legacy — see
+ * hosted intake (one questionnaire - not a separate eligibility product).
+ * Leftover in-repo waitlist/qualify/intake routes are legacy - see
  * docs/BACKEND-DEFERRED.md.
  *
  * `resolveCta(id)` is the ONLY place that decision should be made.
  * Every CTA button/link in the app calls this instead of hardcoding
- * WAITLIST_PATH or a label — so repointing the site (fully or one CTA
+ * WAITLIST_PATH or a label - so repointing the site (fully or one CTA
  * at a time) is a one-file edit here, not a hunt through every
  * route/component.
  *
  * To change what a CTA does:
- *   - Change every CTA at once → edit DEFAULT_CTA_TARGET.
- *   - Change one CTA (e.g. tirzepatide_hero → a medication-specific
+ * - Change every CTA at once → edit DEFAULT_CTA_TARGET.
+ * - Change one CTA (e.g. tirzepatide_hero → a medication-specific
  *     intake URL) → add an entry to CTA_OVERRIDES keyed by the CtaId.
  *     `to` may be an internal path or a full external URL (Bask lives
- *     on a different domain) — both render correctly via TanStack
+ *     on a different domain) - both render correctly via TanStack
  *     Router's <Link>.
  */
 type CtaTarget = { label: string; to: string };
@@ -125,7 +125,7 @@ function isAbsoluteHttpUrl(to: string): boolean {
 /**
  * Append attribution query params onto an absolute URL.
  * TanStack <Link> ignores the `search` prop for absolute http(s) hrefs and
- * uses `to` verbatim — so Bask handoff params must live on `to` itself.
+ * uses `to` verbatim - so Bask handoff params must live on `to` itself.
  */
 export function appendQueryParams(
   url: string,
@@ -152,7 +152,7 @@ export function buildCtaSearch(ctaId: CtaId): CtaSearchParams {
 /**
  * Resolve a CTA id to its current label, destination, attribution search
  * params, and click handler. `onClick` pushes `intake_handoff` to the GTM
- * dataLayer (event + cta_location only — no PHI) when the destination is
+ * dataLayer (event + cta_location only - no PHI) when the destination is
  * Bask intake (`q.beemahealth.com`). Wire it on every marketing CTA Link.
  *
  * For Bask (absolute) destinations, attribution params are baked into `to`

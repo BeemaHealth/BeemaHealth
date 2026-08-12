@@ -1,0 +1,19 @@
+---
+description: Never use em dashes in code or user-facing copy agents write
+alwaysApply: true
+---
+
+# No em dashes
+
+Do **not** use the Unicode em dash (U+2014) in source code, comments, UI copy, meta descriptions, JSON-LD, tests, or agent-authored docs.
+
+**Use instead:**
+- Clause break: spaced hyphen ` - ` (e.g. `Cash-pay option - provider reviewed`)
+- Compound words: ASCII hyphen `-` (e.g. `weight-loss`)
+- Ranges: ASCII hyphen in new copy (e.g. `1-12`, `18+`)
+
+**When editing existing files:** replace any em dashes you touch with ` - ` or rephrase. Prefer cleaning em dashes in files you already change; do not drive-by rewrite the whole repo unless the user asks.
+
+**In tests that forbid dashes:** match with unicode escapes (`/[\u2014\u2013]/`), never paste the literal em dash into source.
+
+**Why:** Em dashes create inconsistent copy, awkward diffs, and font/encoding noise. Spaced hyphens stay ASCII-clean.

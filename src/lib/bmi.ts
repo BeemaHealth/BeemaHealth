@@ -1,4 +1,4 @@
-/** Shared BMI math for the marketing-site calculator (informational only — not clinical intake). */
+/** Shared BMI math for the marketing-site calculator (informational only - not clinical intake). */
 
 export type BmiCategory = "underweight" | "healthy" | "overweight" | "obesity";
 

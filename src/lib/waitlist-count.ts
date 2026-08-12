@@ -1,12 +1,12 @@
 /**
- * Waitlist social-proof headcount — seed from env/constant, bump on successful
+ * Waitlist social-proof headcount - seed from env/constant, bump on successful
  * Formspree submit, persist number-only in localStorage (no PHI).
  */
 
 /** Fallback when env override is unset or invalid. */
 export const WAITLIST_DISPLAY_COUNT_FALLBACK = 2;
 
-/** localStorage key — integer string only; never write names/emails. */
+/** localStorage key - integer string only; never write names/emails. */
 export const WAITLIST_DISPLAY_COUNT_STORAGE_KEY =
   "beema_waitlist_display_count" as const;
 
@@ -24,7 +24,7 @@ function parseNonNegativeInt(raw: string): number | null {
 
 /**
  * Seed / floor for the displayed count (env override or constant).
- * Safe on SSR — does not touch localStorage.
+ * Safe on SSR - does not touch localStorage.
  */
 export function getWaitlistDisplayCountSeed(): number {
   const raw = import.meta.env.VITE_WAITLIST_DISPLAY_COUNT?.trim() ?? "";
@@ -34,7 +34,7 @@ export function getWaitlistDisplayCountSeed(): number {
 
 /**
  * Read the persisted count when available. Returns null on SSR, missing key,
- * or invalid stored value. Never parses PHI — only a non-negative integer.
+ * or invalid stored value. Never parses PHI - only a non-negative integer.
  */
 export function readStoredWaitlistDisplayCount(): number | null {
   if (!canUseLocalStorage()) return null;
@@ -71,7 +71,7 @@ export function incrementWaitlistDisplayCount(): number {
         String(next),
       );
     } catch {
-      // Private mode / quota — still return the incremented value for this session.
+      // Private mode / quota - still return the incremented value for this session.
     }
   }
   return next;

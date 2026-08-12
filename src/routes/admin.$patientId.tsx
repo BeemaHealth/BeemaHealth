@@ -1,5 +1,5 @@
 /**
- * DISABLED — Provider admin detail route (/admin/$patientId) is not implemented yet.
+ * DISABLED - Provider admin detail route (/admin/$patientId) is not implemented yet.
  * To restore: uncomment the block below.
  */
 

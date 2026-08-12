@@ -29,12 +29,12 @@ type Treatment = {
   badge: string;
   pricing: CompoundedMedicationPricing;
   imagery: VialImagery;
-  /** Own indexable landing page — see docs/features/ (treatment pages). */
+  /** Own indexable landing page - see docs/features/ (treatment pages). */
   to: string;
 };
 
 /**
- * Motion-wrapped router Link — defined once at module scope so its identity
+ * Motion-wrapped router Link - defined once at module scope so its identity
  * is stable across renders (recreating it per-render would remount the
  * card and drop the tilt/reveal animation state).
  */
@@ -64,7 +64,7 @@ const TREATMENTS: Treatment[] = [
 /**
  * GLP-1 treatment options grid. A giant outlined "GLP-1" word drifts behind
  * the cards, each card tilts toward the cursor and its vial image drifts
- * slightly on scroll — the section ref drives one shared scroll progress so
+ * slightly on scroll - the section ref drives one shared scroll progress so
  * both images move in the same rhythm.
  */
 export function TreatmentShowcase() {

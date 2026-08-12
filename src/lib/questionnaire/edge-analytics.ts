@@ -18,7 +18,7 @@ export function getAnswerCountForRoute(
 
 /**
  * Count participants whose answer on a branching field follows the default /
- * sequential edge to `targetStepKey` — i.e. values not explicitly routed
+ * sequential edge to `targetStepKey` - i.e. values not explicitly routed
  * elsewhere.
  */
 export function getAnswerCountForDefaultPath(

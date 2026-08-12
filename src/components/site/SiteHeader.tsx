@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 type NavItem = { label: string; to: string };
 
 /**
- * Trailing-slash paths — match sitemap.xml / canonicalUrl / GitHub Pages 200
+ * Trailing-slash paths - match sitemap.xml / canonicalUrl / GitHub Pages 200
  * URLs. "Weight Loss" is a dropdown label (below) over the program overview
  * plus the per-medication pages, see docs/features/treatment-pages.md.
  */
@@ -30,19 +30,18 @@ const NAV: NavItem[] = [
 /** "Weight Loss" nav dropdown items. Add branded-medication pages here later. */
 const WEIGHT_LOSS_ITEMS: NavItem[] = [
   { label: "Weight Loss Program", to: "/weight-loss/" },
-  { label: "GLP-1 Care", to: "/glp-1/" },
   { label: "Compounded Tirzepatide", to: "/tirzepatide/" },
   { label: "Compounded Semaglutide", to: "/semaglutide/" },
 ];
 
 /**
- * Plain, hand-rolled hover dropdown — deliberately not built on Radix's
+ * Plain, hand-rolled hover dropdown - deliberately not built on Radix's
  * DropdownMenu. That component is designed for click/keyboard menus: its
  * Popper positioning recalculates on every layout tick and its open/close
  * animation resizes the content for ~150ms after opening, both of which
  * move the menu's hit-box out from under a stationary cursor and caused a
  * persistent open/close flicker. This version has no portal, no animation,
- * and no dynamic positioning — the menu is a plain absolutely-positioned
+ * and no dynamic positioning - the menu is a plain absolutely-positioned
  * child of the trigger's own wrapper, so there is nothing that can shift
  * under the cursor while it's open.
  */
@@ -122,7 +121,7 @@ function WeightLossNavDropdown() {
 }
 
 /**
- * Mobile-menu equivalent of `WeightLossNavDropdown` — a tap-to-expand
+ * Mobile-menu equivalent of `WeightLossNavDropdown` - a tap-to-expand
  * disclosure instead of a hover dropdown, since there's no hover on touch.
  * Local `expanded` state so it collapses back down each time the mobile
  * menu itself is reopened, rather than persisting open across visits.
@@ -202,7 +201,7 @@ function SocialIconRow({
   );
 }
 
-/** Login link to the Hive patient portal — a separate app, so a plain anchor rather than a router `<Link>`. */
+/** Login link to the Hive patient portal - a separate app, so a plain anchor rather than a router `<Link>`. */
 function HiveLoginLink({ className }: { className?: string }) {
   return (
     <a
@@ -218,7 +217,7 @@ function HiveLoginLink({ className }: { className?: string }) {
   );
 }
 
-/** Pointy-top hexagon menu trigger — matches HexMotif / logo geometry. */
+/** Pointy-top hexagon menu trigger - matches HexMotif / logo geometry. */
 function HexMenuButton({ className, ...props }: ComponentProps<"button">) {
   return (
     <button
@@ -243,7 +242,7 @@ function HexMenuButton({ className, ...props }: ComponentProps<"button">) {
           strokeWidth="4"
           strokeLinejoin="round"
         />
-        {/* Menu bars — dark on white */}
+        {/* Menu bars - dark on white */}
         <g
           className="stroke-foreground"
           fill="none"
@@ -266,7 +265,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
       <div className="veya-container flex h-16 items-center justify-between gap-4">
-        {/* Desktop lockup — mobile gets its own centered, stacked lockup below. */}
+        {/* Desktop lockup - mobile gets its own centered, stacked lockup below. */}
         <Link
           to="/"
           className="hidden shrink-0 lg:block"
@@ -290,7 +289,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:ml-auto lg:flex">
-          {/* Promo line lives in the hero, marquee, and mobile menu —
+          {/* Promo line lives in the hero, marquee, and mobile menu - 
               dropped here so phone + socials have room without wrapping
               (veya-container caps at 1200px; there isn't space for all five). */}
           <div className="hidden items-center gap-4 border-r border-border pr-4 xl:flex">

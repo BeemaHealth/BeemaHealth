@@ -8,12 +8,12 @@ export type BelugaExpectedType = {
 
 /**
  * Expected payload types for Beluga visit `formObj` keys.
- * Meds/allergies/conditions are dedicated string fields — not intakeResults Q/A.
+ * Meds/allergies/conditions are dedicated string fields - not intakeResults Q/A.
  */
 export const BELUGA_FORM_OBJ_FIELD_TYPES: Record<string, BelugaExpectedType> = {
   consentsSigned: {
     kind: "boolean",
-    description: "Boolean — whether required consents were signed",
+    description: "Boolean - whether required consents were signed",
   },
   firstName: { kind: "string", description: "String (max 100 chars)" },
   lastName: { kind: "string", description: "String (max 100 chars)" },
@@ -27,15 +27,15 @@ export const BELUGA_FORM_OBJ_FIELD_TYPES: Record<string, BelugaExpectedType> = {
   sex: { kind: "enum", description: "Male | Female | Other" },
   selfReportedMeds: {
     kind: "string",
-    description: "Free-text string — use this field only, not intakeResults",
+    description: "Free-text string - use this field only, not intakeResults",
   },
   allergies: {
     kind: "string",
-    description: "Free-text string — use this field only, not intakeResults",
+    description: "Free-text string - use this field only, not intakeResults",
   },
   medicalConditions: {
     kind: "string",
-    description: "Free-text string — use this field only, not intakeResults",
+    description: "Free-text string - use this field only, not intakeResults",
   },
   patientPreference: {
     kind: "array",
@@ -50,7 +50,7 @@ export const BELUGA_FORM_OBJ_FIELD_TYPES: Record<string, BelugaExpectedType> = {
   intakeResults: {
     kind: "array",
     description:
-      "Array of { question, answer } — exclude meds/allergies/conditions",
+      "Array of { question, answer } - exclude meds/allergies/conditions",
   },
 };
 

@@ -1,5 +1,5 @@
 /**
- * MVP data models — structured for Django DRF backend integration.
+ * MVP data models - structured for Django DRF backend integration.
  *
  * ARCHITECTURE NOTE: PHI must NEVER be stored in localStorage or sessionStorage.
  * HIPAA requires patient health data to live on the server (encrypted, audited,

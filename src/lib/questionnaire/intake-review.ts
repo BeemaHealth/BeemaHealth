@@ -36,13 +36,13 @@ export function formatFieldDisplayValue(
   field: QuestionnaireFieldSchema,
   raw: unknown,
 ): string {
-  if (raw === null || raw === undefined || raw === "") return "—";
+  if (raw === null || raw === undefined || raw === "") return " - ";
 
   if (field.field_type === "address_group") {
     const parsed = parseAddressGroupValue(raw);
-    if (!parsed) return "—";
+    if (!parsed) return " - ";
     const lines = formatShippingAddressLines(parsed);
-    return lines.length > 0 ? lines.join("\n") : "—";
+    return lines.length > 0 ? lines.join("\n") : " - ";
   }
 
   if (isAccountField(field)) {
@@ -66,7 +66,7 @@ export function formatFieldDisplayValue(
           .split(",")
           .map((v) => v.trim())
           .filter(Boolean);
-    if (parts.length === 0) return "—";
+    if (parts.length === 0) return " - ";
     return parts.map((p) => labels.get(p) ?? p).join(", ");
   }
 
@@ -79,7 +79,7 @@ export function formatFieldDisplayValue(
   }
 
   if (typeof raw === "object") {
-    return "—";
+    return " - ";
   }
 
   return String(raw);

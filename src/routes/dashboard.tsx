@@ -4,7 +4,7 @@ import { loadDashboardData } from "@/lib/dashboard-loader";
 import type { DashboardData } from "@/lib/types/mvp";
 
 /**
- * In-house patient portal retired — real patient login/dashboard is the
+ * In-house patient portal retired - real patient login/dashboard is the
  * Hive portal (see src/lib/cta-ids.ts). Blocking beforeLoad here covers
  * every /dashboard/* child route without touching those files individually;
  * component kept dormant, not deleted.

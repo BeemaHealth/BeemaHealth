@@ -1,4 +1,9 @@
 import { CircleHelp } from "lucide-react";
+import type {
+  KeyboardEvent as ReactKeyboardEvent,
+  MouseEvent as ReactMouseEvent,
+  PointerEvent as ReactPointerEvent,
+} from "react";
 import { cn } from "@/lib/utils";
 import {
   hasStarterPack,
@@ -51,20 +56,33 @@ export function CompoundedPriceLockup({
 function TirzPricingDetailsButton() {
   const details = tirzepatidePricingDetailsCopy();
 
+  // Cards that embed this lockup are often full-card <Link>s (homepage /
+  // /weight-loss). Stop the help control from activating that navigation.
+  function stopCardNavigation(
+    event: ReactMouseEvent | ReactPointerEvent | ReactKeyboardEvent,
+  ) {
+    event.stopPropagation();
+  }
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="inline-flex size-5 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="relative z-10 inline-flex size-5 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="How tirzepatide pricing works"
+          onClick={stopCardNavigation}
+          onPointerDown={stopCardNavigation}
+          onKeyDown={stopCardNavigation}
         >
           <CircleHelp className="size-3.5" />
         </button>
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className="w-[min(100vw-2rem,22rem)] space-y-3 p-4 text-xs leading-relaxed text-muted-foreground"
+        className="z-50 w-[min(100vw-2rem,22rem)] space-y-3 p-4 text-xs leading-relaxed text-muted-foreground"
+        onClick={stopCardNavigation}
+        onPointerDown={stopCardNavigation}
       >
         <p className="text-sm font-semibold text-foreground">
           How tirzepatide pricing works
@@ -141,10 +159,13 @@ function TirzPricingLockup({
       </div>
 
       <div className="rounded-xl bg-background/80 px-3.5 py-3 ring-1 ring-border/70">
-        <div className="flex items-baseline justify-between gap-3">
-          <p className="text-sm font-semibold text-foreground">
-            Standard / maintenance
-          </p>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-1.5">
+            <p className="text-sm font-semibold text-foreground">
+              Standard / maintenance
+            </p>
+            <TirzPricingDetailsButton />
+          </div>
           <p className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
             From ${monthly}/mo
           </p>
@@ -170,8 +191,8 @@ function TirzPricingLockup({
         <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
           ${PROMO_CODE_DISCOUNT_USD} off first month on a{" "}
           {PROMO_CODE_MIN_MONTHS}-month plan, then ${monthly}/mo. Longer plans
-          and quarterly fills are in the ? details. Can&apos;t be combined with
-          the starter pack.
+          and quarterly fills are in the ? next to this heading. Can&apos;t be
+          combined with the starter pack.
         </p>
       </div>
     </div>
