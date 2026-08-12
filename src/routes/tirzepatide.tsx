@@ -96,6 +96,10 @@ const WHATS_INCLUDED = [
   "Syringes",
   "Expedited Shipping",
   "Alcohol Pads",
+  { label: "Free recipes", to: "/recipes/" },
+  { label: "Free learning resources", to: "/learn/" },
+  // Workout videos page not live yet - uncomment when /workout ships:
+  // { label: "Free workout videos", to: "/workout/" },
 ];
 
 const ELIGIBILITY_POINTS = [

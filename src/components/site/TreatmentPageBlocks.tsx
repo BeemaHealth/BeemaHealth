@@ -156,12 +156,22 @@ export function TreatmentPricingCard({
  * page passes its own item order (see WHATS_INCLUDED in the route files) -
  * deliberately not a shared constant, so the two pages don't render an
  * identical list in an identical order.
+ *
+ * Items may be plain labels or `{ label, to }` links (e.g. free recipes).
  */
+export type TreatmentIncludedItem =
+  | string
+  | {
+      label: string;
+      /** Internal path for TanStack Router `Link` (e.g. "/recipes/"). */
+      to: string;
+    };
+
 export function TreatmentIncludedDropdown({
   items,
   className,
 }: {
-  items: readonly string[];
+  items: readonly TreatmentIncludedItem[];
   className?: string;
 }) {
   return (
@@ -175,15 +185,28 @@ export function TreatmentIncludedDropdown({
         </AccordionTrigger>
         <AccordionContent>
           <ul className="space-y-2 pt-1">
-            {items.map((item) => (
-              <li
-                key={item}
-                className="flex items-start gap-2 text-sm text-muted-foreground"
-              >
-                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-foreground" />
-                {item}
-              </li>
-            ))}
+            {items.map((item) => {
+              const label = typeof item === "string" ? item : item.label;
+              const to = typeof item === "string" ? undefined : item.to;
+              return (
+                <li
+                  key={label}
+                  className="flex items-start gap-2 text-sm text-muted-foreground"
+                >
+                  <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-foreground" />
+                  {to ? (
+                    <Link
+                      to={to}
+                      className="font-medium text-primary underline-offset-2 hover:underline"
+                    >
+                      {label}
+                    </Link>
+                  ) : (
+                    label
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </AccordionContent>
       </AccordionItem>
