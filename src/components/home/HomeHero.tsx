@@ -25,10 +25,9 @@ import { cn } from "@/lib/utils";
 import {
   FIRST_MONTH_PROMO_LINE,
   FIRST_MONTH_PROMO_SHORT,
-  promoIncentiveLine,
 } from "@/lib/marketing-copy";
 import {
-  dualCompoundedHeroPricingLine,
+  dualCompoundedHomeHeroTeaser,
   dualCompoundedPromoShortPricingLine,
 } from "@/lib/medication-pricing";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
@@ -238,15 +237,15 @@ export function HomeHero() {
               server-rendered HTML/CSS with zero JS dependency.
             */}
           <p className="mt-5 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-            USA physicians, licensed and certified USA 503A pharmacies,
-            transparent cash pricing: {dualCompoundedHeroPricingLine()}. No
-            bait-and-switch, no surprises, and thoughtful medical care that
-            doesn&apos;t stop at the first prescription.
+            USA physicians, licensed and certified USA 503A pharmacies,{" "}
+            {dualCompoundedHomeHeroTeaser()}. No bait-and-switch, no surprises,
+            and thoughtful medical care that doesn&apos;t stop at the first
+            prescription.
           </p>
 
           <motion.div
             variants={item}
-            className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
+            className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
           >
             <MagneticButton>
               <Button asChild size="xl">
@@ -259,24 +258,17 @@ export function HomeHero() {
                 </Link>
               </Button>
             </MagneticButton>
-            <MagneticButton>
-              <Button asChild size="xl" variant="outline">
-                <Link to="/how-it-works/">How it works</Link>
-              </Button>
-            </MagneticButton>
+            <Button asChild size="xl" variant="outline">
+              <Link to="/tirzepatide/" hash="pricing">
+                Tirzepatide pricing
+              </Link>
+            </Button>
+            <Button asChild size="xl" variant="outline">
+              <Link to="/semaglutide/" hash="pricing">
+                Semaglutide pricing
+              </Link>
+            </Button>
           </motion.div>
-
-          <motion.p
-            variants={item}
-            className="mt-3 text-sm font-medium text-foreground"
-          >
-            {promoIncentiveLine()}.
-            <span className="font-normal text-muted-foreground">
-              {" "}
-              Start your online visit today.
-            </span>
-          </motion.p>
-
           <motion.div
             variants={item}
             className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground"

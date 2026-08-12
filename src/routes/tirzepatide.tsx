@@ -52,7 +52,7 @@ const VIAL_IMAGERY = resolveVialImagery("tirzepatide");
 
 const TITLE = "Compounded Tirzepatide for Weight Loss | Beema Health";
 const STARTER = COMPOUNDED_TIRZEPATIDE_PRICING.starterPack!;
-const DESCRIPTION = `Compounded tirzepatide for medical weight loss, reviewed by licensed providers. ${STARTER.months}-month starter pack $${STARTER.totalUsd} for ${STARTER.dosePathLabel}, or standard/maintenance $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo (promo code ${COMPOUNDED_TIRZEPATIDE_PRICING.promoCode} for $100 off first month on a 3-month plan). Prescribing is never guaranteed.`;
+const DESCRIPTION = `Compounded tirzepatide for medical weight loss, reviewed by licensed providers. ${STARTER.months}-month starter pack from $${STARTER.monthlyEquivalentUsd}/mo ($${STARTER.totalUsd} total), plus multi-month maintenance plans. Prescribing is never guaranteed.`;
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
@@ -191,7 +191,7 @@ function TirzepatidePage() {
                     </LineReveal>
                   </>
                 }
-                description={`Beema Health connects eligible adults with independent licensed providers for personalized medical weight-management care. ${STARTER.months}-month starter pack $${STARTER.totalUsd} for ${STARTER.dosePathLabel}, or $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo for maintenance (with promo code ${COMPOUNDED_TIRZEPATIDE_PRICING.promoCode} for $100 off the first month on a 3-month plan). Completing intake does not guarantee a prescription.`}
+                description="Beema Health connects eligible adults with independent licensed providers for personalized medical weight-management care. Completing intake does not guarantee a prescription."
                 className="mx-0 max-w-xl text-left"
               />
               <motion.div
@@ -225,9 +225,10 @@ function TirzepatidePage() {
                 size="lg"
               />
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">
-                Starter pack and Tirz100 can&apos;t be used together. Medication
-                eligibility and availability are determined by a licensed
-                provider and applicable law.
+                To see the starter pack price, mark that you are new to GLP-1
+                when asked during intake. Starter pack and Tirz100 can&apos;t be
+                used together. Medication eligibility and availability are
+                determined by a licensed provider and applicable law.
               </p>
             </div>
             <motion.div
@@ -319,7 +320,7 @@ function TirzepatidePage() {
         showCareFollowUpNote
       />
 
-      <Section className="pt-0">
+      <Section id="pricing" className="pt-0">
         <div className="grid gap-10 lg:grid-cols-2">
           <motion.div
             initial={reduceMotion ? false : { opacity: 0, y: 24 }}
@@ -458,7 +459,7 @@ function TirzepatidePage() {
               <Link to="/recipes/" className="text-primary underline">
                 free practical meal ideas
               </Link>
- - available to everyone with no intake required.
+              - available to everyone with no intake required.
             </>
           }
           className="mx-0 max-w-2xl"

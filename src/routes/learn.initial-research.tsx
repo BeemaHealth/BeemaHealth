@@ -42,9 +42,10 @@ import { BmiCalculator } from "@/components/site/BmiCalculator";
 import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   COMPOUNDED_TIRZEPATIDE_PRICING,
-  PROMO_CODE_DISCOUNT_USD,
-  PROMO_CODE_MIN_MONTHS,
+  formatUsd,
+  getPlan,
   promoFirstMonthUsd,
+  PROMO_CODE_DISCOUNT_USD,
 } from "@/lib/medication-pricing";
 import {
   INITIAL_RESEARCH_DATE_MODIFIED,
@@ -1045,18 +1046,28 @@ function InitialResearchPage() {
                     <Cite n={22} />, Beema Health&apos;s compounded cash-pay
                     pricing is about{" "}
                     <Strong>one-fifth the cost of brand-name drugs</Strong> (for
-                    example, ${COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd}
+                    example,{" "}
+                    {formatUsd(COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd)}
                     /month vs. Ozempic list pricing of $1,027.51, or about 1/5).
-                    A one-time ${PROMO_CODE_DISCOUNT_USD} promo code can bring
-                    the first month to $
-                    {promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING)}{" "}
-                    (semaglutide) or $
-                    {promoFirstMonthUsd(COMPOUNDED_TIRZEPATIDE_PRICING)}{" "}
-                    (tirzepatide) when purchasing a {PROMO_CODE_MIN_MONTHS}
-                    -month plan; it cannot be combined with a 1-month purchase
-                    and can only be used once per patient. Shipping and labs,
-                    when applicable, are shown separately. A prescription is
-                    never guaranteed.
+                    Multi-month plans include a semaglutide first-month promo (
+                    {formatUsd(
+                      promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING),
+                    )}{" "}
+                    first month on a 3-month plan, then{" "}
+                    {formatUsd(COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd)}
+                    /mo for months 2 and 3) and tirzepatide maintenance from{" "}
+                    {formatUsd(
+                      getPlan(COMPOUNDED_TIRZEPATIDE_PRICING, 6).monthlyUsd,
+                    )}
+                    /mo on a 6-month plan, with a new-patient starter pack at{" "}
+                    {formatUsd(
+                      COMPOUNDED_TIRZEPATIDE_PRICING.starterPack
+                        .monthlyEquivalentUsd,
+                    )}
+                    /mo). A one-time ${PROMO_CODE_DISCOUNT_USD} checkout coupon
+                    (once per patient) applies on eligible multi-month plans
+                    (not the starter pack). Shipping and labs, when applicable,
+                    are shown separately. A prescription is never guaranteed.
                   </ArticleP>
                   <Callout title="Critical compliance note" tone="caution">
                     Compounded medications are <Strong>not FDA-approved</Strong>{" "}

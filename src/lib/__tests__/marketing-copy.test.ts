@@ -18,11 +18,13 @@ describe("marketing-copy", () => {
     vi.unstubAllEnvs();
   });
 
-  it("keeps a single concrete first-month promo amount", () => {
+  it("keeps a single concrete promo teaser for nav/footer", () => {
     expect(FIRST_MONTH_PROMO_LINE).toBe(
-      "sema-off100 for semaglutide, or tirzepatide 3-month starter $597 / maintenance $297/mo with Tirz100",
+      "Semaglutide from $99 first month on a 3-month plan · Tirzepatide starter from $199/mo · one-time $100 off codes",
     );
-    expect(FIRST_MONTH_PROMO_SHORT).toBe("Tirz: 3-mo starter $597 or $297/mo");
+    expect(FIRST_MONTH_PROMO_SHORT).toBe(
+      "Sema from $99 · Tirz starter from $199/mo",
+    );
     expect(promoIncentiveLine()).toContain(FIRST_MONTH_PROMO_LINE);
     expect(waitlistIncentiveBody()).toContain(FIRST_MONTH_PROMO_LINE);
     expect(waitlistSuccessIncentiveLine()).toContain(FIRST_MONTH_PROMO_LINE);

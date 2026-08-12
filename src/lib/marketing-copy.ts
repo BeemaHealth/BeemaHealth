@@ -1,7 +1,7 @@
 /**
  * Shared marketing / promo copy: single source of truth so homepage, nav,
  * and footer never invent conflicting incentive amounts. Deliberately
- * framed as a standing promo, not a "new company" / early-adopter pitch - 
+ * framed as a standing promo, not a "new company" / early-adopter pitch -
  * Beema reads as an established provider, not a startup still filling seats.
  */
 
@@ -9,20 +9,18 @@ import { SUPPORT_EMAIL } from "@/lib/contact-info";
 
 /**
  * Dual-med pricing line shown next to marketing CTAs.
- * Semaglutide: one-time $100 promo code on a 3-month plan.
- * Tirzepatide: 3-month starter pack ($597 for doses 1→2→3) or
- * standard/maintenance ($297/mo, Tirz100 for $100 off first month on a
- * 3-month plan). Numbers live in `medication-pricing.ts`.
+ * Homepage / nav stay high-level; full 3/6/12 plan math lives on the
+ * Semaglutide and Tirzepatide pages. Numbers live in `medication-pricing.ts`.
  */
 export const FIRST_MONTH_PROMO_LINE =
-  "sema-off100 for semaglutide, or tirzepatide 3-month starter $597 / maintenance $297/mo with Tirz100" as const;
+  "Semaglutide from $99 first month on a 3-month plan · Tirzepatide starter from $199/mo · one-time $100 off codes" as const;
 
 /**
  * Short label for tight UI (nav chip, button microcopy).
  * Keep in sync with {@link FIRST_MONTH_PROMO_LINE}.
  */
 export const FIRST_MONTH_PROMO_SHORT =
-  "Tirz: 3-mo starter $597 or $297/mo" as const;
+  "Sema from $99 · Tirz starter from $199/mo" as const;
 
 /**
  * Primary waitlist CTA button label sitewide (nav, hero, footer, mid-page).

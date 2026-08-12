@@ -318,7 +318,7 @@ function SemaglutidePage() {
         showCareFollowUpNote
       />
 
-      <Section className="pt-0">
+      <Section id="pricing" className="pt-0">
         <div className="grid gap-10 lg:grid-cols-2">
           <motion.div
             initial={reduceMotion ? false : { opacity: 0, y: 24 }}
@@ -467,7 +467,7 @@ function SemaglutidePage() {
               <Link to="/recipes/" className="text-primary underline">
                 free practical meal ideas
               </Link>
- - available to everyone with no intake required.
+              - available to everyone with no intake required.
             </>
           }
           className="mx-0 max-w-2xl"

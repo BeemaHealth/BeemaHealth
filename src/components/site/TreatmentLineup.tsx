@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   COMPOUNDED_TIRZEPATIDE_PRICING,
+  promoFirstMonthUsd,
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
@@ -63,9 +64,11 @@ export function TreatmentLineup() {
             GLP-1 weight-loss options
           </h2>
           <p className="mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-            Transparent cash pricing on every option. Semaglutide starts with a
-            first-month promo. Tirzepatide: {TIRZ_STARTER.months}-month starter
-            pack ${TIRZ_STARTER.totalUsd} for {TIRZ_STARTER.dosePathLabel}, or $
+            Transparent cash pricing on every option. Semaglutide: $
+            {promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING)} first month on
+            a 3-month plan, then ${COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd}
+            /mo. Tirzepatide: {TIRZ_STARTER.months}-month starter pack $
+            {TIRZ_STARTER.totalUsd} for {TIRZ_STARTER.dosePathLabel}, or $
             {COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo for maintenance.
           </p>
         </Reveal>
@@ -205,7 +208,10 @@ function TreatmentCard({
         <h3 className="text-2xl font-bold text-foreground md:text-[1.75rem]">
           {treatment.name}
         </h3>
-        <CompoundedPriceLockup pricing={treatment.pricing} />
+        <CompoundedPriceLockup
+          pricing={treatment.pricing}
+          interactive={false}
+        />
         <p className="text-sm font-medium text-foreground/80">
           {treatment.form}
         </p>

@@ -232,7 +232,10 @@ function TreatmentCard({
         <h3 className="text-2xl font-bold text-foreground md:text-[1.75rem]">
           {treatment.name}
         </h3>
-        <CompoundedPriceLockup pricing={treatment.pricing} />
+        <CompoundedPriceLockup
+          pricing={treatment.pricing}
+          interactive={false}
+        />
         <p className="text-sm font-medium text-foreground/80">
           {treatment.form}
         </p>

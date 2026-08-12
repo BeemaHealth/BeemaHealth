@@ -29,11 +29,13 @@ import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   COMPOUNDED_TIRZEPATIDE_PRICING,
   formatCompoundedPriceLine,
+  formatUsd,
+  getPlan,
   hasStarterPack,
   promoFirstMonthUsd,
   PROMO_CODE_DISCOUNT_USD,
-  PROMO_CODE_MIN_MONTHS,
   starterPackTitle,
+  STARTER_PACK_INTAKE_HINT,
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
 
@@ -90,40 +92,53 @@ export function TreatmentPricingCard({
             : brand-new patients beginning tirzepatide get{" "}
             {pricing.starterPack.dosePathLabel} for{" "}
             <span className="font-bold text-foreground">
-              ${pricing.starterPack.totalUsd}
+              {formatUsd(pricing.starterPack.totalUsd)}
             </span>{" "}
-            over {pricing.starterPack.months} months ($
-            {pricing.starterPack.monthlyEquivalentUsd}/mo).{" "}
+            over {pricing.starterPack.months} months (
+            {formatUsd(pricing.starterPack.monthlyEquivalentUsd)}/mo).{" "}
+            {STARTER_PACK_INTAKE_HINT}{" "}
             <span className="font-semibold text-foreground">
               Standard / maintenance
             </span>
-            : ${pricing.monthlyUsd}/mo monthly after the starter (6-month,
-            annual, and quarterly rates in the ? next to Standard /
-            maintenance). Continuing on a quarterly plan after the starter is $
-            {PROMO_CODE_DISCOUNT_USD} less than three months at the standard
-            monthly rate. If you&apos;re on maintenance or not taking the
-            starter pack, promo code{" "}
+            : {formatUsd(pricing.monthlyUsd)}/mo monthly;{" "}
+            {formatUsd(getPlan(pricing, 3).monthlyUsd)}/mo on 3 months (Save{" "}
+            <span className="font-bold text-foreground">
+              {formatUsd(getPlan(pricing, 3).savingsUsd)}
+            </span>
+            ); {formatUsd(getPlan(pricing, 6).monthlyUsd)}/mo on 6 months (Save{" "}
+            <span className="font-bold text-foreground">
+              {formatUsd(getPlan(pricing, 6).savingsUsd)}
+            </span>
+            ); {formatUsd(getPlan(pricing, 12).monthlyUsd)}/mo annually (Save{" "}
+            <span className="font-bold text-foreground">
+              {formatUsd(getPlan(pricing, 12).savingsUsd)}
+            </span>
+            ). Promo code{" "}
             <span className="font-bold text-foreground">
               {pricing.promoCode}
             </span>{" "}
-            takes ${PROMO_CODE_DISCOUNT_USD} off your first month (to $
-            {promoFirstMonthUsd(pricing)}) on a {PROMO_CODE_MIN_MONTHS}-month
-            plan, once per patient. The starter pack and promo code can&apos;t
-            be used together. A 1-month purchase bills at the full $
-            {pricing.monthlyUsd}/mo rate.
+            takes an additional ${PROMO_CODE_DISCOUNT_USD} off 3-, 6-, and
+            12-month maintenance plans at checkout (one-time use, once per
+            patient) - not valid on the starter pack or a 1-month purchase.
           </>
         ) : (
           <>
-            ${pricing.monthlyUsd}/mo is the standard cash-pay rate, billed
-            monthly with no long-term contract. Promo code{" "}
+            On a 3-month plan, one-time code{" "}
             <span className="font-bold text-foreground">
               {pricing.promoCode}
             </span>{" "}
-            is a one-time ${PROMO_CODE_DISCOUNT_USD} discount that brings your
-            first month to ${promoFirstMonthUsd(pricing)}, available only on a{" "}
-            {PROMO_CODE_MIN_MONTHS}-month plan purchase and redeemable once per
-            patient. A 1-month purchase bills at the full ${pricing.monthlyUsd}
-            /mo rate with no promo code discount.
+            brings your first month to{" "}
+            <span className="font-bold text-foreground">
+              {formatUsd(promoFirstMonthUsd(pricing))}
+            </span>
+            , then {formatUsd(pricing.monthlyUsd)}/mo for months 2 and 3. Use
+            the plan tabs for 6- and 12-month rates (Save up to{" "}
+            <span className="font-bold text-foreground">
+              {formatUsd(getPlan(pricing, 12).savingsUsd)}
+            </span>
+            ). The same code can take an additional ${PROMO_CODE_DISCOUNT_USD}{" "}
+            off 6- and 12-month plans at checkout - not valid on a 1-month
+            purchase.
           </>
         )}{" "}
         All-inclusive cash-pay pricing: provider care, medication, supplies, and
