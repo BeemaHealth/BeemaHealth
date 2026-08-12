@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import {
   Breadcrumb,
@@ -174,8 +175,24 @@ export function TreatmentIncludedDropdown({
   items: readonly TreatmentIncludedItem[];
   className?: string;
 }) {
+  // Closed until we know the viewport - avoids opening briefly on mobile SSR/hydrate.
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    // Tailwind `md` (768px): open by default on desktop; still collapsible.
+    if (window.matchMedia("(min-width: 768px)").matches) {
+      setValue("whats-included");
+    }
+  }, []);
+
   return (
-    <Accordion type="single" collapsible className={cn("w-full", className)}>
+    <Accordion
+      type="single"
+      collapsible
+      value={value}
+      onValueChange={setValue}
+      className={cn("w-full", className)}
+    >
       <AccordionItem
         value="whats-included"
         className="rounded-2xl border border-border bg-card px-5"

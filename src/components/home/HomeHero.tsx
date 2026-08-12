@@ -259,14 +259,10 @@ export function HomeHero() {
               </Button>
             </MagneticButton>
             <Button asChild size="xl" variant="outline">
-              <Link to="/tirzepatide/" hash="pricing">
-                Tirzepatide pricing
-              </Link>
+              <Link to="/tirzepatide/">Tirzepatide pricing</Link>
             </Button>
             <Button asChild size="xl" variant="outline">
-              <Link to="/semaglutide/" hash="pricing">
-                Semaglutide pricing
-              </Link>
+              <Link to="/semaglutide/">Semaglutide pricing</Link>
             </Button>
           </motion.div>
           <motion.div
