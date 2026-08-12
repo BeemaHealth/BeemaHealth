@@ -179,6 +179,7 @@ function StepConnector({
             r="2.5"
             fill="currentColor"
             strokeDasharray="0"
+            initial={{ cx: 16, cy: 6 }}
             animate={{ cx: [16, 8, 16], cy: [6, 32, 58] }}
             transition={dotTransition}
           />
@@ -213,6 +214,7 @@ function StepConnector({
             r="2.5"
             fill="currentColor"
             strokeDasharray="0"
+            initial={{ cx: 4, cy: 14 }}
             animate={{ cx: [4, 32, 60], cy: [14, 6, 14] }}
             transition={dotTransition}
           />

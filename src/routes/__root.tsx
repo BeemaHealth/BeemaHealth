@@ -197,7 +197,7 @@ function RootShell({ children }: { children: ReactNode }) {
   // GTM uses the standard head install + noscript fallback. GA4 and Google Ads
   // share one gtag.js loader from initAdPixels after hydration.
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
