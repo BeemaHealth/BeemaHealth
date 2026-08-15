@@ -71,6 +71,7 @@ Disallow: /pricing
 Disallow: /clinicians
 Disallow: /insurance
 Disallow: /switch
+Disallow: /the-comb
 
 # ---------------------------------------------------------------------------
 # Everyone else — no bot is sitewide-blocked; same standard path policy as above
@@ -96,5 +97,6 @@ Disallow: /pricing
 Disallow: /clinicians
 Disallow: /insurance
 Disallow: /switch
+Disallow: /the-comb
 
 Sitemap: https://beemahealth.com/sitemap.xml

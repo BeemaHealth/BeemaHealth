@@ -35,6 +35,8 @@ Key facts:
 - [FAQ](https://beemahealth.com/faq/): common questions about pricing, eligibility, medications, shipping, and refills
 - [Learn](https://beemahealth.com/learn/): educational guides on weight management
 - [Traditional vs. GLP-1 weight loss](https://beemahealth.com/learn/initial-research/): evidence-based comparison of lifestyle and GLP-1-assisted approaches
+- [Resistance training for muscle](https://beemahealth.com/learn/resistance-training/): evidence-based guide to weekly volume, effort, protein, and creatine for maintaining and building muscle
+- [Rest intervals between sets](https://beemahealth.com/learn/rest-intervals/): evidence-based guide to rest between sets for muscle, strength, and power
 - [About](https://beemahealth.com/about/): company and clinical approach
 - [Contact](https://beemahealth.com/contact/): support channels
 
