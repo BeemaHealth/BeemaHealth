@@ -12,7 +12,7 @@ Canonical long-form rules live in `docs/marketing/SEO-AEO-GEO-PLAN.md` **§F1.1*
 4. **Required sentence** (reuse verbatim where the page explains compounded status): "Compounded {drug} is not FDA-approved and is considered only when legally available and clinically appropriate."
 5. No outcome guarantees; prescribing is never guaranteed; provider decides case-by-case.
 
-Product photography: LegitScript review preferred colour vials without a Beema wordmark. Certification is **complete** (August 2026); the site still defaults to unbranded vial imagery via `VIAL_IMAGERY_MODE` in `src/lib/treatment-imagery.ts` until product flips that switchboard to `"branded"`. See `docs/features/legitscript.md` and `docs/features/homepage.md`.
+Product photography: the site defaults to branded Beema-wordmark vial imagery via `VIAL_IMAGERY_MODE` in `src/lib/treatment-imagery.ts` (`"branded"`). Unbranded colour vials (no wordmark) remain on the switchboard if product wants them back. See `docs/features/legitscript.md` and `docs/features/homepage.md`.
 
 ## Routes
 

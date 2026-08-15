@@ -8,21 +8,21 @@ import {
 const MEDICATIONS: MedicationId[] = ["semaglutide", "tirzepatide"];
 
 describe("treatment-imagery", () => {
-  it("ships unbranded vials while LegitScript reviews us", () => {
-    expect(VIAL_IMAGERY_MODE).toBe("unbranded");
+  it("ships branded Beema-wordmark vials by default", () => {
+    expect(VIAL_IMAGERY_MODE).toBe("branded");
     for (const id of MEDICATIONS) {
       const imagery = resolveVialImagery(id);
-      expect(imagery.src).toContain(`unbranded-${id}-vial`);
-      expect(imagery.alt).toBe(`Compounded ${id} injection vial`);
-      expect(imagery.alt).not.toContain("Beema");
+      expect(imagery.src).toContain(`compounded-${id}-vial`);
+      expect(imagery.alt).toContain("Beema Health");
     }
   });
 
-  it("keeps the branded renders one flag away", () => {
+  it("keeps the unbranded shots one flag away", () => {
     for (const id of MEDICATIONS) {
-      const branded = resolveVialImagery(id, "branded");
-      expect(branded.src).toContain(`compounded-${id}-vial`);
-      expect(branded.alt).toContain("Beema Health");
+      const unbranded = resolveVialImagery(id, "unbranded");
+      expect(unbranded.src).toContain(`unbranded-${id}-vial`);
+      expect(unbranded.alt).toBe(`Compounded ${id} injection vial`);
+      expect(unbranded.alt).not.toContain("Beema");
     }
   });
 
@@ -45,7 +45,7 @@ describe("treatment-imagery", () => {
         "object-[center_40%]",
       );
       expect(resolveVialImagery(id, "branded").wideCropClass).toBe(
-        "object-center",
+        "object-[center_40%]",
       );
     }
   });
