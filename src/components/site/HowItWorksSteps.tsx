@@ -251,7 +251,7 @@ export function HowItWorksSteps({
     <section
       id={id}
       className={cn(
-        "relative overflow-hidden bg-background py-16 md:py-24",
+        "relative scroll-mt-20 overflow-hidden bg-background py-16 md:py-24",
         className,
       )}
     >

@@ -220,7 +220,9 @@ function SemaglutidePage() {
                   </Button>
                 </MagneticButton>
                 <Button asChild size="xl" variant="outline">
-                  <Link to="/how-it-works/">How it works</Link>
+                  <Link to="/semaglutide/" hash="how-it-works">
+                    How it works
+                  </Link>
                 </Button>
               </motion.div>
               <CompoundedPriceLockup
@@ -315,7 +317,6 @@ function SemaglutidePage() {
       </Section>
 
       <HowItWorksSteps
-        id="semaglutide-how-it-works"
         className="bg-muted/40"
         eyebrow="How it works"
         title="How Beema's semaglutide care works"

@@ -3,7 +3,6 @@ import { getBaskHandoffParams } from "@/lib/utm";
 
 /** Stable CTA identifiers for funnel / conversion attribution. */
 export const CTA_IDS = {
-  nav_mobile: "nav_mobile",
   footer: "footer",
   home_hero: "home_hero",
   home_mid: "home_mid",
@@ -28,6 +27,8 @@ export const CTA_IDS = {
   about: "about",
   learn_initial_research: "learn_initial_research",
   learn_initial_research_bmi: "learn_initial_research_bmi",
+  learn_resistance_training: "learn_resistance_training",
+  learn_rest_intervals: "learn_rest_intervals",
   recipes_hub: "recipes_hub",
   recipe_detail: "recipe_detail",
   landing_page: "landing_page",

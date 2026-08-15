@@ -14,11 +14,23 @@ import {
   SurfaceCard,
 } from "@/components/site/primitives";
 import {
-  INITIAL_RESEARCH_DATE_MODIFIED,
   INITIAL_RESEARCH_DESCRIPTION,
   INITIAL_RESEARCH_PATH,
   INITIAL_RESEARCH_TITLE,
 } from "@/lib/learn/initial-research";
+import {
+  RESISTANCE_TRAINING_DESCRIPTION,
+  RESISTANCE_TRAINING_PATH,
+  RESISTANCE_TRAINING_TITLE,
+} from "@/lib/learn/resistance-training";
+import {
+  REST_INTERVALS_DATE_MODIFIED,
+  REST_INTERVALS_DESCRIPTION,
+  REST_INTERVALS_PATH,
+  REST_INTERVALS_TITLE,
+} from "@/lib/learn/rest-intervals";
+
+const LEARN_HUB_DATE_MODIFIED = REST_INTERVALS_DATE_MODIFIED;
 
 const LEARN_ARTICLES = [
   {
@@ -27,6 +39,20 @@ const LEARN_ARTICLES = [
     excerpt: INITIAL_RESEARCH_DESCRIPTION,
     category: "Evidence guide",
     readMins: 18,
+  },
+  {
+    to: RESISTANCE_TRAINING_PATH,
+    title: RESISTANCE_TRAINING_TITLE,
+    excerpt: RESISTANCE_TRAINING_DESCRIPTION,
+    category: "Training guide",
+    readMins: 16,
+  },
+  {
+    to: REST_INTERVALS_PATH,
+    title: REST_INTERVALS_TITLE,
+    excerpt: REST_INTERVALS_DESCRIPTION,
+    category: "Training guide",
+    readMins: 14,
   },
 ] as const;
 
@@ -37,13 +63,13 @@ export const Route = createFileRoute("/learn/")({
       {
         name: "description",
         content:
-          "Evidence-based educational guides on weight management, GLP-1 medications, and lifestyle approaches. For general information only, not medical advice.",
+          "Evidence-based educational guides on weight management, resistance training, GLP-1 medications, and lifestyle approaches. For general information only, not medical advice.",
       },
       { property: "og:title", content: "Learn | Beema Health" },
       {
         property: "og:description",
         content:
-          "Clear, cited education on traditional and GLP-1-assisted weight loss.",
+          "Clear, cited education on lifestyle, resistance training, and GLP-1-assisted weight loss.",
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/learn") }],
@@ -63,9 +89,9 @@ export const Route = createFileRoute("/learn/")({
           medicalWebPageJsonLd({
             name: "Learn",
             description:
-              "Evidence-based educational guides on weight management and GLP-1 medications.",
+              "Evidence-based educational guides on weight management, resistance training, and GLP-1 medications.",
             path: "/learn",
-            dateModified: INITIAL_RESEARCH_DATE_MODIFIED,
+            dateModified: LEARN_HUB_DATE_MODIFIED,
           }),
         ),
       },
@@ -86,7 +112,7 @@ function LearnIndexPage() {
           as="h1"
           eyebrow="Learn"
           title="Clear, judgment-free education"
-          description="Cited guides to help you understand lifestyle and medication approaches to weight management. Free to browse whether or not you're a Beema patient - no intake is required. Educational only, not medical advice."
+          description="Cited guides on lifestyle, resistance training, and medication approaches to weight management. Free to browse whether or not you're a Beema patient - no intake is required. Educational only, not medical advice."
         />
       </Section>
 

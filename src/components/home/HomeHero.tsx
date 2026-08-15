@@ -245,7 +245,7 @@ export function HomeHero() {
 
           <motion.div
             variants={item}
-            className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
+            className="mt-6 flex flex-col items-start gap-3"
           >
             <MagneticButton>
               <Button asChild size="xl">
@@ -258,12 +258,14 @@ export function HomeHero() {
                 </Link>
               </Button>
             </MagneticButton>
-            <Button asChild size="xl" variant="outline">
-              <Link to="/tirzepatide/">Tirzepatide pricing</Link>
-            </Button>
-            <Button asChild size="xl" variant="outline">
-              <Link to="/semaglutide/">Semaglutide pricing</Link>
-            </Button>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Button asChild size="xl" variant="outline">
+                <Link to="/tirzepatide/">Tirzepatide pricing</Link>
+              </Button>
+              <Button asChild size="xl" variant="outline">
+                <Link to="/semaglutide/">Semaglutide pricing</Link>
+              </Button>
+            </div>
           </motion.div>
           <motion.div
             variants={item}

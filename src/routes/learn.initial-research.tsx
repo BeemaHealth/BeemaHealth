@@ -56,6 +56,10 @@ import {
   INITIAL_RESEARCH_TITLE,
   INITIAL_RESEARCH_TOC,
 } from "@/lib/learn/initial-research";
+import {
+  RESISTANCE_TRAINING_PATH,
+  RESISTANCE_TRAINING_TITLE,
+} from "@/lib/learn/resistance-training";
 import { cn } from "@/lib/utils";
 
 const PAGE_TITLE = `${INITIAL_RESEARCH_TITLE} | Beema Health`;
@@ -787,6 +791,19 @@ function InitialResearchPage() {
               <Strong>93.5% reduction</Strong> in one older-adult meta-analysis
               <Cite n={5} />, which may not generalize to all GLP-1 users.
             </Callout>
+            <ArticleP>
+              For a practical, cited overview of weekly sets, effort, and
+              protein targets, see{" "}
+              <Link
+                to={RESISTANCE_TRAINING_PATH}
+                className="font-medium text-foreground underline decoration-primary/40 underline-offset-2 hover:text-primary hover:decoration-primary"
+              >
+                {RESISTANCE_TRAINING_TITLE}
+              </Link>
+              . Those programming defaults come from resistance-training
+              research in healthy adults. They are not a claim that any
+              medication preserves muscle.
+            </ArticleP>
           </ArticleSection>
 
           {/* 5. Regain */}

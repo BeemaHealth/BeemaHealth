@@ -13,6 +13,7 @@ import { Route as WeightLossRouteImport } from './routes/weight-loss'
 import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as TirzepatideRouteImport } from './routes/tirzepatide'
+import { Route as TheCombRouteImport } from './routes/the-comb'
 import { Route as SwitchRouteImport } from './routes/switch'
 import { Route as SubmittedRouteImport } from './routes/submitted'
 import { Route as StaffRouteImport } from './routes/staff'
@@ -58,6 +59,8 @@ import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
 import { Route as LegalPhysicianCodeOfConductRouteImport } from './routes/legal.physician-code-of-conduct'
 import { Route as LegalIntakeAcknowledgmentsRouteImport } from './routes/legal.intake-acknowledgments'
 import { Route as LegalHipaaRouteImport } from './routes/legal.hipaa'
+import { Route as LearnRestIntervalsRouteImport } from './routes/learn.rest-intervals'
+import { Route as LearnResistanceTrainingRouteImport } from './routes/learn.resistance-training'
 import { Route as LearnInitialResearchRouteImport } from './routes/learn.initial-research'
 import { Route as DashboardRefillsRouteImport } from './routes/dashboard.refills'
 import { Route as DashboardOrdersRouteImport } from './routes/dashboard.orders'
@@ -87,6 +90,11 @@ const VerifyEmailRoute = VerifyEmailRouteImport.update({
 const TirzepatideRoute = TirzepatideRouteImport.update({
   id: '/tirzepatide',
   path: '/tirzepatide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TheCombRoute = TheCombRouteImport.update({
+  id: '/the-comb',
+  path: '/the-comb',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SwitchRoute = SwitchRouteImport.update({
@@ -316,6 +324,16 @@ const LegalHipaaRoute = LegalHipaaRouteImport.update({
   path: '/legal/hipaa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnRestIntervalsRoute = LearnRestIntervalsRouteImport.update({
+  id: '/rest-intervals',
+  path: '/rest-intervals',
+  getParentRoute: () => LearnRoute,
+} as any)
+const LearnResistanceTrainingRoute = LearnResistanceTrainingRouteImport.update({
+  id: '/resistance-training',
+  path: '/resistance-training',
+  getParentRoute: () => LearnRoute,
+} as any)
 const LearnInitialResearchRoute = LearnInitialResearchRouteImport.update({
   id: '/initial-research',
   path: '/initial-research',
@@ -392,6 +410,7 @@ export interface FileRoutesByFullPath {
   '/staff': typeof StaffRouteWithChildren
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/the-comb': typeof TheCombRoute
   '/tirzepatide': typeof TirzepatideRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/waitlist': typeof WaitlistRoute
@@ -402,6 +421,8 @@ export interface FileRoutesByFullPath {
   '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/refills': typeof DashboardRefillsRoute
   '/learn/initial-research': typeof LearnInitialResearchRoute
+  '/learn/resistance-training': typeof LearnResistanceTrainingRoute
+  '/learn/rest-intervals': typeof LearnRestIntervalsRoute
   '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
@@ -450,6 +471,7 @@ export interface FileRoutesByTo {
   '/semaglutide': typeof SemaglutideRoute
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/the-comb': typeof TheCombRoute
   '/tirzepatide': typeof TirzepatideRoute
   '/waitlist': typeof WaitlistRoute
   '/weight-loss': typeof WeightLossRoute
@@ -459,6 +481,8 @@ export interface FileRoutesByTo {
   '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/refills': typeof DashboardRefillsRoute
   '/learn/initial-research': typeof LearnInitialResearchRoute
+  '/learn/resistance-training': typeof LearnResistanceTrainingRoute
+  '/learn/rest-intervals': typeof LearnRestIntervalsRoute
   '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
@@ -509,6 +533,7 @@ export interface FileRoutesById {
   '/staff': typeof StaffRouteWithChildren
   '/submitted': typeof SubmittedRoute
   '/switch': typeof SwitchRoute
+  '/the-comb': typeof TheCombRoute
   '/tirzepatide': typeof TirzepatideRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/waitlist': typeof WaitlistRoute
@@ -519,6 +544,8 @@ export interface FileRoutesById {
   '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/refills': typeof DashboardRefillsRoute
   '/learn/initial-research': typeof LearnInitialResearchRoute
+  '/learn/resistance-training': typeof LearnResistanceTrainingRoute
+  '/learn/rest-intervals': typeof LearnRestIntervalsRoute
   '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
@@ -572,6 +599,7 @@ export interface FileRouteTypes {
     | '/staff'
     | '/submitted'
     | '/switch'
+    | '/the-comb'
     | '/tirzepatide'
     | '/verify-email'
     | '/waitlist'
@@ -582,6 +610,8 @@ export interface FileRouteTypes {
     | '/dashboard/orders'
     | '/dashboard/refills'
     | '/learn/initial-research'
+    | '/learn/resistance-training'
+    | '/learn/rest-intervals'
     | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
     | '/legal/physician-code-of-conduct'
@@ -630,6 +660,7 @@ export interface FileRouteTypes {
     | '/semaglutide'
     | '/submitted'
     | '/switch'
+    | '/the-comb'
     | '/tirzepatide'
     | '/waitlist'
     | '/weight-loss'
@@ -639,6 +670,8 @@ export interface FileRouteTypes {
     | '/dashboard/orders'
     | '/dashboard/refills'
     | '/learn/initial-research'
+    | '/learn/resistance-training'
+    | '/learn/rest-intervals'
     | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
     | '/legal/physician-code-of-conduct'
@@ -688,6 +721,7 @@ export interface FileRouteTypes {
     | '/staff'
     | '/submitted'
     | '/switch'
+    | '/the-comb'
     | '/tirzepatide'
     | '/verify-email'
     | '/waitlist'
@@ -698,6 +732,8 @@ export interface FileRouteTypes {
     | '/dashboard/orders'
     | '/dashboard/refills'
     | '/learn/initial-research'
+    | '/learn/resistance-training'
+    | '/learn/rest-intervals'
     | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
     | '/legal/physician-code-of-conduct'
@@ -750,6 +786,7 @@ export interface RootRouteChildren {
   StaffRoute: typeof StaffRouteWithChildren
   SubmittedRoute: typeof SubmittedRoute
   SwitchRoute: typeof SwitchRoute
+  TheCombRoute: typeof TheCombRoute
   TirzepatideRoute: typeof TirzepatideRoute
   VerifyEmailRoute: typeof VerifyEmailRouteWithChildren
   WaitlistRoute: typeof WaitlistRoute
@@ -795,6 +832,13 @@ declare module '@tanstack/react-router' {
       path: '/tirzepatide'
       fullPath: '/tirzepatide'
       preLoaderRoute: typeof TirzepatideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/the-comb': {
+      id: '/the-comb'
+      path: '/the-comb'
+      fullPath: '/the-comb'
+      preLoaderRoute: typeof TheCombRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/switch': {
@@ -1112,6 +1156,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalHipaaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/rest-intervals': {
+      id: '/learn/rest-intervals'
+      path: '/rest-intervals'
+      fullPath: '/learn/rest-intervals'
+      preLoaderRoute: typeof LearnRestIntervalsRouteImport
+      parentRoute: typeof LearnRoute
+    }
+    '/learn/resistance-training': {
+      id: '/learn/resistance-training'
+      path: '/resistance-training'
+      fullPath: '/learn/resistance-training'
+      preLoaderRoute: typeof LearnResistanceTrainingRouteImport
+      parentRoute: typeof LearnRoute
+    }
     '/learn/initial-research': {
       id: '/learn/initial-research'
       path: '/initial-research'
@@ -1209,11 +1267,15 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 
 interface LearnRouteChildren {
   LearnInitialResearchRoute: typeof LearnInitialResearchRoute
+  LearnResistanceTrainingRoute: typeof LearnResistanceTrainingRoute
+  LearnRestIntervalsRoute: typeof LearnRestIntervalsRoute
   LearnIndexRoute: typeof LearnIndexRoute
 }
 
 const LearnRouteChildren: LearnRouteChildren = {
   LearnInitialResearchRoute: LearnInitialResearchRoute,
+  LearnResistanceTrainingRoute: LearnResistanceTrainingRoute,
+  LearnRestIntervalsRoute: LearnRestIntervalsRoute,
   LearnIndexRoute: LearnIndexRoute,
 }
 
@@ -1311,6 +1373,7 @@ const rootRouteChildren: RootRouteChildren = {
   StaffRoute: StaffRouteWithChildren,
   SubmittedRoute: SubmittedRoute,
   SwitchRoute: SwitchRoute,
+  TheCombRoute: TheCombRoute,
   TirzepatideRoute: TirzepatideRoute,
   VerifyEmailRoute: VerifyEmailRouteWithChildren,
   WaitlistRoute: WaitlistRoute,

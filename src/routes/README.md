@@ -30,18 +30,23 @@ list is maintained in `public/sitemap.xml` and guarded by
 | Page | Route | Status |
 |------|-------|--------|
 | Home | `/` | Live |
-| Weight Loss | `/weight-loss` | Live |
+| Weight Loss | `/weight-loss` | Live - footer Care group (not in the header dropdown) |
 | GLP-1 Care | `/glp-1` | Live (Houston / cash-pay ads + SEO category page) |
 | Compounded Tirzepatide | `/tirzepatide` | Live |
 | Compounded Semaglutide | `/semaglutide` | Live |
-| How it works | `/how-it-works` | Live |
-| About | `/about` | Live |
-| FAQ | `/faq` | Live |
-| Learn | `/learn` | Live (educational hub) — not in header/footer nav; discovered via the homepage free-resources spotlight, cross-links from `/recipes`, and SEO, same pattern as recipes |
+| How it works | `/how-it-works` | Live - footer Care group (not in the header dropdown) |
+| About | `/about` | Live - in the About header dropdown |
+| FAQ | `/faq` | Live - in the About header dropdown |
+| Recipes | `/recipes` | Live (recipe hub) - in the Resources header/footer nav |
+| Recipe detail | `/recipes/$slug` | Live |
+| Learn | `/learn` | Live (educational hub) - in the Resources header/footer nav |
 | Learn article | `/learn/initial-research` | Live |
+| Learn article | `/learn/resistance-training` | Live |
+| Learn article | `/learn/rest-intervals` | Live |
 | Safety | `/safety` | Live |
-| Contact | `/contact` | Live |
+| Contact | `/contact` | Live - in the About header dropdown |
 | Pricing | `/pricing` | Archived (redirect → `/`) |
+| The Comb | `/the-comb` | Archived (redirect → `/`) - retired branded library overview |
 
 Also archived: `/switch`, `/insurance`, and `/clinicians`. Full source and restore
 instructions:

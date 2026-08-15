@@ -220,7 +220,9 @@ function TirzepatidePage() {
                   </Button>
                 </MagneticButton>
                 <Button asChild size="xl" variant="outline">
-                  <Link to="/how-it-works/">How it works</Link>
+                  <Link to="/tirzepatide/" hash="how-it-works">
+                    How it works
+                  </Link>
                 </Button>
               </motion.div>
               <CompoundedPriceLockup
@@ -317,7 +319,6 @@ function TirzepatidePage() {
       </Section>
 
       <HowItWorksSteps
-        id="tirzepatide-how-it-works"
         className="bg-muted/40"
         eyebrow="How it works"
         title="How Beema's tirzepatide care works"

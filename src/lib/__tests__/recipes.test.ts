@@ -549,15 +549,21 @@ describe("recipe compliance and SEO markup", () => {
   });
 
   it("keeps discovery contextual and clearly free to everyone", () => {
-    expect(header).not.toContain('to: "/recipes/"');
-    expect(footer).not.toContain('to: "/recipes/"');
+    expect(header).toContain('label: "Resources"');
+    expect(header).toContain('label: "About"');
+    expect(header).not.toContain('to: "/the-comb/"');
+    expect(header).toContain('to: "/recipes/"');
+    expect(header).toContain('to: "/learn/"');
+    expect(header).toContain('to: "/about/"');
+    expect(header).toContain('to: "/faq/"');
+    expect(header).toContain('to: "/contact/"');
+    expect(footer).toContain('title: "Resources"');
+    expect(footer).not.toContain('to: "/the-comb/"');
+    expect(footer).toContain('to: "/recipes/"');
+    expect(footer).toContain('to: "/learn/"');
     expect(faqRoute).not.toContain('to="/recipes/"');
-
-    // Learn follows the same free-resource pattern: no primary-nav slot,
-    // discovered via the homepage spotlight and cross-links instead.
-    expect(header).not.toContain('to: "/learn/"');
-    expect(footer).not.toContain('to: "/learn/"');
     expect(homepageResource).toContain('to="/learn/"');
+    expect(homepageResource).not.toContain('to="/the-comb/"');
 
     for (const source of [
       homepageResource,
@@ -569,6 +575,7 @@ describe("recipe compliance and SEO markup", () => {
       expect(source).toContain('to="/recipes/"');
     }
 
+    expect(normalizedHomepageResource).not.toContain("The Comb");
     expect(normalizedHomepageResource).toContain("Free recipe collection");
     expect(normalizedHomepageResource).toContain("Free educational guides");
     expect(normalizedHomepageResource).toContain("No intake is required");

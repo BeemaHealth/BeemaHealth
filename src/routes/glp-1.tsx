@@ -196,7 +196,9 @@ function Glp1Page() {
               </Button>
             </MagneticButton>
             <Button asChild size="xl" variant="outline">
-              <Link to="/how-it-works/">How care works</Link>
+              <Link to="/glp-1/" hash="how-it-works">
+                How care works
+              </Link>
             </Button>
           </motion.div>
         </div>

@@ -6,72 +6,124 @@ import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { CircleRevealMenu } from "@/components/site/CircleRevealMenu";
 import { EASE_OUT } from "@/components/home/home-motion";
-import { CTA_IDS, HIVE_LOGIN_URL, resolveCta } from "@/lib/cta-ids";
+import { HIVE_LOGIN_URL } from "@/lib/cta-ids";
 import { FIRST_MONTH_PROMO_SHORT } from "@/lib/marketing-copy";
 import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
 import { SOCIAL_LINKS } from "@/lib/social-links";
 import { cn } from "@/lib/utils";
 
-type NavItem = { label: string; to: string };
+type NavItem = { label: string; to: string; description?: string };
 
 /**
  * Trailing-slash paths - match sitemap.xml / canonicalUrl / GitHub Pages 200
- * URLs. "Weight Loss" is a dropdown label (below) over the program overview
- * plus the per-medication pages, see docs/features/treatment-pages.md.
+ * URLs. Primary nav is three dropdowns: Weight Loss, Resources, and About.
+ * See docs/features/treatment-pages.md.
  */
 const NAV: NavItem[] = [
-  { label: "How it works", to: "/how-it-works/" },
   // { label: "Pricing", to: "/pricing/" }, // disabled - pricing model not finalized yet
-  { label: "FAQ", to: "/faq/" },
-  { label: "About", to: "/about/" },
-  { label: "Contact", to: "/contact/" },
 ];
 
-/** "Weight Loss" nav dropdown items. Add branded-medication pages here later. */
+/** Weight Loss dropdown - medications only. /weight-loss and /how-it-works
+ * stay in the site footer and on-page links, not here. */
 const WEIGHT_LOSS_ITEMS: NavItem[] = [
-  { label: "Weight Loss Program", to: "/weight-loss/" },
   { label: "Compounded Tirzepatide", to: "/tirzepatide/" },
   { label: "Compounded Semaglutide", to: "/semaglutide/" },
 ];
 
 /**
- * Plain, hand-rolled hover dropdown - deliberately not built on Radix's
- * DropdownMenu. That component is designed for click/keyboard menus: its
- * Popper positioning recalculates on every layout tick and its open/close
- * animation resizes the content for ~150ms after opening, both of which
- * move the menu's hit-box out from under a stationary cursor and caused a
- * persistent open/close flicker. This version has no portal, no animation,
- * and no dynamic positioning - the menu is a plain absolutely-positioned
- * child of the trigger's own wrapper, so there is nothing that can shift
- * under the cursor while it's open.
+ * Free content library (recipes, guides, later workout and cooking videos).
+ * Add new no-account resource hubs here and in SiteFooter COLUMNS. Do not
+ * brand this dropdown - keep the label literal so it does not compete with
+ * Hive (the patient portal at hive.beemahealth.com).
  */
-function WeightLossNavDropdown() {
-  const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+const RESOURCE_ITEMS: NavItem[] = [
+  {
+    label: "Recipes",
+    to: "/recipes/",
+    description: "12 meals for changing appetites",
+  },
+  {
+    label: "Learn",
+    to: "/learn/",
+    description: "Evidence-based guides",
+  },
+];
+
+/** Company cluster - keep FAQ / About / Contact together, not in Resources. */
+const ABOUT_ITEMS: NavItem[] = [
+  { label: "About us", to: "/about/" },
+  { label: "FAQ", to: "/faq/" },
+  { label: "Contact us", to: "/contact/" },
+];
+
+/**
+ * Desktop nav dropdowns - click to open (Good Life Meds pattern), hover to
+ * switch once one is open, fade/slide the panel. Animate opacity + translate
+ * only; do not use Radix DropdownMenu (its Popper repositioning caused a
+ * persistent open/close flicker). Shared `openId` so only one panel is open.
+ */
+function DesktopNav() {
+  const [openId, setOpenId] = useState<string | null>(null);
+  const navRef = useRef<HTMLElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reduceMotion = useReducedMotion();
 
-  const openMenu = () => {
-    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
-    setOpen(true);
+  const cancelTimers = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    if (openTimeoutRef.current) {
+      clearTimeout(openTimeoutRef.current);
+      openTimeoutRef.current = null;
+    }
   };
+
+  const openMenu = (id: string, immediate = false) => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    if (immediate || openId !== null) {
+      if (openTimeoutRef.current) {
+        clearTimeout(openTimeoutRef.current);
+        openTimeoutRef.current = null;
+      }
+      setOpenId(id);
+      return;
+    }
+    if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current);
+    openTimeoutRef.current = setTimeout(() => setOpenId(id), 70);
+  };
+
   const closeMenuSoon = () => {
-    closeTimeoutRef.current = setTimeout(() => setOpen(false), 150);
+    if (openTimeoutRef.current) {
+      clearTimeout(openTimeoutRef.current);
+      openTimeoutRef.current = null;
+    }
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    closeTimeoutRef.current = setTimeout(() => setOpenId(null), 180);
   };
 
-  // Click-outside + Escape close it when opened via click/keyboard rather
-  // than hover (hover already closes itself via onMouseLeave above).
+  const closeMenuNow = () => {
+    cancelTimers();
+    setOpenId(null);
+  };
+
   useEffect(() => {
-    if (!open) return;
+    if (!openId) return;
     function handlePointerDown(event: PointerEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        cancelTimers();
+        setOpenId(null);
       }
     }
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        cancelTimers();
+        setOpenId(null);
+      }
     }
     document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("keydown", handleKeyDown);
@@ -79,56 +131,187 @@ function WeightLossNavDropdown() {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open]);
+  }, [openId]);
+
+  useEffect(() => {
+    return () => cancelTimers();
+  }, []);
+
+  const menus = [
+    {
+      id: "weight-loss",
+      label: "Weight Loss",
+      items: WEIGHT_LOSS_ITEMS,
+    },
+    { id: "resources", label: "Resources", items: RESOURCE_ITEMS },
+    { id: "about", label: "About", items: ABOUT_ITEMS },
+  ] as const;
 
   return (
-    <div
-      ref={containerRef}
-      className="relative"
-      onMouseEnter={openMenu}
+    <nav
+      ref={navRef}
+      className="hidden items-center gap-1 lg:flex"
       onMouseLeave={closeMenuSoon}
     >
+      {menus.map((menu) => (
+        <DesktopNavDropdown
+          key={menu.id}
+          id={menu.id}
+          label={menu.label}
+          items={menu.items}
+          open={openId === menu.id}
+          dimmed={openId !== null && openId !== menu.id}
+          reduceMotion={!!reduceMotion}
+          onOpen={() => openMenu(menu.id)}
+          onToggle={() =>
+            openId === menu.id ? closeMenuNow() : openMenu(menu.id, true)
+          }
+        />
+      ))}
+      {NAV.map((item) => (
+        <Link
+          key={item.to}
+          to={item.to}
+          className="whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          activeProps={{ className: "text-foreground bg-muted" }}
+        >
+          {item.label}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
+function DesktopNavDropdown({
+  id,
+  label,
+  items,
+  footerItems,
+  open,
+  dimmed,
+  reduceMotion,
+  onOpen,
+  onToggle,
+}: {
+  id: string;
+  label: string;
+  items: readonly NavItem[];
+  footerItems?: readonly NavItem[];
+  open: boolean;
+  dimmed: boolean;
+  reduceMotion: boolean;
+  onOpen: () => void;
+  onToggle: () => void;
+}) {
+  const hasDescriptions = items.some((item) => item.description);
+  const menuId = `${id}-menu`;
+
+  return (
+    <div className="relative" onMouseEnter={onOpen}>
       <button
         type="button"
         aria-haspopup="true"
         aria-expanded={open}
-        onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-expanded:bg-muted aria-expanded:text-foreground"
+        aria-controls={menuId}
+        onClick={onToggle}
+        className={cn(
+          "inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium transition-[color,background-color,opacity] duration-200 ease-out hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          open
+            ? "bg-muted text-foreground"
+            : dimmed
+              ? "text-muted-foreground/50 hover:text-foreground"
+              : "text-muted-foreground",
+        )}
       >
-        Weight Loss
-        <ChevronDown className="size-3.5" aria-hidden />
+        {label}
+        <ChevronDown
+          className={cn(
+            "size-3.5 transition-transform duration-200 ease-out",
+            open && "rotate-180",
+          )}
+          aria-hidden
+        />
       </button>
-      {open && (
-        <div
-          role="menu"
-          className="absolute left-0 top-full z-50 mt-1 min-w-[10rem] overflow-hidden whitespace-nowrap rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md"
-        >
-          {WEIGHT_LOSS_ITEMS.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              role="menuitem"
-              onClick={() => setOpen(false)}
-              className="block rounded-sm px-2 py-1.5 text-sm text-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      )}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            id={menuId}
+            role="menu"
+            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? undefined : { opacity: 0, y: 8 }}
+            transition={{
+              duration: reduceMotion ? 0 : 0.28,
+              ease: EASE_OUT,
+            }}
+            className={cn(
+              "absolute left-0 top-full z-50 pt-2",
+              hasDescriptions ? "min-w-[16rem]" : "min-w-[14rem]",
+            )}
+          >
+            <div className="overflow-hidden rounded-xl border border-border bg-popover p-1.5 text-popover-foreground shadow-soft">
+              {items.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  role="menuitem"
+                  className={cn(
+                    "block rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent",
+                    !hasDescriptions && "whitespace-nowrap",
+                  )}
+                  onClick={onToggle}
+                >
+                  {item.label}
+                  {item.description ? (
+                    <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+                      {item.description}
+                    </span>
+                  ) : null}
+                </Link>
+              ))}
+              {footerItems && footerItems.length > 0 ? (
+                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border px-3 py-2">
+                  {footerItems.map((item) => (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      role="menuitem"
+                      className="inline-flex min-h-8 items-center text-xs font-medium text-muted-foreground outline-none transition-colors duration-150 hover:text-foreground focus-visible:text-foreground"
+                      onClick={onToggle}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 /**
- * Mobile-menu equivalent of `WeightLossNavDropdown` - a tap-to-expand
+ * Mobile-menu equivalent of `DesktopNavDropdown` - a tap-to-expand
  * disclosure instead of a hover dropdown, since there's no hover on touch.
  * Local `expanded` state so it collapses back down each time the mobile
  * menu itself is reopened, rather than persisting open across visits.
  */
-function MobileWeightLossDropdown({ onNavigate }: { onNavigate: () => void }) {
+function MobileNavDropdown({
+  label,
+  items,
+  footerItems,
+  onNavigate,
+}: {
+  label: string;
+  items: readonly NavItem[];
+  footerItems?: readonly NavItem[];
+  onNavigate: () => void;
+}) {
   const [expanded, setExpanded] = useState(false);
   const reduceMotion = useReducedMotion();
+  const panelKey = `${label.toLowerCase().replace(/\s+/g, "-")}-links`;
 
   return (
     <div>
@@ -138,7 +321,7 @@ function MobileWeightLossDropdown({ onNavigate }: { onNavigate: () => void }) {
         onClick={() => setExpanded((e) => !e)}
         className="flex w-full items-center justify-between rounded-xl px-1 py-2.5 text-xl font-semibold text-ink-foreground transition-colors hover:text-primary"
       >
-        Weight Loss
+        {label}
         <ChevronDown
           className={cn(
             "size-5 shrink-0 transition-transform duration-300 ease-out",
@@ -150,7 +333,7 @@ function MobileWeightLossDropdown({ onNavigate }: { onNavigate: () => void }) {
       <AnimatePresence initial={false}>
         {expanded && (
           <motion.div
-            key="weight-loss-links"
+            key={panelKey}
             initial={reduceMotion ? false : { height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
@@ -158,7 +341,7 @@ function MobileWeightLossDropdown({ onNavigate }: { onNavigate: () => void }) {
             className="overflow-hidden"
           >
             <div className="flex flex-col gap-1 pb-1 pl-3">
-              {WEIGHT_LOSS_ITEMS.map((item) => (
+              {items.map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}
@@ -166,8 +349,27 @@ function MobileWeightLossDropdown({ onNavigate }: { onNavigate: () => void }) {
                   className="rounded-xl px-1 py-2 text-base font-medium text-ink-foreground/75 transition-colors hover:text-primary"
                 >
                   {item.label}
+                  {item.description ? (
+                    <span className="mt-0.5 block text-sm font-normal text-ink-foreground/55">
+                      {item.description}
+                    </span>
+                  ) : null}
                 </Link>
               ))}
+              {footerItems && footerItems.length > 0 ? (
+                <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-ink-foreground/15 pt-2">
+                  {footerItems.map((item) => (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      onClick={onNavigate}
+                      className="py-1 text-sm text-ink-foreground/55 transition-colors hover:text-ink-foreground"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
             </div>
           </motion.div>
         )}
@@ -260,7 +462,6 @@ function HexMenuButton({ className, ...props }: ComponentProps<"button">) {
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const mobileCta = resolveCta(CTA_IDS.nav_mobile);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
@@ -274,19 +475,7 @@ export function SiteHeader() {
           <Logo className="h-9" />
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          <WeightLossNavDropdown />
-          {NAV.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className="whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              activeProps={{ className: "text-foreground bg-muted" }}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <DesktopNav />
 
         <div className="hidden items-center gap-4 lg:ml-auto lg:flex">
           {/* Promo line lives in the hero, marquee, and mobile menu - 
@@ -314,10 +503,26 @@ export function SiteHeader() {
             trigger={<HexMenuButton aria-label="Open menu" />}
           >
             <div className="mb-2 mt-8 px-8">
-              <Logo tone="ink" className="h-9" />
+              <span className="inline-flex rounded-lg bg-background px-3 py-2">
+                <Logo className="h-9" />
+              </span>
             </div>
             <div className="flex flex-1 flex-col justify-center gap-1 px-8">
-              <MobileWeightLossDropdown onNavigate={() => setOpen(false)} />
+              <MobileNavDropdown
+                label="Weight Loss"
+                items={WEIGHT_LOSS_ITEMS}
+                onNavigate={() => setOpen(false)}
+              />
+              <MobileNavDropdown
+                label="Resources"
+                items={RESOURCE_ITEMS}
+                onNavigate={() => setOpen(false)}
+              />
+              <MobileNavDropdown
+                label="About"
+                items={ABOUT_ITEMS}
+                onNavigate={() => setOpen(false)}
+              />
               {NAV.map((item) => (
                 <Link
                   key={item.to}
@@ -328,26 +533,13 @@ export function SiteHeader() {
                   {item.label}
                 </Link>
               ))}
-              <a
-                href={HIVE_LOGIN_URL}
-                className="mt-2 flex items-center justify-center gap-2 rounded-full border-2 border-primary px-4 py-3 text-lg font-semibold text-ink-foreground transition-colors hover:bg-primary/10"
-              >
-                Log In
-                <Hexagon className="size-5 text-primary" aria-hidden />
-              </a>
             </div>
             <div className="space-y-4 px-8 pb-8">
               <Button asChild size="lg" className="w-full">
-                <Link
-                  to={mobileCta.to}
-                  search={mobileCta.search}
-                  onClick={() => {
-                    mobileCta.onClick();
-                    setOpen(false);
-                  }}
-                >
-                  {mobileCta.label}
-                </Link>
+                <a href={HIVE_LOGIN_URL}>
+                  Log In
+                  <Hexagon className="size-5 text-background" aria-hidden />
+                </a>
               </Button>
               <p className="text-center text-xs font-medium text-ink-foreground/60">
                 {FIRST_MONTH_PROMO_SHORT}

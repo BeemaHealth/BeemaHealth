@@ -29,24 +29,42 @@ Shared building blocks (pricing card, comparison table, FAQ accordion, breadcrum
 
 ## `/weight-loss` is a linked overview page
 
-Previously `/weight-loss` was kept as a deliberate orphan (no internal links anywhere on the site) while still being sitemapped at priority 0.9, on the reasoning that it would be retired once the tirzepatide/semaglutide pages fully replaced it. That left it as a genuine orphan page at a high sitemap priority — a real inconsistency for an SEO-focused site, since Google's crawl/ranking signals come from internal link equity, not sitemap presence alone.
+Previously `/weight-loss` was kept as a deliberate orphan (no internal links anywhere on the site) while still being sitemapped at priority 0.9, on the reasoning that it would be retired once the tirzepatide/semaglutide pages fully replaced it. That left it as a genuine orphan page at a high sitemap priority - a real inconsistency for an SEO-focused site, since Google's crawl/ranking signals come from internal link equity, not sitemap presence alone.
 
-As of the 2026-07-30 SEO pass, that decision was reversed: `/weight-loss` is real, unique, non-duplicate content (its own hero, benefits, "who this is for" section, and CTA — not a stub) that targets broader, higher-volume, non-brand search intent than the drug pages can. It is now:
+As of the 2026-07-30 SEO pass, that decision was reversed: `/weight-loss` is real, unique, non-duplicate content (its own hero, benefits, "who this is for" section, and CTA - not a stub) that targets broader, higher-volume, non-brand search intent than the drug pages can. It is now:
 
-- Linked from primary nav (`WEIGHT_LOSS_ITEMS` in `SiteHeader.tsx`, first item) and the footer `COLUMNS[0].links` in `SiteFooter.tsx`
+- Linked from the footer Care column (`COLUMNS[0].links` in `SiteFooter.tsx`), not from the header Weight Loss dropdown
 - Linked contextually from `/semaglutide` and `/tirzepatide` ("Learn about our weight-loss program")
 - Down-ranked in `public/sitemap.xml` to priority `0.7` (below the two drug pages at `0.9`, which remain the primary conversion targets, and `/how-it-works` at `0.8`)
 
-If a future change needs to re-orphan or retire this page, that's a deliberate call to make with the team, not a default to restore — update this doc and the `WEIGHT_LOSS_ITEMS`/`COLUMNS` comments together with the code.
+If a future change needs to re-orphan or retire this page, that's a deliberate call to make with the team, not a default to restore - update this doc and the `COLUMNS` comments together with the code.
 
 ## Nav: "Weight Loss" dropdown
 
-`SiteHeader.tsx` renders "Weight Loss" as a dropdown listing `WEIGHT_LOSS_ITEMS` - currently the `/weight-loss` overview plus Compounded Tirzepatide and Compounded Semaglutide - via two separate components since hover and tap don't behave the same way:
+`SiteHeader.tsx` renders "Weight Loss" as a dropdown of the medications only. `WEIGHT_LOSS_ITEMS` is Compounded Tirzepatide and Compounded Semaglutide.
 
-- **Desktop** - `WeightLossNavDropdown`, a hand-rolled hover dropdown (deliberately not Radix `DropdownMenu`; see the comment above it for why Radix's Popper positioning caused an open/close flicker).
-- **Mobile** - `MobileWeightLossDropdown`, a tap-to-expand disclosure inside the mobile menu (see `docs/features/homepage.md` for the `CircleRevealMenu` shell it lives in). Local `expanded` state collapses it back down every time the mobile menu reopens; the reveal/collapse is animated (Motion `AnimatePresence` + height/opacity), matching the site's other transitions.
+`/weight-loss` and `/how-it-works` stay live for SEO and for people who want the overview / longer process writeup. They are **not** in the header. Link them from the site footer Care column and from in-page copy. On `/tirzepatide`, `/semaglutide`, and `/glp-1`, the hero "How it works" / "How care works" button is an on-page jump (`hash="how-it-works"`) to `<HowItWorksSteps />` on that same page, not a navigation to `/how-it-works/`.
 
-Add new **medication** pages to `WEIGHT_LOSS_ITEMS` (and to `SiteFooter.tsx`'s `COLUMNS[0].links`) rather than adding a new top-level nav entry. Do **not** add city/geo GLP-1 ads landers (`/glp-1`, future `/glp-1/{city}`) to primary nav or footer - those stay ad/SEO entry points plus contextual in-page links (homepage TreatmentShowcase today).
+Hover/tap behavior is the same shared pair as the other menus:
+
+- **Desktop** - `DesktopNav` / `DesktopNavDropdown`. Click a trigger to open, click it again (or outside / Escape) to close, hover another trigger to switch. The open panel fades and slides in (opacity + translate only - no Radix DropdownMenu; that Popper flicker is why these stay in-flow). Only one panel is open at a time; sibling labels dim while a menu is open.
+- **Mobile** - `MobileNavDropdown`, a tap-to-expand disclosure inside the mobile menu (see `docs/features/homepage.md` for the `CircleRevealMenu` shell it lives in). Local `expanded` state collapses it back down every time the mobile menu reopens; the reveal/collapse is animated (Motion `AnimatePresence` + height/opacity), matching the site's other transitions.
+
+Add new **medication** pages to `WEIGHT_LOSS_ITEMS` (and to `SiteFooter.tsx`'s Care column, above the program/how-it-works links) rather than adding a new top-level nav entry. Keep `/weight-loss` and `/how-it-works` in the footer Care column, not in the header. Do **not** add city/geo GLP-1 ads landers (`/glp-1`, future `/glp-1/{city}`) to primary nav or footer - those stay ad/SEO entry points plus contextual in-page links (homepage TreatmentShowcase today).
+
+## Nav: "Resources" dropdown
+
+`SiteHeader.tsx` also renders **Resources** - the free content library (recipes and educational guides today; workout and cooking videos later). It uses the same `DesktopNavDropdown` / `MobileNavDropdown` pair as Weight Loss. Keep the label literal so it does not compete with Hive (the patient portal at `hive.beemahealth.com`).
+
+Live items in `RESOURCE_ITEMS` today: `/recipes/` and `/learn/`. The matching footer column is titled "Resources". Add workout videos, cooking videos, and other no-account resources there (and in the footer column) when they ship - do not add coming-soon placeholders to the live nav.
+
+`/the-comb/` is a retired branded overview that redirects home. Do not relink it.
+
+The homepage `FreeResourcesSection` is the in-page spotlight for the same library (headline: "Free resources to help you get started").
+
+## Nav: "About" dropdown
+
+`ABOUT_ITEMS` is the company cluster: About us, FAQ, and Contact us. Keep these out of Resources (that dropdown is the free content library) and out of Weight Loss (that dropdown is the program). Add Safety or other trust pages here only if they need a persistent header slot; today Safety stays in the footer Trust column plus in-page treatment links.
 
 ## City GLP-1 pages (planned)
 
@@ -113,7 +131,7 @@ const cta = resolveCta(CTA_IDS.tirzepatide_hero);
 | `src/lib/medication-pricing.ts` | Single source of truth for pricing — never hardcode `$` amounts elsewhere |
 | `src/lib/cta-ids.ts` | `CTA_IDS`, `resolveCta()` — the CTA switchboard |
 | `src/lib/seo.ts` | `faqPageJsonLd()`, `breadcrumbJsonLd()`, `serviceJsonLd()`, `medicalWebPageJsonLd()`, `canonicalUrl()` |
-| `src/components/site/SiteHeader.tsx`, `SiteFooter.tsx` | Weight Loss dropdown (`WeightLossNavDropdown` desktop, `MobileWeightLossDropdown` mobile, includes `/weight-loss/`) / Care links |
+| `src/components/site/SiteHeader.tsx`, `SiteFooter.tsx` | Weight Loss, Resources, and About dropdowns (`DesktopNavDropdown` / `MobileNavDropdown`); footer Care + Resources + Trust columns |
 | `src/lib/marketing-copy.ts` | `FIRST_MONTH_PROMO_LINE` — the one-time, 3-month-only promo code promoted alongside pricing |
 | `src/components/home/TreatmentShowcase.tsx`, `src/components/site/TreatmentLineup.tsx` | Medication cards (home / `/weight-loss`) |
 | `public/sitemap.xml`, `public/llms.txt`, `src/lib/__tests__/sitemap.test.ts` | Keep in sync when adding a page |

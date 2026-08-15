@@ -28,7 +28,7 @@ Icon-card grid rendered right after the hero, sourced from `TRUST_SIGNALS` in `t
 
 Full-screen circular-reveal menu used by `SiteHeader.tsx`'s mobile hamburger trigger (sitewide, not homepage-only). A filled circle grows from the trigger's screen position to cover the viewport, then menu content fades in on top; closing reverses the sequence.
 
-Built directly on Radix `Dialog` (`forceMount` + `AnimatePresence`) rather than the shared `Sheet` primitive — that keeps focus trap / Escape / scroll lock intact while the circular-reveal visual is fully custom. Content inside it (the "Weight Loss" tap-to-expand dropdown, nav links, phone/socials) is documented in `docs/features/treatment-pages.md`'s nav section.
+Built directly on Radix `Dialog` (`forceMount` + `AnimatePresence`) rather than the shared `Sheet` primitive - that keeps focus trap / Escape / scroll lock intact while the circular-reveal visual is fully custom. Content inside it (the Weight Loss, Resources, and About tap-to-expand dropdowns, phone/socials) is documented in `docs/features/treatment-pages.md`'s nav section.
 
 ## Key files
 
@@ -39,5 +39,6 @@ Built directly on Radix `Dialog` (`forceMount` + `AnimatePresence`) rather than 
 | `src/lib/legitscript.ts` | Seal verify URL / asset / display size |
 | `src/components/home/TrustSignals.tsx`, `src/lib/trust-signals.ts` | Trust claims band |
 | `src/components/site/CircleRevealMenu.tsx` | Full-screen mobile menu shell (sitewide) |
-| `src/components/site/SiteHeader.tsx` | Mobile menu content, incl. `MobileWeightLossDropdown` |
+| `src/components/home/FreeResourcesSection.tsx` | Homepage spotlight for free recipes + learn guides |
+| `src/components/site/SiteHeader.tsx` | Mobile menu content, incl. `MobileNavDropdown` for Weight Loss, Resources, and About |
 | `src/components/home/home-motion.tsx` | `EASE_OUT`, `Marquee`, `LineReveal` — shared motion primitives used above |

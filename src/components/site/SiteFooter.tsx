@@ -17,25 +17,33 @@ import { TRUST_SIGNALS } from "@/lib/trust-signals";
 /**
  * Trailing-slash paths - match sitemap.xml / canonicalUrl / GitHub Pages 200
  * URLs. See docs/features/treatment-pages.md for the Care column's link set.
+ * Resources is the free content library (recipes, learn; videos later).
  */
 const COLUMNS = [
   {
     title: "Care",
     links: [
-      { label: "Weight Loss Program", to: "/weight-loss/" },
       { label: "Compounded Tirzepatide", to: "/tirzepatide/" },
       { label: "Compounded Semaglutide", to: "/semaglutide/" },
+      { label: "Weight Loss Program", to: "/weight-loss/" },
       { label: "How it works", to: "/how-it-works/" },
       // { label: "Pricing", to: "/pricing/" }, // disabled - pricing model not finalized yet
     ],
   },
   {
+    title: "Resources",
+    links: [
+      { label: "Recipes", to: "/recipes/" },
+      { label: "Learn", to: "/learn/" },
+    ],
+  },
+  {
     title: "Trust",
     links: [
-      { label: "About Beema Health", to: "/about/" },
+      { label: "About us", to: "/about/" },
       { label: "Safety & eligibility", to: "/safety/" },
       { label: "FAQ", to: "/faq/" },
-      { label: "Contact", to: "/contact/" },
+      { label: "Contact us", to: "/contact/" },
     ],
   },
   {
@@ -61,7 +69,7 @@ export function SiteFooter() {
     <footer className="bg-grad-ink relative overflow-hidden text-ink-foreground">
       <InfinityMotif className="pointer-events-none absolute -right-16 -top-20 w-80 text-primary/10" />
       <div className="veya-container relative py-16">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,minmax(0,1fr))]">
           <div className="max-w-sm">
             <span className="inline-flex rounded-lg bg-white px-3 py-2">
               <Logo className="h-10" />

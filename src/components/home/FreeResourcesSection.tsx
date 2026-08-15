@@ -1,24 +1,75 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, ChefHat } from "lucide-react";
+import { ArrowRight, BookOpen, ChefHat, ImageIcon } from "lucide-react";
 import { RecipeImage } from "@/components/site/RecipeBlocks";
 import { Button } from "@/components/ui/button";
+import {
+  LEARN_GUIDES_IMAGE_ALT,
+  learnGuidesImagePath,
+  learnGuidesImageSrcSet,
+} from "@/lib/learn-guides-image";
 import { RECIPES } from "@/lib/recipes";
+import { cn } from "@/lib/utils";
+
+const CARD_IMAGE_SIZES = "(min-width: 1024px) 50vw, 100vw";
+
+function LearnGuidesImage({ className }: { className?: string }) {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div
+      className={cn(
+        "relative min-w-0 max-w-full overflow-hidden bg-primary-soft",
+        className,
+      )}
+    >
+      {failed ? (
+        <div className="absolute inset-0 grid place-items-center bg-grad-hero p-6 text-center">
+          <div>
+            <ImageIcon
+              className="mx-auto size-8 text-accent-foreground/60"
+              aria-hidden
+            />
+            <p className="mt-3 text-sm font-semibold text-accent-foreground">
+              Free educational guides
+            </p>
+          </div>
+        </div>
+      ) : (
+        <picture className="block h-full w-full">
+          <source
+            type="image/webp"
+            srcSet={learnGuidesImageSrcSet()}
+            sizes={CARD_IMAGE_SIZES}
+          />
+          <img
+            src={learnGuidesImagePath()}
+            srcSet={learnGuidesImageSrcSet()}
+            alt={LEARN_GUIDES_IMAGE_ALT}
+            width={1536}
+            height={1024}
+            loading="lazy"
+            sizes={CARD_IMAGE_SIZES}
+            className="h-full w-full object-cover"
+            onError={() => setFailed(true)}
+          />
+        </picture>
+      )}
+    </div>
+  );
+}
 
 /**
- * Homepage spotlight for the two free, no-account-required resource
- * collections (recipes + educational guides). Neither lives in the primary
- * nav - both are meant to be discovered here, via SEO, and via cross-links
- * between the two, not via a persistent nav slot.
+ * Homepage spotlight for the free content library (recipes + educational
+ * guides today; workout and cooking videos later). Linked from the
+ * header/footer Resources dropdown as well as this homepage band.
  */
 export function FreeResourcesSection() {
   return (
     <section className="bg-primary-soft/45 py-16 md:py-24">
       <div className="veya-container">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-wide text-accent-foreground">
-            Free, no account required
-          </p>
-          <h2 className="mt-4 text-balance text-3xl font-bold text-foreground md:text-5xl">
+          <h2 className="text-balance text-3xl font-bold text-foreground md:text-5xl">
             Free resources to help you get started
           </h2>
           <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">
@@ -31,7 +82,7 @@ export function FreeResourcesSection() {
           <div className="flex flex-col overflow-hidden rounded-[2rem] border border-border bg-card shadow-soft">
             <RecipeImage
               recipe={RECIPES[2]}
-              sizes="(min-width: 1024px) 50vw, 100vw"
+              sizes={CARD_IMAGE_SIZES}
               className="aspect-[16/9]"
             />
             <div className="flex flex-1 flex-col p-6 md:p-8">
@@ -54,24 +105,28 @@ export function FreeResourcesSection() {
             </div>
           </div>
 
-          <div className="flex flex-col rounded-[2rem] border border-border bg-card p-6 shadow-soft md:p-8">
-            <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground">
-              <BookOpen className="size-5" aria-hidden />
-              Free educational guides
-            </p>
-            <h3 className="mt-3 text-xl font-semibold text-foreground md:text-2xl">
-              Researched guides on weight management
-            </h3>
-            <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-              Cited, plain-language comparisons of lifestyle and GLP-1-assisted
-              approaches to weight loss - grounded in peer-reviewed trials and
-              clinical guidelines.
-            </p>
-            <Button asChild className="mt-6 w-fit">
-              <Link to="/learn/">
-                Explore free guides <ArrowRight aria-hidden />
-              </Link>
-            </Button>
+          <div className="flex flex-col overflow-hidden rounded-[2rem] border border-border bg-card shadow-soft">
+            <LearnGuidesImage className="aspect-[16/9]" />
+            <div className="flex flex-1 flex-col p-6 md:p-8">
+              <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-accent-foreground">
+                <BookOpen className="size-5" aria-hidden />
+                Free educational guides
+              </p>
+              <h3 className="mt-3 text-xl font-semibold text-foreground md:text-2xl">
+                Researched guides on weight management
+              </h3>
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                Cited, plain-language guides on lifestyle, resistance training,
+                rest intervals, and glucagon-like peptide-1-assisted approaches
+                to weight loss, grounded in peer-reviewed trials and clinical
+                guidelines.
+              </p>
+              <Button asChild className="mt-6 w-fit">
+                <Link to="/learn/">
+                  Explore free guides <ArrowRight aria-hidden />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

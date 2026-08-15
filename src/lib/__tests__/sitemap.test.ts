@@ -38,6 +38,8 @@ const EXPECTED_PATHS = [
   "/faq/",
   "/learn/",
   "/learn/initial-research/",
+  "/learn/resistance-training/",
+  "/learn/rest-intervals/",
   "/contact/",
   "/legal/privacy/",
   "/legal/terms/",
@@ -124,6 +126,7 @@ describe("public/sitemap.xml", () => {
       "/login",
       "/verify-email",
       "/lp/",
+      "/the-comb",
     ];
     for (const loc of sitemapLocs()) {
       const path = loc.slice(SITE_URL.length);
@@ -169,6 +172,7 @@ describe("public/robots.txt", () => {
       "/clinicians",
       "/insurance",
       "/switch",
+      "/the-comb",
       "/legal/intake-acknowledgments",
     ]) {
       expect(robotsTxt).toContain(`Disallow: ${path}`);
@@ -200,7 +204,13 @@ describe("public/robots.txt", () => {
       robotsTxt.lastIndexOf("User-agent: *"),
     );
     expect(namedGroup.length).toBeGreaterThan(0);
-    for (const path of ["/dashboard", "/staff", "/waitlist", "/pricing"]) {
+    for (const path of [
+      "/dashboard",
+      "/staff",
+      "/waitlist",
+      "/pricing",
+      "/the-comb",
+    ]) {
       expect(namedGroup).toContain(`Disallow: ${path}`);
     }
   });
@@ -246,6 +256,40 @@ describe("internal marketing links (trailing slash)", () => {
     expect(paths.length).toBeGreaterThan(0);
     for (const path of paths) {
       expect(path.endsWith("/"), path).toBe(true);
+    }
+  });
+
+  it("keeps program and how-it-works pages in the footer, not the header dropdown", () => {
+    expect(headerSrc).not.toContain('to: "/weight-loss/"');
+    expect(headerSrc).not.toContain('to: "/how-it-works/"');
+    expect(footerSrc).toContain('to: "/weight-loss/"');
+    expect(footerSrc).toContain('to: "/how-it-works/"');
+  });
+});
+
+describe("treatment page how-it-works CTAs", () => {
+  const routes = {
+    tirzepatide: readFileSync(
+      resolve(__dirname, "../../routes/tirzepatide.tsx"),
+      "utf-8",
+    ),
+    semaglutide: readFileSync(
+      resolve(__dirname, "../../routes/semaglutide.tsx"),
+      "utf-8",
+    ),
+    glp1: readFileSync(resolve(__dirname, "../../routes/glp-1.tsx"), "utf-8"),
+  };
+  const steps = readFileSync(
+    resolve(__dirname, "../../components/site/HowItWorksSteps.tsx"),
+    "utf-8",
+  );
+
+  it("jumps to on-page steps instead of leaving for /how-it-works/", () => {
+    expect(steps).toContain('id = "how-it-works"');
+    expect(steps).toContain("scroll-mt-20");
+    for (const [name, source] of Object.entries(routes)) {
+      expect(source, name).toContain('hash="how-it-works"');
+      expect(source, name).not.toContain('to="/how-it-works/"');
     }
   });
 });
