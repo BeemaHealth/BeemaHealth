@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  BASK_HREF_SYNC_SCRIPT,
   capturePageUtms,
   clearPendingUtms,
   getAttributionForSubmit,
@@ -88,6 +89,70 @@ describe("utm / attribution (frontend-only)", () => {
       utm_campaign: "daily_2026-07-22",
       utm_content: "x_post_1_20260722_jbwy",
     });
+  });
+
+  it("BASK_HREF_SYNC_SCRIPT rewrites prerendered Bask anchors before hydration can", () => {
+    const heroAnchor = {
+      href: "https://q.beemahealth.com/start-online-visit/weightloss?cta_id=home_hero",
+    };
+    const footerAnchor = {
+      href: "https://q.beemahealth.com/start-online-visit/weightloss?cta_id=footer",
+    };
+    const hiveLoginAnchor = { href: "https://hive.beemahealth.com/" };
+    const anchors = [heroAnchor, footerAnchor, hiveLoginAnchor];
+
+    vi.stubGlobal("window", {
+      location: {
+        search:
+          "?utm_source=facebook&utm_campaign=houston&utm_medium=paid&fbclid=IwAR0.abc",
+      },
+    });
+    vi.stubGlobal("document", {
+      // Emulates `a[href^="https://q.beemahealth.com/"]` for the two Bask
+      // CTAs only - the Hive login anchor must be left untouched.
+      querySelectorAll: (selector: string) =>
+        selector.includes("q.beemahealth.com")
+          ? anchors.filter((a) =>
+              a.href.startsWith("https://q.beemahealth.com/"),
+            )
+          : [],
+    });
+
+    // This is the literal inline <script> shipped in every prerendered page
+    // (see RootShell in src/routes/__root.tsx) - run the real string, not a
+    // reimplementation, so the test would catch a typo the same way a
+    // browser would.
+
+    new Function(BASK_HREF_SYNC_SCRIPT)();
+
+    const heroUrl = new URL(heroAnchor.href);
+    expect(heroUrl.searchParams.get("cta_id")).toBe("home_hero");
+    expect(heroUrl.searchParams.get("utm_source")).toBe("facebook");
+    expect(heroUrl.searchParams.get("utm_campaign")).toBe("houston");
+    expect(heroUrl.searchParams.get("utm_medium")).toBe("paid");
+    expect(heroUrl.searchParams.get("fbclid")).toBe("IwAR0.abc");
+
+    const footerUrl = new URL(footerAnchor.href);
+    expect(footerUrl.searchParams.get("cta_id")).toBe("footer");
+    expect(footerUrl.searchParams.get("utm_source")).toBe("facebook");
+
+    expect(hiveLoginAnchor.href).toBe("https://hive.beemahealth.com/");
+  });
+
+  it("BASK_HREF_SYNC_SCRIPT no-ops when the landing URL carries no attribution params", () => {
+    const heroAnchor = {
+      href: "https://q.beemahealth.com/start-online-visit/weightloss?cta_id=home_hero",
+    };
+    vi.stubGlobal("window", { location: { search: "" } });
+    vi.stubGlobal("document", {
+      querySelectorAll: () => [heroAnchor],
+    });
+
+    new Function(BASK_HREF_SYNC_SCRIPT)();
+
+    expect(heroAnchor.href).toBe(
+      "https://q.beemahealth.com/start-online-visit/weightloss?cta_id=home_hero",
+    );
   });
 
   it("leaves already-valid UTM queries unchanged", () => {

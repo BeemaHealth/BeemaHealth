@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   __resetAdPixelBootstrapForTests,
+  ensureMetaPixel,
   initAdPixels,
   isAnyAdPixelConfigured,
   isGaConfigured,
@@ -16,6 +17,7 @@ type FakeWindow = {
   fbq?: ((...args: unknown[]) => void) & {
     queue?: unknown[];
     loaded?: boolean;
+    callMethod?: (...args: unknown[]) => void;
   };
   gtag?: (...args: unknown[]) => void;
   dataLayer?: unknown[];
@@ -112,6 +114,36 @@ describe("ad-conversions", () => {
     const gtagArgs = JSON.stringify(gtag.mock.calls);
     expect(fbqArgs).not.toMatch(/@/);
     expect(gtagArgs).not.toMatch(/@/);
+  });
+
+  it("delegates to fbevents.js's callMethod once it upgrades the stub, instead of queuing forever", () => {
+    vi.stubEnv("VITE_META_PIXEL_ID", "111222333");
+    const win: FakeWindow = {};
+    installDomStubs(win);
+
+    // No pre-installed fbq mock here - this exercises the real self-created
+    // stub from ensureMetaPixel(), the same object fbevents.js upgrades in place.
+    ensureMetaPixel();
+    expect(win.fbq).toBeDefined();
+    expect(win.fbq!.queue).toEqual([
+      ["init", "111222333"],
+      ["track", "PageView"],
+    ]);
+
+    // Simulate fbevents.js finishing its load: it sets `callMethod` on the
+    // existing fbq function object rather than replacing window.fbq.
+    const callMethod = vi.fn();
+    win.fbq!.callMethod = callMethod;
+
+    // A call made after "load" (e.g. the GTM Lead tag on a CTA click) must
+    // reach callMethod directly, not pile into the queue no one drains again.
+    win.fbq!("track", "Lead");
+
+    expect(callMethod).toHaveBeenCalledWith("track", "Lead");
+    expect(win.fbq!.queue).toEqual([
+      ["init", "111222333"],
+      ["track", "PageView"],
+    ]);
   });
 
   it("shares one Google tag loader across GA4 and Ads destinations", () => {

@@ -1,3 +1,5 @@
+import { BASK_INTAKE_HOST } from "@/lib/gtm";
+
 const SESSION_KEY = "beemahealth_pending_utms";
 
 /**
@@ -15,6 +17,52 @@ export const BASK_HANDOFF_PARAM_KEYS = [
 ] as const;
 
 export type BaskHandoffParamKey = (typeof BASK_HANDOFF_PARAM_KEYS)[number];
+
+/**
+ * Every marketing route is statically prerendered (vite.config.ts), so the
+ * "Get Started" anchor's `href` is baked in at build time with no query
+ * string to read - it ships with only `cta_id`, never the utm_ or click-id
+ * params. `resolveCta()` recomputes the correct href once the app hydrates,
+ * but hydration means loading and running the full JS bundle first; a click
+ * before that finishes still fires the stale, param-less prerendered href
+ * and Bask (and every downstream ad platform) sees the visit as Direct.
+ *
+ * This is a plain, dependency-free classic script (not a module) rendered
+ * inline right after the CTA anchors in the document body - see
+ * `RootShell` in `src/routes/__root.tsx`. The browser executes it the
+ * instant it's parsed, before the framework bundle is even requested, so it
+ * closes that window almost entirely: by the time a human (or even a fast
+ * bot) can click, the anchor's href already carries every param the
+ * landing URL had. It intentionally does not touch sessionStorage - that
+ * stays `capturePageUtms()`'s job once React mounts; this only has to fix
+ * the very first, pre-hydration paint of the current page's own CTAs.
+ */
+export const BASK_HREF_SYNC_SCRIPT = `
+(function () {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var keys = ${JSON.stringify(BASK_HANDOFF_PARAM_KEYS)};
+    var found = {};
+    var any = false;
+    for (var i = 0; i < keys.length; i++) {
+      var value = params.get(keys[i]);
+      if (value) {
+        found[keys[i]] = value;
+        any = true;
+      }
+    }
+    if (!any) return;
+    var anchors = document.querySelectorAll('a[href^="https://${BASK_INTAKE_HOST}/"]');
+    for (var j = 0; j < anchors.length; j++) {
+      try {
+        var url = new URL(anchors[j].href);
+        for (var key in found) url.searchParams.set(key, found[key]);
+        anchors[j].href = url.toString();
+      } catch (e) {}
+    }
+  } catch (e) {}
+})();
+`.trim();
 
 export type UtmParams = {
   utm_source: string;

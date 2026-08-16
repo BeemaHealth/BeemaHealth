@@ -8,7 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { capturePageUtms } from "@/lib/utm";
+import { BASK_HREF_SYNC_SCRIPT, capturePageUtms } from "@/lib/utm";
 import { initAdPixels } from "@/lib/ad-conversions";
 import { GTM_CONTAINER_ID, GTM_HEAD_SCRIPT } from "@/lib/gtm";
 import { absoluteUrl, ORGANIZATION_JSONLD } from "@/lib/seo";
@@ -216,6 +216,8 @@ function RootShell({ children }: { children: ReactNode }) {
           />
         </noscript>
         {children}
+        {/* Runs before the framework bundle loads - see BASK_HREF_SYNC_SCRIPT. */}
+        <script dangerouslySetInnerHTML={{ __html: BASK_HREF_SYNC_SCRIPT }} />
         <Scripts />
       </body>
     </html>

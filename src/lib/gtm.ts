@@ -15,7 +15,7 @@ export const GOOGLE_ADS_ID = "AW-18301765593" as const;
 /** Only this host loads GTM / Ads / should be treated as live production traffic. */
 export const GTM_PRODUCTION_HOSTNAME = "beemahealth.com" as const;
 
-const BASK_INTAKE_HOST = "q.beemahealth.com";
+export const BASK_INTAKE_HOST = "q.beemahealth.com";
 
 /**
  * Google's standard GTM bootstrap IIFE, wrapped only with a production

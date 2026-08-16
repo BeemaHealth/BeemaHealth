@@ -29,6 +29,9 @@ declare global {
     fbq?: ((...args: unknown[]) => void) & {
       queue?: unknown[];
       loaded?: boolean;
+      callMethod?: (...args: unknown[]) => void;
+      push?: Window["fbq"];
+      version?: string;
     };
     _fbq?: Window["fbq"];
     dataLayer?: unknown[];
@@ -114,11 +117,23 @@ export function ensureMetaPixel(config = readAdPixelConfig()): void {
   metaBootstrapped = true;
 
   if (!window.fbq) {
+    // Mirrors Meta's official base pixel snippet: once fbevents.js loads, it
+    // sets `callMethod` on this same function object to upgrade it in place.
+    // Every call must check for that upgrade and delegate to it - if it just
+    // unconditionally queues (as a naive stub does), calls made after load
+    // (Lead, ViewContent, etc.) get silently stuck in `queue` forever and
+    // only the very first, pre-load PageView call ever actually sends.
     const fbq: NonNullable<Window["fbq"]> = function (...args: unknown[]) {
-      (fbq.queue = fbq.queue || []).push(args);
+      if (fbq.callMethod) {
+        fbq.callMethod(...args);
+      } else {
+        (fbq.queue = fbq.queue || []).push(args);
+      }
     };
+    fbq.push = fbq;
     fbq.queue = [];
     fbq.loaded = true;
+    fbq.version = "2.0";
     window.fbq = fbq;
     window._fbq = fbq;
   }
