@@ -25,6 +25,7 @@ const COLUMNS = [
     links: [
       { label: "Compounded Tirzepatide", to: "/tirzepatide/" },
       { label: "Compounded Semaglutide", to: "/semaglutide/" },
+      { label: "GLP-1 Care", to: "/glp-1/" },
       { label: "Weight Loss Program", to: "/weight-loss/" },
       { label: "How it works", to: "/how-it-works/" },
       // { label: "Pricing", to: "/pricing/" }, // disabled - pricing model not finalized yet

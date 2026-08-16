@@ -26,6 +26,7 @@ import { Route as LearnRouteImport } from './routes/learn'
 import { Route as IntakeRouteImport } from './routes/intake'
 import { Route as InsuranceRouteImport } from './routes/insurance'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as Glp1HoustonRouteImport } from './routes/glp-1-houston'
 import { Route as Glp1RouteImport } from './routes/glp-1'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
@@ -155,6 +156,11 @@ const InsuranceRoute = InsuranceRouteImport.update({
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Glp1HoustonRoute = Glp1HoustonRouteImport.update({
+  id: '/glp-1-houston',
+  path: '/glp-1-houston',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Glp1Route = Glp1RouteImport.update({
@@ -398,6 +404,7 @@ export interface FileRoutesByFullPath {
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/glp-1': typeof Glp1Route
+  '/glp-1-houston': typeof Glp1HoustonRoute
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
   '/intake': typeof IntakeRoute
@@ -461,6 +468,7 @@ export interface FileRoutesByTo {
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/glp-1': typeof Glp1Route
+  '/glp-1-houston': typeof Glp1HoustonRoute
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
   '/intake': typeof IntakeRoute
@@ -521,6 +529,7 @@ export interface FileRoutesById {
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/glp-1': typeof Glp1Route
+  '/glp-1-houston': typeof Glp1HoustonRoute
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
   '/intake': typeof IntakeRoute
@@ -587,6 +596,7 @@ export interface FileRouteTypes {
     | '/eligibility'
     | '/faq'
     | '/glp-1'
+    | '/glp-1-houston'
     | '/how-it-works'
     | '/insurance'
     | '/intake'
@@ -650,6 +660,7 @@ export interface FileRouteTypes {
     | '/eligibility'
     | '/faq'
     | '/glp-1'
+    | '/glp-1-houston'
     | '/how-it-works'
     | '/insurance'
     | '/intake'
@@ -709,6 +720,7 @@ export interface FileRouteTypes {
     | '/eligibility'
     | '/faq'
     | '/glp-1'
+    | '/glp-1-houston'
     | '/how-it-works'
     | '/insurance'
     | '/intake'
@@ -774,6 +786,7 @@ export interface RootRouteChildren {
   EligibilityRoute: typeof EligibilityRoute
   FaqRoute: typeof FaqRoute
   Glp1Route: typeof Glp1Route
+  Glp1HoustonRoute: typeof Glp1HoustonRoute
   HowItWorksRoute: typeof HowItWorksRoute
   InsuranceRoute: typeof InsuranceRoute
   IntakeRoute: typeof IntakeRoute
@@ -923,6 +936,13 @@ declare module '@tanstack/react-router' {
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glp-1-houston': {
+      id: '/glp-1-houston'
+      path: '/glp-1-houston'
+      fullPath: '/glp-1-houston'
+      preLoaderRoute: typeof Glp1HoustonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/glp-1': {
@@ -1361,6 +1381,7 @@ const rootRouteChildren: RootRouteChildren = {
   EligibilityRoute: EligibilityRoute,
   FaqRoute: FaqRoute,
   Glp1Route: Glp1Route,
+  Glp1HoustonRoute: Glp1HoustonRoute,
   HowItWorksRoute: HowItWorksRoute,
   InsuranceRoute: InsuranceRoute,
   IntakeRoute: IntakeRoute,

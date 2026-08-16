@@ -196,7 +196,18 @@ export type ServiceJsonLdInput = {
   offer?: ServiceOfferInput;
   /** ISO date (YYYY-MM-DD) of the last content-significant edit to this page - keep honest, matches any visible "reviewed on"/"updated" text on the page. */
   dateModified?: string;
+  /**
+   * Defaults to the United States. City landers may pass Houston + US (or
+   * similar) so Service markup matches the page's market without implying
+   * the whole site is single-city.
+   */
+  areaServed?: unknown;
 };
+
+const DEFAULT_AREA_SERVED = {
+  "@type": "Country",
+  name: "United States",
+} as const;
 
 /** Service JSON-LD for a page describing a service Beema Health offers (as opposed to an informational page - see medicalWebPageJsonLd()). */
 export function serviceJsonLd({
@@ -207,6 +218,7 @@ export function serviceJsonLd({
   reviewedByClinicalLead,
   offer,
   dateModified,
+  areaServed,
 }: ServiceJsonLdInput) {
   return {
     "@context": "https://schema.org",
@@ -216,7 +228,7 @@ export function serviceJsonLd({
     serviceType,
     url: canonicalUrl(path),
     provider: { "@id": `${SITE_URL}/#organization` },
-    areaServed: { "@type": "Country", name: "United States" },
+    areaServed: areaServed ?? DEFAULT_AREA_SERVED,
     ...(reviewedByClinicalLead ? { reviewedBy: CLINICAL_REVIEWER_JSONLD } : {}),
     ...(dateModified ? { dateModified } : {}),
     ...(offer

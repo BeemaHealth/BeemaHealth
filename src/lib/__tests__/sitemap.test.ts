@@ -18,6 +18,7 @@ const EXPECTED_PATHS = [
   "/tirzepatide/",
   "/semaglutide/",
   "/glp-1/",
+  "/glp-1-houston/",
   "/how-it-works/",
   "/weight-loss/",
   "/recipes/",
@@ -183,6 +184,11 @@ describe("public/robots.txt", () => {
     expect(robotsTxt).not.toContain("Disallow: /learn");
   });
 
+  it("allows both GLP-1 landers to be crawled", () => {
+    expect(robotsTxt).not.toContain("Disallow: /glp-1");
+    expect(robotsTxt).not.toContain("Disallow: /glp-1-houston");
+  });
+
   it("allows the public recipe collection to be crawled", () => {
     expect(robotsTxt).not.toContain("Disallow: /recipes");
     expect(robotsTxt).toContain("Allow: /");
@@ -259,11 +265,15 @@ describe("internal marketing links (trailing slash)", () => {
     }
   });
 
-  it("keeps program and how-it-works pages in the footer, not the header dropdown", () => {
+  it("keeps program, GLP-1 hub, and how-it-works pages in the footer, not the header dropdown", () => {
     expect(headerSrc).not.toContain('to: "/weight-loss/"');
     expect(headerSrc).not.toContain('to: "/how-it-works/"');
+    expect(headerSrc).not.toContain('to: "/glp-1/"');
+    expect(headerSrc).not.toContain('to: "/glp-1-houston/"');
     expect(footerSrc).toContain('to: "/weight-loss/"');
     expect(footerSrc).toContain('to: "/how-it-works/"');
+    expect(footerSrc).toContain('to: "/glp-1/"');
+    expect(footerSrc).not.toContain('to: "/glp-1-houston/"');
   });
 });
 
@@ -277,7 +287,10 @@ describe("treatment page how-it-works CTAs", () => {
       resolve(__dirname, "../../routes/semaglutide.tsx"),
       "utf-8",
     ),
-    glp1: readFileSync(resolve(__dirname, "../../routes/glp-1.tsx"), "utf-8"),
+    glp1: readFileSync(
+      resolve(__dirname, "../../components/site/Glp1LandingPage.tsx"),
+      "utf-8",
+    ),
   };
   const steps = readFileSync(
     resolve(__dirname, "../../components/site/HowItWorksSteps.tsx"),

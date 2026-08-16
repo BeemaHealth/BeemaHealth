@@ -104,7 +104,7 @@ export function TreatmentShowcase() {
         </p>
         <p className="mt-4">
           <Link
-            to="/glp-1/"
+            to="/glp-1-houston/"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-foreground underline-offset-4 hover:underline"
           >
             Explore GLP-1 care for Houston
