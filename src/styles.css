@@ -372,6 +372,34 @@
 }
 
 /*
+ * Smooth open/close for native <details> accordions (see accordion.tsx).
+ * Native <details> keeps its content in the DOM at all times so crawlers can
+ * read it - the ::details-content pseudo-element is the browser's own box
+ * for that content and already toggles content-visibility correctly for
+ * accessibility (screen readers skip it while closed) without any JS.
+ * `interpolate-size` + a transition on it just makes that resize smooth
+ * instead of an instant snap. Both are progressive enhancement: browsers
+ * without support silently keep the instant snap - no functional loss.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .accordion-item {
+    interpolate-size: allow-keywords;
+  }
+
+  .accordion-item::details-content {
+    height: 0;
+    overflow: hidden;
+    transition:
+      height 0.3s ease,
+      content-visibility 0.3s ease allow-discrete;
+  }
+
+  .accordion-item[open]::details-content {
+    height: auto;
+  }
+}
+
+/*
  * Scroll-reveal motion. Elements with .reveal start hidden and slide up when
  * .is-visible is added (see Reveal in src/components/site/primitives.tsx).
  * Wrapped in prefers-reduced-motion so reduced-motion users see static content.

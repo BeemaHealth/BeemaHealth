@@ -1,5 +1,5 @@
-import brandedSemaglutide from "@/assets/treatments/compounded-semaglutide-vial.png";
-import brandedTirzepatide from "@/assets/treatments/compounded-tirzepatide-vial.png";
+import brandedSemaglutide from "@/assets/treatments/compounded-semaglutide-vial.webp";
+import brandedTirzepatide from "@/assets/treatments/compounded-tirzepatide-vial.webp";
 import unbrandedSemaglutide from "@/assets/treatments/unbranded-semaglutide-vial.webp";
 import unbrandedTirzepatide from "@/assets/treatments/unbranded-tirzepatide-vial.webp";
 

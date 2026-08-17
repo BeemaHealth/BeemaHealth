@@ -41,6 +41,7 @@ const EXPECTED_PATHS = [
   "/learn/initial-research/",
   "/learn/resistance-training/",
   "/learn/rest-intervals/",
+  "/learn/semaglutide-vs-tirzepatide/",
   "/contact/",
   "/legal/privacy/",
   "/legal/terms/",

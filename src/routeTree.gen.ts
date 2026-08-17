@@ -60,6 +60,7 @@ import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
 import { Route as LegalPhysicianCodeOfConductRouteImport } from './routes/legal.physician-code-of-conduct'
 import { Route as LegalIntakeAcknowledgmentsRouteImport } from './routes/legal.intake-acknowledgments'
 import { Route as LegalHipaaRouteImport } from './routes/legal.hipaa'
+import { Route as LearnSemaglutideVsTirzepatideRouteImport } from './routes/learn.semaglutide-vs-tirzepatide'
 import { Route as LearnRestIntervalsRouteImport } from './routes/learn.rest-intervals'
 import { Route as LearnResistanceTrainingRouteImport } from './routes/learn.resistance-training'
 import { Route as LearnInitialResearchRouteImport } from './routes/learn.initial-research'
@@ -330,6 +331,12 @@ const LegalHipaaRoute = LegalHipaaRouteImport.update({
   path: '/legal/hipaa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnSemaglutideVsTirzepatideRoute =
+  LearnSemaglutideVsTirzepatideRouteImport.update({
+    id: '/semaglutide-vs-tirzepatide',
+    path: '/semaglutide-vs-tirzepatide',
+    getParentRoute: () => LearnRoute,
+  } as any)
 const LearnRestIntervalsRoute = LearnRestIntervalsRouteImport.update({
   id: '/rest-intervals',
   path: '/rest-intervals',
@@ -430,6 +437,7 @@ export interface FileRoutesByFullPath {
   '/learn/initial-research': typeof LearnInitialResearchRoute
   '/learn/resistance-training': typeof LearnResistanceTrainingRoute
   '/learn/rest-intervals': typeof LearnRestIntervalsRoute
+  '/learn/semaglutide-vs-tirzepatide': typeof LearnSemaglutideVsTirzepatideRoute
   '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
@@ -491,6 +499,7 @@ export interface FileRoutesByTo {
   '/learn/initial-research': typeof LearnInitialResearchRoute
   '/learn/resistance-training': typeof LearnResistanceTrainingRoute
   '/learn/rest-intervals': typeof LearnRestIntervalsRoute
+  '/learn/semaglutide-vs-tirzepatide': typeof LearnSemaglutideVsTirzepatideRoute
   '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
@@ -555,6 +564,7 @@ export interface FileRoutesById {
   '/learn/initial-research': typeof LearnInitialResearchRoute
   '/learn/resistance-training': typeof LearnResistanceTrainingRoute
   '/learn/rest-intervals': typeof LearnRestIntervalsRoute
+  '/learn/semaglutide-vs-tirzepatide': typeof LearnSemaglutideVsTirzepatideRoute
   '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
@@ -622,6 +632,7 @@ export interface FileRouteTypes {
     | '/learn/initial-research'
     | '/learn/resistance-training'
     | '/learn/rest-intervals'
+    | '/learn/semaglutide-vs-tirzepatide'
     | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
     | '/legal/physician-code-of-conduct'
@@ -683,6 +694,7 @@ export interface FileRouteTypes {
     | '/learn/initial-research'
     | '/learn/resistance-training'
     | '/learn/rest-intervals'
+    | '/learn/semaglutide-vs-tirzepatide'
     | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
     | '/legal/physician-code-of-conduct'
@@ -746,6 +758,7 @@ export interface FileRouteTypes {
     | '/learn/initial-research'
     | '/learn/resistance-training'
     | '/learn/rest-intervals'
+    | '/learn/semaglutide-vs-tirzepatide'
     | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
     | '/legal/physician-code-of-conduct'
@@ -1176,6 +1189,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalHipaaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/semaglutide-vs-tirzepatide': {
+      id: '/learn/semaglutide-vs-tirzepatide'
+      path: '/semaglutide-vs-tirzepatide'
+      fullPath: '/learn/semaglutide-vs-tirzepatide'
+      preLoaderRoute: typeof LearnSemaglutideVsTirzepatideRouteImport
+      parentRoute: typeof LearnRoute
+    }
     '/learn/rest-intervals': {
       id: '/learn/rest-intervals'
       path: '/rest-intervals'
@@ -1289,6 +1309,7 @@ interface LearnRouteChildren {
   LearnInitialResearchRoute: typeof LearnInitialResearchRoute
   LearnResistanceTrainingRoute: typeof LearnResistanceTrainingRoute
   LearnRestIntervalsRoute: typeof LearnRestIntervalsRoute
+  LearnSemaglutideVsTirzepatideRoute: typeof LearnSemaglutideVsTirzepatideRoute
   LearnIndexRoute: typeof LearnIndexRoute
 }
 
@@ -1296,6 +1317,7 @@ const LearnRouteChildren: LearnRouteChildren = {
   LearnInitialResearchRoute: LearnInitialResearchRoute,
   LearnResistanceTrainingRoute: LearnResistanceTrainingRoute,
   LearnRestIntervalsRoute: LearnRestIntervalsRoute,
+  LearnSemaglutideVsTirzepatideRoute: LearnSemaglutideVsTirzepatideRoute,
   LearnIndexRoute: LearnIndexRoute,
 }
 

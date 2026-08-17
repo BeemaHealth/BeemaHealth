@@ -24,13 +24,18 @@ import {
   RESISTANCE_TRAINING_TITLE,
 } from "@/lib/learn/resistance-training";
 import {
-  REST_INTERVALS_DATE_MODIFIED,
   REST_INTERVALS_DESCRIPTION,
   REST_INTERVALS_PATH,
   REST_INTERVALS_TITLE,
 } from "@/lib/learn/rest-intervals";
+import {
+  SEMA_VS_TIRZ_DATE_MODIFIED,
+  SEMA_VS_TIRZ_DESCRIPTION,
+  SEMA_VS_TIRZ_PATH,
+  SEMA_VS_TIRZ_TITLE,
+} from "@/lib/learn/semaglutide-vs-tirzepatide";
 
-const LEARN_HUB_DATE_MODIFIED = REST_INTERVALS_DATE_MODIFIED;
+const LEARN_HUB_DATE_MODIFIED = SEMA_VS_TIRZ_DATE_MODIFIED;
 
 const LEARN_ARTICLES = [
   {
@@ -53,6 +58,13 @@ const LEARN_ARTICLES = [
     excerpt: REST_INTERVALS_DESCRIPTION,
     category: "Training guide",
     readMins: 14,
+  },
+  {
+    to: SEMA_VS_TIRZ_PATH,
+    title: SEMA_VS_TIRZ_TITLE,
+    excerpt: SEMA_VS_TIRZ_DESCRIPTION,
+    category: "Comparison guide",
+    readMins: 10,
   },
 ] as const;
 
