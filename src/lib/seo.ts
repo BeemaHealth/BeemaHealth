@@ -1,4 +1,5 @@
 import { SUPPORT_EMAIL, SUPPORT_PHONE_E164 } from "@/lib/contact-info";
+import { GOOGLE_BUSINESS_LISTING_URL } from "@/lib/google-business";
 import {
   CLINICAL_PROVIDER_LEGAL_NAME,
   SEAN_ARORA_PROVIDER,
@@ -54,6 +55,7 @@ export const ORGANIZATION_JSONLD = {
     "Beema Health is a US telehealth medical weight-loss service. Licensed providers evaluate patients online and, when clinically appropriate, prescribe GLP-1 medications with transparent cash pricing, US pharmacy fulfillment, and ongoing follow-up care.",
   areaServed: { "@type": "Country", name: "United States" },
   sameAs: [
+    GOOGLE_BUSINESS_LISTING_URL,
     "https://www.facebook.com/profile.php?id=61591847661626",
     "https://www.instagram.com/beemahealth",
     "https://www.tiktok.com/@beema.health",

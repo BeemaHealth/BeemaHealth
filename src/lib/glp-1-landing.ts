@@ -1,4 +1,5 @@
 import type { TreatmentFaqItem } from "@/components/site/TreatmentPageBlocks";
+import { bootImagePreloadLinks } from "@/lib/boot-assets";
 import {
   breadcrumbJsonLd,
   canonicalUrl,
@@ -193,7 +194,10 @@ export function glp1Head(market: Glp1Market) {
       { name: "twitter:title", content: copy.title },
       { name: "twitter:description", content: copy.description },
     ],
-    links: [{ rel: "canonical", href: canonicalUrl(copy.path) }],
+    links: [
+      { rel: "canonical", href: canonicalUrl(copy.path) },
+      ...bootImagePreloadLinks(copy.path),
+    ],
     scripts: [
       {
         type: "application/ld+json",

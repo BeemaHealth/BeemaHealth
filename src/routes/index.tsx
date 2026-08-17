@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { bootImagePreloadLinks } from "@/lib/boot-assets";
 import { canonicalUrl, WEBSITE_JSONLD } from "@/lib/seo";
 import { trackPageViewed } from "@/lib/analytics";
 import { createFunnelSession } from "@/lib/api/client";
@@ -24,7 +25,10 @@ export const Route = createFileRoute("/")({
           "Medical weight-loss care reviewed by a licensed provider. Compounded semaglutide and compounded tirzepatide when clinically appropriate and legally available. Compounded medications are not FDA-approved.",
       },
     ],
-    links: [{ rel: "canonical", href: canonicalUrl("/") }],
+    links: [
+      { rel: "canonical", href: canonicalUrl("/") },
+      ...bootImagePreloadLinks("/"),
+    ],
     scripts: [
       {
         type: "application/ld+json",

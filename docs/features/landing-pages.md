@@ -1,37 +1,44 @@
-# Landing Pages
+# Landing pages
 
-Landing pages let staff create custom entry points (e.g. `/lp/meta-summer`) with their own headline, subheadline, and UTM pre-population, without a code deploy. Each landing page is a database row, not a code file.
+**Live:** paid-ads and SEO landers are **code routes**, not CRM database rows. CTAs on every lander go to Bask **intake** via `resolveCta()`. Compliance copy: `docs/features/treatment-pages.md` and `docs/features/legitscript.md`.
 
-## Data model
+| URL | Role |
+|-----|------|
+| `/` | Homepage (organic + brand). See `docs/features/homepage.md`. |
+| `/glp-1` | National cash-pay GLP-1 category page (`<Glp1LandingPage market="national" />`). Footer Care column only - not in the header. |
+| `/glp-1-houston` | Houston cash-pay GLP-1 ads landing (`market="houston"`). Ad/SEO entry plus a contextual homepage TreatmentShowcase link. Keep out of primary nav and footer. |
+| `/semaglutide`, `/tirzepatide`, `/weight-loss` | SEO treatment landers. See `docs/features/treatment-pages.md`. |
 
-**`LandingPage`** (`landing_pages` table):
-- `slug` — URL-safe unique identifier; the route is `/lp/{slug}`
-- `name` — internal label visible only in the CRM
-- `headline` / `subheadline` — displayed on the landing page
-- `utm_source`, `utm_medium`, `utm_campaign`, `utm_content` — pre-set UTMs attached to the funnel session when a user arrives via this LP
-- `redirect_to_home` — if `true`, the slug redirects to `/` instead of rendering a custom page (useful for short links)
-- `active` — inactive pages return 404
+The two GLP-1 URLs share one layout (`src/components/site/Glp1LandingPage.tsx`). Market copy, canonicals, and JSON-LD live in `src/lib/glp-1-landing.ts`. Each page self-canonicalizes. Never canonicalize Houston (or a future city) to `/glp-1/`. Future cities: add a market in `glp-1-landing.ts` plus a thin route file (`/glp-1-austin`, …).
 
-## How a visit works
+## First-visit splash (Google → Beema)
 
-1. User visits `/lp/some-slug`
-2. Frontend calls `GET /api/analytics/landing-pages/{slug}/` to resolve the LP
-3. If `redirect_to_home=true`, frontend redirects to `/`
-4. Otherwise renders the headline/subheadline over the standard home page layout
-5. When the user starts the qualify flow, the `landing_page_slug` is attached to their `FunnelSession` row, and the pre-set UTM params are captured too
-6. All funnel events from that session carry LP attribution for the staff analytics "landing page performance" view
+Bask already shows a loader on the marketing-site → intake hop. This repo shows a branded hex draw plus stacked Beema / Health wordmark on the **first document load** only (`SiteBootLoader` in the root shell). In-app navigations do not replay it.
 
-## Staff workflow
+Photo fetch is LCP-first so the splash does not steal bandwidth from the image Google scores (`src/lib/boot-assets.ts`):
 
-`/staff/landing-pages` — create, edit, activate/deactivate, and delete landing pages. Deletion is guarded if the LP has associated funnel sessions (attribution must not be lost).
+| URL | Waits / `<link rel="preload">` (high) | Then warms (`fetchPriority: "low"`) |
+|-----|--------------------------------------|-------------------------------------|
+| `/` | Homepage `hero.jpg` | Floating semaglutide vial, LegitScript seal, tirzepatide card |
+| `/glp-1`, `/glp-1-houston` | None (headline is LCP) | LegitScript seal only. Do not download unused vial PNGs. |
+| `/semaglutide`, `/tirzepatide` | That page's vial | The other vial |
+| `/weight-loss` | None | Both vials (for `TreatmentLineup`) |
+
+Do not add extra URLs to `criticalBootImageUrls` - competing preloads delay Largest Contentful Paint. Kill switch: `SITE_BOOT_LOADER_ENABLED` in `src/lib/site-boot-loader.ts`.
+
+## Legacy `/lp/{slug}` (not live)
+
+`src/routes/lp.$slug.tsx`, `/staff/landing-pages`, and the Django `landing_pages` table were an in-house CRM lander (per-slug headline/subhead + UTM row, optional redirect home). That funnel is obsolete. Do not plan new campaigns around `/lp/{slug}`. See `docs/BACKEND-DEFERRED.md`.
 
 ## Key files
 
 | File | Role |
 |------|------|
-| `src/routes/lp.$slug.tsx` | Landing page route — resolves and renders |
-| `backend/apps/analytics/models.py` | LandingPage model |
-| `backend/apps/analytics/views.py` | `LandingPageResolveView` (public GET) |
-| `backend/apps/analytics/staff_views.py` | Staff CRUD for landing pages |
-| `src/routes/staff.landing-pages.tsx` | Staff CRM UI |
-| `backend/apps/eligibility/models.py` | `FunnelSession.landing_page_slug` |
+| `src/routes/glp-1.tsx`, `src/routes/glp-1-houston.tsx` | Thin live ad/category routes |
+| `src/components/site/Glp1LandingPage.tsx` | Shared GLP-1 landing layout |
+| `src/lib/glp-1-landing.ts` | Market copy, canonicals, JSON-LD `head()` |
+| `src/lib/boot-assets.ts` | LCP vs warmup photo lists for the first-visit splash |
+| `src/components/brand/SiteBootLoader.tsx` | Branded overlay (root shell, first document load) |
+| `src/lib/cta-ids.ts` | `resolveCta()` → Bask intake |
+| `src/routes/lp.$slug.tsx` | **Legacy** CRM slug route - not a live ads lander |
+| `src/routes/staff.landing-pages.tsx` | **Legacy** staff CRUD UI |

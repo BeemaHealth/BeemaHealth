@@ -42,6 +42,7 @@ import {
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
+import { bootImagePreloadLinks } from "@/lib/boot-assets";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 import {
   CLINICAL_PROVIDER_GROUP,
@@ -121,7 +122,10 @@ export const Route = createFileRoute("/tirzepatide")({
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
-    links: [{ rel: "canonical", href: canonicalUrl("/tirzepatide") }],
+    links: [
+      { rel: "canonical", href: canonicalUrl("/tirzepatide") },
+      ...bootImagePreloadLinks("/tirzepatide"),
+    ],
     scripts: [
       {
         type: "application/ld+json",

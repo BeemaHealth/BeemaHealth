@@ -46,6 +46,7 @@ import {
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
+import { bootImagePreloadLinks } from "@/lib/boot-assets";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 
 const VIAL_IMAGERY = resolveVialImagery("semaglutide");
@@ -124,7 +125,10 @@ export const Route = createFileRoute("/semaglutide")({
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
-    links: [{ rel: "canonical", href: canonicalUrl("/semaglutide") }],
+    links: [
+      { rel: "canonical", href: canonicalUrl("/semaglutide") },
+      ...bootImagePreloadLinks("/semaglutide"),
+    ],
     scripts: [
       {
         type: "application/ld+json",

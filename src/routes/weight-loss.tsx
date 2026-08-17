@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { bootImagePreloadLinks } from "@/lib/boot-assets";
 import { breadcrumbJsonLd, canonicalUrl, serviceJsonLd } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
@@ -51,7 +52,10 @@ export const Route = createFileRoute("/weight-loss")({
         content: `Provider-reviewed GLP-1 weight-loss options with transparent cash pricing: ${dualCompoundedShortPricingLine()}.`,
       },
     ],
-    links: [{ rel: "canonical", href: canonicalUrl("/weight-loss") }],
+    links: [
+      { rel: "canonical", href: canonicalUrl("/weight-loss") },
+      ...bootImagePreloadLinks("/weight-loss"),
+    ],
     scripts: [
       {
         type: "application/ld+json",
@@ -305,8 +309,8 @@ function WeightLossPage() {
             </h2>
             <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
               A practical educational resource we provide as part of the Beema
-              experience - free to browse whether or not you&apos;re a patient. No
-              intake is required to access all 12 recipes.
+              experience - free to browse whether or not you&apos;re a patient.
+              No intake is required to access all 12 recipes.
             </p>
           </div>
           <Button asChild size="lg" variant="outline">

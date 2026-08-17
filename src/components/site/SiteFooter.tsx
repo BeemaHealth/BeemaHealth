@@ -6,6 +6,10 @@ import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { FIRST_MONTH_PROMO_LINE } from "@/lib/marketing-copy";
 import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
 import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
+import {
+  GOOGLE_REVIEW_LINK_LABEL,
+  GOOGLE_REVIEW_URL,
+} from "@/lib/google-business";
 import { SOCIAL_LINKS } from "@/lib/social-links";
 import { cn } from "@/lib/utils";
 import {
@@ -18,6 +22,7 @@ import { TRUST_SIGNALS } from "@/lib/trust-signals";
  * Trailing-slash paths - match sitemap.xml / canonicalUrl / GitHub Pages 200
  * URLs. See docs/features/treatment-pages.md for the Care column's link set.
  * Resources is the free content library (recipes, learn; videos later).
+ * Trust also has one external Google review link (`href`, not `to`).
  */
 const COLUMNS = [
   {
@@ -45,6 +50,7 @@ const COLUMNS = [
       { label: "Safety & eligibility", to: "/safety/" },
       { label: "FAQ", to: "/faq/" },
       { label: "Contact us", to: "/contact/" },
+      { label: GOOGLE_REVIEW_LINK_LABEL, href: GOOGLE_REVIEW_URL },
     ],
   },
   {
@@ -128,13 +134,24 @@ export function SiteFooter() {
               </h4>
               <ul className="mt-4 space-y-3">
                 {col.links.map((l) => (
-                  <li key={l.to}>
-                    <Link
-                      to={l.to}
-                      className="inline-flex min-h-11 items-center text-sm text-ink-foreground/70 transition-colors hover:text-ink-foreground md:min-h-0"
-                    >
-                      {l.label}
-                    </Link>
+                  <li key={"href" in l ? l.href : l.to}>
+                    {"href" in l ? (
+                      <a
+                        href={l.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-11 items-center text-sm text-ink-foreground/70 transition-colors hover:text-ink-foreground md:min-h-0"
+                      >
+                        {l.label}
+                      </a>
+                    ) : (
+                      <Link
+                        to={l.to}
+                        className="inline-flex min-h-11 items-center text-sm text-ink-foreground/70 transition-colors hover:text-ink-foreground md:min-h-0"
+                      >
+                        {l.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

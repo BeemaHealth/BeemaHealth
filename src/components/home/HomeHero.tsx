@@ -299,6 +299,7 @@ export function HomeHero() {
               alt="A calm, bright kitchen with fresh vegetables and a glass of water"
               width={1280}
               height={1024}
+              fetchPriority="high"
               className="h-full w-full object-cover"
             />
             <div

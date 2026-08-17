@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { canonicalUrl } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Clock, Mail, Phone } from "lucide-react";
+import { ArrowRight, Clock, Mail, Phone, Star } from "lucide-react";
 import {
   motion,
   useReducedMotion,
@@ -26,6 +26,10 @@ import {
   SUPPORT_PHONE_DISPLAY,
   SUPPORT_PHONE_HREF,
 } from "@/lib/contact-info";
+import {
+  GOOGLE_REVIEW_LINK_LABEL,
+  GOOGLE_REVIEW_URL,
+} from "@/lib/google-business";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -54,6 +58,7 @@ const CONTACT_OPTIONS = [
     text: `Questions before intake and payment? Email us. After you complete intake and pay, you can ask additional questions. The medical intake itself is a questionnaire only.`,
     action: SUPPORT_EMAIL,
     href: SUPPORT_EMAIL_HREF,
+    external: false,
   },
   {
     icon: Phone,
@@ -61,6 +66,7 @@ const CONTACT_OPTIONS = [
     text: "For anything you'd rather talk through directly. No AI assistants, just real people.",
     action: SUPPORT_PHONE_DISPLAY,
     href: SUPPORT_PHONE_HREF,
+    external: false,
   },
   {
     icon: Clock,
@@ -68,6 +74,15 @@ const CONTACT_OPTIONS = [
     text: "Monday to Friday, 9 AM to 5 PM MT. We'll respond to messages within one business day.",
     action: null,
     href: null,
+    external: false,
+  },
+  {
+    icon: Star,
+    title: "Google review",
+    text: "Already a patient? Share your experience on our Google Business Profile. Honest reviews help other people decide if Beema Health is right for them.",
+    action: GOOGLE_REVIEW_LINK_LABEL,
+    href: GOOGLE_REVIEW_URL,
+    external: true,
   },
 ];
 
@@ -125,7 +140,7 @@ function ContactPage() {
             <HexMotif className="w-16 text-primary/15" />
           </motion.div>
 
-          <div className="relative grid gap-6 md:grid-cols-3">
+          <div className="relative grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             {CONTACT_OPTIONS.map((c, index) => (
               <motion.div
                 key={c.title}
@@ -156,6 +171,12 @@ function ContactPage() {
                     <div className="mt-4">
                       <a
                         href={c.href}
+                        {...(c.external
+                          ? {
+                              target: "_blank" as const,
+                              rel: "noopener noreferrer",
+                            }
+                          : {})}
                         className="text-sm font-medium text-accent-foreground underline-offset-4 hover:underline"
                       >
                         {c.action}

@@ -22,11 +22,25 @@ Product photography: the site defaults to branded Beema-wordmark vial imagery vi
 | `/semaglutide` | `src/routes/semaglutide.tsx` | Compounded semaglutide landing page |
 | `/glp-1` | `src/routes/glp-1.tsx` | National cash-pay GLP-1 category page (not in primary nav/footer). Shares `Glp1LandingPage` with city landers. |
 | `/glp-1-houston` | `src/routes/glp-1-houston.tsx` | Houston cash-pay GLP-1 ads landing. Linked from homepage TreatmentShowcase. Future cities: `/glp-1-{city}` under the same template - see "City GLP-1 pages" below |
-| `/weight-loss` | `src/routes/weight-loss.tsx` | Program overview page — linked from nav/footer, see below |
+| `/weight-loss` | `src/routes/weight-loss.tsx` | Program overview page - linked from nav/footer, see below |
 
-Shared building blocks (pricing card, comparison table, FAQ accordion, breadcrumb) live in `src/components/site/TreatmentPageBlocks.tsx`. Copy/data (steps, FAQ items, eligibility bullets) stays local to each route file — do not extract it into a shared data file, the two pages are meant to have genuinely distinct copy.
+Shared building blocks (pricing card, comparison table, FAQ accordion, breadcrumb) live in `src/components/site/TreatmentPageBlocks.tsx`. Copy/data (steps, FAQ items, eligibility bullets) stays local to each route file - do not extract it into a shared data file, the two pages are meant to have genuinely distinct copy.
 
-`faqPageJsonLd()` and `breadcrumbJsonLd()` (in `src/lib/seo.ts`) generate JSON-LD from the same arrays that render the visible FAQ/breadcrumb — keep them in sync if you edit either.
+`faqPageJsonLd()` and `breadcrumbJsonLd()` (in `src/lib/seo.ts`) generate JSON-LD from the same arrays that render the visible FAQ/breadcrumb - keep them in sync if you edit either.
+
+## First-visit splash and LCP prefetch
+
+Google → Beema document loads show `SiteBootLoader` (hex draw + stacked Beema / Health wordmark) until the document, fonts, and **this URL's LCP photo** are ready. In-app client navigations do not remount it. Bask already shows a loader on the hop to intake.
+
+`bootImagePreloadLinks(path)` is spread into each lander's `head()` links. `criticalBootImageUrls` in `src/lib/boot-assets.ts` must stay LCP-only - extra preloads delay Google LCP:
+
+| URL | Waits / preloads (high) | Then warms (low) |
+|-----|-------------------------|------------------|
+| `/semaglutide`, `/tirzepatide` | That page's branded vial (hero `<img>` also has `fetchPriority="high"`) | The other vial |
+| `/glp-1`, `/glp-1-houston` | None (headline is LCP) | LegitScript seal only. Do not fetch unused vial PNGs. |
+| `/weight-loss` | None | Both vials for `TreatmentLineup` |
+
+Kill switch: `SITE_BOOT_LOADER_ENABLED`. Homepage hero prefetch: `docs/features/homepage.md`. Shared lander table: `docs/features/landing-pages.md`.
 
 ## `/weight-loss` is a linked overview page
 
@@ -65,7 +79,7 @@ The homepage `FreeResourcesSection` is the in-page spotlight for the same librar
 
 ## Nav: "About" dropdown
 
-`ABOUT_ITEMS` is the company cluster: About us, FAQ, and Contact us. Keep these out of Resources (that dropdown is the free content library) and out of Weight Loss (that dropdown is the program). Add Safety or other trust pages here only if they need a persistent header slot; today Safety stays in the footer Trust column plus in-page treatment links.
+`ABOUT_ITEMS` is the company cluster: About us, FAQ, and Contact us. Keep these out of Resources (that dropdown is the free content library) and out of Weight Loss (that dropdown is the program). Add Safety or other trust pages here only if they need a persistent header slot; today Safety stays in the footer Trust column plus in-page treatment links. The Trust column also has an external "Leave a Google review" link (`GOOGLE_REVIEW_URL` in `src/lib/google-business.ts`) - the write-review URL, not the listing URL used in Organization `sameAs`.
 
 ## City GLP-1 pages
 
@@ -133,11 +147,14 @@ const cta = resolveCta(CTA_IDS.tirzepatide_hero);
 | `src/routes/glp-1-houston.tsx` | Houston cash-pay GLP-1 ads + local SEO page |
 | `src/components/site/Glp1LandingPage.tsx` | Shared GLP-1 landing layout (`market="national" \| "houston"`) |
 | `src/lib/glp-1-landing.ts` | Market copy, canonicals, JSON-LD head for both GLP-1 routes |
+| `src/lib/boot-assets.ts` | LCP vs warmup photo lists for the first-visit splash |
+| `src/components/brand/SiteBootLoader.tsx` | Branded overlay (root shell, first document load) |
 | `src/components/site/TreatmentPageBlocks.tsx` | Shared breadcrumb, pricing card, comparison table, FAQ accordion |
 | `src/lib/medication-pricing.ts` | Single source of truth for pricing — never hardcode `$` amounts elsewhere |
 | `src/lib/cta-ids.ts` | `CTA_IDS`, `resolveCta()` — the CTA switchboard |
 | `src/lib/seo.ts` | `faqPageJsonLd()`, `breadcrumbJsonLd()`, `serviceJsonLd()`, `medicalWebPageJsonLd()`, `canonicalUrl()` |
-| `src/components/site/SiteHeader.tsx`, `SiteFooter.tsx` | Weight Loss, Resources, and About dropdowns (`DesktopNavDropdown` / `MobileNavDropdown`); footer Care + Resources + Trust columns |
+| `src/components/site/SiteHeader.tsx`, `SiteFooter.tsx` | Weight Loss, Resources, and About dropdowns (`DesktopNavDropdown` / `MobileNavDropdown`); footer Care + Resources + Trust columns (Trust includes the Google review ask) |
+| `src/lib/google-business.ts` | GBP listing URL (`sameAs`) vs write-review URL (footer + `/contact/`) |
 | `src/lib/marketing-copy.ts` | `FIRST_MONTH_PROMO_LINE` — the one-time, 3-month-only promo code promoted alongside pricing |
 | `src/components/home/TreatmentShowcase.tsx`, `src/components/site/TreatmentLineup.tsx` | Medication cards (home / `/weight-loss`) |
 | `public/sitemap.xml`, `public/llms.txt`, `src/lib/__tests__/sitemap.test.ts` | Keep in sync when adding a page |
