@@ -1,10 +1,10 @@
 import {
-  MEAL_LABELS,
   RECIPE_MODIFIED_DATE,
   RECIPE_PUBLISHED_DATE,
   RECIPES,
   formatRecipeMethodStep,
   recipeImagePath,
+  recipeMealLabel,
   recipePath,
   type Recipe,
 } from "@/lib/recipes";
@@ -45,7 +45,7 @@ export function recipeJsonLd(recipe: Recipe) {
       url: canonicalUrl("/"),
     },
     publisher: { "@id": `${SITE_URL}/#organization` },
-    recipeCategory: MEAL_LABELS[recipe.meal],
+    recipeCategory: recipeMealLabel(recipe.meal, ", "),
     recipeYield: recipe.servings,
     prepTime: `PT${recipe.prepMinutes}M`,
     cookTime: `PT${recipe.cookMinutes}M`,

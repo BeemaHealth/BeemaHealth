@@ -21,7 +21,8 @@ import { TRUST_SIGNALS } from "@/lib/trust-signals";
 /**
  * Trailing-slash paths - match sitemap.xml / canonicalUrl / GitHub Pages 200
  * URLs. See docs/features/treatment-pages.md for the Care column's link set.
- * Resources is the free content library (recipes, learn; videos later).
+ * Resources is the care-process overview plus the free content library
+ * (how it works, recipes, learn; videos later).
  * Trust also has one external Google review link (`href`, not `to`).
  */
 const COLUMNS = [
@@ -32,13 +33,13 @@ const COLUMNS = [
       { label: "Compounded Semaglutide", to: "/semaglutide/" },
       { label: "GLP-1 Care", to: "/glp-1/" },
       { label: "Weight Loss Program", to: "/weight-loss/" },
-      { label: "How it works", to: "/how-it-works/" },
       // { label: "Pricing", to: "/pricing/" }, // disabled - pricing model not finalized yet
     ],
   },
   {
     title: "Resources",
     links: [
+      { label: "How it works", to: "/how-it-works/" },
       { label: "Recipes", to: "/recipes/" },
       { label: "Learn", to: "/learn/" },
     ],

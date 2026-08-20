@@ -32,10 +32,11 @@ import { Button } from "@/components/ui/button";
 import { trackPageViewed } from "@/lib/analytics";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
+import { RECIPES } from "@/lib/recipes";
 
 const TITLE = "How it works | Beema Health";
 const DESCRIPTION =
-  "From medical intake to prescription delivery: how Beema Health telehealth weight-loss care works, step by step.";
+  "From medical intake to prescription delivery: how Beema Health telehealth care works, step by step.";
 
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
@@ -64,11 +65,11 @@ export const Route = createFileRoute("/how-it-works")({
         type: "application/ld+json",
         children: JSON.stringify(
           medicalWebPageJsonLd({
-            name: "How Beema Health's Telehealth Weight-Loss Care Works",
+            name: "How Beema Health Telehealth Care Works",
             description: DESCRIPTION,
             path: "/how-it-works",
             reviewedByClinicalLead: true,
-            dateModified: "2026-07-31",
+            dateModified: "2026-08-20",
           }),
         ),
       },
@@ -167,7 +168,7 @@ function HowItWorksPage() {
                 How long does this take?
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                It depends. Some patients finish the medical intake in one
+                It depends. Some people finish the medical intake in one
                 sitting, while others take longer to gather medication and
                 health history details first. Provider review and pharmacy
                 fulfillment happen after that, and both depend on factors
@@ -199,10 +200,10 @@ function HowItWorksPage() {
                     Practical meal ideas for anyone to browse
                   </h2>
                   <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                    Our 12-recipe collection is free to everyone whether or not
-                    you become a Beema patient. No intake is required, and the
-                    collection provides general educational ideas - not
-                    personalized nutrition care or treatment advice.
+                    Our {RECIPES.length}-recipe collection is free to everyone
+                    whether or not you become a Beema patient. No intake is
+                    required, and the collection provides general educational
+                    ideas - not personalized nutrition care or treatment advice.
                   </p>
                 </div>
                 <Button asChild variant="outline" className="shrink-0">

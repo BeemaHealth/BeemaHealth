@@ -35,7 +35,7 @@ list is maintained in `public/sitemap.xml` and guarded by
 | GLP-1 Care in Houston | `/glp-1-houston` | Live (Houston ads + local SEO lander; not in primary nav) |
 | Compounded Tirzepatide | `/tirzepatide` | Live |
 | Compounded Semaglutide | `/semaglutide` | Live |
-| How it works | `/how-it-works` | Live - footer Care group (not in the header dropdown) |
+| How it works | `/how-it-works` | Live - in the Resources header/footer nav |
 | About | `/about` | Live - in the About header dropdown |
 | FAQ | `/faq` | Live - in the About header dropdown |
 | Recipes | `/recipes` | Live (recipe hub) - in the Resources header/footer nav |

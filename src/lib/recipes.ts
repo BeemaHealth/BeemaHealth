@@ -40,6 +40,29 @@ export const MEAL_LABELS: Record<MealType, string> = {
   "light-meal": "Light meal",
 };
 
+export function recipeMeals(
+  meal: MealType | readonly MealType[],
+): readonly MealType[] {
+  const values = Array.isArray(meal) ? meal : [meal];
+  return Object.freeze([...new Set(values)]);
+}
+
+export function recipeHasMeal(
+  meal: MealType | readonly MealType[],
+  needle: MealType,
+): boolean {
+  return recipeMeals(meal).includes(needle);
+}
+
+export function recipeMealLabel(
+  meal: MealType | readonly MealType[],
+  separator = " · ",
+): string {
+  return recipeMeals(meal)
+    .map((value) => MEAL_LABELS[value])
+    .join(separator);
+}
+
 export type RecipeNutrition = Readonly<{
   calories: number;
   proteinGrams: number;
@@ -60,7 +83,8 @@ export type RecipeIngredient = Readonly<{
 export type ScalableMethodStep = Readonly<{
   baseText: string;
   scaledTemplate: string;
-  baseCount: number;
+  baseCount?: number;
+  quantities?: Readonly<Record<string, number>>;
 }>;
 
 export type RecipeMethodStep = string | ScalableMethodStep;
@@ -71,7 +95,7 @@ export type Recipe = Readonly<{
   title: string;
   description: string;
   category: RecipeCategoryKey;
-  meal: MealType;
+  meal: readonly MealType[];
   servings: string;
   servingsCount: number;
   prep: string;
@@ -92,7 +116,7 @@ export const MIN_RECIPE_MULTIPLIER = 0.5;
 export const MAX_RECIPE_MULTIPLIER = 16;
 export const RECIPE_MULTIPLIER_STEP = 0.5;
 export const RECIPE_PUBLISHED_DATE = "2026-08-09";
-export const RECIPE_MODIFIED_DATE = "2026-08-09";
+export const RECIPE_MODIFIED_DATE = "2026-08-20";
 export const RECIPE_IMAGE_WIDTHS = [480, 768, 1024, 1536] as const;
 
 const FRACTION_RE = String.raw`\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:\.\d+)?`;
@@ -247,12 +271,45 @@ export function formatRecipeMethodStep(
   if (!Number.isFinite(scale) || scale <= 0 || scale === 1) {
     return step.baseText;
   }
-  const count = Math.max(1, Math.round(step.baseCount * scale));
-  return step.scaledTemplate.replace("{{count}}", String(count));
+  let text = step.scaledTemplate;
+  if (step.baseCount != null) {
+    const count = Math.max(1, Math.round(step.baseCount * scale));
+    text = text.replaceAll("{{count}}", String(count));
+  }
+  if (step.quantities) {
+    for (const [key, amount] of Object.entries(step.quantities)) {
+      text = text.replaceAll(
+        `{{${key}}}`,
+        formatCulinaryQuantity(amount * scale),
+      );
+    }
+  }
+  return text;
+}
+
+export function formatRecipeGroceryList({
+  title,
+  scaleLabel,
+  ingredients,
+}: {
+  title: string;
+  scaleLabel: string;
+  ingredients: readonly string[];
+}): string {
+  const lines = [
+    title.trim(),
+    scaleLabel.trim(),
+    "",
+    ...ingredients
+      .map((ingredient) => ingredient.trim())
+      .filter((ingredient) => ingredient.length > 0)
+      .map((ingredient) => `- ${ingredient}`),
+  ];
+  return lines.join("\n");
 }
 
 const SCALABLE_SINGULAR_WORD_RE =
-  /\b(cup|tablespoon|teaspoon|pound|ounce|can|scoop|egg|onion|apple|cucumber|lemon|pear)\b/;
+  /\b(cup|tablespoon|teaspoon|pound|ounce|can|scoop|egg|onion|apple|cucumber|lemon|lime|pear|tortilla|wedge)\b/;
 
 function pluralizeIngredientText(text: string): string {
   return text.replace(SCALABLE_SINGULAR_WORD_RE, (word) =>
@@ -762,17 +819,130 @@ const RECIPE_DATA = [
     imageAlt:
       "Bell peppers filled with smoky turkey, black beans, salsa, and melted cheddar",
   },
+  {
+    slug: "chicken-and-beef-fajitas",
+    title: "Chicken and Beef Fajitas",
+    description:
+      "Crisp-tender peppers and onion with warm chicken and steak strips, tucked into low-carb tortillas.",
+    category: "highProtein",
+    meal: ["lunch", "dinner"],
+    servings: "4 servings (2 fajitas each)",
+    servingsCount: 4,
+    prep: "15 min",
+    cook: "15 min",
+    prepMinutes: 15,
+    cookMinutes: 15,
+    nutrition: { calories: 530, proteinGrams: 47, fiberGrams: 9 },
+    ingredients: [
+      "3 medium bell peppers (red, green, and yellow), sliced into 1/4-inch strips",
+      "1 large yellow onion, sliced into 1/4-inch strips",
+      "2 tablespoons extra-virgin olive oil",
+      "12 ounces cooked chicken fajita strips, or cooked boneless skinless chicken breast, sliced",
+      "12 ounces cooked beef fajita strips, or cooked flank or skirt steak, sliced",
+      "1 teaspoon chili powder",
+      "1 teaspoon ground cumin",
+      "1/2 teaspoon smoked paprika",
+      "1/4 teaspoon garlic powder",
+      "3/4 teaspoon kosher salt, divided",
+      "1/2 teaspoon black pepper, divided",
+      "8 low-carb flour tortillas (6 to 8 inch)",
+      "1/2 cup shredded Colby-Jack cheese",
+      "1/2 cup guacamole or sliced avocado",
+      "1/2 cup light sour cream",
+      "8 lime wedges",
+    ],
+    method: [
+      {
+        baseText:
+          "Slice 3 medium bell peppers and 1 large yellow onion into 1/4-inch strips. If the 12 ounces cooked chicken and 12 ounces cooked beef are in large pieces, cut them into thin strips about 1/2 inch wide. Set out 8 low-carb tortillas, 1/2 cup shredded Colby-Jack, 1/2 cup guacamole, 1/2 cup sour cream, and 8 lime wedges so the toppings are ready when the filling comes off the heat.",
+        scaledTemplate:
+          "Slice {{peppers}} medium bell peppers and {{onion}} large yellow onion into 1/4-inch strips. If the {{chicken}} ounces cooked chicken and {{beef}} ounces cooked beef are in large pieces, cut them into thin strips about 1/2 inch wide. Set out {{tortillas}} low-carb tortillas, {{cheese}} cup shredded Colby-Jack, {{guacamole}} cup guacamole, {{sourCream}} cup sour cream, and {{limes}} lime wedges so the toppings are ready when the filling comes off the heat.",
+        quantities: {
+          peppers: 3,
+          onion: 1,
+          chicken: 12,
+          beef: 12,
+          tortillas: 8,
+          cheese: 0.5,
+          guacamole: 0.5,
+          sourCream: 0.5,
+          limes: 8,
+        },
+      },
+      {
+        baseText:
+          "Heat 2 tablespoons extra-virgin olive oil in a 12-inch skillet over medium-high heat until the oil shimmers, about 1 minute.",
+        scaledTemplate:
+          "Heat {{oil}} tablespoons extra-virgin olive oil in a 12-inch skillet over medium-high heat until the oil shimmers, about 1 minute.",
+        quantities: { oil: 2 },
+      },
+      {
+        baseText:
+          "Add the sliced peppers and onion. Sprinkle with 1/2 teaspoon of the kosher salt and 1/4 teaspoon of the black pepper. Stir-fry, tossing every 30 to 45 seconds, until the vegetables are glossy and crisp-tender, 6 to 8 minutes. They should still have a little bite, not turn soft or browned.",
+        scaledTemplate:
+          "Add the sliced peppers and onion. Sprinkle with {{salt}} teaspoon of the kosher salt and {{pepper}} teaspoon of the black pepper. Stir-fry, tossing every 30 to 45 seconds, until the vegetables are glossy and crisp-tender, 6 to 8 minutes. They should still have a little bite, not turn soft or browned.",
+        quantities: { salt: 0.5, pepper: 0.25 },
+      },
+      {
+        baseText:
+          "Sprinkle 1 teaspoon chili powder, 1 teaspoon ground cumin, 1/2 teaspoon smoked paprika, and 1/4 teaspoon garlic powder over the vegetables. Stir for 20 to 30 seconds, until the spices smell toasty.",
+        scaledTemplate:
+          "Sprinkle {{chili}} teaspoon chili powder, {{cumin}} teaspoon ground cumin, {{paprika}} teaspoon smoked paprika, and {{garlic}} teaspoon garlic powder over the vegetables. Stir for 20 to 30 seconds, until the spices smell toasty.",
+        quantities: {
+          chili: 1,
+          cumin: 1,
+          paprika: 0.5,
+          garlic: 0.25,
+        },
+      },
+      {
+        baseText:
+          "Add the 12 ounces cooked chicken strips and 12 ounces cooked beef strips. Toss until every strip is coated in the peppers, onion, and spices. Cook, stirring often, until the meat is heated through and steaming, 3 to 4 minutes. Season with the remaining 1/4 teaspoon kosher salt and 1/4 teaspoon black pepper. Taste and adjust. Remove the skillet from the heat.",
+        scaledTemplate:
+          "Add the {{chicken}} ounces cooked chicken strips and {{beef}} ounces cooked beef strips. Toss until every strip is coated in the peppers, onion, and spices. Cook, stirring often, until the meat is heated through and steaming, 3 to 4 minutes. Season with the remaining {{salt}} teaspoon kosher salt and {{pepper}} teaspoon black pepper. Taste and adjust. Remove the skillet from the heat.",
+        quantities: { chicken: 12, beef: 12, salt: 0.25, pepper: 0.25 },
+      },
+      {
+        baseText:
+          "Warm the 8 tortillas using one of these methods. Microwave: stack them between two slightly damp paper towels and heat 20 to 30 seconds, until steamy. Oven: wrap the stack in foil and heat at 350°F for 8 to 10 minutes.",
+        scaledTemplate:
+          "Warm the {{tortillas}} tortillas using one of these methods. Microwave: stack them between two slightly damp paper towels and heat 20 to 30 seconds, until steamy. Oven: wrap the stack in foil and heat at 350°F for 8 to 10 minutes.",
+        quantities: { tortillas: 8 },
+      },
+      {
+        baseText:
+          "Build 8 fajitas, 2 per person. Fill each warm tortilla with about 1/2 cup of the meat-and-pepper mixture, dividing the skillet evenly. Top each fajita with 1 tablespoon sour cream, 1 tablespoon guacamole, and 1 tablespoon shredded Colby-Jack. Serve at once with lime wedges.",
+        scaledTemplate:
+          "Build {{tortillas}} fajitas, 2 per person. Fill each warm tortilla with about 1/2 cup of the meat-and-pepper mixture, dividing the skillet evenly. Top each fajita with 1 tablespoon sour cream, 1 tablespoon guacamole, and 1 tablespoon shredded Colby-Jack. Serve at once with lime wedges.",
+        quantities: { tortillas: 8 },
+      },
+    ],
+    chefNote:
+      "Pre-cooked fajita meat keeps this under 20 minutes. If you are starting from raw, cook the chicken to 165°F and the beef to at least 145°F, rest 5 minutes, then slice and continue from the vegetable step. When cooking for more than 4 people, use a second skillet or cook the vegetables in two batches so they sear instead of steam.",
+    makeAhead:
+      "Slice the vegetables and meat up to 1 day ahead. Refrigerate the cooked filling for up to 3 days. Reheat in a skillet over medium heat until steaming. Warm tortillas and add toppings just before serving.",
+    imageAlt:
+      "Chicken and beef fajitas in low-carb tortillas with peppers, onion, guacamole, sour cream, and Colby-Jack",
+  },
 ] as const;
 
 export const RECIPES: readonly Recipe[] = Object.freeze(
   RECIPE_DATA.map((recipe) =>
     Object.freeze({
       ...recipe,
+      meal: recipeMeals(recipe.meal),
       nutrition: Object.freeze({ ...recipe.nutrition }),
       ingredients: Object.freeze(recipe.ingredients.map(parseIngredient)),
       method: Object.freeze(
         recipe.method.map((step) =>
-          typeof step === "string" ? step : Object.freeze({ ...step }),
+          typeof step === "string"
+            ? step
+            : Object.freeze({
+                ...step,
+                ...("quantities" in step && step.quantities
+                  ? { quantities: Object.freeze({ ...step.quantities }) }
+                  : {}),
+              }),
         ),
       ),
     }),

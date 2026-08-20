@@ -3,8 +3,10 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import {
   ArrowLeft,
   ArrowRight,
+  Check,
   ChefHat,
   Clock3,
+  Copy,
   Flame,
   Soup,
   Users,
@@ -20,7 +22,6 @@ import { Button } from "@/components/ui/button";
 import { trackPageViewed } from "@/lib/analytics";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
-  MEAL_LABELS,
   MAX_RECIPE_MULTIPLIER,
   MIN_RECIPE_MULTIPLIER,
   RECIPES,
@@ -28,12 +29,14 @@ import {
   RECIPE_MULTIPLIER_STEP,
   closestRecipeMultiplier,
   closestRecipePeople,
+  formatRecipeGroceryList,
   formatRecipeMethodStep,
   formatScaledIngredient,
   getRecipeBySlug,
   parseRecipeMultiplier,
   parseRecipeServings,
   recipeImagePath,
+  recipeMealLabel,
   recipePath,
   scaleForPeople,
   type Recipe,
@@ -164,7 +167,7 @@ function RecipeDetailPage() {
             <div className="mt-8 grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
               <div className="min-w-0">
                 <p className="text-sm font-semibold uppercase tracking-wide text-accent-foreground">
-                  {category.label} · {MEAL_LABELS[recipe.meal]}
+                  {category.label} · {recipeMealLabel(recipe.meal)}
                 </p>
                 <h1 className="mt-4 text-balance text-4xl font-bold leading-tight text-foreground md:text-5xl">
                   {recipe.title}
@@ -173,7 +176,7 @@ function RecipeDetailPage() {
                   {recipe.description}
                 </p>
                 <p className="mt-3 text-xs text-muted-foreground">
-                  Published August 9, 2026 · Last updated August 9, 2026
+                  Published August 9, 2026 · Last updated August 20, 2026
                 </p>
                 <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
                   <QuickStat
@@ -194,7 +197,7 @@ function RecipeDetailPage() {
                   <QuickStat
                     icon={<Soup className="size-5" aria-hidden />}
                     label="Meal"
-                    value={MEAL_LABELS[recipe.meal]}
+                    value={recipeMealLabel(recipe.meal)}
                   />
                 </div>
                 <div className="mt-6 rounded-2xl border border-border bg-card p-4">
@@ -336,7 +339,7 @@ function RecipeDetailPage() {
                   className="rounded-2xl border border-border bg-card p-5 shadow-soft transition-all hover:-translate-y-1 hover:shadow-lift"
                 >
                   <p className="text-xs font-semibold uppercase tracking-wide text-accent-foreground">
-                    {MEAL_LABELS[candidate.meal]}
+                    {recipeMealLabel(candidate.meal)}
                   </p>
                   <h3 className="mt-2 text-lg font-semibold text-foreground">
                     {candidate.title}
@@ -451,6 +454,7 @@ function RecipeQuantityPanel({
     mode === "people"
       ? scaleForPeople(people, recipe.servingsCount)
       : multiplier;
+  const [copied, setCopied] = useState(false);
   const scaledIngredients = useMemo(
     () =>
       recipe.ingredients.map((ingredient) =>
@@ -458,10 +462,55 @@ function RecipeQuantityPanel({
       ),
     [recipe.ingredients, scale],
   );
+  const scaleLabel =
+    mode === "people"
+      ? `Ingredients for ${people} ${people === 1 ? "person" : "people"}`
+      : `Ingredients at ${multiplier}x`;
   const announcement =
     mode === "people"
       ? `Ingredient quantities scaled for ${people} ${people === 1 ? "person" : "people"}.`
       : `Ingredient quantities scaled to ${multiplier} times the original recipe.`;
+  const groceryList = useMemo(
+    () =>
+      formatRecipeGroceryList({
+        title: recipe.title,
+        scaleLabel,
+        ingredients: scaledIngredients,
+      }),
+    [recipe.title, scaleLabel, scaledIngredients],
+  );
+
+  useEffect(() => {
+    setCopied(false);
+  }, [groceryList]);
+
+  useEffect(() => {
+    if (!copied) return;
+    const timeoutId = window.setTimeout(() => setCopied(false), 2000);
+    return () => window.clearTimeout(timeoutId);
+  }, [copied]);
+
+  async function copyGroceryList() {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(groceryList);
+      } else {
+        throw new Error("Clipboard API unavailable");
+      }
+      setCopied(true);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = groceryList;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copiedWithFallback = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      if (copiedWithFallback) setCopied(true);
+    }
+  }
 
   function changeMode(nextMode: ScaleMode) {
     if (nextMode === mode) return;
@@ -497,7 +546,28 @@ function RecipeQuantityPanel({
 
   return (
     <div className="sticky top-24 rounded-3xl border border-border bg-card p-6 shadow-soft md:p-8">
-      <h2 className="text-2xl font-semibold text-foreground">Ingredients</h2>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-2xl font-semibold text-foreground">Ingredients</h2>
+        <Button
+          type="button"
+          variant="outline"
+          className="min-h-12 shrink-0"
+          onClick={() => {
+            void copyGroceryList();
+          }}
+          aria-describedby={`recipe-copy-list-status-${recipe.slug}`}
+        >
+          {copied ? <Check aria-hidden /> : <Copy aria-hidden />}
+          {copied ? "Copied" : "Copy list"}
+        </Button>
+      </div>
+      <p
+        id={`recipe-copy-list-status-${recipe.slug}`}
+        className="sr-only"
+        aria-live="polite"
+      >
+        {copied ? "Ingredient list copied." : ""}
+      </p>
       <fieldset className="mt-5">
         <legend className="text-sm font-semibold text-foreground">
           Scale quantities by
@@ -611,7 +681,8 @@ function RecipeQuantityPanel({
         aria-live="polite"
         aria-atomic="true"
       >
-        {announcement} Base yield: {recipe.servings}.
+        {announcement} Base yield: {recipe.servings}. Copy the scaled list for
+        shopping.
       </p>
       <ul className="mt-6 divide-y divide-border">
         {scaledIngredients.map((ingredient, index) => (

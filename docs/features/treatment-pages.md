@@ -58,20 +58,20 @@ If a future change needs to re-orphan or retire this page, that's a deliberate c
 
 `SiteHeader.tsx` renders "Weight Loss" as a dropdown of the medications only. `WEIGHT_LOSS_ITEMS` is Compounded Tirzepatide and Compounded Semaglutide.
 
-`/weight-loss` and `/how-it-works` stay live for SEO and for people who want the overview / longer process writeup. They are **not** in the header. Link them from the site footer Care column and from in-page copy. On `/tirzepatide`, `/semaglutide`, `/glp-1`, and `/glp-1-houston`, the hero "How it works" / "How care works" button is an on-page jump (`hash="how-it-works"`) to `<HowItWorksSteps />` on that same page, not a navigation to `/how-it-works/`.
+`/weight-loss` stays live for SEO and for people who want the program overview. It is **not** in the header. Link it from the site footer Care column and from in-page copy. `/how-it-works` is in the **Resources** header dropdown and footer Resources column (care-process overview, not a medication page). On `/tirzepatide`, `/semaglutide`, `/glp-1`, and `/glp-1-houston`, the hero "How it works" / "How care works" button is an on-page jump (`hash="how-it-works"`) to `<HowItWorksSteps />` on that same page, not a navigation to `/how-it-works/`.
 
 Hover/tap behavior is the same shared pair as the other menus:
 
 - **Desktop** - `DesktopNav` / `DesktopNavDropdown`. Click a trigger to open, click it again (or outside / Escape) to close, hover another trigger to switch. The open panel fades and slides in (opacity + translate only - no Radix DropdownMenu; that Popper flicker is why these stay in-flow). Only one panel is open at a time; sibling labels dim while a menu is open.
 - **Mobile** - `MobileNavDropdown`, a tap-to-expand disclosure inside the mobile menu (see `docs/features/homepage.md` for the `CircleRevealMenu` shell it lives in). Local `expanded` state collapses it back down every time the mobile menu reopens; the reveal/collapse is animated (Motion `AnimatePresence` + height/opacity), matching the site's other transitions.
 
-Add new **medication** pages to `WEIGHT_LOSS_ITEMS` (and to `SiteFooter.tsx`'s Care column, above the program/how-it-works links) rather than adding a new top-level nav entry. Keep `/weight-loss`, `/glp-1`, and `/how-it-works` in the footer Care column, not in the header. Do **not** add city/geo GLP-1 ads landers (`/glp-1-houston`, future `/glp-1-{city}`) to primary nav or footer - those stay ad/SEO entry points plus contextual in-page links (homepage TreatmentShowcase today).
+Add new **medication** pages to `WEIGHT_LOSS_ITEMS` (and to `SiteFooter.tsx`'s Care column, above the program links) rather than adding a new top-level nav entry. Keep `/weight-loss` and `/glp-1` in the footer Care column, not in the header. Keep `/how-it-works` in Resources (header + footer), not in Weight Loss or Care. Do **not** add city/geo GLP-1 ads landers (`/glp-1-houston`, future `/glp-1-{city}`) to primary nav or footer - those stay ad/SEO entry points plus contextual in-page links (homepage TreatmentShowcase today).
 
 ## Nav: "Resources" dropdown
 
-`SiteHeader.tsx` also renders **Resources** - the free content library (recipes and educational guides today; workout and cooking videos later). It uses the same `DesktopNavDropdown` / `MobileNavDropdown` pair as Weight Loss. Keep the label literal so it does not compete with Hive (the patient portal at `hive.beemahealth.com`).
+`SiteHeader.tsx` also renders **Resources** - the care-process overview plus the free content library (how it works, recipes, and educational guides today; workout and cooking videos later). It uses the same `DesktopNavDropdown` / `MobileNavDropdown` pair as Weight Loss. Keep the label literal so it does not compete with Hive (the patient portal at `hive.beemahealth.com`).
 
-Live items in `RESOURCE_ITEMS` today: `/recipes/` and `/learn/`. The matching footer column is titled "Resources". Add workout videos, cooking videos, and other no-account resources there (and in the footer column) when they ship - do not add coming-soon placeholders to the live nav.
+Live items in `RESOURCE_ITEMS` today: `/how-it-works/`, `/recipes/`, and `/learn/`. The matching footer column is titled "Resources". Add workout videos, cooking videos, and other no-account resources there (and in the footer column) when they ship - do not add coming-soon placeholders to the live nav.
 
 `/the-comb/` is a retired branded overview that redirects home. Do not relink it.
 

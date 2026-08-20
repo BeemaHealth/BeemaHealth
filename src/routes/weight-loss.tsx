@@ -36,6 +36,7 @@ import {
   dualCompoundedHeroPricingLine,
   dualCompoundedShortPricingLine,
 } from "@/lib/medication-pricing";
+import { RECIPES } from "@/lib/recipes";
 
 const TITLE = "Weight Loss | Beema Health";
 const DESCRIPTION =
@@ -310,7 +311,7 @@ function WeightLossPage() {
             <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
               A practical educational resource we provide as part of the Beema
               experience - free to browse whether or not you&apos;re a patient.
-              No intake is required to access all 12 recipes.
+              No intake is required to access all {RECIPES.length} recipes.
             </p>
           </div>
           <Button asChild size="lg" variant="outline">

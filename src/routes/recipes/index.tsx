@@ -15,7 +15,9 @@ import {
   MEAL_LABELS,
   RECIPES,
   RECIPE_CATEGORIES,
+  getRecipesByCategory,
   parseRecipeServings,
+  recipeHasMeal,
   recipeImagePath,
   type MealType,
   type RecipeCategoryKey,
@@ -33,8 +35,7 @@ export const Route = createFileRoute("/recipes/")({
       { title: "Practical Recipe Collection | Beema Health" },
       {
         name: "description",
-        content:
-          "Explore 12 practical recipes organized around gradually adding fiber, smaller portions, and protein-rich eating, with estimated nutrition and make-ahead guidance.",
+        content: `Explore ${RECIPES.length} practical recipes organized around gradually adding fiber, smaller portions, and protein-rich eating, with estimated nutrition and make-ahead guidance.`,
       },
       {
         property: "og:title",
@@ -62,8 +63,7 @@ export const Route = createFileRoute("/recipes/")({
       },
       {
         name: "twitter:description",
-        content:
-          "Explore 12 practical breakfast, lunch, dinner, and light-meal recipes.",
+        content: `Explore ${RECIPES.length} practical breakfast, lunch, dinner, and light-meal recipes.`,
       },
       {
         name: "twitter:image",
@@ -115,7 +115,7 @@ function RecipesPage() {
       RECIPES.filter(
         (recipe) =>
           (category === "all" || recipe.category === category) &&
-          (meal === "all" || recipe.meal === meal),
+          (meal === "all" || recipeHasMeal(recipe.meal, meal)),
       ),
     [category, meal],
   );
@@ -159,7 +159,7 @@ function RecipesPage() {
               intake or patient relationship is required to browse it.
             </p>
             <p className="mt-2 text-xs text-muted-foreground">
-              Published August 9, 2026 · Last updated August 9, 2026
+              Published August 9, 2026 · Last updated August 20, 2026
             </p>
           </div>
           <RecipeImage
@@ -186,7 +186,7 @@ function RecipesPage() {
               className="rounded-3xl border border-border bg-card p-6 text-left shadow-soft transition-all hover:-translate-y-1 hover:shadow-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <p className="text-xs font-semibold uppercase tracking-wide text-accent-foreground">
-                4 recipes
+                {getRecipesByCategory(key).length} recipes
               </p>
               <h2 className="mt-3 text-2xl font-semibold text-foreground">
                 {item.title}

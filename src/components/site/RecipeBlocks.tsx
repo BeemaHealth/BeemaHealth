@@ -5,21 +5,16 @@ import {
   BookOpen,
   Clock3,
   ImageIcon,
-  MapPin,
   Siren,
   Stethoscope,
   Users,
 } from "lucide-react";
 import {
-  JURISDICTIONAL_NOTICE_BODY,
-  JURISDICTIONAL_NOTICE_TITLE,
-} from "@/lib/jurisdictional-notice";
-import {
-  MEAL_LABELS,
   RECIPE_CATEGORIES,
   nutritionEstimate,
   recipeImagePath,
   recipeImageSrcSet,
+  recipeMealLabel,
   recipePath,
   type Recipe,
 } from "@/lib/recipes";
@@ -112,7 +107,7 @@ export function RecipeCard({
       />
       <div className="flex flex-1 flex-col p-5">
         <p className="text-xs font-semibold uppercase tracking-wide text-accent-foreground">
-          {category.label} · {MEAL_LABELS[recipe.meal]}
+          {category.label} · {recipeMealLabel(recipe.meal)}
         </p>
         <h3 className="mt-2 text-xl font-semibold leading-tight text-foreground">
           {recipe.title}
@@ -202,12 +197,6 @@ export function RecipeComplianceNotice({
           Appetite, food tolerance, symptoms, and treatment results vary by
           person. Stop eating when comfortably full and seek individualized
           guidance when needed.
-        </Notice>
-        <Notice
-          icon={<MapPin className="size-5" aria-hidden />}
-          title={JURISDICTIONAL_NOTICE_TITLE}
-        >
-          {JURISDICTIONAL_NOTICE_BODY}
         </Notice>
         <Notice
           icon={<Siren className="size-5" aria-hidden />}

@@ -94,8 +94,9 @@ export function FreeResourcesSection() {
                 Practical recipes for changing appetites
               </h3>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-                12 breakfast, lunch, dinner, and light-meal ideas organized
-                around fiber, smaller portions, and protein-rich eating.
+                {RECIPES.length} breakfast, lunch, dinner, and light-meal ideas
+                organized around fiber, smaller portions, and protein-rich
+                eating.
               </p>
               <Button asChild className="mt-6 w-fit">
                 <Link to="/recipes/">

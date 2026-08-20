@@ -9,6 +9,7 @@ import { EASE_OUT } from "@/components/home/home-motion";
 import { HIVE_LOGIN_URL } from "@/lib/cta-ids";
 import { FIRST_MONTH_PROMO_SHORT } from "@/lib/marketing-copy";
 import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
+import { RECIPES } from "@/lib/recipes";
 import { SOCIAL_LINKS } from "@/lib/social-links";
 import { cn } from "@/lib/utils";
 
@@ -23,24 +24,29 @@ const NAV: NavItem[] = [
   // { label: "Pricing", to: "/pricing/" }, // disabled - pricing model not finalized yet
 ];
 
-/** Weight Loss dropdown - medications only. /weight-loss and /how-it-works
- * stay in the site footer and on-page links, not here. */
+/** Weight Loss dropdown - medications only. /weight-loss stays in the site
+ * footer Care column, not here. */
 const WEIGHT_LOSS_ITEMS: NavItem[] = [
   { label: "Compounded Tirzepatide", to: "/tirzepatide/" },
   { label: "Compounded Semaglutide", to: "/semaglutide/" },
 ];
 
 /**
- * Free content library (recipes, guides, later workout and cooking videos).
- * Add new no-account resource hubs here and in SiteFooter COLUMNS. Do not
- * brand this dropdown - keep the label literal so it does not compete with
- * Hive (the patient portal at hive.beemahealth.com).
+ * Free content library plus the care-process overview. Add new no-account
+ * resource hubs here and in SiteFooter COLUMNS. Do not brand this dropdown -
+ * keep the label literal so it does not compete with Hive (the patient
+ * portal at hive.beemahealth.com).
  */
 const RESOURCE_ITEMS: NavItem[] = [
   {
+    label: "How it works",
+    to: "/how-it-works/",
+    description: "Intake, review, and delivery",
+  },
+  {
     label: "Recipes",
     to: "/recipes/",
-    description: "12 meals for changing appetites",
+    description: `${RECIPES.length} meals for changing appetites`,
   },
   {
     label: "Learn",

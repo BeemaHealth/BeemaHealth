@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { SITE_URL, canonicalUrl } from "../seo";
+import { RECIPES, recipePath } from "../recipes";
 
 const sitemapXml = readFileSync(
   resolve(__dirname, "../../../public/sitemap.xml"),
@@ -34,6 +35,7 @@ const EXPECTED_PATHS = [
   "/recipes/charred-lemon-chicken-quinoa-bowl/",
   "/recipes/mustard-rosemary-pork-tenderloin-white-bean-mash/",
   "/recipes/smoky-turkey-taco-stuffed-peppers/",
+  "/recipes/chicken-and-beef-fajitas/",
   "/about/",
   "/safety/",
   "/faq/",
@@ -87,11 +89,11 @@ describe("public/sitemap.xml", () => {
     }
   });
 
-  it("lists exactly the recipe hub plus 12 details below treatment priority", () => {
+  it("lists exactly the recipe hub plus all recipe details below treatment priority", () => {
     const recipeLocs = sitemapLocs().filter((loc) =>
       loc.startsWith(`${SITE_URL}/recipes/`),
     );
-    expect(recipeLocs).toHaveLength(13);
+    expect(recipeLocs).toHaveLength(RECIPES.length + 1);
 
     const entries = [
       ...sitemapXml.matchAll(
@@ -108,10 +110,13 @@ describe("public/sitemap.xml", () => {
       .map(({ priority }) => priority);
 
     expect(treatmentPriorities).toHaveLength(2);
-    expect(recipePriorities).toHaveLength(13);
+    expect(recipePriorities).toHaveLength(RECIPES.length + 1);
     expect(Math.max(...recipePriorities)).toBeLessThan(
       Math.min(...treatmentPriorities),
     );
+    for (const recipe of RECIPES) {
+      expect(EXPECTED_PATHS).toContain(recipePath(recipe));
+    }
   });
 
   it("never lists funnel, portal, staff, or auth routes", () => {
@@ -266,15 +271,28 @@ describe("internal marketing links (trailing slash)", () => {
     }
   });
 
-  it("keeps program, GLP-1 hub, and how-it-works pages in the footer, not the header dropdown", () => {
+  it("keeps program and GLP-1 hub pages in the footer, not the header dropdown", () => {
     expect(headerSrc).not.toContain('to: "/weight-loss/"');
-    expect(headerSrc).not.toContain('to: "/how-it-works/"');
     expect(headerSrc).not.toContain('to: "/glp-1/"');
     expect(headerSrc).not.toContain('to: "/glp-1-houston/"');
     expect(footerSrc).toContain('to: "/weight-loss/"');
-    expect(footerSrc).toContain('to: "/how-it-works/"');
     expect(footerSrc).toContain('to: "/glp-1/"');
     expect(footerSrc).not.toContain('to: "/glp-1-houston/"');
+  });
+
+  it("lists how-it-works in the Resources header and footer, not Care", () => {
+    expect(headerSrc).toContain('to: "/how-it-works/"');
+    expect(headerSrc).toContain('description: "Intake, review, and delivery"');
+    const careBlock = footerSrc.slice(
+      footerSrc.indexOf('title: "Care"'),
+      footerSrc.indexOf('title: "Resources"'),
+    );
+    const resourcesBlock = footerSrc.slice(
+      footerSrc.indexOf('title: "Resources"'),
+      footerSrc.indexOf('title: "Trust"'),
+    );
+    expect(careBlock).not.toContain('to: "/how-it-works/"');
+    expect(resourcesBlock).toContain('to: "/how-it-works/"');
   });
 });
 
@@ -344,7 +362,7 @@ describe("public/llms.txt", () => {
 
   it("describes recipes without stale branded-offering or eligibility-flow claims", () => {
     expect(llmsTxt).toContain(
-      "12 practical recipes organized around gradually adding fiber, smaller portions, and protein-rich eating",
+      "13 practical recipes organized around gradually adding fiber, smaller portions, and protein-rich eating",
     );
     expect(llmsTxt).not.toMatch(
       /Zepbound|Wegovy|Ozempic|Mounjaro|online eligibility check/i,

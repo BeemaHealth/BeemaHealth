@@ -14,14 +14,17 @@ import {
   closestRecipeMultiplier,
   closestRecipePeople,
   formatCulinaryQuantity,
+  formatRecipeGroceryList,
   formatRecipeMethodStep,
   formatScaledIngredient,
   getRecipeBySlug,
   getRecipesByCategory,
   parseRecipeMultiplier,
   parseRecipeServings,
+  recipeHasMeal,
   recipeImagePath,
   recipeImageSrcSet,
+  recipeMealLabel,
   recipePath,
   scaleForPeople,
 } from "../recipes";
@@ -30,22 +33,23 @@ import { SITE_URL } from "../seo";
 import { OVERFLOW, STRICT_FIELD_ATTACKS } from "./fixtures/malicious-payloads";
 
 describe("recipe collection", () => {
-  it("contains exactly the 12 supplied recipes", () => {
-    expect(RECIPES).toHaveLength(12);
-    expect(new Set(RECIPE_SLUGS)).toHaveLength(12);
+  it("contains unique published recipes including chicken and beef fajitas", () => {
+    expect(RECIPES).toHaveLength(13);
+    expect(new Set(RECIPE_SLUGS)).toHaveLength(13);
+    expect(RECIPE_SLUGS).toContain("chicken-and-beef-fajitas");
   });
 
-  it("has one recipe per meal type in each category", () => {
+  it("covers every meal type in each category", () => {
     const expectedMeals = Object.keys(MEAL_LABELS).sort();
 
     for (const category of Object.keys(RECIPE_CATEGORIES) as Array<
       keyof typeof RECIPE_CATEGORIES
     >) {
       const recipes = getRecipesByCategory(category);
-      expect(recipes).toHaveLength(4);
-      expect(recipes.map((recipe) => recipe.meal).sort()).toEqual(
-        expectedMeals,
-      );
+      expect(recipes.length).toBeGreaterThanOrEqual(4);
+      expect(
+        [...new Set(recipes.flatMap((recipe) => [...recipe.meal]))].sort(),
+      ).toEqual(expectedMeals);
     }
   });
 
@@ -60,6 +64,10 @@ describe("recipe collection", () => {
       expect(recipe.cook).not.toBe("");
       expect(recipe.ingredients.length).toBeGreaterThan(0);
       expect(recipe.method.length).toBeGreaterThan(0);
+      expect(recipe.meal.length).toBeGreaterThan(0);
+      for (const meal of recipe.meal) {
+        expect(Object.keys(MEAL_LABELS)).toContain(meal);
+      }
       expect(recipe.chefNote).not.toBe("");
       expect(recipe.makeAhead).not.toBe("");
       expect(recipe.nutrition.calories).toBeGreaterThan(0);
@@ -74,6 +82,19 @@ describe("recipe collection", () => {
       expect(recipe.servings).toMatch(/servings?/);
     }
     expect(RECIPES[4].servings).toBe("3 servings (2 mini frittatas each)");
+    expect(getRecipeBySlug("chicken-and-beef-fajitas")?.servings).toBe(
+      "4 servings (2 fajitas each)",
+    );
+  });
+
+  it("lists chicken and beef fajitas as both lunch and dinner", () => {
+    const recipe = getRecipeBySlug("chicken-and-beef-fajitas")!;
+    expect(recipe.meal).toEqual(["lunch", "dinner"]);
+    expect(recipeHasMeal(recipe.meal, "lunch")).toBe(true);
+    expect(recipeHasMeal(recipe.meal, "dinner")).toBe(true);
+    expect(recipeHasMeal(recipe.meal, "breakfast")).toBe(false);
+    expect(recipeMealLabel(recipe.meal)).toBe("Lunch · Dinner");
+    expect(recipeMealLabel(recipe.meal, ", ")).toBe("Lunch, Dinner");
   });
 
   it("keeps all recipe data immutable", () => {
@@ -81,10 +102,16 @@ describe("recipe collection", () => {
     for (const recipe of RECIPES) {
       expect(Object.isFrozen(recipe)).toBe(true);
       expect(Object.isFrozen(recipe.nutrition)).toBe(true);
+      expect(Object.isFrozen(recipe.meal)).toBe(true);
       expect(Object.isFrozen(recipe.ingredients)).toBe(true);
       expect(Object.isFrozen(recipe.method)).toBe(true);
       for (const step of recipe.method) {
-        if (typeof step !== "string") expect(Object.isFrozen(step)).toBe(true);
+        if (typeof step !== "string") {
+          expect(Object.isFrozen(step)).toBe(true);
+          if (step.quantities) {
+            expect(Object.isFrozen(step.quantities)).toBe(true);
+          }
+        }
       }
       for (const ingredient of recipe.ingredients) {
         expect(Object.isFrozen(ingredient)).toBe(true);
@@ -224,7 +251,7 @@ describe("recipe serving controls", () => {
     expect(parseRecipeMultiplier(value)).toBeNull();
   });
 
-  it("computes people scaling for all 12 base recipes", () => {
+  it("computes people scaling for every base recipe", () => {
     for (const recipe of RECIPES) {
       expect(scaleForPeople(recipe.servingsCount, recipe.servingsCount)).toBe(
         1,
@@ -325,6 +352,50 @@ describe("recipe ingredient scaling", () => {
     expect(formatRecipeMethodStep(frittataStep, 0.5)).toContain("Coat 3 cups");
     expect(formatRecipeMethodStep(frittataStep, 2)).toContain("Coat 12 cups");
     expect(formatRecipeMethodStep(frittataStep, 2)).toContain("350°F");
+
+    const fajitas = getRecipeBySlug("chicken-and-beef-fajitas")!;
+    const fajitaPrep = formatRecipeMethodStep(fajitas.method[0], 2);
+    expect(fajitaPrep).toContain("Slice 6 medium bell peppers");
+    expect(fajitaPrep).toContain("2 large yellow onion");
+    expect(fajitaPrep).toContain("24 ounces cooked chicken");
+    expect(fajitaPrep).toContain("16 low-carb tortillas");
+    expect(fajitaPrep).toContain("1 cup shredded Colby-Jack");
+    const fajitaAssemble = formatRecipeMethodStep(fajitas.method[6], 0.5);
+    expect(fajitaAssemble).toContain("Build 4 fajitas, 2 per person");
+    expect(fajitaAssemble).toContain("1 tablespoon sour cream");
+  });
+
+  it("formats a scaled grocery list as plain text", () => {
+    const recipe = getRecipeBySlug("chicken-and-beef-fajitas")!;
+    const scaled = recipe.ingredients.map((ingredient) =>
+      formatScaledIngredient(ingredient, 2),
+    );
+    const list = formatRecipeGroceryList({
+      title: recipe.title,
+      scaleLabel: "Ingredients for 8 people",
+      ingredients: scaled,
+    });
+
+    expect(
+      list.startsWith(
+        "Chicken and Beef Fajitas\nIngredients for 8 people\n\n- ",
+      ),
+    ).toBe(true);
+    expect(list).toContain("- 6 medium bell peppers");
+    expect(list).toContain("- 2 large yellow onions");
+    expect(list).toContain("- 24 ounces cooked chicken fajita strips");
+    expect(list).not.toMatch(/<[^>]+>/);
+    expect(list).not.toMatch(/NaN|Infinity/);
+  });
+
+  it("omits empty grocery-list lines and ignores invalid scale leftovers", () => {
+    expect(
+      formatRecipeGroceryList({
+        title: "  Test stew  ",
+        scaleLabel: " Ingredients for 1 person ",
+        ingredients: ["1 cup broth", "  ", "1 onion", ""],
+      }),
+    ).toBe("Test stew\nIngredients for 1 person\n\n- 1 cup broth\n- 1 onion");
   });
 
   it("does not scale qualitative ingredients", () => {
@@ -422,6 +493,16 @@ describe("recipe compliance and SEO markup", () => {
     );
   });
 
+  it("lets visitors copy the scaled ingredient list without tracking it", () => {
+    expect(detailRoute).toContain("Copy list");
+    expect(detailRoute).toContain("formatRecipeGroceryList");
+    expect(detailRoute).toContain("navigator.clipboard.writeText(groceryList)");
+    expect(detailRoute).toContain("Ingredient list copied.");
+    expect(`${detailRoute}\n${hubRoute}`).not.toMatch(
+      /trackPageViewed\([^)]*(copy|clipboard|grocery)/i,
+    );
+  });
+
   it("includes the required review and symptom disclosures", () => {
     expect(normalizedBlocks).toContain(
       "This recipe has not been clinically or dietitian reviewed.",
@@ -435,6 +516,13 @@ describe("recipe compliance and SEO markup", () => {
     expect(normalizedBlocks).toContain(
       "persistent, severe, or worsening. If you may be experiencing a medical emergency, call 911.",
     );
+  });
+
+  it("keeps the jurisdictional notice in the footer, not the recipe information section", () => {
+    expect(recipeBlocks).not.toContain("JURISDICTIONAL_NOTICE");
+    expect(recipeBlocks).not.toContain("Jurisdictional Notice");
+    expect(footer).toContain("JURISDICTIONAL_NOTICE_TITLE");
+    expect(footer).toContain("JURISDICTIONAL_NOTICE_BODY");
   });
 
   it("includes provenance, dated content, sources, and care education links", () => {
@@ -484,8 +572,8 @@ describe("recipe compliance and SEO markup", () => {
   it("uses ItemList and Recipe schema without unsupported clinical or nutrition claims", () => {
     const collectionSchema = recipeCollectionJsonLd();
     expect(collectionSchema["@type"]).toBe("ItemList");
-    expect(collectionSchema.numberOfItems).toBe(12);
-    expect(collectionSchema.itemListElement).toHaveLength(12);
+    expect(collectionSchema.numberOfItems).toBe(RECIPES.length);
+    expect(collectionSchema.itemListElement).toHaveLength(RECIPES.length);
     expect(collectionSchema.itemListElement.map((item) => item.name)).toEqual(
       RECIPES.map((recipe) => recipe.title),
     );
@@ -511,6 +599,7 @@ describe("recipe compliance and SEO markup", () => {
         `PT${recipe.prepMinutes + recipe.cookMinutes}M`,
       );
       expect(schema.recipeYield).toBe(recipe.servings);
+      expect(schema.recipeCategory).toBe(recipeMealLabel(recipe.meal, ", "));
       expect(schema.recipeIngredient).toEqual(
         recipe.ingredients.map((ingredient) => ingredient.original),
       );
@@ -553,6 +642,7 @@ describe("recipe compliance and SEO markup", () => {
     expect(header).toContain('label: "About"');
     expect(header).not.toContain('to: "/the-comb/"');
     expect(header).toContain('to: "/recipes/"');
+    expect(header).toContain('to: "/how-it-works/"');
     expect(header).toContain('to: "/learn/"');
     expect(header).toContain('to: "/about/"');
     expect(header).toContain('to: "/faq/"');
@@ -589,5 +679,19 @@ describe("recipe compliance and SEO markup", () => {
     expect(normalizedHowItWorksRoute).toContain(
       "not personalized nutrition care",
     );
+    expect(howItWorksRoute).not.toMatch(/weight-loss/i);
+  });
+
+  it("derives public recipe counts from the published collection", () => {
+    expect(hubRoute).toContain(
+      "Explore ${RECIPES.length} practical recipes organized around",
+    );
+    expect(hubRoute).toContain("getRecipesByCategory(key).length} recipes");
+    expect(homepageResource).toContain(
+      "{RECIPES.length} breakfast, lunch, dinner, and light-meal ideas",
+    );
+    expect(header).toContain("${RECIPES.length} meals for changing appetites");
+    expect(weightLossRoute).toContain("all {RECIPES.length} recipes");
+    expect(howItWorksRoute).toContain("{RECIPES.length}-recipe collection");
   });
 });
