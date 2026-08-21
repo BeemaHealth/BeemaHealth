@@ -130,7 +130,13 @@ export const CLINICAL_REVIEWER_JSONLD = {
     value: SEAN_ARORA_PROVIDER.npi,
   },
   jobTitle: SEAN_ARORA_PROVIDER.role,
-  medicalSpecialty: "Family Medicine",
+  /**
+   * schema.org MedicalSpecialty is a closed enumeration - "Family Medicine"
+   * is not a member of it and validates as an unrecognized value. PrimaryCare
+   * is the enum member that covers family/primary care practice.
+   * See https://schema.org/MedicalSpecialty before changing this.
+   */
+  medicalSpecialty: "PrimaryCare",
   worksFor: {
     "@type": "MedicalOrganization",
     name: CLINICAL_PROVIDER_LEGAL_NAME,

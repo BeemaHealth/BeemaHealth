@@ -172,10 +172,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
       ],
       links: [
-        // Root /favicon.ico is the classic crawler fallback (Google still
-        // probes it). Keep the PNG as the preferred high-res icon.
-        { rel: "icon", href: "/favicon.ico", sizes: "any" },
-        { rel: "icon", href: "/favicon-beema.png", type: "image/png" },
+        // Google Search wants a square icon whose size is a multiple of 48px
+        // and picks the <link rel="icon"> that best matches. The PNG is the
+        // intended SERP favicon (tight-cropped glossy mark). /favicon.ico is
+        // the classic crawler fallback Google still probes.
+        { rel: "icon", href: "/favicon.ico", sizes: "48x48" },
+        {
+          rel: "icon",
+          href: "/favicon-beema.png",
+          type: "image/png",
+          sizes: "192x192",
+        },
         // Outfit/Figtree are self-hosted via @fontsource, imported into
         // styles.css - see the comment there. No external font origins to
         // preconnect/fetch from anymore.
