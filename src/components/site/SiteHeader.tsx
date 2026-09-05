@@ -66,8 +66,8 @@ const SEXUAL_HEALTH_SECTIONS: NavSection[] = [
   {
     heading: "For Men",
     items: [
-      { label: "Tadalafil", to: "/tadalafil/" },
-      { label: "Sildenafil", to: "/sildenafil/" },
+      { label: "Oral Tadalafil", to: "/tadalafil/" },
+      { label: "Oral Sildenafil", to: "/sildenafil/" },
       { label: "ED Mints", to: "/ed-mints/" },
     ],
   },
