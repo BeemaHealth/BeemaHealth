@@ -36,6 +36,14 @@ export const CTA_IDS = {
   sildenafil_footer: "sildenafil_footer",
   oral_finasteride_hero: "oral_finasteride_hero",
   oral_finasteride_footer: "oral_finasteride_footer",
+  oral_minoxidil_men_hero: "oral_minoxidil_men_hero",
+  oral_minoxidil_men_footer: "oral_minoxidil_men_footer",
+  oral_minoxidil_women_hero: "oral_minoxidil_women_hero",
+  oral_minoxidil_women_footer: "oral_minoxidil_women_footer",
+  hairloss_spray_men_hero: "hairloss_spray_men_hero",
+  hairloss_spray_men_footer: "hairloss_spray_men_footer",
+  hairloss_spray_women_hero: "hairloss_spray_women_hero",
+  hairloss_spray_women_footer: "hairloss_spray_women_footer",
   ed_mints_rdt_hero: "ed_mints_rdt_hero",
   ed_mints_rdt_footer: "ed_mints_rdt_footer",
   ed_mints_odt_hero: "ed_mints_odt_hero",
@@ -162,6 +170,25 @@ const SILDENAFIL_INTAKE_URL =
   "https://q.beemahealth.com/start-online-visit/sildenafil";
 
 /**
+ * Confirmed production Bask questionnaire URLs (2026-09-09) for Oral
+ * Minoxidil and the two sex-specific Hair Loss Sprays. Oral Minoxidil is one
+ * product/one price/one Bask questionnaire for both sexes (see
+ * HAIRLOSS_ORAL_MINOXIDIL_PRICING) - `ORAL_MINOXIDIL_INTAKE_URL` below is
+ * reused by two separate money pages, `/oral-minoxidil-men` and
+ * `/oral-minoxidil-women` (split 2026-09-09, per Matt, so each page's copy
+ * stays single-sex - women's copy never mentions the men's product and vice
+ * versa - even though both hand off to the same questionnaire). The two
+ * sprays have genuinely separate questionnaires and pages
+ * (`/hair-loss-spray-men`, `/hair-loss-spray-women`).
+ */
+const ORAL_MINOXIDIL_INTAKE_URL =
+  "https://q.beemahealth.com/start-online-visit/oralminoxidil";
+const HAIRLOSS_SPRAY_WOMEN_INTAKE_URL =
+  "https://q.beemahealth.com/start-online-visit/hairlossspraywomen";
+const HAIRLOSS_SPRAY_MEN_INTAKE_URL =
+  "https://q.beemahealth.com/start-online-visit/hairlossspraymen";
+
+/**
  * Money-page architecture (2026-09-03): each product that has a confirmed
  * Bask URL gets its own dedicated landing page (/tadalafil, /sildenafil,
  * /oral-finasteride, /ed-mints, /tirzepatide, /semaglutide) whose CTA goes
@@ -208,6 +235,38 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
   oral_finasteride_footer: {
     label: "Get Started",
     to: FINASTERIDE_INTAKE_URL,
+  },
+  oral_minoxidil_men_hero: {
+    label: "Get Started",
+    to: ORAL_MINOXIDIL_INTAKE_URL,
+  },
+  oral_minoxidil_men_footer: {
+    label: "Get Started",
+    to: ORAL_MINOXIDIL_INTAKE_URL,
+  },
+  oral_minoxidil_women_hero: {
+    label: "Get Started",
+    to: ORAL_MINOXIDIL_INTAKE_URL,
+  },
+  oral_minoxidil_women_footer: {
+    label: "Get Started",
+    to: ORAL_MINOXIDIL_INTAKE_URL,
+  },
+  hairloss_spray_men_hero: {
+    label: "Get Started",
+    to: HAIRLOSS_SPRAY_MEN_INTAKE_URL,
+  },
+  hairloss_spray_men_footer: {
+    label: "Get Started",
+    to: HAIRLOSS_SPRAY_MEN_INTAKE_URL,
+  },
+  hairloss_spray_women_hero: {
+    label: "Get Started",
+    to: HAIRLOSS_SPRAY_WOMEN_INTAKE_URL,
+  },
+  hairloss_spray_women_footer: {
+    label: "Get Started",
+    to: HAIRLOSS_SPRAY_WOMEN_INTAKE_URL,
   },
   ed_mints_rdt_hero: { label: "Get Started", to: ED_MINTS_RDT_INTAKE_URL },
   ed_mints_rdt_footer: { label: "Get Started", to: ED_MINTS_RDT_INTAKE_URL },

@@ -5,7 +5,9 @@ import {
   ArrowRight,
   CheckCircle2,
   Droplet,
+  Pill,
   ShieldCheck,
+  SprayCan,
   Stethoscope,
 } from "lucide-react";
 import { breadcrumbJsonLd, canonicalUrl, serviceJsonLd } from "@/lib/seo";
@@ -29,6 +31,9 @@ import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
   HAIRLOSS_FINASTERIDE_PRICING,
+  HAIRLOSS_ORAL_MINOXIDIL_PRICING,
+  HAIRLOSS_TOPICAL_MEN_PRICING,
+  HAIRLOSS_TOPICAL_WOMEN_PRICING,
   formatSimpleStartingAt,
   simplePerDaySentence,
 } from "@/lib/simple-treatment-pricing";
@@ -85,8 +90,18 @@ export const Route = createFileRoute("/hair-loss")({
  * there was no SEO equity to preserve on either URL - they're combined here
  * rather than one redirecting to the other. Mirrors `/weight-loss` and
  * `/sexual-health`: a category overview linking straight to the dedicated
- * money page for each live product, not a deep FAQ page itself. Add future
- * non-finasteride hair products as their own lineup entries when they ship.
+ * money page for each live product, not a deep FAQ page itself.
+ *
+ * Oral Minoxidil and both sexes' Hair Loss Spray launched 2026-09-09 (Matt),
+ * alongside matching entries in HAIR_SECTIONS (SiteHeader.tsx). Oral
+ * Minoxidil is one product/one price/one Bask questionnaire for both sexes,
+ * but gets two separate cards here (like the spray) rather than one "for men
+ * and women" card, so each links to its own single-sex page
+ * (`/oral-minoxidil-men`, `/oral-minoxidil-women`) - per Matt, women
+ * shouldn't land on copy that also addresses men, and vice versa. "Oral Hair
+ * Compound" (women's, HAIRLOSS_WOMENS_COMPOUND_PRICING) is a distinct
+ * formulation not part of this launch - do not add it here without a
+ * separate go-ahead.
  */
 const LINEUP: CategoryLineupItem[] = [
   {
@@ -97,6 +112,42 @@ const LINEUP: CategoryLineupItem[] = [
     icon: Droplet,
     to: "/oral-finasteride/",
     perDayNote: simplePerDaySentence(HAIRLOSS_FINASTERIDE_PRICING),
+  },
+  {
+    id: "oral-minoxidil-men",
+    name: "Oral Minoxidil (Men)",
+    form: "For men, once daily",
+    pricing: HAIRLOSS_ORAL_MINOXIDIL_PRICING,
+    icon: Pill,
+    to: "/oral-minoxidil-men/",
+    perDayNote: simplePerDaySentence(HAIRLOSS_ORAL_MINOXIDIL_PRICING),
+  },
+  {
+    id: "oral-minoxidil-women",
+    name: "Oral Minoxidil (Women)",
+    form: "For women, once daily",
+    pricing: HAIRLOSS_ORAL_MINOXIDIL_PRICING,
+    icon: Pill,
+    to: "/oral-minoxidil-women/",
+    perDayNote: simplePerDaySentence(HAIRLOSS_ORAL_MINOXIDIL_PRICING),
+  },
+  {
+    id: "hair-loss-spray-men",
+    name: "Hair Loss Spray (Men)",
+    form: "For men, topical spray",
+    pricing: HAIRLOSS_TOPICAL_MEN_PRICING,
+    icon: SprayCan,
+    to: "/hair-loss-spray-men/",
+    perDayNote: simplePerDaySentence(HAIRLOSS_TOPICAL_MEN_PRICING),
+  },
+  {
+    id: "hair-loss-spray-women",
+    name: "Hair Loss Spray (Women)",
+    form: "For women, topical spray",
+    pricing: HAIRLOSS_TOPICAL_WOMEN_PRICING,
+    icon: SprayCan,
+    to: "/hair-loss-spray-women/",
+    perDayNote: simplePerDaySentence(HAIRLOSS_TOPICAL_WOMEN_PRICING),
   },
 ];
 

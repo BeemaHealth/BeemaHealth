@@ -110,7 +110,7 @@ export function SiteFooter() {
             </span>
             <p className="mt-4 text-sm leading-relaxed text-ink-foreground/70">
               Weight-loss care guided by independent medical professionals,
-              licensed providers, with transparent cash pricing (
+              503A-licensed pharmacies, with transparent cash pricing (
               {dualCompoundedShortPricingLine()}), and support designed for
               success.
             </p>

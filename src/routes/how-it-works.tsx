@@ -84,7 +84,7 @@ const AFTER = [
   {
     icon: MessageCircle,
     title: "Stay connected",
-    text: `Clear communication tracks your status and provides updates to your dashboard, so you always know where things stand: whether your intake is under review, your prescription is being filled, or your next refill is on the way. ${patientQuestionsGuidance()} If your provider needs more information or your circumstances change, you'll hear from your care team directly rather than being left to guess.`,
+    text: `Clear communication tracks your status and provides updates to your dashboard, so you always know where things stand: whether your intake is under review, your prescription is being filled, or your next refill is on the way. ${patientQuestionsGuidance()} If your provider needs more information or your circumstances change, you'll hear from your medical care team directly rather than being left to guess.`,
   },
   {
     icon: RefreshCcw,
@@ -228,7 +228,7 @@ function HowItWorksPage() {
             <SectionHeading
               eyebrow="Ongoing care"
               title="Care doesn't stop at delivery"
-              description="Once your prescription ships, your care team and dashboard keep working with you throughout treatment: tracking status, coordinating refills, and staying available if your provider needs to check in or adjust your plan."
+              description="Once your prescription ships, your medical care team and dashboard keep working with you throughout treatment: tracking status, coordinating refills, and staying available if your provider needs to check in or adjust your plan."
             />
           </motion.div>
 
@@ -280,10 +280,11 @@ function HowItWorksPage() {
               </Button>
             </HoverLiftButton>
             <p className="mx-auto mt-4 max-w-md text-xs leading-relaxed text-muted-foreground">
-              A licensed provider makes every clinical decision independently,
-              based on your intake and applicable state law. Completing intake
-              does not guarantee a prescription, and Beema does not influence or
-              override any provider&rsquo;s clinical judgment.
+              A licensed medical provider makes every clinical decision
+              independently, based on your intake and applicable state laws.
+              Completing intake does not guarantee a prescription, and Beema
+              Health does not influence or override any medical provider&rsquo;s
+              clinical judgment.
             </p>
           </div>
         </Section>

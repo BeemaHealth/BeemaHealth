@@ -233,24 +233,6 @@ export function HomeHero() {
                 Get Started <ArrowRight />
               </Button>
             </HoverLiftButton>
-            <div className="flex flex-row flex-wrap gap-3">
-              <Button
-                asChild
-                size="xl"
-                variant="outline"
-                className="h-10 px-4 text-xs sm:h-14 sm:px-9 sm:text-base"
-              >
-                <Link to="/tirzepatide/">Tirzepatide pricing</Link>
-              </Button>
-              <Button
-                asChild
-                size="xl"
-                variant="outline"
-                className="h-10 px-4 text-xs sm:h-14 sm:px-9 sm:text-base"
-              >
-                <Link to="/semaglutide/">Semaglutide pricing</Link>
-              </Button>
-            </div>
           </motion.div>
         </motion.div>
 
@@ -289,6 +271,37 @@ export function HomeHero() {
               </p>
             </div>
           </motion.div>
+        </motion.div>
+
+        {/*
+            Bottom-right pill, separate from the Get Started button above so
+            it doesn't read as a second/third CTA option (per Matt, the old
+            Tirzepatide/Semaglutide button row next to Get Started made the
+            primary CTA look weight-loss-only). Sits in the grid's reserved
+            pb-20/pb-24 bottom padding, same headroom that keeps the fixed
+            marquee band from covering it.
+          */}
+        <motion.div
+          className="absolute bottom-4 right-0 z-20 hidden sm:bottom-6 sm:block"
+          initial={{ opacity: 0, y: reduceMotion ? 0 : 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: reduceMotion ? 0 : 0.6,
+            ease: EASE_OUT,
+            delay: reduceMotion ? 0 : 1.1,
+          }}
+        >
+          <Link
+            to="/tirzepatide/"
+            className="group inline-flex items-center gap-2 rounded-full border border-primary/30 bg-background/95 px-4 py-2 text-xs font-semibold text-foreground shadow-lg backdrop-blur-sm transition-colors hover:border-primary/50 hover:bg-background sm:text-sm"
+          >
+            <span className="text-muted-foreground">Most popular:</span>
+            <span>Tirzepatide</span>
+            <span className="inline-flex items-center gap-1 text-primary">
+              See pricing
+              <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </Link>
         </motion.div>
       </div>
 

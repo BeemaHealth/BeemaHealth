@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, CheckCircle2, HeartPulse } from "lucide-react";
+import { ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import {
   canonicalUrl,
   breadcrumbJsonLd,
@@ -33,50 +33,49 @@ import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
-  ED_TADALAFIL_PER_PILL_USD,
-  ED_TADALAFIL_PRICING,
-  formatPerPillStartingAt,
+  HAIRLOSS_ORAL_MINOXIDIL_PRICING,
+  formatSimpleStartingAt,
+  simplePerDaySentence,
   simplePricingSentence,
 } from "@/lib/simple-treatment-pricing";
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
-import tadalafilPhoto from "@/assets/treatments/tadalafil-oral-tablets-bottle.webp";
+import oralMinoxidilPhoto from "@/assets/treatments/oral-minoxidil-tablets-bottle.webp";
 
-const TITLE = "Tadalafil for ED Online | Beema Health";
-const DESCRIPTION = `Tadalafil, the FDA-approved generic version of Cialis, reviewed by licensed providers. Nationwide telehealth care from ${formatPerPillStartingAt(ED_TADALAFIL_PER_PILL_USD)}. Prescribing is never guaranteed.`;
+const TITLE = "Oral Minoxidil for Men Online | Beema Health";
+const DESCRIPTION = `Compounded oral minoxidil for men, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleStartingAt(HAIRLOSS_ORAL_MINOXIDIL_PRICING)}. Prescribing is never guaranteed.`;
 const SERVICE_DESCRIPTION =
-  "Nationwide telehealth service connecting eligible adult men with independent licensed providers for tadalafil evaluation and ongoing care. Completing intake does not guarantee a prescription.";
+  "Nationwide telehealth service connecting eligible adult men with independent licensed providers for compounded oral minoxidil evaluation and ongoing care. Completing intake does not guarantee a prescription.";
+
+const REQUIRED_COMPOUND_SENTENCE =
+  "Compounded oral minoxidil is not FDA-approved and is considered only when legally available and clinically appropriate.";
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
-    q: "What is tadalafil and how does it work?",
-    a: "Tadalafil works by relaxing blood vessels so more blood can flow to the penis, making it easier to get and keep an erection when you're sexually aroused. It doesn't cause arousal by itself - you still need to be sexually stimulated for it to work. Tadalafil is known for a longer duration of action than sildenafil, which is why it's sometimes taken at a low daily dose rather than only as needed.",
+    q: "What is oral minoxidil and how does it work?",
+    a: "Minoxidil is best known as a topical treatment, but taken as a low-dose oral tablet it can also help support hair growth by improving blood flow to hair follicles and extending the hair growth cycle. It's taken once daily. Results vary and can take several months to become noticeable.",
   },
   {
-    q: "Is Beema's tadalafil the same as generic Cialis?",
-    a: "Yes. Beema's tadalafil is the FDA-approved generic version of Cialis - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.",
+    q: "Is Beema's oral minoxidil for men FDA-approved?",
+    a: `${REQUIRED_COMPOUND_SENTENCE} It is not the same as, and is not claimed to be clinically proven to produce the same results as, any FDA-approved product.`,
   },
   {
-    q: "Tadalafil or sildenafil - which is right for me?",
-    a: "Both work similarly but differ in how quickly they take effect and how long they last; your licensed provider reviews your intake and recommends which option and dose may be appropriate for your case. See Sildenafil for that option, or ED Mints for a dissolve-under-the-tongue combination formulation.",
+    q: "How does online hair loss care through Beema work?",
+    a: "Care starts with creating a secure account and completing a medical intake covering your health history, hair loss pattern, and goals, at your own pace. A licensed provider reviews your intake and independently decides whether oral minoxidil may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability.",
   },
   {
-    q: "How does online ED care through Beema work?",
-    a: "Care starts with creating a secure account and completing a medical intake covering your health history, current medications, and goals, at your own pace. A licensed provider reviews your intake and independently decides whether tadalafil may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability.",
-  },
-  {
-    q: "How much does tadalafil cost through Beema?",
-    a: `${simplePricingSentence("Tadalafil through Beema", ED_TADALAFIL_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
+    q: "How much does oral minoxidil cost through Beema?",
+    a: `${simplePricingSentence("Oral minoxidil through Beema", HAIRLOSS_ORAL_MINOXIDIL_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
     q: "Does Beema serve patients nationwide?",
-    a: "Yes, Beema Health is available to patients in all 50 U.S. states. Eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications, including cardiovascular history.",
+    a: "Yes, Beema Health is available to patients in all 50 U.S. states. Eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications.",
   },
 ];
 
 const WHATS_INCLUDED = [
-  "Prescription Formulation",
+  "Prescription Medication",
   "Doctor Consultation & Visit",
   "Ongoing Doctor Care",
   "Expedited Shipping",
@@ -84,12 +83,12 @@ const WHATS_INCLUDED = [
 ];
 
 const ELIGIBILITY_POINTS = [
-  "Adult men, 18 and older",
-  "Eligibility considers cardiovascular history and current medications",
+  "Men, 18 and older",
+  "Your provider reviews your full health history",
   "Final approval rests with a licensed provider",
 ];
 
-export const Route = createFileRoute("/tadalafil")({
+export const Route = createFileRoute("/oral-minoxidil-men")({
   head: () => ({
     meta: [
       { title: TITLE },
@@ -97,14 +96,14 @@ export const Route = createFileRoute("/tadalafil")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: canonicalUrl("/tadalafil") },
+      { property: "og:url", content: canonicalUrl("/oral-minoxidil-men") },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
     links: [
-      { rel: "canonical", href: canonicalUrl("/tadalafil") },
-      ...bootImagePreloadLinks("/tadalafil"),
+      { rel: "canonical", href: canonicalUrl("/oral-minoxidil-men") },
+      ...bootImagePreloadLinks("/oral-minoxidil-men"),
     ],
     scripts: [
       {
@@ -112,7 +111,7 @@ export const Route = createFileRoute("/tadalafil")({
         children: JSON.stringify(
           breadcrumbJsonLd([
             { name: "Home", path: "/" },
-            { name: "Tadalafil", path: "/tadalafil" },
+            { name: "Oral Minoxidil for Men", path: "/oral-minoxidil-men" },
           ]),
         ),
       },
@@ -124,31 +123,32 @@ export const Route = createFileRoute("/tadalafil")({
         type: "application/ld+json",
         children: JSON.stringify(
           serviceJsonLd({
-            name: "Tadalafil Telehealth Care",
+            name: "Oral Minoxidil for Men Telehealth Care",
             description: SERVICE_DESCRIPTION,
-            path: "/tadalafil",
-            serviceType: "Erectile dysfunction treatment telehealth service",
+            path: "/oral-minoxidil-men",
+            serviceType: "Hair loss treatment telehealth service",
             reviewedByClinicalLead: false,
-            dateModified: "2026-09-03",
+            dateModified: "2026-09-09",
             offer: {
-              introPrice: ED_TADALAFIL_PRICING.monthlyUsd,
-              recurringPrice: ED_TADALAFIL_PRICING.monthlyUsd,
+              introPrice: HAIRLOSS_ORAL_MINOXIDIL_PRICING.monthlyUsd,
+              recurringPrice: HAIRLOSS_ORAL_MINOXIDIL_PRICING.monthlyUsd,
             },
           }),
         ),
       },
     ],
   }),
-  component: TadalafilPage,
+  component: OralMinoxidilMenPage,
 });
 
-function TadalafilPage() {
-  const heroCta = resolveCta(CTA_IDS.tadalafil_hero);
-  const footerCta = resolveCta(CTA_IDS.tadalafil_footer);
+function OralMinoxidilMenPage() {
+  const heroCta = resolveCta(CTA_IDS.oral_minoxidil_men_hero);
+  const footerCta = resolveCta(CTA_IDS.oral_minoxidil_men_footer);
   const reduceMotion = useReducedMotion();
+  const perDayNote = simplePerDaySentence(HAIRLOSS_ORAL_MINOXIDIL_PRICING);
 
   useEffect(() => {
-    trackPageViewed("tadalafil");
+    trackPageViewed("oral_minoxidil_men");
   }, []);
 
   return (
@@ -163,22 +163,20 @@ function TadalafilPage() {
           className="bg-grain pointer-events-none absolute inset-0 z-0 text-foreground/[0.035]"
         />
         <div className="relative z-10">
-          <TreatmentBreadcrumb current="Tadalafil" />
+          <TreatmentBreadcrumb current="Oral Minoxidil for Men" />
           <div className="mt-8 grid items-start gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
             <div>
               <SectionHeading
                 as="h1"
                 align="left"
-                eyebrow="Nationwide telehealth ED care"
+                eyebrow="Nationwide telehealth hair loss care"
                 title={
                   <>
-                    <LineReveal>Tadalafil, </LineReveal>
-                    <LineReveal delay={0.1}>
-                      the generic Cialis&reg; tablet.
-                    </LineReveal>
+                    <LineReveal>Oral Minoxidil, </LineReveal>
+                    <LineReveal delay={0.1}>for men.</LineReveal>
                   </>
                 }
-                description="Beema Health connects eligible adults with independent licensed providers for tadalafil care. Completing intake does not guarantee a prescription."
+                description="Beema Health connects eligible men with independent licensed providers for compounded oral minoxidil care. Completing intake does not guarantee a prescription."
                 className="mx-0 max-w-xl text-left"
               />
               <motion.div
@@ -203,13 +201,18 @@ function TadalafilPage() {
                   </Button>
                 </HoverLiftButton>
                 <Button asChild size="xl" variant="outline">
-                  <Link to="/tadalafil/" hash="how-it-works">
+                  <Link to="/oral-minoxidil-men/" hash="how-it-works">
                     How it works
                   </Link>
                 </Button>
               </motion.div>
-              <p className="mt-6 max-w-md text-2xl font-bold text-foreground">
-                From {formatPerPillStartingAt(ED_TADALAFIL_PER_PILL_USD)}
+              <p className="mt-6 flex max-w-md flex-wrap items-center gap-x-3 gap-y-1 text-2xl font-bold text-foreground">
+                From {formatSimpleStartingAt(HAIRLOSS_ORAL_MINOXIDIL_PRICING)}
+                {perDayNote ? (
+                  <span className="rounded-full bg-accent px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-accent-foreground">
+                    {perDayNote}
+                  </span>
+                ) : null}
               </p>
               <p className="mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">
                 Medication eligibility and availability are determined by a
@@ -228,8 +231,8 @@ function TadalafilPage() {
             >
               <div className="relative aspect-[4/5] overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
                 <img
-                  src={tadalafilPhoto}
-                  alt="Bottle of Beema Health tadalafil oral tablets, generic Cialis"
+                  src={oralMinoxidilPhoto}
+                  alt="Bottle of Beema Health compounded oral minoxidil tablets"
                   width={720}
                   height={900}
                   fetchPriority="high"
@@ -248,42 +251,28 @@ function TadalafilPage() {
       <Section className="pt-0">
         <SectionHeading
           align="left"
-          title="What is tadalafil?"
+          title="What is oral minoxidil?"
           className="mx-0 max-w-2xl"
         />
         <div className="mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-muted-foreground">
           <p>
-            Tadalafil works by relaxing blood vessels so more blood can flow to
-            the penis. That can make it easier to get and keep an erection when
-            you're sexually aroused. It doesn't cause arousal by itself - you
-            still need to be sexually stimulated for it to work. Tadalafil is
-            known for a longer duration of action than other ED medications,
-            which is why some patients take a low dose daily rather than only as
-            needed.
+            Minoxidil is best known as a topical treatment, but taken as a
+            low-dose oral tablet it can also help support hair growth by
+            improving blood flow to hair follicles and extending the hair growth
+            cycle. It's taken once daily. Results vary and can take several
+            months to become noticeable.
           </p>
           <p>
-            Beema's tadalafil is the FDA-approved generic version of Cialis -
-            the identical active ingredient, strength, and intended use as the
-            brand-name product, dispensed by a licensed pharmacy, not a
-            compounded formulation. Looking for sildenafil instead? See{" "}
-            <Link to="/sildenafil/" className="text-primary underline">
-              Sildenafil
-            </Link>
-            . Looking for a dissolve-under-the-tongue combination formulation?
-            See{" "}
-            <Link to="/ed-mints/" className="text-primary underline">
-              ED Mints
-            </Link>
-            , a separate compounded product.
+            Beema's oral minoxidil for men is a compounded formulation.{" "}
+            {REQUIRED_COMPOUND_SENTENCE}
           </p>
           <p>
-            Whether tadalafil may be appropriate for you is a decision your
-            licensed provider makes individually, based on your health history
-            and current medications. Completing intake does not guarantee a
-            prescription.
+            Whether oral minoxidil, or another formulation, may be appropriate
+            for you is a decision your licensed provider makes individually
+            based on your health history and hair loss pattern.
           </p>
           <Button asChild variant="outline" size="sm">
-            <Link to="/tadalafil/" hash="faq">
+            <Link to="/oral-minoxidil-men/" hash="faq">
               View FAQ <ArrowRight className="size-4" />
             </Link>
           </Button>
@@ -293,7 +282,7 @@ function TadalafilPage() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema's tadalafil care works"
+        title="How Beema's oral minoxidil care works"
         showCareFollowUpNote
       />
 
@@ -301,15 +290,16 @@ function TadalafilPage() {
         <SectionHeading
           align="left"
           title="Transparent pricing"
-          description="Your provider decides whether tadalafil is clinically appropriate - this is a starting point, not a self-selected order."
+          description="Your provider decides whether oral minoxidil is clinically appropriate - this is a starting point, not a self-selected order."
           className="mx-0 max-w-2xl"
         />
         <div className="mt-8 max-w-sm">
           <SimpleTreatmentPricingCard
-            label="tadalafil"
-            title="Tadalafil (Generic Cialis®)"
+            label="oral minoxidil"
+            title="Oral Minoxidil (Men)"
             badge="Rx"
-            pricing={ED_TADALAFIL_PRICING}
+            pricing={HAIRLOSS_ORAL_MINOXIDIL_PRICING}
+            perDayNote={perDayNote}
           />
         </div>
         <div className="mt-8">
@@ -318,9 +308,9 @@ function TadalafilPage() {
               Who may be eligible
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Not everyone qualifies. Your provider weighs cardiovascular
-              history, current medications, and applicable state law before
-              making an independent decision.
+              Not everyone qualifies. Your provider weighs your hair loss
+              pattern, health history, current medications, and applicable state
+              law before making an independent decision.
             </p>
             <ul className="mt-5 grid gap-2 sm:grid-cols-3">
               {ELIGIBILITY_POINTS.map((t) => (
@@ -346,34 +336,30 @@ function TadalafilPage() {
         <div className="mt-8 grid gap-6 md:grid-cols-2">
           <SurfaceCard>
             <div className="flex gap-4">
-              <HeartPulse className="size-6 shrink-0 text-accent-foreground" />
+              <ShieldCheck className="size-6 shrink-0 text-accent-foreground" />
               <div>
                 <h3 className="text-base font-semibold text-foreground">
-                  Prescription medical care
+                  Compounded, not FDA-approved
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  This medication is a prescription product and isn't
-                  appropriate for everyone, including people on certain nitrate
-                  medications or with certain cardiovascular conditions. It is
-                  the FDA-approved generic version of Cialis, dispensed by a
-                  licensed pharmacy.
+                  {REQUIRED_COMPOUND_SENTENCE} It isn't appropriate for
+                  everyone.
                 </p>
               </div>
             </div>
           </SurfaceCard>
           <SurfaceCard>
             <div className="flex gap-4">
-              <HeartPulse className="size-6 shrink-0 text-accent-foreground" />
+              <ShieldCheck className="size-6 shrink-0 text-accent-foreground" />
               <div>
                 <h3 className="text-base font-semibold text-foreground">
                   Talk to your provider
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   Include your full medical history, possible contraindications,
-                  side effects, and any medication interactions, especially
-                  nitrates, in your intake questionnaire. After you complete
-                  intake and pay, you can ask follow-up questions. Before then,
-                  email{" "}
+                  side effects, and any medication interactions in your intake
+                  questionnaire. After you complete intake and pay, you can ask
+                  follow-up questions. Before then, email{" "}
                   <a
                     href={`mailto:${SUPPORT_EMAIL}`}
                     className="text-primary underline"
@@ -454,7 +440,7 @@ function TadalafilPage() {
           </div>
         </div>
       </Section>
-      <MoneyPageGuides path="/tadalafil/" />
+      <MoneyPageGuides path="/oral-minoxidil-men/" />
     </MarketingLayout>
   );
 }

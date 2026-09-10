@@ -56,6 +56,7 @@ describe("simple-treatment-pricing", () => {
     expect(TRT_PRICING.quarterly).toBeUndefined();
     expect(HAIRLOSS_FINASTERIDE_PRICING.quarterly).toBeUndefined();
     expect(HAIRLOSS_WOMENS_COMPOUND_PRICING.quarterly).toBeUndefined();
+    expect(HAIRLOSS_ORAL_MINOXIDIL_PRICING.quarterly).toBeUndefined();
   });
 
   it("prices tadalafil and sildenafil independently", () => {
@@ -73,12 +74,18 @@ describe("simple-treatment-pricing", () => {
     expect(formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)).toBe(
       "$29.67/mo",
     );
+    expect(formatSimpleStartingAt(HAIRLOSS_ORAL_MINOXIDIL_PRICING)).toBe(
+      "$29.67/mo",
+    );
     expect(formatSimpleStartingAt(ED_TADALAFIL_PRICING)).toBe("$49.67/mo");
     expect(formatSimpleStartingAt(ED_SILDENAFIL_PRICING)).toBe("$43/mo");
   });
 
   it("simplePerDaySentence only fires when the monthly rate clears $1/day", () => {
     expect(simplePerDaySentence(HAIRLOSS_FINASTERIDE_PRICING)).toBe(
+      "Less than $1 a day.",
+    );
+    expect(simplePerDaySentence(HAIRLOSS_ORAL_MINOXIDIL_PRICING)).toBe(
       "Less than $1 a day.",
     );
     expect(simplePerDaySentence(ED_TADALAFIL_PRICING)).toBeUndefined();
@@ -99,6 +106,9 @@ describe("simple-treatment-pricing", () => {
     expect(simplePricingSentence("TRT", TRT_PRICING)).not.toMatch(/quarterly/i);
     expect(
       simplePricingSentence("Hairloss", HAIRLOSS_ORAL_MINOXIDIL_PRICING),
-    ).toMatch(/quarterly/i);
+    ).not.toMatch(/quarterly/i);
+    expect(simplePricingSentence("ED tadalafil", ED_TADALAFIL_PRICING)).toMatch(
+      /quarterly/i,
+    );
   });
 });

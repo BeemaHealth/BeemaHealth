@@ -27,6 +27,8 @@ import { Route as SemaglutideRouteImport } from './routes/semaglutide'
 import { Route as SafetyRouteImport } from './routes/safety'
 import { Route as QualifyRouteImport } from './routes/qualify'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as OralMinoxidilWomenRouteImport } from './routes/oral-minoxidil-women'
+import { Route as OralMinoxidilMenRouteImport } from './routes/oral-minoxidil-men'
 import { Route as OralFinasterideRouteImport } from './routes/oral-finasteride'
 import { Route as NadPlusRouteImport } from './routes/nad-plus'
 import { Route as LoginRouteImport } from './routes/login'
@@ -34,6 +36,8 @@ import { Route as LearnRouteImport } from './routes/learn'
 import { Route as IntakeRouteImport } from './routes/intake'
 import { Route as InsuranceRouteImport } from './routes/insurance'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as HairLossSprayWomenRouteImport } from './routes/hair-loss-spray-women'
+import { Route as HairLossSprayMenRouteImport } from './routes/hair-loss-spray-men'
 import { Route as HairLossRouteImport } from './routes/hair-loss'
 import { Route as Glp1HoustonRouteImport } from './routes/glp-1-houston'
 import { Route as Glp1RouteImport } from './routes/glp-1'
@@ -178,6 +182,16 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OralMinoxidilWomenRoute = OralMinoxidilWomenRouteImport.update({
+  id: '/oral-minoxidil-women',
+  path: '/oral-minoxidil-women',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OralMinoxidilMenRoute = OralMinoxidilMenRouteImport.update({
+  id: '/oral-minoxidil-men',
+  path: '/oral-minoxidil-men',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OralFinasterideRoute = OralFinasterideRouteImport.update({
   id: '/oral-finasteride',
   path: '/oral-finasteride',
@@ -211,6 +225,16 @@ const InsuranceRoute = InsuranceRouteImport.update({
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HairLossSprayWomenRoute = HairLossSprayWomenRouteImport.update({
+  id: '/hair-loss-spray-women',
+  path: '/hair-loss-spray-women',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HairLossSprayMenRoute = HairLossSprayMenRouteImport.update({
+  id: '/hair-loss-spray-men',
+  path: '/hair-loss-spray-men',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HairLossRoute = HairLossRouteImport.update({
@@ -499,6 +523,8 @@ export interface FileRoutesByFullPath {
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
   '/hair-loss': typeof HairLossRoute
+  '/hair-loss-spray-men': typeof HairLossSprayMenRoute
+  '/hair-loss-spray-women': typeof HairLossSprayWomenRoute
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
   '/intake': typeof IntakeRoute
@@ -506,6 +532,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/nad-plus': typeof NadPlusRoute
   '/oral-finasteride': typeof OralFinasterideRoute
+  '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
+  '/oral-minoxidil-women': typeof OralMinoxidilWomenRoute
   '/pricing': typeof PricingRoute
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
@@ -578,12 +606,16 @@ export interface FileRoutesByTo {
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
   '/hair-loss': typeof HairLossRoute
+  '/hair-loss-spray-men': typeof HairLossSprayMenRoute
+  '/hair-loss-spray-women': typeof HairLossSprayWomenRoute
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
   '/intake': typeof IntakeRoute
   '/login': typeof LoginRoute
   '/nad-plus': typeof NadPlusRoute
   '/oral-finasteride': typeof OralFinasterideRoute
+  '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
+  '/oral-minoxidil-women': typeof OralMinoxidilWomenRoute
   '/pricing': typeof PricingRoute
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
@@ -653,6 +685,8 @@ export interface FileRoutesById {
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
   '/hair-loss': typeof HairLossRoute
+  '/hair-loss-spray-men': typeof HairLossSprayMenRoute
+  '/hair-loss-spray-women': typeof HairLossSprayWomenRoute
   '/how-it-works': typeof HowItWorksRoute
   '/insurance': typeof InsuranceRoute
   '/intake': typeof IntakeRoute
@@ -660,6 +694,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/nad-plus': typeof NadPlusRoute
   '/oral-finasteride': typeof OralFinasterideRoute
+  '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
+  '/oral-minoxidil-women': typeof OralMinoxidilWomenRoute
   '/pricing': typeof PricingRoute
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
@@ -735,6 +771,8 @@ export interface FileRouteTypes {
     | '/glp-1'
     | '/glp-1-houston'
     | '/hair-loss'
+    | '/hair-loss-spray-men'
+    | '/hair-loss-spray-women'
     | '/how-it-works'
     | '/insurance'
     | '/intake'
@@ -742,6 +780,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/nad-plus'
     | '/oral-finasteride'
+    | '/oral-minoxidil-men'
+    | '/oral-minoxidil-women'
     | '/pricing'
     | '/qualify'
     | '/safety'
@@ -814,12 +854,16 @@ export interface FileRouteTypes {
     | '/glp-1'
     | '/glp-1-houston'
     | '/hair-loss'
+    | '/hair-loss-spray-men'
+    | '/hair-loss-spray-women'
     | '/how-it-works'
     | '/insurance'
     | '/intake'
     | '/login'
     | '/nad-plus'
     | '/oral-finasteride'
+    | '/oral-minoxidil-men'
+    | '/oral-minoxidil-women'
     | '/pricing'
     | '/qualify'
     | '/safety'
@@ -888,6 +932,8 @@ export interface FileRouteTypes {
     | '/glp-1'
     | '/glp-1-houston'
     | '/hair-loss'
+    | '/hair-loss-spray-men'
+    | '/hair-loss-spray-women'
     | '/how-it-works'
     | '/insurance'
     | '/intake'
@@ -895,6 +941,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/nad-plus'
     | '/oral-finasteride'
+    | '/oral-minoxidil-men'
+    | '/oral-minoxidil-women'
     | '/pricing'
     | '/qualify'
     | '/safety'
@@ -969,6 +1017,8 @@ export interface RootRouteChildren {
   Glp1Route: typeof Glp1Route
   Glp1HoustonRoute: typeof Glp1HoustonRoute
   HairLossRoute: typeof HairLossRoute
+  HairLossSprayMenRoute: typeof HairLossSprayMenRoute
+  HairLossSprayWomenRoute: typeof HairLossSprayWomenRoute
   HowItWorksRoute: typeof HowItWorksRoute
   InsuranceRoute: typeof InsuranceRoute
   IntakeRoute: typeof IntakeRoute
@@ -976,6 +1026,8 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   NadPlusRoute: typeof NadPlusRoute
   OralFinasterideRoute: typeof OralFinasterideRoute
+  OralMinoxidilMenRoute: typeof OralMinoxidilMenRoute
+  OralMinoxidilWomenRoute: typeof OralMinoxidilWomenRoute
   PricingRoute: typeof PricingRoute
   QualifyRoute: typeof QualifyRoute
   SafetyRoute: typeof SafetyRoute
@@ -1135,6 +1187,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/oral-minoxidil-women': {
+      id: '/oral-minoxidil-women'
+      path: '/oral-minoxidil-women'
+      fullPath: '/oral-minoxidil-women'
+      preLoaderRoute: typeof OralMinoxidilWomenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oral-minoxidil-men': {
+      id: '/oral-minoxidil-men'
+      path: '/oral-minoxidil-men'
+      fullPath: '/oral-minoxidil-men'
+      preLoaderRoute: typeof OralMinoxidilMenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/oral-finasteride': {
       id: '/oral-finasteride'
       path: '/oral-finasteride'
@@ -1182,6 +1248,20 @@ declare module '@tanstack/react-router' {
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hair-loss-spray-women': {
+      id: '/hair-loss-spray-women'
+      path: '/hair-loss-spray-women'
+      fullPath: '/hair-loss-spray-women'
+      preLoaderRoute: typeof HairLossSprayWomenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hair-loss-spray-men': {
+      id: '/hair-loss-spray-men'
+      path: '/hair-loss-spray-men'
+      fullPath: '/hair-loss-spray-men'
+      preLoaderRoute: typeof HairLossSprayMenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hair-loss': {
@@ -1698,6 +1778,8 @@ const rootRouteChildren: RootRouteChildren = {
   Glp1Route: Glp1Route,
   Glp1HoustonRoute: Glp1HoustonRoute,
   HairLossRoute: HairLossRoute,
+  HairLossSprayMenRoute: HairLossSprayMenRoute,
+  HairLossSprayWomenRoute: HairLossSprayWomenRoute,
   HowItWorksRoute: HowItWorksRoute,
   InsuranceRoute: InsuranceRoute,
   IntakeRoute: IntakeRoute,
@@ -1705,6 +1787,8 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   NadPlusRoute: NadPlusRoute,
   OralFinasterideRoute: OralFinasterideRoute,
+  OralMinoxidilMenRoute: OralMinoxidilMenRoute,
+  OralMinoxidilWomenRoute: OralMinoxidilWomenRoute,
   PricingRoute: PricingRoute,
   QualifyRoute: QualifyRoute,
   SafetyRoute: SafetyRoute,

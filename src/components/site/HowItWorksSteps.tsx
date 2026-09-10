@@ -48,7 +48,7 @@ const STEPS: Step[] = [
     icon: Truck,
     title: "Prescription approved, filled, and shipped",
     blurb:
-      "If approved, your prescription moves to a licensed pharmacy and ships to your door, with status updates the whole way.",
+      "If approved, your prescription moves to a 503A-licensed pharmacy and ships to your door, with status updates the whole way.",
   },
 ];
 

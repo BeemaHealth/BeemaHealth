@@ -30,21 +30,25 @@ import { cn } from "@/lib/utils";
  * see docs/features/treatment-pages.md) the visitor wants. Step 2 asks
  * which product within that category, then routes straight to that
  * product's existing Bask questionnaire via resolveCta() - no intermediate
- * page. A category resolves straight from step 1, skipping step 2, when
- * either: it has exactly one live product (Hair's Male branch, today), or
+ * page. A category resolves straight from step 1, skipping step 2, only when
  * every product it lists shares one questionnaire already (Weight Loss,
- * today, via `directCtaId` - see `autoAdvanceCtaId` below). Both are
- * per-category, not hardcoded, so each stops applying the moment that
- * category's products actually diverge.
+ * today, via `directCtaId` - see `autoAdvanceCtaId` below), or when a
+ * category has exactly one live product. Both are per-category, not
+ * hardcoded, so each stops applying the moment that category's products
+ * actually diverge.
  *
- * Hair additionally gates on sex first (`sexGate`, 2026-09-04): Male goes
- * straight to Oral Finasteride (the only live product), Female is a
- * deliberate dead end today since there's no live women's hair product yet
- * - Beema expects to launch one soon, so this asks now rather than silently
- * assuming every visitor is male. This is intentionally NOT the sitewide
- * "no coming-soon placeholders" pattern (docs/features/treatment-pages.md) -
- * that rule is about the persistent header nav; this is a funnel question
- * with an honest "not yet, but soon" answer, not a fake nav entry.
+ * Hair additionally gates on sex first (`sexGate`, since 2026-09-04). Through
+ * 2026-09-09 this was a "not yet, but soon" placeholder - Male auto-resolved
+ * to the only live product (Oral Finasteride), Female dead-ended with a
+ * message since there was no live women's product yet. Now that Oral
+ * Minoxidil and both sexes' Hair Loss Spray are live, selecting a sex
+ * instead filters `products` down to that sex's subset (via each product's
+ * own `sex` tag) and advances to the normal step-2 product picker with just
+ * those matching products. Every Hair product carries a `sex` tag today -
+ * even Oral Minoxidil, which is one product/price/questionnaire for both
+ * sexes, gets a male-tagged and a female-tagged entry (matching its 2
+ * separate landing pages) rather than one untagged entry shown to both, so
+ * this list never implies one sex's product to the other (Matt, 2026-09-09).
  *
  * Sexual Health's "ED Mints" entry isn't a single Bask URL - it's 2
  * formulations picked on /ed-mints today via `EdMintsPickerModal`. Rather
@@ -56,9 +60,20 @@ import { cn } from "@/lib/utils";
  * `backFromEdMints` below).
  */
 
-export type GetStartedProduct =
+export type GetStartedProduct = (
   | { kind: "cta"; label: string; ctaId: CtaId }
-  | { kind: "ed-mints"; label: string };
+  | { kind: "ed-mints"; label: string }
+) & {
+  /**
+   * Only meaningful on a `sexGate` category - filters which products show
+   * after Male/Female is selected. Omit only for a product genuinely
+   * without separate men's/women's pages; a product sold as one SKU for
+   * both sexes (e.g. Oral Minoxidil) still gets one male-tagged and one
+   * female-tagged entry if it has separate single-sex landing pages, so
+   * this list matches what each page's own copy says.
+   */
+  sex?: "male" | "female";
+};
 
 export type GetStartedCategory = {
   id: string;
@@ -76,18 +91,13 @@ export type GetStartedCategory = {
    */
   directCtaId?: CtaId;
   /**
-   * When set, selecting this category shows a Male/Female step before
-   * resolving anything, instead of `directCtaId` or the single-product
-   * shortcut. `male` is the CtaId to resolve straight to (today's Hair
-   * pattern: exactly one live product, so Male itself is a direct link, the
-   * same way a 1-product category would normally auto-advance). Female has
-   * no CtaId - there's no live women's product yet, so selecting it shows a
-   * short "not yet, but soon" message instead of navigating anywhere. Add
-   * this the day a category's men-only products stay men-only with a
-   * women's line genuinely coming; remove it (or add a `female` CtaId) once
-   * that product actually ships.
+   * When true, selecting this category shows a Male/Female step before
+   * step 2 instead of `directCtaId` or the single-product shortcut.
+   * Selecting a sex filters `products` down to the matching subset (see
+   * `GetStartedProduct.sex`) and proceeds straight to step 2 with just
+   * those products.
    */
-  sexGate?: { male: CtaId };
+  sexGate?: boolean;
 };
 
 export const GET_STARTED_CATEGORIES: GetStartedCategory[] = [
@@ -134,23 +144,44 @@ export const GET_STARTED_CATEGORIES: GetStartedCategory[] = [
     id: "hair",
     label: "Hair Loss",
     icon: Sparkles,
-    // Only Oral Finasteride is live, men only (2026-09-03, see
-    // docs/features/treatment-pages.md). A women's hair line is expected to
-    // launch soon, so this asks Male/Female up front (`sexGate` below)
-    // rather than silently routing everyone to the men's product. Male
-    // still auto-resolves straight to Oral Finasteride (only one live
-    // product); add the next hair product to `products` when it launches -
-    // once a men's product step actually shows multiple choices, `sexGate`
-    // needs a matching update (today it only carries a single `male`
-    // CtaId). Add `female: CtaId` to sexGate the day a women's product
-    // ships, and the Female branch resolves instead of showing the
-    // not-yet message.
-    sexGate: { male: CTA_IDS.oral_finasteride_hero },
+    // 5 live products (2026-09-09), gated by sex first (see `sexGate`
+    // above). Oral Minoxidil is one product/price/questionnaire for both
+    // sexes but still gets its own male-tagged and female-tagged entry here
+    // (matching its 2 separate landing pages, /oral-minoxidil-men and
+    // /oral-minoxidil-women) rather than one untagged entry shown to both -
+    // so this step's product list, like each page's own copy, never implies
+    // the other sex's product.
+    sexGate: true,
     products: [
       {
         kind: "cta",
         label: "Oral Finasteride",
         ctaId: CTA_IDS.oral_finasteride_hero,
+        sex: "male",
+      },
+      {
+        kind: "cta",
+        label: "Oral Minoxidil",
+        ctaId: CTA_IDS.oral_minoxidil_men_hero,
+        sex: "male",
+      },
+      {
+        kind: "cta",
+        label: "Oral Minoxidil",
+        ctaId: CTA_IDS.oral_minoxidil_women_hero,
+        sex: "female",
+      },
+      {
+        kind: "cta",
+        label: "Hair Loss Spray",
+        ctaId: CTA_IDS.hairloss_spray_men_hero,
+        sex: "male",
+      },
+      {
+        kind: "cta",
+        label: "Hair Loss Spray",
+        ctaId: CTA_IDS.hairloss_spray_women_hero,
+        sex: "female",
       },
     ],
   },
@@ -161,8 +192,8 @@ export const GET_STARTED_CATEGORIES: GetStartedCategory[] = [
  * step 2 - either because `directCtaId` says every product already shares
  * one questionnaire, or because there's only one live product to begin
  * with. `sexGate` always takes precedence (it needs its own Male/Female
- * step, never a direct resolve). Returns null when step 2 - or the sex gate
- * - should show instead.
+ * step first). Returns null when step 2 - or the sex gate - should show
+ * instead.
  */
 export function autoAdvanceCtaId(category: GetStartedCategory): CtaId | null {
   if (category.sexGate) return null;
@@ -178,6 +209,9 @@ const cardClassName =
   "flex cursor-pointer flex-col items-center gap-3 rounded-2xl border border-border p-6 text-center text-sm font-semibold text-foreground outline-none transition-colors hover:border-primary/40 hover:bg-accent focus-visible:border-primary/40 focus-visible:bg-accent";
 
 type Step = "category" | "sex" | "product";
+type Sex = "male" | "female";
+
+const SEX_LABEL: Record<Sex, string> = { male: "Male", female: "Female" };
 
 export function GetStartedModal({
   open,
@@ -188,7 +222,7 @@ export function GetStartedModal({
 }) {
   const [step, setStep] = useState<Step>("category");
   const [categoryId, setCategoryId] = useState<string | null>(null);
-  const [femaleSelected, setFemaleSelected] = useState(false);
+  const [sex, setSex] = useState<Sex | null>(null);
   const [edMintsOpen, setEdMintsOpen] = useState(false);
   // Set right before re-opening this modal from EdMintsPickerModal's Back
   // button, so the reset-on-open effect below leaves step/categoryId alone
@@ -203,24 +237,45 @@ export function GetStartedModal({
     }
     setStep("category");
     setCategoryId(null);
-    setFemaleSelected(false);
+    setSex(null);
   }, [open]);
 
   const activeCategory = GET_STARTED_CATEGORIES.find(
     (c) => c.id === categoryId,
   );
 
+  // On a sexGate category, step 2 shows only the selected sex's products
+  // (plus any product with no `sex` tag, shared by both) - see
+  // GetStartedProduct.sex.
+  const visibleProducts =
+    activeCategory?.sexGate && sex
+      ? activeCategory.products.filter((p) => !p.sex || p.sex === sex)
+      : (activeCategory?.products ?? []);
+
   function selectCategory(category: GetStartedCategory) {
     if (autoAdvanceCtaId(category)) return; // rendered as a direct Link below, not clickable via JS
     setCategoryId(category.id);
-    setFemaleSelected(false);
+    setSex(null);
     setStep(category.sexGate ? "sex" : "product");
+  }
+
+  function selectSex(value: Sex) {
+    setSex(value);
+    setStep("product");
   }
 
   function backToCategory() {
     setStep("category");
     setCategoryId(null);
-    setFemaleSelected(false);
+    setSex(null);
+  }
+
+  function backFromProduct() {
+    if (activeCategory?.sexGate) {
+      setStep("sex");
+      return;
+    }
+    backToCategory();
   }
 
   function selectEdMints() {
@@ -290,58 +345,36 @@ export function GetStartedModal({
                 })}
               </div>
             </>
-          ) : step === "sex" && activeCategory?.sexGate ? (
-            (() => {
-              const maleCta = resolveCta(activeCategory.sexGate.male);
-              return (
-                <>
-                  <DialogHeader>
-                    <DialogTitle className="text-center text-2xl sm:text-3xl">
-                      Who is this for?
-                    </DialogTitle>
-                    <DialogDescription className="text-center">
-                      {activeCategory.label} care today is available for men.
-                    </DialogDescription>
-                  </DialogHeader>
+          ) : step === "sex" ? (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-center text-2xl sm:text-3xl">
+                  Who is this for?
+                </DialogTitle>
+                <DialogDescription className="text-center">
+                  Choose the option that fits you best.
+                </DialogDescription>
+              </DialogHeader>
 
-                  {femaleSelected ? (
-                    <p className="rounded-2xl border border-border p-6 text-center text-sm text-muted-foreground">
-                      We don&apos;t have a women&apos;s{" "}
-                      {activeCategory.label.toLowerCase()} option to select yet,
-                      but you&apos;ll be able to soon.
-                    </p>
-                  ) : (
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <Link
-                        to={maleCta.to}
-                        search={maleCta.search}
-                        onClick={maleCta.onClick}
-                        className={cardClassName}
-                      >
-                        Male
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => setFemaleSelected(true)}
-                        className={cardClassName}
-                      >
-                        Female
-                      </button>
-                    </div>
-                  )}
+              <div className="grid gap-4 sm:grid-cols-2">
+                {(["male", "female"] as const).map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => selectSex(value)}
+                    className={cardClassName}
+                  >
+                    {SEX_LABEL[value]}
+                  </button>
+                ))}
+              </div>
 
-                  <DialogFooter className="sm:justify-center">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={backToCategory}
-                    >
-                      <ArrowLeft /> Back
-                    </Button>
-                  </DialogFooter>
-                </>
-              );
-            })()
+              <DialogFooter className="sm:justify-center">
+                <Button type="button" variant="ghost" onClick={backToCategory}>
+                  <ArrowLeft /> Back
+                </Button>
+              </DialogFooter>
+            </>
           ) : (
             <>
               <DialogHeader>
@@ -357,12 +390,12 @@ export function GetStartedModal({
               <div
                 className={cn(
                   "grid gap-4",
-                  (activeCategory?.products.length ?? 0) > 1
+                  visibleProducts.length > 1
                     ? "sm:grid-cols-2"
                     : "sm:grid-cols-1",
                 )}
               >
-                {activeCategory?.products.map((product) => {
+                {visibleProducts.map((product) => {
                   if (product.kind === "ed-mints") {
                     return (
                       <button
@@ -392,7 +425,7 @@ export function GetStartedModal({
               </div>
 
               <DialogFooter className="sm:justify-center">
-                <Button type="button" variant="ghost" onClick={backToCategory}>
+                <Button type="button" variant="ghost" onClick={backFromProduct}>
                   <ArrowLeft /> Back
                 </Button>
               </DialogFooter>

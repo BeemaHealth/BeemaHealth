@@ -16,6 +16,9 @@ import edMintsOdtPhoto from "@/assets/treatments/ed-mints-sildenafil-tadalafil-o
 import sildenafilPhoto from "@/assets/treatments/sildenafil-oral-tablets-bottle.webp";
 import tadalafilPhoto from "@/assets/treatments/tadalafil-oral-tablets-bottle.webp";
 import finasteridePhoto from "@/assets/treatments/finasteride-oral-tablets-bottle.webp";
+import hairLossSprayMenPhoto from "@/assets/treatments/hair-loss-spray-men-bottle.webp";
+import hairLossSprayWomenPhoto from "@/assets/treatments/hair-loss-spray-women-bottle.webp";
+import oralMinoxidilPhoto from "@/assets/treatments/oral-minoxidil-tablets-bottle.webp";
 import { LEGITSCRIPT_SEAL_SRC } from "@/lib/legitscript";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 
@@ -67,6 +70,13 @@ export function criticalBootImageUrls(pathname: string): string[] {
       return [tadalafilPhoto];
     case "/oral-finasteride":
       return [finasteridePhoto];
+    case "/hair-loss-spray-men":
+      return [hairLossSprayMenPhoto];
+    case "/hair-loss-spray-women":
+      return [hairLossSprayWomenPhoto];
+    case "/oral-minoxidil-men":
+    case "/oral-minoxidil-women":
+      return [oralMinoxidilPhoto];
     default:
       return [];
   }

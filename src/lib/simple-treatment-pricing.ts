@@ -75,10 +75,16 @@ export const TRT_PRICING: SimpleCompoundedPricing = {
  * Minoxidil is shared by both sexes (one product, one price).
  */
 
-/** Oral minoxidil, GoGoMeds, for both men and women. Monthly cost $65.99 x1.5; quarterly cost $71.99 x1.5. */
+/**
+ * Oral minoxidil, GoGoMeds, for both men and women. Cost-sheet-derived price
+ * at launch (monthly $65.99 x1.5 ~= $99, quarterly $71.99 x1.5 ~= $109);
+ * repriced 2026-09-09 (per Matt) to $89/mo, then repriced again the same day
+ * to a flat $29.67/mo with no quarterly SKU - matching hairloss finasteride's
+ * pattern below. $29.67/mo clears the "less than $1 a day" bar (see
+ * simplePerDaySentence()).
+ */
 export const HAIRLOSS_ORAL_MINOXIDIL_PRICING: SimpleCompoundedPricing = {
-  monthlyUsd: 99,
-  quarterly: quarterlyPlan(109, 99),
+  monthlyUsd: 29.67,
 };
 
 /**

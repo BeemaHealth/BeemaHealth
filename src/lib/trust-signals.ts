@@ -31,12 +31,12 @@ export const TRUST_SIGNALS: TrustSignal[] = [
   },
   {
     icon: CheckCircle2,
-    label: "Licensed providers, verified per state",
+    label: "Licensed medical providers, verified per state",
     detail: "Verified in your state.",
   },
   {
     icon: MapPin,
-    label: "Available in all 50 states",
+    label: "Available in all 50 states and DC",
     detail: "Nationwide, per state eligibility.",
   },
   {
@@ -46,7 +46,7 @@ export const TRUST_SIGNALS: TrustSignal[] = [
   },
   {
     icon: Factory,
-    label: "USA 503A pharmacies",
+    label: "USA 503A-licensed pharmacies",
     detail: "Compounded in licensed U.S. pharmacies.",
   },
 ];

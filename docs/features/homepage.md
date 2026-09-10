@@ -22,6 +22,14 @@ It fades out (`marqueeOpacity`, a `useTransform` off the same `scrollYProgress`)
 
 If you need to change hero copy/layout again and something ends up positioned "at the bottom of the hero," default to viewport-relative (`fixed`) rather than section-relative (`absolute` against the hero's own box) unless you're certain the hero's height is stable across breakpoints.
 
+### CTA row and the "most popular" pill (2026-09-09)
+
+The hero's button row has **one** button: "Get Started" (`GetStartedModal`, opened via local `getStartedOpen` state). It used to also carry two outline buttons ("Tirzepatide pricing" / "Semaglutide pricing") stacked directly under Get Started - Matt flagged that this made the primary CTA read as weight-loss-only, since it sat sandwiched between two weight-loss-specific links. Both were removed from that row.
+
+In their place, a small pill link sits absolutely positioned bottom-right of the hero's content grid: "Most popular: Tirzepatide - See pricing", linking to `/tirzepatide/`. It intentionally does **not** repeat the Semaglutide link - Tirzepatide alone carries the "most popular" framing, and Semaglutide pricing stays reachable via nav/treatment pages rather than cluttering the hero further. It sits in the grid's existing `pb-20`/`pb-24` reserved bottom padding (the same headroom that already keeps the fixed marquee band from covering hero content on load), fades/slides in last in the entrance sequence (`delay: 1.1`, after the headline and photo have settled), and respects `prefers-reduced-motion` like the rest of the hero.
+
+If Semaglutide (or another product) ever needs the same "most popular" treatment, prefer a second pill rather than reintroducing a button row next to Get Started - that's the layout Matt asked to move away from.
+
 ### LegitScript seal on the hero
 
 Official certification seal floats on the hero (mobile: beside the headline; desktop: top-left of the hexagon photo). Shared float animation: `FloatingLegitScriptSeal`. Verify URL / image / size: **`src/lib/legitscript.ts` only** - see `docs/features/legitscript.md`.

@@ -15,21 +15,76 @@ import { clearPendingUtms, storePendingUtms } from "@/lib/utm";
  * utm-attribution.test.ts).
  */
 describe("GetStartedModal category/product config", () => {
-  it("gates Hair on sex instead of auto-advancing, even with exactly one live product", () => {
+  it("gates Hair on sex instead of auto-advancing, with 5 live products split across sexes", () => {
     const hair = GET_STARTED_CATEGORIES.find((c) => c.id === "hair")!;
-    expect(hair.products).toHaveLength(1);
-    expect(hair.sexGate).toBeDefined();
-    expect(hair.sexGate?.male).toBe(CTA_IDS.oral_finasteride_hero);
-    // sexGate takes precedence over the single-product auto-advance shortcut
+    expect(hair.products).toHaveLength(5);
+    expect(hair.sexGate).toBe(true);
+    // sexGate takes precedence over directCtaId/single-product auto-advance
     // - Hair needs its own Male/Female step, never a direct resolve from
     // step 1.
     expect(autoAdvanceCtaId(hair)).toBeNull();
   });
 
-  it("resolves Hair's sexGate.male to a real Bask questionnaire URL", () => {
+  it("every Hair product carries a sex tag, so no product shows to both sexes untagged", () => {
     const hair = GET_STARTED_CATEGORIES.find((c) => c.id === "hair")!;
-    const cta = resolveCta(hair.sexGate!.male);
-    expect(cta.to).toMatch(/^https:\/\/q\.beemahealth\.com\//);
+    for (const product of hair.products) {
+      expect(product.sex, product.label).toBeDefined();
+    }
+  });
+
+  it("filters Hair's products to the selected sex - Oral Minoxidil gets its own male- and female-tagged entry, not one shared entry", () => {
+    const hair = GET_STARTED_CATEGORIES.find((c) => c.id === "hair")!;
+    const forSex = (sex: "male" | "female") =>
+      hair.products.filter((p) => p.sex === sex);
+
+    const male = forSex("male");
+    expect(male.map((p) => p.label)).toEqual([
+      "Oral Finasteride",
+      "Oral Minoxidil",
+      "Hair Loss Spray",
+    ]);
+
+    const female = forSex("female");
+    expect(female.map((p) => p.label)).toEqual([
+      "Oral Minoxidil",
+      "Hair Loss Spray",
+    ]);
+
+    // Each same-labeled pair must resolve to a different product/page.
+    const maleMinoxidil = male.find(
+      (p) => p.label === "Oral Minoxidil" && p.kind === "cta",
+    );
+    const femaleMinoxidil = female.find(
+      (p) => p.label === "Oral Minoxidil" && p.kind === "cta",
+    );
+    expect(maleMinoxidil?.kind === "cta" && maleMinoxidil.ctaId).toBe(
+      CTA_IDS.oral_minoxidil_men_hero,
+    );
+    expect(femaleMinoxidil?.kind === "cta" && femaleMinoxidil.ctaId).toBe(
+      CTA_IDS.oral_minoxidil_women_hero,
+    );
+
+    const maleSpray = male.find(
+      (p) => p.label === "Hair Loss Spray" && p.kind === "cta",
+    );
+    const femaleSpray = female.find(
+      (p) => p.label === "Hair Loss Spray" && p.kind === "cta",
+    );
+    expect(maleSpray?.kind === "cta" && maleSpray.ctaId).toBe(
+      CTA_IDS.hairloss_spray_men_hero,
+    );
+    expect(femaleSpray?.kind === "cta" && femaleSpray.ctaId).toBe(
+      CTA_IDS.hairloss_spray_women_hero,
+    );
+  });
+
+  it("resolves every Hair product to a real Bask questionnaire URL", () => {
+    const hair = GET_STARTED_CATEGORIES.find((c) => c.id === "hair")!;
+    for (const product of hair.products) {
+      if (product.kind !== "cta") continue;
+      const cta = resolveCta(product.ctaId);
+      expect(cta.to, product.label).toMatch(/^https:\/\/q\.beemahealth\.com\//);
+    }
   });
 
   it("auto-advances Weight Loss via directCtaId even though it lists 2 products", () => {
@@ -108,9 +163,6 @@ describe("GetStartedModal UTM passthrough", () => {
     for (const category of GET_STARTED_CATEGORIES) {
       if (category.directCtaId) {
         assertUtms(resolveCta(category.directCtaId).to);
-      }
-      if (category.sexGate) {
-        assertUtms(resolveCta(category.sexGate.male).to);
       }
       for (const product of category.products) {
         if (product.kind !== "cta") continue;

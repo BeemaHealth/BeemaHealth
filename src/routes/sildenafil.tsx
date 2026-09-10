@@ -226,14 +226,14 @@ function SildenafilPage() {
               }}
               className="mx-auto w-full max-w-sm"
             >
-              <div className="relative aspect-square overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
                 <img
                   src={sildenafilPhoto}
                   alt="Bottle of Beema Health sildenafil oral tablets, generic Viagra"
                   width={720}
                   height={900}
                   fetchPriority="high"
-                  className="absolute inset-0 h-full w-full object-cover object-center"
+                  className="absolute inset-0 h-full w-full object-contain"
                 />
               </div>
               <TreatmentIncludedDropdown

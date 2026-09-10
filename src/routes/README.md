@@ -40,7 +40,12 @@ list is maintained in `public/sitemap.xml` and guarded by
 | Compounded NAD+ | `/nad-plus` | Live |
 | Compounded Sermorelin | `/sermorelin` | Live |
 | Sexual Health (hub) | `/sexual-health` | Live - footer Care group, category overview for `/ed` + `/trt` |
-| Hair Loss (hub) | `/hair-loss` | Live - footer Care group, category overview for `/oral-finasteride` (merged 2026-09-04 from the former `/hair` + `/hairloss`) |
+| Oral Finasteride | `/oral-finasteride` | Live money page - Hair Loss header dropdown (For Men) |
+| Oral Minoxidil (Men) | `/oral-minoxidil-men` | Live money page (2026-09-09) - Hair Loss header dropdown (For Men). Same product/price/Bask questionnaire as the women's page, split into 2 single-sex pages on purpose - see docs/features/treatment-pages.md "Single-sex product pages" |
+| Oral Minoxidil (Women) | `/oral-minoxidil-women` | Live money page (2026-09-09) - Hair Loss header dropdown (For Women). Same product as above, single-sex page |
+| Hair Loss Spray for Men | `/hair-loss-spray-men` | Live money page (2026-09-09) - Hair Loss header dropdown (For Men) |
+| Hair Loss Spray for Women | `/hair-loss-spray-women` | Live money page (2026-09-09) - Hair Loss header dropdown (For Women) |
+| Hair Loss (hub) | `/hair-loss` | Live - footer Care group, category overview for `/oral-finasteride`, `/oral-minoxidil-men`, `/oral-minoxidil-women`, `/hair-loss-spray-men`, `/hair-loss-spray-women` (merged 2026-09-04 from the former `/hair` + `/hairloss`) |
 | Wellness (hub) | `/wellness` | Live - footer Care group, category overview for `/nad-plus` + `/sermorelin` |
 | How it works | `/how-it-works` | Live - in the Resources header/footer nav |
 | About | `/about` | Live - in the About header dropdown |

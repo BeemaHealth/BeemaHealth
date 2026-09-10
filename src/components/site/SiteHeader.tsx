@@ -76,41 +76,42 @@ const SEXUAL_HEALTH_SECTIONS: NavSection[] = [
 /**
  * Sectioned For Men / For Women, Good Life Meds style (screenshot ref in
  * conversation, 2026-08-28) - all 6 items originally lived on the one
- * /hairloss page, organized into Men/Women sections there too. "Oral
- * Minoxidil" is the same product/page for both sexes and deliberately
- * listed in both columns, matching the reference site's own pattern.
+ * /hairloss page, organized into Men/Women sections there too.
  * /hairloss was merged into /hair-loss (the hub) on 2026-09-04 - see below.
  *
- * ONLY FINASTERIDE IS LAUNCHING (2026-09-03) - Oral Minoxidil, the men's
- * Topical Spray, and the entire "For Women" section are commented out below,
- * not deleted, pending a launch decision on those SKUs. Re-enable by
- * uncommenting the items here AND adding matching entries to the `LINEUP`
- * array in hair-loss.tsx. See docs/features/treatment-pages.md.
+ * Oral Minoxidil and both sexes' Hair Loss Spray launched 2026-09-09 (Matt),
+ * each on its own dedicated money page with its own confirmed Bask intake
+ * CTA - see cta-ids.ts. Oral Minoxidil is one product/one price/one Bask
+ * questionnaire for both sexes, but per Matt (2026-09-09) it still gets two
+ * separate landing pages - `/oral-minoxidil-men` and
+ * `/oral-minoxidil-women` - rather than one shared page, so each sex's copy
+ * never mentions the other's product. "Oral Hair Compound" (women's, a
+ * distinct formulation from oral minoxidil - HAIRLOSS_WOMENS_COMPOUND_PRICING
+ * in simple-treatment-pricing.ts) is NOT part of this launch and stays out of
+ * both nav and hair-loss.tsx's LINEUP pending its own launch decision - do
+ * not add it here without a separate go-ahead.
  *
- * Money-page architecture (2026-09-03): links straight to the dedicated
- * oral-finasteride.tsx landing page (its own confirmed Bask intake CTA), not
- * through /hair-loss first - /hair-loss stays live as the category hub,
- * reachable from the footer, not this nav.
+ * Money-page architecture: links straight to each dedicated landing page
+ * (its own confirmed Bask intake CTA), not through /hair-loss first -
+ * /hair-loss stays live as the category hub, reachable from the footer, not
+ * this nav.
  */
 const HAIR_SECTIONS: NavSection[] = [
   {
     heading: "For Men",
     items: [
-      // { label: "Oral Minoxidil", to: "/hair-loss/" }, // disabled pending launch decision (2026-09-03) - see comment above
+      { label: "Oral Minoxidil", to: "/oral-minoxidil-men/" },
       { label: "Oral Finasteride", to: "/oral-finasteride/" },
-      // { label: "Topical Spray", to: "/hair-loss/" }, // disabled pending launch decision (2026-09-03) - see comment above
+      { label: "Hair Loss Spray", to: "/hair-loss-spray-men/" },
     ],
   },
-  // "For Women" disabled pending launch decision (2026-09-03) - no women's
-  // hair loss product is launching yet; only men's finasteride is live.
-  // {
-  //   heading: "For Women",
-  //   items: [
-  //     { label: "Oral Minoxidil", to: "/hair-loss/" },
-  //     { label: "Oral Hair Compound", to: "/hair-loss/" },
-  //     { label: "Topical Spray", to: "/hair-loss/" },
-  //   ],
-  // },
+  {
+    heading: "For Women",
+    items: [
+      { label: "Oral Minoxidil", to: "/oral-minoxidil-women/" },
+      { label: "Hair Loss Spray", to: "/hair-loss-spray-women/" },
+    ],
+  },
 ];
 
 /**
