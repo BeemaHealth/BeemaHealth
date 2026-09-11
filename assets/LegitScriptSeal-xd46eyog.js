@@ -1,1 +1,0 @@
-import{j as r,bz as e,bA as s,bB as t,bC as i,bD as T,bE as E,c as I}from"./index-C1DEGBsa.js";function n({className:a}){return r.jsx("a",{href:s,target:"_blank",rel:"noopener noreferrer",title:e,className:I("inline-block shrink-0 drop-shadow-md transition-opacity hover:opacity-90",a),children:r.jsx("img",{src:E,alt:T,width:i,height:t})})}export{n as L};

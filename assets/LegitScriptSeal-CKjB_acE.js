@@ -1,0 +1,1 @@
+import{j as r,bl as e,bm as s,bn as t,bo as i,bp as T,bq as n,c as o}from"./index-C7cznIN6.js";function L({className:a}){return r.jsx("a",{href:s,target:"_blank",rel:"noopener noreferrer",title:e,className:o("inline-block shrink-0 drop-shadow-md transition-opacity hover:opacity-90",a),children:r.jsx("img",{src:n,alt:T,width:i,height:t})})}export{L};
