@@ -48,9 +48,15 @@ export const GTM_FALLBACK_DELAY_MS = 1200;
  * earliest of first user interaction, an idle callback after `load`, or
  * GTM_IDLE_TIMEOUT_MS. Interaction is included so a visitor who clicks a CTA
  * immediately still loads the container before leaving for Bask.
+ *
+ * The hostname gate also opens for Tag Assistant's own `gtm_debug` query
+ * param, so GTM Preview mode works against localhost. This is safe: that
+ * param is only ever present when someone has explicitly started a Preview
+ * session pointed at the URL from tagmanager.google.com - ordinary local/dev
+ * browsing never carries it, so real tags still never fire off-production.
  */
 export const GTM_HEAD_SCRIPT = `
-if (window.location.hostname === '${GTM_PRODUCTION_HOSTNAME}') {
+if (window.location.hostname === '${GTM_PRODUCTION_HOSTNAME}' || /(?:^|[?&])gtm_debug=/.test(window.location.search)) {
 (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});
 var started=false;

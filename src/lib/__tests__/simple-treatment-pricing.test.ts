@@ -98,7 +98,13 @@ describe("simple-treatment-pricing", () => {
       const sentence = simplePricingSentence(label, pricing);
       expect(sentence, label).not.toMatch(/promo code/i);
       expect(sentence, label).not.toMatch(/starter pack/i);
-      expect(sentence, label).toContain("billed monthly");
+    }
+  });
+
+  it("simplePricingSentence never says billed monthly - that cadence isn't confirmed", () => {
+    for (const [label, pricing] of ALL_PRICINGS) {
+      const sentence = simplePricingSentence(label, pricing);
+      expect(sentence, label).not.toContain("billed monthly");
     }
   });
 

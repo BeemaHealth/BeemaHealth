@@ -122,13 +122,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         // Tighten further (nonces/hashes, narrower img-src, drop
         // 'unsafe-inline') and test every page + the ad pixels/GTM/Formspree
         // flows manually before trusting it fully.
+        //
+        // GTM Preview/Tag Assistant (dev-only) needs tagmanager.google.com in
+        // script-src-elem/style-src to load its debug UI - the published
+        // container itself only ever needs googletagmanager.com. Keep that
+        // origin out of the production CSP: allowing it there would let
+        // someone point a Preview session at the live site and run an
+        // unpublished/unreviewed workspace version (including custom
+        // HTML/script tags) against real traffic, bypassing whatever review
+        // happens before a container is published.
         {
           httpEquiv: "Content-Security-Policy",
           content:
             "default-src 'self'; " +
-            "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net; " +
-            "script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net; " +
-            "style-src 'self' 'unsafe-inline'; " +
+            `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net; ` +
+            `script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net; ` +
+            `style-src 'self' 'unsafe-inline'${import.meta.env.DEV ? " https://tagmanager.google.com" : ""}; ` +
             "font-src 'self' data:; " +
             "img-src 'self' data: https:; " +
             "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com; " +

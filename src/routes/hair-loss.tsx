@@ -40,7 +40,7 @@ import {
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 
 const TITLE = "Hair Loss Treatment | Beema Health";
-const DESCRIPTION = `Compounded hair loss treatment, reviewed by licensed providers in all 50 states. Oral and topical formulations from ${formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `FDA-approved generic oral medications and compounded topical formulations for hair loss, reviewed by licensed providers in all 50 states, from ${formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)}. Prescribing is never guaranteed.`;
 
 export const Route = createFileRoute("/hair-loss")({
   head: () => ({
@@ -72,7 +72,7 @@ export const Route = createFileRoute("/hair-loss")({
           serviceJsonLd({
             name: "Hair Loss Telehealth Program",
             description:
-              "Telehealth hair loss program from Beema Health. Licensed providers review every patient and may prescribe compounded oral or topical hairloss formulations when clinically appropriate; these compounded medications are not FDA-approved, and prescribing is never guaranteed.",
+              "Telehealth hair loss program from Beema Health. Licensed providers review every patient and may prescribe FDA-approved generic oral medications or compounded topical hairloss formulations when clinically appropriate; compounded medications are not FDA-approved, and prescribing is never guaranteed.",
             path: "/hair-loss",
             serviceType: "Hair loss telehealth program",
           }),
@@ -160,12 +160,12 @@ const BENEFITS = [
   {
     icon: Droplet,
     title: "Oral and topical options",
-    text: "Compounded formulations, individualized to you, prepared by a licensed compounding pharmacy. Your provider recommends the formulation, if any.",
+    text: "Oral finasteride and oral minoxidil are FDA-approved generic medications. Topical hair loss sprays are compounded formulations, individualized to you. Your provider recommends the formulation, if any.",
   },
   {
     icon: ShieldCheck,
-    title: "Compounded, not FDA-approved",
-    text: "Considered only when legally available and clinically appropriate. Prescribing is never guaranteed.",
+    title: "FDA-approved and compounded options",
+    text: "Oral medications are FDA-approved generics. Compounded topical sprays are not FDA-approved and are considered only when legally available and clinically appropriate. Prescribing is never guaranteed.",
   },
 ];
 
@@ -203,7 +203,7 @@ function HairLossPage() {
                 <LineReveal delay={0.1}>licensed providers</LineReveal>
               </>
             }
-            description={`Beema Health offers compounded oral and topical hairloss formulations, from ${formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)}. Compounded medications are not FDA-approved.`}
+            description={`Beema Health offers FDA-approved generic oral medications and compounded topical hairloss formulations, from ${formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)}. Compounded medications are not FDA-approved.`}
           />
           <motion.div
             className="mt-10 text-center"

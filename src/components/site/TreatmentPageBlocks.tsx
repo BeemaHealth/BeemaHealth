@@ -448,9 +448,7 @@ export function SimpleTreatmentPricingCard({
           </span>{" "}
           vs. paying monthly
         </p>
-      ) : (
-        <p className="mt-2 text-sm text-muted-foreground">Billed monthly.</p>
-      )}
+      ) : null}
       <p className="mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
         All-inclusive cash-pay pricing for {label}: provider care, medication,
         supplies, and expedited shipping are included. No separate platform

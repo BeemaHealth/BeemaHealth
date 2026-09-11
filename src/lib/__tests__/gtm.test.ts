@@ -35,12 +35,12 @@ describe("gtm", () => {
 
   it("keeps one Google tag loader and required measurement CSP origins", () => {
     expect(rootRoute).not.toContain("GOOGLE_ADS_HEAD_SCRIPT");
-    const scriptSrcElem =
-      "script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net";
-    expect(rootRoute).toContain(
-      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net",
+    expect(rootRoute).toMatch(
+      /script-src 'self' 'unsafe-inline' https:\/\/www\.googletagmanager\.com\$\{import\.meta\.env\.DEV[^}]*\} https:\/\/connect\.facebook\.net https:\/\/googleads\.g\.doubleclick\.net https:\/\/www\.googleadservices\.com https:\/\/td\.doubleclick\.net; /,
     );
-    expect(rootRoute).toContain(scriptSrcElem);
+    expect(rootRoute).toMatch(
+      /script-src-elem 'self' 'unsafe-inline' https:\/\/www\.googletagmanager\.com\$\{import\.meta\.env\.DEV[^}]*\} https:\/\/connect\.facebook\.net https:\/\/googleads\.g\.doubleclick\.net https:\/\/www\.googleadservices\.com https:\/\/td\.doubleclick\.net; /,
+    );
     for (const origin of [
       "https://www.google.com",
       "https://googleads.g.doubleclick.net",
@@ -50,6 +50,23 @@ describe("gtm", () => {
     ]) {
       expect(rootRoute).toContain(origin);
     }
+  });
+
+  it("only allows GTM Preview's tagmanager.google.com origin in dev, never unconditionally", () => {
+    // tagmanager.google.com (Preview/Tag Assistant's debug UI) must never
+    // appear as a bare, unconditional CSP origin - only inside an
+    // `import.meta.env.DEV` ternary, so production keeps only the published
+    // container's googletagmanager.com origin.
+    const previewOriginPattern = /https:\/\/tagmanager\.google\.com/g;
+    const matches = rootRoute.match(previewOriginPattern) ?? [];
+    expect(matches.length).toBeGreaterThan(0);
+
+    const devGatedPattern =
+      /import\.meta\.env\.DEV \? "[^"]*https:\/\/tagmanager\.google\.com[^"]*" : ""/g;
+    const gatedMatches = rootRoute.match(devGatedPattern) ?? [];
+    // Every literal occurrence of the preview origin must live inside a
+    // DEV-gated ternary (script-src, script-src-elem, style-src).
+    expect(gatedMatches.length).toBe(matches.length);
   });
 
   it("gates the head snippet to the production hostname only", () => {
@@ -67,7 +84,10 @@ describe("gtm", () => {
   describe("deferred container load", () => {
     type Listener = (...args: unknown[]) => void;
 
-    function runSnippet(hostname: string = GTM_PRODUCTION_HOSTNAME) {
+    function runSnippet(
+      hostname: string = GTM_PRODUCTION_HOSTNAME,
+      search = "",
+    ) {
       const inserted: { src: string; async: boolean }[] = [];
       const listeners = new Map<string, Listener[]>();
       const idleCallbacks: Listener[] = [];
@@ -85,7 +105,7 @@ describe("gtm", () => {
         createElement: () => ({ src: "", async: false }),
       };
       const win = {
-        location: { hostname },
+        location: { hostname, search },
         dataLayer: undefined as unknown[] | undefined,
         addEventListener: (type: string, fn: Listener) => {
           listeners.set(type, [...(listeners.get(type) ?? []), fn]);
@@ -160,6 +180,32 @@ describe("gtm", () => {
 
     it("does nothing at all off the production hostname", () => {
       const { win, inserted, fire, idleCallbacks } = runSnippet("localhost");
+
+      fire("pointerdown");
+      fire("load");
+      idleCallbacks.forEach((fn) => fn());
+
+      expect(win.dataLayer).toBeUndefined();
+      expect(inserted).toHaveLength(0);
+    });
+
+    it("loads off-production when the URL carries Tag Assistant's gtm_debug param", () => {
+      const { win, inserted, fire } = runSnippet(
+        "localhost",
+        "?gtm_debug=1234567890",
+      );
+
+      fire("pointerdown");
+
+      expect(win.dataLayer).toHaveLength(1);
+      expect(inserted).toHaveLength(1);
+    });
+
+    it("ignores an unrelated query string without gtm_debug off-production", () => {
+      const { win, inserted, fire, idleCallbacks } = runSnippet(
+        "localhost",
+        "?utm_source=test",
+      );
 
       fire("pointerdown");
       fire("load");

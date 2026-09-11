@@ -191,7 +191,18 @@ function HairLossSprayMenPage() {
                     <LineReveal delay={0.1}>for men.</LineReveal>
                   </>
                 }
-                description="Beema Health connects eligible men with independent licensed providers for a compounded topical spray combining minoxidil, tretinoin, fluocinolone, and finasteride. Completing intake does not guarantee a prescription."
+                description={
+                  <>
+                    Beema Health connects eligible men with independent licensed
+                    providers for a{" "}
+                    <strong className="font-semibold text-foreground">
+                      4-in-1
+                    </strong>{" "}
+                    compounded topical spray combining minoxidil, tretinoin,
+                    fluocinolone, and finasteride. Completing intake does not
+                    guarantee a prescription.
+                  </>
+                }
                 className="mx-0 max-w-xl text-left"
               />
               <motion.div

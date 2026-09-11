@@ -76,12 +76,14 @@ export const TRT_PRICING: SimpleCompoundedPricing = {
  */
 
 /**
- * Oral minoxidil, GoGoMeds, for both men and women. Cost-sheet-derived price
- * at launch (monthly $65.99 x1.5 ~= $99, quarterly $71.99 x1.5 ~= $109);
- * repriced 2026-09-09 (per Matt) to $89/mo, then repriced again the same day
- * to a flat $29.67/mo with no quarterly SKU - matching hairloss finasteride's
- * pattern below. $29.67/mo clears the "less than $1 a day" bar (see
- * simplePerDaySentence()).
+ * Oral minoxidil, GoGoMeds, for both men and women. FDA-approved generic
+ * medication, not compounded (confirmed with the pharmacy 2026-09-11, per
+ * Matt) - approved to treat high blood pressure, used off-label for hair
+ * loss. Cost-sheet-derived price at launch (monthly $65.99 x1.5 ~= $99,
+ * quarterly $71.99 x1.5 ~= $109); repriced 2026-09-09 (per Matt) to $89/mo,
+ * then repriced again the same day to a flat $29.67/mo with no quarterly SKU
+ * - matching hairloss finasteride's pattern below. $29.67/mo clears the
+ * "less than $1 a day" bar (see simplePerDaySentence()).
  */
 export const HAIRLOSS_ORAL_MINOXIDIL_PRICING: SimpleCompoundedPricing = {
   monthlyUsd: 29.67,
@@ -109,16 +111,24 @@ export const HAIRLOSS_WOMENS_COMPOUND_PRICING: SimpleCompoundedPricing = {
   monthlyUsd: 149,
 };
 
-/** Topical spray with finasteride, Pharmacy Hub, men only. Monthly cost $85.99 x1.5; quarterly cost $147.99 x1.5. */
+/**
+ * Topical spray with finasteride, Pharmacy Hub, men only. Monthly cost
+ * $85.99 x1.5. Quarterly plan removed from copy (2026-09-11, per Matt) -
+ * only the monthly rate is confirmed for the hair loss pages, so no
+ * quarterly comparison is shown.
+ */
 export const HAIRLOSS_TOPICAL_MEN_PRICING: SimpleCompoundedPricing = {
   monthlyUsd: 129,
-  quarterly: quarterlyPlan(219, 129),
 };
 
-/** Topical spray with biotin/melatonin (no finasteride), Pharmacy Hub, women only. Monthly cost $83.99 x1.5; quarterly cost $141.99 x1.5. */
+/**
+ * Topical spray with biotin/melatonin (no finasteride), Pharmacy Hub, women
+ * only. Monthly cost $83.99 x1.5. Quarterly plan removed from copy
+ * (2026-09-11, per Matt) - only the monthly rate is confirmed for the hair
+ * loss pages, so no quarterly comparison is shown.
+ */
 export const HAIRLOSS_TOPICAL_WOMEN_PRICING: SimpleCompoundedPricing = {
   monthlyUsd: 129,
-  quarterly: quarterlyPlan(209, 129),
 };
 
 /**
@@ -249,12 +259,17 @@ export function simplePerDaySentence(
  * Mirrors compoundedMonthlyPricingSentence() in medication-pricing.ts, but
  * without any promo-code or starter-pack language, since these products
  * don't have either.
+ *
+ * Never says "billed monthly" - that billing-cadence detail isn't confirmed
+ * for any of these products, quarterly plan or not (2026-09-11, per Matt).
+ * State the price as given and let the quarterly line (when one exists)
+ * speak for itself.
  */
 export function simplePricingSentence(
   treatmentLabel: string,
   pricing: SimpleCompoundedPricing,
 ): string {
-  const monthlySentence = `${treatmentLabel} is ${formatUsd(pricing.monthlyUsd)}/month, billed monthly.`;
+  const monthlySentence = `${treatmentLabel} is ${formatUsd(pricing.monthlyUsd)}/month.`;
   if (!pricing.quarterly) {
     return `${monthlySentence} That's all-inclusive cash-pay pricing with no separate platform membership fee.`;
   }

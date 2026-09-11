@@ -44,12 +44,9 @@ import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import oralMinoxidilPhoto from "@/assets/treatments/oral-minoxidil-tablets-bottle.webp";
 
 const TITLE = "Oral Minoxidil for Women Online | Beema Health";
-const DESCRIPTION = `Compounded oral minoxidil for women, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleStartingAt(HAIRLOSS_ORAL_MINOXIDIL_PRICING)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Oral minoxidil, an FDA-approved generic medication used off-label for hair loss, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleStartingAt(HAIRLOSS_ORAL_MINOXIDIL_PRICING)}. Prescribing is never guaranteed.`;
 const SERVICE_DESCRIPTION =
-  "Nationwide telehealth service connecting eligible adult women with independent licensed providers for compounded oral minoxidil evaluation and ongoing care. Completing intake does not guarantee a prescription.";
-
-const REQUIRED_COMPOUND_SENTENCE =
-  "Compounded oral minoxidil is not FDA-approved and is considered only when legally available and clinically appropriate.";
+  "Nationwide telehealth service connecting eligible adult women with independent licensed providers for oral minoxidil evaluation and ongoing care. Oral minoxidil is an FDA-approved generic medication; using it for hair loss is a well-established off-label use. Completing intake does not guarantee a prescription.";
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
@@ -58,7 +55,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "Is Beema's oral minoxidil for women FDA-approved?",
-    a: `${REQUIRED_COMPOUND_SENTENCE} It is not the same as, and is not claimed to be clinically proven to produce the same results as, any FDA-approved product.`,
+    a: "Yes. Oral minoxidil is an FDA-approved generic medication, not a compounded formulation. It was originally approved to treat high blood pressure; using it for hair loss is a well-established off-label use in dermatology, and your licensed provider decides whether it's appropriate for you.",
   },
   {
     q: "Is oral minoxidil safe during pregnancy?",
@@ -135,7 +132,7 @@ export const Route = createFileRoute("/oral-minoxidil-women")({
             path: "/oral-minoxidil-women",
             serviceType: "Hair loss treatment telehealth service",
             reviewedByClinicalLead: false,
-            dateModified: "2026-09-09",
+            dateModified: "2026-09-11",
             offer: {
               introPrice: HAIRLOSS_ORAL_MINOXIDIL_PRICING.monthlyUsd,
               recurringPrice: HAIRLOSS_ORAL_MINOXIDIL_PRICING.monthlyUsd,
@@ -183,7 +180,7 @@ function OralMinoxidilWomenPage() {
                     <LineReveal delay={0.1}>for women.</LineReveal>
                   </>
                 }
-                description="Beema Health connects eligible women with independent licensed providers for compounded oral minoxidil care. Completing intake does not guarantee a prescription."
+                description="Beema Health connects eligible women with independent licensed providers for oral minoxidil care, an FDA-approved generic medication used off-label for hair loss. Completing intake does not guarantee a prescription."
                 className="mx-0 max-w-xl text-left"
               />
               <motion.div
@@ -239,7 +236,7 @@ function OralMinoxidilWomenPage() {
               <div className="relative aspect-[4/5] overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
                 <img
                   src={oralMinoxidilPhoto}
-                  alt="Bottle of Beema Health compounded oral minoxidil tablets"
+                  alt="Bottle of Beema Health oral minoxidil tablets, an FDA-approved generic medication"
                   width={720}
                   height={900}
                   fetchPriority="high"
@@ -270,8 +267,10 @@ function OralMinoxidilWomenPage() {
             months to become noticeable.
           </p>
           <p>
-            Beema's oral minoxidil for women is a compounded formulation.{" "}
-            {REQUIRED_COMPOUND_SENTENCE}
+            Beema's oral minoxidil for women is an FDA-approved generic
+            medication, not a compounded formulation. It was originally approved
+            to treat high blood pressure; using it for hair loss is a
+            well-established off-label use in dermatology.
           </p>
           <p>
             Whether oral minoxidil, or another formulation, may be appropriate
@@ -346,11 +345,13 @@ function OralMinoxidilWomenPage() {
               <ShieldCheck className="size-6 shrink-0 text-accent-foreground" />
               <div>
                 <h3 className="text-base font-semibold text-foreground">
-                  Compounded, not FDA-approved
+                  FDA-approved generic medication
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {REQUIRED_COMPOUND_SENTENCE} It isn't appropriate for
-                  everyone.
+                  Oral minoxidil is an FDA-approved generic medication, not
+                  compounded. It's a prescription medication and isn't
+                  appropriate for everyone; using it for hair loss is an
+                  off-label use considered only when clinically appropriate.
                 </p>
               </div>
             </div>

@@ -25,7 +25,6 @@ import {
   TreatmentBreadcrumb,
   TreatmentFaqSection,
   TreatmentIncludedDropdown,
-  SimpleTreatmentPricingCard,
   type TreatmentFaqItem,
 } from "@/components/site/TreatmentPageBlocks";
 import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
@@ -296,44 +295,28 @@ function SildenafilPage() {
         showCareFollowUpNote
       />
 
-      <Section id="pricing" className="pt-0">
-        <SectionHeading
-          align="left"
-          title="Transparent pricing"
-          description="Your provider decides whether sildenafil is clinically appropriate - this is a starting point, not a self-selected order."
-          className="mx-0 max-w-2xl"
-        />
-        <div className="mt-8 max-w-sm">
-          <SimpleTreatmentPricingCard
-            label="sildenafil"
-            title="Sildenafil (Generic Viagra®)"
-            badge="Rx"
-            pricing={ED_SILDENAFIL_PRICING}
-          />
-        </div>
-        <div className="mt-8">
-          <SurfaceCard>
-            <h3 className="text-lg font-semibold text-foreground">
-              Who may be eligible
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Not everyone qualifies. Your provider weighs cardiovascular
-              history, current medications, and applicable state law before
-              making an independent decision.
-            </p>
-            <ul className="mt-5 grid gap-2 sm:grid-cols-3">
-              {ELIGIBILITY_POINTS.map((t) => (
-                <li
-                  key={t}
-                  className="flex items-start gap-2 text-sm text-foreground"
-                >
-                  <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-foreground" />
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </SurfaceCard>
-        </div>
+      <Section className="pt-0">
+        <SurfaceCard>
+          <h3 className="text-lg font-semibold text-foreground">
+            Who may be eligible
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Not everyone qualifies. Your provider weighs cardiovascular history,
+            current medications, and applicable state law before making an
+            independent decision.
+          </p>
+          <ul className="mt-5 grid gap-2 sm:grid-cols-3">
+            {ELIGIBILITY_POINTS.map((t) => (
+              <li
+                key={t}
+                className="flex items-start gap-2 text-sm text-foreground"
+              >
+                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-foreground" />
+                {t}
+              </li>
+            ))}
+          </ul>
+        </SurfaceCard>
       </Section>
 
       <Section className="bg-muted/40 pt-0">

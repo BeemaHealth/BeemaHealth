@@ -195,7 +195,18 @@ function HairLossSprayWomenPage() {
                     <LineReveal delay={0.1}>for women.</LineReveal>
                   </>
                 }
-                description="Beema Health connects eligible women with independent licensed providers for a compounded topical spray combining minoxidil, tretinoin, fluocinolone, biotin, and melatonin. Completing intake does not guarantee a prescription."
+                description={
+                  <>
+                    Beema Health connects eligible women with independent
+                    licensed providers for a{" "}
+                    <strong className="font-semibold text-foreground">
+                      5-in-1
+                    </strong>{" "}
+                    compounded topical spray combining minoxidil, tretinoin,
+                    fluocinolone, biotin, and melatonin. Completing intake does
+                    not guarantee a prescription.
+                  </>
+                }
                 className="mx-0 max-w-xl text-left"
               />
               <motion.div

@@ -62,7 +62,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "How much does ED treatment cost through Beema?",
-    a: `Tadalafil is ${formatSimpleStartingAt(ED_TADALAFIL_PRICING)} and sildenafil is ${formatSimpleStartingAt(ED_SILDENAFIL_PRICING)}, each billed monthly with a lower-cost quarterly option. Both cover your provider consultation, medication, and expedited shipping. Questions about your plan? ${patientQuestionsGuidance()}`,
+    a: `Tadalafil is ${formatSimpleStartingAt(ED_TADALAFIL_PRICING)} and sildenafil is ${formatSimpleStartingAt(ED_SILDENAFIL_PRICING)}, each with a lower-cost quarterly option. Both cover your provider consultation, medication, and expedited shipping. Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
     q: "Does Beema serve patients nationwide?",
