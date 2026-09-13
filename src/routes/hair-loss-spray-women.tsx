@@ -34,7 +34,7 @@ import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
   HAIRLOSS_TOPICAL_WOMEN_PRICING,
-  formatSimpleStartingAt,
+  formatSimpleQuarterlyStartingAt,
   simplePerDaySentence,
   simplePricingSentence,
 } from "@/lib/simple-treatment-pricing";
@@ -44,7 +44,7 @@ import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import hairLossSprayWomenPhoto from "@/assets/treatments/hair-loss-spray-women-bottle.webp";
 
 const TITLE = "Hair Loss Spray for Women Online | Beema Health";
-const DESCRIPTION = `Compounded topical hair loss spray with minoxidil, tretinoin, fluocinolone, biotin, and melatonin, for women, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleStartingAt(HAIRLOSS_TOPICAL_WOMEN_PRICING)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Compounded topical hair loss spray with minoxidil, tretinoin, fluocinolone, biotin, and melatonin, for women, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleQuarterlyStartingAt(HAIRLOSS_TOPICAL_WOMEN_PRICING)}. Prescribing is never guaranteed.`;
 const SERVICE_DESCRIPTION =
   "Nationwide telehealth service connecting eligible adult women with independent licensed providers for compounded topical hair loss spray evaluation and ongoing care. Completing intake does not guarantee a prescription.";
 
@@ -147,7 +147,7 @@ export const Route = createFileRoute("/hair-loss-spray-women")({
             path: "/hair-loss-spray-women",
             serviceType: "Hair loss treatment telehealth service",
             reviewedByClinicalLead: false,
-            dateModified: "2026-09-09",
+            dateModified: "2026-09-13",
             offer: {
               introPrice: HAIRLOSS_TOPICAL_WOMEN_PRICING.monthlyUsd,
               recurringPrice: HAIRLOSS_TOPICAL_WOMEN_PRICING.monthlyUsd,
@@ -237,7 +237,10 @@ function HairLossSprayWomenPage() {
                 </Button>
               </motion.div>
               <p className="mt-6 flex max-w-md flex-wrap items-center gap-x-3 gap-y-1 text-2xl font-bold text-foreground">
-                From {formatSimpleStartingAt(HAIRLOSS_TOPICAL_WOMEN_PRICING)}
+                From{" "}
+                {formatSimpleQuarterlyStartingAt(
+                  HAIRLOSS_TOPICAL_WOMEN_PRICING,
+                )}
                 {perDayNote ? (
                   <span className="rounded-full bg-accent px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-accent-foreground">
                     {perDayNote}
@@ -323,13 +326,14 @@ function HairLossSprayWomenPage() {
           description="Your provider decides whether this spray is clinically appropriate - this is a starting point, not a self-selected order."
           className="mx-0 max-w-2xl"
         />
-        <div className="mt-8 max-w-sm">
+        <div className="mx-auto mt-8 max-w-xl">
           <SimpleTreatmentPricingCard
             label="hair loss spray"
             title="Hair Loss Spray (Women)"
             badge="Rx"
             pricing={HAIRLOSS_TOPICAL_WOMEN_PRICING}
             perDayNote={perDayNote}
+            interactive
           />
         </div>
         <div className="mt-8">

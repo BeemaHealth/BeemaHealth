@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ArrowRight, CheckCircle2, type LucideIcon } from "lucide-react";
 import {
   Breadcrumb,
@@ -41,7 +41,7 @@ import {
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
 import {
-  formatSimpleStartingAt,
+  formatSimpleQuarterlyStartingAt,
   type SimpleCompoundedPricing,
 } from "@/lib/simple-treatment-pricing";
 
@@ -371,21 +371,7 @@ export function TreatmentHeroArt({
   );
 }
 
-/**
- * Pricing card for the 5 non-GLP-1 treatment pages. Deliberately separate
- * from TreatmentPricingCard: no promo code, no starter pack, and an optional
- * quarterly plan instead of the 1/3/6/12-month tier selector. See
- * simple-treatment-pricing.ts for why these products use a different shape.
- */
-export function SimpleTreatmentPricingCard({
-  label,
-  title,
-  badge,
-  pricing,
-  cta,
-  perDayNote,
-  className,
-}: {
+type SimpleTreatmentPricingCardProps = {
   /** e.g. "TRT", "hairloss", "ED" - used in the disclosure sentence. */
   label: string;
   /** Optional visible product name/heading, e.g. "Finasteride (Generic Propecia®)" - for pages showing several distinctly-named products side by side. */
@@ -403,7 +389,45 @@ export function SimpleTreatmentPricingCard({
   /** Optional highlighted callout next to the price, e.g. `simplePerDaySentence(pricing)` - only pass a truthy value when the claim is actually true. */
   perDayNote?: string;
   className?: string;
-}) {
+  /**
+   * Opt-in 3-month/1-month plan tabs (2026-09-13, per Matt - hair loss
+   * spray). Only takes effect when `pricing.quarterly` is set; otherwise
+   * falls back to the static single-price layout below. Default false so
+   * every other caller (oral finasteride, oral minoxidil) keeps its current
+   * plain-price card unchanged.
+   */
+  interactive?: boolean;
+};
+
+/**
+ * Pricing card for the 5 non-GLP-1 treatment pages. Deliberately separate
+ * from TreatmentPricingCard: no promo code, no starter pack, and an optional
+ * quarterly plan instead of the 1/3/6/12-month tier selector. See
+ * simple-treatment-pricing.ts for why these products use a different shape.
+ */
+export function SimpleTreatmentPricingCard({
+  label,
+  title,
+  badge,
+  pricing,
+  cta,
+  perDayNote,
+  className,
+  interactive = false,
+}: SimpleTreatmentPricingCardProps) {
+  if (interactive && pricing.quarterly) {
+    return (
+      <InteractiveSimplePricingCard
+        label={label}
+        title={title}
+        badge={badge}
+        pricing={pricing}
+        cta={cta}
+        className={className}
+      />
+    );
+  }
+
   return (
     <SurfaceCard
       className={cn(
@@ -449,6 +473,151 @@ export function SimpleTreatmentPricingCard({
           vs. paying monthly
         </p>
       ) : null}
+      <p className="mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
+        All-inclusive cash-pay pricing for {label}: provider care, medication,
+        supplies, and expedited shipping are included. No separate platform
+        membership fee. Dose does not change the monthly rate. Treatment
+        availability may vary based on clinical appropriateness, prescription,
+        pharmacy fulfillment, and state requirements.
+      </p>
+      {cta ? (
+        <Button asChild size="lg" className="mt-6 w-full sm:w-auto">
+          <Link to={cta.to} search={cta.search} onClick={cta.onClick}>
+            {cta.label} <ArrowRight className="size-4" />
+          </Link>
+        </Button>
+      ) : null}
+    </SurfaceCard>
+  );
+}
+
+/** Small plan-length tab button, styled to match CompoundedPriceLockup's PlanTab. */
+function SimplePlanTab({
+  selected,
+  onSelect,
+  label,
+  hint,
+}: {
+  selected: boolean;
+  onSelect: () => void;
+  label: string;
+  hint?: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={selected}
+      onClick={onSelect}
+      className={cn(
+        "min-h-11 flex-1 cursor-pointer rounded-xl px-3 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        selected
+          ? "bg-primary text-primary-foreground shadow-soft"
+          : "bg-background/80 text-foreground ring-1 ring-border/70 hover:bg-muted",
+      )}
+    >
+      <span className="block text-sm font-semibold leading-none">{label}</span>
+      {hint ? (
+        <span
+          className={cn(
+            "mt-1 block text-[10px] font-medium leading-none",
+            selected ? "text-primary-foreground/80" : "text-muted-foreground",
+          )}
+        >
+          {hint}
+        </span>
+      ) : null}
+    </button>
+  );
+}
+
+/**
+ * Interactive 3-month/1-month version of SimpleTreatmentPricingCard
+ * (2026-09-13, per Matt - hair loss spray). 3 months is the default
+ * selection, featuring the lower monthly-equivalent rate; 1 month is
+ * available as an explicit alternate tab, never the default and never
+ * described as "billed monthly" - that cadence detail isn't confirmed, so
+ * only the price itself is stated (see simple-treatment-pricing.ts).
+ */
+function InteractiveSimplePricingCard({
+  label,
+  title,
+  badge,
+  pricing,
+  cta,
+  className,
+}: Omit<SimpleTreatmentPricingCardProps, "perDayNote" | "interactive">) {
+  const [months, setMonths] = useState<1 | 3>(3);
+  const q = pricing.quarterly;
+  const isThreeMonth = months === 3;
+
+  if (!q) return null;
+
+  return (
+    <SurfaceCard
+      className={cn(
+        "border-primary/30 bg-primary-soft/30 text-left",
+        className,
+      )}
+    >
+      {title ? (
+        <div className="mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+          {badge ? (
+            <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent-foreground">
+              {badge}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+      <p className="text-xs font-semibold uppercase tracking-wide text-accent-foreground">
+        Transparent pricing
+      </p>
+
+      <div
+        role="tablist"
+        aria-label="Plan length"
+        className="mt-4 flex gap-1.5"
+      >
+        <SimplePlanTab
+          selected={isThreeMonth}
+          onSelect={() => setMonths(3)}
+          label="3 months"
+          hint={
+            <>
+              Save <span className="font-bold">{formatUsd(q.savingsUsd)}</span>
+            </>
+          }
+        />
+        <SimplePlanTab
+          selected={!isThreeMonth}
+          onSelect={() => setMonths(1)}
+          label="1 month"
+        />
+      </div>
+
+      <div className="mt-4 rounded-xl bg-background/80 px-3.5 py-3 ring-1 ring-border/70">
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+          <span className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            {formatUsd(
+              isThreeMonth ? q.monthlyEquivalentUsd : pricing.monthlyUsd,
+            )}
+          </span>
+          <span className="text-sm text-muted-foreground">/mo</span>
+        </div>
+        {isThreeMonth ? (
+          <p className="mt-1.5 text-xs text-muted-foreground">
+            {formatUsd(q.totalUsd)} for 3 months · Save{" "}
+            <span className="font-bold text-foreground">
+              {formatUsd(q.savingsUsd)}
+            </span>{" "}
+            vs. paying monthly
+          </p>
+        ) : (
+          <p className="mt-1.5 text-xs text-muted-foreground">1-month plan.</p>
+        )}
+      </div>
+
       <p className="mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
         All-inclusive cash-pay pricing for {label}: provider care, medication,
         supplies, and expedited shipping are included. No separate platform
@@ -518,7 +687,7 @@ export function SimpleCategoryLineup({
               {item.name}
             </h3>
             <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-lg font-semibold text-foreground">
-              {formatSimpleStartingAt(item.pricing)}
+              {formatSimpleQuarterlyStartingAt(item.pricing)}
               {item.perDayNote ? (
                 <span className="rounded-full bg-accent px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-accent-foreground">
                   {item.perDayNote}

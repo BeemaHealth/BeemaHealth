@@ -113,22 +113,27 @@ export const HAIRLOSS_WOMENS_COMPOUND_PRICING: SimpleCompoundedPricing = {
 
 /**
  * Topical spray with finasteride, Pharmacy Hub, men only. Monthly cost
- * $85.99 x1.5. Quarterly plan removed from copy (2026-09-11, per Matt) -
- * only the monthly rate is confirmed for the hair loss pages, so no
- * quarterly comparison is shown.
+ * $85.99 x1.5. Restructured 2026-09-13 (per Matt) into an interactive
+ * 3-month/1-month picker on the "Transparent pricing" section: 3 months at
+ * $249 total ($83/mo) is the default, 1 month at $129 is the explicit
+ * alternate tab - see the `interactive` prop on `SimpleTreatmentPricingCard`.
  */
 export const HAIRLOSS_TOPICAL_MEN_PRICING: SimpleCompoundedPricing = {
   monthlyUsd: 129,
+  quarterly: quarterlyPlan(249, 129),
 };
 
 /**
  * Topical spray with biotin/melatonin (no finasteride), Pharmacy Hub, women
- * only. Monthly cost $83.99 x1.5. Quarterly plan removed from copy
- * (2026-09-11, per Matt) - only the monthly rate is confirmed for the hair
- * loss pages, so no quarterly comparison is shown.
+ * only. Monthly cost $83.99 x1.5. Restructured 2026-09-13 (per Matt) into an
+ * interactive 3-month/1-month picker on the "Transparent pricing" section:
+ * 3 months at $249 total ($83/mo) is the default, 1 month at $129 is the
+ * explicit alternate tab - see the `interactive` prop on
+ * `SimpleTreatmentPricingCard`.
  */
 export const HAIRLOSS_TOPICAL_WOMEN_PRICING: SimpleCompoundedPricing = {
   monthlyUsd: 129,
+  quarterly: quarterlyPlan(249, 129),
 };
 
 /**

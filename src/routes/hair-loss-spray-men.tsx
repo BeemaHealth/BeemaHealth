@@ -34,7 +34,7 @@ import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
   HAIRLOSS_TOPICAL_MEN_PRICING,
-  formatSimpleStartingAt,
+  formatSimpleQuarterlyStartingAt,
   simplePerDaySentence,
   simplePricingSentence,
 } from "@/lib/simple-treatment-pricing";
@@ -44,7 +44,7 @@ import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import hairLossSprayMenPhoto from "@/assets/treatments/hair-loss-spray-men-bottle.webp";
 
 const TITLE = "Hair Loss Spray for Men Online | Beema Health";
-const DESCRIPTION = `Compounded topical hair loss spray with minoxidil, tretinoin, fluocinolone, and finasteride, for men, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleStartingAt(HAIRLOSS_TOPICAL_MEN_PRICING)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Compounded topical hair loss spray with minoxidil, tretinoin, fluocinolone, and finasteride, for men, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleQuarterlyStartingAt(HAIRLOSS_TOPICAL_MEN_PRICING)}. Prescribing is never guaranteed.`;
 const SERVICE_DESCRIPTION =
   "Nationwide telehealth service connecting eligible adult men with independent licensed providers for compounded topical hair loss spray evaluation and ongoing care. Completing intake does not guarantee a prescription.";
 
@@ -143,7 +143,7 @@ export const Route = createFileRoute("/hair-loss-spray-men")({
             path: "/hair-loss-spray-men",
             serviceType: "Hair loss treatment telehealth service",
             reviewedByClinicalLead: false,
-            dateModified: "2026-09-09",
+            dateModified: "2026-09-13",
             offer: {
               introPrice: HAIRLOSS_TOPICAL_MEN_PRICING.monthlyUsd,
               recurringPrice: HAIRLOSS_TOPICAL_MEN_PRICING.monthlyUsd,
@@ -233,7 +233,8 @@ function HairLossSprayMenPage() {
                 </Button>
               </motion.div>
               <p className="mt-6 flex max-w-md flex-wrap items-center gap-x-3 gap-y-1 text-2xl font-bold text-foreground">
-                From {formatSimpleStartingAt(HAIRLOSS_TOPICAL_MEN_PRICING)}
+                From{" "}
+                {formatSimpleQuarterlyStartingAt(HAIRLOSS_TOPICAL_MEN_PRICING)}
                 {perDayNote ? (
                   <span className="rounded-full bg-accent px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-accent-foreground">
                     {perDayNote}
@@ -319,13 +320,14 @@ function HairLossSprayMenPage() {
           description="Your provider decides whether this spray is clinically appropriate - this is a starting point, not a self-selected order."
           className="mx-0 max-w-2xl"
         />
-        <div className="mt-8 max-w-sm">
+        <div className="mx-auto mt-8 max-w-xl">
           <SimpleTreatmentPricingCard
             label="hair loss spray"
             title="Hair Loss Spray (Men)"
             badge="Rx"
             pricing={HAIRLOSS_TOPICAL_MEN_PRICING}
             perDayNote={perDayNote}
+            interactive
           />
         </div>
         <div className="mt-8">
