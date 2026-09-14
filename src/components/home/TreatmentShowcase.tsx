@@ -1,12 +1,10 @@
-import { useRef, type MouseEvent as ReactMouseEvent } from "react";
+import { useRef, useState } from "react";
 import {
+  AnimatePresence,
   motion,
-  useMotionValue,
   useReducedMotion,
   useScroll,
-  useSpring,
   useTransform,
-  type MotionValue,
 } from "motion/react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
@@ -17,6 +15,8 @@ import {
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
+import { HexMotif } from "@/components/site/primitives";
+import { Button } from "@/components/ui/button";
 import { LineReveal, EASE_OUT } from "@/components/home/home-motion";
 import { resolveVialImagery, type VialImagery } from "@/lib/treatment-imagery";
 
@@ -24,7 +24,10 @@ const TIRZ_STARTER = COMPOUNDED_TIRZEPATIDE_PRICING.starterPack!;
 
 type Treatment = {
   id: string;
+  /** Full product name, e.g. "Compounded Tirzepatide" - used as the panel heading. */
   name: string;
+  /** Short tab label, e.g. "Tirzepatide". */
+  tabLabel: string;
   form: string;
   badge: string;
   pricing: CompoundedMedicationPricing;
@@ -34,42 +37,48 @@ type Treatment = {
 };
 
 /**
- * Motion-wrapped router Link - defined once at module scope so its identity
- * is stable across renders (recreating it per-render would remount the
- * card and drop the tilt/reveal animation state).
+ * Tirzepatide first (2026-09-13, per Matt): it's the default-selected tab,
+ * so it leads the array too - order here is display order, not alphabetical.
  */
-const MotionLink = motion.create(Link);
-
 const TREATMENTS: Treatment[] = [
-  {
-    id: "compounded-semaglutide",
-    name: "Compounded Semaglutide",
-    form: "Weekly injection, if prescribed",
-    badge: "Cash-pay option",
-    pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
-    imagery: resolveVialImagery("semaglutide"),
-    to: "/semaglutide/",
-  },
   {
     id: "compounded-tirzepatide",
     name: "Compounded Tirzepatide",
+    tabLabel: "Tirzepatide",
     form: "Weekly injection, if prescribed",
     badge: "Cash-pay option",
     pricing: COMPOUNDED_TIRZEPATIDE_PRICING,
     imagery: resolveVialImagery("tirzepatide"),
     to: "/tirzepatide/",
   },
+  {
+    id: "compounded-semaglutide",
+    name: "Compounded Semaglutide",
+    tabLabel: "Semaglutide",
+    form: "Weekly injection, if prescribed",
+    badge: "Cash-pay option",
+    pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
+    imagery: resolveVialImagery("semaglutide"),
+    to: "/semaglutide/",
+  },
 ];
 
 /**
- * GLP-1 treatment options grid. A giant outlined "GLP-1" word drifts behind
- * the cards, each card tilts toward the cursor and its vial image drifts
- * slightly on scroll - the section ref drives one shared scroll progress so
- * both images move in the same rhythm.
+ * GLP-1 showcase (redesigned 2026-09-13, per Matt): the old side-by-side
+ * cards cropped the vial photo down to an unreadable sliver of label in a
+ * short wide box - readable at a glance only if you already knew what you
+ * were looking at. This replaces the two static cards with one tabbed
+ * panel: pick a medication (Tirzepatide is the default), see its full,
+ * uncropped bottle photo on one side and its real interactive pricing
+ * selector (the same `CompoundedPriceLockup` used on the medication's own
+ * page) on the other.
  */
 export function TreatmentShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
+  const [activeId, setActiveId] = useState(TREATMENTS[0]!.id);
+  const active = TREATMENTS.find((t) => t.id === activeId) ?? TREATMENTS[0]!;
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -77,7 +86,7 @@ export function TreatmentShowcase() {
   const imageY = useTransform(
     scrollYProgress,
     [0, 1],
-    [0, reduceMotion ? 0 : -24],
+    [0, reduceMotion ? 0 : -16],
   );
 
   return (
@@ -97,7 +106,7 @@ export function TreatmentShowcase() {
           <LineReveal>GLP-1 weight-loss options</LineReveal>
         </h2>
         <p className="mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-          Transparent cash pricing on every card. Semaglutide starts with a
+          Transparent cash pricing on every plan. Semaglutide starts with a
           first-month promo. Tirzepatide: {TIRZ_STARTER.months}-month starter
           pack ${TIRZ_STARTER.totalUsd} for {TIRZ_STARTER.dosePathLabel}, or $
           {COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo for maintenance.
@@ -112,16 +121,85 @@ export function TreatmentShowcase() {
           </Link>
         </p>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
-          {TREATMENTS.map((treatment, index) => (
-            <TreatmentCard
-              key={treatment.id}
-              treatment={treatment}
-              index={index}
-              imageY={imageY}
-            />
-          ))}
-        </div>
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+          whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: reduceMotion ? 0 : 0.7, ease: EASE_OUT }}
+          className="mt-12"
+        >
+          <div
+            role="tablist"
+            aria-label="Choose a GLP-1 medication"
+            className="inline-flex gap-1.5 rounded-2xl bg-background/70 p-1.5 shadow-soft ring-1 ring-border/70"
+          >
+            {TREATMENTS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={t.id === active.id}
+                onClick={() => setActiveId(t.id)}
+                className={cn(
+                  "min-h-11 cursor-pointer rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  t.id === active.id
+                    ? "bg-primary text-primary-foreground shadow-soft"
+                    : "text-foreground/70 hover:bg-muted hover:text-foreground",
+                )}
+              >
+                {t.tabLabel}
+              </button>
+            ))}
+          </div>
+
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={active.id}
+              initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduceMotion ? undefined : { opacity: 0, y: -14 }}
+              transition={{ duration: 0.4, ease: EASE_OUT }}
+              className="mt-6 grid overflow-hidden rounded-4xl bg-primary-soft shadow-lift md:min-h-[440px] md:grid-cols-2"
+            >
+              <div className="relative flex min-w-0 items-center justify-center overflow-hidden p-8 md:p-10">
+                <div
+                  aria-hidden
+                  className="bg-mesh-glow mesh-drift pointer-events-none absolute inset-0 opacity-70"
+                />
+                <HexMotif className="pointer-events-none absolute -left-8 -top-10 w-32 text-primary/10" />
+                <span className="absolute left-5 top-5 z-10 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
+                  {active.badge}
+                </span>
+                <motion.img
+                  src={active.imagery.src}
+                  alt={active.imagery.alt}
+                  width={active.imagery.width}
+                  height={active.imagery.height}
+                  loading="lazy"
+                  style={reduceMotion ? undefined : { y: imageY }}
+                  className="relative z-10 h-auto w-full max-w-[240px] object-contain drop-shadow-2xl md:max-w-[280px]"
+                />
+              </div>
+
+              <div className="flex min-w-0 flex-col justify-center p-8 md:p-10 lg:p-12">
+                <h3 className="text-2xl font-bold text-foreground md:text-[1.75rem]">
+                  {active.name}
+                </h3>
+                <p className="mt-1 text-sm font-medium text-foreground/70">
+                  {active.form}
+                </p>
+                <div className="mt-6">
+                  <CompoundedPriceLockup pricing={active.pricing} size="lg" />
+                </div>
+                <Button asChild size="lg" className="mt-6 w-full sm:w-auto">
+                  <Link to={active.to}>
+                    Explore {active.name} <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
 
         <p className="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">
           <span className="font-medium">†</span> Listed prices are all-inclusive
@@ -134,117 +212,5 @@ export function TreatmentShowcase() {
         </p>
       </div>
     </section>
-  );
-}
-
-/**
- * Cursor-driven tilt (rotateX/rotateY via pointer position) layered on top
- * of a staggered, slightly-rotated scroll-in reveal. Both no-op under
- * reduced motion. `imageY` is a shared scroll-linked motion value from the
- * parent section so both cards' vial images drift together.
- */
-function TreatmentCard({
-  treatment,
-  index,
-  imageY,
-}: {
-  treatment: Treatment;
-  index: number;
-  imageY: MotionValue<number>;
-}) {
-  const reduceMotion = useReducedMotion();
-  const cardRef = useRef<HTMLAnchorElement>(null);
-  const rotateXValue = useMotionValue(0);
-  const rotateYValue = useMotionValue(0);
-  const springRotateX = useSpring(rotateXValue, {
-    stiffness: 220,
-    damping: 22,
-  });
-  const springRotateY = useSpring(rotateYValue, {
-    stiffness: 220,
-    damping: 22,
-  });
-
-  function handleMouseMove(event: ReactMouseEvent<HTMLAnchorElement>) {
-    if (reduceMotion || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const px = (event.clientX - rect.left) / rect.width - 0.5;
-    const py = (event.clientY - rect.top) / rect.height - 0.5;
-    rotateYValue.set(px * 10);
-    rotateXValue.set(py * -10);
-  }
-
-  function handleMouseLeave() {
-    rotateXValue.set(0);
-    rotateYValue.set(0);
-  }
-
-  const rotateOffset = index % 2 === 0 ? -2 : 2;
-
-  return (
-    <MotionLink
-      ref={cardRef}
-      to={treatment.to}
-      aria-label={`Explore ${treatment.name}`}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      initial={{ opacity: 0, y: 32, rotate: reduceMotion ? 0 : rotateOffset }}
-      whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{
-        duration: reduceMotion ? 0 : 0.6,
-        delay: reduceMotion ? 0 : index * 0.15,
-        ease: EASE_OUT,
-      }}
-      style={
-        reduceMotion
-          ? undefined
-          : {
-              rotateX: springRotateX,
-              rotateY: springRotateY,
-              transformPerspective: 900,
-            }
-      }
-      className={cn(
-        "group relative flex min-h-[420px] cursor-pointer flex-col overflow-hidden rounded-4xl bg-primary-soft shadow-lift outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:min-h-[480px]",
-      )}
-    >
-      <span className="absolute left-5 top-5 z-10 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
-        {treatment.badge}
-      </span>
-
-      <div className="relative min-h-[220px] flex-[1.4] overflow-hidden md:min-h-[280px]">
-        <motion.img
-          src={treatment.imagery.src}
-          alt={treatment.imagery.alt}
-          width={treatment.imagery.width}
-          height={treatment.imagery.height}
-          loading="lazy"
-          style={reduceMotion ? undefined : { y: imageY }}
-          className={cn(
-            "absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105",
-            treatment.imagery.wideCropClass,
-          )}
-        />
-      </div>
-
-      <div className="space-y-3 px-6 pb-6 pt-5 md:px-8 md:pb-8 md:pt-6">
-        <h3 className="text-2xl font-bold text-foreground md:text-[1.75rem]">
-          {treatment.name}
-        </h3>
-        <CompoundedPriceLockup
-          pricing={treatment.pricing}
-          interactive={false}
-        />
-        <p className="text-sm font-medium text-foreground/80">
-          {treatment.form}
-        </p>
-      </div>
-
-      <div className="flex items-center gap-1.5 px-6 pb-8 text-sm font-semibold text-accent-foreground md:px-8 md:pb-10">
-        <span>Explore {treatment.name}</span>
-        <ArrowRight className="size-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
-      </div>
-    </MotionLink>
   );
 }

@@ -150,7 +150,7 @@ export const Route = createFileRoute("/tirzepatide")({
             path: "/tirzepatide",
             serviceType: "Medical weight-loss telehealth service",
             reviewedByClinicalLead: false,
-            dateModified: "2026-07-31",
+            dateModified: "2026-09-13",
             offer: {
               introPrice: STARTER.monthlyEquivalentUsd,
               recurringPrice: COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd,
@@ -252,14 +252,14 @@ function TirzepatidePage() {
               }}
               className="mx-auto w-full max-w-sm"
             >
-              <div className="relative aspect-square overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
                 <img
                   src={VIAL_IMAGERY.src}
                   alt={VIAL_IMAGERY.alt}
                   width={VIAL_IMAGERY.width}
                   height={VIAL_IMAGERY.height}
                   fetchPriority="high"
-                  className="absolute inset-0 h-full w-full object-cover object-center"
+                  className="absolute inset-0 h-full w-full object-contain"
                 />
               </div>
               <TreatmentIncludedDropdown

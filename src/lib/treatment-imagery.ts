@@ -17,11 +17,14 @@ import unbrandedTirzepatide from "@/assets/treatments/unbranded-tirzepatide-vial
  * component that shows a vial calls this instead of importing an asset
  * directly.
  *
- * Both sets are square studio photos of a vial on a plinth in a staged
- * set. Branded shots add a flat printed Beema wordmark on the glass.
- * Each set still carries its own `wideCropClass` and intrinsic
- * `width`/`height` so the vial stays inside the letterboxed treatment
- * cards without per-component overrides.
+ * Unbranded shots are square studio photos of a vial on a plinth in a
+ * staged set. Branded shots (2026-09-13, per Matt) are transparent-cutout
+ * renders of the actual Beema-labeled vial (gold cap, black printed label,
+ * honeycomb motif) at a portrait ~4:5 canvas, matching the real product
+ * photography convention used on the other money pages (finasteride,
+ * tadalafil, sildenafil, hair loss). Each set still carries its own
+ * `wideCropClass` and intrinsic `width`/`height` so the vial stays inside
+ * the letterboxed treatment cards without per-component overrides.
  */
 export type MedicationId = "semaglutide" | "tirzepatide";
 
@@ -66,16 +69,16 @@ const IMAGERY: Record<VialImageryMode, Record<MedicationId, VialImagery>> = {
     semaglutide: {
       src: brandedSemaglutide,
       width: 1024,
-      height: 1024,
-      alt: "Beema Health compounded semaglutide injection vial",
-      // Square room-set photo in a letterbox crop: bias upward so the cap stays in.
+      height: 1280,
+      alt: "Beema Health compounded semaglutide sterile injectable vial",
+      // Portrait cutout in a letterbox crop: bias upward so the cap stays in.
       wideCropClass: "object-[center_40%]",
     },
     tirzepatide: {
       src: brandedTirzepatide,
       width: 1024,
-      height: 1024,
-      alt: "Beema Health compounded tirzepatide injection vial",
+      height: 1280,
+      alt: "Beema Health compounded tirzepatide sterile injectable vial",
       wideCropClass: "object-[center_40%]",
     },
   },
