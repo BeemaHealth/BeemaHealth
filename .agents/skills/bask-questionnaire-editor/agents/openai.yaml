@@ -1,0 +1,7 @@
+interface:
+  display_name: "Bask Questionnaire Editor"
+  short_description: "Edit and validate Bask intake questionnaires"
+  default_prompt: "Use $bask-questionnaire-editor to update my Bask intake questionnaire in the in-app browser."
+
+policy:
+  allow_implicit_invocation: true
