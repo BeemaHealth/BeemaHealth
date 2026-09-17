@@ -1,0 +1,1 @@
+import{j as r,bi as e,bj as s,bk as t,bl as i,bm as T,bn as n,c as I}from"./index-BaIkZuZJ.js";function o({className:a}){return r.jsx("a",{href:s,target:"_blank",rel:"noopener noreferrer",title:e,className:I("inline-block shrink-0 drop-shadow-md transition-opacity hover:opacity-90",a),children:r.jsx("img",{src:n,alt:T,width:i,height:t})})}export{o as L};

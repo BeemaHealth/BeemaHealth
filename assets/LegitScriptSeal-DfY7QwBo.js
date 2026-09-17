@@ -1,1 +1,0 @@
-import{j as r,bm as e,bn as s,bo as t,bp as i,bq as T,br as n,c as o}from"./index-BLPxjdND.js";function L({className:a}){return r.jsx("a",{href:s,target:"_blank",rel:"noopener noreferrer",title:e,className:o("inline-block shrink-0 drop-shadow-md transition-opacity hover:opacity-90",a),children:r.jsx("img",{src:n,alt:T,width:i,height:t})})}export{L};
