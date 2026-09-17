@@ -171,7 +171,7 @@ export const LEARN_INDEX_META = {
   title: "Learn | Beema Health",
   h1: "Educational guides, organized by topic",
   description:
-    "Cited educational hubs on GLP-1 weight-loss medicines, ED treatment, hair loss (finasteride), testosterone replacement, and menopausal hormone therapy. Not medical advice.",
+    "Cited educational hubs on GLP-1 weight loss, ED, hair loss, testosterone replacement, and menopausal hormone therapy. Not medical advice.",
   ogDescription:
     "Free, unsigned educational guides on weight-loss medicines, ED treatment, hair loss, and hormone topics. Not medical advice, and not a substitute for a licensed clinician.",
 } as const;
@@ -294,7 +294,7 @@ export const TRT_HUB_META = {
   h1: "Testosterone replacement therapy: an educational overview",
   eyebrow: "Educational overview",
   description:
-    "Educational overview of testosterone replacement therapy, including who guidelines consider, how diagnosis works, and key risks. Beema's live TRT offering is compounded enclomiphene, a related but distinct treatment - see the TRT page for details.",
+    "Overview of testosterone replacement therapy: guidelines, diagnosis, and risks. Beema's live offering is compounded enclomiphene, a distinct treatment.",
   ogDescription:
     "Unsigned education on TRT and hypogonadism. Beema's live TRT offering is compounded enclomiphene, which works differently than the injectable, gel, or patch testosterone described on this page.",
 } as const;

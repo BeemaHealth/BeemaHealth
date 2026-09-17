@@ -8,6 +8,7 @@ import {
 } from "@/content/learn/types";
 import {
   SITE_URL,
+  absoluteUrl,
   breadcrumbJsonLd,
   canonicalUrl,
   faqPageJsonLd,
@@ -67,6 +68,9 @@ export function learnArticleJsonLd(article: LearnArticle) {
     ...medical,
     "@type": ["MedicalWebPage", "Article"],
     headline: article.title,
+    // No per-article hero art exists yet - the shared OG card is a valid
+    // fallback for Article rich-result/link-preview eligibility until one does.
+    image: absoluteUrl("/og-card.jpg"),
     datePublished: article.datePublished,
     author: { "@id": `${SITE_URL}/#organization` },
     keywords: article.keywords.join(", "),

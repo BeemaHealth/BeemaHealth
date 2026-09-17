@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { canonicalUrl } from "@/lib/seo";
+import { breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import {
   LegalBusinessContact,
   LegalDocument,
@@ -27,6 +27,20 @@ export const Route = createFileRoute("/legal/physician-code-of-conduct")({
       {
         rel: "canonical",
         href: canonicalUrl("/legal/physician-code-of-conduct"),
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            {
+              name: "Physician Code of Conduct",
+              path: "/legal/physician-code-of-conduct",
+            },
+          ]),
+        ),
       },
     ],
   }),

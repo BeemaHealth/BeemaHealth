@@ -17,7 +17,7 @@ import {
   SUPPORT_PHONE_DISPLAY,
   SUPPORT_PHONE_HREF,
 } from "@/lib/contact-info";
-import { SITE_URL, canonicalUrl } from "@/lib/seo";
+import { SITE_URL, breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/legal/hipaa")({
   head: () => ({
@@ -30,6 +30,17 @@ export const Route = createFileRoute("/legal/hipaa")({
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/legal/hipaa") }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "HIPAA Privacy Policy", path: "/legal/hipaa" },
+          ]),
+        ),
+      },
+    ],
   }),
   component: HipaaPrivacyPage,
 });

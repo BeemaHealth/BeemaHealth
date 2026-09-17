@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { canonicalUrl } from "@/lib/seo";
+import { breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import {
   LegalBusinessContact,
   LegalDocument,
@@ -42,6 +42,17 @@ export const Route = createFileRoute("/legal/terms")({
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/legal/terms") }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Terms of Service", path: "/legal/terms" },
+          ]),
+        ),
+      },
+    ],
   }),
   component: TermsPage,
 });

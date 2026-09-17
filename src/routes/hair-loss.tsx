@@ -40,7 +40,7 @@ import {
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 
 const TITLE = "Hair Loss Treatment | Beema Health";
-const DESCRIPTION = `FDA-approved generic oral medications and compounded topical formulations for hair loss, reviewed by licensed providers in all 50 states, from ${formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `FDA-approved oral meds and compounded topical formulas for hair loss, reviewed by licensed providers nationwide, from ${formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)}. Never guaranteed.`;
 
 export const Route = createFileRoute("/hair-loss")({
   head: () => ({

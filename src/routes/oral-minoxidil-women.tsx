@@ -44,7 +44,7 @@ import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import oralMinoxidilPhoto from "@/assets/treatments/oral-minoxidil-tablets-bottle.webp";
 
 const TITLE = "Oral Minoxidil for Women Online | Beema Health";
-const DESCRIPTION = `Oral minoxidil, an FDA-approved generic medication used off-label for hair loss, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleStartingAt(HAIRLOSS_ORAL_MINOXIDIL_PRICING)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Oral minoxidil, an FDA-approved generic used off-label for hair loss in women, reviewed by licensed providers, from ${formatSimpleStartingAt(HAIRLOSS_ORAL_MINOXIDIL_PRICING)}. Never guaranteed.`;
 const SERVICE_DESCRIPTION =
   "Nationwide telehealth service connecting eligible adult women with independent licensed providers for oral minoxidil evaluation and ongoing care. Oral minoxidil is an FDA-approved generic medication; using it for hair loss is a well-established off-label use. Completing intake does not guarantee a prescription.";
 

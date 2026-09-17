@@ -44,7 +44,7 @@ import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import hairLossSprayMenPhoto from "@/assets/treatments/hair-loss-spray-men-bottle.webp";
 
 const TITLE = "Hair Loss Spray for Men Online | Beema Health";
-const DESCRIPTION = `Compounded topical hair loss spray with minoxidil, tretinoin, fluocinolone, and finasteride, for men, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleQuarterlyStartingAt(HAIRLOSS_TOPICAL_MEN_PRICING)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Compounded topical spray (minoxidil, tretinoin, fluocinolone, finasteride) for men, reviewed by licensed providers. From ${formatSimpleQuarterlyStartingAt(HAIRLOSS_TOPICAL_MEN_PRICING)}. Never guaranteed.`;
 const SERVICE_DESCRIPTION =
   "Nationwide telehealth service connecting eligible adult men with independent licensed providers for compounded topical hair loss spray evaluation and ongoing care. Completing intake does not guarantee a prescription.";
 

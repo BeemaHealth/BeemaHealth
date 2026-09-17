@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { canonicalUrl } from "@/lib/seo";
+import { breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Clock, Mail, Phone, Star } from "lucide-react";
 import {
@@ -48,6 +48,17 @@ export const Route = createFileRoute("/contact")({
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/contact") }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Contact", path: "/contact" },
+          ]),
+        ),
+      },
+    ],
   }),
   component: ContactPage,
 });

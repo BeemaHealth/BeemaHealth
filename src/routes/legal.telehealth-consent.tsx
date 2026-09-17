@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { canonicalUrl } from "@/lib/seo";
+import { breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   LegalDocument,
@@ -24,6 +24,17 @@ export const Route = createFileRoute("/legal/telehealth-consent")({
     ],
     links: [
       { rel: "canonical", href: canonicalUrl("/legal/telehealth-consent") },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Telehealth Consent", path: "/legal/telehealth-consent" },
+          ]),
+        ),
+      },
     ],
   }),
   component: TelehealthConsentPage,

@@ -66,16 +66,21 @@ Disallow: /lp/
 # Legal text tied to the intake funnel
 Disallow: /legal/intake-acknowledgments
 
-# Retired marketing stubs that only 301 → home (save crawl budget)
+# Retired marketing stubs - client-side redirect to home (GitHub Pages can't
+# serve a real 301 for these). Currently 404, not a redirect - no page was
+# ever built at these paths. Disallowed to save crawl budget either way.
 Disallow: /pricing
 Disallow: /clinicians
 Disallow: /insurance
 Disallow: /switch
 Disallow: /the-comb
 
-# Paused product lines (2026-08-28) that also only 301 → home for now -
-# NAD+ (2026-09-16) and Sermorelin (2026-09-17) relaunched on their own
-# money pages, no longer disallowed here - see docs/features/treatment-pages.md
+# Paused product lines (2026-08-28) - same client-side-only redirect
+# limitation. /wellness currently 404s; /trt currently serves the homepage's
+# HTML at a 200 status (a soft redirect, not a real 301) until its JS
+# redirect fires client-side - verify status before assuming either has
+# changed. NAD+ (2026-09-16) and Sermorelin (2026-09-17) relaunched on their
+# own money pages, no longer disallowed here - see docs/features/treatment-pages.md
 Disallow: /trt
 Disallow: /wellness
 

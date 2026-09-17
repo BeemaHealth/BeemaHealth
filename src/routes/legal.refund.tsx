@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { canonicalUrl } from "@/lib/seo";
+import { breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   LegalBusinessContact,
@@ -23,6 +23,17 @@ export const Route = createFileRoute("/legal/refund")({
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/legal/refund") }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Refund Policy", path: "/legal/refund" },
+          ]),
+        ),
+      },
+    ],
   }),
   component: RefundPage,
 });

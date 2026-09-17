@@ -143,6 +143,17 @@ function HowItWorksPage() {
             }
             description="All-inclusive cash-pay pricing with no platform membership fee, from your medical intake to prescription delivery, when treatment is appropriate."
           />
+          <div className="mt-8 flex justify-center">
+            <HoverLiftButton>
+              <Button
+                type="button"
+                size="lg"
+                onClick={() => setGetStartedOpen(true)}
+              >
+                {cta.label} <ArrowRight />
+              </Button>
+            </HoverLiftButton>
+          </div>
         </div>
       </Section>
 

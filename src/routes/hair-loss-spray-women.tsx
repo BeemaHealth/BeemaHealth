@@ -44,7 +44,7 @@ import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import hairLossSprayWomenPhoto from "@/assets/treatments/hair-loss-spray-women-bottle.webp";
 
 const TITLE = "Hair Loss Spray for Women Online | Beema Health";
-const DESCRIPTION = `Compounded topical hair loss spray with minoxidil, tretinoin, fluocinolone, biotin, and melatonin, for women, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleQuarterlyStartingAt(HAIRLOSS_TOPICAL_WOMEN_PRICING)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Compounded topical spray (minoxidil, tretinoin, fluocinolone, biotin, melatonin) for women, reviewed by licensed providers. From ${formatSimpleQuarterlyStartingAt(HAIRLOSS_TOPICAL_WOMEN_PRICING)}. Never guaranteed.`;
 const SERVICE_DESCRIPTION =
   "Nationwide telehealth service connecting eligible adult women with independent licensed providers for compounded topical hair loss spray evaluation and ongoing care. Completing intake does not guarantee a prescription.";
 

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { canonicalUrl } from "@/lib/seo";
+import { breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import {
   LegalDocument,
   LegalList,
@@ -21,6 +21,20 @@ export const Route = createFileRoute("/legal/intake-acknowledgments")({
     ],
     links: [
       { rel: "canonical", href: canonicalUrl("/legal/intake-acknowledgments") },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            {
+              name: "Intake Acknowledgments",
+              path: "/legal/intake-acknowledgments",
+            },
+          ]),
+        ),
+      },
     ],
   }),
   component: IntakeAcknowledgmentsPage,
