@@ -189,6 +189,23 @@ const HAIRLOSS_SPRAY_MEN_INTAKE_URL =
   "https://q.beemahealth.com/start-online-visit/hairlossspraymen";
 
 /**
+ * Confirmed production Bask questionnaire URL (2026-09-16) for NAD+, given
+ * directly by Matt at relaunch - replaces the earlier
+ * `${BASK_INTAKE_BASE}/nad` guess (same literal URL, now a named, confirmed
+ * const like the others above rather than an inline guess).
+ */
+const NAD_INTAKE_URL = "https://q.beemahealth.com/start-online-visit/nad";
+
+/**
+ * Confirmed production Bask questionnaire URL (2026-09-17) for Sermorelin,
+ * given directly by Matt at relaunch - replaces the earlier
+ * `${BASK_INTAKE_BASE}/sermorelin` guess (same literal URL, now a named,
+ * confirmed const like the others above rather than an inline guess).
+ */
+const SERMORELIN_INTAKE_URL =
+  "https://q.beemahealth.com/start-online-visit/sermorelin";
+
+/**
  * Money-page architecture (2026-09-03): each product that has a confirmed
  * Bask URL gets its own dedicated landing page (/tadalafil, /sildenafil,
  * /oral-finasteride, /ed-mints, /tirzepatide, /semaglutide) whose CTA goes
@@ -272,16 +289,10 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
   ed_mints_rdt_footer: { label: "Get Started", to: ED_MINTS_RDT_INTAKE_URL },
   ed_mints_odt_hero: { label: "Get Started", to: ED_MINTS_ODT_INTAKE_URL },
   ed_mints_odt_footer: { label: "Get Started", to: ED_MINTS_ODT_INTAKE_URL },
-  nad_hero: { label: "Get Started", to: `${BASK_INTAKE_BASE}/nad` },
-  nad_footer: { label: "Get Started", to: `${BASK_INTAKE_BASE}/nad` },
-  sermorelin_hero: {
-    label: "Get Started",
-    to: `${BASK_INTAKE_BASE}/sermorelin`,
-  },
-  sermorelin_footer: {
-    label: "Get Started",
-    to: `${BASK_INTAKE_BASE}/sermorelin`,
-  },
+  nad_hero: { label: "Get Started", to: NAD_INTAKE_URL },
+  nad_footer: { label: "Get Started", to: NAD_INTAKE_URL },
+  sermorelin_hero: { label: "Get Started", to: SERMORELIN_INTAKE_URL },
+  sermorelin_footer: { label: "Get Started", to: SERMORELIN_INTAKE_URL },
   /**
    * Category hub pages (2026-08-27) mix multiple products each, so there's
    * no single correct Bask intake path - these default to one product in
@@ -295,8 +306,8 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
   sexual_health_footer: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
   hair_hero: { label: "Get Started", to: FINASTERIDE_INTAKE_URL },
   hair_footer: { label: "Get Started", to: FINASTERIDE_INTAKE_URL },
-  wellness_hero: { label: "Get Started", to: `${BASK_INTAKE_BASE}/nad` },
-  wellness_footer: { label: "Get Started", to: `${BASK_INTAKE_BASE}/nad` },
+  wellness_hero: { label: "Get Started", to: NAD_INTAKE_URL },
+  wellness_footer: { label: "Get Started", to: NAD_INTAKE_URL },
 };
 
 /** CTA search params: stable cta_id plus Bask attribution handoff keys. */

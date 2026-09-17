@@ -138,6 +138,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net; ` +
             `script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net; ` +
             `style-src 'self' 'unsafe-inline'${import.meta.env.DEV ? " https://tagmanager.google.com" : ""}; ` +
+            // worker-src: not needed in production (no app code spins up
+            // workers). In dev, Vite's HMR client creates a SharedWorker
+            // from a blob: URL to coordinate the ping/visibility state
+            // across tabs - without worker-src, that falls back to
+            // script-src, which doesn't allow blob:, and Vite's dev
+            // overlay/console shows a CSP violation. Scope the blob:
+            // allowance to DEV only so it never widens the shipped policy.
+            `worker-src 'self'${import.meta.env.DEV ? " blob:" : ""}; ` +
             "font-src 'self' data:; " +
             "img-src 'self' data: https:; " +
             "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com; " +

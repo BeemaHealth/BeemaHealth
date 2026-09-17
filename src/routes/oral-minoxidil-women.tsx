@@ -79,7 +79,7 @@ const WHATS_INCLUDED = [
   "Prescription Medication",
   "Doctor Consultation & Visit",
   "Ongoing Doctor Care",
-  "Expedited Shipping",
+  "Shipping",
   { label: "Free learning resources", to: "/learn/" },
 ];
 

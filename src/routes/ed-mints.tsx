@@ -60,7 +60,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "How much do ED Mints cost through Beema?",
-    a: `Pricing for both formulations, including any quarterly savings, is shown during your online questionnaire before you complete your order - our low cost fee covers your provider consultation, prescription formulation, and expedited shipping. Questions about your plan? ${patientQuestionsGuidance()}`,
+    a: `Pricing for both formulations, including any quarterly savings, is shown during your online questionnaire before you complete your order - our low cost fee covers your provider consultation, prescription formulation, and shipping. Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
     q: "Does Beema serve patients nationwide?",
@@ -72,7 +72,7 @@ const WHATS_INCLUDED = [
   "Prescription Formulation",
   "Doctor Consultation & Visit",
   "Ongoing Doctor Care",
-  "Expedited Shipping",
+  "Shipping",
   { label: "Free learning resources", to: "/learn/" },
 ];
 

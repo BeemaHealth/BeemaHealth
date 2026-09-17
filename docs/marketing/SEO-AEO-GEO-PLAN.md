@@ -267,7 +267,7 @@ See also the **Compliance** section in `docs/features/treatment-pages.md` (livin
 
 ### F1.2 Non-GLP-1 compounded product marketing rules (TRT, hairloss, ED, NAD+, sermorelin)
 
-Added 2026-08-27 alongside `/trt`, `/hairloss`, `/ed`, `/nad-plus`, and `/sermorelin`. **TRT, NAD+, and sermorelin are paused as of 2026-08-28** (see `docs/features/treatment-pages.md`) - only hairloss and ED are live - but the rules below still apply to all 5 product lines since the paused ones will return. §F1.1 above was written specifically for compounded semaglutide/tirzepatide (the Feb 2026 FDA action named GLP-1 drugs) - it does not verbatim cover these products, none of which are GLP-1s. The **general** FDA/FTC compounding-marketing principles it embodies still apply broadly, so this section restates them with accurate, product-specific framing rather than copy-pasting GLP-1 language.
+Added 2026-08-27 alongside `/trt`, `/hairloss`, `/ed`, `/nad-plus`, and `/sermorelin`. **TRT remains paused** (see `docs/features/treatment-pages.md`) - hairloss, ED, NAD+ (relaunched 2026-09-16), and Sermorelin (relaunched 2026-09-17) are live - but the rules below still apply to all 5 product lines since TRT will return too. §F1.1 above was written specifically for compounded semaglutide/tirzepatide (the Feb 2026 FDA action named GLP-1 drugs) - it does not verbatim cover these products, none of which are GLP-1s. The **general** FDA/FTC compounding-marketing principles it embodies still apply broadly, so this section restates them with accurate, product-specific framing rather than copy-pasting GLP-1 language.
 
 **Universal rules for all 5 products (same spirit as §F1.1, generalized):**
 

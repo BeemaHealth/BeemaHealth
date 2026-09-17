@@ -19,6 +19,8 @@ import finasteridePhoto from "@/assets/treatments/finasteride-oral-tablets-bottl
 import hairLossSprayMenPhoto from "@/assets/treatments/hair-loss-spray-men-bottle.webp";
 import hairLossSprayWomenPhoto from "@/assets/treatments/hair-loss-spray-women-bottle.webp";
 import oralMinoxidilPhoto from "@/assets/treatments/oral-minoxidil-tablets-bottle.webp";
+import nadInjectionPhoto from "@/assets/treatments/nad-injection-vial.webp";
+import sermorelinInjectionPhoto from "@/assets/treatments/sermorelin-injection-vial.webp";
 import { LEGITSCRIPT_SEAL_SRC } from "@/lib/legitscript";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 
@@ -77,6 +79,10 @@ export function criticalBootImageUrls(pathname: string): string[] {
     case "/oral-minoxidil-men":
     case "/oral-minoxidil-women":
       return [oralMinoxidilPhoto];
+    case "/nad-plus":
+      return [nadInjectionPhoto];
+    case "/sermorelin":
+      return [sermorelinInjectionPhoto];
     default:
       return [];
   }

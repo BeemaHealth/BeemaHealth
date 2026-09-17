@@ -120,6 +120,17 @@ describe("GetStartedModal category/product config", () => {
     }
   });
 
+  it("shows step 2 for Wellness now that NAD+ and Sermorelin are both live (2026-09-17)", () => {
+    const wellness = GET_STARTED_CATEGORIES.find((c) => c.id === "wellness")!;
+    expect(wellness.products).toHaveLength(2);
+    expect(wellness.products.map((p) => p.label)).toEqual([
+      "NAD+",
+      "Sermorelin",
+    ]);
+    expect(wellness.directCtaId).toBeUndefined();
+    expect(autoAdvanceCtaId(wellness)).toBeNull();
+  });
+
   it("resolves every direct-CTA product, and every category's directCtaId, to a real Bask questionnaire URL", () => {
     for (const category of GET_STARTED_CATEGORIES) {
       if (category.directCtaId) {

@@ -31,8 +31,12 @@ import { TRUST_SIGNALS } from "@/lib/trust-signals";
  * first followed by its specific medication pages - mirrors the header's
  * Weight Loss / Sexual Health / Hair dropdowns. Hub pages (`/weight-loss`,
  * `/sexual-health`, `/hair-loss`) live only here in the footer, not in the
- * header dropdowns - see SiteHeader.tsx. TRT, NAD+, Sermorelin, and the
- * Wellness hub are paused (2026-08-28) - see docs/features/treatment-pages.md.
+ * header dropdowns - see SiteHeader.tsx. NAD+ (2026-09-16) and Sermorelin
+ * (2026-09-17) relaunched with their own header Wellness dropdown (see
+ * SiteHeader.tsx) but, like every other individual money page, stay out of
+ * this column - see "Money-page architecture" in
+ * docs/features/treatment-pages.md. TRT and the Wellness hub (`/wellness`)
+ * remain paused.
  *
  * Money-page architecture (2026-09-03): unlike Weight Loss, the ED and Hair
  * Loss rows deliberately do NOT also list every individual money page
@@ -55,8 +59,10 @@ const COLUMNS = [
       { label: "Sexual Health", to: "/sexual-health/" },
       { label: "ED Treatment", to: "/ed/" },
       { label: "Hair Loss Care", to: "/hair-loss/" },
-      // TRT, NAD+, Sermorelin, and the Wellness hub are paused (2026-08-28) -
-      // not linked anywhere while inaccessible. See docs/features/treatment-pages.md.
+      // TRT and the Wellness hub are paused - not linked anywhere while
+      // inaccessible. NAD+ and Sermorelin relaunched via the header's
+      // Wellness dropdown instead (see SiteHeader.tsx), not here - see
+      // docs/features/treatment-pages.md.
       // { label: "Pricing", to: "/pricing/" }, // disabled - pricing model not finalized yet
     ],
   },

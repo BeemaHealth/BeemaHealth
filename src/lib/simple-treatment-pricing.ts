@@ -209,21 +209,36 @@ export const ED_MINTS_ODT_PRICING: SimpleCompoundedPricing = {
 };
 
 /**
- * PAUSED 2026-08-28 - not selling NAD+ for now. Kept defined, unused by any
- * live page. No cost-sheet entry - market-rate estimate, cross-checked
- * against Bask's own $65-$240 variant range.
+ * Live (relaunched 2026-09-16, per Matt) - used by /nad-plus. No cost-sheet
+ * entry - market-rate estimate, cross-checked against Bask's own $65-$240
+ * variant range. Revisit once a real pharmacy cost exists.
+ *
+ * Repriced the same day (per Matt) to an interactive 3-month/1-month picker
+ * on the "Transparent pricing" section, matching the hair loss spray
+ * pattern: 3 months at $439 total (~$146.33/mo) is the default tab, 1 month
+ * at $199/mo is the explicit alternate tab - see the `interactive` prop on
+ * `SimpleTreatmentPricingCard`. The hero leads with the $146.33/mo quarterly
+ * rate via `formatSimpleQuarterlyStartingAt()`, same as ED Mints/hair loss
+ * spray.
  */
 export const NAD_PRICING: SimpleCompoundedPricing = {
-  monthlyUsd: 149,
+  monthlyUsd: 199,
+  quarterly: quarterlyPlan(439, 199),
 };
 
 /**
- * PAUSED 2026-08-28 - not selling sermorelin for now. Kept defined, unused
- * by any live page. No cost-sheet entry - market-rate estimate, cross-
- * checked against Bask's own $189 suggested retail / up to $264 variant range.
+ * Live (relaunched 2026-09-17, per Matt). Repriced the same day (per Matt's
+ * cost-sheet screenshot) into an interactive 3-month/1-month picker on the
+ * "Transparent pricing" section, matching the NAD+/hair loss spray pattern:
+ * 3 months at $597 total (~$199/mo, saving $150) is the default tab, 1
+ * month at $249/mo is the explicit alternate tab - see the `interactive`
+ * prop on `SimpleTreatmentPricingCard`. The hero leads with the $199/mo
+ * quarterly rate via `formatSimpleQuarterlyStartingAt()`, same as ED
+ * Mints/hair loss spray/NAD+.
  */
 export const SERMORELIN_PRICING: SimpleCompoundedPricing = {
-  monthlyUsd: 199,
+  monthlyUsd: 249,
+  quarterly: quarterlyPlan(597, 249),
 };
 
 /** Short card headline, e.g. "$169/mo". */

@@ -475,10 +475,10 @@ export function SimpleTreatmentPricingCard({
       ) : null}
       <p className="mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
         All-inclusive cash-pay pricing for {label}: provider care, medication,
-        supplies, and expedited shipping are included. No separate platform
-        membership fee. Dose does not change the monthly rate. Treatment
-        availability may vary based on clinical appropriateness, prescription,
-        pharmacy fulfillment, and state requirements.
+        supplies, and shipping are included. No separate platform membership
+        fee. Dose does not change the monthly rate. Treatment availability may
+        vary based on clinical appropriateness, prescription, pharmacy
+        fulfillment, and state requirements.
       </p>
       {cta ? (
         <Button asChild size="lg" className="mt-6 w-full sm:w-auto">
@@ -620,10 +620,10 @@ function InteractiveSimplePricingCard({
 
       <p className="mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
         All-inclusive cash-pay pricing for {label}: provider care, medication,
-        supplies, and expedited shipping are included. No separate platform
-        membership fee. Dose does not change the monthly rate. Treatment
-        availability may vary based on clinical appropriateness, prescription,
-        pharmacy fulfillment, and state requirements.
+        supplies, and shipping are included. No separate platform membership
+        fee. Dose does not change the monthly rate. Treatment availability may
+        vary based on clinical appropriateness, prescription, pharmacy
+        fulfillment, and state requirements.
       </p>
       {cta ? (
         <Button asChild size="lg" className="mt-6 w-full sm:w-auto">

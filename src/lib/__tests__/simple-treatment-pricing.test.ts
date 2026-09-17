@@ -26,8 +26,8 @@ const ALL_PRICINGS = [
   ["ED tadalafil", ED_TADALAFIL_PRICING],
   ["ED sildenafil", ED_SILDENAFIL_PRICING],
   ["ED combo", ED_COMBO_PRICING],
-  ["NAD+ (paused)", NAD_PRICING],
-  ["Sermorelin (paused)", SERMORELIN_PRICING],
+  ["NAD+", NAD_PRICING],
+  ["Sermorelin", SERMORELIN_PRICING],
 ] as const;
 
 describe("simple-treatment-pricing", () => {
@@ -69,8 +69,8 @@ describe("simple-treatment-pricing", () => {
 
   it("formatSimpleStartingAt renders the current monthly rates", () => {
     expect(formatSimpleStartingAt(TRT_PRICING)).toBe("$169/mo");
-    expect(formatSimpleStartingAt(NAD_PRICING)).toBe("$149/mo");
-    expect(formatSimpleStartingAt(SERMORELIN_PRICING)).toBe("$199/mo");
+    expect(formatSimpleStartingAt(NAD_PRICING)).toBe("$199/mo");
+    expect(formatSimpleStartingAt(SERMORELIN_PRICING)).toBe("$249/mo");
     expect(formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)).toBe(
       "$29.67/mo",
     );

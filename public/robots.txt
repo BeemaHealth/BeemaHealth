@@ -74,10 +74,9 @@ Disallow: /switch
 Disallow: /the-comb
 
 # Paused product lines (2026-08-28) that also only 301 → home for now -
-# see docs/features/treatment-pages.md
+# NAD+ (2026-09-16) and Sermorelin (2026-09-17) relaunched on their own
+# money pages, no longer disallowed here - see docs/features/treatment-pages.md
 Disallow: /trt
-Disallow: /nad-plus
-Disallow: /sermorelin
 Disallow: /wellness
 
 # ---------------------------------------------------------------------------
@@ -106,8 +105,6 @@ Disallow: /insurance
 Disallow: /switch
 Disallow: /the-comb
 Disallow: /trt
-Disallow: /nad-plus
-Disallow: /sermorelin
 Disallow: /wellness
 
 Sitemap: https://beemahealth.com/sitemap.xml

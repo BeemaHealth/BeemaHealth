@@ -30,6 +30,8 @@ const EXPECTED_PATHS = [
   "/sildenafil/",
   "/ed/",
   "/ed-mints/",
+  "/nad-plus/",
+  "/sermorelin/",
   "/sexual-health/",
   "/hair-loss/",
   "/glp-1/",

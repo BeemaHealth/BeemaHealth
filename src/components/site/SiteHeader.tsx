@@ -19,8 +19,8 @@ type NavSection = { heading: string; items: readonly NavItem[] };
 
 /**
  * Trailing-slash paths - match sitemap.xml / canonicalUrl / GitHub Pages 200
- * URLs. Primary nav is four dropdowns: Weight Loss, Sexual Health, Hair, and
- * More. See docs/features/treatment-pages.md.
+ * URLs. Primary nav is five dropdowns: Weight Loss, Sexual Health, Hair,
+ * Wellness, and More. See docs/features/treatment-pages.md.
  */
 const NAV: NavItem[] = [
   // { label: "Pricing", to: "/pricing/" }, // disabled - pricing model not finalized yet
@@ -112,6 +112,17 @@ const HAIR_SECTIONS: NavSection[] = [
       { label: "Hair Loss Spray", to: "/hair-loss-spray-women/" },
     ],
   },
+];
+
+/**
+ * Wellness relaunched 2026-09-16 (per Matt) with NAD+ on its own dedicated
+ * money page, /nad-plus - Sermorelin joined it 2026-09-17 (per Matt) on
+ * /sermorelin, matching the one-item-to-start-then-grow pattern HAIR_ITEMS
+ * used before Hair grew past one product.
+ */
+const WELLNESS_ITEMS: NavItem[] = [
+  { label: "NAD+", to: "/nad-plus/" },
+  { label: "Sermorelin", to: "/sermorelin/" },
 ];
 
 /**
@@ -238,6 +249,7 @@ function DesktopNav() {
       sections: SEXUAL_HEALTH_SECTIONS,
     },
     { id: "hair", label: "Hair Loss", sections: HAIR_SECTIONS },
+    { id: "wellness", label: "Wellness", items: WELLNESS_ITEMS },
     { id: "more", label: "More", items: MORE_ITEMS },
   ] as const;
 
@@ -675,6 +687,11 @@ export function SiteHeader() {
               <MobileNavDropdown
                 label="Hair Loss"
                 sections={HAIR_SECTIONS}
+                onNavigate={() => setOpen(false)}
+              />
+              <MobileNavDropdown
+                label="Wellness"
+                items={WELLNESS_ITEMS}
                 onNavigate={() => setOpen(false)}
               />
               <MobileNavDropdown

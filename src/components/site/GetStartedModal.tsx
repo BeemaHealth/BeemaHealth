@@ -5,6 +5,7 @@ import {
   HeartPulse,
   Scale,
   Sparkles,
+  Zap,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,9 +26,9 @@ import { cn } from "@/lib/utils";
  * into the homepage hero today only - see docs/features/homepage.md - but
  * built generically so another CTA can open the same component later.
  *
- * Step 1 asks which of the site's 3 live nav categories (Weight Loss /
- * Sexual Health / Hair - matches SiteHeader.tsx's dropdowns, no Wellness,
- * see docs/features/treatment-pages.md) the visitor wants. Step 2 asks
+ * Step 1 asks which of the site's 4 live nav categories (Weight Loss /
+ * Sexual Health / Hair / Wellness - matches SiteHeader.tsx's dropdowns, see
+ * docs/features/treatment-pages.md) the visitor wants. Step 2 asks
  * which product within that category, then routes straight to that
  * product's existing Bask questionnaire via resolveCta() - no intermediate
  * page. A category resolves straight from step 1, skipping step 2, only when
@@ -185,6 +186,20 @@ export const GET_STARTED_CATEGORIES: GetStartedCategory[] = [
       },
     ],
   },
+  {
+    // Wellness relaunched 2026-09-16 with NAD+ as a single live product (the
+    // single-product shortcut in autoAdvanceCtaId() below skipped step 2
+    // automatically then). Sermorelin joined 2026-09-17, so this category
+    // now shows step 2 like Sexual Health - no shared questionnaire to
+    // shortcut to, and no directCtaId set.
+    id: "wellness",
+    label: "Wellness",
+    icon: Zap,
+    products: [
+      { kind: "cta", label: "NAD+", ctaId: CTA_IDS.nad_hero },
+      { kind: "cta", label: "Sermorelin", ctaId: CTA_IDS.sermorelin_hero },
+    ],
+  },
 ];
 
 /**
@@ -304,7 +319,7 @@ export function GetStartedModal({
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="grid gap-4 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {GET_STARTED_CATEGORIES.map((category) => {
                   const Icon = category.icon;
                   const autoCtaId = autoAdvanceCtaId(category);
