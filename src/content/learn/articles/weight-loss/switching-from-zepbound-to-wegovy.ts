@@ -73,7 +73,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health perform this switch?",
       answer:
-        "Beema Health does not dispense Zepbound or Wegovy. This article is educational. If you use either brand through another clinician, keep that clinician in the loop. Completing a Beema online visit does not guarantee a prescription of any kind.",
+        "Beema Health does not dispense Zepbound or Wegovy. This article is educational. If you use either brand through another clinician, keep that clinician in the loop. Completing a Beema Health online visit does not guarantee a prescription of any kind.",
     },
     {
       question: "What should I tell the new prescriber?",

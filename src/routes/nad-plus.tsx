@@ -49,22 +49,22 @@ const SERVICE_DESCRIPTION =
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
     q: "What is NAD+?",
-    a: "NAD+ (nicotinamide adenine dinucleotide) is a coenzyme the body produces naturally and uses in cellular energy processes. Beema's compounded NAD+ injections are prepared by a licensed compounding pharmacy specifically for you. They are not FDA-approved, and are made available only when legally permitted in your state and a licensed provider determines it's clinically appropriate for your individual case.",
+    a: "NAD+ (nicotinamide adenine dinucleotide) is a coenzyme the body produces naturally and uses in cellular energy processes. Beema Health's compounded NAD+ injections are prepared by a licensed compounding pharmacy specifically for you. They are not FDA-approved, and are made available only when legally permitted in your state and a licensed provider determines it's clinically appropriate for your individual case.",
   },
   {
     q: "Is compounded NAD+ FDA-approved?",
-    a: "No. Compounded NAD+ is not FDA-approved. It's prepared individually by a licensed compounding pharmacy rather than manufactured and approved as a standardized branded drug, so it should not be assumed identical in formulation, strength, or effect to any commercial product. Beema only makes it available when legally permitted and when a licensed provider independently determines it's clinically appropriate for your specific case.",
+    a: "No. Compounded NAD+ is not FDA-approved. It's prepared individually by a licensed compounding pharmacy rather than manufactured and approved as a standardized branded drug, so it should not be assumed identical in formulation, strength, or effect to any commercial product. Beema Health only makes it available when legally permitted and when a licensed provider independently determines it's clinically appropriate for your specific case.",
   },
   {
-    q: "How does online NAD+ care through Beema work?",
+    q: "How does online NAD+ care through Beema Health work?",
     a: "Care starts with creating a secure account and completing a medical intake covering your health history, current medications, and goals, at your own pace. A licensed provider reviews your intake and independently decides whether compounded NAD+ may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability.",
   },
   {
-    q: "How much does NAD+ cost through Beema?",
-    a: `${simplePricingSentence("Compounded NAD+ through Beema", NAD_PRICING)} That covers your provider consultation and ongoing doctor care, prescription medication, and shipping. Questions about your plan? ${patientQuestionsGuidance()}`,
+    q: "How much does NAD+ cost through Beema Health?",
+    a: `${simplePricingSentence("Compounded NAD+ through Beema Health", NAD_PRICING)} That covers your provider consultation and ongoing doctor care, prescription medication, and shipping. Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
-    q: "Does Beema serve patients nationwide?",
+    q: "Does Beema Health serve patients nationwide?",
     a: "Yes, Beema Health is available to patients in all 50 U.S. states. Whether compounded NAD+ specifically is available to you still depends on your state's rules around compounded medications and pharmacy fulfillment in your area, and eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications.",
   },
 ];
@@ -251,9 +251,9 @@ function NadPlusPage() {
           </p>
           <p>
             NAD+ (nicotinamide adenine dinucleotide) is a coenzyme the body
-            produces naturally and uses in cellular energy processes. Beema's
-            compounded NAD+ injections are prepared by a licensed compounding
-            pharmacy specifically for you.
+            produces naturally and uses in cellular energy processes. Beema
+            Health's compounded NAD+ injections are prepared by a licensed
+            compounding pharmacy specifically for you.
           </p>
           <p>
             Compounded NAD+ is not FDA-approved and is considered only when
@@ -272,7 +272,7 @@ function NadPlusPage() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema's NAD+ care works"
+        title="How Beema Health's NAD+ care works"
         showCareFollowUpNote
       />
 

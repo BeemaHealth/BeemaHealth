@@ -66,7 +66,7 @@ export const MINT_OPTIONS: MintOption[] = [
     dose: "12mg / 60mg RDT",
     photo: edMintsRdtPhoto,
     photoAlt:
-      "Beema ED Mints - Tadalafil 12mg + Sildenafil 60mg rapidly dissolving tablet (RDT)",
+      "Beema Health ED Mints - Tadalafil 12mg + Sildenafil 60mg rapidly dissolving tablet (RDT)",
     description:
       "A 2-ingredient formula combining tadalafil and sildenafil into one rapidly dissolving tablet.",
     bullets: [
@@ -84,7 +84,7 @@ export const MINT_OPTIONS: MintOption[] = [
     dose: "50mg / 20mg / 125 IU ODT",
     photo: edMintsOdtPhoto,
     photoAlt:
-      "Beema ED Mints - Sildenafil 50mg + Tadalafil 20mg + Oxytocin 125 IU orally dissolving tablet (ODT)",
+      "Beema Health ED Mints - Sildenafil 50mg + Tadalafil 20mg + Oxytocin 125 IU orally dissolving tablet (ODT)",
     description:
       "A 3-ingredient formula combining sildenafil, tadalafil, and oxytocin into one orally dissolving tablet.",
     bullets: [

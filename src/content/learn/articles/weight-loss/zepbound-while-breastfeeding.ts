@@ -92,7 +92,7 @@ export const article: LearnArticle = {
   sections: [
     {
       id: "scope",
-      heading: "Brand-specific education, not a Beema product pitch",
+      heading: "Brand-specific education, not a Beema Health product pitch",
       body: [
         "Zepbound is Eli Lilly’s FDA-approved tirzepatide product for chronic weight management in eligible adults and for obstructive sleep apnea in adults with obesity. This page summarizes labeled lactation and reproductive language. Beema Health does not offer Zepbound on this marketing site. Do not use this article to justify switching products.",
         "If you are pregnant, the PI says to discontinue Zepbound when pregnancy is recognized. Weight loss is not recommended in pregnancy. Go to obstetric care, not to a restart timeline.",

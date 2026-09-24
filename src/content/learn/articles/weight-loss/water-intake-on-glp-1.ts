@@ -140,7 +140,7 @@ export const article: LearnArticle = {
       id: "not-a-protocol",
       heading: "What this page will not prescribe",
       body: [
-        "This page does not set your daily ounces, does not recommend IV fluids, and does not tell you to stop a diuretic. Those are clinical decisions. If a Beema clinician or any other prescriber has given you fluid guidance, that guidance wins.",
+        "This page does not set your daily ounces, does not recommend IV fluids, and does not tell you to stop a diuretic. Those are clinical decisions. If a Beema Health clinician or any other prescriber has given you fluid guidance, that guidance wins.",
         "Persistent GI losses, reduced urine, swelling, or a sudden jump in home blood-pressure readings after dehydration all belong in medical care, not in a hydration blog tweak.",
       ],
     },

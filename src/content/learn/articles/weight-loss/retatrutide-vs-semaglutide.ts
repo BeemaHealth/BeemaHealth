@@ -8,7 +8,7 @@ export const article: LearnArticle = {
   title: "Retatrutide vs Semaglutide: Trial Context, Not a Winner",
   h1: "Retatrutide versus semaglutide: different stages of evidence",
   description:
-    "Compare retatrutide's investigational triple-agonist data with published semaglutide obesity trials. Retatrutide is not a Beema offering today.",
+    "Compare retatrutide's investigational triple-agonist data with published semaglutide obesity trials. Retatrutide is not a Beema Health offering today.",
   keywords: [
     "retatrutide vs semaglutide",
     "triple agonist vs GLP-1",
@@ -60,9 +60,9 @@ export const article: LearnArticle = {
         "There is no head-to-head, peer-reviewed trial that lets a reader declare a personal winner. Phase 2 retatrutide produced a large mean weight change at 12 mg (about 24.2% at 48 weeks). STEP 1 produced about 14.9% mean change with semaglutide 2.4 mg at 68 weeks. Different durations, estimands, and populations make slogan comparisons misleading. Semaglutide also has a completed cardiovascular-outcomes trial in people with obesity (SELECT). Retatrutide's outcomes package is still unfolding. A licensed clinician matches a medicine to a person, and retatrutide is not FDA-approved as of August 2026.",
     },
     {
-      question: "Can I get retatrutide from Beema while I wait?",
+      question: "Can I get retatrutide from Beema Health while I wait?",
       answer:
-        "No. Beema does not offer retatrutide. If a clinician at Beema prescribes anything after intake, it would be compounded semaglutide or compounded tirzepatide when legally available and appropriate - not an investigational triple agonist. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Prescribing is never guaranteed.",
+        "No. Beema Health does not offer retatrutide. If a clinician at Beema Health prescribes anything after intake, it would be compounded semaglutide or compounded tirzepatide when legally available and appropriate - not an investigational triple agonist. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Prescribing is never guaranteed.",
     },
     {
       question: "Is Wegovy the same as the semaglutide in this comparison?",
@@ -82,7 +82,7 @@ export const article: LearnArticle = {
     {
       question: "Does this page say compounded semaglutide beats retatrutide?",
       answer:
-        "No. This page does not rank Beema products against investigational drugs and does not claim compounding is superior. It explains evidence stages so readers do not buy gray-market retatrutide or abandon indicated care based on a rumor.",
+        "No. This page does not rank Beema Health products against investigational drugs and does not claim compounding is superior. It explains evidence stages so readers do not buy gray-market retatrutide or abandon indicated care based on a rumor.",
     },
   ],
   sections: [
@@ -91,7 +91,7 @@ export const article: LearnArticle = {
       heading: "Compare evidence stages, not Instagram winners",
       body: [
         "Semaglutide is a GLP-1 receptor agonist with completed Phase 3 obesity trials, FDA-approved branded products for diabetes and chronic weight management, and a cardiovascular-outcomes trial in people with overweight or obesity and established heart disease. Retatrutide is a GIP, GLP-1, and glucagon triple agonist that remains investigational in the United States as of August 2026. Lilly has reported Phase 3 TRIUMPH toplines and plans a Q1 2027 application. Those are not the same regulatory category.",
-        "This article is educational, not medical advice. It does not name a best drug for you. It does not claim Beema's compounded semaglutide is better than retatrutide or better than Wegovy. Beema does not currently offer retatrutide.",
+        "This article is educational, not medical advice. It does not name a best drug for you. It does not claim Beema Health's compounded semaglutide is better than retatrutide or better than Wegovy. Beema Health does not currently offer retatrutide.",
       ],
     },
     {
@@ -124,14 +124,14 @@ export const article: LearnArticle = {
       heading: "What you can be prescribed today",
       body: [
         "A U.S. clinician can prescribe FDA-approved semaglutide products when indicated, or other approved obesity medicines. Beema Health's cash-pay telehealth program may offer compounded semaglutide or compounded tirzepatide after independent review. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Retatrutide is none of those channels except a sponsored trial.",
-        "If your question is 'which molecule has more Phase 3 obesity plus CV data today,' the answer is semaglutide. If your question is 'which investigational mean looks larger,' retatrutide's early figures are larger and unfinished. Neither sentence tells Beema to call compounded semaglutide the winner.",
+        "If your question is 'which molecule has more Phase 3 obesity plus CV data today,' the answer is semaglutide. If your question is 'which investigational mean looks larger,' retatrutide's early figures are larger and unfinished. Neither sentence tells Beema Health to call compounded semaglutide the winner.",
       ],
     },
     {
       id: "decision",
       heading: "A decision framework that stays honest",
       body: [
-        "Write down your constraints: diabetes or not, heart disease or not, injection willingness, pregnancy plans, cost, and how long you can wait. Bring that list to a licensed provider. If you use Beema, complete intake accurately. A prescription is never guaranteed.",
+        "Write down your constraints: diabetes or not, heart disease or not, injection willingness, pregnancy plans, cost, and how long you can wait. Bring that list to a licensed provider. If you use Beema Health, complete intake accurately. A prescription is never guaranteed.",
         "For more on the investigational drug itself, read the retatrutide explainer. For branded diabetes-dose semaglutide, read the Ozempic education page. For how clinicians compare several GLP-1-class options, read 'best GLP-1 for weight loss' as a process article, not a trophy.",
       ],
     },

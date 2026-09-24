@@ -8,7 +8,7 @@ export const article: LearnArticle = {
   title: "Metformin for Weight Loss: Diabetes Drug, Modest Effect",
   h1: "Metformin can lower weight modestly - it is not a GLP-1 obesity drug",
   description:
-    "Metformin is FDA-approved for type 2 diabetes, not as an obesity GLP-1. Diabetes Prevention Program data, off-label limits, and what Beema offers.",
+    "Metformin is FDA-approved for type 2 diabetes, not as an obesity GLP-1. Diabetes Prevention Program data, off-label limits, and what Beema Health offers.",
   keywords: [
     "metformin for weight loss",
     "Glucophage",
@@ -62,7 +62,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health prescribe metformin?",
       answer:
-        "Beema's live marketing offering is provider-reviewed compounded semaglutide or compounded tirzepatide for medical weight loss, not a metformin product page. Compounded GLP-1-class medications are not FDA-approved and are considered only when legally available and clinically appropriate. Do not assume intake includes metformin.",
+        "Beema Health's live marketing offering is provider-reviewed compounded semaglutide or compounded tirzepatide for medical weight loss, not a metformin product page. Compounded GLP-1-class medications are not FDA-approved and are considered only when legally available and clinically appropriate. Do not assume intake includes metformin.",
     },
     {
       question: "How much weight did people lose on metformin in the DPP?",
@@ -82,7 +82,7 @@ export const article: LearnArticle = {
     {
       question: "Is berberine 'natural metformin'?",
       answer:
-        "No. Berberine is a supplement with a different evidence and safety file, including drug-interaction potential. See Beema's berberine and semaglutide article. Supplements do not replace prescription GLP-1 therapy when a clinician has recommended an incretin medicine.",
+        "No. Berberine is a supplement with a different evidence and safety file, including drug-interaction potential. See Beema Health's berberine and semaglutide article. Supplements do not replace prescription GLP-1 therapy when a clinician has recommended an incretin medicine.",
     },
   ],
   sections: [
@@ -92,7 +92,7 @@ export const article: LearnArticle = {
         "A first-line diabetes medicine with a side effect of modest weight change",
       body: [
         "Metformin (brand Glucophage and many generics) decreases hepatic glucose production and improves insulin sensitivity. FDA labeling indicates it for type 2 diabetes, not as a dedicated chronic-weight-management GLP-1. Many people lose a small amount of weight on it, which is why internet lists file metformin under 'weight-loss drugs.' That filing is incomplete.",
-        "This article is educational, not medical advice. Beema Health does not market metformin as its weight-loss product. Beema's live program evaluates compounded semaglutide and compounded tirzepatide after a licensed provider reviews intake, and completing intake never guarantees a prescription.",
+        "This article is educational, not medical advice. Beema Health does not market metformin as its weight-loss product. Beema Health's live program evaluates compounded semaglutide and compounded tirzepatide after a licensed provider reviews intake, and completing intake never guarantees a prescription.",
       ],
     },
     {
@@ -128,14 +128,14 @@ export const article: LearnArticle = {
       heading: "Metformin and GLP-1 medicines are not rivals by default",
       body: [
         "People with type 2 diabetes frequently take metformin and a GLP-1 receptor agonist together because the drugs do different jobs. If your only goal is weight and your glucose is normal, a clinician may not reach for metformin first. If you already take metformin for diabetes, adding an incretin is a prescribing decision, not something to crowd-source.",
-        "Beema intake should list every medicine you take, including metformin, so the reviewing clinician can see interactions and duplications. Do not hide diabetes drugs because you think a weight-loss visit is 'only about GLP-1.'",
+        "Beema Health intake should list every medicine you take, including metformin, so the reviewing clinician can see interactions and duplications. Do not hide diabetes drugs because you think a weight-loss visit is 'only about GLP-1.'",
       ],
     },
     {
       id: "beema-status",
-      heading: "How this fits Beema's actual offering",
+      heading: "How this fits Beema Health's actual offering",
       body: [
-        "Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Those are the medications Beema's marketing pages price. Metformin remains a widely available generic that your primary-care clinician or endocrinologist may already manage.",
+        "Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Those are the medications Beema Health's marketing pages price. Metformin remains a widely available generic that your primary-care clinician or endocrinologist may already manage.",
         "If you came here hoping metformin is a cheap full replacement for GLP-1 therapy, the evidence does not support that slogan. If you came here to understand why a diabetes drug shows up in weight-loss searches, you now have the accurate box: modest weight change, different indication, different risk file.",
       ],
     },

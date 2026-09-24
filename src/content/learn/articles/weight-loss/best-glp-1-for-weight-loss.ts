@@ -60,9 +60,9 @@ export const article: LearnArticle = {
         "There is no single best medicine for every adult. In SURMOUNT-5, tirzepatide produced a higher mean percent weight loss than semaglutide (20.2% vs 13.7% at 72 weeks) in that open-label trial. STEP 1 still showed clinically large losses with semaglutide 2.4 mg. Liraglutide 3 mg (Saxenda) has smaller average losses and daily injections. Route, diabetes status, heart disease, side effects, pregnancy plans, and what a clinician can legally prescribe all matter more than a ranking table.",
     },
     {
-      question: "Is Beema's compounded tirzepatide the best?",
+      question: "Is Beema Health's compounded tirzepatide the best?",
       answer:
-        "This page will not say that. After independent review, a Beema clinician may prescribe compounded semaglutide or compounded tirzepatide when legally available and clinically appropriate. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. They are not declared winners over Zepbound, Wegovy, or pipeline drugs, and trial averages for those branded products do not prove compounded copies are equivalent.",
+        "This page will not say that. After independent review, a Beema Health clinician may prescribe compounded semaglutide or compounded tirzepatide when legally available and clinically appropriate. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. They are not declared winners over Zepbound, Wegovy, or pipeline drugs, and trial averages for those branded products do not prove compounded copies are equivalent.",
     },
     {
       question:
@@ -73,17 +73,17 @@ export const article: LearnArticle = {
     {
       question: "Is orforglipron the best because it is a pill?",
       answer:
-        "Foundayo (orforglipron) is an FDA-approved oral GLP-1 as of April 2026. ATTAIN-1 means were lower than STEP 1's injectable semaglutide 2.4 mg mean. Best for needle avoidance is not best for maximum trial-average loss. Beema does not offer orforglipron.",
+        "Foundayo (orforglipron) is an FDA-approved oral GLP-1 as of April 2026. ATTAIN-1 means were lower than STEP 1's injectable semaglutide 2.4 mg mean. Best for needle avoidance is not best for maximum trial-average loss. Beema Health does not offer orforglipron.",
     },
     {
       question: "How should I use this article?",
       answer:
-        "Bring the comparison dimensions - not a trophy name - to a licensed provider. If you use Beema, complete intake. Licensed providers can evaluate adults in all 50 US states. Beema Health serves patients located in the United States only. A prescription is never guaranteed.",
+        "Bring the comparison dimensions - not a trophy name - to a licensed provider. If you use Beema Health, complete intake. Licensed providers can evaluate adults in all 50 US states. Beema Health serves patients located in the United States only. A prescription is never guaranteed.",
     },
     {
       question: "Does 'best' include cost?",
       answer:
-        "Cost is a practical constraint, not an efficacy endpoint. See the GLP-1 cost explainer for cash-pay honesty. This page will not compare Ozempic list price with Beema's compounded rates.",
+        "Cost is a practical constraint, not an efficacy endpoint. See the GLP-1 cost explainer for cash-pay honesty. This page will not compare Ozempic list price with Beema Health's compounded rates.",
     },
   ],
   sections: [
@@ -91,8 +91,8 @@ export const article: LearnArticle = {
       id: "no-trophy",
       heading: "There is no single best GLP-1 for every adult",
       body: [
-        "There is no single best GLP-1 for every adult. Head-to-head, SURMOUNT-5 found a higher average percent weight loss with tirzepatide than with semaglutide. Plenty of people still do better on semaglutide, cannot take a dual agonist, or should take nothing. A clinician weighs your history, not a ranking table. This page will not call Beema's compounded options the winner, and it will not run a Zepbound-versus-compounded price contest.",
-        "This article will not conclude that Beema compounded is the best. It will not frame compounded tirzepatide versus Zepbound as a value contest.",
+        "There is no single best GLP-1 for every adult. Head-to-head, SURMOUNT-5 found a higher average percent weight loss with tirzepatide than with semaglutide. Plenty of people still do better on semaglutide, cannot take a dual agonist, or should take nothing. A clinician weighs your history, not a ranking table. This page will not call Beema Health's compounded options the winner, and it will not run a Zepbound-versus-compounded price contest.",
+        "This article will not conclude that Beema Health compounded is the best. It will not frame compounded tirzepatide versus Zepbound as a value contest.",
       ],
     },
     {
@@ -107,7 +107,7 @@ export const article: LearnArticle = {
       id: "dimensions",
       heading: "Dimensions a clinician actually weighs",
       body: [
-        "Diabetes versus no diabetes. Established cardiovascular disease (SELECT used semaglutide 2.4 mg). Injection willingness. Gastrointestinal budget. Pregnancy timing. Other medicines. What the pharmacy can fill this month. What the patient can pay in cash if insurance is not in play. Beema is cash-pay and does not run insurance math on this site.",
+        "Diabetes versus no diabetes. Established cardiovascular disease (SELECT used semaglutide 2.4 mg). Injection willingness. Gastrointestinal budget. Pregnancy timing. Other medicines. What the pharmacy can fill this month. What the patient can pay in cash if insurance is not in play. Beema Health is cash-pay and does not run insurance math on this site.",
       ],
       bullets: [
         "Efficacy averages from named trials",
@@ -120,12 +120,13 @@ export const article: LearnArticle = {
       id: "pipeline",
       heading: "Pipeline drugs are not secretly the current best",
       body: [
-        "Retatrutide, CagriSema, and mazdutide (China-only approval) are not Beema offerings. Orforglipron is approved as Foundayo but is not a Beema offering. Ranking an unavailable drug as 'best' is how people buy research chemicals. Do not do that.",
+        "Retatrutide, CagriSema, and mazdutide (China-only approval) are not Beema Health offerings. Orforglipron is approved as Foundayo but is not a Beema Health offering. Ranking an unavailable drug as 'best' is how people buy research chemicals. Do not do that.",
       ],
     },
     {
       id: "beema-choice",
-      heading: "If you are in Beema's program, the choice set is smaller",
+      heading:
+        "If you are in Beema Health's program, the choice set is smaller",
       body: [
         "Licensed providers may prescribe compounded semaglutide or compounded tirzepatide when legally available and clinically appropriate. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Within that pair, SURMOUNT-5-style averages may inform a conversation. They still do not force tirzepatide for every person, and they do not make compounding better than Zepbound.",
         "Commercial details and plan selectors: [compounded semaglutide](/semaglutide/) and [compounded tirzepatide](/tirzepatide/). Program overview: [medical weight-loss](/weight-loss/).",
@@ -135,7 +136,7 @@ export const article: LearnArticle = {
       id: "next",
       heading: "Take a list, not a brand winner, to your visit",
       body: [
-        "Write your top constraint (needles, nausea history, heart disease, timeline). Ask the clinician how they would choose given that constraint. If you start Beema intake, put the same constraint on the questionnaire. Completing intake and any later payment do not guarantee a prescription.",
+        "Write your top constraint (needles, nausea history, heart disease, timeline). Ask the clinician how they would choose given that constraint. If you start Beema Health intake, put the same constraint on the questionnaire. Completing intake and any later payment do not guarantee a prescription.",
       ],
     },
   ],

@@ -13,7 +13,7 @@ export const article: LearnArticle = {
   title: "Semaglutide Access for Adults Who Live in Texas",
   h1: "Semaglutide in Texas: licensed telehealth access",
   description:
-    "Texas residents can pursue semaglutide through licensed telehealth under Chapter 111. What Beema offers, and why research vials are not care.",
+    "Texas residents can pursue semaglutide through licensed telehealth under Chapter 111. What Beema Health offers, and why research vials are not care.",
   keywords: [
     "semaglutide texas",
     "semaglutide houston",
@@ -70,8 +70,8 @@ export const article: LearnArticle = {
       answer: `Yes, when a clinician licensed to treat you documents a proper evaluation under Texas telemedicine rules. Beema Health serves all 50 states, including Texas. ${LEARN_USA_ONLY_SENTENCE} Completing intake never guarantees that semaglutide, compounded or otherwise, will be prescribed.`,
     },
     {
-      question: "Does Beema offer Wegovy or Ozempic in Texas?",
-      answer: `No. Beema does not sell those brands. A Beema clinician may prescribe compounded semaglutide when legally available and clinically appropriate. ${COMPOUNDED_SEMA_REQUIRED} It is not Wegovy or Ozempic.`,
+      question: "Does Beema Health offer Wegovy or Ozempic in Texas?",
+      answer: `No. Beema Health does not sell those brands. A Beema Health clinician may prescribe compounded semaglutide when legally available and clinically appropriate. ${COMPOUNDED_SEMA_REQUIRED} It is not Wegovy or Ozempic.`,
     },
     {
       question: "How is this different from GLP-1 in Texas?",
@@ -84,7 +84,8 @@ export const article: LearnArticle = {
         "Read both if you have time. Houston covers humidity, TMC, and commutes. This page covers semaglutide-specific evidence and Texas-wide access. Neither replaces /semaglutide, the commercial compounded page.",
     },
     {
-      question: "What does compounded semaglutide cost if Beema prescribes it?",
+      question:
+        "What does compounded semaglutide cost if Beema Health prescribes it?",
       answer: learnSemaCashPayFaqAnswer(),
     },
     {
@@ -94,7 +95,7 @@ export const article: LearnArticle = {
     },
     {
       question:
-        "I am switching from a Texas med spa. Will Beema restart my dose?",
+        "I am switching from a Texas med spa. Will Beema Health restart my dose?",
       answer:
         "Tell intake your current milligrams and last injection date. The reviewing clinician decides whether a comparable dose is appropriate. They are not required to copy a med-spa protocol. Accuracy matters more than hoping for a higher pen.",
     },
@@ -110,7 +111,7 @@ export const article: LearnArticle = {
       heading: "Why semaglutide in Texas is not a duplicate of GLP-1 in Texas",
       body: [
         "Class-level searches ask how incretins work and whether telehealth is legal. Molecule-level searches ask whether STEP data apply and whether a Texas address can receive a specific drug. This page answers the second question without repeating the Houston Medical Center essay or the commercial compounded H1.",
-        "Beema serves Texas as part of nationwide telehealth, not as a Texas-only clinic. El Paso and Texarkana count. So does Houston.",
+        "Beema Health serves Texas as part of nationwide telehealth, not as a Texas-only clinic. El Paso and Texarkana count. So does Houston.",
       ],
     },
     {
@@ -131,7 +132,7 @@ export const article: LearnArticle = {
     },
     {
       id: "visit",
-      heading: "How a Texas Beema visit runs for semaglutide",
+      heading: "How a Texas Beema Health visit runs for semaglutide",
       body: [
         "Intake from home, clinician review, possible compounded semaglutide if appropriate and fillable, shipping, follow-up. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Heat and outdoor work in Texas still affect how aggressive titration should be. That counseling is part of care, not an extra product.",
         "You do not need to drive to Houston's Medical Center for this sequence. You might still need a local hospital if you develop severe abdominal pain. Telehealth is the evaluation setting, not an emergency department. Keep that distinction if you live an hour from the nearest night pharmacy in West Texas.",
@@ -143,7 +144,7 @@ export const article: LearnArticle = {
       body: [
         "High-fat celebration meals are common from Friday-night football to weekend carne asada. Semaglutide slows gastric emptying; greasy plates that used to be 'fine' can become hours of misery during titration. That is not a moral failure. It is a reason to plan smaller portions rather than to stop a needed medicine without talking to the prescriber.",
         "Border and South Texas communities often juggle care on both sides of a long drive. Mail delivery can be a P.O. box or a workplace. Put a reliable shipping address on intake. If someone else opens your packages, plan privacy. Do not list a neighbor who will leave a cooler on a 105 F porch.",
-        "Houston-specific traffic and Gulf humidity are covered in the Houston article so this page does not become a doorway clone. DFW and Austin have their own clinic density; they still sit under the same Chapter 111 standard and the same Beema 50-state statement.",
+        "Houston-specific traffic and Gulf humidity are covered in the Houston article so this page does not become a doorway clone. DFW and Austin have their own clinic density; they still sit under the same Chapter 111 standard and the same Beema Health 50-state statement.",
       ],
     },
     {
@@ -151,7 +152,7 @@ export const article: LearnArticle = {
       heading: "Fulfillment can differ even when the clinician says yes",
       body: [
         "State compounding rules and pharmacy networks can block a fill that a clinician would otherwise write. That is frustrating and still not a reason to use a research supplier. If compounded semaglutide cannot be filled, the clinician may discuss compounded tirzepatide or no medication. Compounded tirzepatide is not FDA-approved either.",
-        "Med-spa cash pens sold in Texas strip-mall clinics are a separate market. If you switch to Beema, report what you were taking. Accuracy protects you from being restarted at 0.25 mg when you were already at a maintenance dose, or from being jumped too high.",
+        "Med-spa cash pens sold in Texas strip-mall clinics are a separate market. If you switch to Beema Health, report what you were taking. Accuracy protects you from being restarted at 0.25 mg when you were already at a maintenance dose, or from being jumped too high.",
       ],
     },
     {

@@ -64,7 +64,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health offer Saxenda?",
       answer:
-        "No. Beema Health does not sell or dispense branded Saxenda. This page is educational. A licensed provider must prescribe Saxenda if it is appropriate. Completing a Beema online visit does not mean you will receive Saxenda.",
+        "No. Beema Health does not sell or dispense branded Saxenda. This page is educational. A licensed provider must prescribe Saxenda if it is appropriate. Completing a Beema Health online visit does not mean you will receive Saxenda.",
     },
     {
       question: "How do you dose Saxenda?",
@@ -137,7 +137,7 @@ export const article: LearnArticle = {
       heading: "Daily versus weekly GLP-1 medicines",
       body: [
         "People comparing Saxenda with weekly Wegovy or Zepbound are comparing different labeled products, trial magnitudes, and injection burden. SCALE mean weight change was smaller than later STEP and SURMOUNT programs on average, but that does not make Saxenda 'useless' or weekly medicines automatically 'right.' Tolerability, other medical conditions, and which product a clinician can lawfully prescribe all matter.",
-        "Switching from daily liraglutide to a weekly incretin (or the reverse) is not a milligram-for-milligram swap. See switching GLP-1 medications. Beema Health does not offer Saxenda. If you are exploring telehealth medical weight loss, read Beema's program overview. That link is not a claim that Beema will substitute another product for Saxenda.",
+        "Switching from daily liraglutide to a weekly incretin (or the reverse) is not a milligram-for-milligram swap. See switching GLP-1 medications. Beema Health does not offer Saxenda. If you are exploring telehealth medical weight loss, read Beema Health's program overview. That link is not a claim that Beema Health will substitute another product for Saxenda.",
       ],
     },
   ],

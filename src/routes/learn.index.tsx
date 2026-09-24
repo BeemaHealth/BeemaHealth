@@ -88,27 +88,27 @@ const VERTICAL_CARDS: Record<
 > = {
   "weight-loss": {
     description:
-      "Cited education on GLP-1 medicines for weight loss, online care, semaglutide, tirzepatide, side effects, and dosing questions. Beema's live clinical offering lives here.",
+      "Cited education on GLP-1 medicines for weight loss, online care, semaglutide, tirzepatide, side effects, and dosing questions. Beema Health's live clinical offering lives here.",
     status: "Live product education",
   },
   trt: {
     description:
-      "Educational overview of testosterone replacement therapy. Beema does not offer TRT today.",
+      "Educational overview of testosterone replacement therapy. Beema Health does not offer TRT today.",
     status: "Education only",
   },
   hrt: {
     description:
-      "Educational overview of menopausal hormone therapy. Beema does not offer HRT today.",
+      "Educational overview of menopausal hormone therapy. Beema Health does not offer HRT today.",
     status: "Education only",
   },
   ed: {
     description:
-      "Cited education on tadalafil, sildenafil, and compounded ED combination formulations - how they work, labeled dosing, and how Beema's compounded options differ. Beema's live clinical offering lives here.",
+      "Cited education on tadalafil, sildenafil, and compounded ED combination formulations - how they work, labeled dosing, and how Beema Health's compounded options differ. Beema Health's live clinical offering lives here.",
     status: "Live product education",
   },
   hairloss: {
     description:
-      "Cited education on finasteride for male pattern hair loss - how it works, FDA-labeled dosing, and a realistic results timeline. Beema's live clinical offering lives here.",
+      "Cited education on finasteride for male pattern hair loss - how it works, FDA-labeled dosing, and a realistic results timeline. Beema Health's live clinical offering lives here.",
     status: "Live product education",
   },
 };
@@ -152,7 +152,7 @@ function LearnIndexPage() {
           as="h1"
           eyebrow="Learn"
           title={LEARN_INDEX_META.h1}
-          description="Cited guides on GLP-1 weight-loss medicines, plus honest educational stubs for testosterone replacement and menopausal hormone therapy. Free to browse whether or not you are a Beema patient. Educational only, not medical advice."
+          description="Cited guides on GLP-1 weight-loss medicines, plus honest educational stubs for testosterone replacement and menopausal hormone therapy. Free to browse whether or not you are a Beema Health patient. Educational only, not medical advice."
         />
       </Section>
 

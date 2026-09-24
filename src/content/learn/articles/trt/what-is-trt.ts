@@ -6,7 +6,7 @@ export const article: LearnArticle = {
   title: "What is testosterone replacement therapy (TRT)?",
   h1: "What is testosterone replacement therapy?",
   description:
-    "Testosterone replacement therapy explained: who guidelines consider and why diagnosis needs repeated labs. Beema's TRT option, enclomiphene, differs.",
+    "Testosterone replacement therapy explained: who guidelines consider and why diagnosis needs repeated labs. Beema Health does not currently offer TRT.",
   keywords: [
     "what is TRT",
     "testosterone replacement therapy",
@@ -15,7 +15,7 @@ export const article: LearnArticle = {
   ],
   cluster: "foundations",
   relatedSlugs: [],
-  moneyPageHrefs: ["/trt/", "/weight-loss/"],
+  moneyPageHrefs: ["/weight-loss/"],
   datePublished: "2026-08-24",
   dateModified: "2026-08-27",
   sources: [
@@ -34,7 +34,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health prescribe TRT?",
       answer:
-        "Beema's live TRT offering is compounded enclomiphene, an oral medication that encourages the body to produce more of its own testosterone rather than replacing it directly like the injectable, gel, or patch testosterone this article describes. See Beema's TRT page for enclomiphene-specific care, pricing, and eligibility; a licensed provider decides case by case whether it's appropriate.",
+        "No. Beema Health does not currently offer TRT. Its related compounded enclomiphene treatment, when it is offered, works differently from the injectable, gel, or patch testosterone this article describes: it's an oral medication that encourages the body to produce more of its own testosterone rather than replacing it directly.",
     },
     {
       question: "Can I diagnose low testosterone from symptoms alone?",
@@ -44,7 +44,7 @@ export const article: LearnArticle = {
     {
       question: "Is TRT a weight-loss drug?",
       answer:
-        "No. Some people with hypogonadism notice body-composition changes on treatment, but TRT is not a GLP-1 weight-management medicine. Beema's compounded enclomiphene program is separate from its GLP-1 weight-loss care.",
+        "No. Some people with hypogonadism notice body-composition changes on treatment, but TRT is not a GLP-1 weight-management medicine. Beema Health does not currently offer TRT or compounded enclomiphene, and its live weight-loss care is a separate program.",
     },
   ],
   sections: [
@@ -69,9 +69,9 @@ export const article: LearnArticle = {
     },
     {
       id: "not-beema",
-      heading: "Where Beema's own TRT-adjacent program fits",
+      heading: "Beema Health does not currently offer TRT",
       body: [
-        "This article describes the injectable, gel, and patch testosterone products covered in major endocrine and urology guidelines. Beema's live TRT offering, compounded enclomiphene, works differently: rather than replacing testosterone directly, it's an oral medication that encourages the body to produce more of its own. See Beema's TRT page for enclomiphene-specific care, pricing, and eligibility - a licensed provider decides case by case whether it, or any treatment, is appropriate. If you need the injectable/gel/patch therapy described in this article specifically, see a licensed clinician who prescribes it. If you came here for GLP-1 weight-loss education, the weight-loss learn hub is the right shelf.",
+        "This article describes the injectable, gel, and patch testosterone products covered in major endocrine and urology guidelines. Beema Health does not currently offer TRT or the related compounded enclomiphene treatment, which would work differently: rather than replacing testosterone directly, it's an oral medication that encourages the body to produce more of its own. If you need the injectable/gel/patch therapy described in this article specifically, see a licensed clinician who prescribes it. If you came here for GLP-1 weight-loss education, the weight-loss learn hub is the right shelf.",
       ],
     },
   ],

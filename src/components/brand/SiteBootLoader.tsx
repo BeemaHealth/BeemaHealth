@@ -39,7 +39,7 @@ function Wing({ d }: { d: string }) {
 }
 
 /**
- * Glossy Beema mark. Two beats: wings + first 3 hexagon sides, then head
+ * Glossy Beema Health mark. Two beats: wings + first 3 hexagon sides, then head
  * and abdomen + remaining 3 sides. One hexagon only.
  */
 export function HexLoader({ className }: { className?: string }) {
@@ -118,7 +118,7 @@ export function HexLoader({ className }: { className?: string }) {
 }
 
 /**
- * Full-viewport splash on the first document load (Google → Beema).
+ * Full-viewport splash on the first document load (Google → Beema Health).
  * Does not remount on in-app navigations. Stays until the document and
  * fonts are ready, finishes the mark draw to match that load, then fades.
  * Set `SITE_BOOT_LOADER_ENABLED` to false to remove it.

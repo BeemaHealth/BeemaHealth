@@ -63,11 +63,11 @@ const FORMULATION_SENTENCE =
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
-    q: "What is Beema's hair loss spray for men and how does it work?",
+    q: "What is Beema Health's hair loss spray for men and how does it work?",
     a: `This is a topical spray, applied directly to the scalp. ${FORMULATION_SENTENCE} Delivering these active ingredients topically is intended to target hair follicles while limiting how much medication reaches the rest of the body compared to an oral tablet. Results vary and can take several months to become noticeable.`,
   },
   {
-    q: "Is Beema's hair loss spray FDA-approved?",
+    q: "Is Beema Health's hair loss spray FDA-approved?",
     a: `${REQUIRED_COMPOUND_SENTENCE} It is not the same as, and is not claimed to be clinically proven to produce the same results as, any FDA-approved product.`,
   },
   {
@@ -75,15 +75,15 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a: "Because this formulation contains finasteride and tretinoin, avoid letting the treated area of skin contact anyone who is or may become pregnant until fully dry. Your provider will review full precautions, for every active ingredient, with you as part of your intake.",
   },
   {
-    q: "How does online hair loss care through Beema work?",
+    q: "How does online hair loss care through Beema Health work?",
     a: "Care starts with creating a secure account and completing a medical intake covering your health history, hair loss pattern, and goals, at your own pace. A licensed provider reviews your intake and independently decides whether this spray may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability.",
   },
   {
-    q: "How much does the hair loss spray cost through Beema?",
-    a: `${simplePricingSentence("Beema's hair loss spray for men", HAIRLOSS_TOPICAL_MEN_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
+    q: "How much does the hair loss spray cost through Beema Health?",
+    a: `${simplePricingSentence("Beema Health's hair loss spray for men", HAIRLOSS_TOPICAL_MEN_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
-    q: "Does Beema serve patients nationwide?",
+    q: "Does Beema Health serve patients nationwide?",
     a: "Yes, Beema Health is available to patients in all 50 U.S. states. Eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications.",
   },
 ];
@@ -278,7 +278,7 @@ function HairLossSprayMenPage() {
       <Section className="pt-0">
         <SectionHeading
           align="left"
-          title="What is Beema's hair loss spray for men?"
+          title="What is Beema Health's hair loss spray for men?"
           className="mx-0 max-w-2xl"
         />
         <div className="mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-muted-foreground">
@@ -290,8 +290,8 @@ function HairLossSprayMenPage() {
             Results vary and can take several months to become noticeable.
           </p>
           <p>
-            Beema's hair loss spray is a compounded formulation, for men only.{" "}
-            {REQUIRED_COMPOUND_SENTENCE}
+            Beema Health's hair loss spray is a compounded formulation, for men
+            only. {REQUIRED_COMPOUND_SENTENCE}
           </p>
           <p>
             Whether this spray, or another formulation, may be appropriate for
@@ -309,7 +309,7 @@ function HairLossSprayMenPage() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema's hair loss spray care works"
+        title="How Beema Health's hair loss spray care works"
         showCareFollowUpNote
       />
 

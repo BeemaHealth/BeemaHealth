@@ -43,7 +43,7 @@ import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import sildenafilPhoto from "@/assets/treatments/sildenafil-oral-tablets-bottle.webp";
 
 const TITLE = "Sildenafil for ED Online | Beema Health";
-const DESCRIPTION = `Sildenafil, the FDA-approved generic version of Viagra, reviewed by licensed providers. Nationwide telehealth care from ${formatPerPillStartingAt(ED_SILDENAFIL_PER_PILL_USD)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Sildenafil, the FDA-approved generic version of Viagra, reviewed by licensed providers. From ${formatPerPillStartingAt(ED_SILDENAFIL_PER_PILL_USD)}. Never guaranteed.`;
 const SERVICE_DESCRIPTION =
   "Nationwide telehealth service connecting eligible adult men with independent licensed providers for sildenafil evaluation and ongoing care. Completing intake does not guarantee a prescription.";
 
@@ -53,23 +53,23 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a: "Sildenafil works by relaxing blood vessels so more blood can flow to the penis, making it easier to get and keep an erection when you're sexually aroused. It doesn't cause arousal by itself - you still need to be sexually stimulated for it to work. Sildenafil typically takes effect within 30-60 minutes and lasts several hours, so it's usually taken as needed before sexual activity rather than daily.",
   },
   {
-    q: "Is Beema's sildenafil the same as generic Viagra?",
-    a: "Yes. Beema's sildenafil is the FDA-approved generic version of Viagra - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.",
+    q: "Is Beema Health's sildenafil the same as generic Viagra?",
+    a: "Yes. Beema Health's sildenafil is the FDA-approved generic version of Viagra - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.",
   },
   {
     q: "Sildenafil or tadalafil - which is right for me?",
     a: "Both work similarly but differ in how quickly they take effect and how long they last; your licensed provider reviews your intake and recommends which option and dose may be appropriate for your case. See Tadalafil for that option, or ED Mints for a dissolve-under-the-tongue combination formulation.",
   },
   {
-    q: "How does online ED care through Beema work?",
+    q: "How does online ED care through Beema Health work?",
     a: "Care starts with creating a secure account and completing a medical intake covering your health history, current medications, and goals, at your own pace. A licensed provider reviews your intake and independently decides whether sildenafil may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability.",
   },
   {
-    q: "How much does sildenafil cost through Beema?",
-    a: `${simplePricingSentence("Sildenafil through Beema", ED_SILDENAFIL_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
+    q: "How much does sildenafil cost through Beema Health?",
+    a: `${simplePricingSentence("Sildenafil through Beema Health", ED_SILDENAFIL_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
-    q: "Does Beema serve patients nationwide?",
+    q: "Does Beema Health serve patients nationwide?",
     a: "Yes, Beema Health is available to patients in all 50 U.S. states. Eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications, including cardiovascular history.",
   },
 ];
@@ -260,9 +260,9 @@ function SildenafilPage() {
             so it's usually taken as needed before activity.
           </p>
           <p>
-            Beema's sildenafil is the FDA-approved generic version of Viagra -
-            the identical active ingredient, strength, and intended use as the
-            brand-name product, dispensed by a licensed pharmacy, not a
+            Beema Health's sildenafil is the FDA-approved generic version of
+            Viagra - the identical active ingredient, strength, and intended use
+            as the brand-name product, dispensed by a licensed pharmacy, not a
             compounded formulation. Looking for tadalafil instead? See{" "}
             <Link to="/tadalafil/" className="text-primary underline">
               Tadalafil
@@ -291,7 +291,7 @@ function SildenafilPage() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema's sildenafil care works"
+        title="How Beema Health's sildenafil care works"
         showCareFollowUpNote
       />
 

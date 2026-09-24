@@ -17,21 +17,22 @@ import {
  * price change would have left structured data disagreeing with the page
  * Google was rendering.
  *
- * Rule: any Beema price rendered anywhere must be a value the pricing module
+ * Rule: any Beema Health price rendered anywhere must be a value the pricing module
  * defines. Third-party figures (branded list prices, gym memberships, grocery
- * costs) are not Beema prices and are deliberately out of scope.
+ * costs) are not Beema Health prices and are deliberately out of scope.
  */
 const ROOT = resolve(__dirname, "../../..");
 
 function walk(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const full = resolve(dir, entry.name);
-    if (entry.isDirectory()) return entry.name === "__tests__" ? [] : walk(full);
+    if (entry.isDirectory())
+      return entry.name === "__tests__" ? [] : walk(full);
     return /\.tsx?$/.test(entry.name) ? [full] : [];
   });
 }
 
-/** Surfaces that render Beema's own commercial pricing. */
+/** Surfaces that render Beema Health's own commercial pricing. */
 const COMMERCIAL_SURFACES = [
   "src/routes/semaglutide.tsx",
   "src/routes/tirzepatide.tsx",
@@ -42,7 +43,7 @@ const COMMERCIAL_SURFACES = [
 ];
 
 describe("pricing single source of truth", () => {
-  it("exposes every Beema price through the pricing module", () => {
+  it("exposes every Beema Health price through the pricing module", () => {
     const known = listKnownPricingUsdAmounts();
     expect(known.length).toBeGreaterThan(5);
     expect(known).toContain(COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd);
@@ -52,9 +53,11 @@ describe("pricing single source of truth", () => {
     );
   });
 
-  it("never hardcodes a Beema price on a commercial surface", () => {
-    // Beema's own price points. A literal here means a second source of truth.
-    const beemaPrices = new Set(listKnownPricingUsdAmounts().map((n) => String(n)));
+  it("never hardcodes a Beema Health price on a commercial surface", () => {
+    // Beema Health's own price points. A literal here means a second source of truth.
+    const beemaPrices = new Set(
+      listKnownPricingUsdAmounts().map((n) => String(n)),
+    );
     beemaPrices.add(String(PROMO_CODE_DISCOUNT_USD));
     const offenders: string[] = [];
     for (const rel of COMMERCIAL_SURFACES) {
@@ -83,7 +86,10 @@ describe("pricing single source of truth", () => {
 
   it("derives structured-data Offer prices from the module", () => {
     // JSON-LD is the surface most likely to drift, because nobody sees it.
-    for (const rel of ["src/routes/semaglutide.tsx", "src/routes/tirzepatide.tsx"]) {
+    for (const rel of [
+      "src/routes/semaglutide.tsx",
+      "src/routes/tirzepatide.tsx",
+    ]) {
       const source = readFileSync(resolve(ROOT, rel), "utf-8");
       const offer = source.match(/offer:\s*\{[\s\S]*?\}/);
       expect(offer, `${rel} has no Offer block`).not.toBeNull();
@@ -102,7 +108,7 @@ describe("pricing single source of truth", () => {
     );
   });
 
-  it("never lets a stray Beema price appear in learn content", () => {
+  it("never lets a stray Beema Health price appear in learn content", () => {
     // Learn articles are plain data and cannot interpolate, so the guard is
     // that any dollar figure they quote is one the module actually defines,
     // or a clearly third-party figure documented in the article's sources.
@@ -116,9 +122,9 @@ describe("pricing single source of truth", () => {
     const offenders: string[] = [];
     for (const file of files) {
       const source = readFileSync(file, "utf-8");
-      // Only flag a figure presented as Beema's price.
+      // Only flag a figure presented as Beema Health's price.
       for (const m of source.matchAll(
-        /Beema[^.$]{0,120}\$\s?(\d[\d,]*(?:\.\d+)?)/g,
+        /Beema Health[^.$]{0,120}\$\s?(\d[\d,]*(?:\.\d+)?)/g,
       )) {
         const raw = m[1]!.replace(/,/g, "");
         if (!known.has(raw) && !beemaOnly.includes(raw)) {

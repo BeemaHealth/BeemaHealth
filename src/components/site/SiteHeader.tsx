@@ -43,7 +43,7 @@ const WEIGHT_LOSS_ITEMS: NavItem[] = [
 ];
 
 /**
- * TRT is paused (2026-08-28) - Beema is not selling it, so it's out of the
+ * TRT is paused (2026-08-28) - Beema Health is not selling it, so it's out of the
  * nav entirely for now (not even commented items, since a disabled link
  * inside a live dropdown is confusing). When it returns, it goes back here
  * (same audience/purchase journey as ED) - see docs/features/

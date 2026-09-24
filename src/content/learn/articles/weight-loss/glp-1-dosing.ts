@@ -77,7 +77,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health use one standard GLP-1 dose for everyone?",
       answer:
-        "Beema Health does not dispense the branded products named in this article. Any prescription that a Beema-network clinician may issue after intake is individualized. Completing a visit does not guarantee a prescription or a particular dose. This page is educational.",
+        "Beema Health does not dispense the branded products named in this article. Any prescription that a Beema Health-network clinician may issue after intake is individualized. Completing a visit does not guarantee a prescription or a particular dose. This page is educational.",
     },
   ],
   sections: [

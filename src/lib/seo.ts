@@ -52,7 +52,7 @@ export const ORGANIZATION_JSONLD = {
   url: `${SITE_URL}/`,
   logo: `${SITE_URL}/beemahealth-logo.png`,
   description:
-    "Beema Health is a US online medical company. Licensed providers evaluate patients online and, when clinically appropriate, prescribe GLP-1 weight-loss medications, TRT, hairloss, ED, NAD+, and sermorelin treatments, with transparent cash pricing, US pharmacy fulfillment, and ongoing follow-up care.",
+    "Beema Health is a US online medical company. Licensed providers evaluate patients online and, when clinically appropriate, prescribe GLP-1 weight-loss medications, hair loss, ED, NAD+, and sermorelin treatments, with transparent cash pricing, US pharmacy fulfillment, and ongoing follow-up care.",
   areaServed: { "@type": "Country", name: "United States" },
   sameAs: [
     GOOGLE_BUSINESS_LISTING_URL,

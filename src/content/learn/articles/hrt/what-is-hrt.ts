@@ -6,7 +6,7 @@ export const article: LearnArticle = {
   title: "What is menopausal hormone therapy (HRT)?",
   h1: "What is menopausal hormone therapy?",
   description:
-    "A short educational explainer of menopausal hormone therapy, how it differs from TRT, and why Beema does not offer HRT today. Not medical advice.",
+    "A short educational explainer of menopausal hormone therapy, how it differs from TRT, and why Beema Health does not offer HRT today. Not medical advice.",
   keywords: [
     "what is HRT",
     "menopausal hormone therapy",
@@ -38,7 +38,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health prescribe HRT?",
       answer:
-        "No. Beema does not currently offer menopausal hormone therapy. This article is educational only.",
+        "No. Beema Health does not currently offer menopausal hormone therapy. This article is educational only.",
     },
     {
       question: "Is HRT the same as testosterone replacement?",
@@ -68,9 +68,9 @@ export const article: LearnArticle = {
     },
     {
       id: "not-beema",
-      heading: "Beema is not an HRT clinic",
+      heading: "Beema Health is not an HRT clinic",
       body: [
-        "We published this explainer so HRT searches are not funneled into a fake product. If your question is about GLP-1 medicines for weight loss, use the weight-loss learn hub. If your question is about menopause hormones, see a clinician who prescribes them. Beema's live care is medical weight-loss.",
+        "We published this explainer so HRT searches are not funneled into a fake product. If your question is about GLP-1 medicines for weight loss, use the weight-loss learn hub. If your question is about menopause hormones, see a clinician who prescribes them. Beema Health's live care is medical weight-loss.",
       ],
     },
   ],

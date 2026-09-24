@@ -100,7 +100,7 @@ export const article: LearnArticle = {
       heading: "Why “increased physical activity” is on the label",
       body: [
         "Wegovy and Zepbound are indicated with a reduced-calorie diet and increased physical activity. STEP 1 and SURMOUNT-1 were not “shot-only” experiments. Participants received lifestyle instruction. Treating the medicine as a reason to stop moving is the opposite of how those programs were studied.",
-        "This is educational, not a personal training plan. Get clinician clearance if you have heart disease, uncontrolled hypertension, recent surgery, pregnancy, or severe joint disease. Beema pages about starting care are separate from this guide.",
+        "This is educational, not a personal training plan. Get clinician clearance if you have heart disease, uncontrolled hypertension, recent surgery, pregnancy, or severe joint disease. Beema Health pages about starting care are separate from this guide.",
       ],
     },
     {

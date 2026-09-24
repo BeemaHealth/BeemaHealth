@@ -1535,12 +1535,12 @@ Then:    increase load and rebuild within 8-12 repetitions`}
             <Callout title="Costs and quality">
               Monthly cost estimates are representative United States retail
               snapshots from August 2026, not formal market averages and not
-              Beema prices. Retail prices change quickly. In the United States,
-              dietary supplements are not individually approved by the United
-              States Food and Drug Administration for safety and efficacy before
-              they reach the market; manufacturers bear primary responsibility,
-              with the United States Food and Drug Administration exercising
-              substantial post-market authority
+              Beema Health prices. Retail prices change quickly. In the United
+              States, dietary supplements are not individually approved by the
+              United States Food and Drug Administration for safety and efficacy
+              before they reach the market; manufacturers bear primary
+              responsibility, with the United States Food and Drug
+              Administration exercising substantial post-market authority
               <Cite n={19} />. That makes reputable manufacturing and
               independent third-party testing more meaningful than flashy
               proprietary blends.

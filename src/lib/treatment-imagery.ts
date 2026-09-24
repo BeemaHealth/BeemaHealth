@@ -9,7 +9,7 @@ import unbrandedTirzepatide from "@/assets/treatments/unbranded-tirzepatide-vial
  * ---------------------------------------------------------------------
  * During LegitScript review we shipped colour product photography without
  * a brand name/logo on the vial. Certification is complete (August 2026);
- * the site now ships branded Beema-wordmark vials. Unbranded shots remain
+ * the site now ships branded Beema Health-wordmark vials. Unbranded shots remain
  * imported so flipping `VIAL_IMAGERY_MODE` back to `"unbranded"` is still
  * a one-line edit.
  *
@@ -19,7 +19,7 @@ import unbrandedTirzepatide from "@/assets/treatments/unbranded-tirzepatide-vial
  *
  * Unbranded shots are square studio photos of a vial on a plinth in a
  * staged set. Branded shots (2026-09-13, per Matt) are transparent-cutout
- * renders of the actual Beema-labeled vial (gold cap, black printed label,
+ * renders of the actual Beema Health-labeled vial (gold cap, black printed label,
  * honeycomb motif) at a portrait ~4:5 canvas, matching the real product
  * photography convention used on the other money pages (finasteride,
  * tadalafil, sildenafil, hair loss). Each set still carries its own
@@ -30,7 +30,7 @@ export type MedicationId = "semaglutide" | "tirzepatide";
 
 export type VialImageryMode = "unbranded" | "branded";
 
-/** Flip to "unbranded" to restore colour vials without a Beema wordmark. */
+/** Flip to "unbranded" to restore colour vials without a Beema Health wordmark. */
 export const VIAL_IMAGERY_MODE: VialImageryMode = "branded";
 
 export type VialImagery = {

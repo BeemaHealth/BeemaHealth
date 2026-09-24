@@ -59,11 +59,11 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a: "No. ED Mints are compounded, not FDA-approved, and are not the same product as any FDA-approved branded or generic medication, even when they share active ingredients. They're prepared at an FDA-registered 503B outsourcing facility as combination formulations not available as a single commercial product, and are considered only when legally available and clinically appropriate.",
   },
   {
-    q: "How much do ED Mints cost through Beema?",
+    q: "How much do ED Mints cost through Beema Health?",
     a: `Pricing for both formulations, including any quarterly savings, is shown during your online questionnaire before you complete your order - our low cost fee covers your provider consultation, prescription formulation, and shipping. Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
-    q: "Does Beema serve patients nationwide?",
+    q: "Does Beema Health serve patients nationwide?",
     a: "Yes, Beema Health is available to patients in all 50 U.S. states. Whether a specific compounded formulation is available to you still depends on your state's rules around compounded medications and pharmacy fulfillment in your area, and eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications, including cardiovascular history.",
   },
 ];
@@ -252,12 +252,12 @@ function EdMintsPage() {
             you still need to be sexually stimulated for them to work.
           </p>
           <p>
-            Beema offers two ED Mints formulations, each a combination not sold
-            as a single commercial product and prepared at an FDA-registered
-            503B outsourcing facility. These formulations are not FDA-approved
-            and are considered only when legally available and clinically
-            appropriate. Which option, if any, may be appropriate for you is a
-            decision your licensed provider makes individually.
+            Beema Health offers two ED Mints formulations, each a combination
+            not sold as a single commercial product and prepared at an
+            FDA-registered 503B outsourcing facility. These formulations are not
+            FDA-approved and are considered only when legally available and
+            clinically appropriate. Which option, if any, may be appropriate for
+            you is a decision your licensed provider makes individually.
           </p>
           <Button asChild variant="outline" size="sm">
             <Link to="/ed-mints/" hash="faq">
@@ -291,7 +291,7 @@ function EdMintsPage() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema's ED Mints care works"
+        title="How Beema Health's ED Mints care works"
         showCareFollowUpNote
       />
 

@@ -65,7 +65,7 @@ export const article: LearnArticle = {
         "Only with clinician awareness. Ashwagandha can cause drowsiness and has been linked in case reports to liver injury. It may affect thyroid hormone levels in some people. GLP-1-class medicines already change appetite and GI motility. Combining them without telling your prescriber makes side-effect attribution harder. This page does not approve a stack.",
     },
     {
-      question: "Does Beema sell ashwagandha?",
+      question: "Does Beema Health sell ashwagandha?",
       answer:
         "No. Beema Health is a telehealth medical weight-loss program. Live medication options, when prescribed, are compounded semaglutide or compounded tirzepatide. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Supplements are not part of the cash-pay lockup.",
     },
@@ -91,7 +91,7 @@ export const article: LearnArticle = {
       heading: "An adaptogen with a stress file, not an obesity label",
       body: [
         "Ashwagandha (Withania somnifera) is a botanical used in Ayurvedic practice. Modern U.S. shoppers meet it as a capsule for 'cortisol' and 'belly fat.' The National Center for Complementary and Integrative Health summarizes evidence as more relevant to stress and sleep than to a dedicated weight-loss indication. That mismatch is the whole story of this page.",
-        "This article is educational, not medical advice. Ashwagandha does not replace GLP-1-class prescription therapy. Beema does not offer ashwagandha.",
+        "This article is educational, not medical advice. Ashwagandha does not replace GLP-1-class prescription therapy. Beema Health does not offer ashwagandha.",
       ],
     },
     {
@@ -114,7 +114,7 @@ export const article: LearnArticle = {
       id: "thyroid",
       heading: "Thyroid overlap with GLP-1 conversations",
       body: [
-        "GLP-1 obesity labels discuss a boxed warning about rodent thyroid C-cell tumors and counsel people with MTC or MEN 2. Ashwagandha's thyroid issue is different: possible hormone-level changes, not that boxed warning. Mention both to a clinician so nobody confuses the two. See Beema's GLP-1 and thyroid explainer for the incretin-specific topic.",
+        "GLP-1 obesity labels discuss a boxed warning about rodent thyroid C-cell tumors and counsel people with MTC or MEN 2. Ashwagandha's thyroid issue is different: possible hormone-level changes, not that boxed warning. Mention both to a clinician so nobody confuses the two. See Beema Health's GLP-1 and thyroid explainer for the incretin-specific topic.",
       ],
     },
     {
@@ -129,7 +129,7 @@ export const article: LearnArticle = {
       id: "practical",
       heading: "A practical stance if you still want the herb for stress",
       body: [
-        "Tell every clinician the brand, dose, and start date. Prefer products with independent testing. Reassess at 8 weeks with a simple question: did validated stress or sleep measures improve? If the only goal was pounds on the scale, the herb is the wrong tool. Beema intake can proceed whether or not you take ashwagandha; list it. A prescription is never guaranteed.",
+        "Tell every clinician the brand, dose, and start date. Prefer products with independent testing. Reassess at 8 weeks with a simple question: did validated stress or sleep measures improve? If the only goal was pounds on the scale, the herb is the wrong tool. Beema Health intake can proceed whether or not you take ashwagandha; list it. A prescription is never guaranteed.",
       ],
     },
   ],

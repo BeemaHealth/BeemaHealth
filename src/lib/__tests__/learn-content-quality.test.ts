@@ -335,9 +335,17 @@ describe("learn pricing and hub status", () => {
   });
 
   it("does not imply HRT is a coming-soon product", () => {
-    // TRT launched 2026-08-27 as compounded enclomiphene, so its hub no
-    // longer needs "educational only" framing - HRT remains unlaunched.
     expect(LEARN_HUBS.hrt.meta.eyebrow).not.toMatch(/coming-soon/i);
     expect(LEARN_HUBS.hrt.meta.eyebrow).toMatch(/educational only/i);
+  });
+
+  it("does not imply the paused TRT vertical is a live offering", () => {
+    // TRT briefly launched 2026-08-27 as compounded enclomiphene but paused
+    // again 2026-08-28 - the hub must read as educational-only, same as HRT,
+    // until it relaunches.
+    expect(LEARN_HUBS.trt.meta.eyebrow).toMatch(/educational only/i);
+    expect(LEARN_HUBS.trt.meta.description).toMatch(
+      /does not currently offer/i,
+    );
   });
 });

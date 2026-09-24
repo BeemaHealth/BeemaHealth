@@ -82,8 +82,8 @@ export const article: LearnArticle = {
     },
     {
       question:
-        "Is there a semaglutide doctor in Houston I can see through Beema?",
-      answer: `Beema works with licensed providers who can treat patients located in Texas, but you will not be assigned a local Houston office. The clinician reviews your history, medications, and BMI-related factors, then decides independently whether compounded semaglutide, compounded tirzepatide, or no medication fits. ${COMPOUNDED_DISCLOSURE}`,
+        "Is there a semaglutide doctor in Houston I can see through Beema Health?",
+      answer: `Beema Health works with licensed providers who can treat patients located in Texas, but you will not be assigned a local Houston office. The clinician reviews your history, medications, and BMI-related factors, then decides independently whether compounded semaglutide, compounded tirzepatide, or no medication fits. ${COMPOUNDED_DISCLOSURE}`,
     },
     {
       question: "How fast can a Houston resident start?",

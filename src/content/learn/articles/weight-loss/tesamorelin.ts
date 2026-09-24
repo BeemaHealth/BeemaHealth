@@ -62,13 +62,13 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health offer tesamorelin?",
       answer:
-        "No. Beema Health does not offer tesamorelin, Egrifta, or growth-hormone secretagogue programs. Beema's live medical weight-loss evaluation, when a licensed provider agrees treatment is appropriate, is for compounded semaglutide or compounded tirzepatide. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
+        "No. Beema Health does not offer tesamorelin, Egrifta, or growth-hormone secretagogue programs. Beema Health's live medical weight-loss evaluation, when a licensed provider agrees treatment is appropriate, is for compounded semaglutide or compounded tirzepatide. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
     },
     {
       question:
         "Why do some wellness clinics advertise tesamorelin for belly fat?",
       answer:
-        "The approved indication is a specific HIV-associated fat-distribution condition, not cosmetic abdominal fat in people without that diagnosis. Using tesamorelin for general fat loss is off-label and is not how Beema practices. Off-label use still requires a licensed clinician, a valid prescription, and an honest risk discussion. It is not a DIY peptide protocol.",
+        "The approved indication is a specific HIV-associated fat-distribution condition, not cosmetic abdominal fat in people without that diagnosis. Using tesamorelin for general fat loss is off-label and is not how Beema Health practices. Off-label use still requires a licensed clinician, a valid prescription, and an honest risk discussion. It is not a DIY peptide protocol.",
     },
     {
       question: "Does tesamorelin make you lose scale weight?",
@@ -83,7 +83,7 @@ export const article: LearnArticle = {
     {
       question: "If I want medical weight loss, what should I read instead?",
       answer:
-        "Read educational pages on GLP-1 medicines and the live Beema program pages for compounded semaglutide and tirzepatide. Those medicines work through incretin pathways and are evaluated for chronic weight management in a completely different evidence base. Completing Beema intake never guarantees a prescription.",
+        "Read educational pages on GLP-1 medicines and the live Beema Health program pages for compounded semaglutide and tirzepatide. Those medicines work through incretin pathways and are evaluated for chronic weight management in a completely different evidence base. Completing Beema Health intake never guarantees a prescription.",
     },
   ],
   sections: [
@@ -105,7 +105,7 @@ export const article: LearnArticle = {
       bullets: [
         "Tesamorelin: GHRH analog for HIV-associated visceral fat, daily injection, weight-neutral on label",
         "Semaglutide/tirzepatide class: incretin agonists studied for percent body-weight change",
-        "Beema offering: neither tesamorelin nor branded Egrifta",
+        "Beema Health offering: neither tesamorelin nor branded Egrifta",
       ],
     },
     {
@@ -120,21 +120,21 @@ export const article: LearnArticle = {
       id: "research-chemicals",
       heading: "Prescription medicine versus research vials",
       body: [
-        "Egrifta is a prescription product dispensed by licensed pharmacies for an approved (or carefully justified off-label) use. Vials marketed as research tesamorelin are not that product. Beema will not help anyone purchase unlabeled peptides. GLP-1-class weight-loss care, when offered here, is also prescription-only after a licensed provider reviews intake - never a cart checkout.",
+        "Egrifta is a prescription product dispensed by licensed pharmacies for an approved (or carefully justified off-label) use. Vials marketed as research tesamorelin are not that product. Beema Health will not help anyone purchase unlabeled peptides. GLP-1-class weight-loss care, when offered here, is also prescription-only after a licensed provider reviews intake - never a cart checkout.",
       ],
     },
     {
       id: "who-needs-hiv-care",
       heading: "If you actually have HIV-associated lipodystrophy",
       body: [
-        "That diagnosis belongs with an HIV clinician who knows your antiretroviral regimen, glucose, and cancer screening. Tesamorelin, if considered, is their conversation, not a telehealth weight-loss program's default menu. Beema's questionnaire is built for medical weight loss with compounded GLP-1-class options, not for HIV metabolic complications.",
+        "That diagnosis belongs with an HIV clinician who knows your antiretroviral regimen, glucose, and cancer screening. Tesamorelin, if considered, is their conversation, not a telehealth weight-loss program's default menu. Beema Health's questionnaire is built for medical weight loss with compounded GLP-1-class options, not for HIV metabolic complications.",
       ],
     },
     {
       id: "beema-status",
       heading: "What Beema Health offers instead",
       body: [
-        "Adults in all 50 U.S. states can complete Beema's online intake. A licensed provider may prescribe compounded semaglutide or compounded tirzepatide when legally available and clinically appropriate. Compounded semaglutide is not FDA-approved. Compounded tirzepatide is not FDA-approved. Prescribing is never guaranteed.",
+        "Adults in all 50 U.S. states can complete Beema Health's online intake. A licensed provider may prescribe compounded semaglutide or compounded tirzepatide when legally available and clinically appropriate. Compounded semaglutide is not FDA-approved. Compounded tirzepatide is not FDA-approved. Prescribing is never guaranteed.",
         "If tesamorelin appeared in your search results next to retatrutide or sermorelin, treat that as a merchandising bundle, not a medical category. Read the sermorelin article next if you want another GHRH analog's true history, then return to GLP-1 education if weight management is the goal.",
       ],
     },

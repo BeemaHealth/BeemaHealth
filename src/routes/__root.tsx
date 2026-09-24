@@ -159,7 +159,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         {
           name: "description",
           content:
-            "Online medical care reviewed by licensed providers: GLP-1 weight loss, TRT, hairloss, ED, NAD+, and sermorelin. Compounded medications are not FDA-approved.",
+            "Online medical care reviewed by licensed providers: GLP-1 weight loss, hair loss, ED, NAD+, and sermorelin. Compounded medications are not FDA-approved.",
         },
         { name: "author", content: "Beema Health" },
         {

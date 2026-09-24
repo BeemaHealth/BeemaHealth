@@ -199,7 +199,7 @@ describe("learn copy has no em or en dashes", () => {
     // TRT went live 2026-08-27 as compounded enclomiphene (see /trt) - a
     // different mechanism than the injectable/gel/patch testosterone this
     // hub describes, so the hub must say so rather than claim the
-    // injectable/gel/patch category itself is Beema's offering.
+    // injectable/gel/patch category itself is Beema Health's offering.
     expect(trtHub).toMatch(/compounded enclomiphene/i);
     expect(trtHub).toMatch(
       /does not currently offer menopausal hormone therapy/i,

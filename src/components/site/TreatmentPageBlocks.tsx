@@ -284,7 +284,7 @@ export function TreatmentComparisonTable({
           </TableRow>
           <TableRow>
             <TableCell className="font-medium text-foreground">
-              Beema starting price
+              Beema Health starting price
             </TableCell>
             <TableCell>
               {formatCompoundedPriceLine(COMPOUNDED_TIRZEPATIDE_PRICING)}
@@ -362,7 +362,7 @@ export function TreatmentHeroArt({
         <Icon className="size-11" aria-hidden />
       </HexBadge>
       <p className="relative z-10 mt-5 text-sm font-bold uppercase tracking-[0.2em] text-primary">
-        Beema
+        Beema Health
       </p>
       <p className="relative z-10 mt-1 max-w-[70%] text-center text-base font-semibold text-foreground">
         {label}
@@ -643,6 +643,14 @@ export type CategoryLineupItem = {
   form: string;
   pricing: SimpleCompoundedPricing;
   icon: LucideIcon;
+  /**
+   * Real product photo, when this medication has one - takes over the
+   * card's image slot from the icon/mesh-glow placeholder below. Reuses the
+   * same photography already shot for the medication's own money page
+   * (e.g. `/tadalafil`'s bottle shot), so `icon` stays required as the
+   * fallback for lineups whose products have no photography yet.
+   */
+  image?: { src: string; alt: string; width: number; height: number };
   /** Own indexable landing page for this specific medication. */
   to: string;
   /** Optional highlighted tag next to the price, e.g. `simplePerDaySentence(pricing)` - only pass a truthy value when the claim is actually true. */
@@ -655,8 +663,9 @@ export type CategoryLineupItem = {
  * separate from TreatmentLineup.tsx (the /weight-loss version): that
  * component is hardcoded to the two GLP-1 medications' photo imagery and
  * `CompoundedPriceLockup`. This uses `TreatmentHeroArt`-style icon art and
- * the simpler pricing shape instead, since none of these products have
- * photography or promo-code pricing.
+ * the simpler pricing shape instead - items whose product has real
+ * photography pass `image` to swap in a photo instead (see
+ * `CategoryLineupItem.image`).
  */
 export function SimpleCategoryLineup({
   items,
@@ -677,10 +686,23 @@ export function SimpleCategoryLineup({
               aria-hidden
               className="bg-mesh-glow pointer-events-none absolute inset-0 opacity-70"
             />
-            <HexMotif className="pointer-events-none absolute -left-6 -top-6 w-24 text-primary/15" />
-            <HexBadge className="relative z-10 size-16">
-              <item.icon className="size-7" aria-hidden />
-            </HexBadge>
+            {item.image ? (
+              <img
+                src={item.image.src}
+                alt={item.image.alt}
+                width={item.image.width}
+                height={item.image.height}
+                loading="lazy"
+                className="relative z-10 h-full w-full object-contain p-6"
+              />
+            ) : (
+              <>
+                <HexMotif className="pointer-events-none absolute -left-6 -top-6 w-24 text-primary/15" />
+                <HexBadge className="relative z-10 size-16">
+                  <item.icon className="size-7" aria-hidden />
+                </HexBadge>
+              </>
+            )}
           </div>
           <div className="space-y-2 px-6 pb-4 pt-5 md:px-8">
             <h3 className="text-xl font-bold text-foreground md:text-2xl">

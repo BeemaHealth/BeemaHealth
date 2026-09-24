@@ -88,7 +88,7 @@ export const article: LearnArticle = {
       heading: "Stop Mounjaro as a diabetes medicine first",
       body: [
         "Mounjaro (tirzepatide) is FDA-approved to improve glycemic control in type 2 diabetes. Weight change in SURPASS trials was important to participants but is not the labeled primary job of this brand. Stopping therefore starts with a glucose plan: home monitoring frequency, sick-day rules, and whether metformin, SGLT2 inhibitors, insulin, or another GLP-1 will continue.",
-        "This page is educational, not medical advice. Beema Health does not dispense Mounjaro. Prescription required to start it; a clinician should also supervise stopping. Completing a Beema questionnaire does not replace endocrinology follow-up.",
+        "This page is educational, not medical advice. Beema Health does not dispense Mounjaro. Prescription required to start it; a clinician should also supervise stopping. Completing a Beema Health questionnaire does not replace endocrinology follow-up.",
       ],
     },
     {

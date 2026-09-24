@@ -15,7 +15,7 @@ export const article: LearnArticle = {
   title: "GLP-1 Near Me: Licensed Telehealth in Every US State",
   h1: "GLP-1 near me: licensed telehealth in every US state",
   description:
-    "Yes. Beema has no clinic to visit. Licensed providers treat adults in every US state by telehealth. Labs still happen locally. Prescription not guaranteed.",
+    "Yes. Beema Health has no clinic to visit. Licensed providers treat adults in every US state by telehealth. Labs happen locally. Prescription not guaranteed.",
   keywords: [
     "glp 1 near me",
     "glp 1 doctor",
@@ -69,7 +69,7 @@ export const article: LearnArticle = {
     buyGlp1OnlineFaq(),
     {
       question: "Can I get a GLP-1 near me without driving to a clinic?",
-      answer: `Yes, if you are in the United States. Beema has no clinic to visit. ${LEARN_FIFTY_STATE_SENTENCE} Labs or emergencies still happen locally. If a clinician prescribes, compounded semaglutide or compounded tirzepatide may ship from a licensed pharmacy. ${COMPOUNDED_DISCLOSURE} ${LEARN_CLINICIAN_RX_SENTENCE} ${LEARN_USA_ONLY_SENTENCE}`,
+      answer: `Yes, if you are in the United States. Beema Health has no clinic to visit. ${LEARN_FIFTY_STATE_SENTENCE} Labs or emergencies still happen locally. If a clinician prescribes, compounded semaglutide or compounded tirzepatide may ship from a licensed pharmacy. ${COMPOUNDED_DISCLOSURE} ${LEARN_CLINICIAN_RX_SENTENCE} ${LEARN_USA_ONLY_SENTENCE}`,
     },
     {
       question: "Do I need a GLP-1 clinic near me?",
@@ -106,7 +106,7 @@ export const article: LearnArticle = {
       id: "what-near-me-means",
       heading: "Near me is a useful search. Licensure is the constraint.",
       body: [
-        "Near me is a useful search when you need a dentist. For a GLP-1, the legal requirement is a clinician licensed where you are, not a clinic two miles away. Beema has no waiting room. Licensed providers can treat adults in every US state by telehealth. If you specifically want an exam you can drive to, a local clinic is the better fit, and that is a fair preference.",
+        "Near me is a useful search when you need a dentist. For a GLP-1, the legal requirement is a clinician licensed where you are, not a clinic two miles away. Beema Health has no waiting room. Licensed providers can treat adults in every US state by telehealth. If you specifically want an exam you can drive to, a local clinic is the better fit, and that is a fair preference.",
         "That is why the same search can return a strip-mall clinic two miles away and a telehealth program with no address at all, and why both can be legitimate. It is also why a nearby business is not automatically safer than a remote one. The credential travels with the prescriber, not with the building.",
       ],
     },
@@ -141,7 +141,7 @@ export const article: LearnArticle = {
     },
     {
       id: "beema-status",
-      heading: "Where Beema fits",
+      heading: "Where Beema Health fits",
       body: [
         "Beema Health is a cash-pay telehealth program for adults in all 50 states. There is no office to visit. A licensed provider reviews your intake and decides independently whether compounded semaglutide, compounded tirzepatide, or no medication is appropriate. Compounded medications are not FDA-approved and are considered only when legally available and clinically appropriate. Prescribing is never guaranteed.",
         "If you are searching locally because you want Houston or Texas specifics, those guides cover state telemedicine rules and local access. If you are searching locally because you want an in-person relationship, that is a legitimate preference and a local clinic is the right answer for you.",

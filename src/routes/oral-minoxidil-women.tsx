@@ -54,7 +54,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a: "Minoxidil is best known as a topical treatment, but taken as a low-dose oral tablet it can also help support hair growth by improving blood flow to hair follicles and extending the hair growth cycle. It's taken once daily. Results vary and can take several months to become noticeable.",
   },
   {
-    q: "Is Beema's oral minoxidil for women FDA-approved?",
+    q: "Is Beema Health's oral minoxidil for women FDA-approved?",
     a: "Yes. Oral minoxidil is an FDA-approved generic medication, not a compounded formulation. It was originally approved to treat high blood pressure; using it for hair loss is a well-established off-label use in dermatology, and your licensed provider decides whether it's appropriate for you.",
   },
   {
@@ -62,15 +62,15 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a: "Your provider reviews your full health history, including pregnancy status, before deciding whether oral minoxidil may be appropriate for you. Always share your pregnancy status and any plans to become pregnant during intake.",
   },
   {
-    q: "How does online hair loss care through Beema work?",
+    q: "How does online hair loss care through Beema Health work?",
     a: "Care starts with creating a secure account and completing a medical intake covering your health history, hair loss pattern, and goals, at your own pace. A licensed provider reviews your intake and independently decides whether oral minoxidil may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability.",
   },
   {
-    q: "How much does oral minoxidil cost through Beema?",
-    a: `${simplePricingSentence("Oral minoxidil through Beema", HAIRLOSS_ORAL_MINOXIDIL_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
+    q: "How much does oral minoxidil cost through Beema Health?",
+    a: `${simplePricingSentence("Oral minoxidil through Beema Health", HAIRLOSS_ORAL_MINOXIDIL_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
-    q: "Does Beema serve patients nationwide?",
+    q: "Does Beema Health serve patients nationwide?",
     a: "Yes, Beema Health is available to patients in all 50 U.S. states. Eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications.",
   },
 ];
@@ -267,7 +267,7 @@ function OralMinoxidilWomenPage() {
             months to become noticeable.
           </p>
           <p>
-            Beema's oral minoxidil for women is an FDA-approved generic
+            Beema Health's oral minoxidil for women is an FDA-approved generic
             medication, not a compounded formulation. It was originally approved
             to treat high blood pressure; using it for hair loss is a
             well-established off-label use in dermatology.
@@ -288,7 +288,7 @@ function OralMinoxidilWomenPage() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema's oral minoxidil care works"
+        title="How Beema Health's oral minoxidil care works"
         showCareFollowUpNote
       />
 

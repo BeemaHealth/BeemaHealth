@@ -8,7 +8,7 @@ export const article: LearnArticle = {
   title: "GLP-1 Telehealth for Houston-Area Adults",
   h1: "GLP-1 Houston: telehealth for metro adults",
   description:
-    "Houston adults can use telehealth GLP-1 visits instead of driving to a clinic. Who online care fits, and how Beema's nationwide model covers Houston.",
+    "Houston adults can use telehealth GLP-1 visits instead of driving to a clinic. Who online care fits, and how Beema Health's nationwide model covers Houston.",
   keywords: [
     "glp 1 houston",
     "glp 1 weight loss houston",
@@ -67,10 +67,10 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health serve Houston?",
       answer:
-        "Yes. Beema serves Houston and the rest of Texas as part of a 50-state telehealth program. Service is USA only. You do not need to live inside Loop 610. Katy, Sugar Land, The Woodlands, Pearland, Cypress, Pasadena, Clear Lake, and other Greater Houston communities can complete intake from home. Completing intake never guarantees a prescription.",
+        "Yes. Beema Health serves Houston and the rest of Texas as part of a 50-state telehealth program. Service is USA only. You do not need to live inside Loop 610. Katy, Sugar Land, The Woodlands, Pearland, Cypress, Pasadena, Clear Lake, and other Greater Houston communities can complete intake from home. Completing intake never guarantees a prescription.",
     },
     {
-      question: "Is this the same as Beema's /glp-1-houston page?",
+      question: "Is this the same as Beema Health's /glp-1-houston page?",
       answer:
         "No. /glp-1-houston is a commercial cash-pay landing page with the H1 about GLP-1 weight-loss care for Houston online. This learn article is educational: Medical Center access, humidity, commutes, and who telehealth is for. Use the landing page or /semaglutide and /tirzepatide when you want live prices and intake.",
     },
@@ -91,7 +91,7 @@ export const article: LearnArticle = {
         "Gulf humidity plus 95 F heat indexes make dehydration from nausea or diarrhea more dangerous than the same symptoms in a mild climate. Plan fluids before afternoon outdoor exposure. Hurricane-season power outages also affect refrigerated branded pens; discuss storage with whoever prescribes you. Compounded products have their own pharmacy storage instructions.",
     },
     {
-      question: "Does Beema only serve Houston?",
+      question: "Does Beema Health only serve Houston?",
       answer:
         "No. Nationwide telehealth includes Houston. This page is local education, not a claim that care stops at the county line.",
     },
@@ -102,7 +102,7 @@ export const article: LearnArticle = {
       heading: "Greater Houston is a region, not a single clinic parking lot",
       body: [
         "Harris, Fort Bend, Montgomery, Brazoria, and Galveston counties function as one labor market with very different drive times to the Texas Medical Center. A teacher in Pearland, a refinery worker in Pasadena, and a software employee in The Woodlands all search 'GLP-1 Houston' and mean different commutes. Telehealth treats those ZIP codes as Texas, which they are, instead of as a failure to live inside 610.",
-        "This article is educational. It does not clone Beema's commercial Houston landing page. That page exists for cash-pay conversion. This page exists so local searchers get unique context: humidity, traffic, TMC versus telehealth, and who an online visit is for.",
+        "This article is educational. It does not clone Beema Health's commercial Houston landing page. That page exists for cash-pay conversion. This page exists so local searchers get unique context: humidity, traffic, TMC versus telehealth, and who an online visit is for.",
       ],
     },
     {
@@ -111,7 +111,7 @@ export const article: LearnArticle = {
         "When the Medical Center is the right building - and when it is not",
       body: [
         "Houston's Texas Medical Center concentrates specialists who should manage organ transplant, advanced heart failure, active cancer therapy, and unstable type 1 diabetes. Those patients should not replace their specialists with a weight-loss questionnaire. They can still ask those specialists whether an incretin is appropriate.",
-        "Adults whose main need is obesity-medicine evaluation, who can tell a complete history, and who do not need same-week imaging, often waste more health on I-69 sitting than they gain from a 15-minute in-person weigh-in. Texas telemedicine law allows a proper remote evaluation. Beema uses that path statewide, including Houston.",
+        "Adults whose main need is obesity-medicine evaluation, who can tell a complete history, and who do not need same-week imaging, often waste more health on I-69 sitting than they gain from a 15-minute in-person weigh-in. Texas telemedicine law allows a proper remote evaluation. Beema Health uses that path statewide, including Houston.",
       ],
     },
     {
@@ -142,7 +142,7 @@ export const article: LearnArticle = {
       id: "visit",
       heading: "How a visit works if your address is Houston",
       body: [
-        "Complete Beema's online intake. A licensed provider reviews it. If appropriate and legally available, compounded semaglutide or compounded tirzepatide may be prescribed and shipped. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Prescribing is never guaranteed. Live cash-pay plan math is on [compounded semaglutide](/semaglutide/) and [compounded tirzepatide](/tirzepatide/), including the tirzepatide starter-pack path for new patients.",
+        "Complete Beema Health's online intake. A licensed provider reviews it. If appropriate and legally available, compounded semaglutide or compounded tirzepatide may be prescribed and shipped. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Prescribing is never guaranteed. Live cash-pay plan math is on [compounded semaglutide](/semaglutide/) and [compounded tirzepatide](/tirzepatide/), including the tirzepatide starter-pack path for new patients.",
         "You can start from a Katy kitchen table. You cannot skip disclosing a personal or family history of medullary thyroid carcinoma. The Medical Center's excellence does not replace that checkbox.",
       ],
     },

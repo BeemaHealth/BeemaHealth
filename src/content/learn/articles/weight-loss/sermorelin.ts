@@ -8,7 +8,7 @@ export const article: LearnArticle = {
   title: "Sermorelin: Discontinued Pediatric GHRH Analog, Not a GLP-1",
   h1: "Sermorelin is not an FDA-approved adult weight-loss GLP-1",
   description:
-    "Sermorelin was Geref, a GHRH analog for pediatric growth-hormone testing. It was discontinued, is not a GLP-1, and Beema does not offer it.",
+    "Sermorelin was Geref, a GHRH analog for pediatric growth-hormone testing. It was discontinued, is not a GLP-1, and Beema Health does not offer it.",
   keywords: [
     "sermorelin",
     "Geref",
@@ -71,7 +71,7 @@ export const article: LearnArticle = {
     {
       question: "Do compounded sermorelin vials equal Geref?",
       answer:
-        "No. Compounded preparations are not the discontinued branded product and have not been shown in modern obesity trials to match GLP-1 outcomes. Compounding a GHRH analog for adult fat loss is a different legal and clinical question from Beema's compounded semaglutide or tirzepatide program. Beema does not provide sermorelin compounding.",
+        "No. Compounded preparations are not the discontinued branded product and have not been shown in modern obesity trials to match GLP-1 outcomes. Compounding a GHRH analog for adult fat loss is a different legal and clinical question from Beema Health's compounded semaglutide or tirzepatide program. Beema Health does not provide sermorelin compounding.",
     },
     {
       question:
@@ -82,7 +82,7 @@ export const article: LearnArticle = {
     {
       question: "What should I use this page for?",
       answer:
-        "Use it to avoid a category error. If you want medical weight-loss care, read GLP-1 education and Beema's live program pages. If you were told you have adult growth-hormone deficiency, that workup belongs in specialty care with IGF-1 testing and stimulation tests, not in a GLP-1 telehealth intake.",
+        "Use it to avoid a category error. If you want medical weight-loss care, read GLP-1 education and Beema Health's live program pages. If you were told you have adult growth-hormone deficiency, that workup belongs in specialty care with IGF-1 testing and stimulation tests, not in a GLP-1 telehealth intake.",
     },
   ],
   sections: [
@@ -99,7 +99,7 @@ export const article: LearnArticle = {
       heading: "Why adult fat-loss marketing overreaches",
       body: [
         "Growth hormone affects body composition, which is why wellness clinics retell sermorelin as a lean-mass shot. That leap skips the evidence standard used for modern obesity drugs: large randomized trials with percent weight change, cardiometabolic endpoints, and labeled risk language. Sermorelin never had a Wegovy-style obesity indication. Hype for unapproved fat-loss use is exactly what this article will not repeat as a benefit claim.",
-        "If an adult has documented growth-hormone deficiency, recombinant growth hormone - not a discontinued diagnostic peptide - is the usual labeled therapy. That diagnosis is specialized. Beema's weight-loss intake is not an endocrine stimulation-test clinic.",
+        "If an adult has documented growth-hormone deficiency, recombinant growth hormone - not a discontinued diagnostic peptide - is the usual labeled therapy. That diagnosis is specialized. Beema Health's weight-loss intake is not an endocrine stimulation-test clinic.",
       ],
     },
     {
@@ -111,14 +111,14 @@ export const article: LearnArticle = {
       bullets: [
         "Sermorelin: GHRH analog, historic pediatric GH use, no current FDA-approved U.S. brand",
         "Tesamorelin: related axis, but a different molecule with a current HIV lipodystrophy label",
-        "Semaglutide/tirzepatide: incretin agonists with obesity-trial evidence Beema may evaluate as compounded options",
+        "Semaglutide/tirzepatide: incretin agonists with obesity-trial evidence Beema Health may evaluate as compounded options",
       ],
     },
     {
       id: "compounded-gray-market",
       heading: "Compounded and research-chemical sermorelin",
       body: [
-        "After Geref left the market, compounding pharmacies and internet vendors filled the gap. Compounded sermorelin is not FDA-approved as a finished drug. Research-labeled vials are not medicines. Beema will not sell either. Prescription status does not disappear because a website uses the word peptide.",
+        "After Geref left the market, compounding pharmacies and internet vendors filled the gap. Compounded sermorelin is not FDA-approved as a finished drug. Research-labeled vials are not medicines. Beema Health will not sell either. Prescription status does not disappear because a website uses the word peptide.",
         "Athletes should also know that growth-hormone releasing factors are prohibited in sport under WADA rules. That is another reason this is not a casual wellness add-on.",
       ],
     },
@@ -133,7 +133,7 @@ export const article: LearnArticle = {
       id: "beema-status",
       heading: "What Beema Health will discuss instead",
       body: [
-        "Beema offers cash-pay telehealth for medical weight loss in all 50 U.S. states. Licensed providers may prescribe compounded semaglutide or compounded tirzepatide when legally available and clinically appropriate. Compounded semaglutide is not FDA-approved. Compounded tirzepatide is not FDA-approved. Completing intake never guarantees a prescription.",
+        "Beema Health offers cash-pay telehealth for medical weight loss in all 50 U.S. states. Licensed providers may prescribe compounded semaglutide or compounded tirzepatide when legally available and clinically appropriate. Compounded semaglutide is not FDA-approved. Compounded tirzepatide is not FDA-approved. Completing intake never guarantees a prescription.",
         "If a social ad promised sermorelin as a gentler Ozempic, that comparison is false on mechanism and false on evidence. Read GLP-1 education next, or the tesamorelin article if you need the other GHRH analog's labeled indication.",
       ],
     },

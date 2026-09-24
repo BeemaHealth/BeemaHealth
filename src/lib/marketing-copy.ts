@@ -2,7 +2,7 @@
  * Shared marketing / promo copy: single source of truth so homepage, nav,
  * and footer never invent conflicting incentive amounts. Deliberately
  * framed as a standing promo, not a "new company" / early-adopter pitch -
- * Beema reads as an established provider, not a startup still filling seats.
+ * Beema Health reads as an established provider, not a startup still filling seats.
  */
 
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
@@ -31,7 +31,7 @@ export const FIRST_MONTH_PROMO_LINE = `Semaglutide from ${formatUsd(promoFirstMo
  * Short label for tight UI (nav chip, button microcopy).
  * Keep in sync with {@link FIRST_MONTH_PROMO_LINE}.
  */
-export const FIRST_MONTH_PROMO_SHORT = `Sema from ${formatUsd(promoFirstMonthUsd(semaPromo))} · Tirz starter from ${formatUsd(tirzStarterPack.monthlyEquivalentUsd)}/mo`;
+export const FIRST_MONTH_PROMO_SHORT = `Sema ${formatUsd(promoFirstMonthUsd(semaPromo))} first mo · Tirz starter from ${formatUsd(tirzStarterPack.monthlyEquivalentUsd)}/mo`;
 
 /**
  * Primary waitlist CTA button label sitewide (nav, hero, footer, mid-page).

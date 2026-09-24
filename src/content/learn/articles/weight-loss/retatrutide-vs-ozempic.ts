@@ -67,7 +67,7 @@ export const article: LearnArticle = {
     {
       question: "Is retatrutide available instead of Ozempic?",
       answer:
-        "No. Retatrutide is not FDA-approved as of August 2026. Ozempic is an approved diabetes medicine. Beema Health does not sell Ozempic and does not offer retatrutide. Beema may evaluate compounded semaglutide after provider review. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. It is not Ozempic.",
+        "No. Retatrutide is not FDA-approved as of August 2026. Ozempic is an approved diabetes medicine. Beema Health does not sell Ozempic and does not offer retatrutide. Beema Health may evaluate compounded semaglutide after provider review. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. It is not Ozempic.",
     },
     {
       question: "Why do people search this comparison?",
@@ -75,14 +75,15 @@ export const article: LearnArticle = {
         "Ozempic became a cultural shorthand for GLP-1 weight loss even though its labeled job is diabetes care. Retatrutide headlines promise larger average losses in obesity trials. Searchers want a winner. The accurate answer is that one product is approved for diabetes today and the other is still in development for obesity and related conditions.",
     },
     {
-      question: "Does Beema say compounded semaglutide is better than Ozempic?",
+      question:
+        "Does Beema Health say compounded semaglutide is better than Ozempic?",
       answer:
         "No. This educational page does not compare branded list prices with compounded cash-pay rates and does not declare compounding superior. FDA-approved branded semaglutide and compounded semaglutide are not the same product. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate.",
     },
     {
       question: "What should someone with type 2 diabetes do?",
       answer:
-        "Diabetes care belongs with a clinician who can choose labeled glucose-lowering medicines, including GLP-1 receptor agonists when appropriate. Do not stop Ozempic because of a retatrutide rumor. Do not start gray-market retatrutide. If you also want weight-management care through Beema, disclose your diabetes medicines on intake. A prescription is never guaranteed.",
+        "Diabetes care belongs with a clinician who can choose labeled glucose-lowering medicines, including GLP-1 receptor agonists when appropriate. Do not stop Ozempic because of a retatrutide rumor. Do not start gray-market retatrutide. If you also want weight-management care through Beema Health, disclose your diabetes medicines on intake. A prescription is never guaranteed.",
     },
   ],
   sections: [
@@ -91,7 +92,7 @@ export const article: LearnArticle = {
       heading: "Brand names are not scientific comparisons",
       body: [
         "Ozempic is Novo Nordisk's brand of injectable semaglutide for type 2 diabetes. Wegovy is the company's brand of semaglutide 2.4 mg for chronic weight management. Retatrutide is Lilly's investigational triple agonist without a U.S. brand for routine prescribing. Comparing 'retatrutide vs Ozempic' is therefore a comparison of an unapproved obesity-trial drug with a diabetes brand, not a clean head-to-head of two obesity labels.",
-        "This article is educational, not medical advice. Beema Health does not offer Ozempic, Wegovy, or retatrutide. We will not conclude that Beema compounded semaglutide is the best of the three.",
+        "This article is educational, not medical advice. Beema Health does not offer Ozempic, Wegovy, or retatrutide. We will not conclude that Beema Health compounded semaglutide is the best of the three.",
       ],
     },
     {
@@ -120,9 +121,9 @@ export const article: LearnArticle = {
     },
     {
       id: "beema",
-      heading: "Where Beema sits in this search",
+      heading: "Where Beema Health sits in this search",
       body: [
-        "Beema is a cash-pay telehealth program for medical weight loss. Licensed providers may prescribe compounded semaglutide or compounded tirzepatide when legally available and clinically appropriate. Compounded semaglutide is not FDA-approved and is not Ozempic. Compounded tirzepatide is not FDA-approved. Retatrutide is not on the menu.",
+        "Beema Health is a cash-pay telehealth program for medical weight loss. Licensed providers may prescribe compounded semaglutide or compounded tirzepatide when legally available and clinically appropriate. Compounded semaglutide is not FDA-approved and is not Ozempic. Compounded tirzepatide is not FDA-approved. Retatrutide is not on the menu.",
         "If you searched this pair because you want the 'next Ozempic,' the factual update is: Ozempic remains a diabetes brand; the obesity-branded semaglutide conversation is Wegovy; the triple agonist is still investigational. For process, read the best-GLP-1 explainer. For the molecule, read the retatrutide page. For diabetes-brand education, read the Ozempic page.",
       ],
     },
@@ -130,7 +131,7 @@ export const article: LearnArticle = {
       id: "next",
       heading: "A safer next step than a gray-market vial",
       body: [
-        "List your diagnosis (diabetes or not), current milligrams, and last fill date. Take that to a licensed provider. If you use Beema, put it on the intake. Completing intake never guarantees a prescription. Waiting for retatrutide approval is a choice you should make with someone who knows your cardiovascular and glucose risk, not with a comment section.",
+        "List your diagnosis (diabetes or not), current milligrams, and last fill date. Take that to a licensed provider. If you use Beema Health, put it on the intake. Completing intake never guarantees a prescription. Waiting for retatrutide approval is a choice you should make with someone who knows your cardiovascular and glucose risk, not with a comment section.",
       ],
     },
   ],

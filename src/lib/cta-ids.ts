@@ -107,7 +107,7 @@ export const qualifyHref = waitlistHref;
  * ---------------------------------------------------------------------
  * CTA switchboard
  * ---------------------------------------------------------------------
- * Beema is live: every marketing CTA sitewide sends visitors to Bask's
+ * Beema Health is live: every marketing CTA sitewide sends visitors to Bask's
  * hosted intake (one questionnaire - not a separate eligibility product).
  * Leftover in-repo waitlist/qualify/intake routes are legacy - see
  * docs/BACKEND-DEFERRED.md.

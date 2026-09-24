@@ -50,9 +50,10 @@ export const article: LearnArticle = {
         "The FDA-approved dose for male pattern hair loss is one 1 mg tablet taken once daily, with or without food. This is a different, much lower dose than the 5 mg finasteride tablet (brand name Proscar) used for an enlarged prostate - the two are not interchangeable, and a licensed provider decides which, if either, is appropriate.",
     },
     {
-      question: "Is Beema's finasteride the same as brand-name Propecia?",
+      question:
+        "Is Beema Health's finasteride the same as brand-name Propecia?",
       answer:
-        "Yes. Unlike most of the medications discussed elsewhere in this library, Beema's oral finasteride is the FDA-approved generic version of Propecia - the identical active ingredient, strength, and intended use as the brand-name product, not a compounded formulation. See the oral finasteride page for pricing and to start an intake.",
+        "Yes. Unlike most of the medications discussed elsewhere in this library, Beema Health's oral finasteride is the FDA-approved generic version of Propecia - the identical active ingredient, strength, and intended use as the brand-name product, not a compounded formulation. See the oral finasteride page for pricing and to start an intake.",
     },
     {
       question: "Does finasteride cause sexual side effects?",
@@ -97,9 +98,9 @@ export const article: LearnArticle = {
     },
     {
       id: "what-beema-offers",
-      heading: "What Beema's finasteride offers, and how it's different",
+      heading: "What Beema Health's finasteride offers, and how it's different",
       body: [
-        "Beema's oral finasteride is the FDA-approved generic version of Propecia: the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy - not a compounded formulation. That makes it different from most other products in this learn library, where Beema's live offering is a compounded, non-FDA-approved formulation.",
+        "Beema Health's oral finasteride is the FDA-approved generic version of Propecia: the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy - not a compounded formulation. That makes it different from most other products in this learn library, where Beema Health's live offering is a compounded, non-FDA-approved formulation.",
         "A licensed provider reviews each patient's intake, including hair loss pattern and health history, and independently decides whether finasteride may be appropriate; completing intake does not guarantee a prescription. See the oral finasteride page for pricing and eligibility.",
       ],
     },

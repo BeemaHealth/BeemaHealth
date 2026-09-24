@@ -139,7 +139,7 @@ describe("learn rest-intervals LegitScript and medical-copy guardrails", () => {
     expect(readerCopy).not.toMatch(/\bd\/wk\b|\bwk\b/);
   });
 
-  it("frames the page as education, not a prescription or Beema supplement shop", () => {
+  it("frames the page as education, not a prescription or Beema Health supplement shop", () => {
     expect(route).toContain("Educational disclaimer");
     expect(routeText).toContain("not medical advice");
     expect(routeText).toContain("does not sell dietary supplements");
@@ -157,7 +157,7 @@ describe("learn rest-intervals LegitScript and medical-copy guardrails", () => {
       /generic version|the same as|identical to|interchangeable with/i,
     );
     expect(combined).not.toMatch(
-      /Beema (?:sells|offers|provides).*(Wegovy|Zepbound|Ozempic|Mounjaro)/i,
+      /Beema Health (?:sells|offers|provides).*(Wegovy|Zepbound|Ozempic|Mounjaro)/i,
     );
   });
 

@@ -63,7 +63,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health offer CagriSema?",
       answer:
-        "No. Beema does not offer CagriSema, does not mix cagrilintide into compounded semaglutide, and does not keep a CagriSema waitlist. Current evaluation is for compounded semaglutide or compounded tirzepatide when a licensed provider finds that appropriate. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
+        "No. Beema Health does not offer CagriSema, does not mix cagrilintide into compounded semaglutide, and does not keep a CagriSema waitlist. Current evaluation is for compounded semaglutide or compounded tirzepatide when a licensed provider finds that appropriate. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
     },
     {
       question: "How is CagriSema different from Wegovy?",
@@ -73,7 +73,7 @@ export const article: LearnArticle = {
     {
       question: "What is cagrilintide?",
       answer:
-        "Cagrilintide is an analog of amylin, a pancreatic hormone that contributes to satiety and slows gastric emptying. It is not a GLP-1. Combining it with semaglutide is the scientific idea behind CagriSema. Cagrilintide alone is not a Beema product.",
+        "Cagrilintide is an analog of amylin, a pancreatic hormone that contributes to satiety and slows gastric emptying. It is not a GLP-1. Combining it with semaglutide is the scientific idea behind CagriSema. Cagrilintide alone is not a Beema Health product.",
     },
     {
       question: "Were gastrointestinal side effects common?",
@@ -102,7 +102,7 @@ export const article: LearnArticle = {
       body: [
         "REDEFINE 1, published in the New England Journal of Medicine in 2025, enrolled adults without diabetes who had a BMI of 30 or higher, or 27 or higher with an obesity-related complication. People were randomized to the combination, semaglutide 2.4 mg alone, cagrilintide 2.4 mg alone, or placebo, all with lifestyle intervention, for 68 weeks.",
         "On the treatment-policy estimand, mean percent weight change was 20.4% with cagrilintide-semaglutide versus 3.0% with placebo (difference about 17.3 percentage points). Participants on the combination were more likely than placebo to reach 5%, 20%, 25%, and 30% weight-loss thresholds. Gastrointestinal adverse events were very common. Those are trial results in a selected population, not a guarantee for any reader.",
-        "Novo Nordisk has also reported REDEFINE 2 in people with type 2 diabetes and overweight or obesity, and a REIMAGINE program focused on diabetes outcomes presented at the American Diabetes Association in 2026. Extra datasets inform regulators. They still do not make the combination a Beema product.",
+        "Novo Nordisk has also reported REDEFINE 2 in people with type 2 diabetes and overweight or obesity, and a REIMAGINE program focused on diabetes outcomes presented at the American Diabetes Association in 2026. Extra datasets inform regulators. They still do not make the combination a Beema Health product.",
       ],
     },
     {
@@ -110,7 +110,7 @@ export const article: LearnArticle = {
       heading: "The 2026 FDA review is not an approval",
       body: [
         "On December 18, 2025, Novo Nordisk announced it had filed a New Drug Application for CagriSema for chronic weight management in adults with obesity or overweight plus a weight-related condition. Later company materials pointed to a possible FDA decision in the fourth quarter of 2026. No public PDUFA date is required for this article to be useful: the honest status in August 2026 is 'under review, not approved.'",
-        "If FDA approves the combination later, that still would not automatically add it to Beema's formulary. Beema's live offering is separate cash-pay compounded GLP-1-class options when a licensed provider decides they are appropriate.",
+        "If FDA approves the combination later, that still would not automatically add it to Beema Health's formulary. Beema Health's live offering is separate cash-pay compounded GLP-1-class options when a licensed provider decides they are appropriate.",
       ],
     },
     {
@@ -125,7 +125,7 @@ export const article: LearnArticle = {
       id: "compared-with-available-care",
       heading: "How this differs from care you can start now",
       body: [
-        "Approved semaglutide for chronic weight management (Wegovy) and approved tirzepatide for chronic weight management (Zepbound) are branded products with FDA labels. Beema does not sell those brands. Beema may offer compounded semaglutide or compounded tirzepatide after provider review. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
+        "Approved semaglutide for chronic weight management (Wegovy) and approved tirzepatide for chronic weight management (Zepbound) are branded products with FDA labels. Beema Health does not sell those brands. Beema Health may offer compounded semaglutide or compounded tirzepatide after provider review. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
         "CagriSema is none of the above. It is an investigational combination. Wanting next-generation efficacy is reasonable. Substituting two gray-market vials is not equivalent to REDEFINE 1.",
       ],
     },
@@ -133,7 +133,7 @@ export const article: LearnArticle = {
       id: "questions",
       heading: "Questions to take to a licensed provider",
       body: [
-        "Ask whether an available GLP-1-class medicine fits your history today. Ask how nausea would be managed if you start therapy. Ask whether you would be a candidate for a branded combination later if FDA approves one. Beema intake can begin those conversations for compounded options only. Completing intake never guarantees a prescription.",
+        "Ask whether an available GLP-1-class medicine fits your history today. Ask how nausea would be managed if you start therapy. Ask whether you would be a candidate for a branded combination later if FDA approves one. Beema Health intake can begin those conversations for compounded options only. Completing intake never guarantees a prescription.",
       ],
     },
   ],

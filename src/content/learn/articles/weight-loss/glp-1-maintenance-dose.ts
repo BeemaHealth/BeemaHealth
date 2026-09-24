@@ -79,7 +79,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health keep people on branded maintenance pens?",
       answer:
-        "Beema Health does not dispense Wegovy, Zepbound, or other brands discussed here. Ongoing care, if a Beema-network clinician prescribes a treatment Beema offers, is provider-directed after intake. Completing a visit does not guarantee a prescription or indefinite treatment.",
+        "Beema Health does not dispense Wegovy, Zepbound, or other brands discussed here. Ongoing care, if a Beema Health-network clinician prescribes a treatment Beema Health offers, is provider-directed after intake. Completing a visit does not guarantee a prescription or indefinite treatment.",
     },
   ],
   sections: [

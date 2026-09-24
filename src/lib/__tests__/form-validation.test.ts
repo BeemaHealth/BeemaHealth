@@ -331,7 +331,7 @@ describe("form-validation", () => {
       expect(validateStateEligibility("")).toBeNull();
     });
 
-    it("allows eligible states, including previously-excluded ones (Beema now serves all 50 states)", () => {
+    it("allows eligible states, including previously-excluded ones (Beema Health now serves all 50 states)", () => {
       expect(validateStateEligibility("California")).toBeNull();
       expect(validateStateEligibility("CO")).toBeNull();
       expect(validateStateEligibility("Kansas")).toBeNull();

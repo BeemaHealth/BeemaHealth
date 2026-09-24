@@ -44,7 +44,7 @@ import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import finasteridePhoto from "@/assets/treatments/finasteride-oral-tablets-bottle.webp";
 
 const TITLE = "Oral Finasteride for Hair Loss Online | Beema Health";
-const DESCRIPTION = `Oral finasteride, the FDA-approved generic version of Propecia, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Oral finasteride, the FDA-approved generic version of Propecia, reviewed by licensed providers. From ${formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)}. Never guaranteed.`;
 const SERVICE_DESCRIPTION =
   "Nationwide telehealth service connecting eligible adult men with independent licensed providers for oral finasteride evaluation and ongoing care. Completing intake does not guarantee a prescription.";
 
@@ -54,19 +54,19 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a: "Finasteride is a once-daily oral tablet that blocks a hormone (DHT) that can shrink hair follicles over time in men with pattern hair loss. Taken consistently, it may help slow further hair loss and support the hair you still have. Results vary and can take several months to become noticeable.",
   },
   {
-    q: "Is Beema's finasteride the same as brand-name Propecia?",
-    a: "Beema's finasteride is the FDA-approved generic version of Propecia - the same active ingredient, strength, and intended use as the brand-name product, at generic pricing. It is only appropriate for men; it is not for women who are or may become pregnant.",
+    q: "Is Beema Health's finasteride the same as brand-name Propecia?",
+    a: "Beema Health's finasteride is the FDA-approved generic version of Propecia - the same active ingredient, strength, and intended use as the brand-name product, at generic pricing. It is only appropriate for men; it is not for women who are or may become pregnant.",
   },
   {
-    q: "How does online hair loss care through Beema work?",
+    q: "How does online hair loss care through Beema Health work?",
     a: "Care starts with creating a secure account and completing a medical intake covering your health history, hair loss pattern, and goals, at your own pace. A licensed provider reviews your intake and independently decides whether finasteride may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability.",
   },
   {
-    q: "How much does finasteride cost through Beema?",
-    a: `${simplePricingSentence("Oral finasteride through Beema", HAIRLOSS_FINASTERIDE_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
+    q: "How much does finasteride cost through Beema Health?",
+    a: `${simplePricingSentence("Oral finasteride through Beema Health", HAIRLOSS_FINASTERIDE_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
-    q: "Does Beema serve patients nationwide?",
+    q: "Does Beema Health serve patients nationwide?",
     a: "Yes, Beema Health is available to patients in all 50 U.S. states. Eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications.",
   },
 ];
@@ -262,7 +262,7 @@ function OralFinasteridePage() {
             months to become noticeable.
           </p>
           <p>
-            Beema's finasteride is the FDA-approved generic version of
+            Beema Health's finasteride is the FDA-approved generic version of
             Propecia&reg; - the same active ingredient, strength, and intended
             use as the brand-name product, at generic pricing. It's only
             appropriate for men; it's not for women who are or may become
@@ -284,7 +284,7 @@ function OralFinasteridePage() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema's finasteride care works"
+        title="How Beema Health's finasteride care works"
         showCareFollowUpNote
       />
 

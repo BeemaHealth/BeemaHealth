@@ -2,10 +2,10 @@
  * First-paint splash for Google → marketing-site document loads.
  *
  * Bask already shows its own loader on the marketing-site → intake hop.
- * This covers the missing hop: the visitor lands on Beema with no branded
+ * This covers the missing hop: the visitor lands on Beema Health with no branded
  * loading mark.
  *
- * Geometry is traced from the glossy Beema mark (square, one rounded
+ * Geometry is traced from the glossy Beema Health mark (square, one rounded
  * hexagon, infinity wings, glossy head, five tapered abdomen segments).
  *
  * The mark draws in two beats on a single hexagon:

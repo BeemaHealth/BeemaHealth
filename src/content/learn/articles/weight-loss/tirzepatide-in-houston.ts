@@ -16,7 +16,7 @@ export const article: LearnArticle = {
   title: "Tirzepatide in Houston: Telehealth Without a Clinic",
   h1: "Tirzepatide Houston: licensed telehealth without a clinic visit",
   description:
-    "Yes. Houston adults can start tirzepatide care online. Beema has no clinic. If prescribed, compounded tirzepatide may ship. Prescription not guaranteed.",
+    "Yes. Houston adults can start tirzepatide care online. Beema Health has no clinic. If prescribed, compounded tirzepatide may ship. Prescription not guaranteed.",
   keywords: [
     "tirzepatide houston",
     "tirzepatide doctor houston",
@@ -79,11 +79,12 @@ export const article: LearnArticle = {
     buyGlp1OnlineFaq({ molecule: "tirzepatide" }),
     {
       question: "Can I get tirzepatide in Houston without going to a clinic?",
-      answer: `Yes. Beema has no Houston office to visit. A clinician licensed to treat Texas patients can evaluate you online under Chapter 111. ${LEARN_FIFTY_STATE_SENTENCE} ${LEARN_USA_ONLY_SENTENCE} If treatment is prescribed, compounded tirzepatide may ship from a licensed pharmacy. ${COMPOUNDED_TIRZ_REQUIRED} ${LEARN_CLINICIAN_RX_SENTENCE}`,
+      answer: `Yes. Beema Health has no Houston office to visit. A clinician licensed to treat Texas patients can evaluate you online under Chapter 111. ${LEARN_FIFTY_STATE_SENTENCE} ${LEARN_USA_ONLY_SENTENCE} If treatment is prescribed, compounded tirzepatide may ship from a licensed pharmacy. ${COMPOUNDED_TIRZ_REQUIRED} ${LEARN_CLINICIAN_RX_SENTENCE}`,
     },
     {
-      question: "Is there a tirzepatide doctor in Houston through Beema?",
-      answer: `You will not be assigned a local Houston office. Beema works with licensed providers who can treat patients located in Texas. The clinician reviews your history and decides independently whether compounded tirzepatide, compounded semaglutide, or no medication fits. ${COMPOUNDED_TIRZ_REQUIRED} Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate.`,
+      question:
+        "Is there a tirzepatide doctor in Houston through Beema Health?",
+      answer: `You will not be assigned a local Houston office. Beema Health works with licensed providers who can treat patients located in Texas. The clinician reviews your history and decides independently whether compounded tirzepatide, compounded semaglutide, or no medication fits. ${COMPOUNDED_TIRZ_REQUIRED} Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate.`,
     },
     {
       question: "Do I have to live inside Loop 610?",
@@ -114,7 +115,7 @@ export const article: LearnArticle = {
       heading: "What the provider looks at before prescribing",
       body: [
         "Intake covers weight history, other medicines, prior GLP-1 use, and conditions that would rule a dual agonist out. Personal or family history of medullary thyroid carcinoma or multiple endocrine neoplasia type 2 appears in the boxed warning for this class. Pregnancy, pancreatitis history, and severe gastrointestinal disease all change the answer.",
-        `This page is educational, not medical advice. Beema evaluates compounded tirzepatide after a licensed provider reviews intake. ${COMPOUNDED_TIRZ_REQUIRED} ${LEARN_CLINICIAN_RX_SENTENCE} Current cash-pay plans live on the [compounded tirzepatide](/tirzepatide/) page.`,
+        `This page is educational, not medical advice. Beema Health evaluates compounded tirzepatide after a licensed provider reviews intake. ${COMPOUNDED_TIRZ_REQUIRED} ${LEARN_CLINICIAN_RX_SENTENCE} Current cash-pay plans live on the [compounded tirzepatide](/tirzepatide/) page.`,
       ],
       bullets: [
         "Reviewed: weight history, BMI-related factors, current medicines, prior GLP-1 response",
@@ -143,7 +144,7 @@ export const article: LearnArticle = {
       heading: "Why the cheapest Houston vial is the wrong comparison",
       body: [
         "FDA has warned about unapproved GLP-1 drugs marketed for weight loss, including products whose labels carried false information. Some of that material moves through local wellness businesses rather than pharmacies.",
-        "A licensed prescriber plus a licensed pharmacy is the part that makes a product traceable. That does not make compounded tirzepatide equivalent to Zepbound or Mounjaro. Beema does not sell those brands. Live prices and intake are on [compounded tirzepatide](/tirzepatide/) and the [Houston GLP-1 lander](/glp-1-houston/).",
+        "A licensed prescriber plus a licensed pharmacy is the part that makes a product traceable. That does not make compounded tirzepatide equivalent to Zepbound or Mounjaro. Beema Health does not sell those brands. Live prices and intake are on [compounded tirzepatide](/tirzepatide/) and the [Houston GLP-1 lander](/glp-1-houston/).",
       ],
     },
     {

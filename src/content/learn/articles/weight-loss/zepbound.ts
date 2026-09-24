@@ -61,7 +61,7 @@ export const article: LearnArticle = {
     {
       question: "How is Zepbound different from Mounjaro?",
       answer:
-        "Both brands contain tirzepatide and are made by Eli Lilly. Mounjaro is FDA-approved to improve glycemic control in adults with type 2 diabetes. Zepbound is FDA-approved for chronic weight management and for moderate to severe OSA in adults with obesity. They are not labeled as interchangeable products. A prescriber chooses the product that matches the indication and the pharmacy benefit, when insurance is involved. Beema does not dispense either brand.",
+        "Both brands contain tirzepatide and are made by Eli Lilly. Mounjaro is FDA-approved to improve glycemic control in adults with type 2 diabetes. Zepbound is FDA-approved for chronic weight management and for moderate to severe OSA in adults with obesity. They are not labeled as interchangeable products. A prescriber chooses the product that matches the indication and the pharmacy benefit, when insurance is involved. Beema Health does not dispense either brand.",
     },
     {
       question: "What is the usual Zepbound dose?",
@@ -71,7 +71,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health sell Zepbound?",
       answer:
-        "No. This article is educational. Beema Health does not sell or dispense branded Zepbound. If a Beema clinician prescribes tirzepatide, it is compounded tirzepatide when legally available and clinically appropriate, not Zepbound. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded tirzepatide](/tirzepatide/) page. Completing intake does not guarantee a prescription.",
+        "No. This article is educational. Beema Health does not sell or dispense branded Zepbound. If a Beema Health clinician prescribes tirzepatide, it is compounded tirzepatide when legally available and clinically appropriate, not Zepbound. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded tirzepatide](/tirzepatide/) page. Completing intake does not guarantee a prescription.",
     },
     {
       question: "How much weight loss was seen in SURMOUNT-1?",
@@ -90,7 +90,7 @@ export const article: LearnArticle = {
       heading: "What Zepbound is",
       body: [
         "Zepbound is Eli Lilly's brand of tirzepatide injection for chronic weight management and for moderate to severe obstructive sleep apnea (OSA) in adults with obesity. Tirzepatide activates receptors for two incretin hormones: glucose-dependent insulinotropic polypeptide (GIP) and glucagon-like peptide-1 (GLP-1). It is given once weekly under the skin.",
-        "This page explains the FDA-approved product. It is not medical advice, not a way to order Zepbound, and not a claim that Beema Health dispenses it. Beema does not sell branded Zepbound. A prescription is required. Licensed clinicians decide case by case. No weight-loss outcome is guaranteed.",
+        "This page explains the FDA-approved product. It is not medical advice, not a way to order Zepbound, and not a claim that Beema Health dispenses it. Beema Health does not sell branded Zepbound. A prescription is required. Licensed clinicians decide case by case. No weight-loss outcome is guaranteed.",
       ],
     },
     {
@@ -133,7 +133,7 @@ export const article: LearnArticle = {
       heading: "Prescription-only status",
       body: [
         "Zepbound requires a prescription from a licensed U.S. clinician after an appropriate evaluation. Pages that invite people to 'buy Zepbound online' without that step are not describing lawful care.",
-        "Beema Health does not offer branded Zepbound. If you are looking for telehealth medical weight-loss information, Beema's program overview explains how an online visit works. If you already take Zepbound, do not stop or switch products without involving the clinician who knows your history. Related articles cover Zepbound dosing, switching to Wegovy, and stopping tirzepatide.",
+        "Beema Health does not offer branded Zepbound. If you are looking for telehealth medical weight-loss information, Beema Health's program overview explains how an online visit works. If you already take Zepbound, do not stop or switch products without involving the clinician who knows your history. Related articles cover Zepbound dosing, switching to Wegovy, and stopping tirzepatide.",
       ],
     },
   ],

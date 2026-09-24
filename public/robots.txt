@@ -9,7 +9,7 @@
 #   2) Training        — may use crawled text to train foundation models
 #   3) User-triggered  — fetch a URL when a person asks about it
 # We allow (1)–(3) for major vendors, and everyone else via `User-agent: *`,
-# so Beema can be read and cited from anywhere. No bots are sitewide-blocked.
+# so Beema Health can be read and cited from anywhere. No bots are sitewide-blocked.
 #
 # IMPORTANT: named User-agent groups below repeat the same path Disallows
 # as `User-agent: *`. Some bots do not merge with `*`; an `Allow: /`-only
@@ -66,21 +66,20 @@ Disallow: /lp/
 # Legal text tied to the intake funnel
 Disallow: /legal/intake-acknowledgments
 
-# Retired marketing stubs - client-side redirect to home (GitHub Pages can't
-# serve a real 301 for these). Currently 404, not a redirect - no page was
-# ever built at these paths. Disallowed to save crawl budget either way.
+# Retired marketing stubs - no route exists for these paths (removed
+# 2026-09-23), so they 404 on GitHub Pages. Disallowed defensively in case
+# an old external link or bookmark still points here. Full page content
+# lives in git history if any of these come back.
 Disallow: /pricing
 Disallow: /clinicians
 Disallow: /insurance
 Disallow: /switch
 Disallow: /the-comb
 
-# Paused product lines (2026-08-28) - same client-side-only redirect
-# limitation. /wellness currently 404s; /trt currently serves the homepage's
-# HTML at a 200 status (a soft redirect, not a real 301) until its JS
-# redirect fires client-side - verify status before assuming either has
-# changed. NAD+ (2026-09-16) and Sermorelin (2026-09-17) relaunched on their
-# own money pages, no longer disallowed here - see docs/features/treatment-pages.md
+# Paused product lines (2026-08-28). /trt and /wellness both 404 (route
+# removed 2026-09-23) - see docs/features/treatment-pages.md. NAD+
+# (2026-09-16) and Sermorelin (2026-09-17) relaunched on their own money
+# pages, no longer disallowed here.
 Disallow: /trt
 Disallow: /wellness
 

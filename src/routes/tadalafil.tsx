@@ -43,7 +43,7 @@ import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import tadalafilPhoto from "@/assets/treatments/tadalafil-oral-tablets-bottle.webp";
 
 const TITLE = "Tadalafil for ED Online | Beema Health";
-const DESCRIPTION = `Tadalafil, the FDA-approved generic version of Cialis, reviewed by licensed providers. Nationwide telehealth care from ${formatPerPillStartingAt(ED_TADALAFIL_PER_PILL_USD)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Tadalafil, the FDA-approved generic version of Cialis, reviewed by licensed providers. From ${formatPerPillStartingAt(ED_TADALAFIL_PER_PILL_USD)}. Never guaranteed.`;
 const SERVICE_DESCRIPTION =
   "Nationwide telehealth service connecting eligible adult men with independent licensed providers for tadalafil evaluation and ongoing care. Completing intake does not guarantee a prescription.";
 
@@ -53,23 +53,23 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a: "Tadalafil works by relaxing blood vessels so more blood can flow to the penis, making it easier to get and keep an erection when you're sexually aroused. It doesn't cause arousal by itself - you still need to be sexually stimulated for it to work. Tadalafil is known for a longer duration of action than sildenafil, which is why it's sometimes taken at a low daily dose rather than only as needed.",
   },
   {
-    q: "Is Beema's tadalafil the same as generic Cialis?",
-    a: "Yes. Beema's tadalafil is the FDA-approved generic version of Cialis - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.",
+    q: "Is Beema Health's tadalafil the same as generic Cialis?",
+    a: "Yes. Beema Health's tadalafil is the FDA-approved generic version of Cialis - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.",
   },
   {
     q: "Tadalafil or sildenafil - which is right for me?",
     a: "Both work similarly but differ in how quickly they take effect and how long they last; your licensed provider reviews your intake and recommends which option and dose may be appropriate for your case. See Sildenafil for that option, or ED Mints for a dissolve-under-the-tongue combination formulation.",
   },
   {
-    q: "How does online ED care through Beema work?",
+    q: "How does online ED care through Beema Health work?",
     a: "Care starts with creating a secure account and completing a medical intake covering your health history, current medications, and goals, at your own pace. A licensed provider reviews your intake and independently decides whether tadalafil may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability.",
   },
   {
-    q: "How much does tadalafil cost through Beema?",
-    a: `${simplePricingSentence("Tadalafil through Beema", ED_TADALAFIL_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
+    q: "How much does tadalafil cost through Beema Health?",
+    a: `${simplePricingSentence("Tadalafil through Beema Health", ED_TADALAFIL_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
-    q: "Does Beema serve patients nationwide?",
+    q: "Does Beema Health serve patients nationwide?",
     a: "Yes, Beema Health is available to patients in all 50 U.S. states. Eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications, including cardiovascular history.",
   },
 ];
@@ -261,9 +261,9 @@ function TadalafilPage() {
             needed.
           </p>
           <p>
-            Beema's tadalafil is the FDA-approved generic version of Cialis -
-            the identical active ingredient, strength, and intended use as the
-            brand-name product, dispensed by a licensed pharmacy, not a
+            Beema Health's tadalafil is the FDA-approved generic version of
+            Cialis - the identical active ingredient, strength, and intended use
+            as the brand-name product, dispensed by a licensed pharmacy, not a
             compounded formulation. Looking for sildenafil instead? See{" "}
             <Link to="/sildenafil/" className="text-primary underline">
               Sildenafil
@@ -292,7 +292,7 @@ function TadalafilPage() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema's tadalafil care works"
+        title="How Beema Health's tadalafil care works"
         showCareFollowUpNote
       />
 

@@ -60,9 +60,9 @@ export const article: LearnArticle = {
         "Published obesity-trial means do not show that. STEP 1 reported about 14.9% mean weight change with weekly semaglutide 2.4 mg at 68 weeks. ATTAIN-1's treatment-regimen means were about 7.5% and 8.4% at 6 mg and 12 mg orforglipron at 72 weeks; Lilly's Foundayo materials highlight 12.4% at the highest dose among people who stayed on treatment. Cross-trial comparison is imperfect. Route convenience is a separate question from average percent loss.",
     },
     {
-      question: "Does Beema offer orforglipron or Foundayo?",
+      question: "Does Beema Health offer orforglipron or Foundayo?",
       answer:
-        "No. Beema Health does not currently offer orforglipron. Live evaluation is for compounded semaglutide or compounded tirzepatide when a licensed provider finds them appropriate. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. This comparison does not conclude that Beema's compounded semaglutide is better than Foundayo.",
+        "No. Beema Health does not currently offer orforglipron. Live evaluation is for compounded semaglutide or compounded tirzepatide when a licensed provider finds them appropriate. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. This comparison does not conclude that Beema Health's compounded semaglutide is better than Foundayo.",
     },
     {
       question: "Is orforglipron oral semaglutide (Rybelsus or Wegovy pill)?",
@@ -91,7 +91,7 @@ export const article: LearnArticle = {
       heading: "Same receptor family, different chemistry and schedule",
       body: [
         "Both orforglipron and semaglutide activate the GLP-1 receptor. Semaglutide is a peptide, usually injected weekly at obesity doses (2.4 mg in STEP 1 / Wegovy). Orforglipron is a non-peptide small molecule taken by mouth daily. In April 2026 the FDA approved orforglipron as Foundayo for chronic weight management in eligible adults. Semaglutide already had years of FDA-approved branded use.",
-        "This page is educational, not medical advice. Beema does not offer Foundayo. We will not claim compounded semaglutide is the best of the two. We will not run a branded-list-price versus compounded-price table.",
+        "This page is educational, not medical advice. Beema Health does not offer Foundayo. We will not claim compounded semaglutide is the best of the two. We will not run a branded-list-price versus compounded-price table.",
       ],
     },
     {
@@ -109,9 +109,9 @@ export const article: LearnArticle = {
         "Pills fail when days are skipped. Weekly injections fail when someone never learns the pen. Travel, shift work, and swallowing difficulties all matter. Orforglipron's lack of Rybelsus-style fasting rules is a genuine convenience point Lilly emphasized at approval. Convenience still does not erase gastrointestinal class effects.",
       ],
       bullets: [
-        "Orforglipron: daily tablet, small molecule, Foundayo (FDA-approved 2026), not offered by Beema",
+        "Orforglipron: daily tablet, small molecule, Foundayo (FDA-approved 2026), not offered by Beema Health",
         "Semaglutide obesity dose: weekly injection in STEP 1 / Wegovy, larger mean percent loss in that trial",
-        "Beema live offering: compounded semaglutide or tirzepatide after provider review, not Foundayo",
+        "Beema Health live offering: compounded semaglutide or tirzepatide after provider review, not Foundayo",
       ],
     },
     {
@@ -123,9 +123,9 @@ export const article: LearnArticle = {
     },
     {
       id: "access",
-      heading: "Access is not the same as a Beema cart",
+      heading: "Access is not the same as a Beema Health cart",
       body: [
-        "Foundayo is a branded product distributed through channels Lilly described at launch, including retail pharmacies. Beema's telehealth intake does not dispense it. If you want Beema's cash-pay compounded semaglutide, that is a different product with a different regulatory status: not FDA-approved, used only when legally available and clinically appropriate.",
+        "Foundayo is a branded product distributed through channels Lilly described at launch, including retail pharmacies. Beema Health's telehealth intake does not dispense it. If you want Beema Health's cash-pay compounded semaglutide, that is a different product with a different regulatory status: not FDA-approved, used only when legally available and clinically appropriate.",
         "People shopping 'orforglipron research peptide' are in the wrong aisle. Orforglipron is not a peptide. Unverified capsules are not Foundayo.",
       ],
     },
@@ -133,7 +133,7 @@ export const article: LearnArticle = {
       id: "decision",
       heading: "How a clinician might choose",
       body: [
-        "A licensed provider may weigh injection willingness, prior GLP-1 exposure, diabetes status, cardiovascular history (semaglutide 2.4 mg has SELECT data), insurance or cash-pay realities, and tolerability. This article will not pick for them. If you start Beema intake, list every GLP-1 you have tried, including pills, so the reviewer is not flying blind. A prescription is never guaranteed.",
+        "A licensed provider may weigh injection willingness, prior GLP-1 exposure, diabetes status, cardiovascular history (semaglutide 2.4 mg has SELECT data), insurance or cash-pay realities, and tolerability. This article will not pick for them. If you start Beema Health intake, list every GLP-1 you have tried, including pills, so the reviewer is not flying blind. A prescription is never guaranteed.",
       ],
     },
   ],

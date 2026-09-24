@@ -34,9 +34,12 @@ import {
   formatSimpleStartingAt,
 } from "@/lib/simple-treatment-pricing";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
+import tadalafilPhoto from "@/assets/treatments/tadalafil-oral-tablets-bottle.webp";
+import sildenafilPhoto from "@/assets/treatments/sildenafil-oral-tablets-bottle.webp";
+import edMintsPhoto from "@/assets/treatments/ed-mints-tadalafil-sildenafil-rdt.webp";
 
 const TITLE = "Sexual Health Treatment | Beema Health";
-const DESCRIPTION = `Tadalafil (generic Cialis), sildenafil (generic Viagra), and compounded ED Mints, reviewed by licensed providers in all 50 states. From ${formatSimpleStartingAt(ED_TADALAFIL_PRICING)}. Prescribing is never guaranteed.`;
+const DESCRIPTION = `Tadalafil (generic Cialis), sildenafil (generic Viagra), and compounded ED Mints, reviewed by licensed providers. From ${formatSimpleStartingAt(ED_TADALAFIL_PRICING)}. Never guaranteed.`;
 
 export const Route = createFileRoute("/sexual-health")({
   head: () => ({
@@ -89,6 +92,12 @@ export const Route = createFileRoute("/sexual-health")({
  * /ed - it's 2 dissolve-under-the-tongue combo products, each with its own
  * Bask intake, priced identically, so ED_MINTS_RDT_PRICING is used here as
  * the representative "starting at" price for the card.
+ *
+ * Each card's `image` (2026-09-23) reuses the real product photo already
+ * shot for that medication's own money page - tadalafil/sildenafil's
+ * bottle shots, and the RDT ED Mints photo already used for the "Sexual
+ * Health" card on the homepage's WellnessLineupSection, for the same
+ * two-SKU reason described there.
  */
 const LINEUP: CategoryLineupItem[] = [
   {
@@ -97,6 +106,12 @@ const LINEUP: CategoryLineupItem[] = [
     form: "Oral, taken as needed or daily",
     pricing: ED_TADALAFIL_PRICING,
     icon: Pill,
+    image: {
+      src: tadalafilPhoto,
+      alt: "Bottle of Beema Health tadalafil oral tablets, generic Cialis",
+      width: 720,
+      height: 900,
+    },
     to: "/tadalafil/",
   },
   {
@@ -105,6 +120,12 @@ const LINEUP: CategoryLineupItem[] = [
     form: "Oral, taken as needed",
     pricing: ED_SILDENAFIL_PRICING,
     icon: Pill,
+    image: {
+      src: sildenafilPhoto,
+      alt: "Bottle of Beema Health sildenafil oral tablets, generic Viagra",
+      width: 720,
+      height: 900,
+    },
     to: "/sildenafil/",
   },
   {
@@ -113,6 +134,12 @@ const LINEUP: CategoryLineupItem[] = [
     form: "Dissolves under the tongue, no water needed",
     pricing: ED_MINTS_RDT_PRICING,
     icon: Pill,
+    image: {
+      src: edMintsPhoto,
+      alt: "Beema Health ED Mints tadalafil and sildenafil rapidly dissolving tablet",
+      width: 1024,
+      height: 1024,
+    },
     to: "/ed-mints/",
   },
 ];

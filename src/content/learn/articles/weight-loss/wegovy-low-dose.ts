@@ -80,7 +80,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health prescribe low-dose Wegovy?",
       answer:
-        "No. Beema Health does not sell or dispense Wegovy at any dose. This page explains the FDA-labeled strengths. Telehealth medical weight-loss visits at Beema are reviewed by licensed providers. Completing intake does not guarantee a prescription.",
+        "No. Beema Health does not sell or dispense Wegovy at any dose. This page explains the FDA-labeled strengths. Telehealth medical weight-loss visits at Beema Health are reviewed by licensed providers. Completing intake does not guarantee a prescription.",
     },
   ],
   sections: [
@@ -128,7 +128,7 @@ export const article: LearnArticle = {
       id: "beema",
       heading: "Prescription-only and Beema Health",
       body: [
-        "Every Wegovy strength is prescription-only. There is no legitimate cart checkout for a 'low-dose Wegovy' kit online without a licensed clinician. Beema Health does not offer Wegovy. If you are exploring telehealth medical weight loss, Beema's program overview explains how intake and provider review work. That is not a substitute-for-Wegovy claim.",
+        "Every Wegovy strength is prescription-only. There is no legitimate cart checkout for a 'low-dose Wegovy' kit online without a licensed clinician. Beema Health does not offer Wegovy. If you are exploring telehealth medical weight loss, Beema Health's program overview explains how intake and provider review work. That is not a substitute-for-Wegovy claim.",
       ],
     },
   ],

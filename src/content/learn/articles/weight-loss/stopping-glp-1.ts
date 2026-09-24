@@ -80,7 +80,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health tell people to stop branded GLP-1s?",
       answer:
-        "No. This article is educational. Beema Health does not dispense those brands. If you take a GLP-1 from another clinic, talk with that prescriber before stopping. Completing a Beema visit does not create a requirement to stop or start any medicine.",
+        "No. This article is educational. Beema Health does not dispense those brands. If you take a GLP-1 from another clinic, talk with that prescriber before stopping. Completing a Beema Health visit does not create a requirement to stop or start any medicine.",
     },
   ],
   sections: [
@@ -130,7 +130,7 @@ export const article: LearnArticle = {
       id: "beema",
       heading: "Beema Health",
       body: [
-        "If you are exploring telehealth medical weight loss, Beema's program overview explains how a licensed provider reviews intake. That visit is not an instruction to stop a GLP-1 you already use. Bring a full medication list. Prescribing is never guaranteed.",
+        "If you are exploring telehealth medical weight loss, Beema Health's program overview explains how a licensed provider reviews intake. That visit is not an instruction to stop a GLP-1 you already use. Bring a full medication list. Prescribing is never guaranteed.",
       ],
     },
   ],

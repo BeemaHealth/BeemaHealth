@@ -29,10 +29,6 @@ export const LEARN_MONEY_PAGES: Readonly<Record<string, LearnMoneyPage>> = {
     href: "/glp-1-houston/",
     label: "GLP-1 care for Houston",
   },
-  "/trt/": {
-    href: "/trt/",
-    label: "TRT (compounded enclomiphene)",
-  },
   "/oral-finasteride/": {
     href: "/oral-finasteride/",
     label: "Oral finasteride",
@@ -68,10 +64,6 @@ export const LEARN_MONEY_PAGES: Readonly<Record<string, LearnMoneyPage>> = {
   "/hair-loss/": {
     href: "/hair-loss/",
     label: "Hair loss program",
-  },
-  "/wellness/": {
-    href: "/wellness/",
-    label: "Wellness program",
   },
   "/how-it-works/": {
     href: "/how-it-works/",

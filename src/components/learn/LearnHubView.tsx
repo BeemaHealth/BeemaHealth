@@ -179,7 +179,7 @@ function WeightLossMoneyLinks() {
   return (
     <section id="program-pages" className="scroll-mt-28 space-y-4">
       <h2 className="text-xl font-semibold tracking-tight text-foreground md:text-2xl">
-        Live Beema program pages
+        Live Beema Health program pages
       </h2>
       <p className="text-sm leading-relaxed text-muted-foreground">
         These commercial pages are where pricing, intake, and the compounded
@@ -328,7 +328,8 @@ export function LearnHubView({ vertical }: { vertical: LearnVertical }) {
                 No intake for this topic yet
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Beema is not currently offering this therapy. For live care, see{" "}
+                Beema Health is not currently offering this therapy. For live
+                care, see{" "}
                 <Link
                   to={learnPath("weight-loss")}
                   className="font-medium text-foreground underline underline-offset-4 hover:text-primary"

@@ -84,7 +84,7 @@ export const WEIGHT_LOSS_CLUSTERS: readonly LearnCluster[] = [
   {
     id: "branded",
     heading: "Branded GLP-1 medicines, explained",
-    intro: `Ozempic, Wegovy, Mounjaro, Zepbound, Saxenda, and related products are FDA-approved medicines with their own labels. Beema does not sell those brands. If a clinician prescribes, the live offering is compounded semaglutide or compounded tirzepatide. ${COMPOUNDED_DISCLOSURE} These explainers exist so searchers can read labelled facts without mixing them up with compounded products.`,
+    intro: `Ozempic, Wegovy, Mounjaro, Zepbound, Saxenda, and related products are FDA-approved medicines with their own labels. Beema Health does not sell those brands. If a clinician prescribes, the live offering is compounded semaglutide or compounded tirzepatide. ${COMPOUNDED_DISCLOSURE} These explainers exist so searchers can read labelled facts without mixing them up with compounded products.`,
     slugs: [
       "ozempic",
       "wegovy",
@@ -125,7 +125,7 @@ export const WEIGHT_LOSS_CLUSTERS: readonly LearnCluster[] = [
     id: "pipeline",
     heading: "Pipeline medicines, peptides, and adjacent topics",
     intro:
-      "Retatrutide and several other pipeline products are investigational. Orforglipron is FDA-approved as Foundayo but is not a Beema offering. Peptide marketing and supplement claims are often ahead of evidence. These pages separate what is in trials or on another company's label from what this US telehealth clinic can prescribe today.",
+      "Retatrutide and several other pipeline products are investigational. Orforglipron is FDA-approved as Foundayo but is not a Beema Health offering. Peptide marketing and supplement claims are often ahead of evidence. These pages separate what is in trials or on another company's label from what this US telehealth clinic can prescribe today.",
     slugs: [
       "retatrutide",
       "orforglipron",
@@ -146,7 +146,7 @@ export const WEIGHT_LOSS_CLUSTERS: readonly LearnCluster[] = [
     id: "commercial-companions",
     heading: "Online GLP-1 care, cost, and how programs work",
     intro:
-      "If you are comparing telehealth weight-loss programs, start with how intake, prescribing, and pharmacy fulfillment actually work. These companions sit next to Beema's commercial pages without copying their headlines. A prescription always requires a licensed provider. Completing an online form does not guarantee medication.",
+      "If you are comparing telehealth weight-loss programs, start with how intake, prescribing, and pharmacy fulfillment actually work. These companions sit next to Beema Health's commercial pages without copying their headlines. A prescription always requires a licensed provider. Completing an online form does not guarantee medication.",
     slugs: [
       "glp-1-for-weight-loss",
       "glp-1-weight-loss-program",
@@ -178,8 +178,8 @@ export const LEARN_INDEX_META = {
 
 export const LEARN_INDEX_INTRO = [
   "This library is for people who want to read before they talk to a clinician. Articles are unsigned educational pieces with citations. They are not a diagnosis, a prescription, or a promise of results.",
-  `Beema Health's live clinical offerings include online medical weight loss, ED treatment (tadalafil, sildenafil, and ED Mints), oral finasteride for hair loss, and TRT (compounded enclomiphene). ${LEARN_USA_ONLY_SENTENCE} ${LEARN_FIFTY_STATE_SENTENCE} Providers review intake and, when clinically appropriate and legally available, may prescribe compounded semaglutide or compounded tirzepatide for weight loss. ${COMPOUNDED_DISCLOSURE} Completing intake does not guarantee a prescription.`,
-  "ED treatment has its own educational hub covering how tadalafil and sildenafil work and how they're labeled to be dosed, alongside Beema's own compounded formulations. Hair loss has its own educational hub covering how finasteride works, its FDA-labeled dosing, and a realistic results timeline - unlike most other products described in this library, Beema's finasteride is the FDA-approved generic, not a compounded formulation. Testosterone replacement therapy (TRT) has its own educational hub describing the broader category of injectable, gel, and patch testosterone - Beema's own live TRT offering, compounded enclomiphene, works differently and has its own page. Menopausal hormone therapy (HRT) also has its own hub so that search topic has a home; that hub describes the medicine, not a Beema product you can start today.",
+  `Beema Health's live clinical offerings include online medical weight loss, ED treatment (tadalafil, sildenafil, and ED Mints), and oral finasteride for hair loss. ${LEARN_USA_ONLY_SENTENCE} ${LEARN_FIFTY_STATE_SENTENCE} Providers review intake and, when clinically appropriate and legally available, may prescribe compounded semaglutide or compounded tirzepatide for weight loss. ${COMPOUNDED_DISCLOSURE} Completing intake does not guarantee a prescription.`,
+  "ED treatment has its own educational hub covering how tadalafil and sildenafil work and how they're labeled to be dosed, alongside Beema Health's own compounded formulations. Hair loss has its own educational hub covering how finasteride works, its FDA-labeled dosing, and a realistic results timeline - unlike most other products described in this library, Beema Health's finasteride is the FDA-approved generic, not a compounded formulation. Testosterone replacement therapy (TRT) has its own educational hub describing the broader category of injectable, gel, and patch testosterone; Beema Health does not currently offer TRT or the related compounded enclomiphene treatment. Menopausal hormone therapy (HRT) also has its own hub so that search topic has a home; that hub describes the medicine, not a Beema Health product you can start today.",
 ] as const;
 
 export const WEIGHT_LOSS_HUB_META = {
@@ -195,9 +195,9 @@ export const WEIGHT_LOSS_HUB_META = {
 export const WEIGHT_LOSS_HUB_SECTIONS = [
   {
     id: "how-to-use-this-hub",
-    heading: "How this hub is different from Beema's program pages",
+    heading: "How this hub is different from Beema Health's program pages",
     body: [
-      "Beema's commercial pages explain the live telehealth program, pricing, and how to start an online visit. This hub is the educational layer: how glucagon-like peptide-1 (GLP-1) medicines work, what trials measured, and which questions are clinical rather than something a webpage can answer.",
+      "Beema Health's commercial pages explain the live telehealth program, pricing, and how to start an online visit. This hub is the educational layer: how glucagon-like peptide-1 (GLP-1) medicines work, what trials measured, and which questions are clinical rather than something a webpage can answer.",
       "If you already know you want to see whether treatment could be appropriate, the program overview, compounded semaglutide page, and compounded tirzepatide page are the right next clicks. Stay here when you want background first.",
     ],
   },
@@ -213,16 +213,16 @@ export const WEIGHT_LOSS_HUB_SECTIONS = [
     id: "online-glp1",
     heading: 'What "online GLP-1" care actually means',
     body: [
-      "Yes, you can get GLP-1 care online in the United States. A legitimate program is telehealth: you complete a medical intake, a licensed provider reviews it, and a licensed pharmacy dispenses only if that provider says yes. Beema does that in all 50 states, for compounded semaglutide and compounded tirzepatide when they are legally available and clinically appropriate. Completing intake does not guarantee a prescription. You cannot lawfully add a GLP-1 to a cart like a vitamin, and Beema does not sell research peptides. Beema does not serve patients outside the United States.",
-      "Beema's intake is hosted with our clinical partner. Geographic availability, compounding rules, and formulary options still depend on state law and clinical judgment. Cash-pay pricing is disclosed on the [compounded semaglutide](/semaglutide/) and [compounded tirzepatide](/tirzepatide/) pages. This site does not collect insurance information or promise that a plan will cover treatment.",
+      "Yes, you can get GLP-1 care online in the United States. A legitimate program is telehealth: you complete a medical intake, a licensed provider reviews it, and a licensed pharmacy dispenses only if that provider says yes. Beema Health does that in all 50 states, for compounded semaglutide and compounded tirzepatide when they are legally available and clinically appropriate. Completing intake does not guarantee a prescription. You cannot lawfully add a GLP-1 to a cart like a vitamin, and Beema Health does not sell research peptides. Beema Health does not serve patients outside the United States.",
+      "Beema Health's intake is hosted with our clinical partner. Geographic availability, compounding rules, and formulary options still depend on state law and clinical judgment. Cash-pay pricing is disclosed on the [compounded semaglutide](/semaglutide/) and [compounded tirzepatide](/tirzepatide/) pages. This site does not collect insurance information or promise that a plan will cover treatment.",
     ],
   },
   {
     id: "semaglutide-tirzepatide",
     heading: "Semaglutide and tirzepatide, in educational terms",
     body: [
-      "Semaglutide is the active ingredient in more than one FDA-approved branded product, used at different doses and for different labelled indications. Tirzepatide is the active ingredient in other FDA-approved branded products. This hub will not treat those brand names as Beema products. Beema does not sell Wegovy, Zepbound, Ozempic, or Mounjaro.",
-      "When a Beema provider prescribes, the live options are compounded semaglutide and compounded tirzepatide, only when legally available and clinically appropriate. Compounded medications are not FDA-approved and are not the same as those branded products. Lower price does not, by itself, establish medical necessity or therapeutic equivalence.",
+      "Semaglutide is the active ingredient in more than one FDA-approved branded product, used at different doses and for different labelled indications. Tirzepatide is the active ingredient in other FDA-approved branded products. This hub will not treat those brand names as Beema Health products. Beema Health does not sell Wegovy, Zepbound, Ozempic, or Mounjaro.",
+      "When a Beema Health provider prescribes, the live options are compounded semaglutide and compounded tirzepatide, only when legally available and clinically appropriate. Compounded medications are not FDA-approved and are not the same as those branded products. Lower price does not, by itself, establish medical necessity or therapeutic equivalence.",
     ],
   },
   {
@@ -237,9 +237,9 @@ export const WEIGHT_LOSS_HUB_SECTIONS = [
 
 export const WEIGHT_LOSS_HUB_FAQS: readonly LearnFaq[] = [
   {
-    question: "Is this the same as Beema's weight-loss program page?",
+    question: "Is this the same as Beema Health's weight-loss program page?",
     answer:
-      "No. The program page describes Beema's live telehealth service, cash-pay pricing, and how to start intake. This hub is educational: mechanisms, trial context, and topic clusters. Use both if you want background plus the actual offer.",
+      "No. The program page describes Beema Health's live telehealth service, cash-pay pricing, and how to start intake. This hub is educational: mechanisms, trial context, and topic clusters. Use both if you want background plus the actual offer.",
   },
   getGlp1OnlineWithBeemaFaq(),
   {
@@ -249,15 +249,15 @@ export const WEIGHT_LOSS_HUB_FAQS: readonly LearnFaq[] = [
   },
   {
     question:
-      "Does Beema offer branded Wegovy, Zepbound, Ozempic, or Mounjaro?",
+      "Does Beema Health offer branded Wegovy, Zepbound, Ozempic, or Mounjaro?",
     answer:
-      "No. Beema's live offering is compounded semaglutide and compounded tirzepatide when a licensed provider decides they are appropriate and they are legally available. " +
+      "No. Beema Health's live offering is compounded semaglutide and compounded tirzepatide when a licensed provider decides they are appropriate and they are legally available. " +
       COMPOUNDED_DISCLOSURE,
   },
   {
-    question: "Will insurance cover online GLP-1 care through Beema?",
+    question: "Will insurance cover online GLP-1 care through Beema Health?",
     answer:
-      "Beema's marketing site describes cash-pay pricing. This library does not claim insurance coverage, prior authorization, or that a specific plan will pay for medication or visits.",
+      "Beema Health's marketing site describes cash-pay pricing. This library does not claim insurance coverage, prior authorization, or that a specific plan will pay for medication or visits.",
   },
 ];
 
@@ -292,19 +292,19 @@ export const WEIGHT_LOSS_HUB_SOURCES = [
 export const TRT_HUB_META = {
   title: "TRT Education | Beema Health Learn",
   h1: "Testosterone replacement therapy: an educational overview",
-  eyebrow: "Educational overview",
+  eyebrow: "Educational only - not a Beema Health product",
   description:
-    "Overview of testosterone replacement therapy: guidelines, diagnosis, and risks. Beema's live offering is compounded enclomiphene, a distinct treatment.",
+    "Overview of testosterone replacement therapy: guidelines, diagnosis, and risks. Beema Health does not currently offer TRT or compounded enclomiphene.",
   ogDescription:
-    "Unsigned education on TRT and hypogonadism. Beema's live TRT offering is compounded enclomiphene, which works differently than the injectable, gel, or patch testosterone described on this page.",
+    "Unsigned education on TRT and hypogonadism, and how it differs from compounded enclomiphene - a related treatment Beema Health does not currently offer.",
 } as const;
 
 export const TRT_HUB_SECTIONS = [
   {
     id: "status",
-    heading: "What Beema actually offers",
+    heading: "Beema Health does not offer TRT today",
     body: [
-      "This hub is a general educational overview of testosterone replacement therapy as described in clinical guidelines - typically intramuscular injections, transdermal gels, or patches that replace testosterone directly. Beema Health's live TRT offering is different: compounded enclomiphene, an oral medication that encourages the body to produce more of its own testosterone rather than replacing it. See Beema's TRT page for enclomiphene-specific care, pricing, and eligibility. A licensed provider decides, case by case, whether enclomiphene or any treatment is appropriate; prescribing is never guaranteed.",
+      "This hub is educational. Beema Health is not currently offering testosterone replacement therapy, injectable/gel/patch testosterone, or compounded enclomiphene (a related but distinct oral medication that encourages the body to produce more of its own testosterone rather than replacing it directly). There is no TRT price list here, because that product is not currently offered. Beema Health's live clinical offerings are medical weight loss, hair loss, sexual health (ED), NAD+, and sermorelin.",
     ],
   },
   {
@@ -328,26 +328,26 @@ export const TRT_HUB_SECTIONS = [
     heading: "Monitoring and risks readers should know exist",
     body: [
       "Clinicians who prescribe testosterone typically monitor hematocrit, prostate-specific antigen when appropriate, testosterone levels, and symptoms. Erythrocytosis, edema, acne, reduced sperm production, and untreated sleep apnea getting worse are among the issues discussed in guidelines. Fertility plans matter because exogenous testosterone can suppress spermatogenesis.",
-      "If you think you might have hypogonadism, the next step is a clinician who can order the right tests, not a marketing quiz. Beema's learn library will not collect those results.",
+      "If you think you might have hypogonadism, the next step is a clinician who can order the right tests, not a marketing quiz. Beema Health's learn library will not collect those results.",
     ],
   },
 ] as const;
 
 export const TRT_HUB_FAQS: readonly LearnFaq[] = [
   {
-    question: "Does Beema currently offer a TRT intake?",
+    question: "Does Beema Health currently offer a TRT intake?",
     answer:
-      "Beema offers compounded enclomiphene, a related but distinct treatment that encourages the body to produce more of its own testosterone rather than replacing it directly, unlike the injectable, gel, or patch testosterone described on this page. See Beema's TRT page for enclomiphene-specific care, pricing, and eligibility. A licensed provider decides, case by case, whether it's appropriate; prescribing is never guaranteed.",
+      "No. Beema Health does not currently offer TRT or an intake for it. Compounded enclomiphene - a related but distinct oral medication that encourages the body to produce more of its own testosterone rather than replacing it directly - is not currently offered either.",
   },
   {
     question: "Is TRT the same as a GLP-1 weight-loss program?",
     answer:
-      "No. They are different medicines, different diagnoses, and different monitoring. Beema's compounded enclomiphene program is separate from its GLP-1 weight-loss care.",
+      "No. They are different medicines, different diagnoses, and different monitoring, and Beema Health does not currently offer TRT or compounded enclomiphene at all.",
   },
   {
     question: "Where should I go if I need testosterone evaluated?",
     answer:
-      "Talk with a licensed clinician, often in endocrinology, urology, or primary care, who can interpret morning testosterone assays and your history. If you're specifically interested in Beema's compounded enclomiphene program, see Beema's TRT page - a licensed provider there reviews your intake and independently decides whether it may be appropriate.",
+      "Talk with a licensed clinician, often in endocrinology, urology, or primary care, who can interpret morning testosterone assays and your history. Beema Health does not currently offer TRT or compounded enclomiphene.",
   },
 ];
 
@@ -372,19 +372,19 @@ export const TRT_HUB_SOURCES = [
 export const HRT_HUB_META = {
   title: "HRT Education | Beema Health Learn",
   h1: "Menopausal hormone therapy: an educational overview",
-  eyebrow: "Educational only - not a Beema product",
+  eyebrow: "Educational only - not a Beema Health product",
   description:
-    "Educational overview of menopausal hormone therapy, including benefits, risks, and guideline context. Beema does not offer HRT today.",
+    "Educational overview of menopausal hormone therapy, including benefits, risks, and guideline context. Beema Health does not offer HRT today.",
   ogDescription:
-    "Unsigned education on menopausal hormone therapy. Beema's live clinical offering is medical weight-loss care, not HRT.",
+    "Unsigned education on menopausal hormone therapy. Beema Health's live clinical offering is medical weight-loss care, not HRT.",
 } as const;
 
 export const HRT_HUB_SECTIONS = [
   {
     id: "status",
-    heading: "Beema does not offer HRT today",
+    heading: "Beema Health does not offer HRT today",
     body: [
-      "This hub is educational. Beema Health is not currently offering menopausal hormone therapy, estrogen or progesterone prescriptions for menopause, or an HRT intake. There is no HRT price list and no patient reviews of an HRT product here, because that product does not exist at Beema yet. Our live offering remains provider-reviewed medical weight-loss care.",
+      "This hub is educational. Beema Health is not currently offering menopausal hormone therapy, estrogen or progesterone prescriptions for menopause, or an HRT intake. There is no HRT price list and no patient reviews of an HRT product here, because that product does not exist at Beema Health yet. Our live offering remains provider-reviewed medical weight-loss care.",
     ],
   },
   {
@@ -407,16 +407,16 @@ export const HRT_HUB_SECTIONS = [
     id: "not-weight-loss",
     heading: "Hormone therapy is not a GLP-1 weight-loss program",
     body: [
-      "Weight can change around menopause for many reasons. Hormone therapy is not approved as a primary obesity drug the way some GLP-1 receptor agonists are for chronic weight management. Mixing those search intents is how people end up on the wrong page. If your question is about GLP-1 medicines, use the weight-loss learn hub and Beema's program pages.",
+      "Weight can change around menopause for many reasons. Hormone therapy is not approved as a primary obesity drug the way some GLP-1 receptor agonists are for chronic weight management. Mixing those search intents is how people end up on the wrong page. If your question is about GLP-1 medicines, use the weight-loss learn hub and Beema Health's program pages.",
     ],
   },
 ] as const;
 
 export const HRT_HUB_FAQS: readonly LearnFaq[] = [
   {
-    question: "Can I start HRT with Beema?",
+    question: "Can I start HRT with Beema Health?",
     answer:
-      "No. Beema does not currently offer menopausal hormone therapy or an HRT intake.",
+      "No. Beema Health does not currently offer menopausal hormone therapy or an HRT intake.",
   },
   {
     question: "Is HRT the same as TRT?",
@@ -457,7 +457,7 @@ export const ED_HUB_META = {
   h1: "Erectile dysfunction treatment, explained",
   eyebrow: "ED education",
   description:
-    "Educational overview of tadalafil, sildenafil, and combination ED treatment: how they work, labeled dosing, and what Beema actually offers.",
+    "Educational overview of tadalafil, sildenafil, and combination ED treatment: how they work, labeled dosing, and what Beema Health actually offers.",
   ogDescription:
     "Unsigned education on tadalafil and sildenafil dosing and how compounded ED combination formulations differ from single-ingredient tablets.",
 } as const;
@@ -465,9 +465,9 @@ export const ED_HUB_META = {
 export const ED_HUB_SECTIONS = [
   {
     id: "how-to-use-this-hub",
-    heading: "How this hub is different from Beema's ED pages",
+    heading: "How this hub is different from Beema Health's ED pages",
     body: [
-      "Beema's commercial pages (Tadalafil, Sildenafil, and ED Mints) explain the live telehealth program, pricing, and how to start an online visit. This hub is the educational layer: how these medicines work, the labeled dosing ranges for each active ingredient, and how Beema's tadalafil and sildenafil (the FDA-approved generics of Cialis and Viagra) relate to ED Mints, a separate compounded combination formulation.",
+      "Beema Health's commercial pages (Tadalafil, Sildenafil, and ED Mints) explain the live telehealth program, pricing, and how to start an online visit. This hub is the educational layer: how these medicines work, the labeled dosing ranges for each active ingredient, and how Beema Health's tadalafil and sildenafil (the FDA-approved generics of Cialis and Viagra) relate to ED Mints, a separate compounded combination formulation.",
       "If you already know which formulation you want to learn about, go straight to the Tadalafil, Sildenafil, or ED Mints page. Stay here for background on dosing and how the two active ingredients work before you compare options.",
     ],
   },
@@ -492,29 +492,29 @@ export const ED_HUB_SECTIONS = [
     heading: "Combination and dissolve-under-the-tongue formulations",
     body: [
       "Some compounding pharmacies prepare formulations that combine tadalafil and sildenafil into a single dose, or add a third ingredient such as oxytocin, and deliver them as a tablet that dissolves under the tongue rather than being swallowed with water. These combination and dissolve-under-the-tongue formulations are not FDA-approved products - they are not sold as a single commercial product by any pharmaceutical manufacturer, and they should not be assumed identical in effect, strength, or safety profile to the single-ingredient tablets described above, even though they share active ingredients with them.",
-      "Oxytocin's role in erectile and sexual function has been studied mainly in animal models and small human studies, not in the large randomized trials that support tadalafil's and sildenafil's FDA labels. Beema does not claim oxytocin is proven to improve outcomes when added to a compounded formulation.",
+      "Oxytocin's role in erectile and sexual function has been studied mainly in animal models and small human studies, not in the large randomized trials that support tadalafil's and sildenafil's FDA labels. Beema Health does not claim oxytocin is proven to improve outcomes when added to a compounded formulation.",
     ],
   },
   {
     id: "what-beema-offers",
-    heading: "What Beema actually offers",
+    heading: "What Beema Health actually offers",
     body: [
-      `Beema's live ED formulations are tadalafil (generic Cialis), sildenafil (generic Viagra), and ED Mints (two dissolve-under-the-tongue combination formulations). ${GENERIC_TADALAFIL_REQUIRED} ${GENERIC_SILDENAFIL_REQUIRED} ${COMPOUNDED_ED_MINTS_REQUIRED} A licensed provider reviews each patient's intake and independently decides which formulation and dose, if any, may be appropriate; completing intake does not guarantee a prescription.`,
+      `Beema Health's live ED formulations are tadalafil (generic Cialis), sildenafil (generic Viagra), and ED Mints (two dissolve-under-the-tongue combination formulations). ${GENERIC_TADALAFIL_REQUIRED} ${GENERIC_SILDENAFIL_REQUIRED} ${COMPOUNDED_ED_MINTS_REQUIRED} A licensed provider reviews each patient's intake and independently decides which formulation and dose, if any, may be appropriate; completing intake does not guarantee a prescription.`,
     ],
   },
 ] as const;
 
 export const ED_HUB_FAQS: readonly LearnFaq[] = [
   {
-    question: "Is this the same as Beema's ED treatment pages?",
+    question: "Is this the same as Beema Health's ED treatment pages?",
     answer:
-      "No. The Tadalafil, Sildenafil, and ED Mints pages describe Beema's live telehealth service, cash-pay pricing, and how to start intake. This hub is educational: how the medicines work and how they're labeled to be dosed. Use both if you want background plus the actual offer.",
+      "No. The Tadalafil, Sildenafil, and ED Mints pages describe Beema Health's live telehealth service, cash-pay pricing, and how to start intake. This hub is educational: how the medicines work and how they're labeled to be dosed. Use both if you want background plus the actual offer.",
   },
   {
     question:
-      "Is Beema's tadalafil or sildenafil the same as Cialis or Viagra?",
+      "Is Beema Health's tadalafil or sildenafil the same as Cialis or Viagra?",
     answer:
-      "Yes, for the single-ingredient tablets. Beema's tadalafil and sildenafil are the FDA-approved generic versions of Cialis and Viagra - the identical active ingredient, strength, and intended use as the brand-name products, dispensed by a licensed pharmacy, not a compounded formulation. ED Mints is different: it's a compounded combination formulation, not sold as a single commercial product by any manufacturer, and should not be assumed identical in effect to the single-ingredient tablets.",
+      "Yes, for the single-ingredient tablets. Beema Health's tadalafil and sildenafil are the FDA-approved generic versions of Cialis and Viagra - the identical active ingredient, strength, and intended use as the brand-name products, dispensed by a licensed pharmacy, not a compounded formulation. ED Mints is different: it's a compounded combination formulation, not sold as a single commercial product by any manufacturer, and should not be assumed identical in effect to the single-ingredient tablets.",
   },
   {
     question: "Can I choose my own dose from this article?",
@@ -522,9 +522,9 @@ export const ED_HUB_FAQS: readonly LearnFaq[] = [
       "No. Prescription medications require a licensed provider. This hub describes labeled dosing ranges for education only; it cannot diagnose you, prescribe a dose, or guarantee a prescription.",
   },
   {
-    question: "Does Beema offer branded Viagra or Cialis?",
+    question: "Does Beema Health offer branded Viagra or Cialis?",
     answer:
-      "Beema's tadalafil and sildenafil are the FDA-approved generic versions of Cialis and Viagra - not the branded, name-on-the-bottle product, but the identical generic drug a pharmacy would dispense for a Cialis or Viagra prescription. Beema also offers ED Mints, a separate compounded combination formulation, when a licensed provider decides it is appropriate and it is legally available.",
+      "Beema Health's tadalafil and sildenafil are the FDA-approved generic versions of Cialis and Viagra - not the branded, name-on-the-bottle product, but the identical generic drug a pharmacy would dispense for a Cialis or Viagra prescription. Beema Health also offers ED Mints, a separate compounded combination formulation, when a licensed provider decides it is appropriate and it is legally available.",
   },
 ];
 
@@ -554,17 +554,17 @@ export const HAIRLOSS_HUB_META = {
   h1: "Finasteride for hair loss, explained",
   eyebrow: "Hair loss education",
   description:
-    "Educational overview of oral finasteride for male pattern hair loss: how it works, FDA-labeled dosing, timeline, and what Beema's finasteride offering is.",
+    "Educational overview of oral finasteride for male pattern hair loss: how it works, FDA-labeled dosing, timeline, and what Beema Health's finasteride offering is.",
   ogDescription:
-    "Unsigned education on finasteride for hair loss, including labeled dosing, results timeline, and safety, plus what Beema's own offering is.",
+    "Unsigned education on finasteride for hair loss, including labeled dosing, results timeline, and safety, plus what Beema Health's own offering is.",
 } as const;
 
 export const HAIRLOSS_HUB_SECTIONS = [
   {
     id: "how-to-use-this-hub",
-    heading: "How this hub is different from Beema's finasteride page",
+    heading: "How this hub is different from Beema Health's finasteride page",
     body: [
-      "Beema's commercial oral finasteride page explains the live telehealth program, pricing, and how to start an online visit. This hub is the educational layer: how finasteride works on hair loss, its FDA-labeled dosing, and a realistic timeline for results.",
+      "Beema Health's commercial oral finasteride page explains the live telehealth program, pricing, and how to start an online visit. This hub is the educational layer: how finasteride works on hair loss, its FDA-labeled dosing, and a realistic timeline for results.",
       "If you already know you want to see whether treatment could be appropriate, the oral finasteride page is the right next click. Stay here when you want background first.",
     ],
   },
@@ -586,23 +586,23 @@ export const HAIRLOSS_HUB_SECTIONS = [
   },
   {
     id: "what-beema-offers",
-    heading: "What Beema actually offers",
+    heading: "What Beema Health actually offers",
     body: [
-      "Beema's live finasteride offering is the FDA-approved generic version of Propecia - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy. Unlike most other treatments in this learn library, it is not a compounded formulation. A licensed provider reviews each patient's intake and independently decides whether finasteride may be appropriate; completing intake does not guarantee a prescription.",
+      "Beema Health's live finasteride offering is the FDA-approved generic version of Propecia - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy. Unlike most other treatments in this learn library, it is not a compounded formulation. A licensed provider reviews each patient's intake and independently decides whether finasteride may be appropriate; completing intake does not guarantee a prescription.",
     ],
   },
 ] as const;
 
 export const HAIRLOSS_HUB_FAQS: readonly LearnFaq[] = [
   {
-    question: "Is this the same as Beema's oral finasteride page?",
+    question: "Is this the same as Beema Health's oral finasteride page?",
     answer:
-      "No. The oral finasteride page describes Beema's live telehealth service, cash-pay pricing, and how to start intake. This hub is educational: how finasteride works, its labeled dosing, and a realistic results timeline. Use both if you want background plus the actual offer.",
+      "No. The oral finasteride page describes Beema Health's live telehealth service, cash-pay pricing, and how to start intake. This hub is educational: how finasteride works, its labeled dosing, and a realistic results timeline. Use both if you want background plus the actual offer.",
   },
   {
-    question: "Is compounded finasteride the same as what Beema offers?",
+    question: "Is compounded finasteride the same as what Beema Health offers?",
     answer:
-      "Beema does not sell a compounded finasteride product. Beema's finasteride is the FDA-approved generic version of Propecia, dispensed by a licensed pharmacy at the labeled 1 mg dose - not a custom-compounded formulation.",
+      "Beema Health does not sell a compounded finasteride product. Beema Health's finasteride is the FDA-approved generic version of Propecia, dispensed by a licensed pharmacy at the labeled 1 mg dose - not a custom-compounded formulation.",
   },
   {
     question: "Can I choose my own dose from this article?",
@@ -673,7 +673,7 @@ export const LEARN_HUBS: Record<LearnVertical, LearnHubCopy> = {
     sources: ED_HUB_SOURCES,
     productLive: true,
     liveCta: {
-      headline: "Beema's live offering includes compounded ED care",
+      headline: "Beema Health's live offering includes compounded ED care",
       ctaId: CTA_IDS.sexual_health_hero,
     },
   },
@@ -685,7 +685,8 @@ export const LEARN_HUBS: Record<LearnVertical, LearnHubCopy> = {
     sources: HAIRLOSS_HUB_SOURCES,
     productLive: true,
     liveCta: {
-      headline: "Beema's live offering is FDA-approved generic finasteride",
+      headline:
+        "Beema Health's live offering is FDA-approved generic finasteride",
       ctaId: CTA_IDS.oral_finasteride_hero,
     },
   },

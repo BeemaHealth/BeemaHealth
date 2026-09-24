@@ -27,7 +27,7 @@ type Step = {
 };
 
 /**
- * The single source of truth for Beema's 3-step journey. Used verbatim by
+ * The single source of truth for Beema Health's 3-step journey. Used verbatim by
  * the home page, /how-it-works, and the tirzepatide/semaglutide treatment
  * pages via <HowItWorksSteps /> so those surfaces never drift out of sync.
  */

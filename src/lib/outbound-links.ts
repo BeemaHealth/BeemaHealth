@@ -8,11 +8,11 @@
  *
  * Commercial destinations are different. Novo Nordisk and Eli Lilly now sell
  * GLP-1 medication direct to consumers through NovoCare Pharmacy and
- * LillyDirect, which makes them competitors for the same searches Beema is
+ * LillyDirect, which makes them competitors for the same searches Beema Health is
  * trying to rank for, not just label publishers. Price-comparison and review
  * sites are commercial too. Those links stay visible and clickable, because
  * removing a citation would be worse than linking to it, but they are marked
- * `nofollow` so Beema is not handing ranking signal to a competitor.
+ * `nofollow` so Beema Health is not handing ranking signal to a competitor.
  *
  * Answer engines still read nofollow links and their labels, so this costs
  * nothing for AEO.
@@ -95,7 +95,7 @@ function hostOf(href: string): string | null {
   }
 }
 
-/** Beema's own hosts. Self-links are never nofollowed. */
+/** Beema Health's own hosts. Self-links are never nofollowed. */
 const OWN_HOSTS: readonly string[] = ["beemahealth.com", "www.beemahealth.com"];
 
 /** True when the destination publishes primary, non-commercial material. */

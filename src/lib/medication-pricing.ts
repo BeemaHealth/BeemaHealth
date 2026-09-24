@@ -298,7 +298,7 @@ export function dualCompoundedShortPricingLine(): string {
   const tirzLead = tirz.starterPack
     ? `from ${formatUsdFixed(tirz.starterPack.monthlyEquivalentUsd)}/mo`
     : `from ${formatUsdFixed(getPlan(tirz, 12).monthlyUsd)}/mo`;
-  return `Semaglutide from ${formatUsdFixed(promoFirstMonthUsd(sema))}/mo · Tirzepatide ${tirzLead}`;
+  return `Semaglutide ${formatUsdFixed(promoFirstMonthUsd(sema))} first month · Tirzepatide ${tirzLead}`;
 }
 
 /**
@@ -319,7 +319,7 @@ export function dualCompoundedPromoShortPricingLine(): string {
   const sema = COMPOUNDED_SEMAGLUTIDE_PRICING;
   const tirz = COMPOUNDED_TIRZEPATIDE_PRICING;
   const pack = tirz.starterPack;
-  return `Semaglutide from ${formatUsdFixed(promoFirstMonthUsd(sema))}/mo · Tirz starter from ${formatUsdFixed(pack.monthlyEquivalentUsd)}/mo`;
+  return `Semaglutide ${formatUsdFixed(promoFirstMonthUsd(sema))} first month · Tirz starter from ${formatUsdFixed(pack.monthlyEquivalentUsd)}/mo`;
 }
 
 /**

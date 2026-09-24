@@ -62,7 +62,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health offer mazdutide?",
       answer:
-        "No. Beema Health does not prescribe, compound, or waitlist mazdutide. U.S. care through Beema, when a licensed provider agrees it is appropriate, uses compounded semaglutide or compounded tirzepatide. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
+        "No. Beema Health does not prescribe, compound, or waitlist mazdutide. U.S. care through Beema Health, when a licensed provider agrees it is appropriate, uses compounded semaglutide or compounded tirzepatide. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
     },
     {
       question: "How is mazdutide different from tirzepatide?",
@@ -72,7 +72,7 @@ export const article: LearnArticle = {
     {
       question: "Can a U.S. compounding pharmacy make mazdutide?",
       answer:
-        "A China approval does not place mazdutide on a lawful U.S. compounding pathway for general weight-loss use. Buying unlabeled 'mazdutide' from a peptide shop is not a prescription from a licensed U.S. provider. Beema will not source it.",
+        "A China approval does not place mazdutide on a lawful U.S. compounding pathway for general weight-loss use. Buying unlabeled 'mazdutide' from a peptide shop is not a prescription from a licensed U.S. provider. Beema Health will not source it.",
     },
     {
       question: "Why do some articles quote 13% or 14% weight loss?",
@@ -98,7 +98,7 @@ export const article: LearnArticle = {
       id: "us-status",
       heading: "Why U.S. headlines overstate access",
       body: [
-        "U.S. social posts sometimes treat any overseas approval as if the drug is 'out.' That is not how FDA law works. A new active ingredient generally needs its own U.S. application, manufacturing data, and review. As of August 2026, mazdutide does not appear as an FDA-approved U.S. product. There is no Beema checkout for it, and there should be no gray-market workaround.",
+        "U.S. social posts sometimes treat any overseas approval as if the drug is 'out.' That is not how FDA law works. A new active ingredient generally needs its own U.S. application, manufacturing data, and review. As of August 2026, mazdutide does not appear as an FDA-approved U.S. product. There is no Beema Health checkout for it, and there should be no gray-market workaround.",
         "Lilly's U.S. obesity pipeline that U.S. patients actually hear about in 2026 is different: tirzepatide is already marketed under brand names, orforglipron was approved as Foundayo, and retatrutide remains investigational. Mazdutide is the China-focused dual glucagon/GLP-1 story. Conflating those assets leads people to buy mislabeled peptides.",
       ],
     },
@@ -133,10 +133,10 @@ export const article: LearnArticle = {
     },
     {
       id: "beema-status",
-      heading: "What Beema can discuss instead",
+      heading: "What Beema Health can discuss instead",
       body: [
         "Beema Health provides nationwide telehealth intake for adults 18 and older. A licensed provider may prescribe compounded semaglutide or compounded tirzepatide when it is legally available and clinically appropriate. Compounded semaglutide is not FDA-approved. Compounded tirzepatide is not FDA-approved. Neither is mazdutide in the United States.",
-        "If mazdutide news is what you wanted to understand, you now have the geographic fact that matters: China yes, FDA no, Beema no. For care that exists today, use the live weight-loss, semaglutide, and tirzepatide pages.",
+        "If mazdutide news is what you wanted to understand, you now have the geographic fact that matters: China yes, FDA no, Beema Health no. For care that exists today, use the live weight-loss, semaglutide, and tirzepatide pages.",
       ],
     },
   ],

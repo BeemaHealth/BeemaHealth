@@ -17,7 +17,7 @@ export const article: LearnArticle = {
   title: "Tirzepatide Online: Telehealth in All 50 US States",
   h1: "Yes, you can get tirzepatide online through licensed telehealth",
   description:
-    "Yes. Beema can evaluate you online in all 50 US states. If prescribed, it is compounded tirzepatide when legally available. Prescription not guaranteed.",
+    "Yes. Beema Health can evaluate you online in all 50 US states. If prescribed, it is compounded tirzepatide when legally available. Prescription not guaranteed.",
   keywords: [
     "tirzepatide online",
     "tirzepatide houston",
@@ -71,27 +71,27 @@ export const article: LearnArticle = {
   faqs: [
     buyGlp1OnlineFaq({ molecule: "tirzepatide" }),
     {
-      question: "Does Beema sell Zepbound or Mounjaro online?",
+      question: "Does Beema Health sell Zepbound or Mounjaro online?",
       answer:
-        "No. Beema does not offer those brands. If a Beema clinician prescribes tirzepatide, it is compounded tirzepatide when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. It is not the branded product.",
+        "No. Beema Health does not offer those brands. If a Beema Health clinician prescribes tirzepatide, it is compounded tirzepatide when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. It is not the branded product.",
     },
     {
       question:
         "I searched tirzepatide Houston and tirzepatide Texas. Do I have to live there?",
       answer:
-        "Beema serves all 50 states, including Texas and the Houston metro. Local keywords describe where you live, not a requirement to sit in a particular waiting room. See the [tirzepatide in Houston](/learn/weight-loss/tirzepatide-in-houston/) and [tirzepatide in Texas](/learn/weight-loss/tirzepatide-in-texas/) guides for regional context.",
+        "Beema Health serves all 50 states, including Texas and the Houston metro. Local keywords describe where you live, not a requirement to sit in a particular waiting room. See the [tirzepatide in Houston](/learn/weight-loss/tirzepatide-in-houston/) and [tirzepatide in Texas](/learn/weight-loss/tirzepatide-in-texas/) guides for regional context.",
     },
     {
       question: "How well did tirzepatide work in trials?",
       answer:
-        "Those figures come from trials of FDA-approved tirzepatide products (Zepbound for chronic weight management; related branded diabetes product Mounjaro), not from compounded tirzepatide. SURMOUNT-1 reported substantial mean weight reduction versus placebo at 72 weeks in adults with obesity, with the 15 mg group about 20.9% in that trial. SURMOUNT-5, an open-label head-to-head versus semaglutide, reported 20.2% versus 13.7% mean loss at 72 weeks. Averages are not a personal promise, are not a Beema outcome guarantee, and should not be treated as proof that compounded tirzepatide matches those branded products or has the same trial evidence.",
+        "Those figures come from trials of FDA-approved tirzepatide products (Zepbound for chronic weight management; related branded diabetes product Mounjaro), not from compounded tirzepatide. SURMOUNT-1 reported substantial mean weight reduction versus placebo at 72 weeks in adults with obesity, with the 15 mg group about 20.9% in that trial. SURMOUNT-5, an open-label head-to-head versus semaglutide, reported 20.2% versus 13.7% mean loss at 72 weeks. Averages are not a personal promise, are not a Beema Health outcome guarantee, and should not be treated as proof that compounded tirzepatide matches those branded products or has the same trial evidence.",
     },
     {
-      question: "What is Beema's starter pack?",
+      question: "What is Beema Health's starter pack?",
       answer: learnTirzStarterPackFaqAnswer(),
     },
     {
-      question: "Is this page Beema's tirzepatide money page?",
+      question: "Is this page Beema Health's tirzepatide money page?",
       answer:
         "No. The [compounded tirzepatide](/tirzepatide/) page is the commercial page. This article explains lawful online access so 'tirzepatide online' is not a gray-market query.",
     },
@@ -101,7 +101,7 @@ export const article: LearnArticle = {
       id: "online-means",
       heading: "You can start tirzepatide without driving to a clinic",
       body: [
-        "You can start tirzepatide without driving to a clinic. Online here means the visit: intake, a licensed clinician, then a pharmacy if they prescribe. Through Beema, that medicine is compounded tirzepatide when it is legally available and clinically appropriate, not a branded Zepbound or Mounjaro pen. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
+        "You can start tirzepatide without driving to a clinic. Online here means the visit: intake, a licensed clinician, then a pharmacy if they prescribe. Through Beema Health, that medicine is compounded tirzepatide when it is legally available and clinically appropriate, not a branded Zepbound or Mounjaro pen. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
         "Tirzepatide is a dual GIP and GLP-1 receptor agonist used in branded form as Mounjaro (diabetes) and Zepbound (chronic weight management). Getting it online should mean a licensed visit, not a vial catalog.",
       ],
     },
@@ -116,7 +116,7 @@ export const article: LearnArticle = {
       id: "steps",
       heading: "Steps for a lawful online start",
       body: [
-        "Complete intake with your location (Texas, Houston, or any other state), history, and current medicines. Disclose prior GLP-1 use and doses. A licensed provider reviews. If they prescribe, pharmacy fulfillment and shipping follow. Follow-up handles titration. No payment is required to begin Beema intake. No one can promise approval.",
+        "Complete intake with your location (Texas, Houston, or any other state), history, and current medicines. Disclose prior GLP-1 use and doses. A licensed provider reviews. If they prescribe, pharmacy fulfillment and shipping follow. Follow-up handles titration. No payment is required to begin Beema Health intake. No one can promise approval.",
         "If you work heat-heavy jobs in Texas or commute long Houston hours, say so. Delayed gastric emptying plus skipped meals is a common nausea setup. That detail helps the clinician pace titration. It is not a reason to buy an unregulated dual-agonist peptide labeled for research.",
       ],
     },
@@ -124,7 +124,7 @@ export const article: LearnArticle = {
       id: "compounded",
       heading: "Compounded versus branded - status, not a price war",
       body: [
-        "Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. It is not Zepbound, and it is not interchangeable with that branded product. Beema states that on the commercial page and will not run a branded-versus-compounded value table here. If you prefer an FDA-approved brand, say so on intake; Beema still does not sell those brands.",
+        "Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. It is not Zepbound, and it is not interchangeable with that branded product. Beema Health states that on the commercial page and will not run a branded-versus-compounded value table here. If you prefer an FDA-approved brand, say so on intake; Beema Health still does not sell those brands.",
       ],
     },
     {
@@ -138,7 +138,7 @@ export const article: LearnArticle = {
       id: "local",
       heading: "Houston and Texas searches",
       body: [
-        `Tirzepatide Houston and tirzepatide doctor Houston are location queries. Beema can evaluate you in Houston under the same 50-state telehealth model. Read [tirzepatide in Houston](/learn/weight-loss/tirzepatide-in-houston/) for heat, storage, and local access. For statewide rules, see [tirzepatide in Texas](/learn/weight-loss/tirzepatide-in-texas/). A Houston search still requires a licensed prescriber and a licensed pharmacy, not a social-media seller. ${LEARN_USA_ONLY_SENTENCE}`,
+        `Tirzepatide Houston and tirzepatide doctor Houston are location queries. Beema Health can evaluate you in Houston under the same 50-state telehealth model. Read [tirzepatide in Houston](/learn/weight-loss/tirzepatide-in-houston/) for heat, storage, and local access. For statewide rules, see [tirzepatide in Texas](/learn/weight-loss/tirzepatide-in-texas/). A Houston search still requires a licensed prescriber and a licensed pharmacy, not a social-media seller. ${LEARN_USA_ONLY_SENTENCE}`,
       ],
     },
   ],

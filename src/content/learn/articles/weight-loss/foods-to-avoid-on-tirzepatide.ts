@@ -99,7 +99,7 @@ export const article: LearnArticle = {
       heading: "This is a trigger pattern, not a purity diet",
       body: [
         "Search results for “foods to avoid on tirzepatide” often read like a punishment list. The useful version is narrower: tirzepatide delays gastric emptying, so large, greasy, or very sweet meals are more likely to feel bad, especially while the dose is increasing. SURMOUNT-1 and the Zepbound/Mounjaro labels document gastrointestinal events as the dominant adverse-reaction group. They do not rank pizza versus salad as a moral failure.",
-        "Beema’s compounded tirzepatide page, if you are exploring care, is a separate commercial conversation. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate, and completing intake never guarantees a prescription. This article stays educational. It does not tell you to start, stop, or switch a medicine based on lunch.",
+        "Beema Health’s compounded tirzepatide page, if you are exploring care, is a separate commercial conversation. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate, and completing intake never guarantees a prescription. This article stays educational. It does not tell you to start, stop, or switch a medicine based on lunch.",
       ],
     },
     {

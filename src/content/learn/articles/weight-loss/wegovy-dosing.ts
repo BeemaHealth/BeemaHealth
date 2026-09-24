@@ -70,7 +70,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health provide Wegovy pens?",
       answer:
-        "No. Beema Health does not sell or dispense Wegovy. This article explains FDA-labeled dosing. If a Beema clinician prescribes for weight loss, it is compounded semaglutide when legally available and clinically appropriate, not Wegovy. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded semaglutide](/semaglutide/) page. Completing intake does not guarantee a prescription.",
+        "No. Beema Health does not sell or dispense Wegovy. This article explains FDA-labeled dosing. If a Beema Health clinician prescribes for weight loss, it is compounded semaglutide when legally available and clinically appropriate, not Wegovy. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded semaglutide](/semaglutide/) page. Completing intake does not guarantee a prescription.",
     },
     {
       question: "Can I start at 2.4 mg to lose weight faster?",

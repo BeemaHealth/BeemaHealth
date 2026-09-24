@@ -99,7 +99,7 @@ describe("qualify-steps validation", () => {
       ).toBe(false);
     });
 
-    it("state_consent allows previously-excluded states (Beema now serves all 50 states)", () => {
+    it("state_consent allows previously-excluded states (Beema Health now serves all 50 states)", () => {
       expect(
         getQualifyStepError(
           "state_consent",

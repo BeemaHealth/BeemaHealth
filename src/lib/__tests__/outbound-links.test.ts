@@ -43,7 +43,7 @@ describe("outbound link policy", () => {
     }
   });
 
-  it("never nofollows a Beema self-link", () => {
+  it("never nofollows a Beema Health self-link", () => {
     expect(citationRel("https://beemahealth.com/semaglutide/")).toBe(
       "noopener noreferrer",
     );
@@ -61,7 +61,7 @@ describe("outbound link policy", () => {
 
   it("cites no known telehealth competitor anywhere in the codebase", () => {
     // Direct-to-consumer GLP-1 and general telehealth brands. Citing one hands
-    // a competitor a link on the exact queries Beema is trying to rank for.
+    // a competitor a link on the exact queries Beema Health is trying to rank for.
     const COMPETITORS = [
       "hims.com",
       "forhims.com",

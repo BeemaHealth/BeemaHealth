@@ -65,7 +65,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health prescribe or dispense Ozempic?",
       answer:
-        "No. Beema Health does not sell, prescribe as a product offering, or dispense branded Ozempic. This page is educational. If a Beema clinician prescribes for weight loss, it is compounded semaglutide when legally available and clinically appropriate, not Ozempic. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded semaglutide](/semaglutide/) page. Completing an online visit does not guarantee a prescription.",
+        "No. Beema Health does not sell, prescribe as a product offering, or dispense branded Ozempic. This page is educational. If a Beema Health clinician prescribes for weight loss, it is compounded semaglutide when legally available and clinically appropriate, not Ozempic. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded semaglutide](/semaglutide/) page. Completing an online visit does not guarantee a prescription.",
     },
     {
       question: "What are the most common Ozempic side effects?",
@@ -141,7 +141,7 @@ export const article: LearnArticle = {
       body: [
         "Ozempic is widely discussed online as a weight-loss shot because weekly GLP-1 medicines can reduce appetite and body weight in trials of other products and, as a secondary finding, in diabetes studies. That public conversation does not rewrite the FDA label. Using a diabetes medicine solely for weight management is a clinical and regulatory question for the prescriber and the patient, not something a marketing page should encourage.",
         "If the goal is FDA-labeled chronic weight management with weekly semaglutide, that labeled product is Wegovy, which has its own doses, trials (including STEP and SELECT), and administration devices. If the goal is diabetes care, Ozempic's indications, cardiovascular data, and kidney data are the relevant frame. Switching between branded GLP-1 products is a clinician-supervised decision. There is no safe self-serve conversion chart.",
-        "Beema Health's live offering is telehealth medical weight-loss care reviewed by licensed providers. This page does not pitch any Beema product as a stand-in for Ozempic. If you want to learn how an online visit works, you can read Beema's medical weight-loss overview. A prescription is never guaranteed.",
+        "Beema Health's live offering is telehealth medical weight-loss care reviewed by licensed providers. This page does not pitch any Beema Health product as a stand-in for Ozempic. If you want to learn how an online visit works, you can read Beema Health's medical weight-loss overview. A prescription is never guaranteed.",
       ],
     },
   ],

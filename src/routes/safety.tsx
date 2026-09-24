@@ -162,9 +162,9 @@ function SafetyPage() {
                 {SEAN_ARORA_PROVIDER.bio} {CLINICAL_PROVIDER_LEGAL_NAME} is
                 Beema Health's clinical provider group and provides clinical
                 leadership over the group of licensed providers who deliver care
-                through Beema. Licensed clinicians make all medical decisions
-                independently. The clinician assigned to your care may vary
-                based on state licensure and availability.
+                through Beema Health. Licensed clinicians make all medical
+                decisions independently. The clinician assigned to your care may
+                vary based on state licensure and availability.
               </p>
             </div>
           </div>
@@ -270,7 +270,7 @@ function SafetyPage() {
       <Section className="bg-muted/40 pt-0">
         <SectionHeading
           align="left"
-          title="How Beema's intake screens for safety"
+          title="How Beema Health's intake screens for safety"
           className="mx-0 max-w-2xl"
         />
         <div className="mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-muted-foreground">

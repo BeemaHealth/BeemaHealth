@@ -52,18 +52,18 @@ export const article: LearnArticle = {
     {
       question: "Does oxytocin help erectile dysfunction?",
       answer:
-        "Oxytocin's role in erectile and sexual function has mostly been studied in animal models, with some smaller human case-level research, not in the large randomized controlled trials that support tadalafil's and sildenafil's FDA labels for ED. Beema does not claim oxytocin is proven to improve outcomes when added to a compounded formulation - it is included as part of this specific compounded product, not as an FDA-approved ED treatment in its own right.",
+        "Oxytocin's role in erectile and sexual function has mostly been studied in animal models, with some smaller human case-level research, not in the large randomized controlled trials that support tadalafil's and sildenafil's FDA labels for ED. Beema Health does not claim oxytocin is proven to improve outcomes when added to a compounded formulation - it is included as part of this specific compounded product, not as an FDA-approved ED treatment in its own right.",
     },
     {
       question: "What does ODT mean?",
       answer:
-        "ODT stands for orally dissolving tablet - a tablet designed to dissolve in the mouth rather than being swallowed with water. Beema's sildenafil 50 mg/tadalafil 20 mg/oxytocin 125 IU formulation is prepared as an ODT.",
+        "ODT stands for orally dissolving tablet - a tablet designed to dissolve in the mouth rather than being swallowed with water. Beema Health's sildenafil 50 mg/tadalafil 20 mg/oxytocin 125 IU formulation is prepared as an ODT.",
     },
     {
       question:
         "Why does this formulation use a higher tadalafil dose than the other ED Mints option?",
       answer:
-        "Beema's two ED Mints formulations use different tadalafil amounts by design: the tadalafil + sildenafil RDT uses 12 mg, while this ODT uses 20 mg, which is within the FDA-labeled as-needed range for single-ingredient tadalafil (5-20 mg). A higher milligram count is not automatically a better outcome for a given person - a licensed provider decides which formulation and dose, if any, may be appropriate based on an individual's health history.",
+        "Beema Health's two ED Mints formulations use different tadalafil amounts by design: the tadalafil + sildenafil RDT uses 12 mg, while this ODT uses 20 mg, which is within the FDA-labeled as-needed range for single-ingredient tadalafil (5-20 mg). A higher milligram count is not automatically a better outcome for a given person - a licensed provider decides which formulation and dose, if any, may be appropriate based on an individual's health history.",
     },
     {
       question:
@@ -77,7 +77,7 @@ export const article: LearnArticle = {
       heading: "What this combination formulation is",
       body: [
         "This is a compounded formulation combining sildenafil, tadalafil, and oxytocin, prepared at an FDA-registered 503B outsourcing facility, as an orally dissolving tablet (ODT) that dissolves in the mouth rather than being swallowed with water. It is not sold as a single commercial product by any pharmaceutical manufacturer, and it is not FDA-approved.",
-        "Beema markets this specific formulation, sildenafil 50 mg combined with tadalafil 20 mg and oxytocin 125 IU, as one of its two ED Mints options - the other being a lower-dose tadalafil + sildenafil RDT without oxytocin.",
+        "Beema Health markets this specific formulation, sildenafil 50 mg combined with tadalafil 20 mg and oxytocin 125 IU, as one of its two ED Mints options - the other being a lower-dose tadalafil + sildenafil RDT without oxytocin.",
       ],
     },
     {
@@ -93,21 +93,21 @@ export const article: LearnArticle = {
       heading: "Oxytocin's role: what the evidence actually shows",
       body: [
         "Oxytocin is a hormone best known for its roles in childbirth and bonding, but it also has receptors in brain regions involved in sexual behavior. Preclinical research in animal models has shown oxytocin can promote penile erection when administered directly to certain brain regions, and a small number of human case-level reports have described improvements in aspects of sexual function with oxytocin. That is meaningfully different from the phase 3 randomized trial evidence behind tadalafil's and sildenafil's FDA labels.",
-        "Beema includes oxytocin in this formulation because a compounding pharmacy prepares it that way, not because oxytocin itself is an FDA-approved ED treatment or because its added benefit in this combination has been proven in controlled human trials. A licensed provider decides whether this formulation, or any other, may be appropriate for a specific patient.",
+        "Beema Health includes oxytocin in this formulation because a compounding pharmacy prepares it that way, not because oxytocin itself is an FDA-approved ED treatment or because its added benefit in this combination has been proven in controlled human trials. A licensed provider decides whether this formulation, or any other, may be appropriate for a specific patient.",
       ],
     },
     {
       id: "dosing-and-timing",
       heading: "Dosing and timing basics",
       body: [
-        "As formulated by Beema, this ODT dissolves in the mouth with no water needed. Most patients take one about 30 minutes before sexual activity, and no more than one dose in a 24-hour period. Like single-ingredient tadalafil and sildenafil, it does not cause arousal by itself - sexual stimulation is still required for it to have an effect. A licensed provider confirms timing and dosing based on an individual patient's health history.",
+        "As formulated by Beema Health, this ODT dissolves in the mouth with no water needed. Most patients take one about 30 minutes before sexual activity, and no more than one dose in a 24-hour period. Like single-ingredient tadalafil and sildenafil, it does not cause arousal by itself - sexual stimulation is still required for it to have an effect. A licensed provider confirms timing and dosing based on an individual patient's health history.",
       ],
     },
     {
       id: "what-beema-offers",
-      heading: "What Beema actually offers",
+      heading: "What Beema Health actually offers",
       body: [
-        `Beema's live ED Mints line has two formulations: this sildenafil + tadalafil + oxytocin 50 mg/20 mg/125 IU ODT, and a separate tadalafil + sildenafil 12 mg/60 mg RDT without oxytocin - see that formulation's own article. ${COMPOUNDED_ED_MINTS_REQUIRED} A licensed provider reviews each patient's intake and independently decides which formulation, if any, may be appropriate; completing intake does not guarantee a prescription. See the ED Mints page for eligibility and to start an intake.`,
+        `Beema Health's live ED Mints line has two formulations: this sildenafil + tadalafil + oxytocin 50 mg/20 mg/125 IU ODT, and a separate tadalafil + sildenafil 12 mg/60 mg RDT without oxytocin - see that formulation's own article. ${COMPOUNDED_ED_MINTS_REQUIRED} A licensed provider reviews each patient's intake and independently decides which formulation, if any, may be appropriate; completing intake does not guarantee a prescription. See the ED Mints page for eligibility and to start an intake.`,
       ],
     },
     {

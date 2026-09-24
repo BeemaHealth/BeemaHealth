@@ -66,7 +66,7 @@ export const article: LearnArticle = {
       answer: `${LEARN_TRIAL_ATTRIBUTION_SENTENCE} In STEP 1, adults without diabetes taking branded semaglutide 2.4 mg weekly (the Wegovy obesity regimen) had about 14.9% mean body-weight change at 68 weeks versus 2.4% with placebo. SELECT showed cardiovascular benefit for 2.4 mg in people with obesity and heart disease without diabetes. Those are group results. They are not a guarantee for you, and they are not medical advice to start therapy.`,
     },
     {
-      question: "Is this Beema's compounded semaglutide sales page?",
+      question: "Is this Beema Health's compounded semaglutide sales page?",
       answer:
         "No. /semaglutide uses the H1 'Compounded Semaglutide, personalized around you.' This article explains trial evidence and dose names so 'semaglutide weight loss' is an education query. Commercial pricing and intake live on the money page. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate.",
     },
@@ -76,11 +76,12 @@ export const article: LearnArticle = {
         "Ozempic is branded semaglutide labeled for type 2 diabetes (and a T2D cardiovascular indication). Chronic weight management at 2.4 mg is the Wegovy regimen studied in STEP. Casual speech mixes the brands. Clinicians should not.",
     },
     {
-      question: "Does Beema offer Wegovy?",
-      answer: `No. Beema may offer compounded semaglutide after provider review. ${COMPOUNDED_SEMA_REQUIRED} It is not Wegovy. ${LEARN_USA_ONLY_SENTENCE}`,
+      question: "Does Beema Health offer Wegovy?",
+      answer: `No. Beema Health may offer compounded semaglutide after provider review. ${COMPOUNDED_SEMA_REQUIRED} It is not Wegovy. ${LEARN_USA_ONLY_SENTENCE}`,
     },
     {
-      question: "What does compounded semaglutide cost at Beema if prescribed?",
+      question:
+        "What does compounded semaglutide cost at Beema Health if prescribed?",
       answer: learnSemaCashPayFaqAnswer(),
     },
     {
@@ -109,22 +110,22 @@ export const article: LearnArticle = {
       id: "program",
       heading: "A semaglutide weight-loss program is follow-up",
       body: [
-        "Titration exists because nausea is common. Protein intake and resistance training matter when calories drop. Stopping often brings regain (STEP 1 extension, STEP 4). A program, including Beema's if you enroll, should talk about that before week one. See the GLP-1 program explainer.",
+        "Titration exists because nausea is common. Protein intake and resistance training matter when calories drop. Stopping often brings regain (STEP 1 extension, STEP 4). A program, including Beema Health's if you enroll, should talk about that before week one. See the GLP-1 program explainer.",
       ],
     },
     {
       id: "online",
       heading: "How people in Texas and Houston actually start",
       body: [
-        "Telehealth intake plus a licensed clinician is the lawful online path. Beema serves all 50 states, including Texas. Semaglutide-in-Texas and Houston articles cover statute and metro logistics. 'Semaglutide doctor Houston' still means a licensed reviewer, not a guaranteed local exam.",
-        "A semaglutide weight-loss program is more than the first box. Titration, protein intake, and a plan for what happens if you stop are part of responsible care. Beema's commercial page is where cash-pay plans live. This article stays on evidence so it does not clone that H1.",
+        "Telehealth intake plus a licensed clinician is the lawful online path. Beema Health serves all 50 states, including Texas. Semaglutide-in-Texas and Houston articles cover statute and metro logistics. 'Semaglutide doctor Houston' still means a licensed reviewer, not a guaranteed local exam.",
+        "A semaglutide weight-loss program is more than the first box. Titration, protein intake, and a plan for what happens if you stop are part of responsible care. Beema Health's commercial page is where cash-pay plans live. This article stays on evidence so it does not clone that H1.",
       ],
     },
     {
       id: "beema",
-      heading: "What Beema will and will not claim",
+      heading: "What Beema Health will and will not claim",
       body: [
-        "If prescribed, compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Beema will not say it is generic Wegovy. Cash-pay figures above belong to the live lockup. A prescription is never guaranteed.",
+        "If prescribed, compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Beema Health will not say it is generic Wegovy. Cash-pay figures above belong to the live lockup. A prescription is never guaranteed.",
         "When you want the commercial H1 and plan selector, go to /semaglutide. When you want dual-agonist comparison at the trial level, read SURMOUNT-5 coverage in tirzepatide-online and best-GLP-1. This page stays on semaglutide's own evidence.",
       ],
     },

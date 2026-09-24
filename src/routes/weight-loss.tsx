@@ -311,7 +311,10 @@ function WeightLossPage() {
             </h2>
             <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
               A practical educational resource we provide as part of the Beema
-              experience - free to browse whether or not you&apos;re a patient.
+              Health experience - free to browse whether or not you&apos;re a
+              patient.
+            </p>
+            <p className="mt-2 max-w-3xl leading-relaxed text-muted-foreground">
               No intake is required to access all {RECIPES.length} recipes.
             </p>
           </div>

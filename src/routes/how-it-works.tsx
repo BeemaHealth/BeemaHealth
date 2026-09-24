@@ -215,8 +215,8 @@ function HowItWorksPage() {
                   </h2>
                   <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                     Our {RECIPES.length}-recipe collection is free to everyone
-                    whether or not you become a Beema patient. No intake is
-                    required, and the collection provides general educational
+                    whether or not you become a Beema Health patient. No intake
+                    is required, and the collection provides general educational
                     ideas - not personalized nutrition care or treatment advice.
                   </p>
                 </div>

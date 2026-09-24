@@ -12,7 +12,7 @@ export const article: LearnArticle = {
   title: "Sildenafil Dosing: How 50mg and 100mg Work",
   h1: "How sildenafil dosing works: 50mg and 100mg",
   description:
-    "Sildenafil (Viagra) is FDA-labeled from 25mg to 100mg, taken as needed. See timing before activity, dose adjustments, and which strengths Beema offers.",
+    "Sildenafil (Viagra) is FDA-labeled from 25mg to 100mg, taken as needed. See timing before activity, dose adjustments, and which strengths Beema Health offers.",
   keywords: [
     "sildenafil dosage",
     "sildenafil dosing",
@@ -59,13 +59,13 @@ export const article: LearnArticle = {
         "No. Sildenafil for erectile dysfunction is labeled for as-needed use, with a maximum recommended frequency of once per day. It is not labeled as a once-daily maintenance medication the way one tadalafil regimen is.",
     },
     {
-      question: "What sildenafil strengths does Beema offer?",
-      answer: `Beema's sildenafil is available at a single flat rate across the 50 mg and 100 mg strengths; a licensed provider decides which, if any, may be appropriate for a given patient. Beema does not currently offer the 25 mg starting-dose strength. ${GENERIC_SILDENAFIL_REQUIRED} See the sildenafil page for pricing and to start an intake. Looking for a formulation that combines sildenafil and tadalafil into one dissolve-under-the-tongue tablet instead? See ED Mints. ${COMPOUNDED_ED_MINTS_REQUIRED}`,
+      question: "What sildenafil strengths does Beema Health offer?",
+      answer: `Beema Health's sildenafil is available at a single flat rate across the 50 mg and 100 mg strengths; a licensed provider decides which, if any, may be appropriate for a given patient. Beema Health does not currently offer the 25 mg starting-dose strength. ${GENERIC_SILDENAFIL_REQUIRED} See the sildenafil page for pricing and to start an intake. Looking for a formulation that combines sildenafil and tadalafil into one dissolve-under-the-tongue tablet instead? See ED Mints. ${COMPOUNDED_ED_MINTS_REQUIRED}`,
     },
     {
-      question: "Is Beema's sildenafil the same as Viagra?",
+      question: "Is Beema Health's sildenafil the same as Viagra?",
       answer:
-        "Yes. Beema's sildenafil is the FDA-approved generic version of Viagra - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.",
+        "Yes. Beema Health's sildenafil is the FDA-approved generic version of Viagra - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.",
     },
   ],
   sections: [
@@ -100,9 +100,9 @@ export const article: LearnArticle = {
     },
     {
       id: "what-beema-offers",
-      heading: "What Beema's sildenafil offers",
+      heading: "What Beema Health's sildenafil offers",
       body: [
-        `Beema's live sildenafil offering is available at 50 mg or 100 mg (the 25 mg starting-dose strength is not currently offered). ${GENERIC_SILDENAFIL_REQUIRED} A licensed provider reviews each patient's intake and independently decides the strength and dose, if any, that may be appropriate; completing intake does not guarantee a prescription. See the sildenafil page for eligibility and to start an intake.`,
+        `Beema Health's live sildenafil offering is available at 50 mg or 100 mg (the 25 mg starting-dose strength is not currently offered). ${GENERIC_SILDENAFIL_REQUIRED} A licensed provider reviews each patient's intake and independently decides the strength and dose, if any, that may be appropriate; completing intake does not guarantee a prescription. See the sildenafil page for eligibility and to start an intake.`,
         `If you're comparing sildenafil to tadalafil, or want a formulation that combines the two into one dissolve-under-the-tongue tablet, see the tadalafil dosing article and ED Mints. ${COMPOUNDED_ED_MINTS_REQUIRED}`,
       ],
     },

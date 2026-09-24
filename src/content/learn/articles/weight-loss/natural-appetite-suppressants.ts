@@ -68,12 +68,12 @@ export const article: LearnArticle = {
       question:
         "Do over-the-counter 'appetite control' pills work like semaglutide?",
       answer:
-        "No. Most supplement labels cannot legally claim they are as effective as prescription drugs. Stimulant blends can raise heart rate and blood pressure. 'Natural' does not mean risk-free. Beema will not tell you to buy a fat-burner stack.",
+        "No. Most supplement labels cannot legally claim they are as effective as prescription drugs. Stimulant blends can raise heart rate and blood pressure. 'Natural' does not mean risk-free. Beema Health will not tell you to buy a fat-burner stack.",
     },
     {
-      question: "How does this fit Beema's program?",
+      question: "How does this fit Beema Health's program?",
       answer:
-        "Beema's live offering is provider-reviewed compounded semaglutide or tirzepatide when appropriate, plus free educational resources such as recipes. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Lifestyle pages exist so medication, if prescribed, is not the only tool. Completing intake never guarantees a prescription.",
+        "Beema Health's live offering is provider-reviewed compounded semaglutide or tirzepatide when appropriate, plus free educational resources such as recipes. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Lifestyle pages exist so medication, if prescribed, is not the only tool. Completing intake never guarantees a prescription.",
     },
     {
       question: "Does drinking more water suppress appetite?",
@@ -100,7 +100,7 @@ export const article: LearnArticle = {
       heading: "Protein, fiber, and volume: the unglamorous core",
       body: [
         "Protein is the macronutrient most consistently tied to satiety in feeding studies. Spreading protein across meals often beats a single giant dinner. Fiber from vegetables, beans, oats, and fruit slows digestion and lowers energy density. Together they are the closest thing to a 'natural suppressant' with a real literature trail.",
-        "People on GLP-1-class medicines sometimes struggle to hit protein because portions shrink. That is when dietitian-style planning matters so weight lost is not only lean mass. Beema's recipe library is a starting point, not a meal-replacement cult.",
+        "People on GLP-1-class medicines sometimes struggle to hit protein because portions shrink. That is when dietitian-style planning matters so weight lost is not only lean mass. Beema Health's recipe library is a starting point, not a meal-replacement cult.",
       ],
     },
     {
@@ -134,7 +134,7 @@ export const article: LearnArticle = {
       id: "next",
       heading: "Where to go next on this site",
       body: [
-        "Read GLP-1 diet and exercise pages for medication-era details. Read berberine and ashwagandha pages if those searches brought you here. If you want a provider to review whether a prescription incretin is appropriate, Beema offers nationwide telehealth intake. Payment is not required to start. A prescription is never guaranteed.",
+        "Read GLP-1 diet and exercise pages for medication-era details. Read berberine and ashwagandha pages if those searches brought you here. If you want a provider to review whether a prescription incretin is appropriate, Beema Health offers nationwide telehealth intake. Payment is not required to start. A prescription is never guaranteed.",
       ],
     },
   ],

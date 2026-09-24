@@ -72,7 +72,7 @@ export const Route = createFileRoute("/hair-loss")({
           serviceJsonLd({
             name: "Hair Loss Telehealth Program",
             description:
-              "Telehealth hair loss program from Beema Health. Licensed providers review every patient and may prescribe FDA-approved generic oral medications or compounded topical hairloss formulations when clinically appropriate; compounded medications are not FDA-approved, and prescribing is never guaranteed.",
+              "Telehealth hair loss program from Beema Health. Licensed providers review every patient and may prescribe FDA-approved generic oral medications or compounded topical hair loss formulations when clinically appropriate; compounded medications are not FDA-approved, and prescribing is never guaranteed.",
             path: "/hair-loss",
             serviceType: "Hair loss telehealth program",
           }),
@@ -203,7 +203,7 @@ function HairLossPage() {
                 <LineReveal delay={0.1}>licensed providers</LineReveal>
               </>
             }
-            description={`Beema Health offers FDA-approved generic oral medications and compounded topical hairloss formulations, from ${formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)}. Compounded medications are not FDA-approved.`}
+            description={`Beema Health offers FDA-approved generic oral medications and compounded topical hair loss formulations, from ${formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)}. Compounded medications are not FDA-approved.`}
           />
           <motion.div
             className="mt-10 text-center"

@@ -13,7 +13,7 @@ import { formatUsd } from "@/lib/medication-pricing";
  *
  * FIRST PASS PRICING (2026-08-27, hairloss/ED expanded 2026-08-28): set at
  * roughly 1.5x landed cost (pharmacy + dispense + shipping + doctor's fee,
- * exactly as summed in the "Beema Pricing" cost sheet), charm-rounded. TRT,
+ * exactly as summed in the "Beema Health Pricing" cost sheet), charm-rounded. TRT,
  * hairloss, and ED costs come from that sheet. NAD+ and sermorelin have no
  * entry in that sheet at all - their prices are telehealth market-rate
  * estimates instead, cross-checked against Bask catalog price ranges
@@ -192,7 +192,7 @@ export const ED_COMBO_PRICING: SimpleCompoundedPricing = {
  * each sold on /ed-mints with its own dedicated Bask questionnaire flow
  * (see ED_MINTS_RDT_INTAKE_URL / ED_MINTS_ODT_INTAKE_URL in cta-ids.ts) -
  * not the shared /ed intake. Pricing from the "Tadalafil & Sildenafil
- * combo's" cost sheet (2026-09-03): both products land at the same Beema
+ * combo's" cost sheet (2026-09-03): both products land at the same Beema Health
  * price, $149/mo or $199 billed quarterly.
  */
 

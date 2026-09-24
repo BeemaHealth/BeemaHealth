@@ -135,7 +135,7 @@ export const article: LearnArticle = {
       heading: "What to tell the clinician",
       body: [
         "Note the date, body site, device type, and whether the reaction happens every week. Mention other skin conditions such as psoriasis or eczema. If a pharmacist already demonstrated technique, say so, so the visit is not spent repeating steps that were done correctly.",
-        "Weekly GLP-1 treatment is a prescription process. Local reactions are common enough on tirzepatide labels to plan for, and uncommon enough on some semaglutide tables that a dramatic reaction still deserves a call. Related dosing and branded-education articles explain devices in product-specific terms without presenting Beema as a seller of those brands.",
+        "Weekly GLP-1 treatment is a prescription process. Local reactions are common enough on tirzepatide labels to plan for, and uncommon enough on some semaglutide tables that a dramatic reaction still deserves a call. Related dosing and branded-education articles explain devices in product-specific terms without presenting Beema Health as a seller of those brands.",
       ],
     },
   ],

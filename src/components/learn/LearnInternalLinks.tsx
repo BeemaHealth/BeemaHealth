@@ -58,8 +58,8 @@ export function LearnInternalLinks({
             Program pages
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            These pages describe Beema&apos;s live medical weight-loss offering.
-            They are commercial pages, not this educational article.
+            These pages describe Beema Health&apos;s live medical weight-loss
+            offering. They are commercial pages, not this educational article.
           </p>
           <ul className="mt-4 space-y-3">
             {money.map((page) => (

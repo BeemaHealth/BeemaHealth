@@ -128,7 +128,7 @@ export const article: LearnArticle = {
       heading: "Product-specific switch pages and Beema Health",
       body: [
         "For Zepbound to Wegovy and Wegovy to Zepbound, see the dedicated articles in this cluster. They use labeled facts and SURMOUNT-5 averages without declaring a winner for every patient.",
-        "If you are exploring telehealth medical weight loss, Beema's program overview explains how licensed providers review intake. Mention any current GLP-1 so the review is informed. That is not a request to stop a medicine without the clinician who will manage the change.",
+        "If you are exploring telehealth medical weight loss, Beema Health's program overview explains how licensed providers review intake. Mention any current GLP-1 so the review is informed. That is not a request to stop a medicine without the clinician who will manage the change.",
       ],
     },
   ],

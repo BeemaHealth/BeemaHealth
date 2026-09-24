@@ -81,7 +81,7 @@ const SHARED_FAQ = {
   },
   getStarted: {
     q: "How do I get started online?",
-    a: "Select Get Started to open Beema’s secure online medical intake. Share your health history, current medications, and goals. A licensed provider reviews your case and decides next steps. No payment is required to start the intake, and a prescription is never guaranteed.",
+    a: "Select Get Started to open Beema Health’s secure online medical intake. Share your health history, current medications, and goals. A licensed provider reviews your case and decides next steps. No payment is required to start the intake, and a prescription is never guaranteed.",
   },
 } as const satisfies Record<string, TreatmentFaqItem>;
 

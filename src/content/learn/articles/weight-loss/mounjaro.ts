@@ -64,7 +64,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health prescribe Mounjaro?",
       answer:
-        "No. Beema Health does not sell or dispense branded Mounjaro. This article is educational. If a Beema clinician prescribes tirzepatide, it is compounded tirzepatide when legally available and clinically appropriate, not Mounjaro. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded tirzepatide](/tirzepatide/) page. Completing intake does not guarantee a prescription.",
+        "No. Beema Health does not sell or dispense branded Mounjaro. This article is educational. If a Beema Health clinician prescribes tirzepatide, it is compounded tirzepatide when legally available and clinically appropriate, not Mounjaro. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded tirzepatide](/tirzepatide/) page. Completing intake does not guarantee a prescription.",
     },
     {
       question: "What were the SURPASS-2 findings?",
@@ -134,8 +134,8 @@ export const article: LearnArticle = {
       id: "weight-and-switching",
       heading: "Weight change, switching, and stopping",
       body: [
-        "Weight reduction in SURPASS was a secondary finding in people being treated for type 2 diabetes. It does not convert Mounjaro into a weight-management indication. If a person's primary goal is labeled chronic weight management with tirzepatide, that conversation is about Zepbound's label, eligibility, and access - still a clinician decision, and not a Beema product.",
-        "Switching from Mounjaro to another GLP-1 or dual agonist, or stopping entirely, needs a plan for glucose monitoring. See switching GLP-1 medications and stopping Mounjaro. Beema Health does not offer Mounjaro. People exploring medical weight loss through telehealth can read Beema's program overview; that is not a claim that Beema will continue a Mounjaro prescription.",
+        "Weight reduction in SURPASS was a secondary finding in people being treated for type 2 diabetes. It does not convert Mounjaro into a weight-management indication. If a person's primary goal is labeled chronic weight management with tirzepatide, that conversation is about Zepbound's label, eligibility, and access - still a clinician decision, and not a Beema Health product.",
+        "Switching from Mounjaro to another GLP-1 or dual agonist, or stopping entirely, needs a plan for glucose monitoring. See switching GLP-1 medications and stopping Mounjaro. Beema Health does not offer Mounjaro. People exploring medical weight loss through telehealth can read Beema Health's program overview; that is not a claim that Beema Health will continue a Mounjaro prescription.",
       ],
     },
   ],

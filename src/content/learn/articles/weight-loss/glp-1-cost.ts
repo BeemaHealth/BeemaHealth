@@ -15,7 +15,7 @@ export const article: LearnArticle = {
   title: "GLP-1 Cost: Cash-Pay Telehealth Pricing, Explained Honestly",
   h1: "What GLP-1 treatment costs with cash-pay telehealth",
   description:
-    "Cash-pay telehealth GLP-1 programs charge a bundled monthly rate. See what Beema bills for compounded semaglutide and tirzepatide, with no insurance math.",
+    "Cash-pay telehealth GLP-1 programs charge a bundled monthly rate. See what Beema Health bills for compounded semaglutide and tirzepatide - no insurance math.",
   keywords: [
     "glp 1 cost",
     "cash pay GLP-1",
@@ -62,18 +62,18 @@ export const article: LearnArticle = {
   ],
   faqs: [
     {
-      question: "How much does a GLP-1 cost at Beema?",
+      question: "How much does a GLP-1 cost at Beema Health?",
       answer: learnDualMedTeaserSentence(),
     },
     {
-      question: "Does insurance cover Beema GLP-1s?",
+      question: "Does insurance cover Beema Health GLP-1s?",
       answer:
-        "Beema's published model is cash-pay. This article will not estimate copays, deductibles, or prior-authorization odds. If you have coverage elsewhere, that is a conversation with your insurer and a clinician who bills insurance. Do not send Beema your insurance card through a marketing form.",
+        "Beema Health's published model is cash-pay. This article will not estimate copays, deductibles, or prior-authorization odds. If you have coverage elsewhere, that is a conversation with your insurer and a clinician who bills insurance. Do not send Beema Health your insurance card through a marketing form.",
     },
     {
-      question: "Why not show Ozempic list price next to Beema's price?",
+      question: "Why not show Ozempic list price next to Beema Health's price?",
       answer:
-        "That layout is a branded-versus-compounded comparison. Beema's compounded products are not FDA-approved and are not Ozempic, Wegovy, Zepbound, or Mounjaro. This page will not build that table. Cash-pay telehealth programs exist; Beema's rates are on the medication pages.",
+        "That layout is a branded-versus-compounded comparison. Beema Health's compounded products are not FDA-approved and are not Ozempic, Wegovy, Zepbound, or Mounjaro. This page will not build that table. Cash-pay telehealth programs exist; Beema Health's rates are on the medication pages.",
     },
     {
       question: "Is there a membership fee?",
@@ -83,12 +83,12 @@ export const article: LearnArticle = {
     {
       question: "Do dose increases cost more?",
       answer:
-        "Within the same compounded medication, dose adjustments do not change the monthly price in Beema's current model. Switching molecules is a new clinical decision.",
+        "Within the same compounded medication, dose adjustments do not change the monthly price in Beema Health's current model. Switching molecules is a new clinical decision.",
     },
     {
       question: "Do I pay before a clinician says yes?",
       answer:
-        "You can start intake without paying. Payment, when it happens in checkout, is not a peptide pre-order and is not a guaranteed prescription. A licensed clinician still reviews your case and may decline to prescribe. Completing intake never guarantees a prescription. Beema serves adults in all 50 US states and only the United States.",
+        "You can start intake without paying. Payment, when it happens in checkout, is not a peptide pre-order and is not a guaranteed prescription. A licensed clinician still reviews your case and may decline to prescribe. Completing intake never guarantees a prescription. Beema Health serves adults in all 50 US states and only the United States.",
     },
   ],
   sections: [
@@ -96,18 +96,18 @@ export const article: LearnArticle = {
       id: "cash-pay-frame",
       heading: "Cash-pay means the number on the page is the number",
       body: [
-        "Many U.S. adults pay for incretin therapy without running it through an obesity-drug insurance benefit. Cash-pay telehealth programs bundle clinician time, medication, supplies, and shipping into a monthly or prepaid rate so you are not reconciling five invoices. That model is what Beema publishes. It is not a claim that insurance never covers GLP-1s somewhere else, and this page will not do insurance math.",
+        "Many U.S. adults pay for incretin therapy without running it through an obesity-drug insurance benefit. Cash-pay telehealth programs bundle clinician time, medication, supplies, and shipping into a monthly or prepaid rate so you are not reconciling five invoices. That model is what Beema Health publishes. It is not a claim that insurance never covers GLP-1s somewhere else, and this page will not do insurance math.",
         "This article is educational. The interactive plan selector on [compounded semaglutide](/semaglutide/) and [compounded tirzepatide](/tirzepatide/) is the live price UI. If those pages and this article ever disagree, trust the lockup.",
       ],
     },
     {
       id: "sema-rates",
-      heading: "Compounded semaglutide cash-pay rates (Beema)",
+      heading: "Compounded semaglutide cash-pay rates (Beema Health)",
       body: [learnSemaCashPayFaqAnswer()],
     },
     {
       id: "tirz-rates",
-      heading: "Compounded tirzepatide cash-pay rates (Beema)",
+      heading: "Compounded tirzepatide cash-pay rates (Beema Health)",
       body: [learnTirzCashPayFaqAnswer()],
     },
     {
@@ -121,7 +121,7 @@ export const article: LearnArticle = {
       id: "how-to-compare-programs",
       heading: "How to compare cash-pay programs without a brand table",
       body: [
-        `Ask what is included. Ask whether refill shipping is extra. Ask whether labs are extra. Ask whether the quoted rate assumes a coupon that expires. Ask who the prescriber is. Beema's dual-medication teaser on marketing pages is ${FIRST_MONTH_PROMO_LINE}, with full math on the medication pages. Other clinics will quote other bundles. Compare bundles, not a screenshot of a manufacturer's list price.`,
+        `Ask what is included. Ask whether refill shipping is extra. Ask whether labs are extra. Ask whether the quoted rate assumes a coupon that expires. Ask who the prescriber is. Beema Health's dual-medication teaser on marketing pages is ${FIRST_MONTH_PROMO_LINE}, with full math on the medication pages. Other clinics will quote other bundles. Compare bundles, not a screenshot of a manufacturer's list price.`,
       ],
     },
     {

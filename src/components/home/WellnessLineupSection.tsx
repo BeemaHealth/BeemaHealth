@@ -50,14 +50,14 @@ const CATEGORIES = [
     description: "Compounded ED treatment.",
     image: edPillPhoto,
     imageAlt:
-      "Beema ED Mints tadalafil and sildenafil rapidly dissolving tablet",
+      "Beema Health ED Mints tadalafil and sildenafil rapidly dissolving tablet",
     priceLine: `From ${formatPerPillStartingAt(ED_TADALAFIL_PER_PILL_USD)}`,
     to: "/sexual-health/",
   },
   {
     id: "hair-loss",
     name: "Hair Loss",
-    description: "Compounded oral and topical hairloss treatment.",
+    description: "Compounded oral and topical hair loss treatment.",
     image: finasteridePhoto,
     imageAlt:
       "Bottle of Beema Health oral finasteride tablets, generic Propecia",
@@ -75,8 +75,8 @@ export function WellnessLineupSection() {
             More than weight loss
           </h2>
           <p className="mt-3 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-            Beema also offers compounded treatment for sexual health and hair
-            loss, each reviewed by a licensed provider.
+            Beema Health also offers compounded treatment for sexual health and
+            hair loss, each reviewed by a licensed provider.
           </p>
         </Reveal>
 

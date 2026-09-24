@@ -12,7 +12,7 @@ import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
 
 export function LearnWeightLossCta({
   ctaId = CTA_IDS.learn_weight_loss,
-  headline = "Beema's live offering is medical weight-loss care",
+  headline = "Beema Health's live offering is medical weight-loss care",
 }: {
   ctaId?: CtaId;
   /** Override for non-weight-loss verticals (e.g. the ED hub). */

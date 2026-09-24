@@ -74,7 +74,7 @@ export function FreeResourcesSection() {
           </h2>
           <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">
             Browse recipes and evidence-based guides at no cost, whether or not
-            you&apos;re a Beema patient. No intake is required.
+            you&apos;re a Beema Health patient. No intake is required.
           </p>
         </div>
 

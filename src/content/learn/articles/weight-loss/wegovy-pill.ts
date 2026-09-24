@@ -135,7 +135,7 @@ export const article: LearnArticle = {
       heading: "Rybelsus, other oral incretins, and Beema Health",
       body: [
         "Rybelsus is oral semaglutide for type 2 diabetes. Investigational oral GLP-1 receptor agonists such as orforglipron are separate molecules still discussed in the pipeline article in this library. None of those products is a Wegovy tablet.",
-        "Beema Health does not offer the Wegovy pill. If a Beema clinician prescribes for weight loss, it is compounded semaglutide when legally available and clinically appropriate, not Wegovy tablets. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded semaglutide](/semaglutide/) page. That is not a pitch that an oral Wegovy prescription will be issued.",
+        "Beema Health does not offer the Wegovy pill. If a Beema Health clinician prescribes for weight loss, it is compounded semaglutide when legally available and clinically appropriate, not Wegovy tablets. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded semaglutide](/semaglutide/) page. That is not a pitch that an oral Wegovy prescription will be issued.",
       ],
     },
   ],

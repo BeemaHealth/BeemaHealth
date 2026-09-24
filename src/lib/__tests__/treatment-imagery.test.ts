@@ -8,7 +8,7 @@ import {
 const MEDICATIONS: MedicationId[] = ["semaglutide", "tirzepatide"];
 
 describe("treatment-imagery", () => {
-  it("ships branded Beema-wordmark vials by default", () => {
+  it("ships branded Beema Health-wordmark vials by default", () => {
     expect(VIAL_IMAGERY_MODE).toBe("branded");
     for (const id of MEDICATIONS) {
       const imagery = resolveVialImagery(id);

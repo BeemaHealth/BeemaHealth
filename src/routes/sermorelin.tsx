@@ -49,22 +49,22 @@ const SERVICE_DESCRIPTION =
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
     q: "What is sermorelin?",
-    a: "Sermorelin is a growth-hormone-releasing hormone analog. It is not currently sold as an FDA-approved commercial drug product, which is why it's available today only through licensed compounding pharmacies. Beema's compounded sermorelin is prepared by a licensed compounding pharmacy specifically for you, made available only when legally permitted in your state and a licensed provider determines it's clinically appropriate for your individual case.",
+    a: "Sermorelin is a growth-hormone-releasing hormone analog. It is not currently sold as an FDA-approved commercial drug product, which is why it's available today only through licensed compounding pharmacies. Beema Health's compounded sermorelin is prepared by a licensed compounding pharmacy specifically for you, made available only when legally permitted in your state and a licensed provider determines it's clinically appropriate for your individual case.",
   },
   {
     q: "Is compounded sermorelin FDA-approved?",
-    a: "No. Compounded sermorelin is not FDA-approved. It's prepared individually by a licensed compounding pharmacy rather than manufactured and approved as a standardized branded drug, so it should not be assumed identical in formulation, strength, or effect to any other product. Beema only makes it available when legally permitted and when a licensed provider independently determines it's clinically appropriate for your specific case.",
+    a: "No. Compounded sermorelin is not FDA-approved. It's prepared individually by a licensed compounding pharmacy rather than manufactured and approved as a standardized branded drug, so it should not be assumed identical in formulation, strength, or effect to any other product. Beema Health only makes it available when legally permitted and when a licensed provider independently determines it's clinically appropriate for your specific case.",
   },
   {
-    q: "How does online sermorelin care through Beema work?",
+    q: "How does online sermorelin care through Beema Health work?",
     a: "Care starts with creating a secure account and completing a medical intake covering your health history, current medications, and goals, at your own pace. A licensed provider reviews your intake and independently decides whether compounded sermorelin may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability.",
   },
   {
-    q: "How much does sermorelin cost through Beema?",
-    a: `${simplePricingSentence("Compounded sermorelin through Beema", SERMORELIN_PRICING)} That covers your provider consultation and ongoing doctor care, prescription medication, and shipping. Questions about your plan? ${patientQuestionsGuidance()}`,
+    q: "How much does sermorelin cost through Beema Health?",
+    a: `${simplePricingSentence("Compounded sermorelin through Beema Health", SERMORELIN_PRICING)} That covers your provider consultation and ongoing doctor care, prescription medication, and shipping. Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
-    q: "Does Beema serve patients nationwide?",
+    q: "Does Beema Health serve patients nationwide?",
     a: "Yes, Beema Health is available to patients in all 50 U.S. states. Whether compounded sermorelin specifically is available to you still depends on your state's rules around compounded medications and pharmacy fulfillment in your area, and eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications.",
   },
 ];
@@ -253,8 +253,8 @@ function SermorelinPage() {
             Sermorelin is a growth-hormone-releasing hormone analog. It is not
             currently sold as an FDA-approved commercial drug product, which is
             why it's available today only through licensed compounding
-            pharmacies. Beema's compounded sermorelin is prepared specifically
-            for you.
+            pharmacies. Beema Health's compounded sermorelin is prepared
+            specifically for you.
           </p>
           <p>
             Compounded sermorelin is not FDA-approved and is considered only
@@ -273,7 +273,7 @@ function SermorelinPage() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema's sermorelin care works"
+        title="How Beema Health's sermorelin care works"
         showCareFollowUpNote
       />
 

@@ -8,7 +8,7 @@ export const article: LearnArticle = {
   title: "GLP-1 Telehealth for Adults Living in Texas",
   h1: "How Texas telemedicine rules shape GLP-1 care",
   description:
-    "Texas adults can use telehealth GLP-1 care when a licensed clinician reviews them. Chapter 111 telemedicine, rural access, and Beema's 50-state model.",
+    "Texas adults can use telehealth GLP-1 care when a licensed clinician reviews them. Chapter 111 telemedicine, rural access, and Beema Health's 50-state model.",
   keywords: [
     "glp 1 in texas",
     "semaglutide texas",
@@ -74,7 +74,7 @@ export const article: LearnArticle = {
     {
       question: "Do I have to go to a clinic in Austin or Dallas first?",
       answer:
-        "Not for Beema's model. The point of statewide telehealth is that El Paso, Amarillo, Tyler, McAllen, and Lubbock are not second-class ZIP codes. You still need a shipping address and an honest medical history. Complex diabetes or surgical follow-up may still belong with a local specialist.",
+        "Not for Beema Health's model. The point of statewide telehealth is that El Paso, Amarillo, Tyler, McAllen, and Lubbock are not second-class ZIP codes. You still need a shipping address and an honest medical history. Complex diabetes or surgical follow-up may still belong with a local specialist.",
     },
     {
       question: "What about Texas heat while I am nauseated on a GLP-1?",
@@ -82,12 +82,14 @@ export const article: LearnArticle = {
         "Texas summers regularly combine high heat and humidity. GLP-1 gastrointestinal effects and lower fluid intake raise dehydration risk. Plan electrolytes and shade the way you would for outdoor work. Seek urgent care for dizziness, very low urine output, or confusion. This is practical safety, not a scare tactic.",
     },
     {
-      question: "Is this page the same as Beema's Houston ads landing page?",
+      question:
+        "Is this page the same as Beema Health's Houston ads landing page?",
       answer:
         "No. /glp-1-houston is a commercial cash-pay landing page. This article is statewide education: telemedicine statute, rural access, heat, and how a visit works. Houston-specific commuting and Medical Center context lives in the Houston learn article.",
     },
     {
-      question: "Can I get compounded semaglutide in Texas through Beema?",
+      question:
+        "Can I get compounded semaglutide in Texas through Beema Health?",
       answer:
         "Possibly, if a licensed provider finds it clinically appropriate and it is legally available to fill. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Live prices are on the medication pages, not in this statute explainer.",
     },
@@ -99,7 +101,7 @@ export const article: LearnArticle = {
         "Texas is large. Endocrinology appointments are not evenly spread.",
       body: [
         "Adults in Harris County and adults in rural West Texas are covered by the same medical board, but they do not have the same drive time to an obesity clinic. Telehealth GLP-1 care exists to close that gap when a licensed clinician can evaluate you remotely under Texas law. It is not a loophole to skip a medical history.",
-        "This article is educational, not Beema's Texas ads landing page and not a claim that Texas is the only state we serve. Beema Health serves all 50 U.S. states. Texas is included, not exclusive.",
+        "This article is educational, not Beema Health's Texas ads landing page and not a claim that Texas is the only state we serve. Beema Health serves all 50 U.S. states. Texas is included, not exclusive.",
       ],
     },
     {
@@ -107,7 +109,7 @@ export const article: LearnArticle = {
       heading: "What Chapter 111 actually says, in plain language",
       body: [
         "Texas Occupations Code Chapter 111 is the state's telemedicine and telehealth chapter. It allows a practitioner-patient relationship to be established using telehealth, and it says the standard of care is the same as for in-person care. If a clinician would not prescribe an incretin after a thoughtful in-person visit, they should not prescribe it after a thin online form either.",
-        "The Texas Medical Board's telemedicine page emphasizes that prescribing is still the practice of medicine. Valid prescriptions require a bona fide relationship, appropriate evaluation, and records. Beema's intake is built as a questionnaire for that evaluation. It is not a three-click checkout.",
+        "The Texas Medical Board's telemedicine page emphasizes that prescribing is still the practice of medicine. Valid prescriptions require a bona fide relationship, appropriate evaluation, and records. Beema Health's intake is built as a questionnaire for that evaluation. It is not a three-click checkout.",
       ],
     },
     {
@@ -120,7 +122,7 @@ export const article: LearnArticle = {
     },
     {
       id: "visit",
-      heading: "How a Beema visit works if you live in Texas",
+      heading: "How a Beema Health visit works if you live in Texas",
       body: [
         "You start the online medical intake from home. No payment is required to begin. A licensed provider reviews your answers. If they prescribe compounded semaglutide or compounded tirzepatide, a pharmacy ships. Follow-up continues. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
         "You do not need to drive I-35 to a city for that sequence. You do need truthful answers. Texas compounding and pharmacy rules can still affect whether a specific preparation can be filled even when the clinician says yes.",
@@ -137,7 +139,7 @@ export const article: LearnArticle = {
       id: "cities-versus-rural",
       heading: "Metro Texas is not one market",
       body: [
-        "Dallas-Fort Worth, Austin, San Antonio, Houston, and El Paso each have different clinic density. Houston gets its own learn article because searches and heat-humidity patterns are distinct, and because Beema already operates a commercial Houston GLP-1 landing page that this education must not clone. Statewide, the legal frame is the same Chapter 111 standard.",
+        "Dallas-Fort Worth, Austin, San Antonio, Houston, and El Paso each have different clinic density. Houston gets its own learn article because searches and heat-humidity patterns are distinct, and because Beema Health already operates a commercial Houston GLP-1 landing page that this education must not clone. Statewide, the legal frame is the same Chapter 111 standard.",
         "If you are comparing cash-pay programs, use /weight-loss, /semaglutide, and /tirzepatide for live rates. This page will not reprint the lockup. A prescription is never guaranteed.",
       ],
     },
@@ -145,7 +147,7 @@ export const article: LearnArticle = {
       id: "next",
       heading: "Next reads if you live in Texas",
       body: [
-        "Houston residents should continue to the Houston article for Medical Center wait times, humidity, and commute context. People specifically asking about semaglutide access can read semaglutide in Texas. People asking how any online GLP-1 should work can read the online GLP-1 explainer. When you want to start Beema intake, use the live medication pages, not this statute guide, as the conversion surface.",
+        "Houston residents should continue to the Houston article for Medical Center wait times, humidity, and commute context. People specifically asking about semaglutide access can read semaglutide in Texas. People asking how any online GLP-1 should work can read the online GLP-1 explainer. When you want to start Beema Health intake, use the live medication pages, not this statute guide, as the conversion surface.",
       ],
     },
   ],

@@ -335,7 +335,6 @@ function RecipeDetailPage() {
                 <Link
                   key={candidate.slug}
                   to={recipePath(candidate)}
-                  search={{ servings: initialPeople }}
                   className="rounded-2xl border border-border bg-card p-5 shadow-soft transition-all hover:-translate-y-1 hover:shadow-lift"
                 >
                   <p className="text-xs font-semibold uppercase tracking-wide text-accent-foreground">

@@ -6,9 +6,9 @@ export const article: LearnArticle = {
   vertical: "weight-loss",
   slug: "orforglipron",
   title: "Orforglipron Oral GLP-1: Data and Access Limits",
-  h1: "Orforglipron is an oral GLP-1 - not a Beema offering",
+  h1: "Orforglipron is an oral GLP-1 - not a Beema Health offering",
   description:
-    "Orforglipron is a once-daily oral small-molecule GLP-1 from Lilly. Review ATTAIN-1 data, the 2026 Foundayo FDA approval, and why Beema does not offer it.",
+    "Orforglipron is a once-daily oral small-molecule GLP-1 from Lilly. Review ATTAIN-1 data, the 2026 Foundayo FDA approval, and why Beema Health does not offer it.",
   keywords: [
     "orforglipron",
     "oral GLP-1",
@@ -63,7 +63,7 @@ export const article: LearnArticle = {
     {
       question: "Did the FDA approve orforglipron?",
       answer:
-        "Yes. On April 1, 2026, Lilly announced FDA approval of Foundayo (orforglipron) for adults with obesity, or overweight plus a weight-related condition, used with diet and activity. Approval of a branded pill does not mean Beema Health stocks or prescribes it. Beema's live offering is provider-reviewed compounded semaglutide or tirzepatide when appropriate. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
+        "Yes. On April 1, 2026, Lilly announced FDA approval of Foundayo (orforglipron) for adults with obesity, or overweight plus a weight-related condition, used with diet and activity. Approval of a branded pill does not mean Beema Health stocks or prescribes it. Beema Health's live offering is provider-reviewed compounded semaglutide or tirzepatide when appropriate. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
     },
     {
       question: "How well did orforglipron work in ATTAIN-1?",
@@ -73,7 +73,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health offer Foundayo or orforglipron?",
       answer:
-        "No. Beema Health does not currently offer orforglipron or Foundayo. There is no Beema waitlist for the pill. If an oral branded GLP-1 is your preference, say so to a clinician who can discuss labeled options outside this program. Completing Beema intake never guarantees any prescription.",
+        "No. Beema Health does not currently offer orforglipron or Foundayo. There is no Beema Health waitlist for the pill. If an oral branded GLP-1 is your preference, say so to a clinician who can discuss labeled options outside this program. Completing Beema Health intake never guarantees any prescription.",
     },
     {
       question:
@@ -82,9 +82,9 @@ export const article: LearnArticle = {
         "Not automatically. Pills can be easier for people who refuse injections, and orforglipron does not have the empty-stomach rules that apply to oral semaglutide (Rybelsus). Weekly injections such as semaglutide 2.4 mg still produced larger mean weight loss in STEP 1 than ATTAIN-1 reported for orforglipron. Route, dose, comorbidities, and tolerability all matter. A licensed provider should match the medicine to the person.",
     },
     {
-      question: "Can I get orforglipron through Beema's online visit?",
+      question: "Can I get orforglipron through Beema Health's online visit?",
       answer:
-        "No. An online visit at Beema is an intake for possible compounded semaglutide or compounded tirzepatide, not a cart for Foundayo. Those compounded medications are not FDA-approved and are considered only when legally available and clinically appropriate.",
+        "No. An online visit at Beema Health is an intake for possible compounded semaglutide or compounded tirzepatide, not a cart for Foundayo. Those compounded medications are not FDA-approved and are considered only when legally available and clinically appropriate.",
     },
   ],
   sections: [
@@ -93,8 +93,8 @@ export const article: LearnArticle = {
       heading: "A daily pill, not an injectable peptide",
       body: [
         "Orforglipron is a once-daily oral GLP-1 receptor agonist developed by Eli Lilly. Chemically it is a small molecule, not a peptide, which is why it can be swallowed rather than injected. In April 2026 the FDA approved it as Foundayo for chronic weight management in eligible adults, alongside reduced-calorie eating and more physical activity. Lilly has described it as a pill that can be taken without the food and water restrictions that apply to oral semaglutide.",
-        "This article is educational, not medical advice. Beema Health does not currently offer orforglipron, Foundayo, or any oral branded GLP-1. Listing the molecule in a pipeline cluster on this site is about search education. It is not a product page and not a promise that Beema will add the pill later.",
-        "People searching 'GLP-1 peptide for weight loss' sometimes mix up research chemicals with licensed medicines. Orforglipron used as Foundayo is a prescription medication. It is not a research peptide, and Beema will not help anyone buy unlabeled powder online.",
+        "This article is educational, not medical advice. Beema Health does not currently offer orforglipron, Foundayo, or any oral branded GLP-1. Listing the molecule in a pipeline cluster on this site is about search education. It is not a product page and not a promise that Beema Health will add the pill later.",
+        "People searching 'GLP-1 peptide for weight loss' sometimes mix up research chemicals with licensed medicines. Orforglipron used as Foundayo is a prescription medication. It is not a research peptide, and Beema Health will not help anyone buy unlabeled powder online.",
       ],
     },
     {
@@ -131,15 +131,15 @@ export const article: LearnArticle = {
       id: "beema-status",
       heading: "Why Beema Health still points you to other options",
       body: [
-        "Beema's live program is cash-pay telehealth evaluation for compounded semaglutide and compounded tirzepatide. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Foundayo is a separate, branded, FDA-approved product that Beema does not currently offer.",
-        "If you specifically want an FDA-approved oral GLP-1, ask a clinician who can prescribe branded products. If you want to understand Beema's current cash-pay injections, use the compounded semaglutide and tirzepatide pages for live plan rates. Do not treat an educational orforglipron article as a checkout path.",
+        "Beema Health's live program is cash-pay telehealth evaluation for compounded semaglutide and compounded tirzepatide. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Foundayo is a separate, branded, FDA-approved product that Beema Health does not currently offer.",
+        "If you specifically want an FDA-approved oral GLP-1, ask a clinician who can prescribe branded products. If you want to understand Beema Health's current cash-pay injections, use the compounded semaglutide and tirzepatide pages for live plan rates. Do not treat an educational orforglipron article as a checkout path.",
       ],
     },
     {
       id: "practical-next-step",
       heading: "A practical next step if you came from a headline",
       body: [
-        "Write down whether your priority is avoiding needles, matching a trial-average percent loss, or starting care that a telehealth program you trust actually provides. Bring that list to a licensed provider. If Beema is the program you chose, the intake questionnaire is how a clinician sees your history. Payment is not required to start intake, and a prescription is never guaranteed.",
+        "Write down whether your priority is avoiding needles, matching a trial-average percent loss, or starting care that a telehealth program you trust actually provides. Bring that list to a licensed provider. If Beema Health is the program you chose, the intake questionnaire is how a clinician sees your history. Payment is not required to start intake, and a prescription is never guaranteed.",
         "Skip websites selling orforglipron capsules without a prescription. A licensed pharmacy filling a valid prescription is the lawful channel for Foundayo. Unverified online sellers are not.",
       ],
     },

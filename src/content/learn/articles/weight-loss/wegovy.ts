@@ -65,7 +65,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health offer Wegovy?",
       answer:
-        "No. Beema Health does not sell or dispense branded Wegovy. This page explains the FDA-approved medicine. If a Beema clinician prescribes for weight loss, it is compounded semaglutide when legally available and clinically appropriate, not Wegovy. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded semaglutide](/semaglutide/) page. Completing a visit does not guarantee a prescription.",
+        "No. Beema Health does not sell or dispense branded Wegovy. This page explains the FDA-approved medicine. If a Beema Health clinician prescribes for weight loss, it is compounded semaglutide when legally available and clinically appropriate, not Wegovy. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded semaglutide](/semaglutide/) page. Completing a visit does not guarantee a prescription.",
     },
     {
       question: "How much weight did people lose in Wegovy trials?",
@@ -132,7 +132,7 @@ export const article: LearnArticle = {
       heading: "Prescription status and how this relates to Beema Health",
       body: [
         "Wegovy is prescription-only. There is no legitimate 'buy Wegovy online' checkout that skips a licensed clinician. Supply, savings cards, and pharmacy networks are handled by Novo Nordisk and dispensing pharmacies, not by this educational page.",
-        "Beema Health operates a marketing site for telehealth medical weight-loss care. Licensed providers review intakes and may prescribe treatments that Beema actually offers. Wegovy is not one of those offered products. If you already use Wegovy through another clinic or pharmacy, bring that history to any new clinician rather than stopping suddenly without a plan. Evidence on stopping GLP-1 medicines and later weight change is covered in related articles on discontinuation and rebound.",
+        "Beema Health operates a marketing site for telehealth medical weight-loss care. Licensed providers review intakes and may prescribe treatments that Beema Health actually offers. Wegovy is not one of those offered products. If you already use Wegovy through another clinic or pharmacy, bring that history to any new clinician rather than stopping suddenly without a plan. Evidence on stopping GLP-1 medicines and later weight change is covered in related articles on discontinuation and rebound.",
       ],
     },
   ],

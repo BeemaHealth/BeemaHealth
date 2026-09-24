@@ -74,7 +74,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health switch patients from Wegovy to Zepbound?",
       answer:
-        "No. Beema Health does not dispense Wegovy or Zepbound. This page is educational. Completing a Beema medical weight-loss visit does not guarantee a prescription.",
+        "No. Beema Health does not dispense Wegovy or Zepbound. This page is educational. Completing a Beema Health medical weight-loss visit does not guarantee a prescription.",
     },
     {
       question: "Will my nausea restart?",

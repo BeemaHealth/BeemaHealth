@@ -81,7 +81,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health claim you will not regain weight?",
       answer:
-        "No. Beema Health does not guarantee weight loss or weight-loss maintenance. This article is educational. Completing an online visit does not guarantee a prescription. Beema does not dispense the branded products named in the trials above.",
+        "No. Beema Health does not guarantee weight loss or weight-loss maintenance. This article is educational. Completing an online visit does not guarantee a prescription. Beema Health does not dispense the branded products named in the trials above.",
     },
   ],
   sections: [
@@ -90,7 +90,7 @@ export const article: LearnArticle = {
       heading: "What 'rebound' means in this context",
       body: [
         "Rebound weight gain after a GLP-1 means body weight rises after the medicine is stopped or interrupted, often toward the pre-treatment weight. Researchers also track waist, blood pressure, lipids, and glucose, which can move in the same direction as weight. The word 'rebound' is used in headlines. The underlying idea in obesity science is that the body defends a higher weight after loss, and that GLP-1-based drugs were suppressing appetite while they were on board.",
-        "This article summarizes trials. It is not medical advice and not a warning designed to sell a prescription. Beema Health does not guarantee results. Branded trial drugs (Wegovy-range semaglutide, Zepbound-range tirzepatide) are not Beema products.",
+        "This article summarizes trials. It is not medical advice and not a warning designed to sell a prescription. Beema Health does not guarantee results. Branded trial drugs (Wegovy-range semaglutide, Zepbound-range tirzepatide) are not Beema Health products.",
       ],
     },
     {
@@ -129,7 +129,7 @@ export const article: LearnArticle = {
       id: "beema",
       heading: "Beema Health",
       body: [
-        "Beema Health provides telehealth medical weight-loss care reviewed by licensed providers. Completing intake does not guarantee a prescription. Beema does not claim that starting care prevents rebound forever. If you already take a branded GLP-1, do not stop it based only on this explainer. Use the program overview to see how an online visit works.",
+        "Beema Health provides telehealth medical weight-loss care reviewed by licensed providers. Completing intake does not guarantee a prescription. Beema Health does not claim that starting care prevents rebound forever. If you already take a branded GLP-1, do not stop it based only on this explainer. Use the program overview to see how an online visit works.",
       ],
     },
   ],

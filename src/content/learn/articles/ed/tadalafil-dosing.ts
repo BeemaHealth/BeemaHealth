@@ -12,7 +12,7 @@ export const article: LearnArticle = {
   title: "Tadalafil Dosing: How 5mg to 20mg Doses Work",
   h1: "How tadalafil dosing works: 5mg, 10mg, and 20mg",
   description:
-    "Tadalafil (Cialis) is FDA-labeled from 5mg to 20mg. See as-needed vs once-daily dosing, timing before activity, and which strengths Beema offers.",
+    "Tadalafil (Cialis) is FDA-labeled from 5mg to 20mg. See as-needed vs once-daily dosing, timing before activity, and which strengths Beema Health offers.",
   keywords: [
     "tadalafil dosage",
     "tadalafil dosing",
@@ -59,13 +59,13 @@ export const article: LearnArticle = {
         "The FDA label reports improved erectile function compared to placebo for up to 36 hours after a dose in clinical trials, which is why tadalafil is sometimes informally called a longer-acting option compared to sildenafil. Individual duration varies, and food does not need to be avoided with tadalafil.",
     },
     {
-      question: "What tadalafil strengths does Beema offer?",
-      answer: `Beema's tadalafil is available at a single flat rate across the 5 mg, 10 mg, and 20 mg as-needed strengths; a licensed provider decides which of those, if any, may be appropriate for a given patient. Beema does not currently offer the 2.5 mg once-daily strength. ${GENERIC_TADALAFIL_REQUIRED} See the tadalafil page for pricing and to start an intake. Looking for a formulation that combines tadalafil and sildenafil into one dissolve-under-the-tongue tablet instead? See ED Mints. ${COMPOUNDED_ED_MINTS_REQUIRED}`,
+      question: "What tadalafil strengths does Beema Health offer?",
+      answer: `Beema Health's tadalafil is available at a single flat rate across the 5 mg, 10 mg, and 20 mg as-needed strengths; a licensed provider decides which of those, if any, may be appropriate for a given patient. Beema Health does not currently offer the 2.5 mg once-daily strength. ${GENERIC_TADALAFIL_REQUIRED} See the tadalafil page for pricing and to start an intake. Looking for a formulation that combines tadalafil and sildenafil into one dissolve-under-the-tongue tablet instead? See ED Mints. ${COMPOUNDED_ED_MINTS_REQUIRED}`,
     },
     {
-      question: "Is Beema's tadalafil the same as Cialis?",
+      question: "Is Beema Health's tadalafil the same as Cialis?",
       answer:
-        "Yes. Beema's tadalafil is the FDA-approved generic version of Cialis - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.",
+        "Yes. Beema Health's tadalafil is the FDA-approved generic version of Cialis - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.",
     },
   ],
   sections: [
@@ -100,9 +100,9 @@ export const article: LearnArticle = {
     },
     {
       id: "what-beema-offers",
-      heading: "What Beema's tadalafil offers",
+      heading: "What Beema Health's tadalafil offers",
       body: [
-        `Beema's live tadalafil offering is available at 5 mg, 10 mg, or 20 mg (as-needed strengths; the 2.5 mg once-daily strength is not currently offered). ${GENERIC_TADALAFIL_REQUIRED} A licensed provider reviews each patient's intake and independently decides the strength and dose, if any, that may be appropriate; completing intake does not guarantee a prescription. See the tadalafil page for eligibility and to start an intake.`,
+        `Beema Health's live tadalafil offering is available at 5 mg, 10 mg, or 20 mg (as-needed strengths; the 2.5 mg once-daily strength is not currently offered). ${GENERIC_TADALAFIL_REQUIRED} A licensed provider reviews each patient's intake and independently decides the strength and dose, if any, that may be appropriate; completing intake does not guarantee a prescription. See the tadalafil page for eligibility and to start an intake.`,
         `If you're comparing tadalafil to sildenafil, or want a formulation that combines the two into one dissolve-under-the-tongue tablet, see the sildenafil dosing article and ED Mints. ${COMPOUNDED_ED_MINTS_REQUIRED}`,
       ],
     },

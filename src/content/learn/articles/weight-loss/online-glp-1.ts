@@ -78,7 +78,7 @@ export const article: LearnArticle = {
         "The standard of care should be the same: adequate history, indicated counseling, and a real prescription decision. The setting differs. Telehealth helps people who cannot take a half-day off for a clinic. It is a poor fit if you need emergency care or cannot complete an honest intake.",
     },
     {
-      question: "Does Beema ship to my state?",
+      question: "Does Beema Health ship to my state?",
       answer: `${LEARN_FIFTY_STATE_SENTENCE} Compounded medication availability can still vary with state rules and pharmacy fulfillment. Eligibility is always individual. ${LEARN_CLINICIAN_RX_SENTENCE} ${LEARN_USA_ONLY_SENTENCE}`,
     },
     {
@@ -94,7 +94,7 @@ export const article: LearnArticle = {
     {
       question: "Are online GLP-1s research peptides?",
       answer:
-        "They should not be. Legitimate telehealth uses prescription medications. If a site brags about research-use-only GLP-1, leave. Beema's model is licensed providers and contracted pharmacies, not a peptide catalog.",
+        "They should not be. Legitimate telehealth uses prescription medications. If a site brags about research-use-only GLP-1, leave. Beema Health's model is licensed providers and contracted pharmacies, not a peptide catalog.",
     },
   ],
   sections: [
@@ -102,7 +102,7 @@ export const article: LearnArticle = {
       id: "definition",
       heading: "Online should mean the visit, not the vial aisle",
       body: [
-        "If you want a GLP-1 without sitting in a waiting room, you can start online. In the United States that still means a licensed provider, a real prescription decision, and a licensed pharmacy. Beema does that visit in all 50 states. What it does not do is sell you a research vial from a catalog.",
+        "If you want a GLP-1 without sitting in a waiting room, you can start online. In the United States that still means a licensed provider, a real prescription decision, and a licensed pharmacy. Beema Health does that visit in all 50 states. What it does not do is sell you a research vial from a catalog.",
         "Searches for online GLP-1, GLP1 online, get GLP-1 online, and buy GLP-1 online should resolve to the same lawful path: a telehealth visit with a licensed US provider, then a prescription only if that clinician decides it is appropriate, then a licensed pharmacy. Yes, you can start that path with Beema Health from home in any US state. The medicine is still a prescription drug. The internet is the waiting room, not a shopping cart.",
       ],
     },
@@ -111,7 +111,7 @@ export const article: LearnArticle = {
       heading: "The visit, step by step",
       body: [
         "You create an account and complete a medical questionnaire covering location, history, medicines, and goals. A licensed clinician reviews it. They may ask follow-up questions. If they prescribe, a pharmacy dispenses and ships. Follow-up continues so doses can change. That is the whole product.",
-        "Beema's intake is a questionnaire, not a live chat. No payment is required to start the questionnaire. If you later pay, you are paying for a medical visit and, only if a licensed clinician prescribes, for pharmacy fulfillment of that prescription - not for a guaranteed drug in a cart. Additional clinical questions may open after checkout, depending on the visit flow. A prescription is never guaranteed.",
+        "Beema Health's intake is a questionnaire, not a live chat. No payment is required to start the questionnaire. If you later pay, you are paying for a medical visit and, only if a licensed clinician prescribes, for pharmacy fulfillment of that prescription - not for a guaranteed drug in a cart. Additional clinical questions may open after checkout, depending on the visit flow. A prescription is never guaranteed.",
       ],
     },
     {
@@ -126,7 +126,7 @@ export const article: LearnArticle = {
       id: "safety-online",
       heading: "How to spot an unsafe 'online GLP-1' shop",
       body: [
-        "Red flags include no named prescriber, 'for research only' disclaimers next to human dosing, prices that ignore clinical review, and claims that compounded product is the same as a brand. FDA has warned about unapproved GLP-1s. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Beema states that on treatment pages instead of hiding it.",
+        "Red flags include no named prescriber, 'for research only' disclaimers next to human dosing, prices that ignore clinical review, and claims that compounded product is the same as a brand. FDA has warned about unapproved GLP-1s. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Beema Health states that on treatment pages instead of hiding it.",
       ],
       bullets: [
         "Licensed provider in your state of residence",
@@ -138,14 +138,14 @@ export const article: LearnArticle = {
       id: "near-me",
       heading: "What 'GLP-1 near me' means in a telehealth world",
       body: [
-        "You may still want a local brick-and-mortar option for labs or comorbidities. You do not have to live next to a med-spa to receive lawful incretin care. Beema's [Houston GLP-1 guide](/learn/weight-loss/glp-1-in-houston/) and [Texas GLP-1 guide](/learn/weight-loss/glp-1-in-texas/) explain regional wrinkles. Nationally, the same 50-state statement applies: you can start intake from home. For the proximity query itself, see [GLP-1 near me](/learn/weight-loss/glp-1-near-me/).",
+        "You may still want a local brick-and-mortar option for labs or comorbidities. You do not have to live next to a med-spa to receive lawful incretin care. Beema Health's [Houston GLP-1 guide](/learn/weight-loss/glp-1-in-houston/) and [Texas GLP-1 guide](/learn/weight-loss/glp-1-in-texas/) explain regional wrinkles. Nationally, the same 50-state statement applies: you can start intake from home. For the proximity query itself, see [GLP-1 near me](/learn/weight-loss/glp-1-near-me/).",
       ],
     },
     {
       id: "next",
-      heading: "When you want Beema's commercial details",
+      heading: "When you want Beema Health's commercial details",
       body: [
-        `Use the [medical weight-loss program](/weight-loss/) overview, [compounded semaglutide](/semaglutide/) and [compounded tirzepatide](/tirzepatide/) for medication-specific cash-pay plans, and the [GLP-1 doctor](/learn/weight-loss/glp-1-doctor/) article for what clinicians check. If you want to see whether compounded semaglutide or compounded tirzepatide could be appropriate for you, start Beema's online intake. ${LEARN_CLINICIAN_RX_SENTENCE} ${LEARN_USA_ONLY_SENTENCE}`,
+        `Use the [medical weight-loss program](/weight-loss/) overview, [compounded semaglutide](/semaglutide/) and [compounded tirzepatide](/tirzepatide/) for medication-specific cash-pay plans, and the [GLP-1 doctor](/learn/weight-loss/glp-1-doctor/) article for what clinicians check. If you want to see whether compounded semaglutide or compounded tirzepatide could be appropriate for you, start Beema Health's online intake. ${LEARN_CLINICIAN_RX_SENTENCE} ${LEARN_USA_ONLY_SENTENCE}`,
       ],
     },
   ],

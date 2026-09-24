@@ -275,28 +275,29 @@ describe("editorial standards", () => {
   });
 
   it("states plainly that the unlaunched HRT vertical is not purchasable", () => {
-    // Beema does not sell menopausal hormone therapy - HRT education must
-    // not read as an offer. TRT launched 2026-08-27 as compounded
-    // enclomiphene (see the next test), so it's checked separately.
+    // Beema Health does not sell menopausal hormone therapy - HRT education must
+    // not read as an offer. TRT briefly launched 2026-08-27 as compounded
+    // enclomiphene but paused again 2026-08-28 (see the next test - it still
+    // must mention enclomiphene educationally, just not as a live offering).
     const inVertical = articles.filter((a) => a.vertical === "hrt");
     expect(inVertical.length).toBeGreaterThan(0);
     for (const a of inVertical) {
       expect(
         articleProse(a),
-        `${learnPath(a.vertical, a.slug)} does not say Beema has no such program yet`,
+        `${learnPath(a.vertical, a.slug)} does not say Beema Health has no such program yet`,
       ).toMatch(
-        /does not (?:currently )?offer|not a Beema product|education(?:al)? only/i,
+        /does not (?:currently )?offer|not a Beema Health product|education(?:al)? only/i,
       );
     }
   });
 
-  it("distinguishes Beema's real TRT offering (compounded enclomiphene) from the injectable/gel/patch category the TRT vertical educates on", () => {
+  it("distinguishes compounded enclomiphene (a related but not currently offered treatment) from the injectable/gel/patch category the TRT vertical educates on", () => {
     const inVertical = articles.filter((a) => a.vertical === "trt");
     expect(inVertical.length).toBeGreaterThan(0);
     for (const a of inVertical) {
       expect(
         articleProse(a),
-        `${learnPath(a.vertical, a.slug)} does not mention Beema's actual enclomiphene offering`,
+        `${learnPath(a.vertical, a.slug)} does not mention Beema Health's actual enclomiphene offering`,
       ).toMatch(/enclomiphene/i);
     }
   });

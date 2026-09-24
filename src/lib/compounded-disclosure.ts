@@ -20,16 +20,16 @@ export const COMPOUNDED_DISCLOSURE = `${COMPOUNDED_SEMA_REQUIRED} ${COMPOUNDED_T
  * FDA-registered.
  */
 export const COMPOUNDED_ED_MINTS_REQUIRED =
-  "Beema's ED Mints formulations are compounded at an FDA-registered 503B outsourcing facility. They are not FDA-approved and are considered only when legally available and clinically appropriate.";
+  "Beema Health's ED Mints formulations are compounded at an FDA-registered 503B outsourcing facility. They are not FDA-approved and are considered only when legally available and clinically appropriate.";
 
 /**
- * Beema's tadalafil and sildenafil are the FDA-approved generic versions of
+ * Beema Health's tadalafil and sildenafil are the FDA-approved generic versions of
  * Cialis and Viagra (corrected 2026-09-03, per Matt) - not compounded, unlike
  * ED Mints above. Mirrors how oral finasteride is the real generic of
  * Propecia, not a compounded formulation.
  */
 export const GENERIC_TADALAFIL_REQUIRED =
-  "Beema's tadalafil is the FDA-approved generic version of Cialis - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.";
+  "Beema Health's tadalafil is the FDA-approved generic version of Cialis - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.";
 
 export const GENERIC_SILDENAFIL_REQUIRED =
-  "Beema's sildenafil is the FDA-approved generic version of Viagra - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.";
+  "Beema Health's sildenafil is the FDA-approved generic version of Viagra - the identical active ingredient, strength, and intended use as the brand-name product, dispensed by a licensed pharmacy, not a compounded formulation.";

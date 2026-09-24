@@ -11,7 +11,7 @@ import {
 import { listKnownSimpleTreatmentPricingUsdAmounts } from "@/lib/simple-treatment-pricing";
 
 /**
- * llms.txt is what answer engines are pointed at as Beema's fact sheet, so a
+ * llms.txt is what answer engines are pointed at as Beema Health's fact sheet, so a
  * stale number here is quoted back to people as current. An audit found it
  * still advertising a tirzepatide price the site had stopped charging, with
  * nothing in the build to catch the drift. These tests bind the file to the
@@ -133,7 +133,7 @@ describe("llms.txt", () => {
     // today" claim would still be citable after these lines relaunch.
     // Omission (silently not listing them as live) is the guard, not a
     // negative claim. HRT is different - docs/features/treatment-pages.md
-    // says it's permanently not a Beema program, so its "not offered" line
+    // says it's permanently not a Beema Health program, so its "not offered" line
     // in /learn/hrt/ stays untouched; this test only covers llms.txt.
     expect(llms).toMatch(/all 50 US states/i);
     expect(llms).toMatch(/United States only/i);

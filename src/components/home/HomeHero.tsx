@@ -6,7 +6,7 @@ import {
   useTransform,
 } from "motion/react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import {
   FloatingHexagons,
   HexMotif,
@@ -14,6 +14,10 @@ import {
 } from "@/components/site/primitives";
 import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
 import { GetStartedModal } from "@/components/site/GetStartedModal";
+import {
+  GOOGLE_BUSINESS_LISTING_URL,
+  GOOGLE_RATING_VALUE,
+} from "@/lib/google-business";
 import {
   EASE_OUT,
   LineReveal,
@@ -224,6 +228,39 @@ export function HomeHero() {
             variants={item}
             className="mt-6 flex flex-col items-start gap-3"
           >
+            {/*
+                Trust badge before the CTA, not after - proof precedes the
+                ask. A pill (not bare inline text) so it reads as a badge
+                rather than an orphaned caption under the button, and its own
+                gap-3 gives it room to breathe above the button at every
+                width instead of crowding it on mobile.
+
+                Star rendering (2026-09-24, per Matt's screenshot feedback):
+                lucide's default strokeWidth (2) is tuned for line-only
+                icons, not a filled shape - at size-4 with a mid-tone stroke
+                it blurred into a muddy blob instead of a crisp star. A
+                thinner (1.5) near-black outline around the bright primary
+                fill reads like a real badge glyph (the classic
+                outlined-emoji-star look) instead of two similar warm tones
+                fighting each other.
+              */}
+            <a
+              href={GOOGLE_BUSINESS_LISTING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-background px-3.5 py-2.5 text-sm font-semibold text-foreground shadow-soft ring-1 ring-border/60 transition-colors hover:bg-muted"
+            >
+              <span aria-hidden className="flex items-center gap-0.5">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <Star
+                    key={i}
+                    strokeWidth={1.5}
+                    className="size-5 fill-primary stroke-foreground"
+                  />
+                ))}
+              </span>
+              {GOOGLE_RATING_VALUE} on Google
+            </a>
             <HoverLiftButton>
               <Button
                 type="button"

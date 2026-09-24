@@ -76,7 +76,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health dose Zepbound?",
       answer:
-        "No. Beema Health does not sell or dispense branded Zepbound. This page is educational. If a Beema clinician prescribes tirzepatide, it is compounded tirzepatide when legally available and clinically appropriate, not Zepbound. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded tirzepatide](/tirzepatide/) page. Completing a visit does not guarantee a prescription or a milligram strength.",
+        "No. Beema Health does not sell or dispense branded Zepbound. This page is educational. If a Beema Health clinician prescribes tirzepatide, it is compounded tirzepatide when legally available and clinically appropriate, not Zepbound. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. See the [compounded tirzepatide](/tirzepatide/) page. Completing a visit does not guarantee a prescription or a milligram strength.",
     },
     {
       question: "Can I stay on 2.5 mg because of nausea?",
@@ -137,7 +137,7 @@ export const article: LearnArticle = {
       heading: "What happens after you reach a maintenance dose",
       body: [
         "SURMOUNT-4 showed that continuing tirzepatide after a lead-in period maintained much more of the weight reduction than switching to placebo. Reaching 10 or 15 mg is not a finish line after which the medicine is optional if the treatment goal remains weight maintenance. See GLP-1 maintenance dose and stopping tirzepatide.",
-        "Switching from Zepbound to Wegovy is a new prescription with no official milligram conversion table. See that switching article. Beema Health does not offer Zepbound. The medical weight-loss overview explains Beema telehealth visits without claiming a branded substitution.",
+        "Switching from Zepbound to Wegovy is a new prescription with no official milligram conversion table. See that switching article. Beema Health does not offer Zepbound. The medical weight-loss overview explains Beema Health telehealth visits without claiming a branded substitution.",
       ],
     },
   ],

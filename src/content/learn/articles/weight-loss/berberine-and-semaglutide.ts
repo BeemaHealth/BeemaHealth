@@ -65,9 +65,9 @@ export const article: LearnArticle = {
         "Not without clinician and pharmacist review. Berberine can affect CYP enzymes and P-glycoprotein, which changes levels of other drugs. Both berberine and GLP-1 medicines can cause gastrointestinal upset. Stacking them can worsen diarrhea or hypoglycemia risk if you also take diabetes drugs. This page does not green-light a combination.",
     },
     {
-      question: "Does Beema prescribe or sell berberine?",
+      question: "Does Beema Health prescribe or sell berberine?",
       answer:
-        "No. Beema Health does not sell supplements. When a licensed provider prescribes through Beema, the live options are compounded semaglutide or compounded tirzepatide if appropriate. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Completing intake never guarantees a prescription.",
+        "No. Beema Health does not sell supplements. When a licensed provider prescribes through Beema Health, the live options are compounded semaglutide or compounded tirzepatide if appropriate. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Completing intake never guarantees a prescription.",
     },
     {
       question: "How strong is berberine's weight-loss evidence?",
@@ -91,7 +91,7 @@ export const article: LearnArticle = {
       heading: "Why the 'natural Ozempic' slogan is false",
       body: [
         "Semaglutide is a peptide GLP-1 receptor agonist. Ozempic is one FDA-approved brand used for type 2 diabetes. Berberine is an isoquinoline alkaloid found in plants such as goldenseal and barberry. People swallow it hoping for metformin-like glucose effects. Calling it natural Ozempic implies receptor-level equivalence that does not exist.",
-        "This article is educational, not medical advice. Berberine does not replace semaglutide. Beema does not offer berberine.",
+        "This article is educational, not medical advice. Berberine does not replace semaglutide. Beema Health does not offer berberine.",
       ],
     },
     {
@@ -135,7 +135,7 @@ export const article: LearnArticle = {
       heading: "If you wanted a clinical incretin, say so",
       body: [
         "Beema Health provides nationwide telehealth evaluation for medical weight loss. Licensed providers may prescribe compounded semaglutide or compounded tirzepatide when appropriate. Compounded tirzepatide is not FDA-approved. A prescription is never guaranteed. Bring a full supplement list so the reviewer is not guessing.",
-        "If your only goal was to avoid injections with a capsule that 'works like Ozempic,' berberine will not meet that standard. Orforglipron is a separate, FDA-approved oral GLP-1 brand (Foundayo) that Beema also does not currently offer. Do not confuse it with berberine either.",
+        "If your only goal was to avoid injections with a capsule that 'works like Ozempic,' berberine will not meet that standard. Orforglipron is a separate, FDA-approved oral GLP-1 brand (Foundayo) that Beema Health also does not currently offer. Do not confuse it with berberine either.",
       ],
     },
   ],

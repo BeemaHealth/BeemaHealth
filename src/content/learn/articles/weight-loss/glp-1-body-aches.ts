@@ -125,7 +125,7 @@ export const article: LearnArticle = {
       id: "activity-without-overdoing",
       heading: "Activity without overdoing a deficit",
       body: [
-        "Labeled indications pair GLP-1 treatment with increased physical activity. Starting high-intensity workouts while barely eating is a common way to feel wrecked. A slower increase in walking and two short resistance sessions, if a clinician agrees, is a typical public-health pattern, not a Beema training program.",
+        "Labeled indications pair GLP-1 treatment with increased physical activity. Starting high-intensity workouts while barely eating is a common way to feel wrecked. A slower increase in walking and two short resistance sessions, if a clinician agrees, is a typical public-health pattern, not a Beema Health training program.",
         'If aches are the reason someone cannot stay active, say so at follow-up. The clinician may look at dose, protein intake, sleep, or another diagnosis. Do not add unprescribed "fat-burning" supplements that can raise heart rate on top of the small labeled heart-rate increases seen with these medicines.',
       ],
     },

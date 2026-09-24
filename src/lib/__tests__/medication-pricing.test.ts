@@ -130,7 +130,9 @@ describe("medication-pricing", () => {
   });
 
   it("balances both medications in short and hero dual lines", () => {
-    expect(dualCompoundedShortPricingLine()).toContain("Semaglutide from");
+    expect(dualCompoundedShortPricingLine()).toContain(
+      "Semaglutide $99 first month",
+    );
     expect(dualCompoundedShortPricingLine()).toContain("Tirzepatide");
     expect(dualCompoundedPromoShortPricingLine()).toContain("$99");
     expect(dualCompoundedPromoShortPricingLine()).toContain("Tirz starter");

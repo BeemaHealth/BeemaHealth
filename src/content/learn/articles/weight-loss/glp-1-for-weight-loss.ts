@@ -81,8 +81,8 @@ export const article: LearnArticle = {
         "No. Trial averages (about 14.9% with semaglutide 2.4 mg in STEP 1; higher means at higher tirzepatide doses in SURMOUNT-1) describe groups. Individuals do better or worse. Stopping often leads to regain. Nobody should promise you a number.",
     },
     {
-      question: "What does Beema offer?",
-      answer: `Beema Health is a cash-pay telehealth program. Licensed providers may prescribe compounded semaglutide or compounded tirzepatide when legally available and clinically appropriate. ${COMPOUNDED_DISCLOSURE} Beema does not sell Wegovy, Ozempic, Zepbound, or Mounjaro. ${LEARN_USA_ONLY_SENTENCE}`,
+      question: "What does Beema Health offer?",
+      answer: `Beema Health is a cash-pay telehealth program. Licensed providers may prescribe compounded semaglutide or compounded tirzepatide when legally available and clinically appropriate. ${COMPOUNDED_DISCLOSURE} Beema Health does not sell Wegovy, Ozempic, Zepbound, or Mounjaro. ${LEARN_USA_ONLY_SENTENCE}`,
     },
     {
       question: "Who is a typical labeled candidate?",
@@ -96,7 +96,7 @@ export const article: LearnArticle = {
       heading: "What GLP-1 is doing in the body",
       body: [
         "Glucagon-like peptide-1 is released after meals. Receptor agonists used as medicines amplify that signal. The practical results people notice first are earlier fullness, fewer intrusive food thoughts, and slower stomach emptying. Those effects are why the class is used in medical weight loss, not because the drugs 'melt fat' in the way a cream claims to.",
-        "This page is educational, not a product landing page and not medical advice. Beema's commercial program pages for weight loss, compounded semaglutide, and compounded tirzepatide explain how to start intake. Here the job is to explain the pharmacology so 'GLP-1 for weight loss' is not a mystery slogan.",
+        "This page is educational, not a product landing page and not medical advice. Beema Health's commercial program pages for weight loss, compounded semaglutide, and compounded tirzepatide explain how to start intake. Here the job is to explain the pharmacology so 'GLP-1 for weight loss' is not a mystery slogan.",
       ],
     },
     {
@@ -112,7 +112,7 @@ export const article: LearnArticle = {
       heading: "How to get GLP-1 treatment online in the United States",
       body: [
         "A licensed provider reviews health history, medicines, and BMI-related factors, then decides whether a prescription is appropriate. Telehealth can establish that relationship under state law. Shipping from a licensed pharmacy may follow. That is online GLP-1 treatment. It is not adding a vial to a cart.",
-        `Beema serves adults in all 50 US states with that telehealth model. Medication availability can still depend on compounding rules and pharmacy fulfillment. Prescribing is never guaranteed. ${LEARN_USA_ONLY_SENTENCE}`,
+        `Beema Health serves adults in all 50 US states with that telehealth model. Medication availability can still depend on compounding rules and pharmacy fulfillment. Prescribing is never guaranteed. ${LEARN_USA_ONLY_SENTENCE}`,
       ],
     },
     {
@@ -120,7 +120,7 @@ export const article: LearnArticle = {
       heading: "Side effects and when to seek care",
       body: [
         "Nausea, constipation, diarrhea, and vomiting are common, especially during dose increases. Gallbladder problems and pancreatitis are less common but serious. Seek urgent care for severe abdominal pain, signs of dehydration, or allergic reaction. People with MTC or MEN 2 history are generally excluded from many labeled incretin obesity products. Read the Medication Guide for any branded product you are prescribed.",
-        "Compounded versions, when used, are not FDA-approved and must not be described as generic equivalents of a brand. Beema's treatment pages state that required distinction.",
+        "Compounded versions, when used, are not FDA-approved and must not be described as generic equivalents of a brand. Beema Health's treatment pages state that required distinction.",
       ],
     },
     {
@@ -134,7 +134,7 @@ export const article: LearnArticle = {
       id: "next",
       heading: "If you want a program, not just a definition",
       body: [
-        "A weight-loss program wraps follow-up, titration, and supplies around the molecule. Read the [GLP-1 weight-loss program](/learn/weight-loss/glp-1-weight-loss-program/) explainer and the [GLP-1 doctor](/learn/weight-loss/glp-1-doctor/) explainer next. When you are ready for Beema's cash-pay intake, use the live [program overview](/weight-loss/), [compounded semaglutide](/semaglutide/), or [compounded tirzepatide](/tirzepatide/) pages. Those pages carry current plan prices. This educational article does not.",
+        "A weight-loss program wraps follow-up, titration, and supplies around the molecule. Read the [GLP-1 weight-loss program](/learn/weight-loss/glp-1-weight-loss-program/) explainer and the [GLP-1 doctor](/learn/weight-loss/glp-1-doctor/) explainer next. When you are ready for Beema Health's cash-pay intake, use the live [program overview](/weight-loss/), [compounded semaglutide](/semaglutide/), or [compounded tirzepatide](/tirzepatide/) pages. Those pages carry current plan prices. This educational article does not.",
       ],
     },
   ],

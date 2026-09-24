@@ -52,7 +52,7 @@ export const article: LearnArticle = {
     {
       question: "What does RDT mean?",
       answer:
-        "RDT stands for rapidly dissolving tablet - a tablet designed to dissolve under the tongue rather than being swallowed with water. Beema's combination formulation combining tadalafil and sildenafil at 12 mg/60 mg is prepared as an RDT.",
+        "RDT stands for rapidly dissolving tablet - a tablet designed to dissolve under the tongue rather than being swallowed with water. Beema Health's combination formulation combining tadalafil and sildenafil at 12 mg/60 mg is prepared as an RDT.",
     },
     {
       question:
@@ -61,9 +61,9 @@ export const article: LearnArticle = {
     },
     {
       question:
-        "How is this different from Beema's single-ingredient tadalafil or sildenafil?",
+        "How is this different from Beema Health's single-ingredient tadalafil or sildenafil?",
       answer:
-        "Beema's single-ingredient tadalafil and sildenafil pages describe standalone formulations of one active ingredient each, each with its own labeled-style dosing range described in the tadalafil dosing and sildenafil dosing articles. This combination formulation, marketed by Beema as one of two ED Mints options, combines both ingredients into a single dissolve-under-the-tongue dose. They are different products with different intake flows.",
+        "Beema Health's single-ingredient tadalafil and sildenafil pages describe standalone formulations of one active ingredient each, each with its own labeled-style dosing range described in the tadalafil dosing and sildenafil dosing articles. This combination formulation, marketed by Beema Health as one of two ED Mints options, combines both ingredients into a single dissolve-under-the-tongue dose. They are different products with different intake flows.",
     },
   ],
   sections: [
@@ -72,21 +72,21 @@ export const article: LearnArticle = {
       heading: "What this combination formulation is",
       body: [
         "This is a compounded formulation combining tadalafil and sildenafil, prepared at an FDA-registered 503B outsourcing facility, as a rapidly dissolving tablet (RDT) that dissolves under the tongue rather than being swallowed with water. It is not sold as a single commercial product by any pharmaceutical manufacturer, and it is not FDA-approved.",
-        "Beema markets this specific formulation, tadalafil 12 mg combined with sildenafil 60 mg, as one of its two ED Mints options.",
+        "Beema Health markets this specific formulation, tadalafil 12 mg combined with sildenafil 60 mg, as one of its two ED Mints options.",
       ],
     },
     {
       id: "why-combine",
       heading: "Why compounding pharmacies combine these two ingredients",
       body: [
-        "Tadalafil and sildenafil are both PDE5 inhibitors that work the same general way (relaxing smooth muscle and increasing blood flow), but they differ in onset speed and how long they last. Some compounding pharmacies and clinicians describe combining them as a way to get a faster-acting component alongside a longer-acting one in a single dose. That is a pharmacologic rationale based on the two ingredients' individual, separately studied profiles - it is not itself a claim that has been tested in large randomized trials of the combined product, and Beema does not represent it that way.",
+        "Tadalafil and sildenafil are both PDE5 inhibitors that work the same general way (relaxing smooth muscle and increasing blood flow), but they differ in onset speed and how long they last. Some compounding pharmacies and clinicians describe combining them as a way to get a faster-acting component alongside a longer-acting one in a single dose. That is a pharmacologic rationale based on the two ingredients' individual, separately studied profiles - it is not itself a claim that has been tested in large randomized trials of the combined product, and Beema Health does not represent it that way.",
       ],
     },
     {
       id: "dosing-and-timing",
       heading: "Dosing and timing basics",
       body: [
-        "As formulated by Beema, this RDT dissolves under the tongue with no water needed. Most patients take one about 30 minutes before sexual activity, and no more than one dose in a 24-hour period. Like single-ingredient tadalafil and sildenafil, it does not cause arousal by itself - sexual stimulation is still required for it to have an effect. A licensed provider confirms timing and dosing based on an individual patient's health history.",
+        "As formulated by Beema Health, this RDT dissolves under the tongue with no water needed. Most patients take one about 30 minutes before sexual activity, and no more than one dose in a 24-hour period. Like single-ingredient tadalafil and sildenafil, it does not cause arousal by itself - sexual stimulation is still required for it to have an effect. A licensed provider confirms timing and dosing based on an individual patient's health history.",
       ],
     },
     {
@@ -99,9 +99,9 @@ export const article: LearnArticle = {
     },
     {
       id: "what-beema-offers",
-      heading: "What Beema actually offers",
+      heading: "What Beema Health actually offers",
       body: [
-        `Beema's live ED Mints line has two formulations: this tadalafil + sildenafil 12 mg/60 mg RDT, and a separate sildenafil + tadalafil + oxytocin 50 mg/20 mg/125 IU ODT (orally dissolving tablet) - see that formulation's own article. ${COMPOUNDED_ED_MINTS_REQUIRED} A licensed provider reviews each patient's intake and independently decides which formulation, if any, may be appropriate; completing intake does not guarantee a prescription. See the ED Mints page for eligibility and to start an intake.`,
+        `Beema Health's live ED Mints line has two formulations: this tadalafil + sildenafil 12 mg/60 mg RDT, and a separate sildenafil + tadalafil + oxytocin 50 mg/20 mg/125 IU ODT (orally dissolving tablet) - see that formulation's own article. ${COMPOUNDED_ED_MINTS_REQUIRED} A licensed provider reviews each patient's intake and independently decides which formulation, if any, may be appropriate; completing intake does not guarantee a prescription. See the ED Mints page for eligibility and to start an intake.`,
       ],
     },
     {

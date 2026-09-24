@@ -74,7 +74,7 @@ export const article: LearnArticle = {
     {
       question: "Does Beema Health offer GLP-1 microdosing?",
       answer:
-        "No. Beema Health does not promote off-label microdosing as a protocol. Beema does not dispense the branded GLP-1 pens named in this article. Any treatment after a Beema visit is decided by a licensed provider. Completing intake does not guarantee a prescription.",
+        "No. Beema Health does not promote off-label microdosing as a protocol. Beema Health does not dispense the branded GLP-1 pens named in this article. Any treatment after a Beema Health visit is decided by a licensed provider. Completing intake does not guarantee a prescription.",
     },
     {
       question: "Where did microdosing videos come from?",
@@ -131,7 +131,7 @@ export const article: LearnArticle = {
       heading: "Beema Health and prescription rules",
       body: [
         "Beema Health does not market microdosing. Completing a medical weight-loss intake does not guarantee any prescription. Providers decide case by case. If you already take a branded GLP-1 from another clinic, bring the actual dose and device to any new visit rather than describing a homemade schedule as if it were a labeled strength.",
-        "For an overview of telehealth medical weight loss, see Beema's program page. That is educational access to care, not a microdose clinic and not a branded-pen shop.",
+        "For an overview of telehealth medical weight loss, see Beema Health's program page. That is educational access to care, not a microdose clinic and not a branded-pen shop.",
       ],
     },
   ],

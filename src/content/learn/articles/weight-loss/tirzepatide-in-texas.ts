@@ -76,7 +76,7 @@ export const article: LearnArticle = {
     {
       question: "Do I need to be in Houston, Dallas, or Austin?",
       answer:
-        "No. Telehealth access under Texas rules depends on where the patient is located and where the clinician is licensed, not on proximity to a metro. Rural Texas residents face the same intake as someone in Harris County. There is no Beema clinic in any Texas city to visit.",
+        "No. Telehealth access under Texas rules depends on where the patient is located and where the clinician is licensed, not on proximity to a metro. Rural Texas residents face the same intake as someone in Harris County. There is no Beema Health clinic in any Texas city to visit.",
     },
     {
       question: "What did the head-to-head trial actually show?",
@@ -134,10 +134,10 @@ export const article: LearnArticle = {
     },
     {
       id: "beema-status",
-      heading: "What Beema offers Texas patients today",
+      heading: "What Beema Health offers Texas patients today",
       body: [
         "Beema Health is a cash-pay telehealth program for medical weight loss, available to adults in all 50 states including Texas. A licensed provider reviews intake and decides independently whether compounded semaglutide, compounded tirzepatide, or no medication is appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate. Prescribing is never guaranteed.",
-        "Beema does not sell Zepbound or Mounjaro. Those brand names appear here because their prescribing information is the public source for labeled facts about tirzepatide. Current pricing lives on the tirzepatide program page, which is the authoritative source rather than any figure quoted in an article.",
+        "Beema Health does not sell Zepbound or Mounjaro. Those brand names appear here because their prescribing information is the public source for labeled facts about tirzepatide. Current pricing lives on the tirzepatide program page, which is the authoritative source rather than any figure quoted in an article.",
       ],
     },
     {

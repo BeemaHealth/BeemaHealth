@@ -23,7 +23,7 @@ describe("marketing-copy", () => {
       "Semaglutide from $99 first month on a 3-month plan · Tirzepatide starter from $199/mo · one-time $100 off codes",
     );
     expect(FIRST_MONTH_PROMO_SHORT).toBe(
-      "Sema from $99 · Tirz starter from $199/mo",
+      "Sema $99 first mo · Tirz starter from $199/mo",
     );
     expect(promoIncentiveLine()).toContain(FIRST_MONTH_PROMO_LINE);
     expect(waitlistIncentiveBody()).toContain(FIRST_MONTH_PROMO_LINE);
