@@ -194,7 +194,7 @@ export function HomeHero() {
           <div className="mt-3">
             <LegitScriptSeal className="float-right ml-3 mb-1 w-[5.75rem] [&_img]:h-auto [&_img]:w-full sm:w-24" />
             <h1 className="text-[clamp(2rem,4.5vw,4rem)] font-bold leading-[1.1] tracking-tight text-foreground">
-              <LineReveal delay={0}>Online care</LineReveal>
+              <LineReveal delay={0}>{"Online care "}</LineReveal>
               <LineReveal delay={0.1}>
                 {"that's "}
                 <span className="text-grad-brand">human</span>
