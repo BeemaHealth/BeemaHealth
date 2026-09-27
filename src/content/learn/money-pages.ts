@@ -29,6 +29,14 @@ export const LEARN_MONEY_PAGES: Readonly<Record<string, LearnMoneyPage>> = {
     href: "/glp-1-houston/",
     label: "GLP-1 care for Houston",
   },
+  "/semaglutide-houston/": {
+    href: "/semaglutide-houston/",
+    label: "Compounded semaglutide for Houston",
+  },
+  "/tirzepatide-houston/": {
+    href: "/tirzepatide-houston/",
+    label: "Compounded tirzepatide for Houston",
+  },
   "/oral-finasteride/": {
     href: "/oral-finasteride/",
     label: "Oral finasteride",
@@ -41,13 +49,25 @@ export const LEARN_MONEY_PAGES: Readonly<Record<string, LearnMoneyPage>> = {
     href: "/tadalafil/",
     label: "Tadalafil (generic Cialis)",
   },
+  "/tadalafil-boston/": {
+    href: "/tadalafil-boston/",
+    label: "Tadalafil for Boston",
+  },
   "/sildenafil/": {
     href: "/sildenafil/",
     label: "Sildenafil (generic Viagra)",
   },
+  "/sildenafil-boston/": {
+    href: "/sildenafil-boston/",
+    label: "Sildenafil for Boston",
+  },
   "/ed-mints/": {
     href: "/ed-mints/",
     label: "ED Mints",
+  },
+  "/ed-mints-boston/": {
+    href: "/ed-mints-boston/",
+    label: "ED Mints for Boston",
   },
   "/nad-plus/": {
     href: "/nad-plus/",

@@ -11,6 +11,8 @@ alwaysApply: true
 
 **Current phase:** **Launched.** This repo = **marketing/SEO site**. [Bask](https://bask.co/) owns **intake** (one questionnaire - not separate eligibility + intake), checkout, backend, and patient portal (Hive). CTAs → Bask via `resolveCta()`. **LegitScript certified** - ads ready. See `docs/features/legitscript.md`. Leftover Django/`/qualify`/`/intake` code is **legacy** - `docs/BACKEND-DEFERRED.md`; do not orient product work there unless the user asks.
 
+**Dev server (hard rule):** The user owns `npm run dev` / `npm run dev:backend`. **Never** start, stop, restart, or kill the frontend or backend dev server (no `pkill`/`kill`/`lsof` port frees, no Compose `down`/`stop` for the API stack). Applies to every Cursor, Claude Code, and other agent session. If the server is needed and not running, ask the user - do not launch it.
+
 **After code changes:** run `npm test` (frontend Vitest). Fix failures; explain them in chat. Add tests when behavior is new or uncovered.
 
 **Lint:** ESLint on **changed** `.ts`/`.tsx` files only (`npx eslint <paths>` or git-diff pipe). Do **not** run `npm run lint` on the whole repo.

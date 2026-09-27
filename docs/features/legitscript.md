@@ -19,7 +19,9 @@
 | Native size | 73×79 (LegitScript: don’t shrink below this) |
 | Display size | See `LEGITSCRIPT_SEAL_WIDTH` / `HEIGHT` in `src/lib/legitscript.ts` (~1.25× native on the hero) |
 
-Placement today: floating seal on the homepage hero (beside the headline on mobile; top-left of the hexagon photo on desktop), and static seal on the `/glp-1` and `/glp-1-houston` landing heroes. Reusable anywhere via `LegitScriptSeal`.
+Placement today: floating seal on the homepage hero (beside the headline on mobile; top-left of the hexagon photo on desktop), and a static seal (top-right of the hero heading block) on `/glp-1`, `/glp-1-houston`, `/semaglutide`, `/tirzepatide`, `/semaglutide-houston`, `/tirzepatide-houston`, `/tadalafil-boston`, `/sildenafil-boston`, and `/ed-mints-boston`. Reusable anywhere via `LegitScriptSeal`.
+
+**Note for whoever reviews this next:** LegitScript's own terms describe seal placement as scoped to the certified site's home page, not any page site-wide - the `/glp-1`/`/glp-1-houston` placement predates this doc note and was apparently accepted; the 2026-09-27 expansion to 7 more treatment/city pages was requested by Matt directly (reusing the already-shipped pattern) but has **not** been separately confirmed with LegitScript. Worth a quick check with them given the larger footprint, rather than assuming the original two-page placement's approval extends indefinitely.
 
 ## Launch architecture
 

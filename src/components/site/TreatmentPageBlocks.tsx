@@ -30,7 +30,6 @@ import { cn } from "@/lib/utils";
 import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   COMPOUNDED_TIRZEPATIDE_PRICING,
-  formatCompoundedPriceLine,
   formatUsd,
   getPlan,
   hasStarterPack,
@@ -44,6 +43,7 @@ import {
   formatSimpleQuarterlyStartingAt,
   type SimpleCompoundedPricing,
 } from "@/lib/simple-treatment-pricing";
+import type { VialImagery } from "@/lib/treatment-imagery";
 
 /**
  * Shared building blocks for the per-medication treatment pages
@@ -72,20 +72,31 @@ export function TreatmentBreadcrumb({ current }: { current: string }) {
   );
 }
 
+export type TreatmentPricingCardCta = {
+  to: string;
+  search?: Record<string, string>;
+  onClick?: () => void;
+  label: string;
+};
+
 export function TreatmentPricingCard({
   pricing,
   className,
+  imagery,
+  cta,
 }: {
   pricing: CompoundedMedicationPricing;
   className?: string;
+  /** Optional photo - used where a page shows more than one medication's
+   * card and needs the photo to switch with it (e.g. Glp1LandingPage's
+   * product picker). Stacks above the pricing content on mobile, becomes a
+   * full-height side panel at `lg:` so it doesn't get cropped as tight. */
+  imagery?: VialImagery;
+  /** Optional "Get Started" link rendered at the bottom of the card. */
+  cta?: TreatmentPricingCardCta;
 }) {
-  return (
-    <SurfaceCard
-      className={cn(
-        "border-primary/30 bg-primary-soft/30 text-left",
-        className,
-      )}
-    >
+  const pricingContent = (
+    <>
       <p className="text-xs font-semibold uppercase tracking-wide text-accent-foreground">
         Transparent pricing
       </p>
@@ -154,6 +165,48 @@ export function TreatmentPricingCard({
         based on clinical appropriateness, prescription, pharmacy fulfillment,
         and state requirements.
       </p>
+      {cta ? (
+        <Button asChild size="lg" className="mt-6 w-full">
+          <Link to={cta.to} search={cta.search} onClick={cta.onClick}>
+            {cta.label} <ArrowRight />
+          </Link>
+        </Button>
+      ) : null}
+    </>
+  );
+
+  if (imagery) {
+    return (
+      <SurfaceCard
+        className={cn(
+          "overflow-hidden border-primary/30 bg-primary-soft/30 p-0 text-left",
+          className,
+        )}
+      >
+        <div className="lg:grid lg:grid-cols-[minmax(0,44%)_minmax(0,56%)] lg:items-stretch">
+          <div className="relative min-h-[260px] overflow-hidden bg-primary-soft sm:min-h-[320px] lg:min-h-0">
+            <img
+              src={imagery.src}
+              alt={imagery.alt}
+              width={imagery.width}
+              height={imagery.height}
+              className="absolute inset-0 h-full w-full object-contain p-8 sm:p-10 lg:p-10"
+            />
+          </div>
+          <div className="p-6 md:p-8">{pricingContent}</div>
+        </div>
+      </SurfaceCard>
+    );
+  }
+
+  return (
+    <SurfaceCard
+      className={cn(
+        "border-primary/30 bg-primary-soft/30 text-left",
+        className,
+      )}
+    >
+      {pricingContent}
     </SurfaceCard>
   );
 }
@@ -237,64 +290,163 @@ export function TreatmentIncludedDropdown({
   );
 }
 
-/** Tirzepatide vs. semaglutide comparison table. `highlight` bolds one column's header. */
+type ComparisonId = "tirzepatide" | "semaglutide";
+
+type ComparisonRow = {
+  label: string;
+  tirzepatide: ReactNode;
+  semaglutide: ReactNode;
+  /** Bolder, tinted treatment for the price row - same row used in both layouts. */
+  emphasis?: boolean;
+};
+
+const COMPARISON_NAMES: Record<ComparisonId, string> = {
+  tirzepatide: "Compounded Tirzepatide",
+  semaglutide: "Compounded Semaglutide",
+};
+
+const COMPARISON_ROWS: ComparisonRow[] = [
+  {
+    label: "Active medication",
+    tirzepatide: "Tirzepatide",
+    semaglutide: "Semaglutide",
+  },
+  {
+    label: "Mechanism (high level)",
+    tirzepatide: "Dual GLP-1/GIP receptor agonist",
+    semaglutide: "GLP-1 receptor agonist",
+  },
+  {
+    label: "Appropriateness",
+    tirzepatide: "Decided individually by a licensed provider",
+    semaglutide: "Decided individually by a licensed provider",
+  },
+  {
+    label: "Beema Health starting price",
+    tirzepatide: `From ${formatUsd(COMPOUNDED_TIRZEPATIDE_PRICING.starterPack!.monthlyEquivalentUsd)}/mo`,
+    semaglutide: `From ${formatUsd(promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING))}/mo first month`,
+    emphasis: true,
+  },
+];
+
+/**
+ * Tirzepatide vs. semaglutide comparison. `highlight` bolds one side.
+ *
+ * Renders two layouts from the same `COMPARISON_ROWS` data (both in the
+ * initial HTML - nothing is client-fetched or hidden from crawlers):
+ * a real `<table>` at `md:` and up, and a pair of stacked spec cards below
+ * `md:` so mobile never needs horizontal scroll to read a comparison.
+ */
 export function TreatmentComparisonTable({
   highlight,
 }: {
-  highlight?: "tirzepatide" | "semaglutide";
+  highlight?: ComparisonId;
 }) {
-  const headCls = (id: "tirzepatide" | "semaglutide") =>
-    cn(highlight === id && "text-foreground");
+  const headCls = (id: ComparisonId) =>
+    cn(
+      "py-4 text-sm font-bold md:text-base",
+      highlight === id ? "text-accent-foreground" : "text-foreground",
+    );
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-1/4"></TableHead>
-            <TableHead className={headCls("tirzepatide")}>
-              Compounded Tirzepatide
-            </TableHead>
-            <TableHead className={headCls("semaglutide")}>
-              Compounded Semaglutide
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-medium text-foreground">
-              Active medication
-            </TableCell>
-            <TableCell>Tirzepatide</TableCell>
-            <TableCell>Semaglutide</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium text-foreground">
-              Mechanism (high level)
-            </TableCell>
-            <TableCell>Dual GLP-1/GIP receptor agonist</TableCell>
-            <TableCell>GLP-1 receptor agonist</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium text-foreground">
-              Appropriateness
-            </TableCell>
-            <TableCell>Decided individually by a licensed provider</TableCell>
-            <TableCell>Decided individually by a licensed provider</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium text-foreground">
-              Beema Health starting price
-            </TableCell>
-            <TableCell>
-              {formatCompoundedPriceLine(COMPOUNDED_TIRZEPATIDE_PRICING)}
-            </TableCell>
-            <TableCell>
-              {formatCompoundedPriceLine(COMPOUNDED_SEMAGLUTIDE_PRICING)}
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+    <div className="overflow-hidden rounded-2xl border border-border shadow-soft">
+      <div className="hidden overflow-x-auto md:block">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-b-2 border-border bg-muted/60 hover:bg-muted/60">
+              <TableHead className="w-1/4"></TableHead>
+              <TableHead className={headCls("tirzepatide")}>
+                {COMPARISON_NAMES.tirzepatide}
+              </TableHead>
+              <TableHead className={headCls("semaglutide")}>
+                {COMPARISON_NAMES.semaglutide}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {COMPARISON_ROWS.map((row) => (
+              <TableRow
+                key={row.label}
+                className={cn(
+                  row.emphasis &&
+                    "border-b-0 bg-primary-soft/40 hover:bg-primary-soft/50",
+                )}
+              >
+                <TableCell
+                  className={cn(
+                    "font-semibold text-foreground",
+                    row.emphasis ? "py-4" : "py-3.5",
+                  )}
+                >
+                  {row.label}
+                </TableCell>
+                <TableCell
+                  className={cn(
+                    row.emphasis
+                      ? "py-4 text-base font-bold text-foreground"
+                      : "py-3.5 text-muted-foreground",
+                  )}
+                >
+                  {row.tirzepatide}
+                </TableCell>
+                <TableCell
+                  className={cn(
+                    row.emphasis
+                      ? "py-4 text-base font-bold text-foreground"
+                      : "py-3.5 text-muted-foreground",
+                  )}
+                >
+                  {row.semaglutide}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Mobile: one spec card per medication instead of a cramped 3-column table. */}
+      <div className="divide-y divide-border md:hidden">
+        {(["tirzepatide", "semaglutide"] as const).map((id) => (
+          <div
+            key={id}
+            className={cn("p-5", highlight === id && "bg-primary-soft/30")}
+          >
+            <h3
+              className={cn(
+                "text-base font-bold",
+                highlight === id ? "text-accent-foreground" : "text-foreground",
+              )}
+            >
+              {COMPARISON_NAMES[id]}
+            </h3>
+            <dl className="mt-3 space-y-3 text-sm">
+              {COMPARISON_ROWS.map((row) => (
+                <div
+                  key={row.label}
+                  className={cn(
+                    row.emphasis &&
+                      "-mx-2 rounded-xl bg-background/80 px-2 py-2 ring-1 ring-border/70",
+                  )}
+                >
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    {row.label}
+                  </dt>
+                  <dd
+                    className={cn(
+                      "mt-1 leading-snug",
+                      row.emphasis
+                        ? "text-base font-bold text-foreground"
+                        : "text-foreground",
+                    )}
+                  >
+                    {id === "tirzepatide" ? row.tirzepatide : row.semaglutide}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -11,6 +11,7 @@ import {
 import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import {
+  Eyebrow,
   FloatingHexagons,
   HexBadge,
   HexMotif,
@@ -27,13 +28,17 @@ import {
 } from "@/components/site/TreatmentPageBlocks";
 import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
 import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
+import { GoogleRatingBadge } from "@/components/site/GoogleRatingBadge";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
+import { cn } from "@/lib/utils";
+import { resolveVialImagery, type MedicationId } from "@/lib/treatment-imagery";
 import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   COMPOUNDED_TIRZEPATIDE_PRICING,
+  type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
 import {
   CASH_PAY_POINTS,
@@ -42,12 +47,34 @@ import {
   type Glp1Market,
 } from "@/lib/glp-1-landing";
 
+const MEDICATION_PICKER: Record<
+  MedicationId,
+  { label: string; pricing: CompoundedMedicationPricing }
+> = {
+  semaglutide: {
+    label: "Semaglutide",
+    pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
+  },
+  tirzepatide: {
+    label: "Tirzepatide",
+    pricing: COMPOUNDED_TIRZEPATIDE_PRICING,
+  },
+};
+
 export function Glp1LandingPage({ market }: { market: Glp1Market }) {
   const copy = getGlp1Copy(market);
   const heroCta = resolveCta(CTA_IDS.glp1_hero);
   const midCta = resolveCta(CTA_IDS.glp1_mid);
   const footerCta = resolveCta(CTA_IDS.glp1_footer);
   const reduceMotion = useReducedMotion();
+  const semaImagery = resolveVialImagery("semaglutide");
+  const tirzImagery = resolveVialImagery("tirzepatide");
+  const vialImagery: Record<MedicationId, typeof semaImagery> = {
+    semaglutide: semaImagery,
+    tirzepatide: tirzImagery,
+  };
+  const [selectedMedication, setSelectedMedication] =
+    useState<MedicationId>("tirzepatide");
 
   useEffect(() => {
     trackPageViewed(copy.analyticsPage);
@@ -55,7 +82,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
 
   return (
     <MarketingLayout>
-      <Section className="relative overflow-hidden bg-grad-hero">
+      <Section className="relative overflow-hidden bg-grad-hero pb-10 md:pb-24">
         <div
           aria-hidden
           className="bg-mesh-glow mesh-drift pointer-events-none absolute inset-0 z-0"
@@ -66,48 +93,97 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
         />
         <FloatingHexagons className="z-0" />
         <div className="relative z-10">
-          <div className="mb-6 flex flex-col items-center gap-4">
-            <TreatmentBreadcrumb current={copy.breadcrumbName} />
-            <LegitScriptSeal />
+          <TreatmentBreadcrumb current={copy.breadcrumbName} />
+          <div className="mt-8 grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+            <div>
+              <div className="relative max-w-xl pr-20 sm:pr-24">
+                <LegitScriptSeal className="absolute right-0 top-0 w-16 [&_img]:h-auto [&_img]:w-full sm:w-20" />
+                <Eyebrow>{copy.heroEyebrow}</Eyebrow>
+                <h1 className="mt-4 text-balance text-3xl font-bold leading-[1.1] tracking-tight text-foreground md:text-4xl lg:text-[2.75rem]">
+                  <LineReveal>{copy.heroTitleLine1}</LineReveal>
+                  <LineReveal delay={0.1}>{copy.heroTitleLine2}</LineReveal>
+                </h1>
+              </div>
+              <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+                {copy.heroDescription}
+              </p>
+
+              <motion.div
+                className="mt-6"
+                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.6,
+                  delay: reduceMotion ? 0 : 0.35,
+                  ease: EASE_OUT,
+                }}
+              >
+                <GoogleRatingBadge />
+              </motion.div>
+
+              <motion.div
+                className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
+                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.6,
+                  delay: reduceMotion ? 0 : 0.5,
+                  ease: EASE_OUT,
+                }}
+              >
+                <HoverLiftButton>
+                  <Button asChild size="xl">
+                    <Link
+                      to={heroCta.to}
+                      search={heroCta.search}
+                      onClick={heroCta.onClick}
+                    >
+                      {heroCta.label} <ArrowRight />
+                    </Link>
+                  </Button>
+                </HoverLiftButton>
+                <Button asChild size="xl" variant="outline">
+                  <Link to={copy.linkPath} hash="how-it-works">
+                    How care works
+                  </Link>
+                </Button>
+              </motion.div>
+            </div>
+
+            {/*
+                Plain wrapper, no motion, at full opacity immediately - this
+                image carries fetchPriority="high" as the page's LCP
+                candidate. A motion.div with an initial opacity:0 here would
+                reintroduce the exact LCP regression fixed sitewide 2026-09-27
+                (see docs/features/treatment-pages.md, "Hero photo is never
+                motion-animated"): Motion's initial state ships in the SSR'd
+                HTML too, so the LCP element would stay invisible until React
+                hydrates and the fade/scale animation finishes.
+              */}
+            <div className="relative mx-auto w-full max-w-sm lg:mx-0">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
+                <div
+                  aria-hidden
+                  className="bg-mesh-glow mesh-drift pointer-events-none absolute inset-0 opacity-70"
+                />
+                <img
+                  src={tirzImagery.src}
+                  alt={tirzImagery.alt}
+                  width={tirzImagery.width}
+                  height={tirzImagery.height}
+                  className="absolute right-[8%] top-[6%] h-[58%] w-auto object-contain drop-shadow-xl"
+                />
+                <img
+                  src={semaImagery.src}
+                  alt={semaImagery.alt}
+                  width={semaImagery.width}
+                  height={semaImagery.height}
+                  fetchPriority="high"
+                  className="absolute bottom-[5%] left-[6%] h-[66%] w-auto object-contain drop-shadow-2xl"
+                />
+              </div>
+            </div>
           </div>
-          <SectionHeading
-            as="h1"
-            eyebrow={copy.heroEyebrow}
-            title={
-              <>
-                <LineReveal>{copy.heroTitleLine1}</LineReveal>
-                <LineReveal delay={0.1}>{copy.heroTitleLine2}</LineReveal>
-              </>
-            }
-            description={copy.heroDescription}
-          />
-          <motion.div
-            className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center"
-            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-            animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-            transition={{
-              duration: reduceMotion ? 0 : 0.6,
-              delay: reduceMotion ? 0 : 0.55,
-              ease: EASE_OUT,
-            }}
-          >
-            <HoverLiftButton>
-              <Button asChild size="xl">
-                <Link
-                  to={heroCta.to}
-                  search={heroCta.search}
-                  onClick={heroCta.onClick}
-                >
-                  {heroCta.label} <ArrowRight />
-                </Link>
-              </Button>
-            </HoverLiftButton>
-            <Button asChild size="xl" variant="outline">
-              <Link to={copy.linkPath} hash="how-it-works">
-                How care works
-              </Link>
-            </Button>
-          </motion.div>
         </div>
       </Section>
 
@@ -121,29 +197,47 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
           <SectionHeading
             eyebrow="GLP-1 cash pricing"
             title="Clear cash-pay rates for compounded options"
-            description="No membership fee. Your licensed provider decides whether compounded semaglutide or compounded tirzepatide is appropriate - pricing below is cash-pay when prescribed."
+            description="No membership fee. Your licensed provider decides what medication and dose is appropriate for you - pricing below is cash-pay when prescribed."
           />
         </motion.div>
-        <div className="mt-10 grid gap-5 lg:grid-cols-2">
-          <div className="flex h-full flex-col gap-3">
-            <h3 className="text-lg font-semibold text-foreground">
-              Compounded Semaglutide
-            </h3>
-            <TreatmentPricingCard
-              pricing={COMPOUNDED_SEMAGLUTIDE_PRICING}
-              className="h-full"
-            />
-          </div>
-          <div className="flex h-full flex-col gap-3">
-            <h3 className="text-lg font-semibold text-foreground">
-              Compounded Tirzepatide
-            </h3>
-            <TreatmentPricingCard
-              pricing={COMPOUNDED_TIRZEPATIDE_PRICING}
-              className="h-full"
-            />
+        <div className="mt-10 flex justify-center">
+          <div
+            role="tablist"
+            aria-label="Choose a medication"
+            className="inline-flex gap-1.5 rounded-full bg-muted p-1.5"
+          >
+            {(Object.keys(MEDICATION_PICKER) as MedicationId[]).map((id) => (
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                aria-selected={selectedMedication === id}
+                onClick={() => setSelectedMedication(id)}
+                className={cn(
+                  "min-h-11 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  selectedMedication === id
+                    ? "bg-primary text-primary-foreground shadow-soft"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {MEDICATION_PICKER[id].label}
+              </button>
+            ))}
           </div>
         </div>
+        <motion.div
+          key={selectedMedication}
+          initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: reduceMotion ? 0 : 0.35, ease: EASE_OUT }}
+          className="mx-auto mt-6 max-w-xl lg:max-w-4xl"
+        >
+          <TreatmentPricingCard
+            pricing={MEDICATION_PICKER[selectedMedication].pricing}
+            imagery={vialImagery[selectedMedication]}
+            cta={midCta}
+          />
+        </motion.div>
         <ul className="mx-auto mt-8 max-w-2xl space-y-2">
           {CASH_PAY_POINTS.map((point, i) => (
             <motion.li

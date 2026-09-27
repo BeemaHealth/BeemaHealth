@@ -1,6 +1,8 @@
 # Start Feature
 
-Run this command at the beginning of every new feature. It checks for existing work, stashes in-progress changes in the repo checkout, creates a feature branch, and defines the testing gate.
+Optional branch-setup workflow when the user wants a clean feature branch. It checks for existing work, stashes in-progress changes, creates a feature branch, and defines the testing gate.
+
+**Hard rule — ask before touching git state:** Do **not** stash, check out `main`, create a branch, or switch branches until the user explicitly approves (branch name + go-ahead). Default is stay on the current branch and work in place. Never run this command automatically just because a request is a “new feature.”
 
 **Repo:** `/Users/mattaertker/Documents/Github/BeemaHealth` — one working copy; do not clone sibling directories.
 
@@ -48,12 +50,14 @@ Ask the user to confirm or adjust the name. Do not create the branch until they 
 
 ## Step 3 — Stash WIP and create the branch
 
+**Stop here until the user has explicitly approved:** (1) the branch name and (2) that you may stash (if dirty) and switch branches. If they decline, skip this step and keep working on the current branch.
+
 Work in the single repo checkout. **Local `main` is the source of truth** — do not clone from GitHub (that can drop commits `origin/main` does not have yet).
 
 ```bash
 cd /Users/mattaertker/Documents/Github/BeemaHealth
 
-# Stash only if the working tree is dirty (tracked + untracked)
+# Stash only if the working tree is dirty (tracked + untracked) AND the user approved stashing
 if [ -n "$(git status --porcelain)" ]; then
   git stash push -u -m "WIP before feature/<approved-name> ($(date +%Y-%m-%d))"
 fi

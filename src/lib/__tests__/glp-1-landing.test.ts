@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { canonicalUrl } from "../seo";
+import { resolveVialImagery } from "../treatment-imagery";
 import { getGlp1Copy, glp1Head } from "../glp-1-landing";
 
 describe("GLP-1 market landing pages", () => {
@@ -15,13 +16,26 @@ describe("GLP-1 market landing pages", () => {
     expect(canonicalUrl(houston.path)).toBe(
       "https://beemahealth.com/glp-1-houston/",
     );
-    expect(nationalHead.links).toEqual([
-      { rel: "canonical", href: "https://beemahealth.com/glp-1/" },
-    ]);
-    expect(houstonHead.links).toEqual([
-      { rel: "canonical", href: "https://beemahealth.com/glp-1-houston/" },
-    ]);
+    expect(nationalHead.links[0]).toEqual({
+      rel: "canonical",
+      href: "https://beemahealth.com/glp-1/",
+    });
+    expect(houstonHead.links[0]).toEqual({
+      rel: "canonical",
+      href: "https://beemahealth.com/glp-1-houston/",
+    });
     expect(nationalHead.links[0].href).not.toBe(houstonHead.links[0].href);
+    // Both markets preload the same LCP photo: the dual-vial hero's
+    // frontmost, fetchPriority="high" image (semaglutide) - see
+    // Glp1LandingPage.tsx and boot-assets.ts.
+    for (const head of [nationalHead, houstonHead]) {
+      expect(head.links[1]).toMatchObject({
+        rel: "preload",
+        as: "image",
+        fetchPriority: "high",
+        href: resolveVialImagery("semaglutide").src,
+      });
+    }
   });
 
   it("does not canonicalize Houston to the national page", () => {

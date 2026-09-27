@@ -28,6 +28,8 @@ import {
   type TreatmentFaqItem,
 } from "@/components/site/TreatmentPageBlocks";
 import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
+import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
+import { GoogleRatingBadge } from "@/components/site/GoogleRatingBadge";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
@@ -39,13 +41,37 @@ import {
 } from "@/lib/simple-treatment-pricing";
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
+import {
+  LEARN_FIFTY_STATE_SENTENCE,
+  LEARN_USA_ONLY_SENTENCE,
+} from "@/lib/learn-trust-copy";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import sildenafilPhoto from "@/assets/treatments/sildenafil-oral-tablets-bottle.webp";
 
-const TITLE = "Sildenafil for ED Online | Beema Health";
-const DESCRIPTION = `Sildenafil, the FDA-approved generic version of Viagra, reviewed by licensed providers. From ${formatPerPillStartingAt(ED_SILDENAFIL_PER_PILL_USD)}. Never guaranteed.`;
+/**
+ * Boston paid-search landing page (2026-09-27) - Google Ads keyword ->
+ * landing-page alignment for "sildenafil boston" / "viagra online boston"
+ * style queries. Mirrors /sildenafil's copy, components, product data,
+ * pricing, and Bask intake, with genuinely localized hero/FAQ copy rather
+ * than a mechanical "nationwide" -> "Boston" swap. Self-canonicalizes;
+ * never canonicalize back to /sildenafil. See
+ * docs/features/treatment-pages.md "City ED pages" and /sildenafil.tsx
+ * (the nationwide page, unchanged).
+ */
+
+const TITLE = "Sildenafil in Boston, MA | Online ED Treatment | Beema Health";
+const DESCRIPTION = `Online sildenafil treatment for eligible adults in Boston, Massachusetts. Licensed provider review, transparent pricing from ${formatPerPillStartingAt(ED_SILDENAFIL_PER_PILL_USD)}, and discreet delivery if prescribed.`;
 const SERVICE_DESCRIPTION =
-  "Nationwide telehealth service connecting eligible adult men with independent licensed providers for sildenafil evaluation and ongoing care. Completing intake does not guarantee a prescription.";
+  "Telehealth service connecting eligible adults in Boston and nationwide with independent licensed providers for sildenafil evaluation and ongoing care. Completing intake does not guarantee a prescription.";
+
+const BOSTON_AREA_SERVED = [
+  {
+    "@type": "City",
+    name: "Boston",
+    containedInPlace: { "@type": "State", name: "Massachusetts" },
+  },
+  { "@type": "Country", name: "United States" },
+];
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
@@ -61,16 +87,16 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a: "Both work similarly but differ in how quickly they take effect and how long they last; your licensed provider reviews your intake and recommends which option and dose may be appropriate for your case. See Tadalafil for that option, or ED Mints for a dissolve-under-the-tongue combination formulation.",
   },
   {
-    q: "How does online ED care through Beema Health work?",
-    a: "Care starts with creating a secure account and completing a medical intake covering your health history, current medications, and goals, at your own pace. A licensed provider reviews your intake and independently decides whether sildenafil may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability.",
+    q: "How does online ED care work for Boston patients?",
+    a: "Care starts with creating a secure account and completing a medical intake covering your health history, current medications, and goals, at your own pace, from anywhere in Boston or Massachusetts. A licensed provider reviews your intake and independently decides whether sildenafil may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability.",
   },
   {
     q: "How much does sildenafil cost through Beema Health?",
     a: `${simplePricingSentence("Sildenafil through Beema Health", ED_SILDENAFIL_PRICING)} Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
-    q: "Does Beema Health serve patients nationwide?",
-    a: "Yes, Beema Health is available to patients in all 50 U.S. states. Eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications, including cardiovascular history.",
+    q: "Does Beema Health serve Boston and Massachusetts?",
+    a: `Yes. Beema Health serves adults in Boston and across all 50 US states through telehealth - there is no physical Boston office or in-person clinic; care happens entirely online. ${LEARN_FIFTY_STATE_SENTENCE} A licensed provider reviews your case remotely and decides, on an individual basis, whether sildenafil may be appropriate for you, considering cardiovascular history and current medications - never guaranteed just because you live in Boston. ${LEARN_USA_ONLY_SENTENCE}`,
   },
 ];
 
@@ -88,7 +114,7 @@ const ELIGIBILITY_POINTS = [
   "Final approval rests with a licensed provider",
 ];
 
-export const Route = createFileRoute("/sildenafil")({
+export const Route = createFileRoute("/sildenafil-boston")({
   head: () => ({
     meta: [
       { title: TITLE },
@@ -96,14 +122,14 @@ export const Route = createFileRoute("/sildenafil")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: canonicalUrl("/sildenafil") },
+      { property: "og:url", content: canonicalUrl("/sildenafil-boston") },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
     links: [
-      { rel: "canonical", href: canonicalUrl("/sildenafil") },
-      ...bootImagePreloadLinks("/sildenafil"),
+      { rel: "canonical", href: canonicalUrl("/sildenafil-boston") },
+      ...bootImagePreloadLinks("/sildenafil-boston"),
     ],
     scripts: [
       {
@@ -111,7 +137,7 @@ export const Route = createFileRoute("/sildenafil")({
         children: JSON.stringify(
           breadcrumbJsonLd([
             { name: "Home", path: "/" },
-            { name: "Sildenafil", path: "/sildenafil" },
+            { name: "Sildenafil in Boston", path: "/sildenafil-boston" },
           ]),
         ),
       },
@@ -123,12 +149,13 @@ export const Route = createFileRoute("/sildenafil")({
         type: "application/ld+json",
         children: JSON.stringify(
           serviceJsonLd({
-            name: "Sildenafil Telehealth Care",
+            name: "Sildenafil Telehealth Care in Boston",
             description: SERVICE_DESCRIPTION,
-            path: "/sildenafil",
+            path: "/sildenafil-boston",
             serviceType: "Erectile dysfunction treatment telehealth service",
             reviewedByClinicalLead: false,
-            dateModified: "2026-09-03",
+            dateModified: "2026-09-27",
+            areaServed: BOSTON_AREA_SERVED,
             offer: {
               introPrice: ED_SILDENAFIL_PRICING.monthlyUsd,
               recurringPrice: ED_SILDENAFIL_PRICING.monthlyUsd,
@@ -138,16 +165,16 @@ export const Route = createFileRoute("/sildenafil")({
       },
     ],
   }),
-  component: SildenafilPage,
+  component: SildenafilBostonPage,
 });
 
-function SildenafilPage() {
-  const heroCta = resolveCta(CTA_IDS.sildenafil_hero);
-  const footerCta = resolveCta(CTA_IDS.sildenafil_footer);
+function SildenafilBostonPage() {
+  const heroCta = resolveCta(CTA_IDS.sildenafil_boston_hero);
+  const footerCta = resolveCta(CTA_IDS.sildenafil_boston_footer);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    trackPageViewed("sildenafil");
+    trackPageViewed("sildenafil_boston");
   }, []);
 
   return (
@@ -162,26 +189,39 @@ function SildenafilPage() {
           className="bg-grain pointer-events-none absolute inset-0 z-0 text-foreground/[0.035]"
         />
         <div className="relative z-10">
-          <TreatmentBreadcrumb current="Sildenafil" />
+          <TreatmentBreadcrumb current="Sildenafil in Boston" />
           <div className="mt-8 grid items-start gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
             <div>
-              <SectionHeading
-                as="h1"
-                align="left"
-                eyebrow="Nationwide telehealth ED care"
-                title={
-                  <>
-                    <LineReveal>Sildenafil, </LineReveal>
-                    <LineReveal delay={0.1}>
-                      the generic Viagra&reg; tablet.
-                    </LineReveal>
-                  </>
-                }
-                description="Beema Health connects eligible adults with independent licensed providers for sildenafil care. Completing intake does not guarantee a prescription."
-                className="mx-0 max-w-xl text-left"
-              />
+              <div className="relative pr-20 sm:pr-24">
+                <LegitScriptSeal className="absolute right-0 top-0 w-16 [&_img]:h-auto [&_img]:w-full sm:w-20" />
+                <SectionHeading
+                  as="h1"
+                  align="left"
+                  eyebrow="Boston telehealth ED care"
+                  title={
+                    <>
+                      <LineReveal>Sildenafil treatment </LineReveal>
+                      <LineReveal delay={0.1}>for Boston patients.</LineReveal>
+                    </>
+                  }
+                  description="Beema Health connects eligible adults in Boston with licensed medical providers for sildenafil-based erectile dysfunction care. Complete your visit online and, if prescribed, medication is delivered discreetly to your door."
+                  className="mx-0 max-w-xl text-left"
+                />
+              </div>
               <motion.div
-                className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
+                className="mt-6"
+                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.6,
+                  delay: reduceMotion ? 0 : 0.35,
+                  ease: EASE_OUT,
+                }}
+              >
+                <GoogleRatingBadge />
+              </motion.div>
+              <motion.div
+                className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
                 initial={reduceMotion ? false : { opacity: 0, y: 18 }}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
@@ -202,7 +242,7 @@ function SildenafilPage() {
                   </Button>
                 </HoverLiftButton>
                 <Button asChild size="xl" variant="outline">
-                  <Link to="/sildenafil/" hash="how-it-works">
+                  <Link to="/sildenafil-boston/" hash="how-it-works">
                     How it works
                   </Link>
                 </Button>
@@ -218,11 +258,9 @@ function SildenafilPage() {
             <div className="mx-auto w-full max-w-sm">
               {/*
                 Not motion-animated: this is the page's LCP element (preloaded,
-                fetchPriority="high"). Animating opacity/scale in leaves it
-                invisible in the SSR'd HTML until hydration + the animation
-                frame complete, which measured as several extra seconds of
-                mobile LCP (2026-09-27 performance audit) - render it visible
-                immediately and only animate the non-LCP content below it.
+                fetchPriority="high"). See docs/features/treatment-pages.md,
+                "Hero photo is never motion-animated" - same fix applied to
+                /sildenafil applies here, since this hero reuses that photo.
               */}
               <div className="relative aspect-[4/5] overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
                 <img
@@ -273,13 +311,13 @@ function SildenafilPage() {
             Viagra - the identical active ingredient, strength, and intended use
             as the brand-name product, dispensed by a licensed pharmacy, not a
             compounded formulation. Looking for tadalafil instead? See{" "}
-            <Link to="/tadalafil/" className="text-primary underline">
-              Tadalafil
+            <Link to="/tadalafil-boston/" className="text-primary underline">
+              Tadalafil in Boston
             </Link>
             . Looking for a dissolve-under-the-tongue combination formulation?
             See{" "}
-            <Link to="/ed-mints/" className="text-primary underline">
-              ED Mints
+            <Link to="/ed-mints-boston/" className="text-primary underline">
+              ED Mints in Boston
             </Link>
             , a separate compounded product.
           </p>
@@ -290,10 +328,38 @@ function SildenafilPage() {
             prescription.
           </p>
           <Button asChild variant="outline" size="sm">
-            <Link to="/sildenafil/" hash="faq">
+            <Link to="/sildenafil-boston/" hash="faq">
               View FAQ <ArrowRight className="size-4" />
             </Link>
           </Button>
+        </div>
+      </Section>
+
+      <Section className="pt-0">
+        <SectionHeading
+          align="left"
+          eyebrow="Serving Boston"
+          title="Telehealth sildenafil care for Boston, Massachusetts"
+          className="mx-0 max-w-2xl"
+        />
+        <div className="mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-muted-foreground">
+          <p>
+            If you're in Boston, or anywhere else in Massachusetts, you can
+            complete Beema Health's medical intake entirely online, from home -
+            there is no physical Boston office or in-person clinic to visit. A
+            licensed provider reviews your case by telehealth and decides, on an
+            individual basis, whether sildenafil may be appropriate for you.
+            When prescribed, medication ships to your Boston address.
+          </p>
+          <p>
+            Licensed providers can evaluate adults in all 50 US states,
+            including Massachusetts. Looking for the nationwide version of this
+            page instead? See{" "}
+            <Link to="/sildenafil/" className="text-primary underline">
+              Sildenafil
+            </Link>
+            .
+          </p>
         </div>
       </Section>
 
@@ -445,7 +511,7 @@ function SildenafilPage() {
           </div>
         </div>
       </Section>
-      <MoneyPageGuides path="/sildenafil/" />
+      <MoneyPageGuides path="/sildenafil-boston/" />
     </MarketingLayout>
   );
 }

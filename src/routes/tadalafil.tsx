@@ -215,16 +215,15 @@ function TadalafilPage() {
                 licensed provider and applicable law.
               </p>
             </div>
-            <motion.div
-              initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
-              animate={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
-              transition={{
-                duration: reduceMotion ? 0 : 0.7,
-                delay: reduceMotion ? 0 : 0.2,
-                ease: EASE_OUT,
-              }}
-              className="mx-auto w-full max-w-sm"
-            >
+            <div className="mx-auto w-full max-w-sm">
+              {/*
+                Not motion-animated: this is the page's LCP element (preloaded,
+                fetchPriority="high"). Animating opacity/scale in leaves it
+                invisible in the SSR'd HTML until hydration + the animation
+                frame complete, which measured as several extra seconds of
+                mobile LCP (2026-09-27 performance audit) - render it visible
+                immediately and only animate the non-LCP content below it.
+              */}
               <div className="relative aspect-[4/5] overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
                 <img
                   src={tadalafilPhoto}
@@ -235,11 +234,21 @@ function TadalafilPage() {
                   className="absolute inset-0 h-full w-full object-contain"
                 />
               </div>
-              <TreatmentIncludedDropdown
-                items={WHATS_INCLUDED}
-                className="mt-6 w-full"
-              />
-            </motion.div>
+              <motion.div
+                initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.5,
+                  delay: reduceMotion ? 0 : 0.3,
+                  ease: EASE_OUT,
+                }}
+              >
+                <TreatmentIncludedDropdown
+                  items={WHATS_INCLUDED}
+                  className="mt-6 w-full"
+                />
+              </motion.div>
+            </div>
           </div>
         </div>
       </Section>

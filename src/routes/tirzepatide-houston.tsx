@@ -42,11 +42,13 @@ import {
   compoundedMonthlyPricingSentence,
 } from "@/lib/medication-pricing";
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
+import { LEARN_USA_ONLY_SENTENCE } from "@/lib/learn-trust-copy";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { bootImagePreloadLinks } from "@/lib/boot-assets";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
+import { learnPath } from "@/content/learn/types";
 import {
   CLINICAL_PROVIDER_GROUP,
   SEAN_ARORA_PROVIDER,
@@ -54,9 +56,22 @@ import {
 
 const VIAL_IMAGERY = resolveVialImagery("tirzepatide");
 
-const TITLE = "Compounded Tirzepatide for Weight Loss | Beema Health";
+const HOUSTON_AREA_SERVED = [
+  {
+    "@type": "City",
+    name: "Houston",
+    containedInPlace: { "@type": "State", name: "Texas" },
+  },
+  { "@type": "Country", name: "United States" },
+];
+
 const STARTER = COMPOUNDED_TIRZEPATIDE_PRICING.starterPack!;
-const DESCRIPTION = `Compounded tirzepatide reviewed by licensed providers in all 50 states. ${STARTER.months}-month starter pack from $${STARTER.monthlyEquivalentUsd}/mo. Prescribing is never guaranteed.`;
+const TITLE =
+  "Tirzepatide in Houston, TX | Online Weight Loss Care | Beema Health";
+const DESCRIPTION =
+  "Explore online tirzepatide weight-loss care for eligible adults in Houston, Texas. Licensed provider review, transparent cash pricing, and medication delivery if prescribed.";
+const SERVICE_DESCRIPTION =
+  "Telehealth medical weight-loss service connecting eligible adults in Houston, Texas with independent licensed providers for compounded tirzepatide evaluation and ongoing care. Completing intake does not guarantee a prescription.";
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
@@ -64,32 +79,32 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a: "Tirzepatide is a GLP-1/GIP medication used in medical weight-management care. It's available both as an FDA-approved branded medication and, separately, as a compounded version prepared by a licensed compounding pharmacy rather than sold under a brand name. Compounded tirzepatide is not the same product as the branded version: it is not FDA-approved, and it's considered as part of care only when it is legally available and clinically appropriate for the specific patient. A licensed provider decides, on a case-by-case basis, whether compounded tirzepatide may be an appropriate option, based on your BMI, health history, current medications, and applicable state law. To be considered, you'll complete a medical intake, which a licensed provider reviews before making that decision. Completing a medical intake does not guarantee that compounded tirzepatide, or any treatment, will ultimately be prescribed for you.",
   },
   {
+    q: "Does Beema Health have a physical office in Houston?",
+    a: `No. Beema Health is a telehealth service - there is no Houston clinic or office to visit. Your intake, provider review, and any prescribed medication are handled entirely online, with medication shipped to your Houston address. ${LEARN_USA_ONLY_SENTENCE}`,
+  },
+  {
     q: "Is tirzepatide right for me?",
     a: "Whether tirzepatide is right for you depends on your BMI, health history, current medications, and a licensed provider's independent clinical judgment, not a fixed checklist. Beema Health's tirzepatide care is intended for adults 18 and older, and eligibility also depends on applicable state law where you live. During the process, you create an account and submit a medical intake describing your health history, current medications, and goals. A licensed provider reviews that information and decides, on a case-by-case basis, whether tirzepatide specifically, or another approach like compounded semaglutide, may be appropriate for your situation. Completing intake does not guarantee that tirzepatide, or any treatment, will be prescribed, and not everyone who applies will be approved. If you're unsure, our BMI calculator and weight-loss program overview can help you think through whether it's worth starting a conversation with a provider.",
   },
   {
-    q: "How does online tirzepatide care through Beema Health work?",
-    a: "Care starts with creating an account and completing a secure medical intake questionnaire at your own pace, covering your health, location, weight-loss goals, health history, and current medications. A licensed provider then reviews your intake and independently decides whether tirzepatide, or another treatment, may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability. If a provider does prescribe treatment, care includes the doctor consultation and visit, the prescription medication, ongoing doctor follow-up, and supplies like syringes and alcohol pads, along with expedited shipping to your door. Beema Health connects patients nationwide with independently licensed providers, though medication availability and eligibility still depend on your state's requirements.",
+    q: "How does online tirzepatide care through Beema Health work for Houston patients?",
+    a: "Care starts with creating an account and completing a secure medical intake questionnaire at your own pace, covering your health, location, weight-loss goals, health history, and current medications. A licensed provider then reviews your intake and independently decides whether tirzepatide, or another treatment, may be appropriate for you; prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, though the clinician assigned to your case may vary by state licensure and availability. If a provider does prescribe treatment, care includes the doctor consultation and visit, the prescription medication, ongoing doctor follow-up, and supplies like syringes and alcohol pads, along with expedited shipping to your Houston address.",
   },
   {
     q: "How much does tirzepatide cost through Beema Health?",
-    a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide through Beema Health", COMPOUNDED_TIRZEPATIDE_PRICING)} That listed rate is all-inclusive cash-pay pricing with no separate platform membership fee: it covers doctor visits, prescription medication, ongoing doctor follow-up care, supplies like syringes and alcohol pads, and expedited shipping. Dose adjustments within compounded tirzepatide do not change the monthly price. Because compounded tirzepatide is a prescription medication, a licensed provider must review your medical intake and independently decide it's appropriate before treatment begins; completing intake never guarantees a prescription. Questions about promo codes or plan length? ${patientQuestionsGuidance()}`,
-  },
-  {
-    q: "Does Beema Health serve patients nationwide?",
-    a: "Yes. Beema Health is available to patients in all 50 U.S. states, connecting you with independently licensed providers as part of a nationwide telehealth model. That said, medication availability and eligibility still depend on your state's specific requirements, since compounding regulations and prescribing rules vary by location. They also depend on your assigned provider's independent clinical decision after reviewing your medical intake, health history, current medications, and BMI. The clinician who reviews your case may vary based on state licensure and availability, but every provider in Beema Health's network is independently licensed and makes treatment decisions using their own clinical judgment, whether that decision concerns tirzepatide, compounded semaglutide, or another approach entirely. Completing intake from anywhere in the country does not guarantee that tirzepatide, or any other treatment, will ultimately be prescribed for you.",
+    a: `${compoundedMonthlyPricingSentence("Compounded tirzepatide through Beema Health", COMPOUNDED_TIRZEPATIDE_PRICING)} Pricing is the same nationwide, including for Houston patients - that listed rate is all-inclusive cash-pay pricing with no separate platform membership fee: it covers doctor visits, prescription medication, ongoing doctor follow-up care, supplies like syringes and alcohol pads, and expedited shipping. Because compounded tirzepatide is a prescription medication, a licensed provider must review your medical intake and independently decide it's appropriate before treatment begins; completing intake never guarantees a prescription. Questions about promo codes or plan length? ${patientQuestionsGuidance()}`,
   },
   {
     q: "Is compounded tirzepatide FDA-approved?",
-    a: `No. Compounded tirzepatide is not an FDA-approved medication the way branded tirzepatide is; it's prepared individually by a licensed compounding pharmacy rather than manufactured and approved as a standardized branded drug. Because of that, it is not the same product as an FDA-approved branded medication, and it's considered as part of care only when it is legally available and clinically appropriate for a given patient. A licensed provider weighs your BMI, health history, current medications, and applicable state law before deciding, on a case-by-case basis, whether compounded tirzepatide may be an appropriate option, or whether another approach, such as compounded semaglutide, makes more sense. If you would rather stick with an FDA-approved branded medication, note that preference in your intake answers so your provider can factor it into their independent clinical decision. ${patientQuestionsGuidance()} For more detail on eligibility, contraindications, and warning signs, see Beema Health's safety and eligibility information.`,
+    a: `No. Compounded tirzepatide is not an FDA-approved medication the way branded tirzepatide is; it's prepared individually by a licensed compounding pharmacy rather than manufactured and approved as a standardized branded drug. Because of that, it is not the same product as an FDA-approved branded medication, and it's considered as part of care only when it is legally available and clinically appropriate for a given patient. A licensed provider weighs your BMI, health history, current medications, and applicable state law before deciding, on a case-by-case basis, whether compounded tirzepatide may be an appropriate option, or whether another approach, such as compounded semaglutide, makes more sense. ${patientQuestionsGuidance()} For more detail on eligibility, contraindications, and warning signs, see Beema Health's safety and eligibility information.`,
   },
   {
     q: "How quickly can treatment begin?",
-    a: "How quickly you can start depends on a few factors: how fast you complete your medical intake questionnaire, how quickly a licensed provider reviews your information and makes an independent clinical decision, and how quickly the pharmacy can fulfill and ship your prescription if one is issued. Because intake is self-paced and provider review takes real clinical judgment rather than an automatic approval, we cannot promise a specific start date for any individual patient. Shipping is expedited once a prescription is issued as part of your included care, but pharmacy timelines can still vary. It's also worth remembering that prescribing is never guaranteed: a licensed provider may determine that tirzepatide, or any treatment, is not appropriate for you based on your health history, current medications, or applicable state law, regardless of how quickly you move through intake. If you're unsure how long to expect, our how-it-works overview walks through each stage in more detail.",
+    a: "How quickly you can start depends on a few factors: how fast you complete your medical intake questionnaire, how quickly a licensed provider reviews your information and makes an independent clinical decision, and how quickly the pharmacy can fulfill and ship your prescription if one is issued. Because intake is self-paced and provider review takes real clinical judgment rather than an automatic approval, we cannot promise a specific start date for any individual patient. Shipping is expedited once a prescription is issued as part of your included care, but pharmacy timelines can still vary. It's also worth remembering that prescribing is never guaranteed: a licensed provider may determine that tirzepatide, or any treatment, is not appropriate for you based on your health history, current medications, or applicable state law, regardless of how quickly you move through intake.",
   },
   {
     q: "Can I switch to Beema Health if I'm already on tirzepatide elsewhere?",
-    a: "Yes. If you're already taking tirzepatide with another provider, tell us about your current provider, dose, and how long you've been on treatment during your medical intake. Your Beema Health provider will factor that history into their independent clinical review, generally with the goal of keeping you on a comparable dose rather than having you restart from scratch, though the final decision is always theirs based on your full health history and current medications. It's important to give accurate, complete details in your intake, since your answers directly shape the dose and treatment plan your provider considers appropriate for you. As with any new patient, completing intake doesn't guarantee that tirzepatide, or any specific dose, will be prescribed; a licensed provider makes that call after independently reviewing your case, health history, current medications, and applicable state law where you live. Beema Health serves patients nationwide, though your assigned provider may vary by state licensure.",
+    a: "Yes. If you're already taking tirzepatide with another provider, tell us about your current provider, dose, and how long you've been on treatment during your medical intake. Your Beema Health provider will factor that history into their independent clinical review, generally with the goal of keeping you on a comparable dose rather than having you restart from scratch, though the final decision is always theirs based on your full health history and current medications. It's important to give accurate, complete details in your intake, since your answers directly shape the dose and treatment plan your provider considers appropriate for you. As with any new patient, completing intake doesn't guarantee that tirzepatide, or any specific dose, will be prescribed.",
   },
 ];
 
@@ -102,8 +117,6 @@ const WHATS_INCLUDED = [
   "Alcohol Pads",
   { label: "Free recipes", to: "/recipes/" },
   { label: "Free learning resources", to: "/learn/" },
-  // Workout videos page not live yet - uncomment when /workout ships:
-  // { label: "Free workout videos", to: "/workout/" },
 ];
 
 const ELIGIBILITY_POINTS = [
@@ -112,7 +125,7 @@ const ELIGIBILITY_POINTS = [
   "A licensed provider makes the final decision, based on your intake and applicable state law",
 ];
 
-export const Route = createFileRoute("/tirzepatide")({
+export const Route = createFileRoute("/tirzepatide-houston")({
   head: () => ({
     meta: [
       { title: TITLE },
@@ -120,14 +133,14 @@ export const Route = createFileRoute("/tirzepatide")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: canonicalUrl("/tirzepatide") },
+      { property: "og:url", content: canonicalUrl("/tirzepatide-houston") },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
     links: [
-      { rel: "canonical", href: canonicalUrl("/tirzepatide") },
-      ...bootImagePreloadLinks("/tirzepatide"),
+      { rel: "canonical", href: canonicalUrl("/tirzepatide-houston") },
+      ...bootImagePreloadLinks("/tirzepatide-houston"),
     ],
     scripts: [
       {
@@ -135,7 +148,10 @@ export const Route = createFileRoute("/tirzepatide")({
         children: JSON.stringify(
           breadcrumbJsonLd([
             { name: "Home", path: "/" },
-            { name: "Compounded Tirzepatide", path: "/tirzepatide" },
+            {
+              name: "Compounded Tirzepatide in Houston",
+              path: "/tirzepatide-houston",
+            },
           ]),
         ),
       },
@@ -147,12 +163,13 @@ export const Route = createFileRoute("/tirzepatide")({
         type: "application/ld+json",
         children: JSON.stringify(
           serviceJsonLd({
-            name: "Compounded Tirzepatide Weight-Loss Telehealth Care",
-            description: DESCRIPTION,
-            path: "/tirzepatide",
+            name: "Compounded Tirzepatide Weight-Loss Telehealth Care in Houston",
+            description: SERVICE_DESCRIPTION,
+            path: "/tirzepatide-houston",
             serviceType: "Medical weight-loss telehealth service",
             reviewedByClinicalLead: false,
-            dateModified: "2026-09-13",
+            dateModified: "2026-09-27",
+            areaServed: HOUSTON_AREA_SERVED,
             offer: {
               introPrice: STARTER.monthlyEquivalentUsd,
               recurringPrice: COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd,
@@ -162,16 +179,16 @@ export const Route = createFileRoute("/tirzepatide")({
       },
     ],
   }),
-  component: TirzepatidePage,
+  component: TirzepatideHoustonPage,
 });
 
-function TirzepatidePage() {
-  const heroCta = resolveCta(CTA_IDS.tirzepatide_hero);
-  const footerCta = resolveCta(CTA_IDS.tirzepatide_footer);
+function TirzepatideHoustonPage() {
+  const heroCta = resolveCta(CTA_IDS.tirzepatide_houston_hero);
+  const footerCta = resolveCta(CTA_IDS.tirzepatide_houston_footer);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    trackPageViewed("tirzepatide");
+    trackPageViewed("tirzepatide_houston");
   }, []);
 
   return (
@@ -187,7 +204,7 @@ function TirzepatidePage() {
         />
         <FloatingHexagons className="z-0" />
         <div className="relative z-10">
-          <TreatmentBreadcrumb current="Compounded Tirzepatide" />
+          <TreatmentBreadcrumb current="Compounded Tirzepatide in Houston" />
           <div className="mt-8 grid items-start gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
             <div>
               <div className="relative pr-20 sm:pr-24">
@@ -195,16 +212,14 @@ function TirzepatidePage() {
                 <SectionHeading
                   as="h1"
                   align="left"
-                  eyebrow="Nationwide telehealth weight-loss care"
+                  eyebrow="Houston telehealth weight-loss care"
                   title={
                     <>
-                      <LineReveal>Compounded Tirzepatide, guided </LineReveal>
-                      <LineReveal delay={0.1}>
-                        by licensed medical professionals.
-                      </LineReveal>
+                      <LineReveal>Tirzepatide weight-loss care </LineReveal>
+                      <LineReveal delay={0.1}>for Houston patients.</LineReveal>
                     </>
                   }
-                  description="Beema Health connects eligible adults with independent licensed providers for personalized medical weight-management care. Completing intake does not guarantee a prescription."
+                  description="Beema Health connects eligible adults in Houston with independent licensed providers for individualized tirzepatide weight-management care. Complete your intake online and, if prescribed, medication ships to your door."
                   className="mx-0 max-w-xl text-left"
                 />
               </div>
@@ -242,7 +257,7 @@ function TirzepatidePage() {
                   </Button>
                 </HoverLiftButton>
                 <Button asChild size="xl" variant="outline">
-                  <Link to="/tirzepatide/" hash="how-it-works">
+                  <Link to="/tirzepatide-houston/" hash="how-it-works">
                     How it works
                   </Link>
                 </Button>
@@ -297,42 +312,44 @@ function TirzepatidePage() {
         >
           <SectionHeading
             align="left"
-            title="What is tirzepatide?"
+            title="Online tirzepatide care for Houston patients"
             className="mx-0 max-w-2xl"
           />
         </motion.div>
         <div className="mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-muted-foreground">
           <p>
-            Tirzepatide helps you feel full sooner and stay full longer, and it
-            may also help your body respond better to the food you eat. When you
-            feel full longer, it's easier to eat less without feeling hungry all
-            the time. Eating less, over time, can lead to weight loss.
+            Beema Health has no clinic or office in Houston. Instead, a provider
+            licensed to treat patients in Texas reviews your medical intake
+            online, under the same Texas telemedicine rules that govern an
+            in-person visit. If compounded tirzepatide is prescribed, it's
+            shipped directly to your Houston address rather than picked up in
+            person.
           </p>
           <p>
             Tirzepatide is a GLP-1/GIP medication used in medical
             weight-management care. It's available both as an FDA-approved
             branded medication and, separately, as a compounded version prepared
-            by a licensed compounding pharmacy.
+            by a licensed compounding pharmacy. Compounded tirzepatide is not
+            the same product as the branded version, it is not FDA-approved and
+            is considered only when legally available and clinically
+            appropriate.
           </p>
           <p>
-            Compounded tirzepatide is not the same product as the branded
-            version, it is not FDA-approved and is considered only when legally
-            available and clinically appropriate. A licensed provider decides,
-            on a case-by-case basis, whether it may be an appropriate option as
-            part of your care.
-          </p>
-          <p>
-            Not sure tirzepatide is the right fit? Learn about our{" "}
-            <Link to="/weight-loss/" className="text-primary underline">
-              weight-loss program
-            </Link>{" "}
-            to see the full range of options.
-          </p>
-          <Button asChild variant="outline" size="sm">
-            <Link to="/tirzepatide/" hash="faq">
-              View FAQ <ArrowRight className="size-4" />
+            Want the fuller picture of how Texas telemedicine law applies, and
+            what Houston's climate means for storing and taking a GLP-1
+            medication? See our{" "}
+            <Link
+              to={learnPath("weight-loss", "tirzepatide-in-houston")}
+              className="text-primary underline"
+            >
+              Houston tirzepatide guide
             </Link>
-          </Button>
+            . Looking for care outside Houston?{" "}
+            <Link to="/tirzepatide/" className="text-primary underline">
+              See our nationwide tirzepatide program
+            </Link>
+            .
+          </p>
         </div>
       </Section>
 
@@ -345,7 +362,7 @@ function TirzepatidePage() {
         />
         <div className="mt-8">
           <BmiCalculator
-            ctaId={CTA_IDS.tirzepatide_bmi}
+            ctaId={CTA_IDS.tirzepatide_houston_bmi}
             medicationLabel="tirzepatide"
           />
         </div>
@@ -354,7 +371,7 @@ function TirzepatidePage() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema Health's tirzepatide care works"
+        title="How Beema Health's tirzepatide care works for Houston patients"
         showCareFollowUpNote
       />
 
@@ -475,8 +492,8 @@ function TirzepatidePage() {
         </div>
         <p className="mt-4 text-sm text-muted-foreground">
           Curious about the alternative?{" "}
-          <Link to="/semaglutide/" className="text-primary underline">
-            See compounded semaglutide details
+          <Link to="/semaglutide-houston/" className="text-primary underline">
+            See compounded semaglutide details for Houston
           </Link>
           .
         </p>
@@ -550,7 +567,7 @@ function TirzepatidePage() {
           </div>
         </div>
       </Section>
-      <MoneyPageGuides path="/tirzepatide/" />
+      <MoneyPageGuides path="/tirzepatide-houston/" />
     </MarketingLayout>
   );
 }

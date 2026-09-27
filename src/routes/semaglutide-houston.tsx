@@ -47,18 +47,31 @@ import {
   promoFirstMonthUsd,
 } from "@/lib/medication-pricing";
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
+import { LEARN_USA_ONLY_SENTENCE } from "@/lib/learn-trust-copy";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
 import { bootImagePreloadLinks } from "@/lib/boot-assets";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
+import { learnPath } from "@/content/learn/types";
 
 const VIAL_IMAGERY = resolveVialImagery("semaglutide");
 
-const TITLE = "Compounded Semaglutide for Weight Loss | Beema Health";
-const DESCRIPTION = `Compounded semaglutide for medical weight loss, personalized by licensed providers. Nationwide telehealth care at $${COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd}/mo. Prescribing is never guaranteed.`;
+const HOUSTON_AREA_SERVED = [
+  {
+    "@type": "City",
+    name: "Houston",
+    containedInPlace: { "@type": "State", name: "Texas" },
+  },
+  { "@type": "Country", name: "United States" },
+];
+
+const TITLE =
+  "Semaglutide in Houston, TX | Online Weight Loss Care | Beema Health";
+const DESCRIPTION =
+  "Explore online semaglutide weight-loss care for eligible adults in Houston, Texas. Licensed provider review, transparent cash pricing, and medication delivery if prescribed.";
 const SERVICE_DESCRIPTION =
-  "Nationwide telehealth medical weight-loss service connecting eligible adults with independent licensed providers for compounded semaglutide evaluation and ongoing care. Completing intake does not guarantee a prescription.";
+  "Telehealth medical weight-loss service connecting eligible adults in Houston, Texas with independent licensed providers for compounded semaglutide evaluation and ongoing care. Completing intake does not guarantee a prescription.";
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
@@ -66,20 +79,20 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a: "Compounded semaglutide is a GLP-1 medication prepared by a licensed compounding pharmacy rather than manufactured and sold under a brand name. It's used in medical weight-management care, and because it isn't reviewed and approved by the FDA the same way a branded drug is, its formulation, strength, and preparation can differ from an FDA-approved branded medication. Beema Health only makes compounded semaglutide available when it's legally permitted in your state and a licensed provider determines it's clinically appropriate for your individual case. To be considered, you'll create a secure account and complete a medical intake questionnaire covering your health history, current medications, and goals. A licensed provider then reviews that information and independently decides whether compounded semaglutide, compounded tirzepatide, or another option makes sense for you. Because it's a prescription medication, your provider's individual judgment always determines eligibility, dosage, and whether treatment is appropriate at all.",
   },
   {
+    q: "Does Beema Health have a physical office in Houston?",
+    a: `No. Beema Health is a telehealth service - there is no Houston clinic or office to visit. Your intake, provider review, and any prescribed medication are handled entirely online, with medication shipped to your Houston address. ${LEARN_USA_ONLY_SENTENCE}`,
+  },
+  {
     q: "Is semaglutide right for me?",
     a: "Whether semaglutide is right for you depends on several factors your licensed provider reviews individually: your BMI, health history, current medications, and any potential contraindications or interactions. During your medical intake questionnaire, you'll share detailed information about your health so your provider can make an informed, independent clinical decision, prescribing is never guaranteed, and not everyone who applies will be approved. Provider approval also depends on applicable state law, since medication availability can vary by state. If semaglutide isn't the right fit for you, your provider may discuss compounded tirzepatide or another approach as part of Beema Health's broader weight-loss program instead. The most reliable way to find out if semaglutide is appropriate for your situation is to complete your intake so a licensed provider can evaluate your case directly.",
   },
   {
-    q: "How does online semaglutide care through Beema Health work?",
-    a: "Care starts with creating a secure account and completing a medical intake questionnaire covering your health, location, weight-loss goals, health history, and current medications; you can save your progress and return to it anytime. A licensed provider then reviews your intake and makes an independent clinical decision about whether compounded semaglutide is appropriate for you, prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, of Arora Health & Aesthetics, though the specific clinician assigned to your case may vary by state licensure and availability. If approved, your plan includes prescription medication, ongoing doctor care, supplies like alcohol pads and syringes, and expedited shipping, with follow-up visits so your provider can monitor your progress and adjust care as needed.",
+    q: "How does online semaglutide care through Beema Health work for Houston patients?",
+    a: "Care starts with creating a secure account and completing a medical intake questionnaire covering your health, location, weight-loss goals, health history, and current medications; you can save your progress and return to it anytime. A licensed provider then reviews your intake and makes an independent clinical decision about whether compounded semaglutide is appropriate for you, prescribing is never guaranteed. Beema Health's clinical provider network is led by Dr. Sean Arora, MD, of Arora Health & Aesthetics, though the specific clinician assigned to your case may vary by state licensure and availability. If approved, your plan includes prescription medication, ongoing doctor care, supplies like alcohol pads and syringes, and expedited shipping to your Houston address, with follow-up visits so your provider can monitor your progress and adjust care as needed.",
   },
   {
     q: "How much does semaglutide cost through Beema Health?",
-    a: `${compoundedMonthlyPricingSentence("Compounded semaglutide through Beema Health", COMPOUNDED_SEMAGLUTIDE_PRICING)} That listed rate is all-inclusive cash-pay pricing with no platform membership fee: our low cost fee covers your provider consul covers your provider consultation and ongoing doctor care, prescription medication, supplies like alcohol pads and syringes, and expedited shipping. Dose adjustments within compounded semaglutide do not change the monthly price. Questions about promo codes or plan length? ${patientQuestionsGuidance()}`,
-  },
-  {
-    q: "Does Beema Health serve patients nationwide?",
-    a: "Yes, Beema Health is available to patients in all 50 U.S. states, so you can start your medical intake no matter where you live. That said, whether compounded semaglutide specifically is available to you still depends on your state's rules around compounded medications and on pharmacy fulfillment in your area, since compounding regulations and sourcing can vary from state to state. Even where compounded semaglutide is available, eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history, current medications, and BMI, it isn't guaranteed just because you're in a covered state. If compounded semaglutide isn't an option where you live or for your specific case, your provider may discuss compounded tirzepatide or another approach as part of Beema Health's broader weight-loss program. Completing your intake is the fastest way to find out what's available to you.",
+    a: `${compoundedMonthlyPricingSentence("Compounded semaglutide through Beema Health", COMPOUNDED_SEMAGLUTIDE_PRICING)} Pricing is the same nationwide, including for Houston patients - that listed rate is all-inclusive cash-pay pricing with no platform membership fee: it covers your provider consultation and ongoing doctor care, prescription medication, supplies like alcohol pads and syringes, and expedited shipping. Dose adjustments within compounded semaglutide do not change the monthly price. Questions about promo codes or plan length? ${patientQuestionsGuidance()}`,
   },
   {
     q: "Is compounded semaglutide FDA-approved?",
@@ -106,8 +119,6 @@ const WHATS_INCLUDED = [
   "Expedited Shipping",
   { label: "Free learning resources", to: "/learn/" },
   { label: "Free recipes", to: "/recipes/" },
-  // Workout videos page not live yet - uncomment when /workout ships:
-  // { label: "Free workout videos", to: "/workout/" },
 ];
 
 const ELIGIBILITY_POINTS = [
@@ -116,7 +127,7 @@ const ELIGIBILITY_POINTS = [
   "Final approval rests with a licensed provider and depends on applicable state law",
 ];
 
-export const Route = createFileRoute("/semaglutide")({
+export const Route = createFileRoute("/semaglutide-houston")({
   head: () => ({
     meta: [
       { title: TITLE },
@@ -124,14 +135,14 @@ export const Route = createFileRoute("/semaglutide")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: canonicalUrl("/semaglutide") },
+      { property: "og:url", content: canonicalUrl("/semaglutide-houston") },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
     links: [
-      { rel: "canonical", href: canonicalUrl("/semaglutide") },
-      ...bootImagePreloadLinks("/semaglutide"),
+      { rel: "canonical", href: canonicalUrl("/semaglutide-houston") },
+      ...bootImagePreloadLinks("/semaglutide-houston"),
     ],
     scripts: [
       {
@@ -139,7 +150,10 @@ export const Route = createFileRoute("/semaglutide")({
         children: JSON.stringify(
           breadcrumbJsonLd([
             { name: "Home", path: "/" },
-            { name: "Compounded Semaglutide", path: "/semaglutide" },
+            {
+              name: "Compounded Semaglutide in Houston",
+              path: "/semaglutide-houston",
+            },
           ]),
         ),
       },
@@ -151,12 +165,13 @@ export const Route = createFileRoute("/semaglutide")({
         type: "application/ld+json",
         children: JSON.stringify(
           serviceJsonLd({
-            name: "Compounded Semaglutide Telehealth Care",
+            name: "Compounded Semaglutide Telehealth Care in Houston",
             description: SERVICE_DESCRIPTION,
-            path: "/semaglutide",
+            path: "/semaglutide-houston",
             serviceType: "Medical weight-loss telehealth service",
             reviewedByClinicalLead: false,
-            dateModified: "2026-09-13",
+            dateModified: "2026-09-27",
+            areaServed: HOUSTON_AREA_SERVED,
             offer: {
               introPrice: promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING),
               recurringPrice: COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd,
@@ -166,16 +181,16 @@ export const Route = createFileRoute("/semaglutide")({
       },
     ],
   }),
-  component: SemaglutidePage,
+  component: SemaglutideHoustonPage,
 });
 
-function SemaglutidePage() {
-  const heroCta = resolveCta(CTA_IDS.semaglutide_hero);
-  const footerCta = resolveCta(CTA_IDS.semaglutide_footer);
+function SemaglutideHoustonPage() {
+  const heroCta = resolveCta(CTA_IDS.semaglutide_houston_hero);
+  const footerCta = resolveCta(CTA_IDS.semaglutide_houston_footer);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    trackPageViewed("semaglutide");
+    trackPageViewed("semaglutide_houston");
   }, []);
 
   return (
@@ -191,7 +206,7 @@ function SemaglutidePage() {
         />
         <FloatingHexagons className="z-0" />
         <div className="relative z-10">
-          <TreatmentBreadcrumb current="Compounded Semaglutide" />
+          <TreatmentBreadcrumb current="Compounded Semaglutide in Houston" />
           <div className="mt-8 grid items-start gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
             <div>
               <div className="relative pr-20 sm:pr-24">
@@ -199,16 +214,14 @@ function SemaglutidePage() {
                 <SectionHeading
                   as="h1"
                   align="left"
-                  eyebrow="Nationwide telehealth weight-loss care"
+                  eyebrow="Houston telehealth weight-loss care"
                   title={
                     <>
-                      <LineReveal>Compounded Semaglutide, </LineReveal>
-                      <LineReveal delay={0.1}>
-                        personalized around you.
-                      </LineReveal>
+                      <LineReveal>Semaglutide weight-loss care </LineReveal>
+                      <LineReveal delay={0.1}>for Houston patients.</LineReveal>
                     </>
                   }
-                  description="Beema Health connects eligible adults with independent licensed providers for individualized medical weight-management care. Completing intake does not guarantee a prescription."
+                  description="Beema Health connects eligible adults in Houston with independent licensed providers for individualized semaglutide weight-management care. Complete your intake online and, if prescribed, medication ships to your door."
                   className="mx-0 max-w-xl text-left"
                 />
               </div>
@@ -246,7 +259,7 @@ function SemaglutidePage() {
                   </Button>
                 </HoverLiftButton>
                 <Button asChild size="xl" variant="outline">
-                  <Link to="/semaglutide/" hash="how-it-works">
+                  <Link to="/semaglutide-houston/" hash="how-it-works">
                     How it works
                   </Link>
                 </Button>
@@ -299,42 +312,44 @@ function SemaglutidePage() {
         >
           <SectionHeading
             align="left"
-            title="What is semaglutide?"
+            title="Online semaglutide care for Houston patients"
             className="mx-0 max-w-2xl"
           />
         </motion.div>
         <div className="mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-muted-foreground">
           <p>
-            Semaglutide helps you feel full sooner and stay full longer, by
-            slowing down how fast food leaves your stomach. When you feel full
-            longer, it's easier to eat less without feeling hungry all the time.
-            Eating less, over time, can lead to weight loss.
+            Beema Health has no clinic or office in Houston. Instead, a provider
+            licensed to treat patients in Texas reviews your medical intake
+            online, under the same Texas telemedicine rules that govern an
+            in-person visit. If compounded semaglutide is prescribed, it's
+            shipped directly to your Houston address rather than picked up in
+            person.
           </p>
           <p>
             Semaglutide is a GLP-1 medication used in medical weight-management
             care. Like tirzepatide, it comes in an FDA-approved branded form
             and, separately, as a compounded version made by a licensed
-            compounding pharmacy.
+            compounding pharmacy. Compounded semaglutide is not FDA-approved and
+            is considered only when legally available and clinically
+            appropriate; whether it's an appropriate option for you is a
+            decision your licensed provider makes individually.
           </p>
           <p>
-            Compounded semaglutide is a different product from the branded
-            version, it is not FDA-approved and is considered only when legally
-            available and clinically appropriate. Whether it's an appropriate
-            option for you is a decision your licensed provider makes
-            individually.
-          </p>
-          <p>
-            Not sure semaglutide is the right fit? Learn about our{" "}
-            <Link to="/weight-loss/" className="text-primary underline">
-              weight-loss program
-            </Link>{" "}
-            to see the full range of options.
-          </p>
-          <Button asChild variant="outline" size="sm">
-            <Link to="/semaglutide/" hash="faq">
-              View FAQ <ArrowRight className="size-4" />
+            Want the fuller picture of how Texas telemedicine law applies, and
+            what Houston's climate means for storing and taking a GLP-1
+            medication? See our{" "}
+            <Link
+              to={learnPath("weight-loss", "semaglutide-in-houston")}
+              className="text-primary underline"
+            >
+              Houston semaglutide guide
             </Link>
-          </Button>
+            . Looking for care outside Houston?{" "}
+            <Link to="/semaglutide/" className="text-primary underline">
+              See our nationwide semaglutide program
+            </Link>
+            .
+          </p>
         </div>
       </Section>
 
@@ -347,7 +362,7 @@ function SemaglutidePage() {
         />
         <div className="mt-8">
           <BmiCalculator
-            ctaId={CTA_IDS.semaglutide_bmi}
+            ctaId={CTA_IDS.semaglutide_houston_bmi}
             medicationLabel="semaglutide"
           />
         </div>
@@ -356,7 +371,7 @@ function SemaglutidePage() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema Health's semaglutide care works"
+        title="How Beema Health's semaglutide care works for Houston patients"
         showCareFollowUpNote
       />
 
@@ -484,8 +499,8 @@ function SemaglutidePage() {
         </div>
         <p className="mt-4 text-sm text-muted-foreground">
           Want to compare the other option?{" "}
-          <Link to="/tirzepatide/" className="text-primary underline">
-            See compounded tirzepatide details
+          <Link to="/tirzepatide-houston/" className="text-primary underline">
+            See compounded tirzepatide details for Houston
           </Link>
           .
         </p>
@@ -549,7 +564,7 @@ function SemaglutidePage() {
           </div>
         </div>
       </Section>
-      <MoneyPageGuides path="/semaglutide/" />
+      <MoneyPageGuides path="/semaglutide-houston/" />
     </MarketingLayout>
   );
 }

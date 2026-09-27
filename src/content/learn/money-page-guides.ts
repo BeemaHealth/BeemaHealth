@@ -15,7 +15,11 @@ import { learnPath, type LearnVertical } from "@/content/learn/types";
  * be re-checked when the account changes. Weight-loss and ED money pages
  * (added 2026-09-03: /tadalafil/, /sildenafil/, /ed-mints/) have guide sets;
  * TRT, HRT, hair-loss, and peptide verticals remain education-only until
- * those programs launch their own dedicated money pages.
+ * those programs launch their own dedicated money pages. The 3 Boston ED
+ * landing pages (added 2026-09-27: /tadalafil-boston/, /sildenafil-boston/,
+ * /ed-mints-boston/) reuse their nationwide sibling's article set with
+ * Boston-specific adKeywords for the same reason - see
+ * docs/features/treatment-pages.md "City ED pages".
  */
 export type MoneyPageGuideSet = {
   /** Program page path, trailing slash, matching the canonical. */
@@ -101,6 +105,44 @@ export const MONEY_PAGE_GUIDES: readonly MoneyPageGuideSet[] = [
     ],
   },
   {
+    path: "/semaglutide-houston/",
+    heading: "Semaglutide questions from Houston patients",
+    adKeywords: [
+      "semaglutide houston",
+      "semaglutide online houston",
+      "semaglutide weight loss houston",
+      "semaglutide weight loss",
+      "semaglutide online",
+    ],
+    articles: [
+      wl("semaglutide-in-houston"),
+      wl("tirzepatide-in-houston"),
+      wl("semaglutide-in-texas"),
+      wl("semaglutide-weight-loss"),
+      wl("glp-1-doctor"),
+      wl("glp-1-cost"),
+    ],
+  },
+  {
+    path: "/tirzepatide-houston/",
+    heading: "Tirzepatide questions from Houston patients",
+    adKeywords: [
+      "tirzepatide houston",
+      "tirzepatide online houston",
+      "tirzepatide doctor houston",
+      "tirzepatide weight loss houston",
+      "tirzepatide online",
+    ],
+    articles: [
+      wl("tirzepatide-in-houston"),
+      wl("semaglutide-in-houston"),
+      wl("tirzepatide-in-texas"),
+      wl("tirzepatide-online"),
+      wl("glp-1-doctor"),
+      wl("stopping-tirzepatide"),
+    ],
+  },
+  {
     path: "/glp-1-houston/",
     heading: "GLP-1 questions from Houston and Texas patients",
     adKeywords: [
@@ -164,6 +206,58 @@ export const MONEY_PAGE_GUIDES: readonly MoneyPageGuideSet[] = [
       "ed mints",
       "dissolvable ed medication",
       "tadalafil sildenafil combo",
+    ],
+    articles: [
+      ed("tadalafil-sildenafil-combo"),
+      ed("sildenafil-tadalafil-oxytocin"),
+      ed("tadalafil-dosing"),
+      ed("sildenafil-dosing"),
+    ],
+  },
+  {
+    path: "/tadalafil-boston/",
+    heading: "Tadalafil questions Boston patients ask before starting",
+    adKeywords: [
+      "tadalafil boston",
+      "tadalafil online boston",
+      "tadalafil prescription boston",
+      "tadalafil cost boston",
+      "cialis boston",
+      "cialis online boston",
+    ],
+    articles: [
+      ed("tadalafil-dosing"),
+      ed("sildenafil-dosing"),
+      ed("tadalafil-sildenafil-combo"),
+      ed("sildenafil-tadalafil-oxytocin"),
+    ],
+  },
+  {
+    path: "/sildenafil-boston/",
+    heading: "Sildenafil questions Boston patients ask before starting",
+    adKeywords: [
+      "sildenafil boston",
+      "sildenafil online boston",
+      "sildenafil prescription boston",
+      "sildenafil cost boston",
+      "viagra online boston",
+    ],
+    articles: [
+      ed("sildenafil-dosing"),
+      ed("tadalafil-dosing"),
+      ed("tadalafil-sildenafil-combo"),
+      ed("sildenafil-tadalafil-oxytocin"),
+    ],
+  },
+  {
+    path: "/ed-mints-boston/",
+    heading: "ED Mints questions Boston patients ask before starting",
+    adKeywords: [
+      "ed treatment boston",
+      "ed meds online boston",
+      "ed medication boston",
+      "online ed treatment massachusetts",
+      "ed pills boston",
     ],
     articles: [
       ed("tadalafil-sildenafil-combo"),

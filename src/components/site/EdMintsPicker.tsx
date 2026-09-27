@@ -17,9 +17,13 @@ import {
 } from "@/components/ui/dialog";
 import { FullScreenMobileDialogContent } from "@/components/site/FullScreenMobileDialog";
 import { CTA_IDS, resolveCta, type CtaId } from "@/lib/cta-ids";
+import {
+  ED_MINTS_RDT_PRICING,
+  formatSimpleQuarterlyStartingAt,
+} from "@/lib/simple-treatment-pricing";
 import { cn } from "@/lib/utils";
 import edMintsRdtPhoto from "@/assets/treatments/ed-mints-tadalafil-sildenafil-rdt.webp";
-import edMintsOdtPhoto from "@/assets/treatments/ed-mints-sildenafil-tadalafil-oxytocin-odt.webp";
+import edMintsOdtPhoto from "@/assets/treatments/ed-mints-dissolvable-tablet.webp";
 
 /**
  * ED Mints formulation picker - extracted from ed-mints.tsx (2026-09-03) so
@@ -35,14 +39,17 @@ import edMintsOdtPhoto from "@/assets/treatments/ed-mints-sildenafil-tadalafil-o
  * mix and dose (product 2 has a higher tadalafil dose - 20mg vs 12mg - plus
  * a 3rd ingredient), not an efficacy/outcome claim - the disclaimer under
  * the cards says so explicitly, matching the site's no-outcome-guarantee
- * rule (docs/features/treatment-pages.md). No pricing anywhere here
- * (2026-09-03, per Matt) - pricing for both formulations is shown only
- * during the Bask questionnaire after "Continue"; don't reintroduce a price
- * display here without checking with Matt first. Each option has its own
- * real product photo (2026-09-03, per Matt) - grey for the RDT (also the
- * ed-mints.tsx page hero shot), orange for the ODT - stored under
- * descriptive filenames in src/assets/treatments/ for image-search SEO, with
- * per-product `alt` text naming the exact formulation and dose.
+ * rule (docs/features/treatment-pages.md). Both formulations are the same
+ * price - a shared price line renders once above the cards rather than
+ * per-card (2026-09-27, reversing the 2026-09-03 "no pricing anywhere here"
+ * decision - Google Ads flagged the hidden pricing as a landing-page-
+ * experience problem; see docs/features/treatment-pages.md). Each option
+ * has its own real product photo - grey for the RDT (2026-09-03, per Matt),
+ * blue for the ODT (2026-09-27, replacing the earlier orange shot to match
+ * the ed-mints.tsx page hero, which switched to the same blue tablet photo
+ * the same day) - stored under descriptive filenames in
+ * src/assets/treatments/ for image-search SEO, with per-product `alt` text
+ * naming the exact formulation and dose.
  */
 export type MintOption = {
   id: "rdt" | "odt";
@@ -84,7 +91,7 @@ export const MINT_OPTIONS: MintOption[] = [
     dose: "50mg / 20mg / 125 IU ODT",
     photo: edMintsOdtPhoto,
     photoAlt:
-      "Beema Health ED Mints - Sildenafil 50mg + Tadalafil 20mg + Oxytocin 125 IU orally dissolving tablet (ODT)",
+      "Beema Health ED Mints - blue Sildenafil 50mg + Tadalafil 20mg + Oxytocin 125 IU orally dissolving tablet (ODT), embossed with the Beema Health logo",
     description:
       "A 3-ingredient formula combining sildenafil, tadalafil, and oxytocin into one orally dissolving tablet.",
     bullets: [
@@ -135,6 +142,11 @@ export function EdMintsPickerModal({
             reviewed by licensed providers.
           </DialogDescription>
         </DialogHeader>
+
+        <p className="text-center text-sm font-semibold text-foreground">
+          Both formulations: from{" "}
+          {formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING)}
+        </p>
 
         <div className="grid gap-4 sm:grid-cols-2">
           {MINT_OPTIONS.map((opt) => (

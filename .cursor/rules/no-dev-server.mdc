@@ -1,0 +1,18 @@
+---
+description: Never start, stop, or kill the user-owned dev server
+alwaysApply: true
+---
+
+# Dev server is user-owned
+
+**Hard rule for every Cursor, Claude Code, and other agent session.**
+
+The user starts and stops the marketing frontend (`npm run dev`) and any backend/API stack (`npm run dev:backend`, Docker Compose API) themselves.
+
+**Never:**
+- Run `npm run dev`, `npm run dev:backend`, `vite`, or equivalent to start a server
+- Kill, stop, restart, or free ports for a running server (`pkill`, `kill`, `lsof -ti`, `fuser`, `kill-port`, Ctrl-C on a server process, `docker compose down`/`stop` aimed at the API stack)
+
+**Do instead:** Assume the server is already running when you need to browse or smoke-check. If it is not running, ask the user to start it - do not start or tear it down yourself.
+
+Authoritative copy: `AGENTS.md` (Common commands / Do not), `CLAUDE.md`, `.cursor/rules/beemahealth-core.mdc`.

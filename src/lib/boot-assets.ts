@@ -12,7 +12,7 @@
 
 import beemaMark from "@/assets/beema-mark.png";
 import heroImg from "@/assets/hero.jpg";
-import edMintsOdtPhoto from "@/assets/treatments/ed-mints-sildenafil-tadalafil-oxytocin-odt.webp";
+import edMintsHeroPhoto from "@/assets/treatments/ed-mints-dissolvable-tablet.webp";
 import sildenafilPhoto from "@/assets/treatments/sildenafil-oral-tablets-bottle.webp";
 import tadalafilPhoto from "@/assets/treatments/tadalafil-oral-tablets-bottle.webp";
 import finasteridePhoto from "@/assets/treatments/finasteride-oral-tablets-bottle.webp";
@@ -61,14 +61,26 @@ export function criticalBootImageUrls(pathname: string): string[] {
     case "/":
       return [heroImg];
     case "/semaglutide":
+    case "/semaglutide-houston":
       return [vialSrc("semaglutide")];
     case "/tirzepatide":
+    case "/tirzepatide-houston":
       return [vialSrc("tirzepatide")];
+    case "/glp-1":
+    case "/glp-1-houston":
+      // Dual-vial hero: semaglutide renders largest/frontmost and carries
+      // fetchPriority="high" as the actual LCP element - see
+      // Glp1LandingPage.tsx. Tirzepatide is the smaller/back vial in the
+      // same image, warmed at low priority below instead of preloaded.
+      return [vialSrc("semaglutide")];
     case "/ed-mints":
-      return [edMintsOdtPhoto];
+    case "/ed-mints-boston":
+      return [edMintsHeroPhoto];
     case "/sildenafil":
+    case "/sildenafil-boston":
       return [sildenafilPhoto];
     case "/tadalafil":
+    case "/tadalafil-boston":
       return [tadalafilPhoto];
     case "/oral-finasteride":
       return [finasteridePhoto];
@@ -106,15 +118,17 @@ export function warmupBootImageUrls(pathname: string): string[] {
       break;
     case "/glp-1":
     case "/glp-1-houston":
-      extra = [LEGITSCRIPT_SEAL_SRC];
+      extra = [vialSrc("tirzepatide"), LEGITSCRIPT_SEAL_SRC];
       break;
     case "/weight-loss":
       extra = [vialSrc("semaglutide"), vialSrc("tirzepatide")];
       break;
     case "/semaglutide":
+    case "/semaglutide-houston":
       extra = [vialSrc("tirzepatide")];
       break;
     case "/tirzepatide":
+    case "/tirzepatide-houston":
       extra = [vialSrc("semaglutide")];
       break;
     default:

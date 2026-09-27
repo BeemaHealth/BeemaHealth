@@ -8,7 +8,6 @@ import {
 } from "@/lib/seo";
 import {
   dualCompoundedFaqPricingParagraph,
-  dualCompoundedHeroPricingLine,
   dualCompoundedShortPricingLine,
 } from "@/lib/medication-pricing";
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
@@ -94,7 +93,8 @@ const HOUSTON_AREA_SERVED = [
   { "@type": "Country", name: "United States" },
 ];
 
-const SHARED_HERO_DESCRIPTION = `Provider-reviewed telehealth care with transparent cash pricing: ${dualCompoundedHeroPricingLine()}. ${COMPOUNDED_DISCLOSURE} Prescribing is never guaranteed.`;
+const SHARED_HERO_DESCRIPTION =
+  "Provider-reviewed telehealth care with transparent cash pricing on compounded semaglutide and tirzepatide. No membership fee, and completing intake does not guarantee a prescription.";
 
 const GLP1_COPY: Record<Glp1Market, Glp1LandingCopy> = {
   national: {

@@ -12,13 +12,17 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WeightLossRouteImport } from './routes/weight-loss'
 import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
+import { Route as TirzepatideHoustonRouteImport } from './routes/tirzepatide-houston'
 import { Route as TirzepatideRouteImport } from './routes/tirzepatide'
+import { Route as TadalafilBostonRouteImport } from './routes/tadalafil-boston'
 import { Route as TadalafilRouteImport } from './routes/tadalafil'
 import { Route as SubmittedRouteImport } from './routes/submitted'
 import { Route as StaffRouteImport } from './routes/staff'
+import { Route as SildenafilBostonRouteImport } from './routes/sildenafil-boston'
 import { Route as SildenafilRouteImport } from './routes/sildenafil'
 import { Route as SexualHealthRouteImport } from './routes/sexual-health'
 import { Route as SermorelinRouteImport } from './routes/sermorelin'
+import { Route as SemaglutideHoustonRouteImport } from './routes/semaglutide-houston'
 import { Route as SemaglutideRouteImport } from './routes/semaglutide'
 import { Route as SafetyRouteImport } from './routes/safety'
 import { Route as QualifyRouteImport } from './routes/qualify'
@@ -37,6 +41,7 @@ import { Route as Glp1HoustonRouteImport } from './routes/glp-1-houston'
 import { Route as Glp1RouteImport } from './routes/glp-1'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
+import { Route as EdMintsBostonRouteImport } from './routes/ed-mints-boston'
 import { Route as EdMintsRouteImport } from './routes/ed-mints'
 import { Route as EdRouteImport } from './routes/ed'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -100,9 +105,19 @@ const VerifyEmailRoute = VerifyEmailRouteImport.update({
   path: '/verify-email',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TirzepatideHoustonRoute = TirzepatideHoustonRouteImport.update({
+  id: '/tirzepatide-houston',
+  path: '/tirzepatide-houston',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TirzepatideRoute = TirzepatideRouteImport.update({
   id: '/tirzepatide',
   path: '/tirzepatide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TadalafilBostonRoute = TadalafilBostonRouteImport.update({
+  id: '/tadalafil-boston',
+  path: '/tadalafil-boston',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TadalafilRoute = TadalafilRouteImport.update({
@@ -120,6 +135,11 @@ const StaffRoute = StaffRouteImport.update({
   path: '/staff',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SildenafilBostonRoute = SildenafilBostonRouteImport.update({
+  id: '/sildenafil-boston',
+  path: '/sildenafil-boston',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SildenafilRoute = SildenafilRouteImport.update({
   id: '/sildenafil',
   path: '/sildenafil',
@@ -133,6 +153,11 @@ const SexualHealthRoute = SexualHealthRouteImport.update({
 const SermorelinRoute = SermorelinRouteImport.update({
   id: '/sermorelin',
   path: '/sermorelin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SemaglutideHoustonRoute = SemaglutideHoustonRouteImport.update({
+  id: '/semaglutide-houston',
+  path: '/semaglutide-houston',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SemaglutideRoute = SemaglutideRouteImport.update({
@@ -223,6 +248,11 @@ const FaqRoute = FaqRouteImport.update({
 const EligibilityRoute = EligibilityRouteImport.update({
   id: '/eligibility',
   path: '/eligibility',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EdMintsBostonRoute = EdMintsBostonRouteImport.update({
+  id: '/ed-mints-boston',
+  path: '/ed-mints-boston',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EdMintsRoute = EdMintsRouteImport.update({
@@ -475,6 +505,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/ed': typeof EdRoute
   '/ed-mints': typeof EdMintsRoute
+  '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/glp-1': typeof Glp1Route
@@ -493,13 +524,17 @@ export interface FileRoutesByFullPath {
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
   '/semaglutide': typeof SemaglutideRoute
+  '/semaglutide-houston': typeof SemaglutideHoustonRoute
   '/sermorelin': typeof SermorelinRoute
   '/sexual-health': typeof SexualHealthRoute
   '/sildenafil': typeof SildenafilRoute
+  '/sildenafil-boston': typeof SildenafilBostonRoute
   '/staff': typeof StaffRouteWithChildren
   '/submitted': typeof SubmittedRoute
   '/tadalafil': typeof TadalafilRoute
+  '/tadalafil-boston': typeof TadalafilBostonRoute
   '/tirzepatide': typeof TirzepatideRoute
+  '/tirzepatide-houston': typeof TirzepatideHoustonRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/waitlist': typeof WaitlistRoute
   '/weight-loss': typeof WeightLossRoute
@@ -551,6 +586,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/ed': typeof EdRoute
   '/ed-mints': typeof EdMintsRoute
+  '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/glp-1': typeof Glp1Route
@@ -568,12 +604,16 @@ export interface FileRoutesByTo {
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
   '/semaglutide': typeof SemaglutideRoute
+  '/semaglutide-houston': typeof SemaglutideHoustonRoute
   '/sermorelin': typeof SermorelinRoute
   '/sexual-health': typeof SexualHealthRoute
   '/sildenafil': typeof SildenafilRoute
+  '/sildenafil-boston': typeof SildenafilBostonRoute
   '/submitted': typeof SubmittedRoute
   '/tadalafil': typeof TadalafilRoute
+  '/tadalafil-boston': typeof TadalafilBostonRoute
   '/tirzepatide': typeof TirzepatideRoute
+  '/tirzepatide-houston': typeof TirzepatideHoustonRoute
   '/waitlist': typeof WaitlistRoute
   '/weight-loss': typeof WeightLossRoute
   '/dashboard/account': typeof DashboardAccountRoute
@@ -623,6 +663,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/ed': typeof EdRoute
   '/ed-mints': typeof EdMintsRoute
+  '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/glp-1': typeof Glp1Route
@@ -641,13 +682,17 @@ export interface FileRoutesById {
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
   '/semaglutide': typeof SemaglutideRoute
+  '/semaglutide-houston': typeof SemaglutideHoustonRoute
   '/sermorelin': typeof SermorelinRoute
   '/sexual-health': typeof SexualHealthRoute
   '/sildenafil': typeof SildenafilRoute
+  '/sildenafil-boston': typeof SildenafilBostonRoute
   '/staff': typeof StaffRouteWithChildren
   '/submitted': typeof SubmittedRoute
   '/tadalafil': typeof TadalafilRoute
+  '/tadalafil-boston': typeof TadalafilBostonRoute
   '/tirzepatide': typeof TirzepatideRoute
+  '/tirzepatide-houston': typeof TirzepatideHoustonRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/waitlist': typeof WaitlistRoute
   '/weight-loss': typeof WeightLossRoute
@@ -702,6 +747,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/ed'
     | '/ed-mints'
+    | '/ed-mints-boston'
     | '/eligibility'
     | '/faq'
     | '/glp-1'
@@ -720,13 +766,17 @@ export interface FileRouteTypes {
     | '/qualify'
     | '/safety'
     | '/semaglutide'
+    | '/semaglutide-houston'
     | '/sermorelin'
     | '/sexual-health'
     | '/sildenafil'
+    | '/sildenafil-boston'
     | '/staff'
     | '/submitted'
     | '/tadalafil'
+    | '/tadalafil-boston'
     | '/tirzepatide'
+    | '/tirzepatide-houston'
     | '/verify-email'
     | '/waitlist'
     | '/weight-loss'
@@ -778,6 +828,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/ed'
     | '/ed-mints'
+    | '/ed-mints-boston'
     | '/eligibility'
     | '/faq'
     | '/glp-1'
@@ -795,12 +846,16 @@ export interface FileRouteTypes {
     | '/qualify'
     | '/safety'
     | '/semaglutide'
+    | '/semaglutide-houston'
     | '/sermorelin'
     | '/sexual-health'
     | '/sildenafil'
+    | '/sildenafil-boston'
     | '/submitted'
     | '/tadalafil'
+    | '/tadalafil-boston'
     | '/tirzepatide'
+    | '/tirzepatide-houston'
     | '/waitlist'
     | '/weight-loss'
     | '/dashboard/account'
@@ -849,6 +904,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/ed'
     | '/ed-mints'
+    | '/ed-mints-boston'
     | '/eligibility'
     | '/faq'
     | '/glp-1'
@@ -867,13 +923,17 @@ export interface FileRouteTypes {
     | '/qualify'
     | '/safety'
     | '/semaglutide'
+    | '/semaglutide-houston'
     | '/sermorelin'
     | '/sexual-health'
     | '/sildenafil'
+    | '/sildenafil-boston'
     | '/staff'
     | '/submitted'
     | '/tadalafil'
+    | '/tadalafil-boston'
     | '/tirzepatide'
+    | '/tirzepatide-houston'
     | '/verify-email'
     | '/waitlist'
     | '/weight-loss'
@@ -927,6 +987,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   EdRoute: typeof EdRoute
   EdMintsRoute: typeof EdMintsRoute
+  EdMintsBostonRoute: typeof EdMintsBostonRoute
   EligibilityRoute: typeof EligibilityRoute
   FaqRoute: typeof FaqRoute
   Glp1Route: typeof Glp1Route
@@ -945,13 +1006,17 @@ export interface RootRouteChildren {
   QualifyRoute: typeof QualifyRoute
   SafetyRoute: typeof SafetyRoute
   SemaglutideRoute: typeof SemaglutideRoute
+  SemaglutideHoustonRoute: typeof SemaglutideHoustonRoute
   SermorelinRoute: typeof SermorelinRoute
   SexualHealthRoute: typeof SexualHealthRoute
   SildenafilRoute: typeof SildenafilRoute
+  SildenafilBostonRoute: typeof SildenafilBostonRoute
   StaffRoute: typeof StaffRouteWithChildren
   SubmittedRoute: typeof SubmittedRoute
   TadalafilRoute: typeof TadalafilRoute
+  TadalafilBostonRoute: typeof TadalafilBostonRoute
   TirzepatideRoute: typeof TirzepatideRoute
+  TirzepatideHoustonRoute: typeof TirzepatideHoustonRoute
   VerifyEmailRoute: typeof VerifyEmailRouteWithChildren
   WaitlistRoute: typeof WaitlistRoute
   WeightLossRoute: typeof WeightLossRoute
@@ -991,11 +1056,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerifyEmailRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tirzepatide-houston': {
+      id: '/tirzepatide-houston'
+      path: '/tirzepatide-houston'
+      fullPath: '/tirzepatide-houston'
+      preLoaderRoute: typeof TirzepatideHoustonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tirzepatide': {
       id: '/tirzepatide'
       path: '/tirzepatide'
       fullPath: '/tirzepatide'
       preLoaderRoute: typeof TirzepatideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tadalafil-boston': {
+      id: '/tadalafil-boston'
+      path: '/tadalafil-boston'
+      fullPath: '/tadalafil-boston'
+      preLoaderRoute: typeof TadalafilBostonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tadalafil': {
@@ -1019,6 +1098,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaffRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sildenafil-boston': {
+      id: '/sildenafil-boston'
+      path: '/sildenafil-boston'
+      fullPath: '/sildenafil-boston'
+      preLoaderRoute: typeof SildenafilBostonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sildenafil': {
       id: '/sildenafil'
       path: '/sildenafil'
@@ -1038,6 +1124,13 @@ declare module '@tanstack/react-router' {
       path: '/sermorelin'
       fullPath: '/sermorelin'
       preLoaderRoute: typeof SermorelinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/semaglutide-houston': {
+      id: '/semaglutide-houston'
+      path: '/semaglutide-houston'
+      fullPath: '/semaglutide-houston'
+      preLoaderRoute: typeof SemaglutideHoustonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/semaglutide': {
@@ -1164,6 +1257,13 @@ declare module '@tanstack/react-router' {
       path: '/eligibility'
       fullPath: '/eligibility'
       preLoaderRoute: typeof EligibilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ed-mints-boston': {
+      id: '/ed-mints-boston'
+      path: '/ed-mints-boston'
+      fullPath: '/ed-mints-boston'
+      preLoaderRoute: typeof EdMintsBostonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ed-mints': {
@@ -1632,6 +1732,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRouteWithChildren,
   EdRoute: EdRoute,
   EdMintsRoute: EdMintsRoute,
+  EdMintsBostonRoute: EdMintsBostonRoute,
   EligibilityRoute: EligibilityRoute,
   FaqRoute: FaqRoute,
   Glp1Route: Glp1Route,
@@ -1650,13 +1751,17 @@ const rootRouteChildren: RootRouteChildren = {
   QualifyRoute: QualifyRoute,
   SafetyRoute: SafetyRoute,
   SemaglutideRoute: SemaglutideRoute,
+  SemaglutideHoustonRoute: SemaglutideHoustonRoute,
   SermorelinRoute: SermorelinRoute,
   SexualHealthRoute: SexualHealthRoute,
   SildenafilRoute: SildenafilRoute,
+  SildenafilBostonRoute: SildenafilBostonRoute,
   StaffRoute: StaffRouteWithChildren,
   SubmittedRoute: SubmittedRoute,
   TadalafilRoute: TadalafilRoute,
+  TadalafilBostonRoute: TadalafilBostonRoute,
   TirzepatideRoute: TirzepatideRoute,
+  TirzepatideHoustonRoute: TirzepatideHoustonRoute,
   VerifyEmailRoute: VerifyEmailRouteWithChildren,
   WaitlistRoute: WaitlistRoute,
   WeightLossRoute: WeightLossRoute,

@@ -22,6 +22,7 @@ Read `AGENTS.md` first - it is the authoritative engineering guide. This file co
 - Error handling, validation, tests, security, and copy quality are included on every change.
 - **Never store PHI in `localStorage` or `sessionStorage`.**
 - No PHI in logs, analytics, or ad pixels.
+- **Dev server is user-owned.** Never start, stop, restart, or kill `npm run dev`, `npm run dev:backend`, or any related process (Vite, Docker API stack, port killers). Ask the user if the server is down; do not launch or tear it down yourself.
 
 ---
 
@@ -37,7 +38,9 @@ Read `AGENTS.md` first - it is the authoritative engineering guide. This file co
 
 ## New feature requests
 
-Before writing any code for a new feature, run `/start-feature` (branch setup) then `/discover-feature` (blindspot pass → prototype → interview → plan) for non-trivial work. Full instructions live in `.claude/commands/`. Never push - the user pushes when ready.
+**Do not stash, check out, create, or switch git branches unless the user explicitly asks.** Stay on the current branch by default.
+
+For non-trivial work, offer `/discover-feature` (blindspot pass → prototype → interview → plan). Offer `/start-feature` (branch setup) only if the user wants a clean feature branch - **ask and wait for approval before any stash/checkout**. Full instructions live in `.claude/commands/`. Never push - the user pushes when ready.
 
 ---
 
@@ -130,6 +133,7 @@ Usage: **`src/lib/design-tokens.ts`** - import from here, never hardcode ad hoc 
 - **No em dashes:** Never use the Unicode em dash (U+2014) in source, comments, UI copy, meta, JSON-LD, or tests. Use a spaced hyphen ` - `, a plain `-`, or rephrase. See `.cursor/rules/no-em-dashes.mdc` and `AGENTS.md`.
 - Frontend routes: file-based in `src/routes/` - see `src/routes/README.md`. Do not create `src/pages/`.
 - Commits: only when the user asks. No `--no-verify`, no force-push to main.
+- Dev server: user-owned - never start, stop, restart, or kill it.
 - Scope: smallest correct diff. No drive-by refactors.
 - **Launched + Bask intake + LegitScript certified.** CTAs: `resolveCta(CTA_IDS.x)` → Bask **intake**. Seal: `src/lib/legitscript.ts`. See `docs/features/legitscript.md` and `docs/features/treatment-pages.md`.
 
@@ -137,9 +141,11 @@ Usage: **`src/lib/design-tokens.ts`** - import from here, never hardcode ad hoc 
 
 ## Common commands
 
+**Dev server:** User-owned. Never run `npm run dev` / `npm run dev:backend`, and never kill or restart an existing server. Reference only:
+
 | Command | Purpose |
 |---------|---------|
-| `npm run dev` | Marketing frontend → http://localhost:8080 |
+| `npm run dev` | Marketing frontend → http://localhost:8080 (**user runs this**) |
 | `npm test` | Frontend tests (Vitest) - preferred default |
 | `npx tsc --noEmit` | TypeScript check - required after any TS/TSX change |
 

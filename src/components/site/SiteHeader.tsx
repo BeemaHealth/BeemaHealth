@@ -9,7 +9,7 @@ import { EASE_OUT } from "@/components/home/home-motion";
 import { HIVE_LOGIN_URL } from "@/lib/cta-ids";
 import { FIRST_MONTH_PROMO_SHORT } from "@/lib/marketing-copy";
 import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
-import { RECIPES } from "@/lib/recipes";
+import { RECIPES_COUNT } from "@/lib/recipes-meta";
 import { SOCIAL_LINKS } from "@/lib/social-links";
 import { cn } from "@/lib/utils";
 
@@ -148,7 +148,7 @@ const MORE_ITEMS: NavItem[] = [
   {
     label: "Recipes",
     to: "/recipes/",
-    description: `${RECIPES.length} meals for changing appetites`,
+    description: `${RECIPES_COUNT} meals for changing appetites`,
   },
   {
     label: "Learn",

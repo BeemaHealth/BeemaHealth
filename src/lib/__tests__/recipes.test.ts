@@ -30,6 +30,7 @@ import {
 } from "../recipes";
 import { recipeCollectionJsonLd, recipeJsonLd } from "../recipe-seo";
 import { SITE_URL } from "../seo";
+import { RECIPES_COUNT } from "../recipes-meta";
 import { OVERFLOW, STRICT_FIELD_ATTACKS } from "./fixtures/malicious-payloads";
 
 describe("recipe collection", () => {
@@ -37,6 +38,15 @@ describe("recipe collection", () => {
     expect(RECIPES).toHaveLength(13);
     expect(new Set(RECIPE_SLUGS)).toHaveLength(13);
     expect(RECIPE_SLUGS).toContain("chicken-and-beef-fajitas");
+  });
+
+  it("keeps the header's hardcoded RECIPES_COUNT in sync with the collection", () => {
+    // SiteHeader.tsx deliberately imports RECIPES_COUNT (a hardcoded number)
+    // instead of RECIPES itself, so the ~600-line recipe dataset isn't bundled
+    // into the shared MarketingLayout chunk just to show a count - see
+    // recipes-meta.ts. This test is what catches drift if a recipe is added
+    // or removed without updating that constant.
+    expect(RECIPES_COUNT).toBe(RECIPES.length);
   });
 
   it("covers every meal type in each category", () => {
@@ -687,12 +697,14 @@ describe("recipe compliance and SEO markup", () => {
   it("derives public recipe counts from the published collection", () => {
     // Asserts the count is interpolated from the collection, not the exact
     // marketing sentence, which is copy that gets tuned for SERP length.
+    // SiteHeader is the one deliberate exception - see recipes-meta.ts and
+    // the "keeps the header's hardcoded RECIPES_COUNT in sync" test above.
     expect(hubRoute).toContain("Explore ${RECIPES.length} practical recipes");
     expect(hubRoute).toContain("getRecipesByCategory(key).length} recipes");
     expect(homepageResource).toContain(
       "{RECIPES.length} breakfast, lunch, dinner, and light-meal ideas",
     );
-    expect(header).toContain("${RECIPES.length} meals for changing appetites");
+    expect(header).toContain("${RECIPES_COUNT} meals for changing appetites");
     expect(weightLossRoute).toContain("all {RECIPES.length} recipes");
     expect(howItWorksRoute).toContain("{RECIPES.length}-recipe collection");
   });

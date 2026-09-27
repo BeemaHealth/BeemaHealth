@@ -33,11 +33,20 @@ describe("boot image prefetch", () => {
     ]);
   });
 
-  it("does not preload competing product photos on GLP-1 landers", () => {
+  it("waits for the semaglutide vial as the GLP-1 lander's LCP photo, warms tirzepatide and the seal", () => {
     for (const path of ["/glp-1", "/glp-1-houston/"]) {
-      expect(criticalBootImageUrls(path)).toEqual([]);
-      expect(bootImagePreloadLinks(path)).toEqual([]);
-      expect(warmupBootImageUrls(path)).toEqual([LEGITSCRIPT_SEAL_SRC]);
+      expect(criticalBootImageUrls(path)).toEqual([
+        resolveVialImagery("semaglutide").src,
+      ]);
+      expect(bootImagePreloadLinks(path)[0]).toMatchObject({
+        rel: "preload",
+        as: "image",
+        fetchPriority: "high",
+      });
+      expect(warmupBootImageUrls(path)).toEqual([
+        resolveVialImagery("tirzepatide").src,
+        LEGITSCRIPT_SEAL_SRC,
+      ]);
     }
   });
 

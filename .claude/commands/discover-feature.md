@@ -6,7 +6,7 @@ Run this command **before writing production code** on any non-trivial feature. 
 
 **When to skip:** one-line fixes, copy tweaks, tests-only changes, or work where the spec is already locked (e.g. an approved plan in `.claude/plans/`).
 
-**Prerequisite:** run `/start-feature` first if you need a clean feature branch. This command does not create branches.
+**Branching:** This command does not create or switch branches. Stay on the current branch unless the user explicitly asks for `/start-feature` / a branch change. Never stash or checkout as a side effect of discovery.
 
 ---
 

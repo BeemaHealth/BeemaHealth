@@ -52,9 +52,11 @@ describe("bmiCategory", () => {
 });
 
 describe("BMI_CTA_THRESHOLD", () => {
-  it("aligns with the obesity category boundary", () => {
-    expect(BMI_CTA_THRESHOLD).toBe(30);
-    expect(bmiCategory(BMI_CTA_THRESHOLD)).toBe("obesity");
+  it("aligns with the overweight category boundary, so overweight and obese both see the CTA", () => {
+    expect(BMI_CTA_THRESHOLD).toBe(25);
+    expect(bmiCategory(BMI_CTA_THRESHOLD)).toBe("overweight");
+    expect(bmiCategory(29.9)).toBe("overweight");
+    expect(bmiCategory(30)).toBe("obesity");
   });
 });
 

@@ -428,13 +428,21 @@
     animation: beema-float 13s ease-in-out infinite reverse;
   }
 
-  /* Slow autonomous drift for background gradient-mesh blobs. */
+  /*
+   * Slow autonomous drift for background gradient-mesh blobs. Delayed start
+   * (not removed) so the animation doesn't force layer compositing/repaint
+   * of the full-viewport bg-mesh-glow/bg-grain gradients during the critical
+   * rendering window - measured competing with hero LCP paint on mobile
+   * (2026-09-27 performance audit). transform: scale() at 0%/100% is
+   * identical (1 vs 1.06 only appears mid-animation), so delaying the start
+   * causes no visible jump once it kicks in.
+   */
   .mesh-drift {
-    animation: mesh-drift 22s ease-in-out infinite alternate;
+    animation: mesh-drift 22s ease-in-out 1.5s infinite alternate;
   }
 
   .mesh-drift-reverse {
-    animation: mesh-drift 26s ease-in-out infinite alternate-reverse;
+    animation: mesh-drift 26s ease-in-out 1.5s infinite alternate-reverse;
   }
 
   @keyframes mesh-drift {

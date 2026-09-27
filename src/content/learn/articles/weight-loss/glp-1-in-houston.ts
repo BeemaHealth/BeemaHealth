@@ -34,6 +34,8 @@ export const article: LearnArticle = {
     "semaglutide-in-texas",
   ],
   moneyPageHrefs: [
+    "/semaglutide-houston",
+    "/tirzepatide-houston",
     "/weight-loss",
     "/semaglutide",
     "/tirzepatide",

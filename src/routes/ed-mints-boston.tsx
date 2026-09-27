@@ -28,6 +28,8 @@ import {
   type TreatmentFaqItem,
 } from "@/components/site/TreatmentPageBlocks";
 import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
+import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
+import { GoogleRatingBadge } from "@/components/site/GoogleRatingBadge";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { EdMintsPickerModal } from "@/components/site/EdMintsPicker";
@@ -38,13 +40,39 @@ import {
 } from "@/lib/simple-treatment-pricing";
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
+import {
+  LEARN_FIFTY_STATE_SENTENCE,
+  LEARN_USA_ONLY_SENTENCE,
+} from "@/lib/learn-trust-copy";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import edMintsHeroPhoto from "@/assets/treatments/ed-mints-dissolvable-tablet.webp";
 
-const TITLE = "ED Mints - Compounded Dissolving ED Treatment | Beema Health";
-const DESCRIPTION = `Compounded ED formulations that dissolve under the tongue, reviewed by licensed providers. Nationwide telehealth care from ${formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING)}. Prescribing is never guaranteed.`;
+/**
+ * Boston paid-search landing page (2026-09-27) - Google Ads keyword ->
+ * landing-page alignment for "ed treatment boston" / "ed medication
+ * boston" style queries. Mirrors /ed-mints's copy, components, product
+ * data (both formulations), pricing, and Bask intake, with genuinely
+ * localized hero/FAQ copy rather than a mechanical "nationwide" -> "Boston"
+ * swap. Self-canonicalizes; never canonicalize back to /ed-mints. See
+ * docs/features/treatment-pages.md "City ED pages" and /ed-mints.tsx (the
+ * nationwide page, unchanged). Reuses `EdMintsPickerModal` as-is - its
+ * Continue button still resolves to `ed_mints_rdt_hero`/`ed_mints_odt_hero`
+ * for per-formulation attribution, matching the nationwide page's behavior.
+ */
+
+const TITLE = "ED Treatment in Boston, MA | Online ED Care | Beema Health";
+const DESCRIPTION = `Online erectile dysfunction treatment for eligible adults in Boston, Massachusetts. Licensed provider review, transparent pricing from ${formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING)}, and medication delivery if prescribed.`;
 const SERVICE_DESCRIPTION =
-  "Nationwide telehealth service connecting eligible adult men with independent licensed providers for compounded, dissolve-under-the-tongue ED formulation evaluation and ongoing care. Completing intake does not guarantee a prescription.";
+  "Telehealth service connecting eligible adult men in Boston and nationwide with independent licensed providers for compounded, dissolve-under-the-tongue ED formulation evaluation and ongoing care. Completing intake does not guarantee a prescription.";
+
+const BOSTON_AREA_SERVED = [
+  {
+    "@type": "City",
+    name: "Boston",
+    containedInPlace: { "@type": "State", name: "Massachusetts" },
+  },
+  { "@type": "Country", name: "United States" },
+];
 
 const FAQ_ITEMS: TreatmentFaqItem[] = [
   {
@@ -64,8 +92,8 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
     a: `${simplePricingSentence("Either ED Mints formulation through Beema Health", ED_MINTS_RDT_PRICING)} Both formulations are the same price. Questions about your plan? ${patientQuestionsGuidance()}`,
   },
   {
-    q: "Does Beema Health serve patients nationwide?",
-    a: "Yes, Beema Health is available to patients in all 50 U.S. states. Whether a specific compounded formulation is available to you still depends on your state's rules around compounded medications and pharmacy fulfillment in your area, and eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications, including cardiovascular history.",
+    q: "Does Beema Health serve Boston and Massachusetts?",
+    a: `Yes. Beema Health serves adults in Boston and across all 50 US states through telehealth - there is no physical Boston office or in-person clinic; care happens entirely online. ${LEARN_FIFTY_STATE_SENTENCE} Whether a specific compounded formulation is available to you still depends on your state's rules around compounded medications and pharmacy fulfillment, and eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications, including cardiovascular history. ${LEARN_USA_ONLY_SENTENCE}`,
   },
 ];
 
@@ -83,7 +111,7 @@ const ELIGIBILITY_POINTS = [
   "Final approval and formulation selection rests with a licensed provider",
 ];
 
-export const Route = createFileRoute("/ed-mints")({
+export const Route = createFileRoute("/ed-mints-boston")({
   head: () => ({
     meta: [
       { title: TITLE },
@@ -91,14 +119,14 @@ export const Route = createFileRoute("/ed-mints")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: canonicalUrl("/ed-mints") },
+      { property: "og:url", content: canonicalUrl("/ed-mints-boston") },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
     links: [
-      { rel: "canonical", href: canonicalUrl("/ed-mints") },
-      ...bootImagePreloadLinks("/ed-mints"),
+      { rel: "canonical", href: canonicalUrl("/ed-mints-boston") },
+      ...bootImagePreloadLinks("/ed-mints-boston"),
     ],
     scripts: [
       {
@@ -106,7 +134,7 @@ export const Route = createFileRoute("/ed-mints")({
         children: JSON.stringify(
           breadcrumbJsonLd([
             { name: "Home", path: "/" },
-            { name: "ED Mints", path: "/ed-mints" },
+            { name: "ED Mints in Boston", path: "/ed-mints-boston" },
           ]),
         ),
       },
@@ -118,12 +146,13 @@ export const Route = createFileRoute("/ed-mints")({
         type: "application/ld+json",
         children: JSON.stringify(
           serviceJsonLd({
-            name: "ED Mints Telehealth Care",
+            name: "ED Mints Telehealth Care in Boston",
             description: SERVICE_DESCRIPTION,
-            path: "/ed-mints",
+            path: "/ed-mints-boston",
             serviceType: "Erectile dysfunction treatment telehealth service",
             reviewedByClinicalLead: false,
             dateModified: "2026-09-27",
+            areaServed: BOSTON_AREA_SERVED,
             offer: {
               introPrice: ED_MINTS_RDT_PRICING.monthlyUsd,
               recurringPrice: ED_MINTS_RDT_PRICING.monthlyUsd,
@@ -133,16 +162,16 @@ export const Route = createFileRoute("/ed-mints")({
       },
     ],
   }),
-  component: EdMintsPage,
+  component: EdMintsBostonPage,
 });
 
-function EdMintsPage() {
+function EdMintsBostonPage() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickerInitial, setPickerInitial] = useState<"rdt" | "odt">("rdt");
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    trackPageViewed("ed_mints");
+    trackPageViewed("ed_mints_boston");
   }, []);
 
   const openPicker = (preselect: "rdt" | "odt" = "rdt") => {
@@ -168,26 +197,39 @@ function EdMintsPage() {
           className="bg-grain pointer-events-none absolute inset-0 z-0 text-foreground/[0.035]"
         />
         <div className="relative z-10">
-          <TreatmentBreadcrumb current="ED Mints" />
+          <TreatmentBreadcrumb current="ED Mints in Boston" />
           <div className="mt-8 grid items-start gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
             <div>
-              <SectionHeading
-                as="h1"
-                align="left"
-                eyebrow="Nationwide telehealth ED care"
-                title={
-                  <>
-                    <LineReveal>ED Mints, </LineReveal>
-                    <LineReveal delay={0.1}>
-                      dissolve-under-the-tongue relief.
-                    </LineReveal>
-                  </>
-                }
-                description="Two combination formulations that dissolve under the tongue - no water needed. Completing intake does not guarantee a prescription."
-                className="mx-0 max-w-xl text-left"
-              />
+              <div className="relative pr-20 sm:pr-24">
+                <LegitScriptSeal className="absolute right-0 top-0 w-16 [&_img]:h-auto [&_img]:w-full sm:w-20" />
+                <SectionHeading
+                  as="h1"
+                  align="left"
+                  eyebrow="Boston online ED care"
+                  title={
+                    <>
+                      <LineReveal>ED Mints, </LineReveal>
+                      <LineReveal delay={0.1}>for Boston patients.</LineReveal>
+                    </>
+                  }
+                  description="Beema Health connects eligible adults in Boston with licensed medical providers for personalized erectile dysfunction treatment. Complete your visit online and, if prescribed, medication is delivered discreetly to your door."
+                  className="mx-0 max-w-xl text-left"
+                />
+              </div>
               <motion.div
-                className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
+                className="mt-6"
+                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.6,
+                  delay: reduceMotion ? 0 : 0.35,
+                  ease: EASE_OUT,
+                }}
+              >
+                <GoogleRatingBadge />
+              </motion.div>
+              <motion.div
+                className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
                 initial={reduceMotion ? false : { opacity: 0, y: 18 }}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
@@ -202,7 +244,7 @@ function EdMintsPage() {
                   </Button>
                 </HoverLiftButton>
                 <Button asChild size="xl" variant="outline">
-                  <Link to="/ed-mints/" hash="how-it-works">
+                  <Link to="/ed-mints-boston/" hash="how-it-works">
                     How it works
                   </Link>
                 </Button>
@@ -219,16 +261,14 @@ function EdMintsPage() {
             <div className="mx-auto w-full max-w-sm">
               {/*
                 Not motion-animated: this is the page's LCP element (preloaded,
-                fetchPriority="high"). Animating opacity/scale in leaves it
-                invisible in the SSR'd HTML until hydration + the animation
-                frame complete, which measured as several extra seconds of
-                mobile LCP (2026-09-27 performance audit) - render it visible
-                immediately and only animate the non-LCP content below it.
+                fetchPriority="high"). See docs/features/treatment-pages.md,
+                "Hero photo is never motion-animated" - same fix applied to
+                /ed-mints applies here, since this hero reuses that photo.
               */}
               <div className="relative aspect-square overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
                 <img
                   src={edMintsHeroPhoto}
-                  alt="Beema Health ED Mints - dissolvable erectile dysfunction tablet embossed with the Beema Health logo"
+                  alt="Beema Health ED Mints - dissolvable ED tablet for Boston patients, embossed with the Beema Health logo"
                   width={1024}
                   height={1024}
                   fetchPriority="high"
@@ -277,7 +317,7 @@ function EdMintsPage() {
             you is a decision your licensed provider makes individually.
           </p>
           <Button asChild variant="outline" size="sm">
-            <Link to="/ed-mints/" hash="faq">
+            <Link to="/ed-mints-boston/" hash="faq">
               View FAQ <ArrowRight className="size-4" />
             </Link>
           </Button>
@@ -302,6 +342,34 @@ function EdMintsPage() {
               oxytocin into one dose.
             </p>
           </SurfaceCard>
+        </div>
+      </Section>
+
+      <Section className="pt-0">
+        <SectionHeading
+          align="left"
+          eyebrow="Serving Boston"
+          title="Telehealth ED care for Boston, Massachusetts"
+          className="mx-0 max-w-2xl"
+        />
+        <div className="mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-muted-foreground">
+          <p>
+            If you're in Boston, or anywhere else in Massachusetts, you can
+            complete Beema Health's medical intake entirely online, from home -
+            there is no physical Boston office or in-person clinic to visit. A
+            licensed provider reviews your case by telehealth and decides, on an
+            individual basis, whether an ED Mints formulation may be appropriate
+            for you. When prescribed, medication ships to your Boston address.
+          </p>
+          <p>
+            Licensed providers can evaluate adults in all 50 US states,
+            including Massachusetts. Looking for the nationwide version of this
+            page instead? See{" "}
+            <Link to="/ed-mints/" className="text-primary underline">
+              ED Mints
+            </Link>
+            .
+          </p>
         </div>
       </Section>
 
@@ -463,7 +531,7 @@ function EdMintsPage() {
           </div>
         </div>
       </Section>
-      <MoneyPageGuides path="/ed-mints/" />
+      <MoneyPageGuides path="/ed-mints-boston/" />
     </MarketingLayout>
   );
 }

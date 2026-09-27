@@ -57,9 +57,11 @@ This is a **live marketing/SEO site**. CTAs link to Bask’s hosted **intake** +
 
 ## New feature requests
 
-**Before writing any code for a new feature:**
+**Do not stash, check out, create, or switch git branches unless the user explicitly asks you to.** Stay on the current branch and work in place by default.
 
-1. **`/start-feature`** (`.claude/commands/start-feature.md`) - stash WIP, check out a feature branch from local `main`.
+Optional workflows (only after the user opts in):
+
+1. **`/start-feature`** (`.claude/commands/start-feature.md`) - branch setup from local `main`. **Ask first**; never run stash/checkout without approval.
 2. **`/discover-feature`** (`.claude/commands/discover-feature.md`) - blindspot pass, prototypes, interview, and plan in `.claude/plans/` before production code (skip for trivial fixes).
 
 Full instructions are in those command files - do not duplicate them here.
@@ -258,6 +260,7 @@ Defined in `styles.css`, referenced as Tailwind tokens: `primary`, `primary-soft
 - **Terminology:** Bask’s questionnaire = **intake** (singular). Do not invent a separate “eligibility” product step for Beema.
 - **Patient portal login:** `HIVE_LOGIN_URL` in `src/lib/cta-ids.ts` (Hive) - not an in-repo `/dashboard`.
 - **Commits:** only when the user asks. No `--no-verify`, no force-push to main.
+- **Dev server:** user-owned - never start, stop, restart, or kill it (see Common commands).
 - **Scope:** smallest correct diff. No drive-by refactors.
 - **Colors:** `src/lib/design-tokens.ts` - see **Design system & color scheme** above.
 - **Legacy `backend/` / old funnel routes:** do not extend unless the user explicitly asks - `docs/BACKEND-DEFERRED.md`.
@@ -266,14 +269,16 @@ Defined in `styles.css`, referenced as Tailwind tokens: `primary`, `primary-soft
 
 ## Common commands
 
+**Dev server (user-owned):** The user starts and stops `npm run dev` / `npm run dev:backend` themselves. **Never** run those commands, and **never** kill, stop, restart, or free ports for an existing dev server (`pkill`, `kill`, `lsof`, `fuser`, `kill-port`, Ctrl-C on a running server process, Docker Compose `down`/`stop` aimed at the API stack, etc.). This applies to every Cursor, Claude Code, and other agent session. Assume the server is already running if you need to browse or smoke-check; if it is not, ask the user to start it - do not start it yourself. Reference only:
+
 | Command | Purpose |
 |---------|---------|
-| `npm run dev` | Marketing frontend → http://localhost:8080 |
+| `npm run dev` | Marketing frontend → http://localhost:8080 (**user runs this**) |
 | `npm test` | Frontend tests (Vitest) - default |
 | ESLint on changed `.ts`/`.tsx` only | See workflow §3 - `npx eslint <paths>` or git-diff pipe; not `npm run lint` |
 | `npx tsc --noEmit` | **Required** when any TS/TSX changed |
 
-Legacy (only if user asks to touch `backend/`): `npm run dev:backend`, `npm run test:all`, `npm run test:backend` - see `docs/BACKEND-DEFERRED.md`.
+Legacy (only if user asks to touch `backend/`): `npm run test:all`, `npm run test:backend` - see `docs/BACKEND-DEFERRED.md`. Same rule: **`npm run dev:backend` is user-owned** - agents must not start or stop it.
 
 ---
 
@@ -284,6 +289,7 @@ File-specific rules live in `.cursor/rules/`:
 | Rule | Scope |
 |------|-------|
 | `beemahealth-core.mdc` | Always apply - production mindset, test gate, Bask/intake model |
+| `no-dev-server.mdc` | Always apply - never start/stop/kill the user-owned dev server |
 | `no-em-dashes.mdc` | Always apply - never use Unicode em dash (U+2014) in code or copy |
 | `input-validation-tests.mdc` | Marketing validators / test files |
 
@@ -300,6 +306,7 @@ Rules are **summaries**. This file, `docs/features/legitscript.md`, and `docs/IN
 - Skip tests after changing marketing inputs or validators
 - Edit `AGENTS.md` or `.cursor/rules/*` without user approval when fixing doc drift
 - Log or send PHI to ad pixels / analytics
+- **Start, stop, restart, or kill the dev server** (frontend or backend) - the user owns that lifecycle (see **Dev server** under Common commands)
 
 ---
 

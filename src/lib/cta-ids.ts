@@ -26,6 +26,12 @@ export const CTA_IDS = {
   semaglutide_hero: "semaglutide_hero",
   semaglutide_footer: "semaglutide_footer",
   semaglutide_bmi: "semaglutide_bmi",
+  semaglutide_houston_hero: "semaglutide_houston_hero",
+  semaglutide_houston_footer: "semaglutide_houston_footer",
+  semaglutide_houston_bmi: "semaglutide_houston_bmi",
+  tirzepatide_houston_hero: "tirzepatide_houston_hero",
+  tirzepatide_houston_footer: "tirzepatide_houston_footer",
+  tirzepatide_houston_bmi: "tirzepatide_houston_bmi",
   trt_hero: "trt_hero",
   trt_footer: "trt_footer",
   ed_hero: "ed_hero",
@@ -48,6 +54,12 @@ export const CTA_IDS = {
   ed_mints_rdt_footer: "ed_mints_rdt_footer",
   ed_mints_odt_hero: "ed_mints_odt_hero",
   ed_mints_odt_footer: "ed_mints_odt_footer",
+  ed_mints_boston_hero: "ed_mints_boston_hero",
+  ed_mints_boston_footer: "ed_mints_boston_footer",
+  tadalafil_boston_hero: "tadalafil_boston_hero",
+  tadalafil_boston_footer: "tadalafil_boston_footer",
+  sildenafil_boston_hero: "sildenafil_boston_hero",
+  sildenafil_boston_footer: "sildenafil_boston_footer",
   nad_hero: "nad_hero",
   nad_footer: "nad_footer",
   sermorelin_hero: "sermorelin_hero",
@@ -289,6 +301,25 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
   ed_mints_rdt_footer: { label: "Get Started", to: ED_MINTS_RDT_INTAKE_URL },
   ed_mints_odt_hero: { label: "Get Started", to: ED_MINTS_ODT_INTAKE_URL },
   ed_mints_odt_footer: { label: "Get Started", to: ED_MINTS_ODT_INTAKE_URL },
+  /**
+   * Boston paid-search landing pages (2026-09-27) - same confirmed Bask
+   * intake URLs as their nationwide siblings, distinct CtaIds only so
+   * funnel attribution can tell a Boston-lander conversion apart from a
+   * nationwide-page one. See /ed-mints-boston, /tadalafil-boston,
+   * /sildenafil-boston and docs/features/treatment-pages.md "City ED pages".
+   */
+  ed_mints_boston_hero: { label: "Get Started", to: ED_MINTS_RDT_INTAKE_URL },
+  ed_mints_boston_footer: {
+    label: "Get Started",
+    to: ED_MINTS_RDT_INTAKE_URL,
+  },
+  tadalafil_boston_hero: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
+  tadalafil_boston_footer: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
+  sildenafil_boston_hero: { label: "Get Started", to: SILDENAFIL_INTAKE_URL },
+  sildenafil_boston_footer: {
+    label: "Get Started",
+    to: SILDENAFIL_INTAKE_URL,
+  },
   nad_hero: { label: "Get Started", to: NAD_INTAKE_URL },
   nad_footer: { label: "Get Started", to: NAD_INTAKE_URL },
   sermorelin_hero: { label: "Get Started", to: SERMORELIN_INTAKE_URL },

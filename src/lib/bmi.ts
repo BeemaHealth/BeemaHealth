@@ -5,8 +5,8 @@ export type BmiCategory = "underweight" | "healthy" | "overweight" | "obesity";
 export const BMI_SCALE_MIN = 15;
 export const BMI_SCALE_MAX = 40;
 
-/** Beema Health shows the "Get started" CTA at/above this BMI. */
-export const BMI_CTA_THRESHOLD = 30;
+/** Beema Health shows the "Get started" CTA at/above this BMI (overweight and obesity). */
+export const BMI_CTA_THRESHOLD = 25;
 
 /** Standard BMI formula (lb / in^2 * 703). Returns null for non-finite or non-positive inputs. */
 export function computeBmi(
