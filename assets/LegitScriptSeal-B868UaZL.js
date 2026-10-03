@@ -1,0 +1,1 @@
+import{j as a,aZ as e,a_ as s,a$ as t,b0 as i,b1 as T,b2 as I,f as L}from"./index-Bf68r3_z.js";function o({className:r}){return a.jsx("a",{href:s,target:"_blank",rel:"noopener noreferrer",title:e,className:L("inline-block shrink-0 drop-shadow-md transition-opacity hover:opacity-90",r),children:a.jsx("img",{src:I,alt:T,width:i,height:t})})}export{o as L};
