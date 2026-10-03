@@ -4,16 +4,17 @@ import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   CheckCircle2,
-  HeartPulse,
+  MapPin,
   Pill,
-  Stethoscope,
+  ShieldCheck,
 } from "lucide-react";
-import { breadcrumbJsonLd, canonicalUrl, serviceJsonLd } from "@/lib/seo";
 import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import {
+  Eyebrow,
   FloatingHexagons,
   HexBadge,
+  HexMotif,
   HoverLiftButton,
   Section,
   SectionHeading,
@@ -22,88 +23,66 @@ import {
 import {
   SimpleCategoryLineup,
   TreatmentBreadcrumb,
+  TreatmentFaqSection,
   type CategoryLineupItem,
 } from "@/components/site/TreatmentPageBlocks";
+import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
+import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
+import { GoogleRatingBadge } from "@/components/site/GoogleRatingBadge";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
+  COMPOUNDED_ED_MINTS_REQUIRED,
+  GENERIC_SILDENAFIL_REQUIRED,
+  GENERIC_TADALAFIL_REQUIRED,
+} from "@/lib/compounded-disclosure";
+import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
+import {
   ED_MINTS_RDT_PRICING,
   ED_SILDENAFIL_PRICING,
   ED_TADALAFIL_PRICING,
-  formatSimpleStartingAt,
 } from "@/lib/simple-treatment-pricing";
-import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
+import {
+  SEXUAL_HEALTH_FAQ,
+  SEXUAL_HEALTH_HERO,
+  SEXUAL_HEALTH_LINK,
+  SEXUAL_HEALTH_SERVING_POINTS,
+  sexualHealthHead,
+} from "@/lib/sexual-health-page";
 import tadalafilPhoto from "@/assets/treatments/tadalafil-oral-tablets-bottle.webp";
 import sildenafilPhoto from "@/assets/treatments/sildenafil-oral-tablets-bottle.webp";
-import edMintsPhoto from "@/assets/treatments/ed-mints-tadalafil-sildenafil-rdt.webp";
-
-const TITLE = "Sexual Health Treatment | Beema Health";
-const DESCRIPTION = `Tadalafil (generic Cialis), sildenafil (generic Viagra), and compounded ED Mints, reviewed by licensed providers. From ${formatSimpleStartingAt(ED_TADALAFIL_PRICING)}. Never guaranteed.`;
+import edMintsHeroPhoto from "@/assets/treatments/ed-mints-dissolvable-tablet.webp";
 
 export const Route = createFileRoute("/sexual-health")({
-  head: () => ({
-    meta: [
-      { title: TITLE },
-      { name: "description", content: DESCRIPTION },
-      { property: "og:title", content: TITLE },
-      { property: "og:description", content: DESCRIPTION },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: canonicalUrl("/sexual-health") },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: TITLE },
-      { name: "twitter:description", content: DESCRIPTION },
-    ],
-    links: [{ rel: "canonical", href: canonicalUrl("/sexual-health") }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify(
-          breadcrumbJsonLd([
-            { name: "Home", path: "/" },
-            { name: "Sexual Health", path: "/sexual-health" },
-          ]),
-        ),
-      },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify(
-          serviceJsonLd({
-            name: "Sexual Health Telehealth Program",
-            description:
-              "Telehealth sexual health program from Beema Health. Licensed providers review every patient and may prescribe tadalafil, sildenafil (the FDA-approved generic versions of Cialis and Viagra), or ED Mints (a compounded combination formulation) when clinically appropriate; prescribing is never guaranteed.",
-            path: "/sexual-health",
-            serviceType: "Sexual health telehealth program",
-          }),
-        ),
-      },
-    ],
-  }),
+  head: () => sexualHealthHead(),
   component: SexualHealthPage,
 });
 
 /**
- * TRT is paused (2026-08-28, not selling it right now) - this hub is
- * ED-only until it returns. When it does, it goes back here as its own
- * lineup entry, not folded into the ED page - see
- * docs/features/treatment-pages.md.
- *
- * "ED Mints" (2026-09-03) links to its own comparison page, /ed-mints, not
- * /ed - it's 2 dissolve-under-the-tongue combo products, each with its own
- * Bask intake, priced identically, so ED_MINTS_RDT_PRICING is used here as
- * the representative "starting at" price for the card.
- *
- * Each card's `image` (2026-09-23) reuses the real product photo already
- * shot for that medication's own money page - tadalafil/sildenafil's
- * bottle shots, and the RDT ED Mints photo already used for the "Sexual
- * Health" card on the homepage's WellnessLineupSection, for the same
- * two-SKU reason described there.
+ * TRT is paused. This hub is ED-only until it returns. ED Mints links to
+ * /ed-mints (both formulations, same price), so ED_MINTS_RDT_PRICING is the
+ * card price. Photos match each money page.
  */
 const LINEUP: CategoryLineupItem[] = [
   {
+    id: "ed-mints",
+    name: "ED Mints",
+    form: "Dissolves under the tongue, no water needed",
+    pricing: ED_MINTS_RDT_PRICING,
+    icon: Pill,
+    image: {
+      src: edMintsHeroPhoto,
+      alt: "Beema Health ED Mints - dissolvable erectile dysfunction tablet embossed with the Beema Health logo",
+      width: 1024,
+      height: 1024,
+    },
+    to: "/ed-mints/",
+  },
+  {
     id: "ed-tadalafil",
     name: "Tadalafil",
-    form: "Oral, taken as needed or daily",
+    form: "Oral tablet, generic Cialis, taken as needed or daily",
     pricing: ED_TADALAFIL_PRICING,
     icon: Pill,
     image: {
@@ -117,7 +96,7 @@ const LINEUP: CategoryLineupItem[] = [
   {
     id: "ed-sildenafil",
     name: "Sildenafil",
-    form: "Oral, taken as needed",
+    form: "Oral tablet, generic Viagra, taken as needed",
     pricing: ED_SILDENAFIL_PRICING,
     icon: Pill,
     image: {
@@ -127,38 +106,6 @@ const LINEUP: CategoryLineupItem[] = [
       height: 900,
     },
     to: "/sildenafil/",
-  },
-  {
-    id: "ed-mints",
-    name: "ED Mints",
-    form: "Dissolves under the tongue, no water needed",
-    pricing: ED_MINTS_RDT_PRICING,
-    icon: Pill,
-    image: {
-      src: edMintsPhoto,
-      alt: "Beema Health ED Mints tadalafil and sildenafil rapidly dissolving tablet",
-      width: 1024,
-      height: 1024,
-    },
-    to: "/ed-mints/",
-  },
-];
-
-const BENEFITS = [
-  {
-    icon: Stethoscope,
-    title: "Licensed provider review",
-    text: "Every patient is reviewed by a licensed clinician who makes independent medical decisions.",
-  },
-  {
-    icon: HeartPulse,
-    title: "Multiple formulations",
-    text: "Tadalafil, sildenafil, and ED Mints, a dissolve-under-the-tongue combination. Your provider reviews your intake and recommends which, if any, may be appropriate.",
-  },
-  {
-    icon: Pill,
-    title: "Tadalafil (Generic Cialis®) & Sildenafil (Generic Viagra®)",
-    text: "Tadalafil and sildenafil are the FDA-approved generic versions of Cialis and Viagra. ED Mints is a separate compounded combination formulation, considered only when legally available and clinically appropriate.",
   },
 ];
 
@@ -173,7 +120,7 @@ function SexualHealthPage() {
 
   return (
     <MarketingLayout>
-      <Section className="relative overflow-hidden bg-grad-hero">
+      <Section className="relative overflow-hidden bg-grad-hero pb-10 md:pb-24">
         <div
           aria-hidden
           className="bg-mesh-glow mesh-drift pointer-events-none absolute inset-0 z-0"
@@ -184,161 +131,187 @@ function SexualHealthPage() {
         />
         <FloatingHexagons className="z-0" />
         <div className="relative z-10">
-          <div className="mb-6 flex justify-center">
-            <TreatmentBreadcrumb current="Sexual Health" />
+          <TreatmentBreadcrumb current="Sexual Health" />
+          <div className="mt-8 grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+            <div>
+              <div className="relative max-w-xl pr-20 sm:pr-24">
+                <LegitScriptSeal className="absolute right-0 top-0 w-16 [&_img]:h-auto [&_img]:w-full sm:w-20" />
+                <Eyebrow>{SEXUAL_HEALTH_HERO.eyebrow}</Eyebrow>
+                <h1 className="mt-4 text-balance text-3xl font-bold leading-[1.1] tracking-tight text-foreground md:text-4xl lg:text-[2.75rem]">
+                  <LineReveal>{SEXUAL_HEALTH_HERO.titleLine1}</LineReveal>
+                  <LineReveal delay={0.1}>
+                    {SEXUAL_HEALTH_HERO.titleLine2}
+                  </LineReveal>
+                </h1>
+              </div>
+              <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+                {SEXUAL_HEALTH_HERO.description}
+              </p>
+              <motion.div
+                className="mt-6"
+                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.6,
+                  delay: reduceMotion ? 0 : 0.35,
+                  ease: EASE_OUT,
+                }}
+              >
+                <GoogleRatingBadge />
+              </motion.div>
+              <motion.div
+                className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
+                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.6,
+                  delay: reduceMotion ? 0 : 0.5,
+                  ease: EASE_OUT,
+                }}
+              >
+                <HoverLiftButton>
+                  <Button asChild size="xl">
+                    <Link to={SEXUAL_HEALTH_LINK} hash="formulations">
+                      Compare formulations <ArrowRight />
+                    </Link>
+                  </Button>
+                </HoverLiftButton>
+                <Button asChild size="xl" variant="outline">
+                  <Link
+                    to={heroCta.to}
+                    search={heroCta.search}
+                    onClick={heroCta.onClick}
+                  >
+                    {heroCta.label}
+                  </Link>
+                </Button>
+              </motion.div>
+            </div>
+            <div className="relative mx-auto w-full max-w-sm lg:mx-0">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
+                <div
+                  aria-hidden
+                  className="bg-mesh-glow mesh-drift pointer-events-none absolute inset-0 opacity-70"
+                />
+                <img
+                  src={edMintsHeroPhoto}
+                  alt="Beema Health ED Mints - dissolvable erectile dysfunction tablet embossed with the Beema Health logo"
+                  width={1024}
+                  height={1024}
+                  className="absolute right-[6%] top-[5%] h-[42%] w-auto object-contain drop-shadow-xl"
+                />
+                <img
+                  src={sildenafilPhoto}
+                  alt="Bottle of Beema Health sildenafil oral tablets, generic Viagra"
+                  width={720}
+                  height={900}
+                  className="absolute right-[4%] bottom-[6%] h-[48%] w-auto object-contain drop-shadow-xl"
+                />
+                <img
+                  src={tadalafilPhoto}
+                  alt="Bottle of Beema Health tadalafil oral tablets, generic Cialis"
+                  width={720}
+                  height={900}
+                  fetchPriority="high"
+                  className="absolute bottom-[8%] left-[4%] h-[62%] w-auto object-contain drop-shadow-2xl"
+                />
+              </div>
+            </div>
           </div>
-          <SectionHeading
-            as="h1"
-            eyebrow="Men's sexual health"
-            title={
-              <>
-                <LineReveal>Sexual health care guided by </LineReveal>
-                <LineReveal delay={0.1}>licensed providers</LineReveal>
-              </>
-            }
-            description={`Beema Health offers tadalafil (generic Cialis), sildenafil (generic Viagra), and compounded ED Mints, from ${formatSimpleStartingAt(ED_TADALAFIL_PRICING)}.`}
-          />
-          <motion.div
-            className="mt-10 text-center"
-            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-            animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-            transition={{
-              duration: reduceMotion ? 0 : 0.6,
-              delay: reduceMotion ? 0 : 0.55,
-              ease: EASE_OUT,
-            }}
-          >
-            <HoverLiftButton>
-              <Button asChild size="xl">
-                <Link
-                  to={heroCta.to}
-                  search={heroCta.search}
-                  onClick={heroCta.onClick}
-                >
-                  {heroCta.label} <ArrowRight />
-                </Link>
-              </Button>
-            </HoverLiftButton>
-          </motion.div>
         </div>
       </Section>
 
-      <Section className="bg-muted/40 py-16 md:py-20">
+      <Section id="formulations" className="bg-muted/40">
         <SectionHeading
           align="left"
-          eyebrow="Choose your formulation"
-          title="ED formulations"
-          description="Your provider decides which formulation, if any, is clinically appropriate for you. Women's sexual health products are coming soon."
+          eyebrow="Choose a formulation"
+          title="ED treatment options"
+          description="Your provider decides which formulation, if any, is clinically appropriate. Each option has its own page and online visit."
           className="mx-0 max-w-2xl"
         />
-        <h3 className="mt-10 text-xs font-semibold uppercase tracking-wide text-accent-foreground">
-          For Men
-        </h3>
-        <div className="mt-4">
+        <div className="mt-10">
           <SimpleCategoryLineup items={LINEUP} />
         </div>
+        <div className="mt-8 max-w-3xl space-y-3 text-sm leading-relaxed text-muted-foreground">
+          <p>{GENERIC_TADALAFIL_REQUIRED}</p>
+          <p>{GENERIC_SILDENAFIL_REQUIRED}</p>
+          <p>{COMPOUNDED_ED_MINTS_REQUIRED}</p>
+        </div>
+        <p className="mt-6">
+          <Link
+            to="/ed/"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-foreground underline-offset-4 hover:underline"
+          >
+            Compare tadalafil and sildenafil
+            <ArrowRight className="size-4" aria-hidden />
+          </Link>
+        </p>
+      </Section>
+
+      <HowItWorksSteps
+        eyebrow="How ED care works"
+        title={
+          <LineReveal>From online intake to a provider decision</LineReveal>
+        }
+        showCareFollowUpNote
+      />
+
+      <Section className="relative overflow-hidden bg-muted/40">
+        <HexMotif className="pointer-events-none absolute -right-10 top-8 z-0 w-48 text-primary/10 md:w-64" />
+        <SurfaceCard className="relative z-10 grid gap-8 lg:grid-cols-[auto_1fr] lg:items-start">
+          <HexBadge className="size-14">
+            <MapPin className="size-6" aria-hidden />
+          </HexBadge>
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-wide text-accent-foreground">
+              Nationwide telehealth
+            </p>
+            <h2 className="mt-2 text-2xl font-bold text-foreground md:text-3xl">
+              Online care that&apos;s human and built for success.
+            </h2>
+            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-base">
+              Availability depends on your state. Most US states allow online
+              clinic visits, but some do not. Where it applies, adult men
+              complete intake online. A licensed provider reviews health history
+              and current medications, including cardiovascular history, and
+              decides whether treatment may be appropriate. Prescribing is never
+              guaranteed. Beema Health does not serve patients outside the
+              United States.
+            </p>
+            <ul className="mt-5 space-y-2">
+              {SEXUAL_HEALTH_SERVING_POINTS.map((item) => (
+                <li
+                  key={item}
+                  className="flex items-start gap-2 text-sm text-foreground"
+                >
+                  <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-foreground" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6">
+              <Button asChild variant="outline">
+                <Link to="/safety/">Safety & eligibility</Link>
+              </Button>
+            </div>
+          </div>
+        </SurfaceCard>
       </Section>
 
       <Section>
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-          whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE_OUT }}
-        >
-          <SectionHeading
-            eyebrow="Why Beema Health"
-            title="Sexual health care that respects your time and trust"
-            description="No hype, no fake urgency, just a calm path from intake to provider review."
-          />
-        </motion.div>
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {BENEFITS.map((b, i) => (
-            <motion.div
-              key={b.title}
-              className="h-full"
-              initial={
-                reduceMotion
-                  ? false
-                  : { opacity: 0, y: 32, rotate: i % 2 === 0 ? -1.5 : 1.5 }
-              }
-              whileInView={
-                reduceMotion ? undefined : { opacity: 1, y: 0, rotate: 0 }
-              }
-              viewport={{ once: true, amount: 0.3 }}
-              whileHover={reduceMotion ? undefined : { y: -6 }}
-              transition={{
-                duration: reduceMotion ? 0 : 0.55,
-                delay: reduceMotion ? 0 : i * 0.1,
-                ease: EASE_OUT,
-              }}
-            >
-              <SurfaceCard className="flex h-full flex-col p-6 transition-shadow hover:shadow-lift">
-                <HexBadge className="size-11">
-                  <b.icon className="size-5" />
-                </HexBadge>
-                <h3 className="mt-4 text-lg font-semibold text-foreground">
-                  {b.title}
-                </h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
-                  {b.text}
-                </p>
-              </SurfaceCard>
-            </motion.div>
-          ))}
+        <div className="mb-8 flex justify-center">
+          <HexBadge className="size-11">
+            <ShieldCheck className="size-5" aria-hidden />
+          </HexBadge>
         </div>
-      </Section>
-
-      <Section className="bg-muted/40 pt-0">
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 28 }}
-          whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE_OUT }}
-        >
-          <SurfaceCard>
-            <h3 className="text-lg font-semibold text-foreground">
-              Who this is for
-            </h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Beema Health is here for adult men considering ED treatment.
-              During your medical intake, we review your health history, current
-              medications, and any factors that might make treatment
-              inadvisable. A licensed provider decides whether treatment may be
-              appropriate for you; prescribing is never guaranteed.
-            </p>
-            <ul className="mt-5 space-y-2">
-              {[
-                "Adult men, 18 and older",
-                "Eligibility considers cardiovascular history and current medications",
-                "Final approval and formulation selection rests with a licensed provider",
-              ].map((t, i) => (
-                <motion.li
-                  key={t}
-                  className="flex items-start gap-2 text-sm text-foreground"
-                  initial={reduceMotion ? false : { opacity: 0, x: -12 }}
-                  whileInView={reduceMotion ? undefined : { opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.5 }}
-                  transition={{
-                    duration: reduceMotion ? 0 : 0.4,
-                    delay: reduceMotion ? 0 : i * 0.08,
-                    ease: EASE_OUT,
-                  }}
-                >
-                  <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-foreground" />
-                  {t}
-                </motion.li>
-              ))}
-            </ul>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <HoverLiftButton>
-                <Button asChild variant="outline">
-                  <Link to="/safety/">Safety & eligibility</Link>
-                </Button>
-              </HoverLiftButton>
-            </div>
-          </SurfaceCard>
-        </motion.div>
+        <SectionHeading
+          eyebrow="FAQ"
+          title="ED treatment, pricing, and getting started"
+          description="Straight answers for men comparing online ED treatment."
+        />
+        <div className="mt-10">
+          <TreatmentFaqSection items={SEXUAL_HEALTH_FAQ} />
+        </div>
       </Section>
 
       <Section className="pt-0">
@@ -347,14 +320,15 @@ function SexualHealthPage() {
             aria-hidden
             className="bg-mesh-primary-depth mesh-drift pointer-events-none absolute inset-0 z-0"
           />
+          <HexMotif className="float-slow pointer-events-none absolute -left-8 -top-8 z-0 w-40 text-primary-foreground/10 md:w-56" />
+          <HexMotif className="float-slower pointer-events-none absolute -bottom-10 -right-8 z-0 w-48 text-primary-foreground/10 md:w-64" />
           <div className="relative z-10">
             <h2 className="text-3xl font-bold">
-              <LineReveal>Ready to get started?</LineReveal>
+              <LineReveal>Get started online</LineReveal>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">
-              Complete your medical intake online. A licensed provider makes
-              every clinical decision independently, prescribing is never
-              guaranteed.
+              Complete intake from home. No payment required to start. A
+              prescription is never guaranteed.
             </p>
             <HoverLiftButton className="mt-8">
               <Button

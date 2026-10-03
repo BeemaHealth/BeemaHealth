@@ -100,6 +100,7 @@ const WHATS_INCLUDED = [
   "Syringes",
   "Expedited Shipping",
   "Alcohol Pads",
+  "Dedicated Human Customer Support",
   { label: "Free recipes", to: "/recipes/" },
   { label: "Free learning resources", to: "/learn/" },
   // Workout videos page not live yet - uncomment when /workout ships:

@@ -34,6 +34,7 @@ describe("marketing-copy", () => {
     const guidance = patientQuestionsGuidance();
     expect(guidance).toMatch(/questionnaire only/i);
     expect(guidance).toMatch(/can't ask questions inside it/i);
+    expect(guidance).toMatch(/AI chat/i);
     expect(guidance).toMatch(/After you complete intake and pay/i);
     expect(guidance).toContain(SUPPORT_EMAIL);
   });

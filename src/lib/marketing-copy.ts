@@ -41,11 +41,12 @@ export const WAITLIST_CTA_LABEL = "Join waitlist" as const;
 
 /**
  * How patients get answers: intake is a questionnaire only (no live Q&A
- * inside it). Follow-up questions open after intake + payment; before that,
- * email support.
+ * inside it). Site AI chat covers quick pre-intake questions; dedicated human
+ * support is available by call, text, or email. Follow-up questions also open
+ * after intake + payment.
  */
 export function patientQuestionsGuidance(): string {
-  return `The medical intake is a questionnaire only; you can't ask questions inside it. After you complete intake and pay, you can ask us additional questions. If you'd like to chat before then, email us at ${SUPPORT_EMAIL}.`;
+  return `The medical intake is a questionnaire only; you can't ask questions inside it. For quick answers anytime, use the AI chat on our site. Prefer a person? Call, text, or email ${SUPPORT_EMAIL}. After you complete intake and pay, you can ask us additional questions.`;
 }
 
 /** @see WAITLIST_DISPLAY_COUNT_FALLBACK in waitlist-count.ts */

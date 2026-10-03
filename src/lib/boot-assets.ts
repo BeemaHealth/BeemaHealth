@@ -68,11 +68,16 @@ export function criticalBootImageUrls(pathname: string): string[] {
       return [vialSrc("tirzepatide")];
     case "/glp-1":
     case "/glp-1-houston":
+    case "/weight-loss":
       // Dual-vial hero: semaglutide renders largest/frontmost and carries
       // fetchPriority="high" as the actual LCP element - see
-      // Glp1LandingPage.tsx. Tirzepatide is the smaller/back vial in the
-      // same image, warmed at low priority below instead of preloaded.
+      // Glp1LandingPage.tsx and weight-loss.tsx. Tirzepatide is the
+      // smaller/back vial in the same image, warmed at low priority below
+      // instead of preloaded.
       return [vialSrc("semaglutide")];
+    case "/sexual-health":
+      // Front bottle in the hero collage carries fetchPriority="high".
+      return [tadalafilPhoto];
     case "/ed-mints":
     case "/ed-mints-boston":
       return [edMintsHeroPhoto];
@@ -118,10 +123,11 @@ export function warmupBootImageUrls(pathname: string): string[] {
       break;
     case "/glp-1":
     case "/glp-1-houston":
+    case "/weight-loss":
       extra = [vialSrc("tirzepatide"), LEGITSCRIPT_SEAL_SRC];
       break;
-    case "/weight-loss":
-      extra = [vialSrc("semaglutide"), vialSrc("tirzepatide")];
+    case "/sexual-health":
+      extra = [sildenafilPhoto, edMintsHeroPhoto, LEGITSCRIPT_SEAL_SRC];
       break;
     case "/semaglutide":
     case "/semaglutide-houston":

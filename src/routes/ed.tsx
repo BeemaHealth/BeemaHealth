@@ -75,6 +75,7 @@ const WHATS_INCLUDED = [
   "Doctor Consultation & Visit",
   "Ongoing Doctor Care",
   "Shipping",
+  "Dedicated Human Customer Support",
   { label: "Free learning resources", to: "/learn/" },
 ];
 

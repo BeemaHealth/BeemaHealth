@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 import { BASK_HREF_SYNC_SCRIPT, capturePageUtms } from "@/lib/utm";
 import { initAdPixels } from "@/lib/ad-conversions";
 import { GTM_CONTAINER_ID, GTM_HEAD_SCRIPT } from "@/lib/gtm";
+import { CHATBASE_EMBED_SCRIPT } from "@/lib/chatbase";
 import { absoluteUrl, ORGANIZATION_JSONLD } from "@/lib/seo";
 import { duplicateHomepageRedirectTarget } from "@/lib/canonicalize-url";
 import { SiteBootLoader } from "@/components/brand/SiteBootLoader";
@@ -110,7 +111,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         //     either as "fixed" by what's below.
         // The CSP below is intentionally on the permissive side - it allows
         // every external origin this app currently loads (GTM/gtag.js, Google
-        // Ads, Meta Pixel, Formspree, Nominatim) plus 'unsafe-inline' for
+        // Ads, Meta Pixel, Chatbase, Formspree, Nominatim) plus 'unsafe-inline' for
         // script/style because this is a static SPA with no server to mint
         // per-request nonces, and both React's SSR'd inline `style` attributes
         // and the app's inline bootstrap scripts (GTM snippet, gtag stub)
@@ -135,8 +136,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           httpEquiv: "Content-Security-Policy",
           content:
             "default-src 'self'; " +
-            `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net; ` +
-            `script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net; ` +
+            `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co; ` +
+            `script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co; ` +
             `style-src 'self' 'unsafe-inline'${import.meta.env.DEV ? " https://tagmanager.google.com" : ""}; ` +
             // worker-src: not needed in production (no app code spins up
             // workers). In dev, Vite's HMR client creates a SharedWorker
@@ -148,8 +149,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             `worker-src 'self'${import.meta.env.DEV ? " blob:" : ""}; ` +
             "font-src 'self' data:; " +
             "img-src 'self' data: https:; " +
-            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com; " +
-            "frame-src https://www.googletagmanager.com https://td.doubleclick.net https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com; " +
+            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com https://www.chatbase.co https://backend.chatbase.co; " +
+            "frame-src https://www.googletagmanager.com https://td.doubleclick.net https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.chatbase.co https://backend.chatbase.co; " +
             "form-action 'self' https://formspree.io; " +
             "base-uri 'self'; " +
             "object-src 'none'",
@@ -264,6 +265,8 @@ function RootShell({ children }: { children: ReactNode }) {
         {children}
         {/* Runs before the framework bundle loads - see BASK_HREF_SYNC_SCRIPT. */}
         <script dangerouslySetInnerHTML={{ __html: BASK_HREF_SYNC_SCRIPT }} />
+        {/* Chatbase bubble. Waits for window load inside the snippet. */}
+        <script dangerouslySetInnerHTML={{ __html: CHATBASE_EMBED_SCRIPT }} />
         <Scripts />
       </body>
     </html>

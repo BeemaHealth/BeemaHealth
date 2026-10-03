@@ -22,13 +22,13 @@ It fades out (`marqueeOpacity`, a `useTransform` off the same `scrollYProgress`)
 
 If you need to change hero copy/layout again and something ends up positioned "at the bottom of the hero," default to viewport-relative (`fixed`) rather than section-relative (`absolute` against the hero's own box) unless you're certain the hero's height is stable across breakpoints.
 
-### CTA row and the "most popular" pill (2026-09-09)
+### CTA row and the two offering doors (2026-10-02)
 
-The hero's button row has **one** button: "Get Started" (`GetStartedModal`, opened via local `getStartedOpen` state). It used to also carry two outline buttons ("Tirzepatide pricing" / "Semaglutide pricing") stacked directly under Get Started - Matt flagged that this made the primary CTA read as weight-loss-only, since it sat sandwiched between two weight-loss-specific links. Both were removed from that row.
+The hero's button row has **one** button: "Get Started" (`GetStartedModal`, opened via local `getStartedOpen` state). It used to also carry two outline buttons ("Tirzepatide pricing" / "Semaglutide pricing") stacked directly under Get Started - Matt flagged that this made the primary CTA read as weight-loss-only. Both were removed from that row.
 
-In their place, a small pill link sits absolutely positioned bottom-right of the hero's content grid: "Most popular: Tirzepatide - See pricing", linking to `/tirzepatide/`. It intentionally does **not** repeat the Semaglutide link - Tirzepatide alone carries the "most popular" framing, and Semaglutide pricing stays reachable via nav/treatment pages rather than cluttering the hero further. It sits in the grid's existing `pb-20`/`pb-24` reserved bottom padding (the same headroom that already keeps the fixed marquee band from covering hero content on load), fades/slides in last in the entrance sequence (`delay: 1.1`, after the headline and photo have settled), and respects `prefers-reduced-motion` like the rest of the hero.
+A later "Most popular: Tirzepatide" pill (bottom-right of the grid) pulled the hero back to weight loss. That pill is gone. In its place, two equal doors sit under the intro, before Get Started: **Weight loss** (`/weight-loss/`) and **ED treatment** (`/sexual-health/`). A line under those doors links hair loss, NAD+, and sermorelin so the hero does not read as a two-product company. Copy lives in `src/lib/home-hero.ts`. The rotating badge leads with "Weight loss, ED, and more", and the marquee names the wider catalog once. GLP-1 promo pricing still rotates through the badge and appears once in the marquee.
 
-If Semaglutide (or another product) ever needs the same "most popular" treatment, prefer a second pill rather than reintroducing a button row next to Get Started - that's the layout Matt asked to move away from.
+Do not put a single-product pricing pill back in the hero. A second door for another category should match these two, not sit as a corner chip next to Get Started.
 
 ### LegitScript seal on the hero
 
@@ -51,6 +51,7 @@ Built directly on Radix `Dialog` (`forceMount` + `AnimatePresence`) rather than 
 | File | Role |
 |------|------|
 | `src/components/home/HomeHero.tsx` | Hero, viewport-fixed marquee, LegitScript seal placement |
+| `src/lib/home-hero.ts` | Hero offering doors, intro, badge, and marquee line |
 | `src/components/brand/SiteBootLoader.tsx` | First-visit branded overlay (root shell) |
 | `src/lib/boot-assets.ts` | Homepage LCP (`hero.jpg`) vs low-priority warmup photos |
 | `src/lib/site-boot-loader.ts` | Splash enable flag, load-wait, catch-up |

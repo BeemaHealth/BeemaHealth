@@ -302,7 +302,8 @@ export function dualCompoundedShortPricingLine(): string {
 }
 
 /**
- * Homepage hero teaser only - starter pack lead-in, no plan-table dump.
+ * Short tirzepatide-led teaser. The homepage hero no longer uses this -
+ * that surface names weight loss and ED together (`src/lib/home-hero.ts`).
  * Full rates live on /semaglutide and /tirzepatide.
  */
 export function dualCompoundedHomeHeroTeaser(): string {
@@ -324,7 +325,8 @@ export function dualCompoundedPromoShortPricingLine(): string {
 
 /**
  * Longer dual-med pricing teaser for ads / category pages that still need
- * both meds named. Prefer {@link dualCompoundedHomeHeroTeaser} on the home hero.
+ * both meds named. The homepage hero names weight loss and ED together
+ * (`src/lib/home-hero.ts`) and does not use this line.
  * Semaglutide always leads with the $99 first-month / 3-month promo - never
  * the annual prepaid rate.
  */

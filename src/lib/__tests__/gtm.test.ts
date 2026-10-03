@@ -36,10 +36,10 @@ describe("gtm", () => {
   it("keeps one Google tag loader and required measurement CSP origins", () => {
     expect(rootRoute).not.toContain("GOOGLE_ADS_HEAD_SCRIPT");
     expect(rootRoute).toMatch(
-      /script-src 'self' 'unsafe-inline' https:\/\/www\.googletagmanager\.com\$\{import\.meta\.env\.DEV[^}]*\} https:\/\/connect\.facebook\.net https:\/\/googleads\.g\.doubleclick\.net https:\/\/www\.googleadservices\.com https:\/\/td\.doubleclick\.net; /,
+      /script-src 'self' 'unsafe-inline' https:\/\/www\.googletagmanager\.com\$\{import\.meta\.env\.DEV[^}]*\} https:\/\/connect\.facebook\.net https:\/\/googleads\.g\.doubleclick\.net https:\/\/www\.googleadservices\.com https:\/\/td\.doubleclick\.net https:\/\/www\.chatbase\.co; /,
     );
     expect(rootRoute).toMatch(
-      /script-src-elem 'self' 'unsafe-inline' https:\/\/www\.googletagmanager\.com\$\{import\.meta\.env\.DEV[^}]*\} https:\/\/connect\.facebook\.net https:\/\/googleads\.g\.doubleclick\.net https:\/\/www\.googleadservices\.com https:\/\/td\.doubleclick\.net; /,
+      /script-src-elem 'self' 'unsafe-inline' https:\/\/www\.googletagmanager\.com\$\{import\.meta\.env\.DEV[^}]*\} https:\/\/connect\.facebook\.net https:\/\/googleads\.g\.doubleclick\.net https:\/\/www\.googleadservices\.com https:\/\/td\.doubleclick\.net https:\/\/www\.chatbase\.co; /,
     );
     for (const origin of [
       "https://www.google.com",

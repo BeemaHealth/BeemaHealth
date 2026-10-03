@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { breadcrumbJsonLd, canonicalUrl } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Clock, Mail, Phone, Star } from "lucide-react";
+import {
+  ArrowRight,
+  Clock,
+  Mail,
+  MessageCircle,
+  Phone,
+  Star,
+} from "lucide-react";
 import {
   motion,
   useReducedMotion,
@@ -24,6 +31,8 @@ import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
   SUPPORT_EMAIL,
   SUPPORT_EMAIL_HREF,
+  SUPPORT_HOURS_DETAIL,
+  SUPPORT_HOURS_DISPLAY,
   SUPPORT_PHONE_DISPLAY,
   SUPPORT_PHONE_HREF,
 } from "@/lib/contact-info";
@@ -39,12 +48,13 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Questions before you start? Email Beema Health support. After you complete intake and pay, you can ask additional questions. For emergencies, call 911.",
+          "Chat with Beema Health's AI for fast answers, or reach our dedicated human support team by call, text, or email every day, 9 AM to 9 PM MT. For emergencies, call 911.",
       },
       { property: "og:title", content: "Contact | Beema Health" },
       {
         property: "og:description",
-        content: "Get in touch with the Beema Health care team.",
+        content:
+          "AI chat for quick answers, plus dedicated human support by call, text, or email.",
       },
     ],
     links: [{ rel: "canonical", href: canonicalUrl("/contact") }],
@@ -65,9 +75,17 @@ export const Route = createFileRoute("/contact")({
 
 const CONTACT_OPTIONS = [
   {
+    icon: MessageCircle,
+    title: "AI chat",
+    text: "Need a fast answer about offerings, pricing, or how care works? Use the chat on this site anytime for immediate responses. Prefer a person? Call, text, or email our human support team.",
+    action: null,
+    href: null,
+    external: false,
+  },
+  {
     icon: Mail,
     title: "Email support",
-    text: `Questions before intake and payment? Email us. After you complete intake and pay, you can ask additional questions. The medical intake itself is a questionnaire only.`,
+    text: `Reach our dedicated human support team at ${SUPPORT_EMAIL}. Questions before intake are welcome. After you complete intake and pay, you can ask additional questions. The medical intake itself is a questionnaire only.`,
     action: SUPPORT_EMAIL,
     href: SUPPORT_EMAIL_HREF,
     external: false,
@@ -75,15 +93,15 @@ const CONTACT_OPTIONS = [
   {
     icon: Phone,
     title: "Call or text",
-    text: "For anything you'd rather talk through directly. No AI assistants, just real people.",
+    text: "Talk with a real person on our dedicated human support team whenever you'd rather call or text than chat or email.",
     action: SUPPORT_PHONE_DISPLAY,
     href: SUPPORT_PHONE_HREF,
     external: false,
   },
   {
     icon: Clock,
-    title: "Business hours",
-    text: "Monday to Friday, 9 AM to 5 PM MT. We'll respond to messages within one business day.",
+    title: "Support hours",
+    text: SUPPORT_HOURS_DETAIL,
     action: null,
     href: null,
     external: false,
@@ -139,7 +157,7 @@ function ContactPage() {
             as="h1"
             eyebrow="Contact"
             title={<LineReveal>We&apos;re here to help</LineReveal>}
-            description={`Questions before you complete intake and pay? Email ${SUPPORT_EMAIL}. After you submit and pay, you can ask us additional questions. The medical intake is a questionnaire only.`}
+            description={`Chat with our AI anytime for fast answers, or reach our dedicated human support team by call, text, or email (${SUPPORT_HOURS_DISPLAY}). Prefer email? ${SUPPORT_EMAIL}. The medical intake is a questionnaire only.`}
           />
         </div>
       </section>
@@ -154,7 +172,7 @@ function ContactPage() {
             <HexMotif className="w-16 text-primary/15" />
           </motion.div>
 
-          <div className="relative grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="relative grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {CONTACT_OPTIONS.map((c, index) => (
               <motion.div
                 key={c.title}

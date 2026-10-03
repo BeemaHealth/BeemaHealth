@@ -129,9 +129,9 @@ const GLP1_COPY: Record<Glp1Market, Glp1LandingCopy> = {
     faqDescription:
       "Straight answers for adults comparing cash-pay GLP-1 options online.",
     servingEyebrow: "Nationwide telehealth",
-    servingTitle: "Cash-pay GLP-1 care without a clinic visit",
+    servingTitle: "Online care that's human and built for success.",
     servingBody:
-      "You can complete Beema Health's medical intake online from anywhere in the United States. A licensed provider reviews your case by telehealth. When clinically appropriate and legally available, compounded GLP-1 options may be prescribed and shipped to you. Licensed providers can evaluate adults in all 50 US states. Beema Health does not serve patients outside the United States.",
+      "Availability depends on your state. Most US states allow online clinic visits, but some do not. Where it applies, you complete Beema Health's medical intake online and a licensed provider reviews your case by telehealth. When clinically appropriate and legally available, compounded GLP-1 options may be prescribed and shipped to you. Beema Health does not serve patients outside the United States.",
     servingMarketLink: {
       to: "/glp-1-houston/",
       label: "See GLP-1 care for Houston",
@@ -170,9 +170,9 @@ const GLP1_COPY: Record<Glp1Market, Glp1LandingCopy> = {
     faqDescription:
       "Straight answers for Houston adults comparing cash-pay GLP-1 options online.",
     servingEyebrow: "Serving Houston",
-    servingTitle: "Cash-pay GLP-1 care without a clinic visit",
+    servingTitle: "Online care that's human and built for success.",
     servingBody:
-      "If you're in Houston, or anywhere in Texas, you can complete Beema Health's medical intake online. A licensed provider reviews your case by telehealth. When clinically appropriate and legally available, compounded GLP-1 options may be prescribed and shipped to you. Licensed providers can evaluate adults in all 50 US states, including Houston. Beema Health does not serve patients outside the United States.",
+      "Availability depends on your state. Most US states allow online clinic visits, but some do not. If you're in Houston, or anywhere in Texas where it applies, you complete Beema Health's medical intake online and a licensed provider reviews your case by telehealth. When clinically appropriate and legally available, compounded GLP-1 options may be prescribed and shipped to you. Beema Health does not serve patients outside the United States.",
     footerCtaBody:
       "Houston patients can complete medical intake from home. No payment required to start. A prescription is never guaranteed.",
     dateModified: "2026-08-16",

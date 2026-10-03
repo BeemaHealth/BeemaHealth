@@ -94,7 +94,7 @@ Added 2026-08-27, alongside the nav reorganization below. Mirrors the pre-existi
 
 **Compliance note (Sexual Health specifically):** when TRT returns, remember ED and TRT are different treatments for different concerns - the hub's copy should say so explicitly (it did, before the pause) so that bucketing them together for nav/audience reasons doesn't read as implying one is the other.
 
-**Structured data:** each hub carries `BreadcrumbList` + `serviceJsonLd()` only, matching `/weight-loss` - no visible FAQ content on any hub, so no `FAQPage` (see the Structured data section below for why that pairing matters).
+**Structured data:** `/hair-loss` carries `BreadcrumbList` + `serviceJsonLd()` only, with no visible FAQ, so no `FAQPage`. `/weight-loss` and `/sexual-health` (rebuilt 2026-10-02 on the GLP-1 landing layout) have a visible FAQ and matching `FAQPage` JSON-LD, plus breadcrumb and service markup. `reviewedByClinicalLead` stays false. See the Structured data section below for why FAQ markup has to match visible questions.
 
 **Shared building block:** `SimpleCategoryLineup` in `TreatmentPageBlocks.tsx` renders each hub's card grid (icon art + name + price + link), deliberately separate from `TreatmentLineup.tsx` (the `/weight-loss`-only version hardcoded to GLP-1 photo imagery and `CompoundedPriceLockup`).
 
@@ -290,7 +290,8 @@ Every treatment-adjacent page carries page-specific JSON-LD alongside the sitewi
 - `/semaglutide-houston`, `/tirzepatide-houston` — same `BreadcrumbList` + `FAQPage` + `serviceJsonLd()` shape as their nationwide siblings, plus a Houston/Texas `areaServed` (`City` + `containedInPlace: State` + `Country`, matching `/glp-1-houston`'s pattern) on the `Service`. Each self-canonicalizes; neither canonicalizes to its nationwide sibling. See "City semaglutide/tirzepatide pages" above
 - `/glp-1` — `BreadcrumbList` + `FAQPage` + `serviceJsonLd()` (national cash-pay GLP-1 category page; visible FAQ matches JSON-LD; canonical `https://beemahealth.com/glp-1/`)
 - `/glp-1-houston` — `BreadcrumbList` + `FAQPage` + `serviceJsonLd()` (Houston cash-pay GLP-1 ads + local SEO page; visible FAQ matches JSON-LD; canonical `https://beemahealth.com/glp-1-houston/`)
-- `/weight-loss`, `/sexual-health`, `/hair-loss` — `BreadcrumbList` + `serviceJsonLd()` (each a `Service` describing the category program itself; no visible FAQ content on any hub, so no `FAQPage`). `/wellness` carried the same shape before being paused
+- `/weight-loss`, `/sexual-health` - `BreadcrumbList` + `FAQPage` + `serviceJsonLd()` (visible FAQ matches JSON-LD; rebuilt 2026-10-02 on the GLP-1 landing layout). `reviewedByClinicalLead` is false
+- `/hair-loss` - `BreadcrumbList` + `serviceJsonLd()` (a `Service` for the category; no visible FAQ, so no `FAQPage`). `/wellness` carried the same shape before being paused
 - `/how-it-works`, `/safety` — `BreadcrumbList` + `medicalWebPageJsonLd()` (a `MedicalWebPage` describing the informational content; no visible FAQ content, so no `FAQPage`)
 
 `breadcrumbJsonLd()`, `faqPageJsonLd()`, `serviceJsonLd()`, and `medicalWebPageJsonLd()` all live in `src/lib/seo.ts`. Never add `FAQPage` JSON-LD without a matching visible FAQ accordion on the page — Google's structured-data guidelines require the two to match, and `faqPageJsonLd()`'s docstring says the same.

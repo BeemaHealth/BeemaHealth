@@ -117,6 +117,7 @@ const WHATS_INCLUDED = [
   "Doctor Consultation & Visit",
   "Syringes",
   "Expedited Shipping",
+  "Dedicated Human Customer Support",
   { label: "Free learning resources", to: "/learn/" },
   { label: "Free recipes", to: "/recipes/" },
 ];

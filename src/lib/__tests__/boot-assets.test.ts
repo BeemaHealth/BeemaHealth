@@ -65,10 +65,15 @@ describe("boot image prefetch", () => {
       as: "image",
       fetchPriority: "high",
     });
-    expect(criticalBootImageUrls("/weight-loss")).toEqual([]);
-    expect(warmupBootImageUrls("/weight-loss")).toEqual([
+    expect(criticalBootImageUrls("/weight-loss")).toEqual([
       resolveVialImagery("semaglutide").src,
+    ]);
+    expect(warmupBootImageUrls("/weight-loss")).toEqual([
       resolveVialImagery("tirzepatide").src,
+      expect.stringContaining("legitscript"),
+    ]);
+    expect(criticalBootImageUrls("/sexual-health")).toEqual([
+      expect.stringContaining("tadalafil"),
     ]);
   });
 

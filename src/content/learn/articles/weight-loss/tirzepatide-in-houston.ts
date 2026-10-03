@@ -14,7 +14,7 @@ export const article: LearnArticle = {
   vertical: "weight-loss",
   slug: "tirzepatide-in-houston",
   title: "Tirzepatide in Houston: Telehealth Without a Clinic",
-  h1: "Tirzepatide Houston: licensed telehealth without a clinic visit",
+  h1: "Tirzepatide Houston: licensed telehealth, online",
   description:
     "Yes. Houston adults can start tirzepatide care online. Beema Health has no clinic. If prescribed, compounded tirzepatide may ship. Prescription not guaranteed.",
   keywords: [

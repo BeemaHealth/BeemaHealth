@@ -38,6 +38,10 @@ import {
   simplePerDaySentence,
 } from "@/lib/simple-treatment-pricing";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
+import finasteridePhoto from "@/assets/treatments/finasteride-oral-tablets-bottle.webp";
+import oralMinoxidilPhoto from "@/assets/treatments/oral-minoxidil-tablets-bottle.webp";
+import hairLossSprayMenPhoto from "@/assets/treatments/hair-loss-spray-men-bottle.webp";
+import hairLossSprayWomenPhoto from "@/assets/treatments/hair-loss-spray-women-bottle.webp";
 
 const TITLE = "Hair Loss Treatment | Beema Health";
 const DESCRIPTION = `FDA-approved oral meds and compounded topical formulas for hair loss, reviewed by licensed providers nationwide, from ${formatSimpleStartingAt(HAIRLOSS_FINASTERIDE_PRICING)}. Never guaranteed.`;
@@ -102,6 +106,13 @@ export const Route = createFileRoute("/hair-loss")({
  * Compound" (women's, HAIRLOSS_WOMENS_COMPOUND_PRICING) is a distinct
  * formulation not part of this launch - do not add it here without a
  * separate go-ahead.
+ *
+ * Each card's `image` reuses the real product photo already shot for that
+ * medication's money page (same pattern as `/sexual-health`). Descriptive
+ * WebP filenames under `src/assets/treatments/` and product-specific alt
+ * text keep the hub cards image-search friendly. Oral Minoxidil (men) and
+ * (women) share one bottle photo - same product - with sex-specific alt
+ * text matching each card's landing page.
  */
 const LINEUP: CategoryLineupItem[] = [
   {
@@ -110,6 +121,12 @@ const LINEUP: CategoryLineupItem[] = [
     form: "For men, once daily",
     pricing: HAIRLOSS_FINASTERIDE_PRICING,
     icon: Droplet,
+    image: {
+      src: finasteridePhoto,
+      alt: "Bottle of Beema Health oral finasteride tablets, generic Propecia for men's hair loss",
+      width: 720,
+      height: 900,
+    },
     to: "/oral-finasteride/",
     perDayNote: simplePerDaySentence(HAIRLOSS_FINASTERIDE_PRICING),
   },
@@ -119,6 +136,12 @@ const LINEUP: CategoryLineupItem[] = [
     form: "For men, once daily",
     pricing: HAIRLOSS_ORAL_MINOXIDIL_PRICING,
     icon: Pill,
+    image: {
+      src: oralMinoxidilPhoto,
+      alt: "Bottle of Beema Health oral minoxidil tablets for men, an FDA-approved generic medication for hair loss",
+      width: 720,
+      height: 900,
+    },
     to: "/oral-minoxidil-men/",
     perDayNote: simplePerDaySentence(HAIRLOSS_ORAL_MINOXIDIL_PRICING),
   },
@@ -128,6 +151,12 @@ const LINEUP: CategoryLineupItem[] = [
     form: "For women, once daily",
     pricing: HAIRLOSS_ORAL_MINOXIDIL_PRICING,
     icon: Pill,
+    image: {
+      src: oralMinoxidilPhoto,
+      alt: "Bottle of Beema Health oral minoxidil tablets for women, an FDA-approved generic medication for hair loss",
+      width: 720,
+      height: 900,
+    },
     to: "/oral-minoxidil-women/",
     perDayNote: simplePerDaySentence(HAIRLOSS_ORAL_MINOXIDIL_PRICING),
   },
@@ -137,6 +166,12 @@ const LINEUP: CategoryLineupItem[] = [
     form: "For men, topical spray",
     pricing: HAIRLOSS_TOPICAL_MEN_PRICING,
     icon: SprayCan,
+    image: {
+      src: hairLossSprayMenPhoto,
+      alt: "Bottle of Beema Health compounded hair loss spray for men with minoxidil, tretinoin, fluocinolone, and finasteride",
+      width: 720,
+      height: 900,
+    },
     to: "/hair-loss-spray-men/",
     perDayNote: simplePerDaySentence(HAIRLOSS_TOPICAL_MEN_PRICING),
   },
@@ -146,6 +181,12 @@ const LINEUP: CategoryLineupItem[] = [
     form: "For women, topical spray",
     pricing: HAIRLOSS_TOPICAL_WOMEN_PRICING,
     icon: SprayCan,
+    image: {
+      src: hairLossSprayWomenPhoto,
+      alt: "Bottle of Beema Health compounded hair loss spray for women with minoxidil, tretinoin, fluocinolone, biotin, and melatonin",
+      width: 720,
+      height: 900,
+    },
     to: "/hair-loss-spray-women/",
     perDayNote: simplePerDaySentence(HAIRLOSS_TOPICAL_WOMEN_PRICING),
   },

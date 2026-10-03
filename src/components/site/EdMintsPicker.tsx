@@ -143,10 +143,14 @@ export function EdMintsPickerModal({
           </DialogDescription>
         </DialogHeader>
 
-        <p className="text-center text-sm font-semibold text-foreground">
-          Both formulations: from{" "}
-          {formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING)}
-        </p>
+        <div className="rounded-2xl border border-primary/40 bg-primary-soft/60 px-4 py-3.5 text-center shadow-soft">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-accent-foreground">
+            Both formulations
+          </p>
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+            from {formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING)}
+          </p>
+        </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           {MINT_OPTIONS.map((opt) => (

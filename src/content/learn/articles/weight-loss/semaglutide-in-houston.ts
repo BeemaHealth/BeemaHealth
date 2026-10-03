@@ -12,7 +12,7 @@ export const article: LearnArticle = {
   vertical: "weight-loss",
   slug: "semaglutide-in-houston",
   title: "Semaglutide in Houston: Telehealth Access for Adults",
-  h1: "How Houston adults start semaglutide care without a clinic visit",
+  h1: "How Houston adults start semaglutide care online",
   description:
     "Houston adults can be evaluated for semaglutide by a licensed clinician online under Texas telemedicine rules. What the visit covers and what it cannot promise.",
   keywords: [

@@ -845,6 +845,7 @@ export function SimpleCategoryLineup({
                 width={item.image.width}
                 height={item.image.height}
                 loading="lazy"
+                decoding="async"
                 className="relative z-10 h-full w-full object-contain p-6"
               />
             ) : (

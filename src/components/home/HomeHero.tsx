@@ -6,7 +6,13 @@ import {
   useTransform,
 } from "motion/react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Star } from "lucide-react";
+import {
+  ArrowRight,
+  HeartPulse,
+  Scale,
+  Star,
+  type LucideIcon,
+} from "lucide-react";
 import {
   FloatingHexagons,
   HexMotif,
@@ -27,30 +33,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
-  FIRST_MONTH_PROMO_LINE,
-  FIRST_MONTH_PROMO_SHORT,
-} from "@/lib/marketing-copy";
-import {
-  dualCompoundedHomeHeroTeaser,
-  dualCompoundedPromoShortPricingLine,
-} from "@/lib/medication-pricing";
+  HERO_BADGE_MESSAGES,
+  HERO_MARQUEE_OFFERING_LINE,
+  HOME_HERO_ALSO,
+  HOME_HERO_INTRO,
+  HOME_HERO_OFFERINGS,
+  type HomeHeroOfferingId,
+} from "@/lib/home-hero";
+import { dualCompoundedPromoShortPricingLine } from "@/lib/medication-pricing";
 import heroImg from "@/assets/hero.jpg";
 
-/** Hero badge rotation - reuses the same approved trust claims shown elsewhere on this page (marquee ticker, promo line) rather than inventing new copy. */
-const HERO_BADGE_MESSAGES = [
-  "GLP-1 weight-loss care",
-  "Licensed USA physician network",
-  "USA 503A pharmacies",
-  FIRST_MONTH_PROMO_SHORT,
-] as const;
+const OFFERING_ICONS: Record<HomeHeroOfferingId, LucideIcon> = {
+  "weight-loss": Scale,
+  ed: HeartPulse,
+};
 
 const MARQUEE_ITEMS = [
   "Licensed providers",
+  HERO_MARQUEE_OFFERING_LINE,
   dualCompoundedPromoShortPricingLine(),
   "USA licensed pharmacies",
   "Private & secure encrypted intake",
   "HIPAA-compliant care",
-  FIRST_MONTH_PROMO_LINE,
   "Self-paced online intake",
 ] as const;
 
@@ -194,7 +198,9 @@ export function HomeHero() {
           <div className="mt-3">
             <LegitScriptSeal className="float-right ml-3 mb-1 w-[5.75rem] [&_img]:h-auto [&_img]:w-full sm:w-24" />
             <h1 className="text-[clamp(2rem,4.5vw,4rem)] font-bold leading-[1.1] tracking-tight text-foreground">
-              <LineReveal delay={0}>{"Online care "}</LineReveal>
+              <LineReveal delay={0}>
+                {"Online weight-loss and ED care "}
+              </LineReveal>
               <LineReveal delay={0.1}>
                 {"that's "}
                 <span className="text-grad-brand">human</span>
@@ -220,8 +226,60 @@ export function HomeHero() {
               server-rendered HTML/CSS with zero JS dependency.
             */}
           <p className="mt-5 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground lg:max-w-2xl">
-            USA physicians, licensed and certified USA 503A pharmacies,{" "}
-            {dualCompoundedHomeHeroTeaser()}.
+            {HOME_HERO_INTRO}
+          </p>
+
+          <ul className="mt-5 grid list-none gap-3 p-0 sm:grid-cols-2">
+            {HOME_HERO_OFFERINGS.map((offering) => {
+              const Icon = OFFERING_ICONS[offering.id];
+              return (
+                <li key={offering.id}>
+                  <Link
+                    to={offering.to}
+                    className="group flex h-full min-h-11 items-center gap-3 rounded-2xl border border-border bg-background/95 px-3.5 py-3 shadow-soft transition-colors hover:border-primary/40 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary-soft text-accent-foreground">
+                      <Icon className="size-5" aria-hidden />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold text-foreground">
+                        {offering.label}
+                      </span>
+                      <span className="mt-0.5 block text-xs leading-snug text-muted-foreground">
+                        {offering.detail}
+                      </span>
+                    </span>
+                    <ArrowRight
+                      className="ml-auto size-4 shrink-0 text-primary transition-transform group-hover:translate-x-0.5"
+                      aria-hidden
+                    />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Also{" "}
+            {HOME_HERO_ALSO.map((item, index) => {
+              const separator =
+                index === 0
+                  ? null
+                  : index === HOME_HERO_ALSO.length - 1
+                    ? ", and "
+                    : ", ";
+              return (
+                <span key={item.to}>
+                  {separator}
+                  <Link
+                    to={item.to}
+                    className="font-semibold text-foreground underline-offset-4 hover:underline"
+                  >
+                    {item.label}
+                  </Link>
+                </span>
+              );
+            })}
+            .
           </p>
 
           <motion.div
@@ -308,37 +366,6 @@ export function HomeHero() {
               </p>
             </div>
           </motion.div>
-        </motion.div>
-
-        {/*
-            Bottom-right pill, separate from the Get Started button above so
-            it doesn't read as a second/third CTA option (per Matt, the old
-            Tirzepatide/Semaglutide button row next to Get Started made the
-            primary CTA look weight-loss-only). Sits in the grid's reserved
-            pb-20/pb-24 bottom padding, same headroom that keeps the fixed
-            marquee band from covering it.
-          */}
-        <motion.div
-          className="absolute bottom-4 right-0 z-20 hidden sm:bottom-6 sm:block"
-          initial={{ opacity: 0, y: reduceMotion ? 0 : 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: reduceMotion ? 0 : 0.6,
-            ease: EASE_OUT,
-            delay: reduceMotion ? 0 : 1.1,
-          }}
-        >
-          <Link
-            to="/tirzepatide/"
-            className="group inline-flex items-center gap-2 rounded-full border border-primary/30 bg-background/95 px-4 py-2 text-xs font-semibold text-foreground shadow-lg backdrop-blur-sm transition-colors hover:border-primary/50 hover:bg-background sm:text-sm"
-          >
-            <span className="text-muted-foreground">Most popular:</span>
-            <span>Tirzepatide</span>
-            <span className="inline-flex items-center gap-1 text-primary">
-              See pricing
-              <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
-            </span>
-          </Link>
         </motion.div>
       </div>
 
