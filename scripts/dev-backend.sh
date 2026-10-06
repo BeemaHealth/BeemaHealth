@@ -72,7 +72,7 @@ if [[ ! -f "$ENV_FILE" ]]; then
   echo
 fi
 
-COMPOSE=(docker compose -f backend/docker-compose.yml)
+COMPOSE=(docker compose -f old_backend/docker-compose.yml)
 if [[ -f "$ENV_FILE" ]]; then
   COMPOSE+=(--env-file "$ENV_FILE")
 fi

@@ -1,5 +1,7 @@
 # Legacy backend & in-house funnel (not the live product)
 
+> **Branch `fuck-bask` note:** on this branch the legacy tree was renamed from `backend/` to `old_backend/` (reference only). A new `backend/` holds the portal build. Paths below say `backend/`; on this branch read them as `old_backend/`. See `docs/portal/PLAN.md`.
+
 **Live product:** Marketing site (this repo) + [Bask](https://bask.co/) for **intake** (one long questionnaire — not a separate eligibility vs intake product), checkout, backend, and patient portal (Hive). See `docs/features/legitscript.md` and `src/lib/cta-ids.ts` (`resolveCta()`).
 
 The `backend/` Django tree and old in-repo routes (`/qualify`, `/intake`, `/consent`, `/dashboard`, etc.) are **leftover from a previous in-house funnel**. They are **not** what Beema runs today. Do **not** orient new features, CTAs, or agent workflows around them.

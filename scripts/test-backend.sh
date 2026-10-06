@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$ROOT/backend"
+cd "$ROOT/old_backend"
 
 if [[ ! -d .venv ]]; then
   python3 -m venv .venv

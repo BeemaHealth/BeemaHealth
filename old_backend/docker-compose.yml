@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: beemahealth
+      POSTGRES_PASSWORD: beemahealth
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U beemahealth -d beemahealth"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../.env.dev
+    environment:
+      BEEMAHEALTH_ENV: ${BEEMAHEALTH_ENV:-dev}
+      DEBUG: "true"
+      SECRET_KEY: dev-secret-key-change-in-production
+      DATABASE_URL: postgres://beemahealth:beemahealth@db:5432/beemahealth
+      DATABASE_SSL_REQUIRE: "false"
+      SECURE_SSL_REDIRECT: "false"
+      ALLOWED_HOSTS: localhost,127.0.0.1,0.0.0.0
+      CORS_ALLOWED_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
+      CSRF_TRUSTED_ORIGINS: http://localhost:8000,http://127.0.0.1:8000,http://localhost:8080,http://127.0.0.1:8080
+      FERNET_KEY: ${FERNET_KEY:-}
+      HOSTING_TARGET: local
+      EMAIL_BACKEND: ${EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
+      EMAIL_HOST: ${EMAIL_HOST:-}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
+      EMAIL_USE_TLS: ${EMAIL_USE_TLS:-true}
+      EMAIL_USE_SSL: ${EMAIL_USE_SSL:-false}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-noreply@beemahealth.com}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+
+name: beemahealth

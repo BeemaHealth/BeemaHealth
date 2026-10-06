@@ -58,3 +58,12 @@ mailer_pii.wrap
 .idea/
 .vscode/
 *.swp
+
+# Legacy backend (renamed from backend/ on branch fuck-bask)
+old_backend/.venv/
+old_backend/**/__pycache__/
+old_backend/**/*.pyc
+old_backend/.pytest_cache/
+old_backend/staticfiles/
+old_backend/media/
+old_backend/dev.db
