@@ -53,29 +53,19 @@ port_in_use() {
   lsof -iTCP:"$1" -sTCP:LISTEN -n -P >/dev/null 2>&1
 }
 
-if port_in_use 8000; then
-  echo "Port 8000 is already in use. Stop the other process and retry:"
-  echo "  lsof -ti:8000 | xargs kill"
+if port_in_use 8001; then
+  echo "Port 8001 is already in use. Stop the other process and retry:"
+  echo "  lsof -ti:8001 | xargs kill"
   exit 1
 fi
 
-BEEMAHEALTH_ENV="${BEEMAHEALTH_ENV:-dev}"
-ENV_FILE=".env.${BEEMAHEALTH_ENV}"
-
-if [[ ! -f "$ENV_FILE" ]]; then
-  if [[ -f .env ]]; then
-    echo "Note: $ENV_FILE not found — falling back to .env (BEEMAHEALTH_ENV=${BEEMAHEALTH_ENV})."
-    ENV_FILE=".env"
-  else
-    echo "Warning: no $ENV_FILE or .env found. Create or edit .env.dev at the repo root and set FERNET_KEY."
-  fi
-  echo
-fi
-
-COMPOSE=(docker compose -f old_backend/docker-compose.yml)
-if [[ -f "$ENV_FILE" ]]; then
-  COMPOSE+=(--env-file "$ENV_FILE")
-fi
-export BEEMAHEALTH_ENV
-"${COMPOSE[@]}" run --rm api python manage.py migrate
-exec "${COMPOSE[@]}" up "$@"
+# New portal backend (backend/): Postgres :5433, API :8001. The compose command
+# migrates, seeds dev definitions, and creates the dev admin on every start.
+# Email (SMTP) settings come from the root .env.dev; Stripe keys from backend/.env.
+# Without EMAIL_HOST, sign-in emails print to the API log instead of sending.
+COMPOSE=(docker compose -f backend/docker-compose.yml)
+[[ -f .env.dev ]] && COMPOSE+=(--env-file .env.dev)
+[[ -f backend/.env ]] && COMPOSE+=(--env-file backend/.env)
+echo "API:   http://localhost:8001"
+echo "Admin: http://localhost:8001/admin  (admin@beemahealth.local / admin)"
+exec "${COMPOSE[@]}" up --build "$@"

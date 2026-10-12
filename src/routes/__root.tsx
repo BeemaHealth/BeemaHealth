@@ -88,6 +88,18 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+// Origin of the portal API (Django). Allowed in connect-src for the patient portal and questionnaire.
+const PORTAL_API_ORIGIN = (() => {
+  const raw =
+    import.meta.env.VITE_PORTAL_API_URL ??
+    (import.meta.env.DEV ? "http://localhost:8001/api/v1" : "");
+  try {
+    return raw ? new URL(raw).origin : "";
+  } catch {
+    return "";
+  }
+})();
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
     head: () => ({
@@ -136,8 +148,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           httpEquiv: "Content-Security-Policy",
           content:
             "default-src 'self'; " +
-            `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co; ` +
-            `script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co; ` +
+            `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co https://js.stripe.com; ` +
+            `script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co https://js.stripe.com; ` +
             `style-src 'self' 'unsafe-inline'${import.meta.env.DEV ? " https://tagmanager.google.com" : ""}; ` +
             // worker-src: not needed in production (no app code spins up
             // workers). In dev, Vite's HMR client creates a SharedWorker
@@ -149,8 +161,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             `worker-src 'self'${import.meta.env.DEV ? " blob:" : ""}; ` +
             "font-src 'self' data:; " +
             "img-src 'self' data: https:; " +
-            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com https://www.chatbase.co https://backend.chatbase.co; " +
-            "frame-src https://www.googletagmanager.com https://td.doubleclick.net https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.chatbase.co https://backend.chatbase.co; " +
+            `connect-src 'self'${PORTAL_API_ORIGIN ? ` ${PORTAL_API_ORIGIN}` : ""} https://api.stripe.com https://*.amazonaws.com https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com https://www.chatbase.co https://backend.chatbase.co; ` +
+            "frame-src https://js.stripe.com https://hooks.stripe.com https://www.googletagmanager.com https://td.doubleclick.net https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.chatbase.co https://backend.chatbase.co; " +
             "form-action 'self' https://formspree.io; " +
             "base-uri 'self'; " +
             "object-src 'none'",

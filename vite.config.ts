@@ -26,9 +26,14 @@ export default defineConfig({
         // Exact /dashboard is the spa.maskPath shell entry — it must pass
         // the filter to emit _shell.html (it never writes dashboard HTML).
         path === "/dashboard" ||
-        !["/dashboard", "/intake", "/consent", "/verify-email/pending"].some(
-          (prefix) => path === prefix || path.startsWith(`${prefix}/`),
-        ),
+        ![
+          "/dashboard",
+          "/intake",
+          "/consent",
+          "/verify-email/pending",
+          "/portal",
+          "/start",
+        ].some((prefix) => path === prefix || path.startsWith(`${prefix}/`)),
     },
     client: { base: "/" },
   },
@@ -36,10 +41,10 @@ export default defineConfig({
     base: "/",
     server: {
       // Same-origin proxy so HttpOnly funnel cookies (beemahealth_funnel) persist in dev.
-      // Frontend :8080 → /api/* → backend :8000/api/*
+      // Frontend :8080 → /api/* → backend :8001/api/*
       proxy: {
         "/api": {
-          target: "http://localhost:8000",
+          target: "http://localhost:8001",
           changeOrigin: true,
         },
       },

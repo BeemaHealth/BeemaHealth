@@ -1,0 +1,34 @@
+# Routing seed, loaded by the routing app (apps/routing/loader.py) via `load_definitions` or `load_routing`.
+# The catalog loader skips files named routing*.yaml.
+# Idempotent: organizations upsert by slug, rules upsert by name.
+# States: every US state except NM, KS and WV (legacy eligibility exclusions, see old_backend eligibility service).
+organizations:
+  - slug: beluga
+    kind: network
+    name: Beluga Health
+    integration_adapter: beluga
+
+rules:
+  - name: Beluga weight loss GLP-1
+    product_slug: weight-loss-glp1
+    network_slug: beluga
+    priority: 100
+    states_mode: except
+    states: [NM, KS, WV]
+    fill_type: any
+
+  - name: Beluga weight loss semaglutide
+    product_slug: weight-loss-semaglutide
+    network_slug: beluga
+    priority: 100
+    states_mode: except
+    states: [NM, KS, WV]
+    fill_type: any
+
+  - name: Beluga weight loss tirzepatide
+    product_slug: weight-loss-tirzepatide
+    network_slug: beluga
+    priority: 100
+    states_mode: except
+    states: [NM, KS, WV]
+    fill_type: any

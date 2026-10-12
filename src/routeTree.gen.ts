@@ -26,6 +26,7 @@ import { Route as SemaglutideHoustonRouteImport } from './routes/semaglutide-hou
 import { Route as SemaglutideRouteImport } from './routes/semaglutide'
 import { Route as SafetyRouteImport } from './routes/safety'
 import { Route as QualifyRouteImport } from './routes/qualify'
+import { Route as PortalRouteImport } from './routes/portal'
 import { Route as OralMinoxidilWomenRouteImport } from './routes/oral-minoxidil-women'
 import { Route as OralMinoxidilMenRouteImport } from './routes/oral-minoxidil-men'
 import { Route as OralFinasterideRouteImport } from './routes/oral-finasteride'
@@ -52,9 +53,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerifyEmailIndexRouteImport } from './routes/verify-email.index'
 import { Route as StaffIndexRouteImport } from './routes/staff.index'
 import { Route as RecipesIndexRouteImport } from './routes/recipes/index'
+import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pending'
+import { Route as StartSlugRouteImport } from './routes/start.$slug'
 import { Route as StaffVendorsRouteImport } from './routes/staff.vendors'
 import { Route as StaffQuestionnairesRouteImport } from './routes/staff.questionnaires'
 import { Route as StaffPatientsRouteImport } from './routes/staff.patients'
@@ -64,6 +67,11 @@ import { Route as StaffExperimentsRouteImport } from './routes/staff.experiments
 import { Route as StaffDevRouteImport } from './routes/staff.dev'
 import { Route as StaffAnalyticsRouteImport } from './routes/staff.analytics'
 import { Route as RecipesSlugRouteImport } from './routes/recipes/$slug'
+import { Route as PortalTreatmentsRouteImport } from './routes/portal.treatments'
+import { Route as PortalShotsRouteImport } from './routes/portal.shots'
+import { Route as PortalLoginRouteImport } from './routes/portal.login'
+import { Route as PortalChatRouteImport } from './routes/portal.chat'
+import { Route as PortalAccountRouteImport } from './routes/portal.account'
 import { Route as LpSlugRouteImport } from './routes/lp.$slug'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
@@ -86,6 +94,7 @@ import { Route as DashboardAccountRouteImport } from './routes/dashboard.account
 import { Route as StaffQuestionnairesIndexRouteImport } from './routes/staff.questionnaires.index'
 import { Route as LearnVerticalIndexRouteImport } from './routes/learn/$vertical.index'
 import { Route as StaffQuestionnairesSlugRouteImport } from './routes/staff.questionnaires.$slug'
+import { Route as PortalLoginVerifyRouteImport } from './routes/portal.login_.verify'
 import { Route as LearnVerticalSlugRouteImport } from './routes/learn/$vertical.$slug'
 import { Route as StaffQuestionnairesSlugIndexRouteImport } from './routes/staff.questionnaires.$slug.index'
 import { Route as StaffQuestionnairesSlugVersionsVersionIdRouteImport } from './routes/staff.questionnaires.$slug.versions.$versionId'
@@ -173,6 +182,11 @@ const SafetyRoute = SafetyRouteImport.update({
 const QualifyRoute = QualifyRouteImport.update({
   id: '/qualify',
   path: '/qualify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OralMinoxidilWomenRoute = OralMinoxidilWomenRouteImport.update({
@@ -305,6 +319,11 @@ const RecipesIndexRoute = RecipesIndexRouteImport.update({
   path: '/recipes/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortalIndexRoute = PortalIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PortalRoute,
+} as any)
 const LearnIndexRoute = LearnIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -319,6 +338,11 @@ const VerifyEmailPendingRoute = VerifyEmailPendingRouteImport.update({
   id: '/pending',
   path: '/pending',
   getParentRoute: () => VerifyEmailRoute,
+} as any)
+const StartSlugRoute = StartSlugRouteImport.update({
+  id: '/start/$slug',
+  path: '/start/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const StaffVendorsRoute = StaffVendorsRouteImport.update({
   id: '/vendors',
@@ -364,6 +388,31 @@ const RecipesSlugRoute = RecipesSlugRouteImport.update({
   id: '/recipes/$slug',
   path: '/recipes/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PortalTreatmentsRoute = PortalTreatmentsRouteImport.update({
+  id: '/treatments',
+  path: '/treatments',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalShotsRoute = PortalShotsRouteImport.update({
+  id: '/shots',
+  path: '/shots',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalLoginRoute = PortalLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalChatRoute = PortalChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAccountRoute = PortalAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => PortalRoute,
 } as any)
 const LpSlugRoute = LpSlugRouteImport.update({
   id: '/lp/$slug',
@@ -479,6 +528,11 @@ const StaffQuestionnairesSlugRoute = StaffQuestionnairesSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => StaffQuestionnairesRoute,
 } as any)
+const PortalLoginVerifyRoute = PortalLoginVerifyRouteImport.update({
+  id: '/login_/verify',
+  path: '/login/verify',
+  getParentRoute: () => PortalRoute,
+} as any)
 const LearnVerticalSlugRoute = LearnVerticalSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -521,6 +575,7 @@ export interface FileRoutesByFullPath {
   '/oral-finasteride': typeof OralFinasterideRoute
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
   '/oral-minoxidil-women': typeof OralMinoxidilWomenRoute
+  '/portal': typeof PortalRouteWithChildren
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
   '/semaglutide': typeof SemaglutideRoute
@@ -557,6 +612,11 @@ export interface FileRoutesByFullPath {
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
+  '/portal/account': typeof PortalAccountRoute
+  '/portal/chat': typeof PortalChatRoute
+  '/portal/login': typeof PortalLoginRoute
+  '/portal/shots': typeof PortalShotsRoute
+  '/portal/treatments': typeof PortalTreatmentsRoute
   '/recipes/$slug': typeof RecipesSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
   '/staff/dev': typeof StaffDevRoute
@@ -566,13 +626,16 @@ export interface FileRoutesByFullPath {
   '/staff/patients': typeof StaffPatientsRoute
   '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
   '/staff/vendors': typeof StaffVendorsRoute
+  '/start/$slug': typeof StartSlugRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/learn/': typeof LearnIndexRoute
+  '/portal/': typeof PortalIndexRoute
   '/recipes/': typeof RecipesIndexRoute
   '/staff/': typeof StaffIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
   '/learn/$vertical/$slug': typeof LearnVerticalSlugRoute
+  '/portal/login/verify': typeof PortalLoginVerifyRoute
   '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugRouteWithChildren
   '/learn/$vertical/': typeof LearnVerticalIndexRoute
   '/staff/questionnaires/': typeof StaffQuestionnairesIndexRoute
@@ -634,6 +697,11 @@ export interface FileRoutesByTo {
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
+  '/portal/account': typeof PortalAccountRoute
+  '/portal/chat': typeof PortalChatRoute
+  '/portal/login': typeof PortalLoginRoute
+  '/portal/shots': typeof PortalShotsRoute
+  '/portal/treatments': typeof PortalTreatmentsRoute
   '/recipes/$slug': typeof RecipesSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
   '/staff/dev': typeof StaffDevRoute
@@ -642,13 +710,16 @@ export interface FileRoutesByTo {
   '/staff/medications': typeof StaffMedicationsRoute
   '/staff/patients': typeof StaffPatientsRoute
   '/staff/vendors': typeof StaffVendorsRoute
+  '/start/$slug': typeof StartSlugRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard': typeof DashboardIndexRoute
   '/learn': typeof LearnIndexRoute
+  '/portal': typeof PortalIndexRoute
   '/recipes': typeof RecipesIndexRoute
   '/staff': typeof StaffIndexRoute
   '/verify-email': typeof VerifyEmailIndexRoute
   '/learn/$vertical/$slug': typeof LearnVerticalSlugRoute
+  '/portal/login/verify': typeof PortalLoginVerifyRoute
   '/learn/$vertical': typeof LearnVerticalIndexRoute
   '/staff/questionnaires': typeof StaffQuestionnairesIndexRoute
   '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugIndexRoute
@@ -679,6 +750,7 @@ export interface FileRoutesById {
   '/oral-finasteride': typeof OralFinasterideRoute
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
   '/oral-minoxidil-women': typeof OralMinoxidilWomenRoute
+  '/portal': typeof PortalRouteWithChildren
   '/qualify': typeof QualifyRoute
   '/safety': typeof SafetyRoute
   '/semaglutide': typeof SemaglutideRoute
@@ -715,6 +787,11 @@ export interface FileRoutesById {
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
+  '/portal/account': typeof PortalAccountRoute
+  '/portal/chat': typeof PortalChatRoute
+  '/portal/login': typeof PortalLoginRoute
+  '/portal/shots': typeof PortalShotsRoute
+  '/portal/treatments': typeof PortalTreatmentsRoute
   '/recipes/$slug': typeof RecipesSlugRoute
   '/staff/analytics': typeof StaffAnalyticsRoute
   '/staff/dev': typeof StaffDevRoute
@@ -724,13 +801,16 @@ export interface FileRoutesById {
   '/staff/patients': typeof StaffPatientsRoute
   '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
   '/staff/vendors': typeof StaffVendorsRoute
+  '/start/$slug': typeof StartSlugRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/learn/': typeof LearnIndexRoute
+  '/portal/': typeof PortalIndexRoute
   '/recipes/': typeof RecipesIndexRoute
   '/staff/': typeof StaffIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
   '/learn/$vertical/$slug': typeof LearnVerticalSlugRoute
+  '/portal/login_/verify': typeof PortalLoginVerifyRoute
   '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugRouteWithChildren
   '/learn/$vertical/': typeof LearnVerticalIndexRoute
   '/staff/questionnaires/': typeof StaffQuestionnairesIndexRoute
@@ -763,6 +843,7 @@ export interface FileRouteTypes {
     | '/oral-finasteride'
     | '/oral-minoxidil-men'
     | '/oral-minoxidil-women'
+    | '/portal'
     | '/qualify'
     | '/safety'
     | '/semaglutide'
@@ -799,6 +880,11 @@ export interface FileRouteTypes {
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
+    | '/portal/account'
+    | '/portal/chat'
+    | '/portal/login'
+    | '/portal/shots'
+    | '/portal/treatments'
     | '/recipes/$slug'
     | '/staff/analytics'
     | '/staff/dev'
@@ -808,13 +894,16 @@ export interface FileRouteTypes {
     | '/staff/patients'
     | '/staff/questionnaires'
     | '/staff/vendors'
+    | '/start/$slug'
     | '/verify-email/pending'
     | '/dashboard/'
     | '/learn/'
+    | '/portal/'
     | '/recipes/'
     | '/staff/'
     | '/verify-email/'
     | '/learn/$vertical/$slug'
+    | '/portal/login/verify'
     | '/staff/questionnaires/$slug'
     | '/learn/$vertical/'
     | '/staff/questionnaires/'
@@ -876,6 +965,11 @@ export interface FileRouteTypes {
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
+    | '/portal/account'
+    | '/portal/chat'
+    | '/portal/login'
+    | '/portal/shots'
+    | '/portal/treatments'
     | '/recipes/$slug'
     | '/staff/analytics'
     | '/staff/dev'
@@ -884,13 +978,16 @@ export interface FileRouteTypes {
     | '/staff/medications'
     | '/staff/patients'
     | '/staff/vendors'
+    | '/start/$slug'
     | '/verify-email/pending'
     | '/dashboard'
     | '/learn'
+    | '/portal'
     | '/recipes'
     | '/staff'
     | '/verify-email'
     | '/learn/$vertical/$slug'
+    | '/portal/login/verify'
     | '/learn/$vertical'
     | '/staff/questionnaires'
     | '/staff/questionnaires/$slug'
@@ -920,6 +1017,7 @@ export interface FileRouteTypes {
     | '/oral-finasteride'
     | '/oral-minoxidil-men'
     | '/oral-minoxidil-women'
+    | '/portal'
     | '/qualify'
     | '/safety'
     | '/semaglutide'
@@ -956,6 +1054,11 @@ export interface FileRouteTypes {
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
+    | '/portal/account'
+    | '/portal/chat'
+    | '/portal/login'
+    | '/portal/shots'
+    | '/portal/treatments'
     | '/recipes/$slug'
     | '/staff/analytics'
     | '/staff/dev'
@@ -965,13 +1068,16 @@ export interface FileRouteTypes {
     | '/staff/patients'
     | '/staff/questionnaires'
     | '/staff/vendors'
+    | '/start/$slug'
     | '/verify-email/pending'
     | '/dashboard/'
     | '/learn/'
+    | '/portal/'
     | '/recipes/'
     | '/staff/'
     | '/verify-email/'
     | '/learn/$vertical/$slug'
+    | '/portal/login_/verify'
     | '/staff/questionnaires/$slug'
     | '/learn/$vertical/'
     | '/staff/questionnaires/'
@@ -1003,6 +1109,7 @@ export interface RootRouteChildren {
   OralFinasterideRoute: typeof OralFinasterideRoute
   OralMinoxidilMenRoute: typeof OralMinoxidilMenRoute
   OralMinoxidilWomenRoute: typeof OralMinoxidilWomenRoute
+  PortalRoute: typeof PortalRouteWithChildren
   QualifyRoute: typeof QualifyRoute
   SafetyRoute: typeof SafetyRoute
   SemaglutideRoute: typeof SemaglutideRoute
@@ -1030,6 +1137,7 @@ export interface RootRouteChildren {
   LegalTermsRoute: typeof LegalTermsRoute
   LpSlugRoute: typeof LpSlugRoute
   RecipesSlugRoute: typeof RecipesSlugRoute
+  StartSlugRoute: typeof StartSlugRoute
   RecipesIndexRoute: typeof RecipesIndexRoute
 }
 
@@ -1152,6 +1260,13 @@ declare module '@tanstack/react-router' {
       path: '/qualify'
       fullPath: '/qualify'
       preLoaderRoute: typeof QualifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/oral-minoxidil-women': {
@@ -1336,6 +1451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecipesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portal/': {
+      id: '/portal/'
+      path: '/'
+      fullPath: '/portal/'
+      preLoaderRoute: typeof PortalIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/learn/': {
       id: '/learn/'
       path: '/'
@@ -1356,6 +1478,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/verify-email/pending'
       preLoaderRoute: typeof VerifyEmailPendingRouteImport
       parentRoute: typeof VerifyEmailRoute
+    }
+    '/start/$slug': {
+      id: '/start/$slug'
+      path: '/start/$slug'
+      fullPath: '/start/$slug'
+      preLoaderRoute: typeof StartSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/staff/vendors': {
       id: '/staff/vendors'
@@ -1419,6 +1548,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/recipes/$slug'
       preLoaderRoute: typeof RecipesSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/portal/treatments': {
+      id: '/portal/treatments'
+      path: '/treatments'
+      fullPath: '/portal/treatments'
+      preLoaderRoute: typeof PortalTreatmentsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/shots': {
+      id: '/portal/shots'
+      path: '/shots'
+      fullPath: '/portal/shots'
+      preLoaderRoute: typeof PortalShotsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/login': {
+      id: '/portal/login'
+      path: '/login'
+      fullPath: '/portal/login'
+      preLoaderRoute: typeof PortalLoginRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/chat': {
+      id: '/portal/chat'
+      path: '/chat'
+      fullPath: '/portal/chat'
+      preLoaderRoute: typeof PortalChatRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/account': {
+      id: '/portal/account'
+      path: '/account'
+      fullPath: '/portal/account'
+      preLoaderRoute: typeof PortalAccountRouteImport
+      parentRoute: typeof PortalRoute
     }
     '/lp/$slug': {
       id: '/lp/$slug'
@@ -1574,6 +1738,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaffQuestionnairesSlugRouteImport
       parentRoute: typeof StaffQuestionnairesRoute
     }
+    '/portal/login_/verify': {
+      id: '/portal/login_/verify'
+      path: '/login/verify'
+      fullPath: '/portal/login/verify'
+      preLoaderRoute: typeof PortalLoginVerifyRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/learn/$vertical/$slug': {
       id: '/learn/$vertical/$slug'
       path: '/$slug'
@@ -1653,6 +1824,29 @@ const LearnRouteChildren: LearnRouteChildren = {
 }
 
 const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
+
+interface PortalRouteChildren {
+  PortalAccountRoute: typeof PortalAccountRoute
+  PortalChatRoute: typeof PortalChatRoute
+  PortalLoginRoute: typeof PortalLoginRoute
+  PortalShotsRoute: typeof PortalShotsRoute
+  PortalTreatmentsRoute: typeof PortalTreatmentsRoute
+  PortalIndexRoute: typeof PortalIndexRoute
+  PortalLoginVerifyRoute: typeof PortalLoginVerifyRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalAccountRoute: PortalAccountRoute,
+  PortalChatRoute: PortalChatRoute,
+  PortalLoginRoute: PortalLoginRoute,
+  PortalShotsRoute: PortalShotsRoute,
+  PortalTreatmentsRoute: PortalTreatmentsRoute,
+  PortalIndexRoute: PortalIndexRoute,
+  PortalLoginVerifyRoute: PortalLoginVerifyRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
 
 interface StaffQuestionnairesSlugRouteChildren {
   StaffQuestionnairesSlugIndexRoute: typeof StaffQuestionnairesSlugIndexRoute
@@ -1748,6 +1942,7 @@ const rootRouteChildren: RootRouteChildren = {
   OralFinasterideRoute: OralFinasterideRoute,
   OralMinoxidilMenRoute: OralMinoxidilMenRoute,
   OralMinoxidilWomenRoute: OralMinoxidilWomenRoute,
+  PortalRoute: PortalRouteWithChildren,
   QualifyRoute: QualifyRoute,
   SafetyRoute: SafetyRoute,
   SemaglutideRoute: SemaglutideRoute,
@@ -1775,6 +1970,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalTermsRoute: LegalTermsRoute,
   LpSlugRoute: LpSlugRoute,
   RecipesSlugRoute: RecipesSlugRoute,
+  StartSlugRoute: StartSlugRoute,
   RecipesIndexRoute: RecipesIndexRoute,
 }
 export const routeTree = rootRouteImport

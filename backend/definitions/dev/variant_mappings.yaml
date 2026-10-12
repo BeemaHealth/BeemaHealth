@@ -1,0 +1,5 @@
+# DEV ONLY fake vendor ids for the dev test product. Staged as variant_mappings_dev.yaml by `load_definitions --dev`.
+variant_mappings:
+  - variant_slug: devtest-none-maintenance
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-DEVTEST-1MG"

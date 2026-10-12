@@ -1,0 +1,1090 @@
+{
+  "slug": "weight_loss",
+  "title": "Weight loss",
+  "product_slug": "weight-loss-glp1",
+  "version_label": "v1",
+  "layout": "default",
+  "start": "motivation",
+  "nodes": {
+    "motivation": {
+      "id": "motivation",
+      "type": "radio",
+      "title": "What's your motivation to lose weight?",
+      "icon": "target",
+      "maps_to": "history.motivation",
+      "options": [
+        {
+          "key": "health",
+          "label": "Improve my overall health"
+        },
+        {
+          "key": "energy",
+          "label": "Have more energy"
+        },
+        {
+          "key": "confidence",
+          "label": "Feel more confident"
+        },
+        {
+          "key": "event",
+          "label": "A special event"
+        },
+        {
+          "key": "doctor",
+          "label": "My doctor recommended it"
+        },
+        {
+          "key": "other",
+          "label": "Something else"
+        }
+      ],
+      "next": "weight_goal"
+    },
+    "weight_goal": {
+      "id": "weight_goal",
+      "type": "radio",
+      "title": "What is your weight loss goal?",
+      "maps_to": "history.weight_goal",
+      "options": [
+        {
+          "key": "lose_10_20",
+          "label": "10 to 20 lbs"
+        },
+        {
+          "key": "lose_20_40",
+          "label": "20 to 40 lbs"
+        },
+        {
+          "key": "lose_40_60",
+          "label": "40 to 60 lbs"
+        },
+        {
+          "key": "lose_60_plus",
+          "label": "More than 60 lbs"
+        },
+        {
+          "key": "not_sure",
+          "label": "I am not sure yet"
+        }
+      ],
+      "next": "goal_closer"
+    },
+    "goal_closer": {
+      "id": "goal_closer",
+      "type": "empty_page",
+      "title": "Your goal is closer than you think",
+      "body": "Steady steps add up. A licensed provider will look at your history and help you build a plan that fits your life.",
+      "next": "prior_programs"
+    },
+    "prior_programs": {
+      "id": "prior_programs",
+      "type": "radio",
+      "title": "How many different weight loss programs have you tried?",
+      "maps_to": "history.prior_programs",
+      "options": [
+        {
+          "key": "none",
+          "label": "None"
+        },
+        {
+          "key": "one_two",
+          "label": "1 to 2"
+        },
+        {
+          "key": "three_five",
+          "label": "3 to 5"
+        },
+        {
+          "key": "six_plus",
+          "label": "6 or more"
+        }
+      ],
+      "next": "family_history"
+    },
+    "family_history": {
+      "id": "family_history",
+      "type": "radio",
+      "title": "Do you have family members who struggle with weight?",
+      "maps_to": "history.family_history",
+      "options": [
+        {
+          "key": "yes",
+          "label": "Yes"
+        },
+        {
+          "key": "no",
+          "label": "No"
+        },
+        {
+          "key": "not_sure",
+          "label": "I am not sure"
+        }
+      ],
+      "next": "genetics"
+    },
+    "genetics": {
+      "id": "genetics",
+      "type": "empty_page",
+      "title": "Genetics play a role",
+      "body": "Weight is shaped by many things, including family history, hormones, and sleep. It is not just willpower.",
+      "next": "sleep"
+    },
+    "sleep": {
+      "id": "sleep",
+      "type": "radio",
+      "title": "How much sleep do you get?",
+      "maps_to": "history.sleep",
+      "options": [
+        {
+          "key": "under_5h",
+          "label": "Under 5 hours"
+        },
+        {
+          "key": "5_to_6h",
+          "label": "5 to 6 hours"
+        },
+        {
+          "key": "7_to_8h",
+          "label": "7 to 8 hours"
+        },
+        {
+          "key": "over_8h",
+          "label": "More than 8 hours"
+        }
+      ],
+      "next": "sleep_note"
+    },
+    "sleep_note": {
+      "id": "sleep_note",
+      "type": "empty_page",
+      "title": "Sleep is not optional",
+      "body": "Sleep affects appetite, energy, and weight. Your provider may talk with you about sleep habits.",
+      "next": "login_nudge"
+    },
+    "login_nudge": {
+      "id": "login_nudge",
+      "type": "empty_page",
+      "title": "Time to create your account",
+      "body": "Your answers are private. Create an account with your email so you can pick up where you left off.",
+      "next": "auth"
+    },
+    "auth": {
+      "id": "auth",
+      "type": "auth",
+      "title": "Create your account",
+      "body": "Enter your email. We will send you a secure code or link. No password needed.",
+      "next": "basics"
+    },
+    "basics": {
+      "id": "basics",
+      "type": "basics",
+      "title": "About you",
+      "body": "Your provider needs these details. We keep them private.",
+      "routes": [
+        {
+          "when": {
+            "ref": "basics.age_years",
+            "lt": 18
+          },
+          "goto": "no_proceed_age"
+        }
+      ],
+      "next": "glp1_history"
+    },
+    "glp1_history": {
+      "id": "glp1_history",
+      "type": "radio",
+      "title": "Are you currently, or have you been in the past, on a GLP-1 medication?",
+      "maps_to": "glp1.history",
+      "options": [
+        {
+          "key": "current",
+          "label": "Yes, I am currently taking one"
+        },
+        {
+          "key": "past",
+          "label": "Yes, I have taken one in the past"
+        },
+        {
+          "key": "never",
+          "label": "No, I have never taken one"
+        }
+      ],
+      "flags": [
+        {
+          "when": {
+            "ref": "glp1_history",
+            "in": [
+              "current",
+              "past"
+            ]
+          },
+          "flag": "glp1_experienced"
+        },
+        {
+          "when": {
+            "ref": "glp1_history",
+            "equals": "never"
+          },
+          "flag": "glp1_new_user"
+        }
+      ],
+      "routes": [
+        {
+          "when": {
+            "ref": "glp1_history",
+            "equals": "never"
+          },
+          "goto": "bmi_new"
+        }
+      ],
+      "next": "current_med"
+    },
+    "current_med": {
+      "id": "current_med",
+      "type": "radio",
+      "title": "Which medication are you on or were you on?",
+      "maps_to": "glp1.current_medication",
+      "options": [
+        {
+          "key": "semaglutide",
+          "label": "Semaglutide"
+        },
+        {
+          "key": "tirzepatide",
+          "label": "Tirzepatide"
+        }
+      ],
+      "next": "current_dose"
+    },
+    "current_dose": {
+      "id": "current_dose",
+      "type": "radio",
+      "title": "What is your most recent dose?",
+      "maps_to": "glp1.current_dose",
+      "options": [
+        {
+          "key": "sema_0_25mg",
+          "label": "0.25 mg",
+          "when": {
+            "ref": "current_med",
+            "equals": "semaglutide"
+          }
+        },
+        {
+          "key": "sema_0_5mg",
+          "label": "0.5 mg",
+          "when": {
+            "ref": "current_med",
+            "equals": "semaglutide"
+          }
+        },
+        {
+          "key": "sema_1_0mg",
+          "label": "1 mg",
+          "when": {
+            "ref": "current_med",
+            "equals": "semaglutide"
+          }
+        },
+        {
+          "key": "sema_1_7mg",
+          "label": "1.7 mg",
+          "when": {
+            "ref": "current_med",
+            "equals": "semaglutide"
+          }
+        },
+        {
+          "key": "sema_2_4mg",
+          "label": "2.4 mg",
+          "when": {
+            "ref": "current_med",
+            "equals": "semaglutide"
+          }
+        },
+        {
+          "key": "tirz_2_5mg",
+          "label": "2.5 mg",
+          "when": {
+            "ref": "current_med",
+            "equals": "tirzepatide"
+          }
+        },
+        {
+          "key": "tirz_5mg",
+          "label": "5 mg",
+          "when": {
+            "ref": "current_med",
+            "equals": "tirzepatide"
+          }
+        },
+        {
+          "key": "tirz_7_5mg",
+          "label": "7.5 mg",
+          "when": {
+            "ref": "current_med",
+            "equals": "tirzepatide"
+          }
+        },
+        {
+          "key": "tirz_10mg",
+          "label": "10 mg",
+          "when": {
+            "ref": "current_med",
+            "equals": "tirzepatide"
+          }
+        },
+        {
+          "key": "tirz_12_5mg",
+          "label": "12.5 mg",
+          "when": {
+            "ref": "current_med",
+            "equals": "tirzepatide"
+          }
+        },
+        {
+          "key": "tirz_15mg",
+          "label": "15 mg",
+          "when": {
+            "ref": "current_med",
+            "equals": "tirzepatide"
+          }
+        }
+      ],
+      "next": "dose_preference"
+    },
+    "dose_preference": {
+      "id": "dose_preference",
+      "type": "radio",
+      "title": "Do you want to stay on this dose or go to a lower one?",
+      "maps_to": "glp1.dose_preference",
+      "options": [
+        {
+          "key": "same",
+          "label": "Stay on my current dose"
+        },
+        {
+          "key": "down",
+          "label": "Go to a lower dose"
+        }
+      ],
+      "routes": [
+        {
+          "when": {
+            "ref": "dose_preference",
+            "equals": "down"
+          },
+          "goto": "dose_down_detail"
+        }
+      ],
+      "next": "last_injection"
+    },
+    "dose_down_detail": {
+      "id": "dose_down_detail",
+      "type": "textarea",
+      "title": "Tell us why you want a lower dose",
+      "maps_to": "glp1.dose_down_reason",
+      "max_length": 1000,
+      "next": "last_injection"
+    },
+    "last_injection": {
+      "id": "last_injection",
+      "type": "radio",
+      "title": "When was your last injection?",
+      "maps_to": "glp1.last_injection",
+      "options": [
+        {
+          "key": "within_week",
+          "label": "Within the past week"
+        },
+        {
+          "key": "one_to_two_weeks",
+          "label": "1 to 2 weeks ago"
+        },
+        {
+          "key": "two_to_four_weeks",
+          "label": "2 to 4 weeks ago"
+        },
+        {
+          "key": "over_4_weeks",
+          "label": "More than 4 weeks ago"
+        }
+      ],
+      "flags": [
+        {
+          "when": {
+            "ref": "last_injection",
+            "equals": "over_4_weeks"
+          },
+          "flag": "glp1_gap_over_4_weeks"
+        }
+      ],
+      "next": "glp1_photo"
+    },
+    "glp1_photo": {
+      "id": "glp1_photo",
+      "type": "radio",
+      "title": "Do you have a photo of your current medication?",
+      "maps_to": "glp1.has_photo",
+      "body": "A photo of the box or vial helps your provider confirm your dose.",
+      "options": [
+        {
+          "key": "yes",
+          "label": "Yes"
+        },
+        {
+          "key": "no",
+          "label": "No"
+        }
+      ],
+      "next": "side_effects"
+    },
+    "side_effects": {
+      "id": "side_effects",
+      "type": "radio",
+      "title": "Are you currently having any side effects?",
+      "maps_to": "glp1.side_effects",
+      "options": [
+        {
+          "key": "yes",
+          "label": "Yes"
+        },
+        {
+          "key": "no",
+          "label": "No"
+        }
+      ],
+      "flags": [
+        {
+          "when": {
+            "ref": "side_effects",
+            "equals": "yes"
+          },
+          "flag": "current_side_effects"
+        }
+      ],
+      "routes": [
+        {
+          "when": {
+            "ref": "side_effects",
+            "equals": "yes"
+          },
+          "goto": "side_effects_detail"
+        }
+      ],
+      "next": "bmi_current"
+    },
+    "side_effects_detail": {
+      "id": "side_effects_detail",
+      "type": "textarea",
+      "title": "Describe your side effects",
+      "maps_to": "glp1.side_effects_detail",
+      "max_length": 1000,
+      "next": "bmi_current"
+    },
+    "bmi_current": {
+      "id": "bmi_current",
+      "type": "bmi",
+      "title": "Your height and weight",
+      "body": "Use your current weight.",
+      "min_bmi": 20,
+      "below_min_goto": "no_proceed_bmi",
+      "next": "bmi_consent"
+    },
+    "bmi_new": {
+      "id": "bmi_new",
+      "type": "bmi",
+      "title": "Your height and weight",
+      "body": "Use your current weight.",
+      "min_bmi": 25,
+      "below_min_goto": "no_proceed_bmi",
+      "next": "bmi_consent"
+    },
+    "bmi_consent": {
+      "id": "bmi_consent",
+      "type": "safety_consent",
+      "title": "Eligibility is based on BMI",
+      "consent_kind": "weight_loss",
+      "statement": "I understand that eligibility for this program is based on my BMI, and that my provider makes the final decision about treatment.",
+      "next": "drug_choice"
+    },
+    "drug_choice": {
+      "id": "drug_choice",
+      "type": "radio",
+      "title": "Semaglutide or tirzepatide?",
+      "body": "Both are prescription medications. Your provider decides whether either is right for you.",
+      "options": [
+        {
+          "key": "semaglutide",
+          "label": "Semaglutide",
+          "description": "A once weekly injection that works on the GLP-1 hormone."
+        },
+        {
+          "key": "tirzepatide",
+          "label": "Tirzepatide",
+          "description": "A once weekly injection that works on the GLP-1 and GIP hormones."
+        }
+      ],
+      "next": "zip_router"
+    },
+    "zip_router": {
+      "id": "zip_router",
+      "type": "zip_router",
+      "drug_ref": "drug_choice",
+      "state_ref": "basics.state",
+      "unavailable_goto": "no_proceed_state",
+      "routes": [
+        {
+          "when": {
+            "ref": "drug_choice",
+            "equals": "tirzepatide"
+          },
+          "goto": "additive_tirzepatide"
+        }
+      ],
+      "next": "additive_semaglutide"
+    },
+    "additive_semaglutide": {
+      "id": "additive_semaglutide",
+      "type": "radio",
+      "title": "Add an ingredient to your Semaglutide?",
+      "body": "Your provider confirms what is appropriate for you.",
+      "options": [
+        {
+          "key": "b12",
+          "label": "Vitamin B12"
+        },
+        {
+          "key": "glycine",
+          "label": "Glycine"
+        }
+      ],
+      "next": "phase_router"
+    },
+    "additive_tirzepatide": {
+      "id": "additive_tirzepatide",
+      "type": "radio",
+      "title": "Add an ingredient to your Tirzepatide?",
+      "body": "Your provider confirms what is appropriate for you.",
+      "options": [
+        {
+          "key": "b12",
+          "label": "Vitamin B12"
+        },
+        {
+          "key": "glycine",
+          "label": "Glycine"
+        }
+      ],
+      "next": "phase_router"
+    },
+    "phase_router": {
+      "id": "phase_router",
+      "type": "answer_router",
+      "rules": [
+        {
+          "when": {
+            "all": [
+              {
+                "ref": "glp1_history",
+                "in": [
+                  "current",
+                  "past"
+                ]
+              },
+              {
+                "ref": "dose_preference",
+                "equals": "same"
+              }
+            ]
+          },
+          "value": "maintenance"
+        }
+      ],
+      "default": "titration",
+      "next": "checkout"
+    },
+    "checkout": {
+      "id": "checkout",
+      "type": "checkout",
+      "title": "Choose your plan",
+      "body": "You pay now. Your provider reviews your answers after checkout, and prescribing is never guaranteed.",
+      "drug_ref": "drug_choice",
+      "additive_refs": [
+        "additive_semaglutide",
+        "additive_tirzepatide"
+      ],
+      "phase_ref": "phase_router.value",
+      "new_user_when": {
+        "ref": "glp1_history",
+        "equals": "never"
+      },
+      "new_user_only_plans": [
+        "tirzepatide-starter-pack"
+      ],
+      "variants": {
+        "semaglutide.b12.titration": {
+          "plan_slugs": [
+            "semaglutide-monthly",
+            "semaglutide-3month",
+            "semaglutide-6month",
+            "semaglutide-12month"
+          ]
+        },
+        "semaglutide.b12.maintenance": {
+          "plan_slugs": [
+            "semaglutide-monthly",
+            "semaglutide-3month",
+            "semaglutide-6month",
+            "semaglutide-12month"
+          ]
+        },
+        "semaglutide.glycine.titration": {
+          "plan_slugs": [
+            "semaglutide-monthly",
+            "semaglutide-3month",
+            "semaglutide-6month",
+            "semaglutide-12month"
+          ]
+        },
+        "semaglutide.glycine.maintenance": {
+          "plan_slugs": [
+            "semaglutide-monthly",
+            "semaglutide-3month",
+            "semaglutide-6month",
+            "semaglutide-12month"
+          ]
+        },
+        "tirzepatide.b12.titration": {
+          "plan_slugs": [
+            "tirzepatide-starter-pack",
+            "tirzepatide-monthly",
+            "tirzepatide-3month",
+            "tirzepatide-6month",
+            "tirzepatide-12month"
+          ]
+        },
+        "tirzepatide.b12.maintenance": {
+          "plan_slugs": [
+            "tirzepatide-monthly",
+            "tirzepatide-3month",
+            "tirzepatide-6month",
+            "tirzepatide-12month"
+          ]
+        },
+        "tirzepatide.glycine.titration": {
+          "plan_slugs": [
+            "tirzepatide-starter-pack",
+            "tirzepatide-monthly",
+            "tirzepatide-3month",
+            "tirzepatide-6month",
+            "tirzepatide-12month"
+          ]
+        },
+        "tirzepatide.glycine.maintenance": {
+          "plan_slugs": [
+            "tirzepatide-monthly",
+            "tirzepatide-3month",
+            "tirzepatide-6month",
+            "tirzepatide-12month"
+          ]
+        }
+      },
+      "next": "medical_intro"
+    },
+    "medical_intro": {
+      "id": "medical_intro",
+      "type": "empty_page",
+      "title": "One more section",
+      "body": "You must finish your medical questionnaire to the end for your prescription.",
+      "next": "conditions"
+    },
+    "conditions": {
+      "id": "conditions",
+      "type": "multi_select",
+      "title": "Do any of these apply to you?",
+      "maps_to": "medical.conditions",
+      "options": [
+        {
+          "key": "pancreatitis",
+          "label": "Pancreatitis"
+        },
+        {
+          "key": "thyroid_cancer_men2",
+          "label": "Medullary thyroid cancer or MEN2 (personal or family history)"
+        },
+        {
+          "key": "gallbladder",
+          "label": "Gallbladder disease"
+        },
+        {
+          "key": "kidney_disease",
+          "label": "Kidney disease"
+        },
+        {
+          "key": "type1_diabetes",
+          "label": "Type 1 diabetes"
+        },
+        {
+          "key": "eating_disorder",
+          "label": "Eating disorder"
+        },
+        {
+          "key": "high_blood_pressure",
+          "label": "High blood pressure"
+        },
+        {
+          "key": "none",
+          "label": "None of these",
+          "exclusive": true
+        }
+      ],
+      "flags": [
+        {
+          "when": {
+            "ref": "conditions",
+            "contains": "pancreatitis"
+          },
+          "flag": "pancreatitis"
+        },
+        {
+          "when": {
+            "ref": "conditions",
+            "contains": "thyroid_cancer_men2"
+          },
+          "flag": "thyroid_cancer_men2"
+        },
+        {
+          "when": {
+            "ref": "conditions",
+            "contains": "gallbladder"
+          },
+          "flag": "gallbladder"
+        },
+        {
+          "when": {
+            "ref": "conditions",
+            "contains": "type1_diabetes"
+          },
+          "flag": "type1_diabetes"
+        },
+        {
+          "when": {
+            "ref": "conditions",
+            "contains": "eating_disorder"
+          },
+          "flag": "eating_disorder"
+        }
+      ],
+      "routes": [
+        {
+          "when": {
+            "ref": "conditions",
+            "contains": "gallbladder"
+          },
+          "goto": "gallbladder_consent"
+        }
+      ],
+      "next": "conditions_detail"
+    },
+    "gallbladder_consent": {
+      "id": "gallbladder_consent",
+      "type": "safety_consent",
+      "title": "Gallbladder history",
+      "consent_kind": "gallbladder",
+      "statement": "I understand that GLP-1 medications can affect the gallbladder and that I should tell my provider about any gallbladder symptoms.",
+      "next": "conditions_detail"
+    },
+    "conditions_detail": {
+      "id": "conditions_detail",
+      "type": "textarea",
+      "title": "Anything else about these conditions?",
+      "optional": true,
+      "maps_to": "medical.conditions_detail",
+      "max_length": 1000,
+      "next": "gastric_bypass"
+    },
+    "gastric_bypass": {
+      "id": "gastric_bypass",
+      "type": "radio",
+      "title": "Have you had gastric bypass or weight loss surgery in the past 6 months?",
+      "maps_to": "medical.gastric_bypass_6mo",
+      "options": [
+        {
+          "key": "yes",
+          "label": "Yes"
+        },
+        {
+          "key": "no",
+          "label": "No"
+        }
+      ],
+      "routes": [
+        {
+          "when": {
+            "ref": "gastric_bypass",
+            "equals": "yes"
+          },
+          "goto": "no_proceed_bypass"
+        }
+      ],
+      "next": "allergy_confirm"
+    },
+    "allergy_confirm": {
+      "id": "allergy_confirm",
+      "type": "multi_select",
+      "title": "Do you have any allergies?",
+      "maps_to": "medical.allergy_categories",
+      "options": [
+        {
+          "key": "drug_allergy",
+          "label": "Medication allergy"
+        },
+        {
+          "key": "food_allergy",
+          "label": "Food allergy"
+        },
+        {
+          "key": "latex",
+          "label": "Latex"
+        },
+        {
+          "key": "other",
+          "label": "Other"
+        },
+        {
+          "key": "none",
+          "label": "No known allergies",
+          "exclusive": true
+        }
+      ],
+      "next": "medications"
+    },
+    "medications": {
+      "id": "medications",
+      "type": "multi_select",
+      "title": "Are you taking any of these?",
+      "maps_to": "medical.medication_categories",
+      "options": [
+        {
+          "key": "diabetes_medication",
+          "label": "Diabetes medication or insulin"
+        },
+        {
+          "key": "blood_thinners",
+          "label": "Blood thinners"
+        },
+        {
+          "key": "thyroid_medication",
+          "label": "Thyroid medication"
+        },
+        {
+          "key": "hormonal",
+          "label": "Hormonal birth control or hormone therapy"
+        },
+        {
+          "key": "other",
+          "label": "Other prescription medication"
+        },
+        {
+          "key": "none",
+          "label": "None of these",
+          "exclusive": true
+        }
+      ],
+      "next": "gender_router"
+    },
+    "gender_router": {
+      "id": "gender_router",
+      "type": "answer_router",
+      "routes": [
+        {
+          "when": {
+            "ref": "basics.sex_at_birth",
+            "equals": "female"
+          },
+          "goto": "pregnancy"
+        }
+      ],
+      "next": "add_medication"
+    },
+    "pregnancy": {
+      "id": "pregnancy",
+      "type": "radio",
+      "title": "Are you pregnant, breastfeeding, or planning to become pregnant?",
+      "maps_to": "medical.pregnancy_status",
+      "options": [
+        {
+          "key": "no",
+          "label": "No"
+        },
+        {
+          "key": "pregnant",
+          "label": "I am pregnant"
+        },
+        {
+          "key": "breastfeeding",
+          "label": "I am breastfeeding"
+        },
+        {
+          "key": "planning",
+          "label": "I am planning to become pregnant"
+        }
+      ],
+      "routes": [
+        {
+          "when": {
+            "ref": "pregnancy",
+            "in": [
+              "pregnant",
+              "breastfeeding",
+              "planning"
+            ]
+          },
+          "goto": "no_proceed_pregnancy"
+        }
+      ],
+      "next": "pregnancy_consent"
+    },
+    "pregnancy_consent": {
+      "id": "pregnancy_consent",
+      "type": "safety_consent",
+      "title": "Pregnancy and GLP-1 medication",
+      "consent_kind": "pregnancy",
+      "statement": "I understand that these medications should not be used during pregnancy or while breastfeeding, and I will tell my provider right away if my situation changes.",
+      "next": "add_medication"
+    },
+    "add_medication": {
+      "id": "add_medication",
+      "type": "add_medication",
+      "title": "List your current medications",
+      "body": "Include prescriptions, over the counter medicines, and supplements.",
+      "maps_to": "medical.medications",
+      "next": "allergies"
+    },
+    "allergies": {
+      "id": "allergies",
+      "type": "allergies",
+      "title": "List your allergies",
+      "maps_to": "medical.allergies",
+      "next": "med_conditions"
+    },
+    "med_conditions": {
+      "id": "med_conditions",
+      "type": "med_conditions",
+      "title": "List your medical conditions",
+      "maps_to": "medical.condition_details",
+      "routes": [
+        {
+          "when": {
+            "ref": "glp1_history",
+            "in": [
+              "current",
+              "past"
+            ]
+          },
+          "goto": "glp1_proof"
+        }
+      ],
+      "next": "id_verification"
+    },
+    "glp1_proof": {
+      "id": "glp1_proof",
+      "type": "file_input",
+      "title": "Upload a photo of your current medication",
+      "file_kind": "glp1_proof",
+      "max_files": 3,
+      "body": "A clear photo of the box or vial showing the label. If you do not have one, you can skip this step.",
+      "optional_when": {
+        "ref": "glp1_photo",
+        "equals": "no"
+      },
+      "next": "id_verification"
+    },
+    "id_verification": {
+      "id": "id_verification",
+      "type": "id_photo",
+      "title": "Verify your identity",
+      "file_kind": "id_photo",
+      "max_files": 2,
+      "body": "Upload a clear photo of a government issued photo ID.",
+      "next": "extra_notes"
+    },
+    "extra_notes": {
+      "id": "extra_notes",
+      "type": "textarea",
+      "title": "Anything else your provider should know?",
+      "optional": true,
+      "maps_to": "medical.extra_notes",
+      "max_length": 2000,
+      "next": "glp1_consent"
+    },
+    "glp1_consent": {
+      "id": "glp1_consent",
+      "type": "safety_consent",
+      "title": "GLP-1 medication consent",
+      "consent_kind": "glp1",
+      "statement": "I understand the benefits, risks, and possible side effects of GLP-1 medication, and I have had the chance to ask questions.",
+      "next": "truthfulness_consent"
+    },
+    "truthfulness_consent": {
+      "id": "truthfulness_consent",
+      "type": "safety_consent",
+      "title": "Your answers",
+      "consent_kind": "truthfulness",
+      "statement": "I confirm that my answers are complete and truthful to the best of my knowledge.",
+      "next": "weight_loss_consent"
+    },
+    "weight_loss_consent": {
+      "id": "weight_loss_consent",
+      "type": "safety_consent",
+      "title": "Weight loss program consent",
+      "consent_kind": "weight_loss",
+      "statement": "I understand that medication is one part of a weight loss plan and that results vary from person to person.",
+      "next": "thank_you"
+    },
+    "thank_you": {
+      "id": "thank_you",
+      "type": "thank_you",
+      "title": "You are all set",
+      "body": "Your provider will review your answers. We will let you know when there is an update."
+    },
+    "no_proceed_age": {
+      "id": "no_proceed_age",
+      "type": "no_proceed",
+      "reason": "under_18",
+      "title": "You must be 18 or older",
+      "body": "This program is only available to adults."
+    },
+    "no_proceed_bmi": {
+      "id": "no_proceed_bmi",
+      "type": "no_proceed",
+      "reason": "bmi_below_minimum",
+      "title": "This program is not a fit right now",
+      "body": "Based on the height and weight you entered, you do not meet the BMI requirement for this program."
+    },
+    "no_proceed_state": {
+      "id": "no_proceed_state",
+      "type": "no_proceed",
+      "reason": "state_unavailable",
+      "title": "Not available in your state yet",
+      "body": "We do not offer this medication in your state yet. Leave your email and we will let you know when that changes.",
+      "collect_email": true
+    },
+    "no_proceed_bypass": {
+      "id": "no_proceed_bypass",
+      "type": "no_proceed",
+      "reason": "recent_gastric_bypass",
+      "title": "We cannot continue",
+      "body": "This program is not appropriate within 6 months of weight loss surgery. Please talk with your surgeon."
+    },
+    "no_proceed_pregnancy": {
+      "id": "no_proceed_pregnancy",
+      "type": "no_proceed",
+      "reason": "pregnancy_or_breastfeeding",
+      "title": "We cannot continue",
+      "body": "This program is not appropriate during pregnancy, breastfeeding, or while planning a pregnancy."
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "slug": "default",
+  "name": "Default questionnaire shell",
+  "config": {
+    "shell": {
+      "max_width": "640px",
+      "logo_slot": "wordmark",
+      "show_header": true,
+      "show_footer": true
+    },
+    "progress": {
+      "style": "bar",
+      "show_percent": false,
+      "fill_token": "primary",
+      "track_token": "muted"
+    },
+    "colors": {
+      "background": "background",
+      "surface": "card",
+      "text": "foreground",
+      "border": "border",
+      "primary": "primary",
+      "accent": "accent",
+      "success": "success",
+      "warning": "warning",
+      "error": "destructive"
+    },
+    "back_button": {
+      "enabled": true,
+      "hidden_on_node_types": [
+        "auth",
+        "thank_you"
+      ]
+    },
+    "header": {
+      "logo_slot": "wordmark",
+      "show_save_and_exit": false
+    },
+    "footer": {
+      "legal_text": "Beema Health is a telehealth service. A licensed provider decides whether treatment is right for you, and prescriptions are never guaranteed.",
+      "privacy_text": "Your information is private and protected.",
+      "links": [
+        {
+          "label": "Privacy",
+          "href": "/privacy"
+        },
+        {
+          "label": "Terms",
+          "href": "/terms"
+        },
+        {
+          "label": "Telehealth consent",
+          "href": "/telehealth-consent"
+        }
+      ]
+    },
+    "copy": {
+      "continue": "Continue",
+      "back": "Back",
+      "saving": "Saving",
+      "error_generic": "Something went wrong. Please try again.",
+      "upload_hint": "JPG, PNG, WebP, HEIC or PDF, up to 10 MB."
+    },
+    "node_types": {
+      "empty_page": {
+        "align": "center",
+        "button_label": "Continue"
+      },
+      "radio": {
+        "auto_advance": false
+      },
+      "safety_consent": {
+        "button_label": "I agree"
+      },
+      "checkout": {
+        "max_width": "960px",
+        "button_label": "Continue to payment"
+      },
+      "no_proceed": {
+        "align": "center",
+        "icon": "info"
+      },
+      "thank_you": {
+        "align": "center",
+        "icon": "check"
+      }
+    }
+  }
+}

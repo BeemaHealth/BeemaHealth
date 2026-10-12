@@ -1,0 +1,196 @@
+products:
+  - slug: weight-loss-glp1
+    name: Weight Loss (GLP-1)
+    category: weight_loss
+    is_active: true
+    questionnaire_slug: weight_loss
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
+
+  - slug: weight-loss-semaglutide
+    name: Semaglutide
+    category: weight_loss
+    is_active: true
+    questionnaire_slug: weight_loss_semaglutide
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
+
+  - slug: weight-loss-tirzepatide
+    name: Tirzepatide
+    category: weight_loss
+    is_active: true
+    questionnaire_slug: weight_loss_tirzepatide
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
+
+plans:
+  # Semaglutide plans
+  - slug: semaglutide-monthly
+    product_slug: weight-loss-semaglutide
+    name: Monthly
+    kind: standard
+    term_months: 1
+    billing_commitment: renewing_monthly
+    bill_interval_months: 1
+    ship_interval_months: 1
+    supply_days_per_shipment: 30
+    allows_coupons: true
+    stackable_with_term_discount: false
+    is_active: true
+    renews_at_term_end_default: true
+    prices:
+      - amount_cents: 19900
+        effective_from: "2026-01-01T00:00:00Z"
+
+  - slug: semaglutide-3month
+    product_slug: weight-loss-semaglutide
+    name: 3 months
+    kind: standard
+    term_months: 3
+    billing_commitment: prepaid_term
+    bill_interval_months: 3
+    ship_interval_months: 1
+    supply_days_per_shipment: 30
+    allows_coupons: true
+    stackable_with_term_discount: true
+    is_active: true
+    renews_at_term_end_default: true
+    prices:
+      - amount_cents: 52200
+        effective_from: "2026-01-01T00:00:00Z"
+
+  - slug: semaglutide-6month
+    product_slug: weight-loss-semaglutide
+    name: 6 months
+    kind: standard
+    term_months: 6
+    billing_commitment: prepaid_term
+    bill_interval_months: 6
+    ship_interval_months: 1
+    supply_days_per_shipment: 30
+    allows_coupons: true
+    stackable_with_term_discount: true
+    is_active: true
+    renews_at_term_end_default: true
+    prices:
+      - amount_cents: 99400
+        effective_from: "2026-01-01T00:00:00Z"
+
+  - slug: semaglutide-12month
+    product_slug: weight-loss-semaglutide
+    name: Annual
+    kind: standard
+    term_months: 12
+    billing_commitment: prepaid_term
+    bill_interval_months: 12
+    ship_interval_months: 1
+    supply_days_per_shipment: 30
+    allows_coupons: true
+    stackable_with_term_discount: true
+    is_active: true
+    renews_at_term_end_default: true
+    prices:
+      - amount_cents: 186900
+        effective_from: "2026-01-01T00:00:00Z"
+
+  # Tirzepatide plans
+  - slug: tirzepatide-monthly
+    product_slug: weight-loss-tirzepatide
+    name: Monthly
+    kind: standard
+    term_months: 1
+    billing_commitment: renewing_monthly
+    bill_interval_months: 1
+    ship_interval_months: 1
+    supply_days_per_shipment: 30
+    allows_coupons: true
+    stackable_with_term_discount: false
+    is_active: true
+    renews_at_term_end_default: true
+    prices:
+      - amount_cents: 29700
+        effective_from: "2026-01-01T00:00:00Z"
+
+  - slug: tirzepatide-starter-pack
+    product_slug: weight-loss-tirzepatide
+    name: 3-month starter pack
+    kind: starter_pack
+    term_months: 3
+    billing_commitment: prepaid_term
+    bill_interval_months: 3
+    ship_interval_months: 1
+    supply_days_per_shipment: 30
+    allows_coupons: false
+    stackable_with_term_discount: false
+    is_active: true
+    renews_at_term_end_default: true
+    prices:
+      - amount_cents: 59700
+        effective_from: "2026-01-01T00:00:00Z"
+    phases:
+      - sequence: 1
+        start_month: 0
+        variant_slug: tirzepatide-none-titration-2-5mg
+        dose_interval_days: 30
+      - sequence: 2
+        start_month: 1
+        variant_slug: tirzepatide-none-titration-5mg
+        dose_interval_days: 30
+      - sequence: 3
+        start_month: 2
+        variant_slug: tirzepatide-none-titration-7-5mg
+        dose_interval_days: 30
+
+  - slug: tirzepatide-3month
+    product_slug: weight-loss-tirzepatide
+    name: 3 months
+    kind: standard
+    term_months: 3
+    billing_commitment: prepaid_term
+    bill_interval_months: 3
+    ship_interval_months: 1
+    supply_days_per_shipment: 30
+    allows_coupons: true
+    stackable_with_term_discount: true
+    is_active: true
+    renews_at_term_end_default: true
+    prices:
+      - amount_cents: 79100
+        effective_from: "2026-01-01T00:00:00Z"
+
+  - slug: tirzepatide-6month
+    product_slug: weight-loss-tirzepatide
+    name: 6 months
+    kind: standard
+    term_months: 6
+    billing_commitment: prepaid_term
+    bill_interval_months: 6
+    ship_interval_months: 1
+    supply_days_per_shipment: 30
+    allows_coupons: true
+    stackable_with_term_discount: true
+    is_active: true
+    renews_at_term_end_default: true
+    prices:
+      - amount_cents: 149700
+        effective_from: "2026-01-01T00:00:00Z"
+
+  - slug: tirzepatide-12month
+    product_slug: weight-loss-tirzepatide
+    name: Annual
+    kind: standard
+    term_months: 12
+    billing_commitment: prepaid_term
+    bill_interval_months: 12
+    ship_interval_months: 1
+    supply_days_per_shipment: 30
+    allows_coupons: true
+    stackable_with_term_discount: true
+    is_active: true
+    renews_at_term_end_default: true
+    prices:
+      - amount_cents: 278800
+        effective_from: "2026-01-01T00:00:00Z"

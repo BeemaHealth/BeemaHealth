@@ -1,0 +1,15 @@
+# DEV ONLY. Loaded exclusively by `load_definitions --dev` and only when DEBUG is true.
+organizations:
+  - slug: beluga
+    kind: network
+    name: Beluga Health
+    integration_adapter: beluga
+
+rules:
+  - name: Dev test visit (Beluga, all states)
+    product_slug: dev-test-visit
+    network_slug: beluga
+    priority: 100
+    states_mode: all
+    states: []
+    fill_type: any

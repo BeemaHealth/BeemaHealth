@@ -1,0 +1,61 @@
+# Development variant mappings (fake placeholder medIds)
+# Only loaded when load_definitions is run with --dev flag
+# In production, mappings are managed via admin or bulk import from Beluga catalog
+variant_mappings:
+  # Semaglutide variants - fake medIds for local testing
+  - variant_slug: semaglutide-none-titration
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-SEMA-TITRATION-0.2MG"
+
+  - variant_slug: semaglutide-none-maintenance
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-SEMA-MAINTENANCE-0.25MG"
+
+  - variant_slug: semaglutide-b12-titration
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-SEMA-B12-TITRATION-0.2MG"
+
+  - variant_slug: semaglutide-b12-maintenance
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-SEMA-B12-MAINTENANCE-0.25MG"
+
+  - variant_slug: semaglutide-glycine-titration
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-SEMA-GLYCINE-TITRATION-0.2MG"
+
+  - variant_slug: semaglutide-glycine-maintenance
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-SEMA-GLYCINE-MAINTENANCE-0.25MG"
+
+  # Tirzepatide variants - fake medIds for local testing
+  - variant_slug: tirzepatide-none-titration-2-5mg
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-TIRZ-TITRATION-2.5MG"
+
+  - variant_slug: tirzepatide-none-titration-5mg
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-TIRZ-TITRATION-5MG"
+
+  - variant_slug: tirzepatide-none-titration-7-5mg
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-TIRZ-TITRATION-7.5MG"
+
+  - variant_slug: tirzepatide-none-maintenance
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-TIRZ-MAINTENANCE-5MG"
+
+  - variant_slug: tirzepatide-b12-titration
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-TIRZ-B12-TITRATION-2.5MG"
+
+  - variant_slug: tirzepatide-b12-maintenance
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-TIRZ-B12-MAINTENANCE-5MG"
+
+  - variant_slug: tirzepatide-glycine-titration
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-TIRZ-GLYCINE-TITRATION-2.5MG"
+
+  - variant_slug: tirzepatide-glycine-maintenance
+    organization_slug: beluga
+    vendor_sku: "DEV-FAKE-TIRZ-GLYCINE-MAINTENANCE-5MG"

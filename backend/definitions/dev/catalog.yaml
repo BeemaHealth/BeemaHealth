@@ -1,0 +1,53 @@
+# DEV ONLY. Loaded exclusively by `load_definitions --dev` and only when DEBUG is true.
+products:
+  - slug: dev-test-visit
+    name: Dev test visit
+    category: other
+    is_active: true
+    questionnaire_slug: quick_test
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
+
+variants:
+  - slug: devtest-none-maintenance
+    product_slug: dev-test-visit
+    drug: devtest
+    additive: none
+    phase: maintenance
+    form: test
+    strength_mg: 1
+    is_active: true
+
+plans:
+  - slug: dev-test-monthly
+    product_slug: dev-test-visit
+    variant_slug: devtest-none-maintenance
+    name: Dev test monthly
+    kind: standard
+    term_months: 1
+    billing_commitment: renewing_monthly
+    bill_interval_months: 1
+    ship_interval_months: 1
+    supply_days_per_shipment: 30
+    allows_coupons: true
+    is_active: true
+    prices:
+      - amount_cents: 100
+        effective_from: "2026-01-01T00:00:00Z"
+
+  - slug: dev-test-3month
+    product_slug: dev-test-visit
+    variant_slug: devtest-none-maintenance
+    name: Dev test 3 months
+    kind: standard
+    term_months: 3
+    billing_commitment: prepaid_term
+    bill_interval_months: 3
+    ship_interval_months: 3
+    supply_days_per_shipment: 90
+    allows_coupons: true
+    is_active: true
+    prices:
+      - amount_cents: 250
+        effective_from: "2026-01-01T00:00:00Z"

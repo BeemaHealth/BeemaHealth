@@ -1,0 +1,252 @@
+{
+  "slug": "quick_test",
+  "title": "Quick test (dev only)",
+  "product_slug": "dev-test-visit",
+  "version_label": "v2",
+  "layout": "default",
+  "start": "goal",
+  "nodes": {
+    "goal": {
+      "id": "goal",
+      "type": "radio",
+      "title": "What is your main goal?",
+      "maps_to": "history.goal",
+      "options": [
+        {
+          "key": "health",
+          "label": "Better health"
+        },
+        {
+          "key": "energy",
+          "label": "More energy"
+        },
+        {
+          "key": "other",
+          "label": "Something else"
+        }
+      ],
+      "next": "activity"
+    },
+    "activity": {
+      "id": "activity",
+      "type": "radio",
+      "title": "How active are you?",
+      "maps_to": "history.activity",
+      "options": [
+        {
+          "key": "low",
+          "label": "Not very"
+        },
+        {
+          "key": "medium",
+          "label": "Somewhat"
+        },
+        {
+          "key": "high",
+          "label": "Very"
+        }
+      ],
+      "next": "sleep"
+    },
+    "sleep": {
+      "id": "sleep",
+      "type": "radio",
+      "title": "How much sleep do you get?",
+      "maps_to": "history.sleep",
+      "options": [
+        {
+          "key": "under_6h",
+          "label": "Under 6 hours"
+        },
+        {
+          "key": "6_to_8h",
+          "label": "6 to 8 hours"
+        },
+        {
+          "key": "over_8h",
+          "label": "Over 8 hours"
+        }
+      ],
+      "next": "login_nudge"
+    },
+    "login_nudge": {
+      "id": "login_nudge",
+      "type": "empty_page",
+      "title": "Time to create your account",
+      "body": "Dev test flow. Create an account to continue.",
+      "next": "auth"
+    },
+    "auth": {
+      "id": "auth",
+      "type": "auth",
+      "title": "Create your account",
+      "body": "Enter your email. We will send you a secure code or link.",
+      "next": "basics"
+    },
+    "basics": {
+      "id": "basics",
+      "type": "basics",
+      "title": "About you",
+      "routes": [
+        {
+          "when": {
+            "ref": "basics.age_years",
+            "lt": 18
+          },
+          "goto": "no_proceed_age"
+        }
+      ],
+      "next": "visit_type",
+      "collect_name": true,
+      "collect_address": true
+    },
+    "visit_type": {
+      "id": "visit_type",
+      "type": "radio",
+      "title": "Choose a visit type",
+      "maps_to": "visit.type",
+      "options": [
+        {
+          "key": "devtest",
+          "label": "Dev test visit"
+        }
+      ],
+      "next": "visit_option"
+    },
+    "visit_option": {
+      "id": "visit_option",
+      "type": "radio",
+      "title": "Choose an option",
+      "maps_to": "visit.option",
+      "options": [
+        {
+          "key": "none",
+          "label": "Standard"
+        }
+      ],
+      "next": "phase_router"
+    },
+    "phase_router": {
+      "id": "phase_router",
+      "type": "answer_router",
+      "rules": [],
+      "default": "maintenance",
+      "next": "terms_consent"
+    },
+    "safety": {
+      "id": "safety",
+      "type": "safety_consent",
+      "title": "Before you pay",
+      "consent_kind": "weight_loss",
+      "statement": "I understand this is a test flow and my provider makes the final decision about treatment.",
+      "next": "checkout"
+    },
+    "checkout": {
+      "id": "checkout",
+      "type": "checkout",
+      "title": "Choose your plan",
+      "body": "Dev test pricing. Use a Stripe test card.",
+      "drug_ref": "visit_type",
+      "additive_refs": [
+        "visit_option"
+      ],
+      "phase_ref": "phase_router.value",
+      "variants": {
+        "devtest.none.maintenance": {
+          "plan_slugs": [
+            "dev-test-monthly",
+            "dev-test-3month"
+          ]
+        }
+      },
+      "next": "medical_intro"
+    },
+    "medical_intro": {
+      "id": "medical_intro",
+      "type": "empty_page",
+      "title": "One more section",
+      "body": "Finish this short medical section for your visit.",
+      "next": "conditions"
+    },
+    "conditions": {
+      "id": "conditions",
+      "type": "multi_select",
+      "title": "Do any of these apply to you?",
+      "maps_to": "medical.conditions",
+      "options": [
+        {
+          "key": "high_blood_pressure",
+          "label": "High blood pressure"
+        },
+        {
+          "key": "diabetes",
+          "label": "Diabetes"
+        },
+        {
+          "key": "none",
+          "label": "None of these",
+          "exclusive": true
+        }
+      ],
+      "next": "allergy_note"
+    },
+    "allergy_note": {
+      "id": "allergy_note",
+      "type": "text",
+      "title": "Any allergies? (optional)",
+      "optional": true,
+      "maps_to": "medical.allergy_note",
+      "max_length": 200,
+      "next": "id_verification"
+    },
+    "id_verification": {
+      "id": "id_verification",
+      "type": "id_photo",
+      "title": "Upload an ID (optional in dev)",
+      "file_kind": "id_photo",
+      "optional": true,
+      "max_files": 1,
+      "next": "truthfulness_consent"
+    },
+    "truthfulness_consent": {
+      "id": "truthfulness_consent",
+      "type": "safety_consent",
+      "title": "Your answers",
+      "consent_kind": "truthfulness",
+      "statement": "I confirm that my answers are truthful to the best of my knowledge.",
+      "next": "thank_you"
+    },
+    "thank_you": {
+      "id": "thank_you",
+      "type": "thank_you",
+      "title": "You are all set",
+      "body": "Your provider will review your answers."
+    },
+    "no_proceed_age": {
+      "id": "no_proceed_age",
+      "type": "no_proceed",
+      "reason": "under_18",
+      "title": "You must be 18 or older",
+      "body": "This program is only available to adults."
+    },
+    "terms_consent": {
+      "id": "terms_consent",
+      "type": "safety_consent",
+      "title": "Terms and privacy",
+      "consent_kinds": [
+        "terms",
+        "privacy"
+      ],
+      "statement": "I have read and agree to the Terms of Use and the Privacy Policy.",
+      "next": "telehealth_consent"
+    },
+    "telehealth_consent": {
+      "id": "telehealth_consent",
+      "type": "safety_consent",
+      "title": "Telehealth consent",
+      "consent_kind": "telehealth",
+      "statement": "I consent to receive care by telehealth and understand a licensed provider decides whether treatment is appropriate.",
+      "next": "safety"
+    }
+  }
+}

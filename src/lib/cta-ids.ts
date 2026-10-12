@@ -140,9 +140,22 @@ export const qualifyHref = waitlistHref;
  */
 type CtaTarget = { label: string; to: string };
 
+/**
+ * Weight-loss intake destination. Production stays on Bask until the Beema
+ * portal backend launches; set VITE_USE_PORTAL_INTAKE=true (see .env.dev) to
+ * send every weight-loss CTA to the in-house questionnaire at /start/weight_loss.
+ */
+const BASK_WEIGHT_LOSS_INTAKE_URL =
+  "https://q.beemahealth.com/start-online-visit/weightloss";
+const PORTAL_WEIGHT_LOSS_INTAKE_PATH = "/start/weight_loss";
+const WEIGHT_LOSS_INTAKE_TO =
+  import.meta.env.VITE_USE_PORTAL_INTAKE === "true"
+    ? PORTAL_WEIGHT_LOSS_INTAKE_PATH
+    : BASK_WEIGHT_LOSS_INTAKE_URL;
+
 const DEFAULT_CTA_TARGET: CtaTarget = {
   label: "Get Started",
-  to: "https://q.beemahealth.com/start-online-visit/weightloss",
+  to: WEIGHT_LOSS_INTAKE_TO,
 };
 
 /**

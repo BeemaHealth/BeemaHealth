@@ -1,0 +1,138 @@
+# ProductVariant definitions for catalog seeding.
+# Variants are loaded by the catalog loader and referenced by plans.
+# Strengths from Beluga medication catalog (docs/vendor/BELUGA_API.md).
+# Tirzepatide titration uses starter pack doses (2.5, 5, 7.5 mg).
+# Semaglutide titration starts at 0.2mg; maintenance uses starting maintenance dose 0.25mg.
+# Note: vendor_sku (Beluga medId) must be seeded separately via VariantMapping.
+variants:
+  # Semaglutide variants
+  # Titration phase: starting dose 0.2mg per Beluga catalog
+  - slug: semaglutide-none-titration
+    product_slug: weight-loss-semaglutide
+    drug: semaglutide
+    additive: none
+    phase: titration
+    strength_mg: 0.2
+    form: compounded
+    is_active: true
+
+  # Maintenance: starting dose 0.25mg
+  - slug: semaglutide-none-maintenance
+    product_slug: weight-loss-semaglutide
+    drug: semaglutide
+    additive: none
+    phase: maintenance
+    strength_mg: 0.25
+    form: compounded
+    is_active: true
+
+  - slug: semaglutide-b12-titration
+    product_slug: weight-loss-semaglutide
+    drug: semaglutide
+    additive: b12
+    phase: titration
+    strength_mg: 0.2
+    form: compounded
+    is_active: true
+
+  - slug: semaglutide-b12-maintenance
+    product_slug: weight-loss-semaglutide
+    drug: semaglutide
+    additive: b12
+    phase: maintenance
+    strength_mg: 0.25
+    form: compounded
+    is_active: true
+
+  - slug: semaglutide-glycine-titration
+    product_slug: weight-loss-semaglutide
+    drug: semaglutide
+    additive: glycine
+    phase: titration
+    strength_mg: 0.2
+    form: compounded
+    is_active: true
+
+  - slug: semaglutide-glycine-maintenance
+    product_slug: weight-loss-semaglutide
+    drug: semaglutide
+    additive: glycine
+    phase: maintenance
+    strength_mg: 0.25
+    form: compounded
+    is_active: true
+
+  # Tirzepatide variants
+  # Titration phase uses starter pack strengths (2.5, 5, 7.5 mg per Beluga Zepbound/Mounjaro catalog)
+  - slug: tirzepatide-none-titration-2-5mg
+    product_slug: weight-loss-tirzepatide
+    drug: tirzepatide
+    additive: none
+    phase: titration
+    strength_mg: 2.5
+    form: compounded
+    is_active: true
+
+  - slug: tirzepatide-none-titration-5mg
+    product_slug: weight-loss-tirzepatide
+    drug: tirzepatide
+    additive: none
+    phase: titration
+    strength_mg: 5.0
+    form: compounded
+    is_active: true
+
+  - slug: tirzepatide-none-titration-7-5mg
+    product_slug: weight-loss-tirzepatide
+    drug: tirzepatide
+    additive: none
+    phase: titration
+    strength_mg: 7.5
+    form: compounded
+    is_active: true
+
+  # Maintenance: starting at 5mg (typical maintenance entry dose)
+  - slug: tirzepatide-none-maintenance
+    product_slug: weight-loss-tirzepatide
+    drug: tirzepatide
+    additive: none
+    phase: maintenance
+    strength_mg: 5.0
+    form: compounded
+    is_active: true
+
+  - slug: tirzepatide-b12-titration
+    product_slug: weight-loss-tirzepatide
+    drug: tirzepatide
+    additive: b12
+    phase: titration
+    strength_mg: 2.5
+    form: compounded
+    is_active: true
+
+  - slug: tirzepatide-b12-maintenance
+    product_slug: weight-loss-tirzepatide
+    drug: tirzepatide
+    additive: b12
+    phase: maintenance
+    strength_mg: 5.0
+    form: compounded
+    is_active: true
+
+  - slug: tirzepatide-glycine-titration
+    product_slug: weight-loss-tirzepatide
+    drug: tirzepatide
+    additive: glycine
+    phase: titration
+    strength_mg: 2.5
+    form: compounded
+    is_active: true
+
+  - slug: tirzepatide-glycine-maintenance
+    product_slug: weight-loss-tirzepatide
+    drug: tirzepatide
+    additive: glycine
+    phase: maintenance
+    strength_mg: 5.0
+    form: compounded
+    is_active: true

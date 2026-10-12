@@ -1,0 +1,72 @@
+products:
+  - slug: sexual-health-ed
+    name: Sexual Health (ED)
+    category: sexual_health
+    is_active: false
+    questionnaire_slug: sexual_health_ed
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
+
+  - slug: ed-tadalafil
+    name: Tadalafil
+    category: sexual_health
+    is_active: false
+    questionnaire_slug: ed_tadalafil
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
+
+  - slug: ed-sildenafil
+    name: Sildenafil
+    category: sexual_health
+    is_active: false
+    questionnaire_slug: ed_sildenafil
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
+
+  - slug: ed-mints-rdt
+    name: ED Mints (RDT)
+    category: sexual_health
+    is_active: false
+    questionnaire_slug: ed_mints_rdt
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
+
+  - slug: hairloss
+    name: Hair Loss
+    category: other
+    is_active: false
+    questionnaire_slug: hairloss
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
+
+  - slug: trt
+    name: TRT
+    category: other
+    is_active: false
+    questionnaire_slug: trt
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
+
+  - slug: nad-plus
+    name: NAD+
+    category: other
+    is_active: false
+    questionnaire_slug: nad_plus
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
+
+  - slug: sermorelin
+    name: Sermorelin
+    category: other
+    is_active: false
+    questionnaire_slug: sermorelin
+    routing_mode: network_routes
+    neutral_label: Beema Health membership
+    requires_ineligibility_check: false
