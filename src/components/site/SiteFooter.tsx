@@ -72,6 +72,9 @@ const COLUMNS = [
       { label: "How it works", to: "/how-it-works/" },
       { label: "Recipes", to: "/recipes/" },
       { label: "Learn", to: "/learn/" },
+      { label: "Share your story", to: "/share-your-story/" },
+      { label: "Refer a friend", to: "/refer/" },
+      { label: "Creator program", to: "/creators/" },
     ],
   },
   {
@@ -97,6 +100,9 @@ const COLUMNS = [
       },
       { label: "HIPAA Privacy Policy", to: "/legal/hipaa/" },
       { label: "Telehealth Consent", to: "/legal/telehealth-consent/" },
+      { label: "Story Program Terms", to: "/legal/story-program-terms/" },
+      { label: "Referral Terms", to: "/legal/referral-terms/" },
+      { label: "Creator Program Terms", to: "/legal/creator-program-terms/" },
     ],
   },
 ] as const;

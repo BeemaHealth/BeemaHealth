@@ -155,6 +155,21 @@ const MORE_ITEMS: NavItem[] = [
     to: "/learn/",
     description: "GLP-1 and hormone education",
   },
+  {
+    label: "Share your story",
+    to: "/share-your-story/",
+    description: "Video testimonials with a patient credit",
+  },
+  {
+    label: "Refer a friend",
+    to: "/refer/",
+    description: "Give a credit, get a credit",
+  },
+  {
+    label: "Creator program",
+    to: "/creators/",
+    description: "Partner with Beema Health",
+  },
   { label: "About us", to: "/about/" },
   { label: "FAQ", to: "/faq/" },
   { label: "Contact us", to: "/contact/" },

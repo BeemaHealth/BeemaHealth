@@ -20,11 +20,13 @@ import { Route as SubmittedRouteImport } from './routes/submitted'
 import { Route as StaffRouteImport } from './routes/staff'
 import { Route as SildenafilBostonRouteImport } from './routes/sildenafil-boston'
 import { Route as SildenafilRouteImport } from './routes/sildenafil'
+import { Route as ShareYourStoryRouteImport } from './routes/share-your-story'
 import { Route as SexualHealthRouteImport } from './routes/sexual-health'
 import { Route as SermorelinRouteImport } from './routes/sermorelin'
 import { Route as SemaglutideHoustonRouteImport } from './routes/semaglutide-houston'
 import { Route as SemaglutideRouteImport } from './routes/semaglutide'
 import { Route as SafetyRouteImport } from './routes/safety'
+import { Route as ReferRouteImport } from './routes/refer'
 import { Route as QualifyRouteImport } from './routes/qualify'
 import { Route as OralMinoxidilWomenRouteImport } from './routes/oral-minoxidil-women'
 import { Route as OralMinoxidilMenRouteImport } from './routes/oral-minoxidil-men'
@@ -45,6 +47,7 @@ import { Route as EdMintsBostonRouteImport } from './routes/ed-mints-boston'
 import { Route as EdMintsRouteImport } from './routes/ed-mints'
 import { Route as EdRouteImport } from './routes/ed'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CreatorsRouteImport } from './routes/creators'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsentRouteImport } from './routes/consent'
 import { Route as AboutRouteImport } from './routes/about'
@@ -67,12 +70,15 @@ import { Route as RecipesSlugRouteImport } from './routes/recipes/$slug'
 import { Route as LpSlugRouteImport } from './routes/lp.$slug'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalTelehealthConsentRouteImport } from './routes/legal.telehealth-consent'
+import { Route as LegalStoryProgramTermsRouteImport } from './routes/legal.story-program-terms'
 import { Route as LegalShippingRouteImport } from './routes/legal.shipping'
 import { Route as LegalRefundRouteImport } from './routes/legal.refund'
+import { Route as LegalReferralTermsRouteImport } from './routes/legal.referral-terms'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
 import { Route as LegalPhysicianCodeOfConductRouteImport } from './routes/legal.physician-code-of-conduct'
 import { Route as LegalIntakeAcknowledgmentsRouteImport } from './routes/legal.intake-acknowledgments'
 import { Route as LegalHipaaRouteImport } from './routes/legal.hipaa'
+import { Route as LegalCreatorProgramTermsRouteImport } from './routes/legal.creator-program-terms'
 import { Route as LearnSemaglutideVsTirzepatideRouteImport } from './routes/learn.semaglutide-vs-tirzepatide'
 import { Route as LearnRestIntervalsRouteImport } from './routes/learn.rest-intervals'
 import { Route as LearnResistanceTrainingRouteImport } from './routes/learn.resistance-training'
@@ -145,6 +151,11 @@ const SildenafilRoute = SildenafilRouteImport.update({
   path: '/sildenafil',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShareYourStoryRoute = ShareYourStoryRouteImport.update({
+  id: '/share-your-story',
+  path: '/share-your-story',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SexualHealthRoute = SexualHealthRouteImport.update({
   id: '/sexual-health',
   path: '/sexual-health',
@@ -168,6 +179,11 @@ const SemaglutideRoute = SemaglutideRouteImport.update({
 const SafetyRoute = SafetyRouteImport.update({
   id: '/safety',
   path: '/safety',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReferRoute = ReferRouteImport.update({
+  id: '/refer',
+  path: '/refer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QualifyRoute = QualifyRouteImport.update({
@@ -268,6 +284,11 @@ const EdRoute = EdRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorsRoute = CreatorsRouteImport.update({
+  id: '/creators',
+  path: '/creators',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -380,6 +401,11 @@ const LegalTelehealthConsentRoute = LegalTelehealthConsentRouteImport.update({
   path: '/legal/telehealth-consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalStoryProgramTermsRoute = LegalStoryProgramTermsRouteImport.update({
+  id: '/legal/story-program-terms',
+  path: '/legal/story-program-terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LegalShippingRoute = LegalShippingRouteImport.update({
   id: '/legal/shipping',
   path: '/legal/shipping',
@@ -388,6 +414,11 @@ const LegalShippingRoute = LegalShippingRouteImport.update({
 const LegalRefundRoute = LegalRefundRouteImport.update({
   id: '/legal/refund',
   path: '/legal/refund',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalReferralTermsRoute = LegalReferralTermsRouteImport.update({
+  id: '/legal/referral-terms',
+  path: '/legal/referral-terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
@@ -412,6 +443,12 @@ const LegalHipaaRoute = LegalHipaaRouteImport.update({
   path: '/legal/hipaa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalCreatorProgramTermsRoute =
+  LegalCreatorProgramTermsRouteImport.update({
+    id: '/legal/creator-program-terms',
+    path: '/legal/creator-program-terms',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LearnSemaglutideVsTirzepatideRoute =
   LearnSemaglutideVsTirzepatideRouteImport.update({
     id: '/semaglutide-vs-tirzepatide',
@@ -502,6 +539,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
+  '/creators': typeof CreatorsRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/ed': typeof EdRoute
   '/ed-mints': typeof EdMintsRoute
@@ -522,11 +560,13 @@ export interface FileRoutesByFullPath {
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
   '/oral-minoxidil-women': typeof OralMinoxidilWomenRoute
   '/qualify': typeof QualifyRoute
+  '/refer': typeof ReferRoute
   '/safety': typeof SafetyRoute
   '/semaglutide': typeof SemaglutideRoute
   '/semaglutide-houston': typeof SemaglutideHoustonRoute
   '/sermorelin': typeof SermorelinRoute
   '/sexual-health': typeof SexualHealthRoute
+  '/share-your-story': typeof ShareYourStoryRoute
   '/sildenafil': typeof SildenafilRoute
   '/sildenafil-boston': typeof SildenafilBostonRoute
   '/staff': typeof StaffRouteWithChildren
@@ -548,12 +588,15 @@ export interface FileRoutesByFullPath {
   '/learn/resistance-training': typeof LearnResistanceTrainingRoute
   '/learn/rest-intervals': typeof LearnRestIntervalsRoute
   '/learn/semaglutide-vs-tirzepatide': typeof LearnSemaglutideVsTirzepatideRoute
+  '/legal/creator-program-terms': typeof LegalCreatorProgramTermsRoute
   '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
   '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/referral-terms': typeof LegalReferralTermsRoute
   '/legal/refund': typeof LegalRefundRoute
   '/legal/shipping': typeof LegalShippingRoute
+  '/legal/story-program-terms': typeof LegalStoryProgramTermsRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
@@ -584,6 +627,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
+  '/creators': typeof CreatorsRoute
   '/ed': typeof EdRoute
   '/ed-mints': typeof EdMintsRoute
   '/ed-mints-boston': typeof EdMintsBostonRoute
@@ -602,11 +646,13 @@ export interface FileRoutesByTo {
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
   '/oral-minoxidil-women': typeof OralMinoxidilWomenRoute
   '/qualify': typeof QualifyRoute
+  '/refer': typeof ReferRoute
   '/safety': typeof SafetyRoute
   '/semaglutide': typeof SemaglutideRoute
   '/semaglutide-houston': typeof SemaglutideHoustonRoute
   '/sermorelin': typeof SermorelinRoute
   '/sexual-health': typeof SexualHealthRoute
+  '/share-your-story': typeof ShareYourStoryRoute
   '/sildenafil': typeof SildenafilRoute
   '/sildenafil-boston': typeof SildenafilBostonRoute
   '/submitted': typeof SubmittedRoute
@@ -625,12 +671,15 @@ export interface FileRoutesByTo {
   '/learn/resistance-training': typeof LearnResistanceTrainingRoute
   '/learn/rest-intervals': typeof LearnRestIntervalsRoute
   '/learn/semaglutide-vs-tirzepatide': typeof LearnSemaglutideVsTirzepatideRoute
+  '/legal/creator-program-terms': typeof LegalCreatorProgramTermsRoute
   '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
   '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/referral-terms': typeof LegalReferralTermsRoute
   '/legal/refund': typeof LegalRefundRoute
   '/legal/shipping': typeof LegalShippingRoute
+  '/legal/story-program-terms': typeof LegalStoryProgramTermsRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
@@ -660,6 +709,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
+  '/creators': typeof CreatorsRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/ed': typeof EdRoute
   '/ed-mints': typeof EdMintsRoute
@@ -680,11 +730,13 @@ export interface FileRoutesById {
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
   '/oral-minoxidil-women': typeof OralMinoxidilWomenRoute
   '/qualify': typeof QualifyRoute
+  '/refer': typeof ReferRoute
   '/safety': typeof SafetyRoute
   '/semaglutide': typeof SemaglutideRoute
   '/semaglutide-houston': typeof SemaglutideHoustonRoute
   '/sermorelin': typeof SermorelinRoute
   '/sexual-health': typeof SexualHealthRoute
+  '/share-your-story': typeof ShareYourStoryRoute
   '/sildenafil': typeof SildenafilRoute
   '/sildenafil-boston': typeof SildenafilBostonRoute
   '/staff': typeof StaffRouteWithChildren
@@ -706,12 +758,15 @@ export interface FileRoutesById {
   '/learn/resistance-training': typeof LearnResistanceTrainingRoute
   '/learn/rest-intervals': typeof LearnRestIntervalsRoute
   '/learn/semaglutide-vs-tirzepatide': typeof LearnSemaglutideVsTirzepatideRoute
+  '/legal/creator-program-terms': typeof LegalCreatorProgramTermsRoute
   '/legal/hipaa': typeof LegalHipaaRoute
   '/legal/intake-acknowledgments': typeof LegalIntakeAcknowledgmentsRoute
   '/legal/physician-code-of-conduct': typeof LegalPhysicianCodeOfConductRoute
   '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/referral-terms': typeof LegalReferralTermsRoute
   '/legal/refund': typeof LegalRefundRoute
   '/legal/shipping': typeof LegalShippingRoute
+  '/legal/story-program-terms': typeof LegalStoryProgramTermsRoute
   '/legal/telehealth-consent': typeof LegalTelehealthConsentRoute
   '/legal/terms': typeof LegalTermsRoute
   '/lp/$slug': typeof LpSlugRoute
@@ -744,6 +799,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/consent'
     | '/contact'
+    | '/creators'
     | '/dashboard'
     | '/ed'
     | '/ed-mints'
@@ -764,11 +820,13 @@ export interface FileRouteTypes {
     | '/oral-minoxidil-men'
     | '/oral-minoxidil-women'
     | '/qualify'
+    | '/refer'
     | '/safety'
     | '/semaglutide'
     | '/semaglutide-houston'
     | '/sermorelin'
     | '/sexual-health'
+    | '/share-your-story'
     | '/sildenafil'
     | '/sildenafil-boston'
     | '/staff'
@@ -790,12 +848,15 @@ export interface FileRouteTypes {
     | '/learn/resistance-training'
     | '/learn/rest-intervals'
     | '/learn/semaglutide-vs-tirzepatide'
+    | '/legal/creator-program-terms'
     | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
     | '/legal/physician-code-of-conduct'
     | '/legal/privacy'
+    | '/legal/referral-terms'
     | '/legal/refund'
     | '/legal/shipping'
+    | '/legal/story-program-terms'
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
@@ -826,6 +887,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/consent'
     | '/contact'
+    | '/creators'
     | '/ed'
     | '/ed-mints'
     | '/ed-mints-boston'
@@ -844,11 +906,13 @@ export interface FileRouteTypes {
     | '/oral-minoxidil-men'
     | '/oral-minoxidil-women'
     | '/qualify'
+    | '/refer'
     | '/safety'
     | '/semaglutide'
     | '/semaglutide-houston'
     | '/sermorelin'
     | '/sexual-health'
+    | '/share-your-story'
     | '/sildenafil'
     | '/sildenafil-boston'
     | '/submitted'
@@ -867,12 +931,15 @@ export interface FileRouteTypes {
     | '/learn/resistance-training'
     | '/learn/rest-intervals'
     | '/learn/semaglutide-vs-tirzepatide'
+    | '/legal/creator-program-terms'
     | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
     | '/legal/physician-code-of-conduct'
     | '/legal/privacy'
+    | '/legal/referral-terms'
     | '/legal/refund'
     | '/legal/shipping'
+    | '/legal/story-program-terms'
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
@@ -901,6 +968,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/consent'
     | '/contact'
+    | '/creators'
     | '/dashboard'
     | '/ed'
     | '/ed-mints'
@@ -921,11 +989,13 @@ export interface FileRouteTypes {
     | '/oral-minoxidil-men'
     | '/oral-minoxidil-women'
     | '/qualify'
+    | '/refer'
     | '/safety'
     | '/semaglutide'
     | '/semaglutide-houston'
     | '/sermorelin'
     | '/sexual-health'
+    | '/share-your-story'
     | '/sildenafil'
     | '/sildenafil-boston'
     | '/staff'
@@ -947,12 +1017,15 @@ export interface FileRouteTypes {
     | '/learn/resistance-training'
     | '/learn/rest-intervals'
     | '/learn/semaglutide-vs-tirzepatide'
+    | '/legal/creator-program-terms'
     | '/legal/hipaa'
     | '/legal/intake-acknowledgments'
     | '/legal/physician-code-of-conduct'
     | '/legal/privacy'
+    | '/legal/referral-terms'
     | '/legal/refund'
     | '/legal/shipping'
+    | '/legal/story-program-terms'
     | '/legal/telehealth-consent'
     | '/legal/terms'
     | '/lp/$slug'
@@ -984,6 +1057,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ConsentRoute: typeof ConsentRoute
   ContactRoute: typeof ContactRoute
+  CreatorsRoute: typeof CreatorsRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   EdRoute: typeof EdRoute
   EdMintsRoute: typeof EdMintsRoute
@@ -1004,11 +1078,13 @@ export interface RootRouteChildren {
   OralMinoxidilMenRoute: typeof OralMinoxidilMenRoute
   OralMinoxidilWomenRoute: typeof OralMinoxidilWomenRoute
   QualifyRoute: typeof QualifyRoute
+  ReferRoute: typeof ReferRoute
   SafetyRoute: typeof SafetyRoute
   SemaglutideRoute: typeof SemaglutideRoute
   SemaglutideHoustonRoute: typeof SemaglutideHoustonRoute
   SermorelinRoute: typeof SermorelinRoute
   SexualHealthRoute: typeof SexualHealthRoute
+  ShareYourStoryRoute: typeof ShareYourStoryRoute
   SildenafilRoute: typeof SildenafilRoute
   SildenafilBostonRoute: typeof SildenafilBostonRoute
   StaffRoute: typeof StaffRouteWithChildren
@@ -1020,12 +1096,15 @@ export interface RootRouteChildren {
   VerifyEmailRoute: typeof VerifyEmailRouteWithChildren
   WaitlistRoute: typeof WaitlistRoute
   WeightLossRoute: typeof WeightLossRoute
+  LegalCreatorProgramTermsRoute: typeof LegalCreatorProgramTermsRoute
   LegalHipaaRoute: typeof LegalHipaaRoute
   LegalIntakeAcknowledgmentsRoute: typeof LegalIntakeAcknowledgmentsRoute
   LegalPhysicianCodeOfConductRoute: typeof LegalPhysicianCodeOfConductRoute
   LegalPrivacyRoute: typeof LegalPrivacyRoute
+  LegalReferralTermsRoute: typeof LegalReferralTermsRoute
   LegalRefundRoute: typeof LegalRefundRoute
   LegalShippingRoute: typeof LegalShippingRoute
+  LegalStoryProgramTermsRoute: typeof LegalStoryProgramTermsRoute
   LegalTelehealthConsentRoute: typeof LegalTelehealthConsentRoute
   LegalTermsRoute: typeof LegalTermsRoute
   LpSlugRoute: typeof LpSlugRoute
@@ -1112,6 +1191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SildenafilRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/share-your-story': {
+      id: '/share-your-story'
+      path: '/share-your-story'
+      fullPath: '/share-your-story'
+      preLoaderRoute: typeof ShareYourStoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sexual-health': {
       id: '/sexual-health'
       path: '/sexual-health'
@@ -1145,6 +1231,13 @@ declare module '@tanstack/react-router' {
       path: '/safety'
       fullPath: '/safety'
       preLoaderRoute: typeof SafetyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refer': {
+      id: '/refer'
+      path: '/refer'
+      fullPath: '/refer'
+      preLoaderRoute: typeof ReferRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/qualify': {
@@ -1285,6 +1378,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creators': {
+      id: '/creators'
+      path: '/creators'
+      fullPath: '/creators'
+      preLoaderRoute: typeof CreatorsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -1441,6 +1541,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalTelehealthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/story-program-terms': {
+      id: '/legal/story-program-terms'
+      path: '/legal/story-program-terms'
+      fullPath: '/legal/story-program-terms'
+      preLoaderRoute: typeof LegalStoryProgramTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legal/shipping': {
       id: '/legal/shipping'
       path: '/legal/shipping'
@@ -1453,6 +1560,13 @@ declare module '@tanstack/react-router' {
       path: '/legal/refund'
       fullPath: '/legal/refund'
       preLoaderRoute: typeof LegalRefundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/referral-terms': {
+      id: '/legal/referral-terms'
+      path: '/legal/referral-terms'
+      fullPath: '/legal/referral-terms'
+      preLoaderRoute: typeof LegalReferralTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/legal/privacy': {
@@ -1481,6 +1595,13 @@ declare module '@tanstack/react-router' {
       path: '/legal/hipaa'
       fullPath: '/legal/hipaa'
       preLoaderRoute: typeof LegalHipaaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/creator-program-terms': {
+      id: '/legal/creator-program-terms'
+      path: '/legal/creator-program-terms'
+      fullPath: '/legal/creator-program-terms'
+      preLoaderRoute: typeof LegalCreatorProgramTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn/semaglutide-vs-tirzepatide': {
@@ -1729,6 +1850,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ConsentRoute: ConsentRoute,
   ContactRoute: ContactRoute,
+  CreatorsRoute: CreatorsRoute,
   DashboardRoute: DashboardRouteWithChildren,
   EdRoute: EdRoute,
   EdMintsRoute: EdMintsRoute,
@@ -1749,11 +1871,13 @@ const rootRouteChildren: RootRouteChildren = {
   OralMinoxidilMenRoute: OralMinoxidilMenRoute,
   OralMinoxidilWomenRoute: OralMinoxidilWomenRoute,
   QualifyRoute: QualifyRoute,
+  ReferRoute: ReferRoute,
   SafetyRoute: SafetyRoute,
   SemaglutideRoute: SemaglutideRoute,
   SemaglutideHoustonRoute: SemaglutideHoustonRoute,
   SermorelinRoute: SermorelinRoute,
   SexualHealthRoute: SexualHealthRoute,
+  ShareYourStoryRoute: ShareYourStoryRoute,
   SildenafilRoute: SildenafilRoute,
   SildenafilBostonRoute: SildenafilBostonRoute,
   StaffRoute: StaffRouteWithChildren,
@@ -1765,12 +1889,15 @@ const rootRouteChildren: RootRouteChildren = {
   VerifyEmailRoute: VerifyEmailRouteWithChildren,
   WaitlistRoute: WaitlistRoute,
   WeightLossRoute: WeightLossRoute,
+  LegalCreatorProgramTermsRoute: LegalCreatorProgramTermsRoute,
   LegalHipaaRoute: LegalHipaaRoute,
   LegalIntakeAcknowledgmentsRoute: LegalIntakeAcknowledgmentsRoute,
   LegalPhysicianCodeOfConductRoute: LegalPhysicianCodeOfConductRoute,
   LegalPrivacyRoute: LegalPrivacyRoute,
+  LegalReferralTermsRoute: LegalReferralTermsRoute,
   LegalRefundRoute: LegalRefundRoute,
   LegalShippingRoute: LegalShippingRoute,
+  LegalStoryProgramTermsRoute: LegalStoryProgramTermsRoute,
   LegalTelehealthConsentRoute: LegalTelehealthConsentRoute,
   LegalTermsRoute: LegalTermsRoute,
   LpSlugRoute: LpSlugRoute,
