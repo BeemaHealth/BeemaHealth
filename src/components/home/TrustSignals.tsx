@@ -14,17 +14,17 @@ import { TRUST_SIGNALS } from "@/lib/trust-signals";
 const PILLARS = [
   {
     icon: BadgeDollarSign,
-    title: "Pricing without the fine print",
+    title: "No surprises at checkout",
     text: "You see the full cost before you check out. Our cash pricing is posted up front, with no hidden fees added later.",
   },
   {
     icon: Stethoscope,
-    title: "Care led by licensed providers",
+    title: "Reliable Care by Clinicians",
     text: "A licensed provider looks over each intake and decides if treatment fits your health. Compounded medications are prepared by USA 503A-licensed pharmacies.",
   },
   {
     icon: Headset,
-    title: "A real person when you need one",
+    title: "Real Human Support",
     text: `Our care team is here ${SUPPORT_HOURS_DISPLAY.replace("Every day, ", "every day, ")}. Refill and plan questions are answered by a member of our team.`,
   },
 ] as const;
@@ -55,10 +55,11 @@ export function TrustSignals() {
         </h2>
       </div>
 
-      <div className="mt-10 grid gap-10 md:grid-cols-3 md:gap-8">
+      <div className="mt-8 grid gap-4 md:mt-10 md:grid-cols-3 md:gap-8">
         {PILLARS.map(({ icon: Icon, title, text }, index) => (
           <motion.div
             key={title}
+            className="rounded-3xl border border-border bg-card p-5 shadow-soft md:rounded-none md:border-0 md:bg-transparent md:p-0 md:shadow-none"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -69,8 +70,12 @@ export function TrustSignals() {
             }}
           >
             <div className="flex items-center gap-4">
-              <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-primary-soft text-accent-foreground">
-                <Icon className="size-7" aria-hidden strokeWidth={1.6} />
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-soft text-accent-foreground md:size-14">
+                <Icon
+                  className="size-6 md:size-7"
+                  aria-hidden
+                  strokeWidth={1.6}
+                />
               </span>
               <h3 className="text-balance text-lg font-semibold leading-snug text-accent-foreground">
                 {title}
@@ -83,11 +88,11 @@ export function TrustSignals() {
         ))}
       </div>
 
-      <ul className="mt-12 grid gap-3 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-4">
+      <ul className="mt-6 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card md:mt-12 lg:grid lg:grid-cols-4 lg:gap-3 lg:divide-y-0 lg:overflow-visible lg:rounded-none lg:border-0 lg:border-t lg:bg-transparent lg:pt-8">
         {claims.map(({ icon: Icon, label }) => (
           <li
             key={label}
-            className="flex items-center gap-3 text-sm font-medium text-foreground"
+            className="flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-foreground lg:p-0"
           >
             <Icon
               className="size-5 shrink-0 text-accent-foreground"
