@@ -273,7 +273,8 @@ export function HowItWorksSteps({
   className,
   id = "how-it-works",
 }: {
-  eyebrow?: string;
+  /** Pass `null` to hide the tag above the heading. */
+  eyebrow?: string | null;
   title?: ReactNode;
   /** Support / doctor follow-up note under the steps (treatment pages). */
   showCareFollowUpNote?: boolean;
@@ -299,8 +300,13 @@ export function HowItWorksSteps({
 
       <div className="veya-container relative">
         <div className="mx-auto max-w-2xl text-center">
-          <Eyebrow>{eyebrow}</Eyebrow>
-          <h2 className="mt-4 text-balance text-3xl font-bold text-foreground md:text-4xl">
+          {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+          <h2
+            className={cn(
+              "text-balance text-3xl font-bold text-foreground md:text-4xl",
+              eyebrow && "mt-4",
+            )}
+          >
             {title ?? <LineReveal>Three simple steps</LineReveal>}
           </h2>
         </div>

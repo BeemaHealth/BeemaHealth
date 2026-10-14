@@ -8,10 +8,7 @@ import {
   faqPageJsonLd,
   serviceJsonLd,
 } from "@/lib/seo";
-import {
-  CLINICAL_PROVIDER_GROUP,
-  SEAN_ARORA_PROVIDER,
-} from "@/lib/provider-info";
+import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 import { trackPageViewed } from "@/lib/analytics";
 import { bootImagePreloadLinks } from "@/lib/boot-assets";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
@@ -474,15 +471,9 @@ function EdMintsBostonPage() {
             </div>
           </SurfaceCard>
         </div>
-        <p className="mt-6 max-w-2xl text-xs leading-relaxed text-muted-foreground">
-          Clinical oversight: Beema Health&rsquo;s clinical provider network is
-          led by {SEAN_ARORA_PROVIDER.displayName},{" "}
-          {SEAN_ARORA_PROVIDER.credentials}, {SEAN_ARORA_PROVIDER.role} of{" "}
-          {CLINICAL_PROVIDER_GROUP}. Licensed clinicians make every treatment
-          decision independently, the clinician assigned to your care may vary
-          by state licensure and availability.
-        </p>
       </Section>
+
+      <MedicalTeamSection className="pt-0" />
 
       <Section id="faq" className="scroll-mt-20 bg-muted/40 pt-0">
         <SectionHeading

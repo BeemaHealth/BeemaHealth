@@ -28,6 +28,7 @@ import {
 } from "@/components/site/TreatmentPageBlocks";
 import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
 import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
+import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 import { GoogleRatingBadge } from "@/components/site/GoogleRatingBadge";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
@@ -345,6 +346,8 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
           </SurfaceCard>
         </motion.div>
       </Section>
+
+      {market === "houston" ? <MedicalTeamSection className="pt-0" /> : null}
 
       <Section>
         <div className="mb-8 flex justify-center">

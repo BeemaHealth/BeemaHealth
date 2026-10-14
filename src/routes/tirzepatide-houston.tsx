@@ -49,10 +49,7 @@ import { bootImagePreloadLinks } from "@/lib/boot-assets";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import { learnPath } from "@/content/learn/types";
-import {
-  CLINICAL_PROVIDER_GROUP,
-  SEAN_ARORA_PROVIDER,
-} from "@/lib/provider-info";
+import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 
 const VIAL_IMAGERY = resolveVialImagery("tirzepatide");
 
@@ -500,6 +497,8 @@ function TirzepatideHoustonPage() {
         </p>
       </Section>
 
+      <MedicalTeamSection className="pt-0" />
+
       <Section id="faq" className="scroll-mt-20 bg-muted/40 pt-0">
         <SectionHeading
           align="left"
@@ -520,16 +519,6 @@ function TirzepatideHoustonPage() {
           }
           className="mx-0 max-w-2xl"
         />
-        <p className="mt-3 flex max-w-2xl items-start gap-2 text-xs leading-relaxed text-muted-foreground">
-          <Stethoscope className="mt-0.5 size-3.5 shrink-0 text-accent-foreground" />
-          <span>
-            Clinical oversight: {SEAN_ARORA_PROVIDER.displayName},{" "}
-            {SEAN_ARORA_PROVIDER.credentials}, {SEAN_ARORA_PROVIDER.role} of{" "}
-            {CLINICAL_PROVIDER_GROUP}, oversees Beema Health's clinical provider
-            network. Every licensed provider makes treatment decisions
-            independently.
-          </span>
-        </p>
         <div className="mt-8">
           <TreatmentFaqSection items={FAQ_ITEMS} />
         </div>

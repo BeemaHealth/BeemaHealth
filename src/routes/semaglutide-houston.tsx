@@ -13,10 +13,7 @@ import {
   faqPageJsonLd,
   serviceJsonLd,
 } from "@/lib/seo";
-import {
-  CLINICAL_PROVIDER_GROUP,
-  SEAN_ARORA_PROVIDER,
-} from "@/lib/provider-info";
+import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import {
@@ -478,15 +475,9 @@ function SemaglutideHoustonPage() {
             </div>
           </SurfaceCard>
         </div>
-        <p className="mt-6 max-w-2xl text-xs leading-relaxed text-muted-foreground">
-          Clinical oversight: Beema Health&rsquo;s clinical provider network is
-          led by {SEAN_ARORA_PROVIDER.displayName},{" "}
-          {SEAN_ARORA_PROVIDER.credentials}, {SEAN_ARORA_PROVIDER.role} of{" "}
-          {CLINICAL_PROVIDER_GROUP}. Licensed clinicians make every treatment
-          decision independently, the clinician assigned to your care may vary
-          by state licensure and availability.
-        </p>
       </Section>
+
+      <MedicalTeamSection className="pt-0" />
 
       <Section className="pt-0">
         <SectionHeading

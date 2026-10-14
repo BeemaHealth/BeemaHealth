@@ -14,6 +14,10 @@ Read `AGENTS.md` first - it is the authoritative engineering guide. This file co
 
 **Current phase:** **Launched.** Do not describe an in-house `/qualify` → `/intake` → `/consent` → `/dashboard` funnel as the product. Leftover code for that lives in-repo as **legacy** only - `docs/BACKEND-DEFERRED.md`.
 
+**Business facts (stated by Matt, 2026-10-12):** Beema serves all 50 states. Cash-pay only: we never bill Medicare, Medicaid, or any insurance. Bask is the contracting entity. Bask integrates affiliate/referral platforms (GrowSurf and others).
+
+**Planned growth programs (not built, legal review pending):** patient referral program, influencer/affiliate program, and a paid "share your story" video program, all modeled on Trava (taketrava.com). Do not build or publish copy for these until the 50-state review and Bask answers are done. They touch HIPAA authorization, FTC endorsement disclosure, and state patient-brokering / fee-splitting law. A Facebook group is deprioritized. Status and open questions: `docs/features/growth-programs-legal.md` if it exists, otherwise ask Matt.
+
 ---
 
 ## Production mindset (non-negotiable)

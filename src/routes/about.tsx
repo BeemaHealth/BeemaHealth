@@ -5,7 +5,7 @@ import {
   canonicalUrl,
   medicalWebPageJsonLd,
 } from "@/lib/seo";
-import { SEAN_ARORA_PROVIDER } from "@/lib/provider-info";
+import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 import {
   PARTNER_PHARMACY_ADDRESS_LINE1,
   PARTNER_PHARMACY_ADDRESS_LINE2,
@@ -25,7 +25,6 @@ import {
   RefreshCcw,
   ShieldCheck,
   Sparkles,
-  Stethoscope,
   Target,
   Users,
 } from "lucide-react";
@@ -407,47 +406,8 @@ function AboutPage() {
         </div>
       </Section>
 
-      {/* Clinical leadership */}
-      <Section className="pt-0">
-        <motion.div
-          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE_OUT }}
-        >
-          <SectionHeading
-            eyebrow="Clinical leadership"
-            title="Physician-led, from day one"
-          />
-        </motion.div>
-        <motion.div
-          className="mt-10"
-          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{
-            duration: reduceMotion ? 0 : 0.6,
-            delay: reduceMotion ? 0 : 0.1,
-            ease: EASE_OUT,
-          }}
-        >
-          <SurfaceCard className="mx-auto max-w-2xl text-center">
-            <HexBadge className="mx-auto size-14">
-              <Stethoscope className="size-6" />
-            </HexBadge>
-            <h3 className="mt-4 text-lg font-semibold text-foreground">
-              {SEAN_ARORA_PROVIDER.displayName},{" "}
-              {SEAN_ARORA_PROVIDER.credentials}
-            </h3>
-            <p className="text-sm font-medium text-accent-foreground">
-              {SEAN_ARORA_PROVIDER.role}
-            </p>
-            <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground">
-              {SEAN_ARORA_PROVIDER.bio}
-            </p>
-          </SurfaceCard>
-        </motion.div>
-      </Section>
+      {/* Clinical collaboration - Arora Health team media (see lib/medical-team.ts) */}
+      <MedicalTeamSection variant="full" className="pt-0" />
 
       {/* Pharmacy partner */}
       <Section className="pt-0">

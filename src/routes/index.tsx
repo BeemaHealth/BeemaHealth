@@ -8,6 +8,8 @@ import { getPendingUtms, clearPendingUtms } from "@/lib/utm";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { ScrollProgressBar } from "@/components/site/primitives";
 import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
+import { LineReveal } from "@/components/home/home-motion";
+import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 import { HomeHero } from "@/components/home/HomeHero";
 import { TrustSignals } from "@/components/home/TrustSignals";
 import { TreatmentShowcase } from "@/components/home/TreatmentShowcase";
@@ -69,7 +71,11 @@ function HomePage() {
       <MarketingLayout>
         <HomeHero />
         <TrustSignals />
-        <HowItWorksSteps />
+        <HowItWorksSteps
+          eyebrow={null}
+          title={<LineReveal>How it works</LineReveal>}
+        />
+        <MedicalTeamSection />
         <TreatmentShowcase />
         <WellnessLineupSection />
         <FreeResourcesSection />

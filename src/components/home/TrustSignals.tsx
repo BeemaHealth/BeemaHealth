@@ -1,80 +1,102 @@
 import { motion, useReducedMotion } from "motion/react";
-import {
-  Section,
-  SectionHeading,
-  SurfaceCard,
-} from "@/components/site/primitives";
+import { BadgeDollarSign, Headset, Stethoscope } from "lucide-react";
+import { Section } from "@/components/site/primitives";
 import { EASE_OUT } from "@/components/home/home-motion";
+import { SUPPORT_HOURS_DISPLAY } from "@/lib/contact-info";
 import { TRUST_SIGNALS } from "@/lib/trust-signals";
-import { cn } from "@/lib/utils";
 
 /**
- * Per-card icon color, matched to what each claim is about rather than
- * cycled mechanically: trust blue for HIPAA/security, green for
- * "verified/value" claims, brand gold for the flagship verification
- * checkmark, warm brown for "place/sourcing" claims. Kept local to this
- * component - the shared `TrustSignal` type has no color field, since
- * footer/waitlist render these icons monochrome.
+ * The three headline reasons to trust Beema Health, in the left-aligned
+ * accent-bar + three-column format. Copy sticks to claims that are true
+ * today: cash pricing with no hidden fees, a human support team on stated
+ * hours, and provider-reviewed care where a prescription is never promised.
  */
-const ICON_COLOR_CLASSES = [
-  "text-trust",
-  "text-primary",
-  "text-accent-foreground",
-  "text-success",
-  "text-accent-foreground",
+const PILLARS = [
+  {
+    icon: BadgeDollarSign,
+    title: "Pricing without the fine print",
+    text: "You see the full cost before you check out. Our cash pricing is posted up front, with no hidden fees added later.",
+  },
+  {
+    icon: Stethoscope,
+    title: "Care led by licensed providers",
+    text: "A licensed provider looks over each intake and decides if treatment fits your health. Compounded medications are prepared by USA 503A-licensed pharmacies.",
+  },
+  {
+    icon: Headset,
+    title: "A real person when you need one",
+    text: `Our care team is here ${SUPPORT_HOURS_DISPLAY.replace("Every day, ", "every day, ")}. Refill and plan questions are answered by a member of our team.`,
+  },
 ] as const;
 
 /**
- * Homepage trust band - the honest, verifiable claims from
- * `lib/trust-signals.ts` rendered as a prominent icon-card grid. Sits
- * right after the hero so trust signals land before any deeper page
- * scroll, per the site-wide "stronger trust signals" ask.
+ * Pillars already covered by the three columns above, so they are not
+ * repeated in the verified-claims row.
+ */
+const COVERED_BY_PILLARS = new Set(["Transparent pricing"]);
+
+/**
+ * Homepage trust band. Sits right after the hero so trust signals land
+ * before any deeper page scroll: the three pillars first, then the verified
+ * claims from `lib/trust-signals.ts` as a compact row directly beneath.
  */
 export function TrustSignals() {
   const reduceMotion = useReducedMotion();
+  const claims = TRUST_SIGNALS.filter(
+    ({ label }) => !COVERED_BY_PILLARS.has(label),
+  );
 
   return (
     <Section>
-      <SectionHeading
-        eyebrow="Why patients trust Beema Health"
-        title="Built on clear standards"
-      />
+      <div className="flex items-center gap-4">
+        <span aria-hidden className="h-12 w-2 rounded-full bg-primary" />
+        <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+          Why Trust Beema Health
+        </h2>
+      </div>
 
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-        {TRUST_SIGNALS.map(({ icon: Icon, label, detail }, index) => (
+      <div className="mt-10 grid gap-10 md:grid-cols-3 md:gap-8">
+        {PILLARS.map(({ icon: Icon, title, text }, index) => (
           <motion.div
-            key={label}
-            className="h-full"
+            key={title}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            whileHover={reduceMotion ? undefined : { y: -6 }}
             transition={{
               duration: reduceMotion ? 0 : 0.5,
               delay: reduceMotion ? 0 : index * 0.08,
               ease: EASE_OUT,
             }}
           >
-            <SurfaceCard className="group relative flex h-full flex-col items-center border-border/70 p-7 text-center transition-all duration-300 hover:border-primary/30 hover:shadow-lift">
-              <Icon
-                className={cn(
-                  "size-14 transition-transform duration-300 ease-out group-hover:scale-110",
-                  ICON_COLOR_CLASSES[index],
-                )}
-                aria-hidden
-                strokeWidth={1.6}
-              />
-              <h3 className="mt-6 flex min-h-11 items-center text-balance text-base font-semibold leading-snug text-foreground">
-                {label}
+            <div className="flex items-center gap-4">
+              <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-primary-soft text-accent-foreground">
+                <Icon className="size-7" aria-hidden strokeWidth={1.6} />
+              </span>
+              <h3 className="text-balance text-lg font-semibold leading-snug text-accent-foreground">
+                {title}
               </h3>
-              <span className="mt-1.5 h-0.5 w-8 rounded-full bg-primary/35 transition-all duration-300 group-hover:w-12 group-hover:bg-primary" />
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {detail}
-              </p>
-            </SurfaceCard>
+            </div>
+            <p className="mt-4 text-pretty text-sm leading-relaxed text-foreground/80 md:text-base">
+              {text}
+            </p>
           </motion.div>
         ))}
       </div>
+
+      <ul className="mt-12 grid gap-3 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-4">
+        {claims.map(({ icon: Icon, label }) => (
+          <li
+            key={label}
+            className="flex items-center gap-3 text-sm font-medium text-foreground"
+          >
+            <Icon
+              className="size-5 shrink-0 text-accent-foreground"
+              aria-hidden
+            />
+            {label}
+          </li>
+        ))}
+      </ul>
     </Section>
   );
 }

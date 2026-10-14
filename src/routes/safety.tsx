@@ -159,12 +159,12 @@ function SafetyPage() {
                 {CLINICAL_PROVIDER_LEGAL_NAME} · NPI {SEAN_ARORA_PROVIDER.npi}
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {SEAN_ARORA_PROVIDER.bio} {CLINICAL_PROVIDER_LEGAL_NAME} is
-                Beema Health's clinical provider group and provides clinical
-                leadership over the group of licensed providers who deliver care
-                through Beema Health. Licensed clinicians make all medical
-                decisions independently. The clinician assigned to your care may
-                vary based on state licensure and availability.
+                {CLINICAL_PROVIDER_LEGAL_NAME} is Beema Health's clinical
+                provider group and provides clinical leadership over the group
+                of licensed providers who deliver care through Beema Health.
+                Licensed clinicians make all medical decisions independently.
+                The clinician assigned to your care may vary based on state
+                licensure and availability.
               </p>
             </div>
           </div>
