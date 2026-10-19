@@ -207,7 +207,7 @@ function TadalafilBostonPage() {
               </div>
               <motion.div
                 className="mt-6"
-                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                initial={false}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
                   duration: reduceMotion ? 0 : 0.6,
@@ -219,7 +219,7 @@ function TadalafilBostonPage() {
               </motion.div>
               <motion.div
                 className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
-                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                initial={false}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
                   duration: reduceMotion ? 0 : 0.6,
@@ -270,7 +270,7 @@ function TadalafilBostonPage() {
                 />
               </div>
               <motion.div
-                initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+                initial={false}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
                   duration: reduceMotion ? 0 : 0.5,

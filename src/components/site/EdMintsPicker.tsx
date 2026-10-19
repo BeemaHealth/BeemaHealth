@@ -23,7 +23,7 @@ import {
 } from "@/lib/simple-treatment-pricing";
 import { cn } from "@/lib/utils";
 import edMintsRdtPhoto from "@/assets/treatments/ed-mints-tadalafil-sildenafil-rdt.webp";
-import edMintsOdtPhoto from "@/assets/treatments/ed-mints-dissolvable-tablet.webp";
+import edMintsOdtPhoto from "@/assets/treatments/ed-mints-sildenafil-tadalafil-oxytocin-odt.webp";
 
 /**
  * ED Mints formulation picker - extracted from ed-mints.tsx (2026-09-03) so
@@ -66,6 +66,24 @@ export type MintOption = {
 
 export const MINT_OPTIONS: MintOption[] = [
   {
+    id: "odt",
+    ctaId: CTA_IDS.ed_mints_odt_hero,
+    badge: "Highest Strength",
+    name: "Sildenafil + Tadalafil + Oxytocin",
+    dose: "50mg / 20mg / 125 IU ODT",
+    photo: edMintsOdtPhoto,
+    photoAlt:
+      "Beema Health ED Mints - Sildenafil 50mg + Tadalafil 20mg + Oxytocin 125 IU orally dissolving tablet (ODT)",
+    description:
+      "A 3-ingredient formula combining sildenafil, tadalafil, and oxytocin into one orally dissolving tablet.",
+    bullets: [
+      "3 active ingredients",
+      "Orally dissolving tablet (ODT)",
+      "No water needed",
+    ],
+    profile: "Profile: 3 active ingredients",
+  },
+  {
     id: "rdt",
     ctaId: CTA_IDS.ed_mints_rdt_hero,
     badge: "Most Common",
@@ -82,24 +100,6 @@ export const MINT_OPTIONS: MintOption[] = [
       "No water needed",
     ],
     profile: "Profile: 2 active ingredients",
-  },
-  {
-    id: "odt",
-    ctaId: CTA_IDS.ed_mints_odt_hero,
-    badge: "Highest Strength",
-    name: "Sildenafil + Tadalafil + Oxytocin",
-    dose: "50mg / 20mg / 125 IU ODT",
-    photo: edMintsOdtPhoto,
-    photoAlt:
-      "Beema Health ED Mints - blue Sildenafil 50mg + Tadalafil 20mg + Oxytocin 125 IU orally dissolving tablet (ODT), embossed with the Beema Health logo",
-    description:
-      "A 3-ingredient formula combining sildenafil, tadalafil, and oxytocin into one orally dissolving tablet.",
-    bullets: [
-      "3 active ingredients",
-      "Orally dissolving tablet (ODT)",
-      "No water needed",
-    ],
-    profile: "Profile: 3 active ingredients",
   },
 ];
 

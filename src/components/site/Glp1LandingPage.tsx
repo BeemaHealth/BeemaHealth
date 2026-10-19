@@ -111,7 +111,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
 
               <motion.div
                 className="mt-6"
-                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                initial={false}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
                   duration: reduceMotion ? 0 : 0.6,
@@ -124,7 +124,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
 
               <motion.div
                 className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
-                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                initial={false}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
                   duration: reduceMotion ? 0 : 0.6,
@@ -228,7 +228,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
         </div>
         <motion.div
           key={selectedMedication}
-          initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+          initial={false}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: reduceMotion ? 0 : 0.35, ease: EASE_OUT }}
           className="mx-auto mt-6 max-w-xl lg:max-w-4xl"

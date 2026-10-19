@@ -456,7 +456,7 @@ export function GetStartedModal({
       <EdMintsPickerModal
         open={edMintsOpen}
         onOpenChange={setEdMintsOpen}
-        initialSelected="rdt"
+        initialSelected="odt"
         onBack={backFromEdMints}
       />
     </>

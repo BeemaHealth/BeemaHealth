@@ -14,11 +14,6 @@ import { GTM_CONTAINER_ID, GTM_HEAD_SCRIPT } from "@/lib/gtm";
 import { CHATBASE_EMBED_SCRIPT } from "@/lib/chatbase";
 import { absoluteUrl, ORGANIZATION_JSONLD } from "@/lib/seo";
 import { duplicateHomepageRedirectTarget } from "@/lib/canonicalize-url";
-import { SiteBootLoader } from "@/components/brand/SiteBootLoader";
-import {
-  HEX_LOADER_DURATION_SCRIPT,
-  isSiteBootLoaderEnabled,
-} from "@/lib/site-boot-loader";
 import { SITE_CHROME_PRELOAD_LINK } from "@/lib/boot-assets";
 
 import appCss from "../styles.css?url";
@@ -238,11 +233,6 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: HEX_LOADER_DURATION_SCRIPT,
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
             __html: GTM_HEAD_SCRIPT,
           }}
         />
@@ -250,11 +240,6 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         <noscript>
-          <style
-            dangerouslySetInnerHTML={{
-              __html: ".site-boot-loader{display:none!important}",
-            }}
-          />
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_CONTAINER_ID}`}
             height="0"
@@ -305,7 +290,6 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        {isSiteBootLoaderEnabled() ? <SiteBootLoader /> : null}
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
       </AuthProvider>

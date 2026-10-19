@@ -149,7 +149,7 @@ function SexualHealthPage() {
               </p>
               <motion.div
                 className="mt-6"
-                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                initial={false}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
                   duration: reduceMotion ? 0 : 0.6,
@@ -161,7 +161,7 @@ function SexualHealthPage() {
               </motion.div>
               <motion.div
                 className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
-                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                initial={false}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
                   duration: reduceMotion ? 0 : 0.6,

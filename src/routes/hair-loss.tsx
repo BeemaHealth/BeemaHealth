@@ -248,7 +248,7 @@ function HairLossPage() {
           />
           <motion.div
             className="mt-10 text-center"
-            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+            initial={false}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
             transition={{
               duration: reduceMotion ? 0 : 0.6,

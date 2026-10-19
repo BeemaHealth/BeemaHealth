@@ -225,7 +225,7 @@ function SemaglutideHoustonPage() {
               </div>
               <motion.div
                 className="mt-6"
-                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                initial={false}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
                   duration: reduceMotion ? 0 : 0.6,
@@ -237,7 +237,7 @@ function SemaglutideHoustonPage() {
               </motion.div>
               <motion.div
                 className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
-                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                initial={false}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
                   duration: reduceMotion ? 0 : 0.6,
@@ -273,7 +273,7 @@ function SemaglutideHoustonPage() {
               </p>
             </div>
             <motion.div
-              initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
+              initial={false}
               animate={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
               transition={{
                 duration: reduceMotion ? 0 : 0.7,
