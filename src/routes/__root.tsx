@@ -145,7 +145,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             "font-src 'self' data:; " +
             "img-src 'self' data: https:; " +
             "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com https://www.chatbase.co https://backend.chatbase.co; " +
-            "frame-src https://www.googletagmanager.com https://td.doubleclick.net https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.chatbase.co https://backend.chatbase.co; " +
+            "frame-src https://www.youtube-nocookie.com https://www.googletagmanager.com https://td.doubleclick.net https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.chatbase.co https://backend.chatbase.co; " +
             "form-action 'self' https://formspree.io; " +
             "base-uri 'self'; " +
             "object-src 'none'",

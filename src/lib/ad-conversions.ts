@@ -293,6 +293,32 @@ export function trackGaPageView(page: string, ctaId?: string): void {
  * Fire lead conversion events after a successful waitlist submit.
  * No PHI - event name / conversion ping only.
  */
+/**
+ * Send a GA4 event straight from the page (not through GTM).
+ *
+ * `beacon: true` uses `transport_type: "beacon"` so the hit survives the
+ * navigation to Bask that follows a CTA click. Returns false when GA is not
+ * configured or gtag is unavailable. Never pass PHI in `params`.
+ */
+export function trackGaEvent(
+  name: string,
+  params: Record<string, string | number | boolean | undefined>,
+  options: { beacon?: boolean } = {},
+): boolean {
+  const config = readAdPixelConfig();
+  if (!isGaConfigured(config) || typeof window === "undefined") return false;
+  ensureGoogleTag(config);
+  if (typeof window.gtag !== "function") return false;
+  const clean = Object.fromEntries(
+    Object.entries(params).filter(([, v]) => v !== undefined),
+  );
+  window.gtag("event", name, {
+    ...clean,
+    ...(options.beacon ? { transport_type: "beacon" } : {}),
+  });
+  return true;
+}
+
 export function trackWaitlistLeadConversion(): void {
   const config = readAdPixelConfig();
   if (!isAnyAdPixelConfigured(config)) return;

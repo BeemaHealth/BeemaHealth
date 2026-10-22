@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRO Dashboard</title>
+<style>
+  :root { --bg:#f5f6f8; --fg:#14181f; --muted:#5b6472; --card:#fff; --line:#dde1e7; --accent:#0f6b5c; --accent-fg:#fff; --warn:#9a5b00; --warn-bg:#fff4e0; --bad:#a32020; --bad-bg:#fdeaea; --ok:#146c43; --ok-bg:#e6f5ec; --bar:#7fb8ad; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#12151a; --fg:#e8ebf0; --muted:#98a1ae; --card:#1b2027; --line:#2c333d; --accent:#3cc2a8; --accent-fg:#06201a; --warn:#f0b35a; --warn-bg:#33270f; --bad:#ff8a8a; --bad-bg:#361818; --ok:#6fd49c; --ok-bg:#13291d; --bar:#2f6b61; } }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.45 system-ui, sans-serif; background:var(--bg); color:var(--fg); }
+  header { padding:12px 20px; border-bottom:1px solid var(--line); display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  h1 { font-size:16px; margin:0 8px 0 0; }
+  main { padding:16px 20px; max-width:1280px; margin:0 auto; }
+  h2 { font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin:0 0 10px; }
+  h3 { font-size:15px; margin:0 0 4px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; margin-bottom:14px; }
+  select, input, button { font:inherit; color:var(--fg); background:var(--card); border:1px solid var(--line); border-radius:6px; padding:5px 8px; }
+  button, .btn { cursor:pointer; text-decoration:none; display:inline-block; }
+  button:hover, .btn:hover { border-color:var(--accent); }
+  .btn { padding:4px 8px; border:1px solid var(--line); border-radius:6px; color:var(--fg); background:var(--card); font-size:12px; }
+  .primary { background:var(--accent); color:var(--accent-fg); border-color:var(--accent); }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .grow { flex:1; }
+  .note { color:var(--muted); font-size:12px; }
+  .banner { border-radius:8px; padding:10px 12px; margin-bottom:14px; border:1px solid; }
+  .banner.warn { background:var(--warn-bg); color:var(--warn); border-color:var(--warn); }
+  .banner.bad { background:var(--bad-bg); color:var(--bad); border-color:var(--bad); }
+  .banner.ok { background:var(--ok-bg); color:var(--ok); border-color:var(--ok); }
+  .banner b { color:inherit; }
+  .tablewrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; padding:8px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { white-space:nowrap; cursor:pointer; user-select:none; color:var(--muted); font-weight:600; font-size:12px; }
+  th.nosort { cursor:default; }
+  th:hover:not(.nosort) { color:var(--fg); }
+  td.n, th.n { text-align:right; }
+  tr.click { cursor:pointer; }
+  tr.click:hover td { background:color-mix(in srgb, var(--accent) 6%, transparent); }
+  .chip { display:inline-block; font-size:11px; padding:1px 7px; border-radius:999px; border:1px solid var(--line); margin:1px 3px 1px 0; color:var(--muted); white-space:nowrap; }
+  .chip.live { border-color:var(--ok); color:var(--ok); background:var(--ok-bg); }
+  .chip.warn { border-color:var(--warn); color:var(--warn); background:var(--warn-bg); }
+  .chip.bad { border-color:var(--bad); color:var(--bad); background:var(--bad-bg); }
+  .sub { color:var(--muted); font-size:12px; }
+  .unav { color:var(--muted); font-style:italic; }
+  .acts { display:flex; gap:4px; flex-wrap:wrap; }
+  .funnel .stage { margin-bottom:10px; }
+  .funnel .bar { height:26px; background:var(--bar); border-radius:4px; display:flex; align-items:center; padding:0 8px; color:var(--fg); min-width:2px; white-space:nowrap; overflow:hidden; }
+  .funnel .bar.na { background:repeating-linear-gradient(45deg,var(--line),var(--line) 6px,transparent 6px,transparent 12px); color:var(--muted); }
+  .funnel .drop { color:var(--muted); font-size:12px; margin:2px 0 8px 8px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:900px) { .grid2 { grid-template-columns:1fr; } }
+  svg text { fill:var(--muted); font-size:10px; }
+  code { background:var(--bg); padding:1px 5px; border-radius:4px; font-size:12px; }
+  details summary { cursor:pointer; color:var(--muted); }
+  ul.defs { margin:8px 0 0; padding-left:18px; } ul.defs li { margin-bottom:6px; }
+  #toast { position:fixed; bottom:16px; right:16px; background:var(--accent); color:var(--accent-fg); padding:8px 12px; border-radius:8px; display:none; max-width:420px; }
+  #toast.err { background:var(--bad); color:#fff; }
+  .demo { border:1px dashed var(--warn); }
+</style>
+</head>
+<body>
+<header>
+  <h1>CRO Dashboard</h1>
+  <select id="pageSel" aria-label="Landing page"></select>
+  <select id="daysSel" aria-label="Date range"><option value="7">Last 7 days</option><option value="14">Last 14 days</option><option value="30" selected>Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select>
+  <button id="refresh">Refresh</button>
+  <span class="note grow" id="fresh"></span>
+  <button id="setupBtn">Tracking &amp; setup</button>
+</header>
+<main id="main"></main>
+<div id="toast"></div>
+<script type="module">
+import { MIN_VISITORS, handoffRate, wilson, compareRates, variantWarnings, concurrencyShare } from "/metrics.mjs";
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pct = (x, d = 1) => (x == null ? "-" : (x * 100).toFixed(d) + "%");
+const fmt = (n) => Number(n).toLocaleString();
+const day = (yyyymmdd) => `${yyyymmdd.slice(0,4)}-${yyyymmdd.slice(4,6)}-${yyyymmdd.slice(6,8)}`;
+
+let S = null;            // /api/state
+let R = null;            // /api/report for current page/days
+let page = null, days = 30;
+let view = { name: "table" };          // or { name:"detail", variant }
+let sort = { key: "status", dir: 1 };
+let filter = { status: "all", q: "" };
+let edits = null;        // pending local edits: { [variantId]: {status, weight} }
+let detail = null;       // /api/detail
+let pageStats = null;    // /api/pagestats (page level, not per variant)
+let compareTo = null;
+let showSetup = false;
+let realtime = null;
+let loadingReport = false;
+
+const STATUS_ORDER = { live: 0, paused: 1, draft: 2, archived: 3 };
+
+async function api(url, body) {
+  const r = await fetch(url, body ? { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify(body) } : undefined);
+  const j = await r.json();
+  if (!r.ok) { toast(j.error || "Request failed", true); return null; }
+  return j;
+}
+
+async function loadState(initial) {
+  const next = await (await fetch("/api/state")).json();
+  const changed = JSON.stringify(next) !== JSON.stringify(S);
+  S = next;
+  if (!page || !S.pages[page]) page = Object.keys(S.pages)[0] ?? null;
+  if (initial || changed) { renderPageSel(); render(); }
+}
+
+async function loadReport() {
+  if (!page) return;
+  loadingReport = true; R = null; render();
+  try { R = await (await fetch(`/api/report?page=${page}&days=${days}`)).json(); }
+  catch (e) { R = { error: String(e) }; }
+  loadingReport = false; render();
+  pageStats = null;
+  try { pageStats = await (await fetch(`/api/pagestats?page=${page}&days=${days}`)).json(); }
+  catch (e) { pageStats = { error: String(e) }; }
+  render();
+}
+
+async function loadDetail(variant) {
+  detail = null; render();
+  detail = await (await fetch(`/api/detail?page=${page}&variant=${variant}&days=${days}`)).json();
+  render();
+}
+
+function renderPageSel() {
+  $("pageSel").innerHTML = Object.keys(S.pages).map((p) => `<option value="${esc(p)}" ${p === page ? "selected" : ""}>/${esc(p)}/</option>`).join("");
+}
+
+// ---- derived numbers per variant -----------------------------------------
+function trackingCtx() {
+  const dims = R?.dims?.all === true;
+  const verified = (R?.health?.intake_handoff?.events ?? 0) > 0;
+  return { dimensionsRegistered: dims, trackingVerified: verified };
+}
+
+function metricsFor(v) {
+  const t = R?.variants?.[v.id] ?? { visitors: 0, clickers: 0, clicks: 0, exposures: 0 };
+  const ctx = trackingCtx();
+  const warnings = R && !R.error && R.configured ? variantWarnings(t, ctx) : ["no-data"];
+  const known = !warnings.includes("custom-dimensions-missing") && !warnings.includes("no-data");
+  const rateUsable = known && !warnings.includes("handoff-unverified") && !warnings.includes("no-exposures");
+  return {
+    visitors: t.visitors, clickers: t.clickers, clicks: t.clicks,
+    nonClickers: Math.max(0, t.visitors - t.clickers),
+    rate: rateUsable ? handoffRate(t.visitors, t.clickers) : null,
+    known, rateUsable, warnings,
+    firstDay: R?.variantDays?.[v.id]?.[0] ?? null,
+    days: R?.variantDays?.[v.id] ?? [],
+  };
+}
+
+const WARN_TEXT = {
+  "custom-dimensions-missing": ["bad", "GA4 dimensions not registered"],
+  "handoff-unverified": ["bad", "Handoff tracking unverified"],
+  "no-exposures": ["warn", "No exposures yet"],
+  "low-traffic": ["warn", `Under ${MIN_VISITORS} visitors`],
+  "clickers-exceed-visitors": ["bad", "Clickers exceed visitors: incomplete exposure data"],
+  "no-data": ["warn", "No analytics loaded"],
+};
+const chips = (ws) => ws.map((w) => `<span class="chip ${WARN_TEXT[w][0]}">${esc(WARN_TEXT[w][1])}</span>`).join("");
+
+function deployChip(v, pg) {
+  const dep = v.deployed;
+  const depLive = dep?.status === "live";
+  if (v.status === "live" && depLive) return `<span class="chip live">Live on site</span>` + (dep.weight !== v.weight ? `<span class="chip warn">weight change not deployed</span>` : "");
+  if (v.status === "live" && !depLive) return `<span class="chip warn">Live locally, not deployed</span>`;
+  if (v.status !== "live" && depLive) return `<span class="chip warn">Still live on site until you deploy</span>`;
+  return "";
+}
+
+// ---- rendering -------------------------------------------------------------
+function render() {
+  if (!S) return;
+  $("fresh").textContent = R?.fetchedAt ? `GA4 data fetched ${new Date(R.fetchedAt).toLocaleTimeString()}. Today is preliminary; GA4 standard reports can lag up to ~24-48h.` : "";
+  if (showSetup) return void ($("main").innerHTML = setupView());
+  if (!page) { $("main").innerHTML = `<div class="card">No landing pages with variants found.</div>`; return; }
+  $("main").innerHTML = view.name === "detail" ? detailView() : tableView();
+  bind();
+}
+
+function healthBanner() {
+  if (loadingReport) return `<div class="banner">Loading GA4 data...</div>`;
+  if (!S.ga4) return `<div class="banner bad"><b>GA4 not connected.</b> Create <code>tools/cro/config.json</code> with <code>{"ga4PropertyId":"546707320"}</code> and log in with <code>gcloud auth application-default login</code>.</div>`;
+  if (!R) return "";
+  if (R.error) return `<div class="banner bad"><b>GA4 request failed.</b> ${esc(R.error)}</div>`;
+  const h = R.health, out = [];
+  if (!R.dims.all) {
+    const missing = Object.entries(R.dims.registered).filter(([, ok]) => !ok).map(([k]) => k).join(", ");
+    out.push(`<div class="banner bad"><b>Per-variant numbers are unavailable.</b> GA4 custom dimensions not registered: <code>${esc(missing)}</code>. See Tracking &amp; setup. Values shown as "-" are <b>unknown, not zero</b>.</div>`);
+  }
+  if (h.intake_handoff.events === 0) {
+    out.push(`<div class="banner warn"><b>Intake handoff tracking is unverified for this page.</b> GA4 recorded <b>0</b> <code>intake_handoff</code> events in the last ${R.days} days (it has never recorded one for this property). That means "not measured", not "0 clicks". Conversion rates are hidden until the first event arrives.</div>`);
+  } else {
+    out.push(`<div class="banner ok">Handoff tracking verified: ${fmt(h.intake_handoff.events)} <code>intake_handoff</code> events from ${fmt(h.intake_handoff.users)} users on this page in the last ${R.days} days.</div>`);
+  }
+  return out.join("");
+}
+
+function tableView() {
+  const pg = S.pages[page];
+  const rows = pg.variants
+    .map((v) => ({ v, m: metricsFor(v) }))
+    .filter(({ v }) => (filter.status === "all" || v.status === filter.status) && (!filter.q || (v.label + v.id).toLowerCase().includes(filter.q.toLowerCase())));
+  const key = sort.key;
+  const val = ({ v, m }) => ({
+    name: v.label.toLowerCase(), status: STATUS_ORDER[v.status], weight: v.weight,
+    visitors: m.visitors, clickers: m.clickers, rate: m.rate ?? -1, non: m.nonClickers, start: v.lastActivation ?? m.firstDay ?? "",
+  })[key];
+  rows.sort((a, b) => { const x = val(a), y = val(b); return (x < y ? -1 : x > y ? 1 : 0) * sort.dir; });
+  const th = (k, label, cls = "") => `<th class="${cls}" data-sort="${k}">${label}${sort.key === k ? (sort.dir > 0 ? " &uarr;" : " &darr;") : ""}</th>`;
+  const dimsOk = R?.dims?.all;
+  const cell = (m, text) => (m.known ? text : `<span class="unav">unavailable</span>`);
+
+  const body = rows.map(({ v, m }) => `
+    <tr class="click" data-open="${esc(v.id)}">
+      <td><b>${esc(v.label)}</b><div class="sub">${esc(v.id)}</div></td>
+      <td><span class="chip ${v.status === "live" ? "live" : ""}">${esc(v.status)}</span>${deployChip(v, pg)}</td>
+      <td class="n">${v.weight}%${v.deployed && v.deployed.weight !== v.weight ? `<div class="sub">deployed: ${v.deployed.weight}%</div>` : ""}</td>
+      <td class="n">${cell(m, fmt(m.visitors))}</td>
+      <td class="n">${cell(m, m.rateUsable || m.clickers ? fmt(m.clickers) : fmt(m.clickers))}</td>
+      <td class="n">${m.rateUsable ? `<b>${pct(m.rate)}</b>` : `<span class="unav">${m.known ? (m.warnings.includes("handoff-unverified") ? "unverified" : "-") : "unavailable"}</span>`}${chips(m.warnings.filter((w) => w !== "no-data"))}</td>
+      <td class="n">${cell(m, fmt(m.nonClickers))}</td>
+      <td>${v.lastActivation ? `Active since ${esc(new Date(v.lastActivation).toLocaleDateString())}` : `<span class="unav">no confirmed deploy</span>`}${m.firstDay ? `<div class="sub">first exposure ${day(m.firstDay)}</div>` : ""}</td>
+      <td><div class="acts">
+        <a class="btn" target="_blank" rel="noopener" href="${esc(v.previewUrl)}" data-stop>Preview</a>
+        ${v.status !== "live" ? `<button class="btn" data-act="live" data-id="${esc(v.id)}" data-stop>Activate</button>` : ""}
+        ${v.status === "live" ? `<button class="btn" data-act="paused" data-id="${esc(v.id)}" data-stop>Pause</button>` : ""}
+        ${v.status !== "archived" ? `<button class="btn" data-act="archived" data-id="${esc(v.id)}" data-stop>Archive</button>` : ""}
+        <button class="btn" data-edit="${esc(v.id)}" data-stop>Edit</button>
+        <button class="btn" data-open="${esc(v.id)}" data-stop>Details</button>
+      </div></td>
+    </tr>`).join("") || `<tr><td colspan="9" class="unav">No variants match the filter.</td></tr>`;
+
+  return `
+    ${healthBanner()}
+    <div class="card">
+      <div class="row" style="margin-bottom:10px">
+        <h2 style="margin:0">Variants for /${esc(page)}/</h2><span class="note">experiment <code>${esc(pg.experimentId)}</code></span>
+        <span class="grow"></span>
+        <select id="fStatus"><option value="all">All statuses</option>${["live","paused","draft","archived"].map((s) => `<option ${filter.status === s ? "selected" : ""}>${s}</option>`).join("")}</select>
+        <input id="fQ" placeholder="Filter by name" value="${esc(filter.q)}">
+      </div>
+      <div class="tablewrap"><table>
+        <tr>${th("name","Variant")}${th("status","Status")}${th("weight","Traffic","n")}${th("visitors","Unique visitors","n")}${th("clickers","Visitors who clicked into Bask","n")}${th("rate","Intake handoff rate","n")}${th("non","Did not click","n")}${th("start","Activation")}<th class="nosort">Actions</th></tr>
+        ${body}
+      </table></div>
+      <p class="note">Intake handoff = a click on a CTA that leaves for Bask. It is <b>not</b> a confirmed questionnaire start. Click a row for the funnel.</p>
+    </div>
+    ${deployPanel(pg)}
+    ${editorPanel(pg)}
+    ${historicalCard()}
+    ${definitionsCard()}`;
+}
+
+function deployPanel(pg) {
+  const last = pg.lastDeployAt ? new Date(pg.lastDeployAt).toLocaleString() : "never confirmed";
+  return `<div class="card ${pg.pendingDeploy ? "" : ""}">
+    <h2>Deployment</h2>
+    ${pg.pendingDeploy
+      ? `<div class="banner warn" style="margin-bottom:8px"><b>Your local settings are not confirmed as live.</b> Nothing below is live for visitors until you run your deploy script. Last confirmed deploy: ${esc(last)}.</div>`
+      : `<div class="banner ok" style="margin-bottom:8px">Local settings match the last confirmed deploy (${esc(last)}).</div>`}
+    <div class="row">
+      <span class="note">After deploying, confirm it so "Live" and activation dates are accurate:</span>
+      <input type="datetime-local" id="depAt"><button class="btn primary" id="confirmDeploy">I deployed these settings</button>
+    </div>
+    <p class="note">Uncommitted changes in <code>src/landing-variants</code>:</p><pre class="note" style="margin:0;white-space:pre-wrap">${esc(S.diff || "none")}</pre>
+  </div>`;
+}
+
+function editorPanel(pg) {
+  const cur = Object.fromEntries(pg.variants.map((v) => [v.id, { status: v.status, weight: v.weight }]));
+  const e = edits ?? cur;
+  const liveTotal = pg.variants.reduce((n, v) => n + (e[v.id].status === "live" ? Number(e[v.id].weight) || 0 : 0), 0);
+  const dirty = JSON.stringify(e) !== JSON.stringify(cur);
+  const rows = pg.variants.map((v) => `<tr>
+      <td>${esc(v.label)}<div class="sub">${esc(v.id)} &middot; src/landing-variants/${esc(page)}/${esc(v.file)}</div></td>
+      <td><select data-estatus="${esc(v.id)}">${["draft","live","paused","archived"].map((s) => `<option ${e[v.id].status === s ? "selected" : ""}>${s}</option>`).join("")}</select></td>
+      <td class="n"><input type="number" min="0" max="100" step="1" style="width:70px" data-eweight="${esc(v.id)}" value="${e[v.id].status === "live" ? e[v.id].weight : 0}" ${e[v.id].status === "live" ? "" : "disabled"}> %</td></tr>`).join("");
+  const nLive = pg.variants.filter((v) => e[v.id].status === "live").length;
+  return `<div class="card" id="editor">
+    <h2>Traffic &amp; status</h2>
+    <div class="tablewrap"><table><tr><th class="nosort">Variant</th><th class="nosort">Status</th><th class="nosort n">Traffic</th></tr>${rows}</table></div>
+    <div class="row" style="margin-top:10px">
+      <span class="chip ${liveTotal === 100 ? "live" : "bad"}">Live total: ${liveTotal}%</span>
+      <button class="btn" id="evenSplit">Split evenly</button>
+      <button class="btn primary" id="applyEdits" ${dirty && liveTotal === 100 ? "" : "disabled"}>Apply locally</button>
+      <button class="btn" id="resetEdits" ${dirty ? "" : "disabled"}>Reset</button>
+    </div>
+    <p class="note">${nLive > 1
+      ? `<b>Randomized split:</b> visitors are assigned once per browser and stay in their variant. Results are comparable because variants run at the same time.`
+      : `<b>Single variant:</b> everyone sees it. Comparing it with a variant that ran at a different time is <b>sequential and nonrandomized</b>: seasonality, ad changes, and traffic mix can explain differences.`}
+      Applying only edits files in your working tree; it does not change the site until you deploy.</p>
+    <div class="row">
+      <input id="newName" placeholder="new-variant-name"><input id="newLabel" placeholder="Label (optional)">
+      <button class="btn" id="newVariant">+ New variant (copy of control, saved as draft)</button>
+      <span class="grow"></span>
+      <button class="btn" id="newExp" title="Starts a new experiment id; returning visitors are re-randomized">Start new experiment</button>
+    </div>
+  </div>`;
+}
+
+function historicalCard() {
+  if (!R?.health) return "";
+  const h = R.health.page_view;
+  const tagged = Object.values(R.variants ?? {}).reduce((n, v) => n + v.visitors, 0);
+  return `<div class="card">
+    <h2>Reconciliation with raw GA4 (not attributed to variants)</h2>
+    <p style="margin:0">GA4 <code>page_view</code> on this page, last ${R.days} days: <b>${fmt(h.users)}</b> users, ${fmt(h.events)} events.
+    Variant-tagged unique visitors (summed): <b>${R.dims?.all ? fmt(tagged) : "unavailable"}</b>.</p>
+    <p class="note">Page views before variant tagging shipped cannot be assigned to a variant and are never attributed to the control. They are shown only as a reference total. Large gaps between these two numbers after launch mean exposure tracking is incomplete (ad blockers, consent, or pages not yet deployed with tagging).</p>
+  </div>
+  <div class="card"><h2>This page in GA4: all visitors, all variants combined</h2>
+    <p class="note" style="margin-top:0">Real GA4 data available today. It is <b>not</b> split by variant and has no click data yet, because <code>intake_handoff</code> was never recorded before tagging shipped.</p>
+    <div class="grid2"><div>${seriesChart(pageStats, { noRate: true })}</div><div>${breakdownTable(pageStats, { noRate: true })}</div></div>
+  </div>`;
+}
+
+function definitionsCard() {
+  return `<details class="card"><summary>How every number is calculated</summary><ul class="defs">
+    <li><b>Unique visitors</b>: GA4 <code>totalUsers</code> for event <code>variant_exposure</code> where <code>landing_page_id</code> = this page and <code>variant_id</code> = the variant, over the selected dates, de-duplicated per browser (GA4 client id). Preview and admin-excluded browsers never send this event.</li>
+    <li><b>Visitors who clicked into Bask</b>: GA4 <code>totalUsers</code> for event <code>intake_handoff</code> with the same page and variant. Counted once per user however many times they click.</li>
+    <li><b>Intake handoff rate</b> = unique clickers / unique visitors. Shown with a 95% Wilson interval in the detail view.</li>
+    <li><b>Did not click</b> = visitors minus clickers.</li>
+    <li><b>Not used</b>: page views, sessions, and raw event counts. Those answer different questions (repeat loads, return visits, multiple clicks).</li>
+    <li><b>Limits</b>: one person on two browsers or devices counts as two. Ad blockers hide some visitors from GA4. Handoff is a click toward Bask, not a started questionnaire; confirming starts needs evidence from Bask.</li>
+    <li><b>Ad clicks</b> (Google Ads) and GA4 visitors are measured differently and are not matched one-to-one.</li></ul></details>`;
+}
+
+// ---- detail view ----------------------------------------------------------
+function detailView() {
+  const pg = S.pages[page];
+  const v = pg.variants.find((x) => x.id === view.variant);
+  if (!v) { view = { name: "table" }; return tableView(); }
+  const m = metricsFor(v);
+  const others = pg.variants.filter((x) => x.id !== v.id);
+  if (!compareTo || compareTo === v.id || !pg.variants.some((x) => x.id === compareTo)) compareTo = (others.find((x) => x.id === "v1-control") ?? others[0])?.id ?? null;
+  const cmpV = others.find((x) => x.id === compareTo);
+  const cm = cmpV ? metricsFor(cmpV) : null;
+
+  const stage = (label, n, width, na, extra = "") => `<div class="stage"><div class="sub">${label}</div><div class="bar ${na ? "na" : ""}" style="width:${Math.max(width, 3)}%">${na ? "not connected" : fmt(n)}</div>${extra}</div>`;
+  const vis = m.visitors || 0;
+  const funnel = !m.known ? `<p class="unav">Funnel unavailable: ${m.warnings.includes("custom-dimensions-missing") ? "GA4 custom dimensions are not registered." : "no analytics loaded."}</p>` : `<div class="funnel">
+      ${stage("Ad clicks (Google Ads)", 0, 100, true, `<div class="drop">Ads adapter not connected. Ad clicks and GA4 visitors are measured differently and are not matched one-to-one.</div>`)}
+      ${stage("Landing-page visitors (unique)", vis, 100, false)}
+      <div class="drop">${m.rateUsable ? `${pct(m.rate)} of visitors clicked into Bask &middot; ${fmt(m.nonClickers)} did not` : "Conversion hidden: handoff tracking unverified"}</div>
+      ${stage("Clicked into Bask (intake handoff)", m.clickers, vis ? (m.clickers / vis) * 100 : 0, false)}
+      ${stage("Did not click into Bask", m.nonClickers, vis ? (m.nonClickers / vis) * 100 : 0, false)}
+    </div>`;
+
+  const ci = m.rateUsable ? wilson(m.clickers, m.visitors) : null;
+  const when = v.lastActivation ? `Active since ${new Date(v.lastActivation).toLocaleString()}` : "No confirmed deploy yet";
+
+  let compare = `<p class="unav">Select another variant with data to compare.</p>`;
+  if (cm && m.rateUsable && cm.rateUsable) {
+    const r = compareRates(cm.clickers, cm.visitors, m.clickers, m.visitors);
+    const conc = concurrencyShare(m.days, cm.days);
+    const concurrent = conc >= 0.8;
+    const small = m.visitors < MIN_VISITORS || cm.visitors < MIN_VISITORS;
+    const cci = wilson(cm.clickers, cm.visitors);
+    compare = `<div class="banner ${concurrent ? "ok" : "warn"}"><b>${concurrent ? "Concurrent comparison" : "Sequential, nonrandomized comparison"}.</b> ${concurrent
+      ? `The two variants were shown on overlapping days (${Math.round(conc * 100)}%). This is only a randomized A/B test if both were live in one split experiment.`
+      : `These variants ran at different times (${Math.round(conc * 100)}% day overlap). Seasonality, ad changes, and traffic mix can explain the difference; it is not causally equivalent to a simultaneous A/B test.`}</div>
+      <table><tr><th class="nosort"></th><th class="nosort n">Visitors</th><th class="nosort n">Clickers</th><th class="nosort n">Rate</th><th class="nosort n">95% interval</th></tr>
+      <tr><td>${esc(cmpV.label)}</td><td class="n">${fmt(cm.visitors)}</td><td class="n">${fmt(cm.clickers)}</td><td class="n">${pct(cm.rate)}</td><td class="n">${pct(cci.low)} - ${pct(cci.high)}</td></tr>
+      <tr><td>${esc(v.label)}</td><td class="n">${fmt(m.visitors)}</td><td class="n">${fmt(m.clickers)}</td><td class="n"><b>${pct(m.rate)}</b></td><td class="n">${pct(ci.low)} - ${pct(ci.high)}</td></tr></table>
+      <p>Difference: <b>${r.diff >= 0 ? "+" : ""}${(r.diff * 100).toFixed(1)} points</b> vs ${esc(cmpV.label)}, p = ${r.p < 0.001 ? "<0.001" : r.p.toFixed(3)}.
+      ${small ? `<span class="chip warn">Under ${MIN_VISITORS} visitors: treat as noise</span>` : ""}</p>
+      <p class="note">A small p-value does not by itself justify a decision; with several variants and repeated peeking, false positives are common. Decide a sample size in advance.</p>`;
+  } else if (cm) {
+    compare = `<p class="unav">Comparison unavailable: ${!cm.rateUsable ? esc(cmpV.label) : "this variant"} has no usable conversion data yet.</p>`;
+  }
+
+  return `
+    <div class="row" style="margin-bottom:10px"><button class="btn" id="back">&larr; All variants</button><span class="note">${esc(page)} / experiment ${esc(pg.experimentId)}</span></div>
+    ${healthBanner()}
+    <div class="card">
+      <h3>${esc(v.label)} <span class="chip ${v.status === "live" ? "live" : ""}">${esc(v.status)}</span>${deployChip(v, pg)}</h3>
+      <div class="sub">${esc(v.id)} &middot; ${esc(when)} &middot; traffic ${v.weight}%${m.firstDay ? ` &middot; first exposure ${day(m.firstDay)}` : ""}</div>
+      <div class="row" style="margin-top:8px"><a class="btn" target="_blank" rel="noopener" href="${esc(v.previewUrl)}">Preview (dev server)</a>
+        <span class="note">Preview is untracked. Only variants that are live ship to production, so a draft can only be previewed locally.</span></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h2>Funnel (${R?.days ?? days} days)</h2>${funnel}</div>
+      <div class="card"><h2>Compare</h2>
+        <div class="row" style="margin-bottom:8px">Compare with <select id="cmpSel">${others.map((x) => `<option value="${esc(x.id)}" ${x.id === compareTo ? "selected" : ""}>${esc(x.label)}</option>`).join("")}</select></div>${compare}</div>
+    </div>
+    <div class="card"><h2>Daily visitors and handoff rate</h2>${seriesChart()}</div>
+    <div class="card"><h2>Source / medium / campaign</h2>${breakdownTable()}</div>`;
+}
+
+function seriesChart(d = detail, opts = {}) {
+  if (!d) return `<p class="note">Loading...</p>`;
+  if (d.error) return `<p class="unav">${esc(d.error)}</p>`;
+  if (!d.configured) return `<p class="unav">GA4 not connected.</p>`;
+  if (d.dimsMissing) return `<p class="unav">Per-variant daily data is unavailable until the GA4 custom dimensions are registered (see Tracking &amp; setup). Page-level history is shown on the main variants screen.</p>`;
+  const s = d.series;
+  if (!s.length) return `<p class="unav">No tagged exposures in this period.</p>`;
+  const W = 760, H = 190, pl = 34, pb = 22, pt = 8, pr = 34;
+  const maxV = Math.max(...s.map((d) => d.visitors), 1);
+  const bw = (W - pl - pr) / s.length;
+  const todayKey = new Date().toISOString().slice(0,10).replaceAll("-", "");
+  const verified = !opts.noRate && (R?.health?.intake_handoff?.events ?? 0) > 0;
+  const bars = s.map((d, i) => {
+    const h = ((H - pt - pb) * d.visitors) / maxV;
+    const x = pl + i * bw;
+    return `<rect x="${x + 1}" y="${H - pb - h}" width="${Math.max(bw - 2, 1)}" height="${h}" fill="var(--bar)" ${d.date >= todayKey ? 'opacity="0.45"' : ""}><title>${day(d.date)}: ${d.visitors} visitors, ${d.clickers} clickers${d.date >= todayKey ? " (preliminary)" : ""}</title></rect>`;
+  }).join("");
+  const rates = s.map((d, i) => ({ x: pl + i * bw + bw / 2, r: d.visitors ? d.clickers / d.visitors : null }));
+  const maxR = Math.max(...rates.map((p) => p.r ?? 0), 0.05);
+  const pts = rates.filter((p) => p.r != null).map((p) => `${p.x},${pt + (H - pt - pb) * (1 - p.r / maxR)}`);
+  const line = verified && pts.length > 1 ? `<polyline fill="none" stroke="var(--accent)" stroke-width="2" points="${pts.join(" ")}"/>` : "";
+  const labels = `<text x="${pl}" y="${H - 6}">${day(s[0].date)}</text><text x="${W - pr}" y="${H - 6}" text-anchor="end">${day(s[s.length-1].date)}</text>
+    <text x="${pl - 4}" y="${pt + 8}" text-anchor="end">${maxV}</text><text x="${W - pr + 4}" y="${pt + 8}">${verified ? pct(maxR, 0) : ""}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Daily visitors (bars) and handoff rate (line)">${bars}${line}${labels}</svg>
+    <p class="note">Bars: unique visitors per day (left axis). ${opts.noRate ? "" : `Line: handoff rate (right axis)${verified ? "" : " - hidden because handoff tracking is unverified"}.`} Faded bars are today (preliminary). Daily rates on small numbers are noisy.</p>`;
+}
+
+function breakdownTable(d = detail, opts = {}) {
+  if (!d) return `<p class="note">Loading...</p>`;
+  if (d.dimsMissing) return `<p class="unav">Unavailable until the GA4 custom dimensions are registered.</p>`;
+  if (!d.configured || d.error) return `<p class="unav">Unavailable.</p>`;
+  if (!d.breakdown.length) return `<p class="unav">No data.</p>`;
+  const verified = !opts.noRate && (R?.health?.intake_handoff?.events ?? 0) > 0;
+  return `<div class="tablewrap"><table><tr><th class="nosort">Source / medium</th><th class="nosort">Campaign</th><th class="nosort n">Visitors</th><th class="nosort n">Clickers</th><th class="nosort n">Rate</th></tr>` +
+    d.breakdown.slice(0, 25).map((b) => `<tr><td>${esc(b.source)}</td><td>${esc(b.campaign)}</td><td class="n">${fmt(b.visitors)}</td><td class="n">${fmt(b.clickers)}</td><td class="n">${verified && b.visitors ? pct(handoffRate(b.visitors, b.clickers)) : "-"}</td></tr>`).join("") +
+    `</table></div><p class="note">Source columns use GA4 session attribution, so a user's source can differ slightly from the exposure event.</p>`;
+}
+
+// ---- setup / verification --------------------------------------------------
+function setupView() {
+  const dims = R?.dims?.registered;
+  const dimRow = (d) => `<tr><td><code>${d}</code></td><td>${dims ? (dims[d] ? '<span class="chip live">registered</span>' : '<span class="chip bad">missing</span>') : "?"}</td></tr>`;
+  return `<div class="row" style="margin-bottom:10px"><button class="btn" id="closeSetup">&larr; Back</button></div>
+    <div class="card"><h2>1. GA4 custom dimensions (manual, one-time)</h2>
+      <p>GA4 Admin &gt; Custom definitions &gt; Create custom dimension. Scope <b>Event</b> for all three:</p>
+      <table><tr><th class="nosort">Event parameter</th><th class="nosort">Status</th></tr>${["variant_id","experiment_id","landing_page_id"].map(dimRow).join("")}</table>
+      <p class="note">Dimension name and event parameter can be identical (for example <code>variant_id</code>). Dimensions apply only to events received after registration, and can take up to ~24h to show in reports.</p></div>
+    <div class="card"><h2>2. Verify events fire (GA4 DebugView)</h2><ol>
+      <li>Open the deployed (or preview-deployed) page with <code>?ga_debug=1</code> appended, for example <code>https://beemahealth.com/tirzepatide-houston/?ga_debug=1</code>. That flag sends events from non-production hosts and turns on debug mode.</li>
+      <li>GA4 &gt; Admin &gt; DebugView. Within a few seconds expect <code>page_view</code> then <code>variant_exposure</code> with <code>experiment_id</code>, <code>variant_id</code>, <code>landing_page_id</code>.</li>
+      <li>Click the hero CTA. Expect <code>intake_handoff</code> with <code>cta_id</code> plus the same three parameters. Click in a normal tab, not a new-tab/blocked context, because the browser leaves for Bask immediately (events are sent as beacons for that reason).</li>
+      <li>Visit with <code>?preview_variant=&lt;id&gt;</code> and confirm <b>no</b> experiment events appear (previews are excluded). Visit once with <code>?exp_exclude=1</code> in your own browser to exclude it permanently (<code>?exp_exclude=0</code> undoes).</li></ol>
+      <p class="note">Brave, DuckDuckGo and Safari private modes often block GA entirely; test in Chrome.</p></div>
+    <div class="card"><h2>3. GTM note (no GTM change required)</h2>
+      <p>The published GTM container <code>GTM-MHHJ44GF</code> contains no <code>intake_handoff</code> tag or trigger, which is why GA4 never received the event. The site now sends it to GA4 directly. <b>Do not publish the spec's "T3 GA4 - intake_handoff" tag</b>: it would double count. The site still pushes <code>intake_handoff</code> to the dataLayer (now with the experiment ids) in case you later want a Google Ads conversion tag in GTM.</p>
+      <p class="note">GTM Preview check, if you want to confirm: open Tag Assistant on the page, click the CTA, and confirm a <code>intake_handoff</code> dataLayer event appears in the event list. It will show "no tags fired" for it; that is expected.</p></div>
+    <div class="card"><h2>4. Realtime troubleshooting (last 30 minutes only)</h2>
+      <button id="rt" class="btn">Check recent GA4 events</button><div id="rtOut" class="note" style="margin-top:8px">${realtime ? realtimeText() : ""}</div></div>`;
+}
+function realtimeText() {
+  if (!realtime.configured) return "GA4 not connected.";
+  if (realtime.error) return esc(realtime.error);
+  const find = (n) => realtime.events.find((e) => e.event === n)?.count ?? 0;
+  return `variant_exposure: <b>${find("variant_exposure")}</b>, intake_handoff: <b>${find("intake_handoff")}</b>, page_view: <b>${find("page_view")}</b> (all events: ${realtime.events.map((e) => `${esc(e.event)} ${e.count}`).join(", ") || "none"}). Realtime is for debugging, not reporting.`;
+}
+
+// ---- wiring ---------------------------------------------------------------
+function rebalance(e) {
+  const live = Object.keys(e).filter((id) => e[id].status === "live");
+  if (!live.length) return;
+  const base = Math.floor(100 / live.length);
+  live.forEach((id, i) => { e[id].weight = base + (i < 100 - base * live.length ? 1 : 0); });
+}
+function currentEdits() {
+  return edits ?? Object.fromEntries(S.pages[page].variants.map((v) => [v.id, { status: v.status, weight: v.weight }]));
+}
+
+function bind() {
+  document.querySelectorAll("[data-stop]").forEach((e) => e.addEventListener("click", (ev) => ev.stopPropagation()));
+  document.querySelectorAll("tr[data-open], button[data-open]").forEach((e) => e.addEventListener("click", () => { view = { name: "detail", variant: e.dataset.open }; render(); loadDetail(e.dataset.open); }));
+  document.querySelectorAll("th[data-sort]").forEach((e) => e.addEventListener("click", () => { sort = { key: e.dataset.sort, dir: sort.key === e.dataset.sort ? -sort.dir : 1 }; render(); }));
+  $("fStatus")?.addEventListener("change", (e) => { filter.status = e.target.value; render(); });
+  $("fQ")?.addEventListener("input", (e) => { filter.q = e.target.value; render(); $("fQ").focus(); $("fQ").setSelectionRange(filter.q.length, filter.q.length); });
+  document.querySelectorAll("[data-act]").forEach((b) => b.addEventListener("click", () => {
+    const e = structuredClone(currentEdits()); e[b.dataset.id].status = b.dataset.act;
+    if (b.dataset.act !== "live") e[b.dataset.id].weight = 0;
+    rebalance(e); edits = e; render(); $("editor")?.scrollIntoView({ behavior: "smooth" });
+    toast("Review traffic below, then press Apply locally.");
+  }));
+  document.querySelectorAll("[data-edit]").forEach((b) => b.addEventListener("click", () => { $("editor")?.scrollIntoView({ behavior: "smooth" }); }));
+  document.querySelectorAll("[data-estatus]").forEach((s) => s.addEventListener("change", () => { const e = structuredClone(currentEdits()); e[s.dataset.estatus].status = s.value; if (s.value !== "live") e[s.dataset.estatus].weight = 0; rebalance(e); edits = e; render(); }));
+  document.querySelectorAll("[data-eweight]").forEach((s) => s.addEventListener("change", () => { const e = structuredClone(currentEdits()); e[s.dataset.eweight].weight = Math.max(0, Math.min(100, Math.round(Number(s.value) || 0))); edits = e; render(); }));
+  $("evenSplit")?.addEventListener("click", () => { const e = structuredClone(currentEdits()); rebalance(e); edits = e; render(); });
+  $("resetEdits")?.addEventListener("click", () => { edits = null; render(); });
+  $("applyEdits")?.addEventListener("click", async () => { const j = await api("/api/config", { page, variants: currentEdits() }); if (j) { S = j; edits = null; toast("Applied to your working tree. Deploy, then confirm."); render(); } });
+  $("newVariant")?.addEventListener("click", async () => { const name = $("newName").value.trim(); if (!name) return toast("Enter a name first", true); const j = await api("/api/new-variant", { page, name, label: $("newLabel").value.trim() || name }); if (j) { S = j; toast("Draft created. Edit its file, then activate it."); render(); } });
+  $("newExp")?.addEventListener("click", async () => { if (!confirm("Start a new experiment? Returning visitors will be randomly re-assigned and the experiment id changes.")) return; const j = await api("/api/new-experiment", { page }); if (j) { S = j; render(); } });
+  $("confirmDeploy")?.addEventListener("click", async () => { const v = $("depAt").value; const j = await api("/api/deployed", { page, at: v ? new Date(v).toISOString() : undefined }); if (j) { S = j; toast("Deploy recorded."); render(); } });
+  $("back")?.addEventListener("click", () => { view = { name: "table" }; render(); });
+  $("cmpSel")?.addEventListener("change", (e) => { compareTo = e.target.value; render(); });
+  $("closeSetup")?.addEventListener("click", () => { showSetup = false; render(); });
+  $("rt")?.addEventListener("click", async () => { $("rtOut").textContent = "Loading..."; realtime = await (await fetch("/api/realtime")).json(); $("rtOut").innerHTML = realtimeText(); });
+}
+
+$("pageSel").addEventListener("change", (e) => { page = e.target.value; view = { name: "table" }; edits = null; loadReport(); });
+$("daysSel").addEventListener("change", (e) => { days = Number(e.target.value); loadReport(); if (view.name === "detail") loadDetail(view.variant); });
+$("refresh").addEventListener("click", () => { loadState(true); loadReport(); });
+$("setupBtn").addEventListener("click", () => { showSetup = !showSetup; render(); if (showSetup) bind(); });
+
+function toast(m, err) { const t = $("toast"); t.textContent = m; t.className = err ? "err" : ""; t.style.display = "block"; setTimeout(() => (t.style.display = "none"), 4500); }
+
+await loadState(true);
+loadReport();
+// Pick up file changes (new variants, edits, deploys) without a manual reload.
+setInterval(() => { if (!showSetup) loadState(false).catch(() => {}); }, 3000);
+</script>
+</body>
+</html>

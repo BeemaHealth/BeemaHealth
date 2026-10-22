@@ -92,13 +92,18 @@ export function isBaskIntakeUrl(url: string): boolean {
 
 /**
  * Push intake_handoff to dataLayer immediately before navigating to Bask.
- * Only `event` + `cta_location` - never email, phone, name, or form values.
+ * Only `event` + `cta_location` (+ non-PHI experiment ids) - never email, phone,
+ * name, or form values.
  */
-export function trackIntakeHandoff(ctaLocation: string): void {
+export function trackIntakeHandoff(
+  ctaLocation: string,
+  experiment?: Record<string, string>,
+): void {
   if (typeof window === "undefined") return;
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: "intake_handoff",
     cta_location: ctaLocation,
+    ...experiment,
   });
 }

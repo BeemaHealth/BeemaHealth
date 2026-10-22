@@ -1,4 +1,8 @@
 import { isBaskIntakeUrl, trackIntakeHandoff } from "@/lib/gtm";
+import {
+  experimentEventParams,
+  sendIntakeHandoffEvent,
+} from "@/lib/experiment-context";
 import { getBaskHandoffParams } from "@/lib/utm";
 
 /** Stable CTA identifiers for funnel / conversion attribution. */
@@ -405,7 +409,8 @@ export function resolveCta(
     onClick: () => {
       if (isBaskIntakeUrl(target.to)) {
         // cta_location uses the stable CtaId (e.g. home_hero, footer, pricing_hero).
-        trackIntakeHandoff(ctaId);
+        trackIntakeHandoff(ctaId, experimentEventParams());
+        sendIntakeHandoffEvent(ctaId);
       }
     },
   };

@@ -50,6 +50,11 @@ type CompoundedPriceLockupProps = {
    * teaser that still links out for full pricing.
    */
   interactive?: boolean;
+  /**
+   * Opt-in sectioned layout for CRO variants (starter pack as labeled lines,
+   * shorter semaglutide teaser). Defaults to false: original copy and layout.
+   */
+  compact?: boolean;
 };
 
 /**
@@ -63,6 +68,7 @@ export function CompoundedPriceLockup({
   className,
   size = "default",
   interactive = true,
+  compact = false,
 }: CompoundedPriceLockupProps) {
   if (!interactive) {
     return (
@@ -75,7 +81,12 @@ export function CompoundedPriceLockup({
   }
 
   return (
-    <PlanSelectorLockup pricing={pricing} className={className} size={size} />
+    <PlanSelectorLockup
+      pricing={pricing}
+      className={className}
+      size={size}
+      compact={compact}
+    />
   );
 }
 
@@ -212,6 +223,7 @@ function PlanSelectorLockup({
   pricing,
   className,
   size = "default",
+  compact = false,
 }: CompoundedPriceLockupProps) {
   const hasStarter = hasStarterPack(pricing);
   const [selection, setSelection] = useState<Selection>(
@@ -283,7 +295,7 @@ function PlanSelectorLockup({
       </div>
 
       {selection.kind === "starter" && hasStarter ? (
-        <StarterPackPanel pricing={pricing} large={large} />
+        <StarterPackPanel pricing={pricing} large={large} compact={compact} />
       ) : selectedPlan ? (
         <PlanPanel
           pricing={pricing}
@@ -293,7 +305,7 @@ function PlanSelectorLockup({
         />
       ) : null}
 
-      {!hasStarter && <TirzValueTeaser className="mt-1" />}
+      {!hasStarter && <TirzValueTeaser className="mt-1" compact={compact} />}
     </div>
   );
 }
@@ -343,11 +355,13 @@ function PlanTab({
 function StarterPackPanel({
   pricing,
   large,
+  compact,
 }: {
   pricing: CompoundedMedicationPricing & {
     starterPack: NonNullable<CompoundedMedicationPricing["starterPack"]>;
   };
   large: boolean;
+  compact: boolean;
 }) {
   const pack = pricing.starterPack;
   return (
@@ -375,11 +389,31 @@ function StarterPackPanel({
           <span className="font-normal">†</span>
         </span>
       </div>
-      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-        {pack.dosePathLabel}. Typically one-time for brand-new patients
-        beginning tirzepatide. {STARTER_PACK_INTAKE_HINT} Checkout coupon does
-        not apply to the starter pack.
-      </p>
+      {compact ? (
+        <ul className="mt-3 space-y-1.5 border-t border-border/60 pt-3 text-xs leading-snug text-muted-foreground">
+          <li>
+            <span className="font-semibold text-foreground">Doses: </span>
+            {pack.dosePathLabel}
+          </li>
+          <li>
+            <span className="font-semibold text-foreground">
+              Who it is for:{" "}
+            </span>
+            brand-new patients beginning tirzepatide. Typically one-time.
+          </li>
+          <li>
+            <span className="font-semibold text-foreground">To get it: </span>
+            {STARTER_PACK_INTAKE_HINT}
+          </li>
+          <li>Checkout coupon does not apply to the starter pack.</li>
+        </ul>
+      ) : (
+        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+          {pack.dosePathLabel}. Typically one-time for brand-new patients
+          beginning tirzepatide. {STARTER_PACK_INTAKE_HINT} Checkout coupon does
+          not apply to the starter pack.
+        </p>
+      )}
     </div>
   );
 }
@@ -518,7 +552,13 @@ function PlanPanel({
 }
 
 /** Semaglutide-only teaser pointing at tirz savings + starter pack (no outcome claims). */
-function TirzValueTeaser({ className }: { className?: string }) {
+function TirzValueTeaser({
+  className,
+  compact = false,
+}: {
+  className?: string;
+  compact?: boolean;
+}) {
   const tirz = COMPOUNDED_TIRZEPATIDE_PRICING;
   const pack = tirz.starterPack;
   const m6 = getPlan(tirz, 6);
@@ -534,19 +574,32 @@ function TirzValueTeaser({ className }: { className?: string }) {
       <p className="text-sm font-semibold text-foreground">
         Larger multi-month savings on tirzepatide
       </p>
-      <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-        Maintenance plans: Save up to <SaveAmount amount={m12.savingsUsd} /> on
-        annual (
-        <span className="line-through decoration-muted-foreground/70">
-          {formatUsd(tirz.monthlyUsd)}
-        </span>{" "}
-        → {formatUsd(m12.monthlyUsd)}/mo), or {formatUsd(m6.monthlyUsd)}/mo on 6
-        months. New patients can start with the Tirzepatide{" "}
-        {starterPackTitle(pack)} at {formatUsd(pack.totalUsd)} (
-        {formatUsd(pack.monthlyEquivalentUsd)}/mo) for {pack.dosePathLabel}.{" "}
-        {STARTER_PACK_INTAKE_HINT} Your provider decides which option, if any,
-        fits - prescribing is never guaranteed.
-      </p>
+      {compact ? (
+        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+          Save up to <SaveAmount amount={m12.savingsUsd} /> on annual (
+          <span className="line-through decoration-muted-foreground/70">
+            {formatUsd(tirz.monthlyUsd)}
+          </span>{" "}
+          → {formatUsd(m12.monthlyUsd)}/mo), or start with the{" "}
+          {starterPackTitle(pack)} at {formatUsd(pack.totalUsd)} (
+          {formatUsd(pack.monthlyEquivalentUsd)}/mo) as a new patient. Your
+          provider decides which option, if any, fits.
+        </p>
+      ) : (
+        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+          Maintenance plans: Save up to <SaveAmount amount={m12.savingsUsd} />{" "}
+          on annual (
+          <span className="line-through decoration-muted-foreground/70">
+            {formatUsd(tirz.monthlyUsd)}
+          </span>{" "}
+          → {formatUsd(m12.monthlyUsd)}/mo), or {formatUsd(m6.monthlyUsd)}/mo on
+          6 months. New patients can start with the Tirzepatide{" "}
+          {starterPackTitle(pack)} at {formatUsd(pack.totalUsd)} (
+          {formatUsd(pack.monthlyEquivalentUsd)}/mo) for {pack.dosePathLabel}.{" "}
+          {STARTER_PACK_INTAKE_HINT} Your provider decides which option, if any,
+          fits - prescribing is never guaranteed.
+        </p>
+      )}
       <Link
         to="/tirzepatide/"
         className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-primary underline-offset-2 hover:underline"

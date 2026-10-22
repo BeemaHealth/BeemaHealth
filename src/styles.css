@@ -490,3 +490,16 @@
     }
   }
 }
+
+/* Landing-page split tests: hide the prerendered default variant until the
+   visitor's assigned variant has mounted, then reveal. The animation is a
+   failsafe so a JS failure can never leave the page blank. */
+.exp-pending {
+  visibility: hidden;
+  animation: exp-reveal 0s linear 2.5s forwards;
+}
+@keyframes exp-reveal {
+  to {
+    visibility: visible;
+  }
+}

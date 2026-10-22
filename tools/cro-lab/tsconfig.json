@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["shared", "server", "web/src", "vite.config.ts"],
+  "compilerOptions": {
+    "types": ["node", "vite/client"],
+    "paths": { "@shared/*": ["./shared/*"] },
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  }
+}

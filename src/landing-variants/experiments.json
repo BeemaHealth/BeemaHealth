@@ -1,0 +1,88 @@
+{
+  "tirzepatide-houston": {
+    "experimentId": "tirzepatide-houston-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v2-variant-b": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "glp-1-houston": {
+    "experimentId": "glp-1-houston-e1",
+    "variants": {
+      "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v2-variant-b": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v3-testing-new-principles": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-editing-the-pricing-large-info-text-at-b": {
+        "status": "live",
+        "weight": 100
+      }
+    }
+  },
+  "semaglutide-houston": {
+    "experimentId": "semaglutide-houston-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v2-variant-b": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "sildenafil-boston": {
+    "experimentId": "sildenafil-boston-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v2-variant-b": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "tadalafil-boston": {
+    "experimentId": "tadalafil-boston-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v2-variant-b": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "ed-mints-boston": {
+    "experimentId": "ed-mints-boston-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v2-variant-b": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  }
+}
