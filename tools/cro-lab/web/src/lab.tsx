@@ -7,7 +7,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { DailyRow, LabState, Mode, PathRow } from "@shared/types.ts";
+import type {
+  DailyRow,
+  DownstreamRow,
+  LabState,
+  Mode,
+  PathRow,
+} from "@shared/types.ts";
 import { api, ApiError } from "./api.ts";
 
 export type Period = "1" | "3" | "7" | "14" | "30" | "all";
@@ -18,6 +24,7 @@ type Ctx = {
   state: LabState | null;
   rows: DailyRow[];
   paths: PathRow[];
+  downstream: DownstreamRow[];
   error: string | null;
   loading: boolean;
   refreshedAt: Date | null;
@@ -62,6 +69,7 @@ export function LabProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<LabState | null>(null);
   const [rows, setRows] = useState<DailyRow[]>([]);
   const [paths, setPaths] = useState<PathRow[]>([]);
+  const [downstream, setDownstream] = useState<DownstreamRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshedAt, setRefreshedAt] = useState<Date | null>(null);
@@ -76,6 +84,7 @@ export function LabProvider({ children }: { children: ReactNode }) {
         setState(s);
         setRows(r.rows);
         setPaths(r.paths ?? []);
+        setDownstream(r.downstream ?? []);
         setError(null);
         setRefreshedAt(new Date());
       } catch (e) {
@@ -98,6 +107,7 @@ export function LabProvider({ children }: { children: ReactNode }) {
       state,
       rows,
       paths,
+      downstream,
       error,
       loading,
       refreshedAt,
@@ -113,7 +123,18 @@ export function LabProvider({ children }: { children: ReactNode }) {
         setPeriodRaw(p);
       },
     }),
-    [mode, state, rows, paths, error, loading, refreshedAt, reload, period],
+    [
+      mode,
+      state,
+      rows,
+      paths,
+      downstream,
+      error,
+      loading,
+      refreshedAt,
+      reload,
+      period,
+    ],
   );
 
   return <LabCtx.Provider value={value}>{children}</LabCtx.Provider>;

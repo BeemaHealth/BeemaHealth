@@ -1,4 +1,10 @@
-import type { DailyRow, LabState, Mode, PathRow } from "@shared/types.ts";
+import type {
+  DailyRow,
+  DownstreamRow,
+  LabState,
+  Mode,
+  PathRow,
+} from "@shared/types.ts";
 
 export class ApiError extends Error {}
 
@@ -30,11 +36,11 @@ async function call<T>(
 export const api = {
   state: (m: Mode) => call<LabState>("GET", "/state", m),
   rows: (m: Mode, refresh = false) =>
-    call<{ rows: DailyRow[]; paths: PathRow[] }>(
-      "GET",
-      `/rows${refresh ? "?refresh=1" : ""}`,
-      m,
-    ),
+    call<{
+      rows: DailyRow[];
+      paths: PathRow[];
+      downstream: DownstreamRow[];
+    }>("GET", `/rows${refresh ? "?refresh=1" : ""}`, m),
   createVariant: (m: Mode, body: unknown) =>
     call<{ id: string; componentPath: string }>("POST", "/variants", m, body),
   patchVariant: (m: Mode, pageId: string, id: string, body: unknown) =>

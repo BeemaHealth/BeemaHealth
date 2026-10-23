@@ -2,6 +2,7 @@
 // Used by the web UI today and by the GA4 cache layer in Phase C.
 import type {
   DailyRow,
+  DownstreamRow,
   PathRow,
   Deployment,
   Variant,
@@ -436,4 +437,44 @@ export function variantPaths(opts: {
     if (!a || a.variantId !== opts.variantId) return false;
     return !opts.windowIds || opts.windowIds.includes(a.deploymentId);
   });
+}
+
+export type DownstreamTotals = {
+  /** Unique users who fired the Bask signup event. */
+  signups: number;
+  /** Unique users who fired the Bask purchase event. */
+  purchases: number;
+};
+
+/**
+ * Sums sitewide Bask events (already filtered to the wanted dates). Unique
+ * users per day are added across days, the same way the landing funnel adds
+ * daily users, so a person active on two days counts twice in both.
+ */
+export function downstreamTotals(rows: DownstreamRow[]): DownstreamTotals {
+  let signups = 0;
+  let purchases = 0;
+  for (const r of rows) {
+    if (r.event === "signup") signups += r.users;
+    else purchases += r.users;
+  }
+  return { signups, purchases };
+}
+
+/**
+ * Bask signups and purchases tied to one page, on the days of `rows` that have
+ * handoff tracking (handoff tracking is newer than the signup tag, so older
+ * days would inflate the ratio). `rows` are the landing rows being summarized,
+ * so a variant's windows, period and attribution carry over automatically.
+ */
+export function pageDownstream(
+  down: DownstreamRow[],
+  pageId: string,
+  rows: DailyRow[],
+): DownstreamTotals {
+  const dates = new Set<string>();
+  for (const r of rows) if (r.handoffUsers !== null) dates.add(r.date);
+  return downstreamTotals(
+    down.filter((r) => r.pageId === pageId && dates.has(r.date)),
+  );
 }

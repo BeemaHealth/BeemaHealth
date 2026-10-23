@@ -1,6 +1,7 @@
 // DEMO fixtures. Everything here is synthetic and labelled DEMO in the UI.
 import type {
   DailyRow,
+  DownstreamRow,
   PathRow,
   Deployment,
   LabData,
@@ -498,5 +499,50 @@ export function demoPaths(rows: DailyRow[]): PathRow[] {
   }
   return out.sort(
     (a, b) => a.date.localeCompare(b.date) || a.pageId.localeCompare(b.pageId),
+  );
+}
+
+/**
+ * Synthetic Bask signup and purchase counts derived from demo handoffs so the
+ * funnel narrows sensibly, attributed to a page like the live data (a share of
+ * signups carries no page).
+ */
+export function demoDownstream(rows: DailyRow[]): DownstreamRow[] {
+  const handoffs = new Map<
+    string,
+    { date: string; pageId: string; n: number }
+  >();
+  for (const r of rows) {
+    if (r.handoffUsers === null) continue;
+    const k = `${r.date}|${r.pageId}`;
+    const g = handoffs.get(k) ?? { date: r.date, pageId: r.pageId, n: 0 };
+    g.n += r.handoffUsers;
+    handoffs.set(k, g);
+  }
+  const out: DownstreamRow[] = [];
+  const add = (
+    date: string,
+    event: DownstreamRow["event"],
+    pageId: string | null,
+    n: number,
+  ) => {
+    if (n > 0) out.push({ date, event, pageId, users: n, events: n });
+  };
+  const days = new Set<string>();
+  for (const { date, pageId, n } of handoffs.values()) {
+    days.add(date);
+    const signups = Math.round(n * (0.45 + rand(`s|${date}|${pageId}`) * 0.2));
+    const purchases = Math.round(
+      signups * (0.35 + rand(`b|${date}|${pageId}`) * 0.2),
+    );
+    add(date, "signup", pageId, signups);
+    add(date, "purchase", pageId, purchases);
+  }
+  for (const date of days) {
+    const stray = Math.round(rand(`x|${date}`) * 2);
+    add(date, "signup", null, stray);
+  }
+  return out.sort(
+    (a, b) => a.date.localeCompare(b.date) || a.event.localeCompare(b.event),
   );
 }

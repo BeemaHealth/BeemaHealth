@@ -218,7 +218,7 @@
       "pageId": "glp-1-houston",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-10-22T21:31:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -266,6 +266,15 @@
       "endUtc": null,
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
+    },
+    {
+      "id": "dmvk2b878",
+      "pageId": "glp-1-houston",
+      "variantId": "v4-editing-the-pricing-large-info-text-at-b",
+      "startUtc": "2026-10-22T21:31:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
     }
   ],
   "tests": [

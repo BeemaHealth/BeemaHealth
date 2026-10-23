@@ -2,6 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   classifyError,
+  ctaIdFromLocation,
+  fetchDownstream,
   fetchPaths,
   fetchRows,
   getLive,
@@ -140,4 +142,51 @@ test("fetchPaths merges views and handoffs by landing page and destination", asy
   assert.equal(sema.page, "/semaglutide-houston/");
   assert.equal(sema.sessionsViewed, 3);
   assert.equal(sema.handoffSessions, 1);
+});
+
+test("fetchDownstream ties Bask events to a page by cta_id and excludes GTM Preview", async () => {
+  let request = "";
+  const q = "https://q.beemahealth.com/start-online-visit/weightloss";
+  const out = await fetchDownstream(async (req) => {
+    request = JSON.stringify(req);
+    return [
+      row(["20261021", "signup", `${q}?cta_id=glp1_hero&utm_source=x`], [2, 3]),
+      row(["20261021", "signup", `${q}?cta_id=glp1_footer`], [1, 1]),
+      row(["20261021", "signup", `${q}?cta_id=home_hero`], [1, 1]),
+      row(
+        ["20261020", "purchase", `${q}?cta_id=tirzepatide_houston_hero`],
+        [1, 1],
+      ),
+      row(
+        [
+          "20261020",
+          "signup",
+          "https://q.beemahealth.com/start-online-visit/draft-1",
+        ],
+        [1, 1],
+      ),
+      row(["20261020", "intake_handoff", `${q}?cta_id=glp1_hero`], [9, 9]),
+    ];
+  });
+  assert.deepEqual(
+    out.map((r) => [r.date, r.event, r.pageId, r.users, r.events]),
+    [
+      ["2026-10-20", "purchase", "tirzepatide-houston", 1, 1],
+      ["2026-10-20", "signup", null, 1, 1],
+      ["2026-10-21", "signup", null, 1, 1],
+      ["2026-10-21", "signup", "glp-1-houston", 3, 4],
+    ],
+  );
+  assert.match(request, /q\.beemahealth\.com/);
+  assert.match(request, /tagassistant\.google\.com/);
+  assert.match(request, /gtm_debug/);
+});
+
+test("ctaIdFromLocation reads cta_id and tolerates bad URLs", () => {
+  assert.equal(
+    ctaIdFromLocation("https://q.x.com/a?cta_id=glp1_hero&b=1"),
+    "glp1_hero",
+  );
+  assert.equal(ctaIdFromLocation("https://q.x.com/a"), null);
+  assert.equal(ctaIdFromLocation("not a url"), null);
 });

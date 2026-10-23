@@ -4,6 +4,8 @@ import {
   attributeDays,
   bySource,
   compareToBaseline,
+  downstreamTotals,
+  pageDownstream,
   pathGroup,
   pathSummary,
   sourceKind,
@@ -17,7 +19,7 @@ import {
   denverLocalToIso,
   denverLocalValue,
 } from "./time.ts";
-import type { DailyRow, Deployment, PathRow } from "./types.ts";
+import type { DailyRow, Deployment, DownstreamRow, PathRow } from "./types.ts";
 
 const dep = (
   id: string,
@@ -274,4 +276,56 @@ test("pathSummary keeps untracked days null and caps the list", () => {
   assert.equal(s.destinations.length, 3);
   assert.equal(s.destinations[2].label, "1 other pages");
   assert.equal(s.destinations[2].handoffs, null);
+});
+
+test("downstreamTotals adds unique users per event across days", () => {
+  const rows: DownstreamRow[] = [
+    { date: "2026-10-20", event: "signup", pageId: null, users: 2, events: 2 },
+    { date: "2026-10-21", event: "signup", pageId: "p", users: 1, events: 4 },
+    { date: "2026-10-21", event: "purchase", pageId: "p", users: 1, events: 1 },
+  ];
+  assert.deepEqual(downstreamTotals(rows), { signups: 3, purchases: 1 });
+  assert.deepEqual(downstreamTotals([]), { signups: 0, purchases: 0 });
+});
+
+test("pageDownstream keeps one page's events on handoff-tracked days only", () => {
+  const rows = [
+    {
+      date: "2026-10-19",
+      pageId: "p",
+      sourceMedium: "a",
+      campaign: "c",
+      users: 5,
+      sessions: 5,
+      handoffUsers: null,
+      handoffEvents: null,
+    },
+    {
+      date: "2026-10-20",
+      pageId: "p",
+      sourceMedium: "a",
+      campaign: "c",
+      users: 5,
+      sessions: 5,
+      handoffUsers: 1,
+      handoffEvents: 1,
+    },
+  ] satisfies DailyRow[];
+  const down: DownstreamRow[] = [
+    { date: "2026-10-19", event: "signup", pageId: "p", users: 9, events: 9 },
+    { date: "2026-10-20", event: "signup", pageId: "p", users: 2, events: 2 },
+    {
+      date: "2026-10-20",
+      event: "signup",
+      pageId: "other",
+      users: 7,
+      events: 7,
+    },
+    { date: "2026-10-20", event: "signup", pageId: null, users: 4, events: 4 },
+    { date: "2026-10-20", event: "purchase", pageId: "p", users: 1, events: 1 },
+  ];
+  assert.deepEqual(pageDownstream(down, "p", rows), {
+    signups: 2,
+    purchases: 1,
+  });
 });

@@ -5,7 +5,14 @@
 // dimension: variants are attributed by confirmed deployment windows, so the
 // numbers do not depend on custom dimensions being registered in GA4.
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
-import type { AnalyticsStatus, DailyRow, PathRow } from "../shared/types.ts";
+import { pageIdFromCtaId } from "../shared/pages.ts";
+import {
+  DOWNSTREAM_EVENTS,
+  type AnalyticsStatus,
+  type DailyRow,
+  type DownstreamRow,
+  type PathRow,
+} from "../shared/types.ts";
 
 export const GA4_PROPERTY_ID = process.env.CRO_GA4_PROPERTY ?? "546707320";
 /** First day of data the lab ever shows ("All time"). */
@@ -19,6 +26,7 @@ const LOGIN_HINT = `Run \`${REAUTH_COMMAND}\`, then press Refresh.`;
 export type LiveResult = {
   rows: DailyRow[];
   paths: PathRow[];
+  downstream: DownstreamRow[];
   status: AnalyticsStatus;
   message: string;
   refreshedAt: string | null;
@@ -235,6 +243,95 @@ export async function fetchPaths(
   );
 }
 
+/** Host Bask serves intake and checkout from; signup and purchase fire here. */
+const BASK_HOST = "q.beemahealth.com";
+/** Traffic from GTM Preview (our own testing) is not a real signup. */
+const PREVIEW_SOURCE = "tagassistant.google.com";
+
+/** cta_id from a Bask page URL, or null if absent or unparseable. */
+export function ctaIdFromLocation(location: string): string | null {
+  try {
+    return new URL(location).searchParams.get("cta_id");
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Signup and purchase counts per day from Bask's GTM tags, tied to a landing
+ * page by the cta_id still on the Bask URL (pageId null when there is none).
+ * Excludes GTM Preview sessions (our own testing) so QA runs do not inflate
+ * the funnel. Counts are summed over distinct URLs, so a user who fires the
+ * event from two different URLs on one day counts twice.
+ */
+export async function fetchDownstream(
+  run: Runner = defaultRunner,
+): Promise<DownstreamRow[]> {
+  const rows = await run({
+    property: `properties/${GA4_PROPERTY_ID}`,
+    dateRanges: [{ startDate: RANGE_START, endDate: "today" }],
+    dimensions: [
+      { name: "date" },
+      { name: "eventName" },
+      { name: "pageLocation" },
+    ],
+    metrics: [{ name: "totalUsers" }, { name: "eventCount" }],
+    dimensionFilter: {
+      andGroup: {
+        expressions: [
+          {
+            filter: {
+              fieldName: "eventName",
+              inListFilter: { values: [...DOWNSTREAM_EVENTS] },
+            },
+          },
+          {
+            filter: {
+              fieldName: "hostName",
+              stringFilter: { matchType: "EXACT", value: BASK_HOST },
+            },
+          },
+          {
+            notExpression: {
+              filter: {
+                fieldName: "sessionSource",
+                stringFilter: { matchType: "EXACT", value: PREVIEW_SOURCE },
+              },
+            },
+          },
+          {
+            // GTM Preview appends gtm_debug to every URL it loads.
+            notExpression: {
+              filter: {
+                fieldName: "pageLocation",
+                stringFilter: { matchType: "CONTAINS", value: "gtm_debug" },
+              },
+            },
+          },
+        ],
+      },
+    },
+  });
+  const byKey = new Map<string, DownstreamRow>();
+  for (const r of rows) {
+    const event = DOWNSTREAM_EVENTS.find((e) => e === dv(r, 1));
+    if (!event) continue;
+    const date = isoDate(dv(r, 0));
+    const pageId = pageIdFromCtaId(ctaIdFromLocation(dv(r, 2)));
+    const key = [date, event, pageId ?? ""].join("\u0000");
+    const row = byKey.get(key) ?? { date, event, pageId, users: 0, events: 0 };
+    row.users += mv(r, 0);
+    row.events += mv(r, 1);
+    byKey.set(key, row);
+  }
+  return [...byKey.values()].sort(
+    (a, b) =>
+      a.date.localeCompare(b.date) ||
+      a.event.localeCompare(b.event) ||
+      (a.pageId ?? "").localeCompare(b.pageId ?? ""),
+  );
+}
+
 /** Maps a thrown GA4/auth error to a dashboard status and a plain-English message. */
 export function classifyError(e: unknown): {
   status: AnalyticsStatus;
@@ -290,10 +387,14 @@ export function getLive(
       const paths = await fetchPaths(pageIds, trackingStart, opts.run).catch(
         () => cache?.result.paths ?? [],
       );
+      const downstream = await fetchDownstream(opts.run).catch(
+        () => cache?.result.downstream ?? [],
+      );
       const result: LiveResult = rows.length
         ? {
             rows,
             paths,
+            downstream,
             status: "connected",
             message: `Live GA4 data (property ${GA4_PROPERTY_ID}). Today is preliminary.`,
             refreshedAt: new Date().toISOString(),
@@ -301,6 +402,7 @@ export function getLive(
         : {
             rows,
             paths,
+            downstream,
             status: "no-data",
             message: "Connected to GA4, but no rows came back for these pages.",
             refreshedAt: new Date().toISOString(),
@@ -314,6 +416,7 @@ export function getLive(
       return {
         rows: stale,
         paths: cache?.result.paths ?? [],
+        downstream: cache?.result.downstream ?? [],
         status,
         message: stale.length
           ? `${message} Showing the last loaded data.`

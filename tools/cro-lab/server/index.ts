@@ -13,7 +13,13 @@ import type {
 } from "../shared/types.ts";
 import { TEST_STATUSES } from "../shared/types.ts";
 import { Store } from "./store.ts";
-import { demoPaths, demoRows, seedDemo, DEMO_TRACKING_START } from "./demo.ts";
+import {
+  demoDownstream,
+  demoPaths,
+  demoRows,
+  seedDemo,
+  DEMO_TRACKING_START,
+} from "./demo.ts";
 import { seedLive } from "./seed-live.ts";
 import { getLive } from "./ga4.ts";
 import {
@@ -394,11 +400,21 @@ async function api(req: http.IncomingMessage, url: URL): Promise<unknown> {
   if (m === "GET" && parts[0] === "rows") {
     if (mode === "demo") {
       const rows = demoRows(stores.demo.data);
-      return { mode, rows, paths: demoPaths(rows) };
+      return {
+        mode,
+        rows,
+        paths: demoPaths(rows),
+        downstream: demoDownstream(rows),
+      };
     }
     const force = url.searchParams.get("refresh") === "1";
     const live = await getLive(PAGE_IDS, LIVE_TRACKING_START, { force });
-    return { mode, rows: live.rows, paths: live.paths };
+    return {
+      mode,
+      rows: live.rows,
+      paths: live.paths,
+      downstream: live.downstream,
+    };
   }
   if (m !== "GET" && req.headers["x-cro-lab"] !== "1")
     throw new HttpError(403, "Missing X-CRO-Lab header");

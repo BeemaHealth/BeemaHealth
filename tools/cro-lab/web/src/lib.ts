@@ -7,14 +7,17 @@ import type {
   VariantStatus,
 } from "@shared/types.ts";
 import {
+  attributeDays,
   compareToBaseline,
   observedLift,
+  sumRows,
   variantReport,
   variantStatus,
   type Evidence,
   type Totals,
   type VariantReport,
 } from "@shared/metrics.ts";
+import { SHARED_CTA_NOTE } from "@shared/pages.ts";
 import { addDays, denverDate, fmtDateKey } from "@shared/time.ts";
 import type { Period } from "./lab.tsx";
 
@@ -116,6 +119,14 @@ export function defaultBaseline(
   return (vs.find((v) => v.parentId === null) ?? vs[0])?.id ?? null;
 }
 
+/** One slice of the selected period: a variant's own days, or the switch day. */
+export type PeriodSplit = {
+  key: string;
+  label: string;
+  kind: "variant" | "switch";
+  totals: Totals;
+};
+
 export type PageSummary = {
   page: PageDef;
   live: Variant | null;
@@ -123,6 +134,11 @@ export type PageSummary = {
   totals: Totals | null;
   /** Daily rows behind `totals`, for the source breakdown. */
   rows: DailyRow[];
+  /** Whole page for the period, across every variant and the switch day. */
+  pageTotals: Totals | null;
+  pageRows: DailyRow[];
+  /** Period totals per variant (in time order) plus any unattributed switch day. */
+  split: PeriodSplit[];
   prev: Variant | null;
   prevTotals: Totals | null;
   evidence: Evidence | null;
@@ -206,6 +222,33 @@ export function summarize(
       }
     }
   }
+  const pageRows =
+    nonEmpty && deps.length
+      ? rows.filter(
+          (r) => r.pageId === page.id && r.date >= from && r.date <= to,
+        )
+      : [];
+  const split: PeriodSplit[] = [];
+  if (pageRows.length) {
+    const attr = attributeDays(deps, from, to);
+    const groups = new Map<string, DailyRow[]>();
+    for (const r of pageRows) {
+      const a = attr.byDate.get(r.date);
+      const key = a ? a.variantId : "switch";
+      (groups.get(key) ?? groups.set(key, []).get(key)!).push(r);
+    }
+    for (const [key, g] of groups) {
+      split.push({
+        key,
+        label: key === "switch" ? "Switch day" : (vOf(key)?.name ?? key),
+        kind: key === "switch" ? "switch" : "variant",
+        totals: sumRows(g),
+      });
+    }
+    split.sort((a, b) =>
+      a.kind === b.kind ? 0 : a.kind === "variant" ? -1 : 1,
+    );
+  }
   const readyId = state.data.readyToDeploy[page.id];
   const ready = readyId && readyId !== live?.id ? vOf(readyId) : null;
   const order = {
@@ -230,6 +273,9 @@ export function summarize(
     liveSince: liveDep?.startUtc ?? null,
     totals,
     rows: liveRows,
+    pageTotals: pageRows.length ? sumRows(pageRows) : null,
+    pageRows,
+    split,
     prev,
     prevTotals,
     evidence,
@@ -262,3 +308,18 @@ export const previewUrl = (state: LabState, v: Variant) => {
   const page = state.pages.find((p) => p.id === v.pageId)!;
   return `${state.devUrl}${page.path}?preview_variant=${encodeURIComponent(v.id)}`;
 };
+
+/** Caption under the all-pages funnel: Bask events are not split by page. */
+export const SITEWIDE_DOWN_NOTE =
+  "Signups and purchases are unique users from Bask's analytics tags across the whole site (GTM preview sessions excluded). They include people who did not come from these landing pages.";
+
+/** Caption under a page or variant funnel: how Bask events were tied to it. */
+export function pageDownNote(pageId: string): string {
+  return [
+    "Signups and purchases are matched to this page by the cta_id on the Bask URL (GTM preview sessions excluded), on days with handoff tracking.",
+    "Any signup that arrives without a cta_id is not counted here.",
+    SHARED_CTA_NOTE[pageId],
+  ]
+    .filter(Boolean)
+    .join(" ");
+}

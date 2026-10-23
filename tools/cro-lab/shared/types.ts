@@ -108,6 +108,27 @@ export type PathRow = {
   handoffSessions: number | null;
 };
 
+/** Events Bask's GTM container sends after the marketing handoff. */
+export const DOWNSTREAM_EVENTS = ["signup", "purchase"] as const;
+export type DownstreamEvent = (typeof DOWNSTREAM_EVENTS)[number];
+
+/**
+ * One day of a Bask-side event (signup, purchase). These fire on
+ * q.beemahealth.com, where GA4 has no landing page for the session. A row is
+ * tied to a landing page only through the `cta_id` still on the Bask URL.
+ */
+export type DownstreamRow = {
+  date: string;
+  event: DownstreamEvent;
+  /**
+   * Landing page whose CTA led here, from cta_id. null = no cta_id, or a
+   * cta_id from a page the lab does not track (home, learn, ...).
+   */
+  pageId: string | null;
+  users: number;
+  events: number;
+};
+
 export type AnalyticsStatus =
   | "demo"
   | "not-connected"

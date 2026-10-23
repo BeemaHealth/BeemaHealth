@@ -47,3 +47,32 @@ export const PAGES: PageDef[] = [
 
 export const TIME_ZONE = "America/Denver";
 export const CANONICAL_ORIGIN = "https://beemahealth.com";
+
+/**
+ * CTA id prefixes by landing page. Every CTA on a page resolves through
+ * resolveCta(CTA_IDS.<prefix>_hero|mid|footer|bmi), so the prefix identifies
+ * the page. glp1_* is shared: /glp-1 uses the same ids as /glp-1-houston.
+ */
+const CTA_PREFIX_TO_PAGE: readonly [string, string][] = [
+  ["glp1_", "glp-1-houston"],
+  ["semaglutide_houston_", "semaglutide-houston"],
+  ["tirzepatide_houston_", "tirzepatide-houston"],
+  ["sildenafil_boston_", "sildenafil-boston"],
+  ["tadalafil_boston_", "tadalafil-boston"],
+  ["ed_mints_boston_", "ed-mints-boston"],
+];
+
+/** Landing page a Bask-bound CTA belongs to, or null if untracked or unknown. */
+export function pageIdFromCtaId(
+  ctaId: string | null | undefined,
+): string | null {
+  if (!ctaId) return null;
+  const hit = CTA_PREFIX_TO_PAGE.find(([prefix]) => ctaId.startsWith(prefix));
+  return hit ? hit[1] : null;
+}
+
+/** Pages whose attribution is shared with another page, with a plain note. */
+export const SHARED_CTA_NOTE: Record<string, string> = {
+  "glp-1-houston":
+    "The GLP-1 buttons use the same CTA ids on /glp-1, so some of these may come from /glp-1.",
+};

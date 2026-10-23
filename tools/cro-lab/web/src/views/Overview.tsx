@@ -19,11 +19,17 @@ import {
   MiniFunnel,
   PathsPanel,
 } from "../components/Funnel.tsx";
-import { bySource, sumRows } from "@shared/metrics.ts";
+import {
+  bySource,
+  downstreamTotals,
+  pageDownstream,
+  sumRows,
+} from "@shared/metrics.ts";
 import {
   metricsUnavailable,
   periodLabel,
   rangeFor,
+  SITEWIDE_DOWN_NOTE,
   summarize,
 } from "../lib.ts";
 import { Card, DemoChip, EvidenceBadge, cx } from "../ui.tsx";
@@ -58,10 +64,20 @@ function PageCard({
   i: number;
   showFunnel: boolean;
 }) {
-  const { state, mode, rows } = useLab();
+  const { state, mode, rows, downstream } = useLab();
   const a = state!.analytics;
   const noData = metricsUnavailable(state!, rows);
-  const t = s.totals;
+  // When other variants (or the switch day) fall inside the period, show the
+  // whole page for the period instead of only the live variant's own days.
+  const mixed = s.split.some(
+    (x) => x.key !== s.live?.id && x.totals.visitors > 0,
+  );
+  const t = mixed ? s.pageTotals : s.totals;
+  const funnelRows = mixed ? s.pageRows : s.rows;
+  const down =
+    t && t.clickers !== null
+      ? pageDownstream(downstream, s.page.id, funnelRows)
+      : undefined;
   const up = (s.lift ?? 0) >= 0;
   return (
     <button
@@ -108,12 +124,46 @@ function PageCard({
       </div>
 
       {showFunnel && !noData && t && t.visitors > 0 && (
-        <MiniFunnel totals={t} sources={bySource(s.rows)} />
+        <MiniFunnel totals={t} sources={bySource(funnelRows)} down={down} />
+      )}
+      {mixed && (
+        <div className="space-y-1.5 rounded-lg border border-line bg-bg/60 p-3 text-xs">
+          <p className="text-[11px] font-medium uppercase tracking-wide text-faint">
+            This period, by variant
+          </p>
+          {s.split.map((x) => (
+            <div
+              key={x.key}
+              className="flex items-baseline justify-between gap-2"
+            >
+              <span
+                className={cx(
+                  "truncate",
+                  x.kind === "switch" ? "text-faint" : "text-ink",
+                )}
+                title={x.label}
+              >
+                {x.label}
+                {x.key === s.live?.id ? " (live)" : ""}
+              </span>
+              <span className="num shrink-0 text-soft">
+                {fmtInt(x.totals.visitors)} visitors ·{" "}
+                {x.totals.clickers === null ? "n/a" : fmtInt(x.totals.clickers)}{" "}
+                handoffs · {fmtPct(x.totals.rate)}
+              </span>
+            </div>
+          ))}
+          {s.split.some((x) => x.kind === "switch") && (
+            <p className="text-[11px] text-faint">
+              The switch day is shown here but not credited to either variant.
+            </p>
+          )}
+        </div>
       )}
 
       <div className="grid grid-cols-3 gap-3">
         <Stat
-          label="Visitors"
+          label={mixed ? "Page visitors" : "Visitors"}
           value={noData || !t ? "n/a" : fmtInt(t.visitors)}
         />
         <Stat
@@ -199,13 +249,28 @@ const saveHidden = (key: string, hidden: boolean) => {
 };
 
 function Totals({ period }: { period: Period }) {
-  const { state, rows, paths } = useLab();
+  const { state, rows, paths, downstream } = useLab();
   const [hidden, setHidden] = useState(() => readHidden(FUNNEL_KEY));
   if (!state) return null;
   if (metricsUnavailable(state, rows)) return null;
   const { from, to } = rangeFor(period);
   const inRange = rows.filter((r) => r.date >= from && r.date <= to);
   const t = sumRows(inRange);
+  // Compare signups to handoffs on the same days: handoff tracking is newer
+  // than the signup tag, so older days would inflate the ratio.
+  const trackedDates = new Set(
+    inRange.filter((r) => r.handoffUsers !== null).map((r) => r.date),
+  );
+  const downRows = downstream.filter(
+    (r) =>
+      r.date >= from &&
+      r.date <= to &&
+      (t.clickers === null || trackedDates.has(r.date)),
+  );
+  const down = downstreamTotals(downRows);
+  // The page cards only count events whose cta_id belongs to one of the
+  // tracked landing pages, so the rest explains the gap to this total.
+  const matched = downstreamTotals(downRows.filter((r) => r.pageId !== null));
   const toggle = () => {
     const next = !hidden;
     setHidden(next);
@@ -224,6 +289,15 @@ function Totals({ period }: { period: Period }) {
             value={t.clickers === null ? "n/a" : fmtInt(t.clickers)}
           />
           <Stat label="Handoff rate" value={fmtPct(t.rate)} />
+          <Stat
+            label="Bask signups"
+            value={fmtInt(down.signups)}
+            sub={
+              t.clickers !== null && t.untrackedDays > 0
+                ? "sitewide, tracked days"
+                : "sitewide"
+            }
+          />
         </div>
         <button
           onClick={toggle}
@@ -248,7 +322,12 @@ function Totals({ period }: { period: Period }) {
       </p>
       {!hidden && t.visitors > 0 && (
         <div className="mt-4 border-t border-line pt-4">
-          <FunnelGraphic totals={t} sources={bySource(inRange)} />
+          <FunnelGraphic
+            totals={t}
+            sources={bySource(inRange)}
+            down={down}
+            downNote={`${SITEWIDE_DOWN_NOTE} ${matched.signups} of ${down.signups} signups and ${matched.purchases} of ${down.purchases} purchases carry a cta_id from one of these landing pages; those are the ones the page cards show. The rest had no cta_id, or came from other pages (home, /semaglutide, /tirzepatide, learn articles).`}
+          />
           <h3 className="mb-3 mt-6 text-sm font-semibold">
             Where visitors go after landing
           </h3>

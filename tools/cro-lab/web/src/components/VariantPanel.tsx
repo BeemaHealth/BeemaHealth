@@ -22,6 +22,7 @@ import {
   byDay,
   compareToBaseline,
   observedLift,
+  pageDownstream,
   sumRows,
   variantReport,
 } from "@shared/metrics.ts";
@@ -32,6 +33,7 @@ import {
   claudeInstruction,
   defaultBaseline,
   metricsUnavailable,
+  pageDownNote,
   previewUrl,
   rangeFor,
   today,
@@ -207,7 +209,7 @@ export function VariantPanel({
   baselineId: string | null;
   onClose: () => void;
 }) {
-  const { state, rows, paths, period, mode } = useLab();
+  const { state, rows, paths, downstream, period, mode } = useLab();
   const [windowSel, setWindowSel] = useState<string>("all");
   const [picked, setPicked] = useState<Set<string>>(new Set());
   const [byCampaign, setByCampaign] = useState(false);
@@ -259,6 +261,14 @@ export function VariantPanel({
     [report, picked],
   );
   const totals = useMemo(() => sumRows(filtered), [filtered]);
+  // Bask events have no source, so they only show when no source is picked.
+  const down = useMemo(
+    () =>
+      picked.size || totals.clickers === null
+        ? undefined
+        : pageDownstream(downstream, pageId, report.rows),
+    [picked, totals.clickers, downstream, pageId, report],
+  );
   const sources = useMemo(() => bySource(report.rows), [report]);
   const campaigns = useMemo(() => bySource(filtered, true), [filtered]);
   const daily = useMemo(
@@ -564,7 +574,12 @@ export function VariantPanel({
 
               {totals.visitors > 0 && (
                 <Section title="Conversion funnel">
-                  <FunnelGraphic totals={totals} sources={sources} />
+                  <FunnelGraphic
+                    totals={totals}
+                    sources={sources}
+                    down={down}
+                    downNote={pageDownNote(pageId)}
+                  />
                 </Section>
               )}
 
