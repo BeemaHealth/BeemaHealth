@@ -34,7 +34,7 @@ export function QueueView() {
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   const [draft, setDraft] = useState({
-    pageId: state!.pages[0].id,
+    pageId: state!.pages.filter((p) => p.variants)[0].id,
     hypothesis: "",
     element: "",
     priority: "Medium" as Priority,
@@ -104,11 +104,13 @@ export function QueueView() {
                 value={draft.pageId}
                 onChange={(e) => setDraft({ ...draft, pageId: e.target.value })}
               >
-                {state!.pages.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.title}
-                  </option>
-                ))}
+                {state!.pages
+                  .filter((p) => p.variants)
+                  .map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.title}
+                    </option>
+                  ))}
               </select>
             </Field>
             <Field label="Priority">

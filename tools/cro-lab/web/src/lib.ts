@@ -1,5 +1,6 @@
 import type {
   DailyRow,
+  PageGroup,
   LabState,
   PageDef,
   TestIdea,
@@ -13,6 +14,7 @@ import {
   sumRows,
   variantReport,
   variantStatus,
+  type DownstreamTotals,
   type Evidence,
   type Totals,
   type VariantReport,
@@ -173,6 +175,33 @@ export function summarize(
     lift: number | null = null;
   const nonEmpty =
     state.analytics.status === "demo" || state.analytics.status === "connected";
+  if (!page.variants) {
+    // Product pages have no variants: the whole page for the period is the data.
+    const own = nonEmpty
+      ? rows.filter(
+          (r) => r.pageId === page.id && r.date >= from && r.date <= to,
+        )
+      : [];
+    const t = own.length ? sumRows(own) : null;
+    return {
+      page,
+      live: null,
+      liveSince: null,
+      totals: t,
+      rows: own,
+      pageTotals: t,
+      pageRows: own,
+      split: [],
+      prev: null,
+      prevTotals: null,
+      evidence: null,
+      lift: null,
+      nextTest: null,
+      ready: null,
+      warnings: [],
+      variantCount: 0,
+    };
+  }
   if (!live)
     warnings.push(
       "No confirmed live variant. Record the production activation.",
@@ -309,9 +338,29 @@ export const previewUrl = (state: LabState, v: Variant) => {
   return `${state.devUrl}${page.path}?preview_variant=${encodeURIComponent(v.id)}`;
 };
 
-/** Caption under the all-pages funnel: Bask events are not split by page. */
-export const SITEWIDE_DOWN_NOTE =
-  "Signups and purchases are unique users from Bask's analytics tags across the whole site (GTM preview sessions excluded). They include people who did not come from these landing pages.";
+/**
+ * Caption under a group funnel (all landing pages, or all product pages). The
+ * counts are the ones matched to the group's own pages by cta_id; the rest are
+ * listed so the numbers reconcile with the whole site.
+ */
+export function groupDownNote(o: {
+  label: string;
+  otherLabel: string;
+  other: DownstreamTotals;
+  unmatched: DownstreamTotals;
+}): string {
+  const parts = [
+    `Signups and purchases are matched to a page by the cta_id on the Bask URL (GTM preview sessions excluded), on days with handoff tracking. This funnel counts the ones from ${o.label}.`,
+  ];
+  const left = [
+    o.other.signups + o.other.purchases > 0 &&
+      `${o.other.signups} signups and ${o.other.purchases} purchases came from ${o.otherLabel}`,
+    o.unmatched.signups + o.unmatched.purchases > 0 &&
+      `${o.unmatched.signups} signups and ${o.unmatched.purchases} purchases had no cta_id from a tracked page (the sitewide footer link, untracked pages, or direct)`,
+  ].filter(Boolean);
+  if (left.length) parts.push(`Not included here: ${left.join("; ")}.`);
+  return parts.join(" ");
+}
 
 /** Caption under a page or variant funnel: how Bask events were tied to it. */
 export function pageDownNote(pageId: string): string {
@@ -322,4 +371,30 @@ export function pageDownNote(pageId: string): string {
   ]
     .filter(Boolean)
     .join(" ");
+}
+
+export const GROUP_LABEL: Record<PageGroup, string> = {
+  landing: "Landing pages",
+  product: "Product pages",
+};
+
+const GROUP_KEY = "cro.overviewGroup";
+
+/** Which Overview tab was last open; shared so "back" from a page returns to it. */
+export function readGroup(): PageGroup {
+  try {
+    return localStorage.getItem(GROUP_KEY) === "product"
+      ? "product"
+      : "landing";
+  } catch {
+    return "landing";
+  }
+}
+
+export function saveGroup(group: PageGroup): void {
+  try {
+    localStorage.setItem(GROUP_KEY, group);
+  } catch {
+    /* preference only */
+  }
 }

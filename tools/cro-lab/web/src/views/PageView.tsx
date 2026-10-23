@@ -22,11 +22,13 @@ import { PeriodSelect } from "../components/Period.tsx";
 import { CreateVariantDialog } from "../components/CreateVariant.tsx";
 import { MakeMainDialog } from "../components/MakeMain.tsx";
 import { VariantPanel } from "../components/VariantPanel.tsx";
+import { ProductPageView } from "./ProductPageView.tsx";
 import {
   defaultBaseline,
   metricsUnavailable,
   pageRows,
   previewUrl,
+  saveGroup,
   summarize,
   type VariantRow,
 } from "../lib.ts";
@@ -83,6 +85,7 @@ export function PageView({
       </div>
     );
 
+  if (!page.variants) return <ProductPageView pageId={pageId} />;
   const summary = summarize(state!, rows, page, period);
   const mainId = state!.mainVariants?.[pageId] ?? null;
   const noData = metricsUnavailable(state!, rows);
@@ -181,7 +184,10 @@ export function PageView({
   return (
     <div className="mx-auto max-w-[1400px] space-y-6 p-6">
       <button
-        onClick={() => go()}
+        onClick={() => {
+          saveGroup("landing");
+          go();
+        }}
         className="inline-flex cursor-pointer items-center gap-1.5 text-xs text-faint hover:text-ink"
       >
         <ArrowLeft className="size-3.5" />

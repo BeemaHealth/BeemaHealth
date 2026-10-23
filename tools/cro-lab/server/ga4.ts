@@ -5,7 +5,11 @@
 // dimension: variants are attributed by confirmed deployment windows, so the
 // numbers do not depend on custom dimensions being registered in GA4.
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
-import { pageIdFromCtaId } from "../shared/pages.ts";
+import {
+  pageIdFromCtaId,
+  pageIdFromPagePath,
+  pagePathRegexp,
+} from "../shared/pages.ts";
 import {
   DOWNSTREAM_EVENTS,
   type AnalyticsStatus,
@@ -56,14 +60,23 @@ const mv = (r: GaRow, i: number) => Number(r.metricValues?.[i]?.value ?? 0);
 const isoDate = (d: string) =>
   `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
 
-/** "/glp-1-houston/" or "/glp-1-houston" -> "glp-1-houston", else null. */
+/** "/glp-1-houston/" or "/glp-1-houston" -> "glp-1-houston", "/" -> "home", else null. */
 export function pageIdFromPath(
   pagePath: string,
   pageIds: readonly string[],
 ): string | null {
-  const id = pagePath.replace(/^\/+|\/+$/g, "");
-  return pageIds.includes(id) ? id : null;
+  return pageIdFromPagePath(pagePath, pageIds);
 }
+
+/** Marketing-site events only: Bask (q.) also has a "/" and its own paths. */
+const notBask = () => ({
+  notExpression: {
+    filter: {
+      fieldName: "hostName",
+      stringFilter: { matchType: "EXACT", value: BASK_HOST },
+    },
+  },
+});
 
 const reportBase = (pageIds: readonly string[], events: string[]) => ({
   property: `properties/${GA4_PROPERTY_ID}`,
@@ -82,10 +95,11 @@ const reportBase = (pageIds: readonly string[], events: string[]) => ({
             fieldName: "pagePath",
             stringFilter: {
               matchType: "FULL_REGEXP",
-              value: `/(${pageIds.join("|")})/?`,
+              value: pagePathRegexp(pageIds),
             },
           },
         },
+        notBask(),
         {
           filter: {
             fieldName: "eventName",
@@ -188,10 +202,11 @@ export async function fetchPaths(
               fieldName: "landingPage",
               stringFilter: {
                 matchType: "FULL_REGEXP",
-                value: `/(${pageIds.join("|")})/?`,
+                value: pagePathRegexp(pageIds),
               },
             },
           },
+          notBask(),
           {
             filter: {
               fieldName: "eventName",

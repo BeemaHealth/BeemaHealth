@@ -7,6 +7,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { go, useLab, useRoute } from "./lab.tsx";
+import { GROUP_LABEL, saveGroup } from "./lib.ts";
 import { Button, Card, DemoChip, Skeleton, cx } from "./ui.tsx";
 import { Overview } from "./views/Overview.tsx";
 import { PageView } from "./views/PageView.tsx";
@@ -47,6 +48,36 @@ function Nav({ route }: { route: string[] }) {
           Test queue
         </button>
       </nav>
+      {state && (
+        <div className="hidden min-h-0 flex-1 space-y-4 overflow-y-auto md:block">
+          {(["landing", "product"] as const).map((g) => (
+            <nav key={g} aria-label={GROUP_LABEL[g]}>
+              <p className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-widest text-faint">
+                {GROUP_LABEL[g]}
+              </p>
+              {state.pages
+                .filter((p) => p.group === g)
+                .map((p) => (
+                  <button
+                    key={p.id}
+                    className={cx(
+                      "flex w-full cursor-pointer items-center rounded-md px-3 py-1.5 text-left text-[13px] transition-colors",
+                      route[0] === "page" && route[1] === p.id
+                        ? "bg-raised font-medium text-ink"
+                        : "text-soft hover:bg-raised/60 hover:text-ink",
+                    )}
+                    onClick={() => {
+                      saveGroup(g);
+                      go("page", p.id);
+                    }}
+                  >
+                    <span className="truncate">{p.title}</span>
+                  </button>
+                ))}
+            </nav>
+          ))}
+        </div>
+      )}
       <div className="mt-auto hidden space-y-3 md:block">
         <div
           role="group"

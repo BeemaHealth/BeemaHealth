@@ -1,9 +1,16 @@
 // Types shared by the CRO Lab server and web UI. No runtime imports.
 
+/** "landing" pages run ad traffic and variants; "product" pages are tracked only. */
+export type PageGroup = "landing" | "product";
+
 export type PageDef = {
   id: string;
   path: string;
-  market: "Houston" | "Boston";
+  group: PageGroup;
+  /** Only landing pages have variants, experiments and go-live windows. */
+  variants: boolean;
+  /** Ad market, landing pages only. */
+  market?: "Houston" | "Boston";
   title: string;
   /** Route file that renders the page (used for non-migrated pages). */
   routeFile: string;

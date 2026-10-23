@@ -152,7 +152,7 @@ test("fetchDownstream ties Bask events to a page by cta_id and excludes GTM Prev
     return [
       row(["20261021", "signup", `${q}?cta_id=glp1_hero&utm_source=x`], [2, 3]),
       row(["20261021", "signup", `${q}?cta_id=glp1_footer`], [1, 1]),
-      row(["20261021", "signup", `${q}?cta_id=home_hero`], [1, 1]),
+      row(["20261021", "signup", `${q}?cta_id=footer`], [1, 1]),
       row(
         ["20261020", "purchase", `${q}?cta_id=tirzepatide_houston_hero`],
         [1, 1],

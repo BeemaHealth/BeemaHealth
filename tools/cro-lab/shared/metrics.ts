@@ -9,6 +9,7 @@ import type {
   VariantStatus,
   LabData,
 } from "./types.ts";
+import { pagePathFor } from "./pages.ts";
 import {
   addDays,
   denverDate,
@@ -383,7 +384,7 @@ export function pathSummary(paths: PathRow[], maxShown = 6): PathSummary {
   let direct: number | null = null;
   const groups = new Map<string, PathDestination>();
   for (const r of paths) {
-    if (r.page === `/${r.pageId}/`) {
+    if (r.page === pagePathFor(r.pageId)) {
       landed += r.sessionsViewed;
       direct = addNullable(direct, r.handoffSessions);
       continue;

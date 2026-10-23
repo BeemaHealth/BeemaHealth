@@ -3,7 +3,7 @@ import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createServer as createVite } from "vite";
-import { PAGES } from "../shared/pages.ts";
+import { PAGES, TRACKED_PAGES } from "../shared/pages.ts";
 import type {
   CreateVariantInput,
   LabState,
@@ -37,7 +37,10 @@ import {
 const here = path.dirname(fileURLToPath(import.meta.url));
 const labRoot = path.resolve(here, "..");
 const repoRoot = path.resolve(labRoot, "../..");
+/** Landing pages: variants, experiments, go-live windows. */
 const PAGE_IDS = PAGES.map((p) => p.id);
+/** Every page analytics is read for (landing + product + home). */
+const TRACKED_IDS = TRACKED_PAGES.map((p) => p.id);
 const PORT = Number(process.env.CRO_PORT ?? 8787);
 const DEV_URL = process.env.CRO_DEV_URL ?? "http://localhost:8080";
 const LIVE_TRACKING_START = "2026-10-19";
@@ -68,7 +71,7 @@ async function buildState(mode: Mode): Promise<LabState> {
   const store = stores[mode];
   const base = {
     mode,
-    pages: PAGES,
+    pages: TRACKED_PAGES,
     data: store.data,
     devUrl: DEV_URL,
     writesFiles: mode === "live",
@@ -84,7 +87,7 @@ async function buildState(mode: Mode): Promise<LabState> {
         refreshedAt: new Date().toISOString(),
       },
     };
-  const live = await getLive(PAGE_IDS, LIVE_TRACKING_START);
+  const live = await getLive(TRACKED_IDS, LIVE_TRACKING_START);
   const experiments = readExperiments(repoRoot);
   return {
     ...base,
@@ -408,7 +411,7 @@ async function api(req: http.IncomingMessage, url: URL): Promise<unknown> {
       };
     }
     const force = url.searchParams.get("refresh") === "1";
-    const live = await getLive(PAGE_IDS, LIVE_TRACKING_START, { force });
+    const live = await getLive(TRACKED_IDS, LIVE_TRACKING_START, { force });
     return {
       mode,
       rows: live.rows,

@@ -8,7 +8,7 @@ import type {
   TestIdea,
   Variant,
 } from "../shared/types.ts";
-import { PAGES } from "../shared/pages.ts";
+import { PAGES, TRACKED_PAGES, pagePathFor } from "../shared/pages.ts";
 import {
   addDays,
   denverDate,
@@ -400,8 +400,9 @@ export function demoRows(
   today = denverDate(new Date()),
 ): DailyRow[] {
   const rows: DailyRow[] = [];
-  for (const page of PAGES) {
-    const base = page.market === "Houston" ? 70 : 38;
+  for (const page of TRACKED_PAGES) {
+    const base =
+      page.market === "Houston" ? 70 : page.market === "Boston" ? 38 : 26;
     const deps = data.deployments.filter((d) => d.pageId === page.id);
     for (const date of eachDate(DEMO_START, today)) {
       const s = denverDayStartMs(date) + 12 * 3600_000;
@@ -475,7 +476,7 @@ export function demoPaths(rows: DailyRow[]): PathRow[] {
     out.push({
       date,
       pageId,
-      page: `/${pageId}/`,
+      page: pagePathFor(pageId) ?? `/${pageId}/`,
       sessionsViewed: g.sessions,
       handoffSessions: own,
     });
