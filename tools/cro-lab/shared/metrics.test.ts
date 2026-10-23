@@ -6,6 +6,7 @@ import {
   compareToBaseline,
   downstreamTotals,
   pageDownstream,
+  trackingWarningText,
   pathGroup,
   pathSummary,
   sourceKind,
@@ -328,4 +329,35 @@ test("pageDownstream keeps one page's events on handoff-tracked days only", () =
     signups: 2,
     purchases: 1,
   });
+});
+
+test("trackingWarningText flags partial and missing handoff tracking", () => {
+  const row = (date: string, users: number, h: number | null): DailyRow => ({
+    date,
+    pageId: "p",
+    sourceMedium: "a",
+    campaign: "c",
+    users,
+    sessions: users,
+    handoffUsers: h,
+    handoffEvents: h,
+  });
+  const partial = sumRows([
+    row("2026-10-12", 900, null),
+    row("2026-10-20", 24, 3),
+  ]);
+  const text = trackingWarningText(partial, "2026-10-19");
+  assert.match(text ?? "", /not running on 1 of the 2 days/);
+  assert.match(
+    text ?? "",
+    /only the 24 visitors from the 1 day tracked, not all 924/,
+  );
+  assert.match(text ?? "", /started Oct 19/i);
+  const none = sumRows([row("2026-10-12", 900, null)]);
+  assert.match(trackingWarningText(none, null) ?? "", /any of the 1 day/);
+  assert.equal(
+    trackingWarningText(sumRows([row("2026-10-20", 5, 1)]), "2026-10-19"),
+    null,
+  );
+  assert.equal(trackingWarningText(sumRows([]), "2026-10-19"), null);
 });

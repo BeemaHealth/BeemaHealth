@@ -1,4 +1,7 @@
 import test from "node:test";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import assert from "node:assert/strict";
 import {
   classifyError,
@@ -7,6 +10,7 @@ import {
   fetchPaths,
   fetchRows,
   getLive,
+  resetLiveCache,
   pageIdFromPath,
 } from "./ga4.ts";
 
@@ -67,6 +71,7 @@ test("days at or after tracking start with no handoff row report zero, not null"
 });
 
 test("getLive keeps the last loaded rows when a later refresh fails", async () => {
+  resetLiveCache();
   const good = await getLive(IDS, "2026-10-19", {
     force: true,
     run: async (req) =>
@@ -84,7 +89,7 @@ test("getLive keeps the last loaded rows when a later refresh fails", async () =
   });
   assert.equal(stale.status, "api-unavailable");
   assert.deepEqual(stale.rows, good.rows);
-  assert.match(stale.message, /Showing the last loaded data/);
+  assert.match(stale.message, /Showing cached data last pulled/);
 });
 
 test("classifyError separates auth, permission, and other failures", () => {
@@ -189,4 +194,123 @@ test("ctaIdFromLocation reads cta_id and tolerates bad URLs", () => {
   );
   assert.equal(ctaIdFromLocation("https://q.x.com/a"), null);
   assert.equal(ctaIdFromLocation("not a url"), null);
+});
+
+const NOW = "2026-10-23T15:00:00.000Z"; // 09:00 in Denver
+const pageViewRun = (calls: string[]) => async (req: object) => {
+  const json = JSON.stringify(req);
+  calls.push(
+    (json.match(/"startDate":"([\d-]+)"/)?.[1] ?? "?") +
+      (json.includes("intake_handoff") ? " handoff" : " other"),
+  );
+  return json.includes("intake_handoff") || json.includes('"signup"')
+    ? []
+    : [row(["20261022", "/glp-1-houston/", "google / cpc", "c1"], [5, 6])];
+};
+
+test("getLive pulls once, then serves reloads and restarts from the day cache", async () => {
+  resetLiveCache();
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cro-days-"));
+  const file = path.join(dir, "days.json");
+  const calls: string[] = [];
+  const run = pageViewRun(calls);
+
+  const first = await getLive(IDS, "2026-10-19", {
+    run,
+    persistFile: file,
+    now: NOW,
+  });
+  assert.equal(first.status, "connected");
+  assert.equal(first.rows.length, 1);
+  assert.equal(
+    calls.length,
+    5,
+    "page views, handoffs, two path reports, signups",
+  );
+  assert.ok(
+    calls.every((c) => c.startsWith("2026-08-01")),
+    "first pull covers all history",
+  );
+
+  const again = await getLive(IDS, "2026-10-19", {
+    run,
+    persistFile: file,
+    now: NOW,
+  });
+  assert.equal(calls.length, 5, "a reload makes no Google calls");
+  assert.match(again.message, /cached GA4 data/);
+  assert.deepEqual(again.rows, first.rows);
+
+  resetLiveCache(); // server restart
+  const restarted = await getLive(IDS, "2026-10-19", {
+    run: async () => {
+      throw new Error("must not call Google");
+    },
+    persistFile: file,
+    now: NOW,
+  });
+  assert.equal(restarted.status, "connected");
+  assert.deepEqual(restarted.rows, first.rows);
+
+  fs.rmSync(dir, { recursive: true });
+});
+
+test("getLive pulls only the new day, and Refresh re-pulls only recent days", async () => {
+  resetLiveCache();
+  const calls: string[] = [];
+  const run = pageViewRun(calls);
+  await getLive(IDS, "2026-10-19", { run, now: NOW });
+  calls.length = 0;
+
+  // Next morning: only the new day is missing.
+  const next = "2026-10-24T15:00:00.000Z";
+  await getLive(IDS, "2026-10-19", { run, now: next });
+  assert.equal(calls.length, 5);
+  assert.ok(
+    calls.every((c) => c.startsWith("2026-10-24")),
+    calls.join(),
+  );
+
+  // Refresh: 10/21 onward were pulled while GA4 could still revise them (10/20
+  // had settled), so they are pulled again and 10/20 is not.
+  calls.length = 0;
+  await getLive(IDS, "2026-10-19", { run, now: next, force: true });
+  assert.equal(calls.length, 5);
+  assert.ok(
+    calls.every((c) => c.startsWith("2026-10-21")),
+    calls.join(),
+  );
+
+  // A much later open pulls only the days after the last cached one.
+  const later = "2026-11-30T15:00:00.000Z";
+  calls.length = 0;
+  await getLive(IDS, "2026-10-19", { run, now: later });
+  assert.ok(
+    calls.every((c) => c.startsWith("2026-10-25")),
+    calls.join(),
+  );
+});
+
+test("getLive falls back to the cache when Google fails after a restart", async () => {
+  resetLiveCache();
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cro-days-"));
+  const file = path.join(dir, "days.json");
+  await getLive(IDS, "2026-10-19", {
+    run: pageViewRun([]),
+    persistFile: file,
+    now: NOW,
+  });
+  resetLiveCache();
+  const failing = async () => {
+    throw new Error("invalid_grant: reauth related error (invalid_rapt)");
+  };
+  const res = await getLive(IDS, "2026-10-19", {
+    run: failing,
+    persistFile: file,
+    now: "2026-10-24T15:00:00.000Z", // a new day is missing, so Google is called
+  });
+  assert.equal(res.status, "auth-expired");
+  assert.equal(res.rows.length, 1);
+  assert.match(res.message, /Showing cached data last pulled/);
+  fs.rmSync(dir, { recursive: true });
 });

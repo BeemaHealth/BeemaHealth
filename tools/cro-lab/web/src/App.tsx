@@ -125,7 +125,7 @@ function Nav({ route }: { route: string[] }) {
 }
 
 function Banner() {
-  const { state, mode, reload, loading, refreshedAt } = useLab();
+  const { state, mode, reload, loading } = useLab();
   if (!state) return null;
   const a = state.analytics;
   return (
@@ -140,8 +140,8 @@ function Banner() {
       {mode === "demo" ? <DemoChip /> : <AlertTriangle className="size-3.5" />}
       <span className="flex-1">{a.message}</span>
       <span className="text-faint">
-        {refreshedAt
-          ? `Refreshed ${fmtDateTime(refreshedAt.toISOString())}`
+        {a.refreshedAt
+          ? `Last pulled from GA4 ${fmtDateTime(a.refreshedAt)}`
           : ""}
       </span>
       <Button
@@ -150,6 +150,7 @@ function Banner() {
         onClick={() => void reload(true)}
         loading={loading}
         aria-label="Refresh data"
+        title="Pull the most recent days from GA4 again. Opening or restarting the lab uses the saved data."
       >
         <RefreshCw className="size-3.5" />
         Refresh

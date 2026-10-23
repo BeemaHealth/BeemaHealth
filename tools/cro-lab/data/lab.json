@@ -188,7 +188,7 @@
       "description": "Duplicate of Changing Header text.",
       "componentPath": "src/landing-variants/glp-1-houston/v3-testing-new-principles.tsx",
       "createdAt": "2026-10-22T20:40:22.208Z",
-      "status": "draft",
+      "status": "ready",
       "parentId": "v2-variant-b",
       "hypothesis": "Going to try changing it entirely to match what this guy said as i believe he gave some good tips. the skill based off his tips is: .claude/skills/landing-page-clarity/SKILL.md.",
       "element": "Lots",
@@ -290,5 +290,7 @@
       "followUp": ""
     }
   ],
-  "readyToDeploy": {}
+  "readyToDeploy": {
+    "glp-1-houston": "v3-testing-new-principles"
+  }
 }

@@ -163,6 +163,8 @@ export type LabState = {
   mainVariants: Record<string, string | null>;
   /** True when variant files are really created on disk (live mode). */
   writesFiles: boolean;
+  /** Live mode only. */
+  staging: StagingState | null;
 };
 
 export type CreateVariantInput = {
@@ -173,4 +175,20 @@ export type CreateVariantInput = {
   element: string;
   whyTested?: string;
   expected?: string;
+};
+
+/** Deploys the working tree (committed or not) to staging.beemahealth.com. */
+export type StagingState = {
+  status: "idle" | "running" | "succeeded" | "failed";
+  startedAt: string | null;
+  finishedAt: string | null;
+  error: string | null;
+  /** Last lines of the deploy script output. */
+  log: string[];
+  /** Last successful deploy: what each landing page's main variant was. */
+  deployed: {
+    at: string;
+    mains: Record<string, string | null>;
+  } | null;
+  url: string;
 };

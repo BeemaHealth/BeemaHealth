@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   ArrowUp,
   ArrowUpDown,
+  CloudUpload,
   Copy,
   ExternalLink,
   Eye,
@@ -21,13 +22,16 @@ import { go, useLab } from "../lab.tsx";
 import { PeriodSelect } from "../components/Period.tsx";
 import { CreateVariantDialog } from "../components/CreateVariant.tsx";
 import { MakeMainDialog } from "../components/MakeMain.tsx";
+import { StagingDeploy } from "../components/StagingDeploy.tsx";
 import { VariantPanel } from "../components/VariantPanel.tsx";
 import { ProductPageView } from "./ProductPageView.tsx";
 import {
   defaultBaseline,
+  displayStatus,
   metricsUnavailable,
   pageRows,
   previewUrl,
+  stagingPreviewUrl,
   saveGroup,
   summarize,
   type VariantRow,
@@ -229,6 +233,7 @@ export function PageView({
               <Copy className="size-4" />
               Duplicate leader
             </Button>
+            <StagingDeploy />
             <Button
               variant="primary"
               onClick={() =>
@@ -382,13 +387,7 @@ export function PageView({
                     </td>
                     <td className="px-3 py-3">
                       <StatusBadge
-                        status={
-                          mainId === v.id &&
-                          r.status !== "live" &&
-                          r.status !== "ready"
-                            ? "testing"
-                            : r.status
-                        }
+                        status={displayStatus(state!, pageId, v.id, r.status)}
                       />
                     </td>
                     <td className="max-w-64 px-3 py-3">
@@ -481,6 +480,18 @@ export function PageView({
                         >
                           <Eye className="size-4" />
                         </a>
+                        {state!.staging && (
+                          <a
+                            href={stagingPreviewUrl(state!, v)}
+                            target="_blank"
+                            rel="noreferrer"
+                            aria-label={`Preview ${v.name} on staging`}
+                            title="Preview on staging (after a staging deploy that includes it)"
+                            className="inline-flex size-8 items-center justify-center rounded-lg text-faint hover:bg-raised hover:text-ink"
+                          >
+                            <CloudUpload className="size-4" />
+                          </a>
+                        )}
                         {mode === "live" && mainId !== v.id && (
                           <IconButton
                             label="Make main locally"

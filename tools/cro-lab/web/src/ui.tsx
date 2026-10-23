@@ -61,10 +61,11 @@ export function IconButton({
   );
 }
 
-export type DisplayStatus = VariantStatus | "testing";
+export type DisplayStatus = VariantStatus | "testing" | "staging";
 
 const STATUS_STYLE: Record<DisplayStatus, string> = {
   testing: "bg-sky/10 text-sky ring-sky/30",
+  staging: "bg-violet-500/10 text-violet-300 ring-violet-400/30",
   live: "bg-amber/12 text-amber ring-amber/30",
   ready: "bg-teal/10 text-teal ring-teal/30",
   draft: "bg-raised text-soft ring-line-strong",
@@ -74,6 +75,7 @@ const STATUS_STYLE: Record<DisplayStatus, string> = {
 };
 export const STATUS_LABEL: Record<DisplayStatus, string> = {
   testing: "LIVE LOCALLY",
+  staging: "ON STAGING, TESTING",
   live: "Live",
   ready: "Ready to deploy",
   draft: "Draft",

@@ -3,7 +3,7 @@
 // Only live variants are imported, so drafts and paused variants never ship.
 import type { ExperimentConfig } from "./types";
 import { variant as edMintsBostonV0 } from "./ed-mints-boston/v1-control";
-import { variant as glp1HoustonV0 } from "./glp-1-houston/v4-editing-the-pricing-large-info-text-at-b";
+import { variant as glp1HoustonV0 } from "./glp-1-houston/v3-testing-new-principles";
 import { variant as semaglutideHoustonV0 } from "./semaglutide-houston/v1-control";
 import { variant as sildenafilBostonV0 } from "./sildenafil-boston/v1-control";
 import { variant as tadalafilBostonV0 } from "./tadalafil-boston/v1-control";

@@ -1,6 +1,8 @@
+import { AlertTriangle } from "lucide-react";
 import { fmtInt, fmtPct } from "@shared/format.ts";
 import {
   pathSummary,
+  trackingWarningText,
   type DownstreamTotals,
   type SourceRow,
   type Totals,
@@ -112,6 +114,31 @@ function Stage({
       </div>
       <p className="mt-1 text-[11px] text-faint">{note}</p>
     </div>
+  );
+}
+
+/**
+ * Shown above a funnel when handoff tracking was not running for the whole
+ * date range, so the handoff rate only covers part of the visitors.
+ */
+export function TrackingWarning({
+  totals,
+  since,
+}: {
+  totals: Totals;
+  /** First date (YYYY-MM-DD) intake_handoff was verified in GA4. */
+  since: string | null;
+}) {
+  const text = trackingWarningText(totals, since);
+  if (!text) return null;
+  return (
+    <p
+      role="status"
+      className="mb-4 flex items-start gap-2 rounded-lg border border-amber/30 bg-amber/8 p-3 text-xs text-amber"
+    >
+      <AlertTriangle className="mt-0.5 size-3.5 shrink-0" />
+      <span>{text}</span>
+    </p>
   );
 }
 
@@ -251,6 +278,14 @@ export function FunnelGraphic({
           >
             Landing page visitors
           </text>
+          <text
+            x={cx0}
+            y={H1 / 2 + 36}
+            textAnchor="middle"
+            className="fill-bg text-[12px]"
+          >
+            {`over ${totals.days} ${totals.days === 1 ? "day" : "days"}`}
+          </text>
           {tracked ? (
             <>
               <polygon
@@ -267,10 +302,17 @@ export function FunnelGraphic({
               </text>
               <text
                 x={labelX(midW)}
-                y={y2 + H2 / 2 + 5}
+                y={y2 + H2 / 2 - 2}
                 className="fill-ink text-[13px] font-semibold"
               >
                 Intake handoffs ({fmtPct(totals.rate)})
+              </text>
+              <text
+                x={labelX(midW)}
+                y={y2 + H2 / 2 + 15}
+                className="fill-soft text-[11px]"
+              >
+                {`of ${fmtInt(totals.trackedVisitors)} visitors on ${totals.trackedDays} ${totals.trackedDays === 1 ? "day" : "days"}${totals.untrackedDays > 0 ? " with tracking" : ""}`}
               </text>
               {!showDown && (
                 <>
@@ -374,12 +416,6 @@ export function FunnelGraphic({
       </svg>
       {showDown && downNote && (
         <p className="mt-1 text-center text-[11px] text-faint">{downNote}</p>
-      )}
-      {tracked && totals.untrackedDays > 0 && (
-        <p className="mt-1 text-center text-[11px] text-faint">
-          Handoffs and rate use tracked days only ({totals.trackedDays} of{" "}
-          {totals.days} days, {fmtInt(totals.trackedVisitors)} visitors).
-        </p>
       )}
     </div>
   );

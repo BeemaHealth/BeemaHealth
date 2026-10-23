@@ -47,6 +47,8 @@ export const api = {
     call<LabState>("PATCH", `/variants/${pageId}/${id}`, m, body),
   makeMain: (pageId: string, body: { variantId: string; goLiveAt?: string }) =>
     call<LabState>("POST", `/pages/${pageId}/main`, "live", body),
+  deployStaging: () =>
+    call<LabState>("POST", "/staging/deploy", "live", {}),
   addTest: (m: Mode, body: unknown) =>
     call<LabState>("POST", "/tests", m, body),
   patchTest: (m: Mode, id: string, body: unknown) =>

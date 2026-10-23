@@ -173,8 +173,9 @@ export function summarize(
     prevTotals: Totals | null = null;
   let evidence: Evidence | null = null,
     lift: number | null = null;
-  const nonEmpty =
-    state.analytics.status === "demo" || state.analytics.status === "connected";
+  // Same rule as the total funnel: keep showing the last loaded rows when GA4
+  // auth has lapsed (the banner says the data is stale) instead of blanking.
+  const nonEmpty = !metricsUnavailable(state, rows);
   if (!page.variants) {
     // Product pages have no variants: the whole page for the period is the data.
     const own = nonEmpty
@@ -338,6 +339,12 @@ export const previewUrl = (state: LabState, v: Variant) => {
   return `${state.devUrl}${page.path}?preview_variant=${encodeURIComponent(v.id)}`;
 };
 
+/** Same preview on the deployed staging site (needs a deploy that included the variant). */
+export const stagingPreviewUrl = (state: LabState, v: Variant) => {
+  const page = state.pages.find((p) => p.id === v.pageId)!;
+  return `${state.staging?.url ?? ""}${page.path}?preview_variant=${encodeURIComponent(v.id)}`;
+};
+
 /**
  * Caption under a group funnel (all landing pages, or all product pages). The
  * counts are the ones matched to the group's own pages by cta_id; the rest are
@@ -397,4 +404,21 @@ export function saveGroup(group: PageGroup): void {
   } catch {
     /* preference only */
   }
+}
+
+/**
+ * Badge for a variant. Live and ready-to-deploy always win; otherwise the
+ * variant that last went to staging shows "on staging", and the one the local
+ * code serves shows "live locally".
+ */
+export function displayStatus(
+  state: LabState,
+  pageId: string,
+  variantId: string,
+  status: VariantStatus,
+): VariantStatus | "testing" | "staging" {
+  if (status === "live" || status === "ready") return status;
+  if (state.staging?.deployed?.mains[pageId] === variantId) return "staging";
+  if (state.mainVariants?.[pageId] === variantId) return "testing";
+  return status;
 }

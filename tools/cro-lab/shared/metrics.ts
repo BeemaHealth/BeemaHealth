@@ -10,6 +10,7 @@ import type {
   LabData,
 } from "./types.ts";
 import { pagePathFor } from "./pages.ts";
+import { fmtDateKey } from "./time.ts";
 import {
   addDays,
   denverDate,
@@ -478,4 +479,21 @@ export function pageDownstream(
   return downstreamTotals(
     down.filter((r) => r.pageId === pageId && dates.has(r.date)),
   );
+}
+
+/**
+ * Warning for a funnel whose date range includes days before handoff tracking
+ * existed, so the handoff rate covers only some of the visitors. null when
+ * every day with traffic was tracked.
+ */
+export function trackingWarningText(
+  totals: Totals,
+  since: string | null,
+): string | null {
+  if (totals.untrackedDays === 0 || totals.days === 0) return null;
+  const started = since ? ` It started ${fmtDateKey(since)}.` : "";
+  const days = (n: number) => `${n} ${n === 1 ? "day" : "days"}`;
+  if (totals.trackedDays === 0)
+    return `Handoff tracking was not running on any of the ${days(totals.days)} with traffic in this date range, so there is no handoff rate.${started}`;
+  return `The handoff rate is incomplete: handoff tracking was not running on ${totals.untrackedDays} of the ${days(totals.days)} with traffic in this date range. The rate uses only the ${totals.trackedVisitors.toLocaleString("en-US")} visitors from the ${days(totals.trackedDays)} tracked, not all ${totals.visitors.toLocaleString("en-US")}.${started} Pick a range that starts on or after that date for a clean rate.`;
 }

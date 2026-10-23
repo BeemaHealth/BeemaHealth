@@ -29,12 +29,15 @@ import {
 import { fmtDateKey, fmtDateTime } from "@shared/time.ts";
 import { api, ApiError } from "../api.ts";
 import { useLab } from "../lab.tsx";
+import { StagingDeploy } from "./StagingDeploy.tsx";
 import {
   claudeInstruction,
   defaultBaseline,
   metricsUnavailable,
   pageDownNote,
+  displayStatus,
   previewUrl,
+  stagingPreviewUrl,
   rangeFor,
   today,
 } from "../lib.ts";
@@ -50,7 +53,12 @@ import {
 } from "../ui.tsx";
 import { variantPaths, variantStatus } from "@shared/metrics.ts";
 import type { Variant } from "@shared/types.ts";
-import { Funnel, FunnelGraphic, PathsPanel } from "./Funnel.tsx";
+import {
+  Funnel,
+  FunnelGraphic,
+  PathsPanel,
+  TrackingWarning,
+} from "./Funnel.tsx";
 
 const Section = ({
   title,
@@ -351,19 +359,18 @@ export function VariantPanel({
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl font-bold">{v.name}</h1>
                 <StatusBadge
-                  status={(() => {
-                    const st = variantStatus(state!.data, v);
-                    return state!.mainVariants?.[v.pageId] === v.id &&
-                      st !== "live" &&
-                      st !== "ready"
-                      ? "testing"
-                      : st;
-                  })()}
+                  status={displayStatus(
+                    state!,
+                    v.pageId,
+                    v.id,
+                    variantStatus(state!.data, v),
+                  )}
                 />
                 {mode === "demo" && <DemoChip />}
               </div>
               <p className="num mt-1 text-xs text-faint">{v.id}</p>
             </div>
+            <StagingDeploy />
           </header>
 
           <section className="space-y-3">
@@ -416,6 +423,17 @@ export function VariantPanel({
                 <ExternalLink className="size-3.5" />
                 Preview locally
               </a>
+              {state!.staging && (
+                <a
+                  href={stagingPreviewUrl(state!, v)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-line-strong px-2.5 text-xs font-medium hover:bg-raised"
+                >
+                  <ExternalLink className="size-3.5" />
+                  Preview on staging
+                </a>
+              )}
               <CopyButton text={v.componentPath} label="Copy path" />
               <CopyButton
                 text={claudeInstruction(state!, v)}
@@ -574,6 +592,10 @@ export function VariantPanel({
 
               {totals.visitors > 0 && (
                 <Section title="Conversion funnel">
+                  <TrackingWarning
+                    totals={totals}
+                    since={state!.analytics.trackingStart}
+                  />
                   <FunnelGraphic
                     totals={totals}
                     sources={sources}

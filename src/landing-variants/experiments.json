@@ -24,12 +24,12 @@
         "weight": 0
       },
       "v3-testing-new-principles": {
-        "status": "draft",
-        "weight": 0
-      },
-      "v4-editing-the-pricing-large-info-text-at-b": {
         "status": "live",
         "weight": 100
+      },
+      "v4-editing-the-pricing-large-info-text-at-b": {
+        "status": "draft",
+        "weight": 0
       }
     }
   },

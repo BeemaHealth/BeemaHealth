@@ -5,6 +5,17 @@
 // dimension: variants are attributed by confirmed deployment windows, so the
 // numbers do not depend on custom dimensions being registered in GA4.
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
+import { denverDate, fmtDateTime } from "../shared/time.ts";
+import {
+  applyFetch,
+  datesToFetch,
+  emptyStore,
+  lastPulled,
+  loadStore,
+  saveStore,
+  storeKey,
+  type DayStore,
+} from "./ga4-cache.ts";
 import {
   pageIdFromCtaId,
   pageIdFromPagePath,
@@ -21,7 +32,6 @@ import {
 export const GA4_PROPERTY_ID = process.env.CRO_GA4_PROPERTY ?? "546707320";
 /** First day of data the lab ever shows ("All time"). */
 export const RANGE_START = "2026-08-01";
-const TTL_MS = 60_000;
 const SERVICE_ACCOUNT =
   "beema-cro-analytics@beema-health.iam.gserviceaccount.com";
 const REAUTH_COMMAND = `gcloud auth application-default login --impersonate-service-account=${SERVICE_ACCOUNT}`;
@@ -78,9 +88,13 @@ const notBask = () => ({
   },
 });
 
-const reportBase = (pageIds: readonly string[], events: string[]) => ({
+const reportBase = (
+  pageIds: readonly string[],
+  events: string[],
+  startDate: string,
+) => ({
   property: `properties/${GA4_PROPERTY_ID}`,
-  dateRanges: [{ startDate: RANGE_START, endDate: "today" }],
+  dateRanges: [{ startDate, endDate: "today" }],
   dimensions: [
     { name: "date" },
     { name: "pagePath" },
@@ -120,14 +134,15 @@ export async function fetchRows(
   pageIds: readonly string[],
   trackingStart: string,
   run: Runner = defaultRunner,
+  startDate = RANGE_START,
 ): Promise<DailyRow[]> {
   const [views, handoffs] = await Promise.all([
     run({
-      ...reportBase(pageIds, ["page_view"]),
+      ...reportBase(pageIds, ["page_view"], startDate),
       metrics: [{ name: "totalUsers" }, { name: "sessions" }],
     }),
     run({
-      ...reportBase(pageIds, ["intake_handoff"]),
+      ...reportBase(pageIds, ["intake_handoff"], startDate),
       metrics: [{ name: "totalUsers" }, { name: "eventCount" }],
     }),
   ]);
@@ -185,10 +200,11 @@ export async function fetchPaths(
   pageIds: readonly string[],
   trackingStart: string,
   run: Runner = defaultRunner,
+  startDate = RANGE_START,
 ): Promise<PathRow[]> {
   const base = (event: string) => ({
     property: `properties/${GA4_PROPERTY_ID}`,
-    dateRanges: [{ startDate: RANGE_START, endDate: "today" }],
+    dateRanges: [{ startDate, endDate: "today" }],
     dimensions: [
       { name: "date" },
       { name: "landingPage" },
@@ -281,10 +297,11 @@ export function ctaIdFromLocation(location: string): string | null {
  */
 export async function fetchDownstream(
   run: Runner = defaultRunner,
+  startDate = RANGE_START,
 ): Promise<DownstreamRow[]> {
   const rows = await run({
     property: `properties/${GA4_PROPERTY_ID}`,
-    dateRanges: [{ startDate: RANGE_START, endDate: "today" }],
+    dateRanges: [{ startDate, endDate: "today" }],
     dimensions: [
       { name: "date" },
       { name: "eventName" },
@@ -384,63 +401,96 @@ export function classifyError(e: unknown): {
   };
 }
 
-let cache: { at: number; result: LiveResult } | null = null;
+let memStore: DayStore | null = null;
 let inflight: Promise<LiveResult> | null = null;
 
-/** Cached for 60s; concurrent callers share one request. Never throws. */
+const toResult = (
+  store: DayStore,
+  status: AnalyticsStatus,
+  message: string,
+): LiveResult => ({
+  rows: store.rows,
+  paths: store.paths,
+  downstream: store.downstream,
+  status: status === "connected" && !store.rows.length ? "no-data" : status,
+  message:
+    status === "connected" && !store.rows.length
+      ? "Connected to GA4, but no rows came back for these pages."
+      : message,
+  refreshedAt: lastPulled(store),
+});
+
+/**
+ * GA4 data for the dashboard, served from a per-day cache. Only days never
+ * pulled are requested (plus, on `force`, recent days GA4 may still revise),
+ * so opening, restarting or switching period costs no Google calls. A failed
+ * pull keeps serving the cache. Concurrent callers share one request. Never
+ * throws.
+ */
 export function getLive(
   pageIds: readonly string[],
   trackingStart: string,
-  opts: { force?: boolean; run?: Runner } = {},
+  opts: {
+    force?: boolean;
+    run?: Runner;
+    /** Where the per-day cache lives; memory only when omitted. */
+    persistFile?: string;
+    /** Current time as an ISO string (tests). */
+    now?: string;
+  } = {},
 ): Promise<LiveResult> {
-  if (!opts.force && cache && Date.now() - cache.at < TTL_MS)
-    return Promise.resolve(cache.result);
   inflight ??= (async (): Promise<LiveResult> => {
+    const key = storeKey(pageIds, trackingStart);
+    let store =
+      memStore?.key === key
+        ? memStore
+        : (opts.persistFile && loadStore(opts.persistFile, key)) ||
+          emptyStore(key);
+    memStore = store;
     try {
-      const rows = await fetchRows(pageIds, trackingStart, opts.run);
-      // Path data is secondary: if it fails, keep the core funnel working.
-      const paths = await fetchPaths(pageIds, trackingStart, opts.run).catch(
-        () => cache?.result.paths ?? [],
+      const nowIso = opts.now ?? new Date().toISOString();
+      const today = denverDate(nowIso);
+      const need = datesToFetch(store, RANGE_START, today, !!opts.force);
+      if (!need.length)
+        return toResult(
+          store,
+          "connected",
+          `Showing cached GA4 data last pulled ${fmtDateTime(lastPulled(store) ?? nowIso)}. Refresh pulls the most recent days again.`,
+        );
+      const from = need[0];
+      const [rows, paths, downstream] = await Promise.all([
+        fetchRows(pageIds, trackingStart, opts.run, from),
+        fetchPaths(pageIds, trackingStart, opts.run, from),
+        fetchDownstream(opts.run, from),
+      ]);
+      store = applyFetch(store, need, { rows, paths, downstream }, nowIso);
+      memStore = store;
+      if (opts.persistFile) saveStore(opts.persistFile, store);
+      return toResult(
+        store,
+        "connected",
+        `Live GA4 data (property ${GA4_PROPERTY_ID}), ${need.length} ${need.length === 1 ? "day" : "days"} pulled. Recent days are preliminary.`,
       );
-      const downstream = await fetchDownstream(opts.run).catch(
-        () => cache?.result.downstream ?? [],
-      );
-      const result: LiveResult = rows.length
-        ? {
-            rows,
-            paths,
-            downstream,
-            status: "connected",
-            message: `Live GA4 data (property ${GA4_PROPERTY_ID}). Today is preliminary.`,
-            refreshedAt: new Date().toISOString(),
-          }
-        : {
-            rows,
-            paths,
-            downstream,
-            status: "no-data",
-            message: "Connected to GA4, but no rows came back for these pages.",
-            refreshedAt: new Date().toISOString(),
-          };
-      cache = { at: Date.now(), result };
-      return result;
     } catch (e) {
-      // Keep serving the last good rows, flagged stale, rather than blanking the UI.
+      // Keep serving the cache, flagged, rather than blanking the UI.
       const { status, message } = classifyError(e);
-      const stale = cache?.result.rows ?? [];
-      return {
-        rows: stale,
-        paths: cache?.result.paths ?? [],
-        downstream: cache?.result.downstream ?? [],
+      const when = lastPulled(store);
+      return toResult(
+        store,
         status,
-        message: stale.length
-          ? `${message} Showing the last loaded data.`
+        store.rows.length
+          ? `${message} Showing cached data last pulled ${fmtDateTime(when ?? opts.now ?? new Date().toISOString())}.`
           : message,
-        refreshedAt: cache?.result.refreshedAt ?? null,
-      };
+      );
     } finally {
       inflight = null;
     }
   })();
   return inflight;
+}
+
+/** Forgets the in-memory cache (tests; simulates a server restart). */
+export function resetLiveCache(): void {
+  memStore = null;
+  inflight = null;
 }

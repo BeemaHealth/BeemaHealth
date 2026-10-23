@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useState } from "react";
 import {
   setExperimentContext,
   setExperimentTrackingSuppressed,
@@ -14,6 +14,13 @@ import type { ExperimentConfig, LandingVariant } from "./types";
 
 type PageKey = keyof typeof EXPERIMENTS;
 
+// Staging only. The flag is a build-time constant, so production drops both the
+// switcher and the all-variants module from its bundle.
+const VariantSwitcher =
+  import.meta.env.VITE_PREVIEW_ALL_VARIANTS === "1"
+    ? lazy(() => import("./VariantSwitcher"))
+    : null;
+
 type Resolution = {
   variant: LandingVariant;
   /** Preview and excluded-admin visits are never tracked. */
@@ -28,7 +35,8 @@ type Resolution = {
  *   prerendered default is hidden (never painted) until the assigned variant
  *   has mounted, so there is no visible flicker.
  * - `?preview_variant=<id>` shows a variant without tracking. In production
- *   only live variants can be previewed; in dev, any variant file.
+ *   only live variants can be previewed; in dev, any variant file. The staging
+ *   build sets VITE_PREVIEW_ALL_VARIANTS=1 to bundle every variant file too.
  */
 export function LandingExperiment({ page }: { page: PageKey }) {
   const config: ExperimentConfig = EXPERIMENTS[page];
@@ -41,6 +49,9 @@ export function LandingExperiment({ page }: { page: PageKey }) {
     tracked: false,
   });
   const [ready, setReady] = useState(!isSplit);
+  // Client-only so the prerendered HTML and hydration stay identical.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Layout effect: runs after hydration but before the browser paints the
   // swapped variant.
@@ -63,7 +74,10 @@ export function LandingExperiment({ page }: { page: PageKey }) {
         finish(live, false);
         return undefined;
       }
-      if (import.meta.env.DEV) {
+      if (
+        import.meta.env.DEV ||
+        import.meta.env.VITE_PREVIEW_ALL_VARIANTS === "1"
+      ) {
         void import("./dev-variants").then(({ findDevVariant }) =>
           finish(findDevVariant(page, previewId) ?? defaultVariant, false),
         );
@@ -117,6 +131,11 @@ export function LandingExperiment({ page }: { page: PageKey }) {
   return (
     <div className={ready ? "contents" : "contents exp-pending"}>
       <Component />
+      {VariantSwitcher && mounted && (
+        <Suspense fallback={null}>
+          <VariantSwitcher page={page} currentId={resolved.variant.id} />
+        </Suspense>
+      )}
     </div>
   );
 }

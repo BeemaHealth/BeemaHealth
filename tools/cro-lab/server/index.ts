@@ -28,6 +28,7 @@ import {
   withMain,
   writeExperiments,
 } from "./experiments.ts";
+import { StagingDeployer, scriptRunner } from "./staging.ts";
 import {
   duplicateVariantFile,
   nextVariantId,
@@ -44,6 +45,8 @@ const TRACKED_IDS = TRACKED_PAGES.map((p) => p.id);
 const PORT = Number(process.env.CRO_PORT ?? 8787);
 const DEV_URL = process.env.CRO_DEV_URL ?? "http://localhost:8080";
 const LIVE_TRACKING_START = "2026-10-19";
+/** Per-day GA4 cache: a restart or period change makes no Google calls. */
+const GA4_CACHE_FILE = path.join(labRoot, ".local/ga4-days.json");
 const allowedHosts = new Set([`127.0.0.1:${PORT}`, `localhost:${PORT}`]);
 
 const stores: Record<Mode, Store> = {
@@ -52,6 +55,17 @@ const stores: Record<Mode, Store> = {
   ),
   demo: new Store(path.join(labRoot, ".local/demo-lab.json"), () => seedDemo()),
 };
+const currentMains = () => {
+  const experiments = readExperiments(repoRoot);
+  return Object.fromEntries(
+    PAGE_IDS.map((id) => [id, mainVariantId(experiments, id)]),
+  );
+};
+const staging = new StagingDeployer(
+  path.join(labRoot, ".local/staging.json"),
+  scriptRunner(repoRoot),
+  currentMains,
+);
 // Pick up variant files created outside the dashboard (e.g. by Claude Code).
 stores.live.update((d) => void syncWithDisk(d, repoRoot, PAGE_IDS));
 
@@ -80,6 +94,7 @@ async function buildState(mode: Mode): Promise<LabState> {
     return {
       ...base,
       mainVariants: {},
+      staging: null,
       analytics: {
         status: "demo",
         message: "Synthetic DEMO data. Nothing here is real analytics.",
@@ -87,13 +102,13 @@ async function buildState(mode: Mode): Promise<LabState> {
         refreshedAt: new Date().toISOString(),
       },
     };
-  const live = await getLive(TRACKED_IDS, LIVE_TRACKING_START);
-  const experiments = readExperiments(repoRoot);
+  const live = await getLive(TRACKED_IDS, LIVE_TRACKING_START, {
+    persistFile: GA4_CACHE_FILE,
+  });
   return {
     ...base,
-    mainVariants: Object.fromEntries(
-      PAGE_IDS.map((id) => [id, mainVariantId(experiments, id)]),
-    ),
+    mainVariants: currentMains(),
+    staging: staging.snapshot(),
     analytics: {
       status: live.status,
       message: live.message,
@@ -411,7 +426,10 @@ async function api(req: http.IncomingMessage, url: URL): Promise<unknown> {
       };
     }
     const force = url.searchParams.get("refresh") === "1";
-    const live = await getLive(TRACKED_IDS, LIVE_TRACKING_START, { force });
+    const live = await getLive(TRACKED_IDS, LIVE_TRACKING_START, {
+      force,
+      persistFile: GA4_CACHE_FILE,
+    });
     return {
       mode,
       rows: live.rows,
@@ -441,6 +459,16 @@ async function api(req: http.IncomingMessage, url: URL): Promise<unknown> {
         "Demo data has no files. Switch to Live data to change the main variant.",
       );
     await makeMain(parts[1], await readBody(req));
+    return buildState("live");
+  }
+  if (m === "POST" && parts[0] === "staging" && parts[1] === "deploy") {
+    if (mode !== "live")
+      throw bad("Demo data has no files. Switch to Live data to deploy.");
+    try {
+      staging.start();
+    } catch (e) {
+      throw new HttpError(409, (e as Error).message);
+    }
     return buildState("live");
   }
   if (m === "POST" && parts[0] === "tests" && parts.length === 1) {

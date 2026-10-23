@@ -18,6 +18,7 @@ import {
   FunnelGraphic,
   MiniFunnel,
   PathsPanel,
+  TrackingWarning,
 } from "../components/Funnel.tsx";
 import {
   bySource,
@@ -346,6 +347,7 @@ function Totals({ period, group }: { period: Period; group: PageGroup }) {
       </p>
       {!hidden && t.visitors > 0 && (
         <div className="mt-4 border-t border-line pt-4">
+          <TrackingWarning totals={t} since={state.analytics.trackingStart} />
           <FunnelGraphic
             totals={t}
             sources={bySource(inRange)}

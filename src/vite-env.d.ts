@@ -11,6 +11,8 @@ interface ImportMetaEnv {
   readonly VITE_GA_MEASUREMENT_ID?: string;
   /** GTM container ID, e.g. GTM-XXXXXXX - Bask questionnaire + marketing Preview. */
   readonly VITE_GTM_CONTAINER_ID?: string;
+  /** "1" bundles every landing variant for ?preview_variant= (staging only). */
+  readonly VITE_PREVIEW_ALL_VARIANTS?: string;
   /** Optional override for waitlist-page social-proof count. */
   readonly VITE_WAITLIST_DISPLAY_COUNT?: string;
 }

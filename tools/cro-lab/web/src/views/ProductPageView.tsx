@@ -4,7 +4,11 @@ import { CANONICAL_ORIGIN } from "@shared/pages.ts";
 import { bySource, pageDownstream, sumRows } from "@shared/metrics.ts";
 import { go, useLab } from "../lab.tsx";
 import { PeriodSelect } from "../components/Period.tsx";
-import { FunnelGraphic, PathsPanel } from "../components/Funnel.tsx";
+import {
+  FunnelGraphic,
+  PathsPanel,
+  TrackingWarning,
+} from "../components/Funnel.tsx";
 import {
   metricsUnavailable,
   pageDownNote,
@@ -105,6 +109,10 @@ export function ProductPageView({ pageId }: { pageId: string }) {
           </div>
           {t.visitors > 0 ? (
             <div className="mt-4 border-t border-line pt-4">
+              <TrackingWarning
+                totals={t}
+                since={state!.analytics.trackingStart}
+              />
               <FunnelGraphic
                 totals={t}
                 sources={bySource(inRange)}
