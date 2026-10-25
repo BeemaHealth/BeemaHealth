@@ -79,7 +79,7 @@ export type UtmParams = {
   cta_id: string;
   /** document.referrer at first capture (truncated) - not PHI. */
   referrer: string;
-  /** First path seen this session (e.g. /, /waitlist/) - not PHI. */
+  /** First path seen this session (e.g. /, /glp-1-houston/) - not PHI. */
   landing_path: string;
 };
 
@@ -253,30 +253,4 @@ export function capturePageUtms(): void {
   }
 
   if (Object.keys(patch).length > 0) storePendingUtms(patch);
-}
-
-/**
- * Fields to attach to Formspree (or similar) on waitlist submit so each
- * lead row shows where the visitor came from - no backend required.
- */
-export function getAttributionForSubmit(): AttributionSnapshot {
-  const pending = getPendingUtms();
-  const page_path =
-    typeof window !== "undefined"
-      ? `${window.location.pathname}${window.location.search}`.slice(0, 256)
-      : undefined;
-
-  return {
-    utm_source: pending.utm_source,
-    utm_medium: pending.utm_medium,
-    utm_campaign: pending.utm_campaign,
-    utm_term: pending.utm_term,
-    utm_content: pending.utm_content,
-    fbclid: pending.fbclid,
-    gclid: pending.gclid,
-    cta_id: pending.cta_id,
-    referrer: pending.referrer,
-    landing_path: pending.landing_path,
-    page_path,
-  };
 }

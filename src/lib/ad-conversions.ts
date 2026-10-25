@@ -252,8 +252,8 @@ export function initAdPixels(): void {
 /**
  * SPA page view for GA4.
  *
- * `page_title` is the URL path (`/` or `/waitlist/`) so Realtime is readable.
- * Logical route key stays in `screen_name` (home, waitlist, …).
+ * `page_title` is the URL path (e.g. `/` or `/glp-1-houston/`) so Realtime is readable.
+ * Logical route key stays in `screen_name` (home, glp-1-houston, …).
  * UTM fields are sent explicitly for DebugView / campaign_landing.
  */
 export function trackGaPageView(page: string, ctaId?: string): void {
@@ -290,10 +290,6 @@ export function trackGaPageView(page: string, ctaId?: string): void {
 }
 
 /**
- * Fire lead conversion events after a successful waitlist submit.
- * No PHI - event name / conversion ping only.
- */
-/**
  * Send a GA4 event straight from the page (not through GTM).
  *
  * `beacon: true` uses `transport_type: "beacon"` so the hit survives the
@@ -317,33 +313,6 @@ export function trackGaEvent(
     ...(options.beacon ? { transport_type: "beacon" } : {}),
   });
   return true;
-}
-
-export function trackWaitlistLeadConversion(): void {
-  const config = readAdPixelConfig();
-  if (!isAnyAdPixelConfigured(config)) return;
-
-  ensureMetaPixel(config);
-  ensureGoogleTag(config);
-
-  if (isMetaPixelConfigured(config) && typeof window.fbq === "function") {
-    window.fbq("track", "Lead");
-  }
-
-  if (
-    isGoogleAdsConversionConfigured(config) &&
-    typeof window.gtag === "function"
-  ) {
-    window.gtag("event", "conversion", {
-      send_to: `${config.googleAdsId}/${config.googleAdsConversionLabel}`,
-    });
-  }
-
-  if (isGaConfigured(config) && typeof window.gtag === "function") {
-    window.gtag("event", "generate_lead", {
-      event_category: "waitlist",
-    });
-  }
 }
 
 /** Test-only reset of bootstrap flags. */

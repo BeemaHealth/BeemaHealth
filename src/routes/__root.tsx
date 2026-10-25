@@ -262,7 +262,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   // Capture UTMs / cta_id from the URL on every page load so Formspree and
-  // GA can attribute waitlist leads and sessions without a backend.
+  // GA can attribute sessions without a backend.
   useEffect(() => {
     capturePageUtms();
   }, []);

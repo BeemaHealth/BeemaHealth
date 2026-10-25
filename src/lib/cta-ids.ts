@@ -94,43 +94,18 @@ export type CtaId = (typeof CTA_IDS)[keyof typeof CTA_IDS];
  */
 export const HIVE_LOGIN_URL = "https://hive.beemahealth.com" as const;
 
-/** Waitlist route - trailing slash matches sitemap-style canonical URLs. */
-export const WAITLIST_PATH = "/waitlist/" as const;
-
-/** @deprecated Prefer WAITLIST_PATH - alias kept so old imports keep working. */
-export const QUALIFY_PATH = WAITLIST_PATH;
-
-/** Search object for `<Link to={WAITLIST_PATH} search={waitlistSearch(id)} />`. */
-export function waitlistSearch(ctaId: CtaId): { cta_id: CtaId } {
-  return { cta_id: ctaId };
-}
-
-/** @deprecated Prefer waitlistSearch */
-export const qualifySearch = waitlistSearch;
-
-/**
- * Full path+search string for raw anchors / non-Link navigation.
- * Slash before `?` so the path matches the GitHub Pages canonical form.
- */
-export function waitlistHref(ctaId: CtaId): string {
-  return `${WAITLIST_PATH}?cta_id=${encodeURIComponent(ctaId)}`;
-}
-
-/** @deprecated Prefer waitlistHref */
-export const qualifyHref = waitlistHref;
-
 /**
  * ---------------------------------------------------------------------
  * CTA switchboard
  * ---------------------------------------------------------------------
  * Beema Health is live: every marketing CTA sitewide sends visitors to Bask's
  * hosted intake (one questionnaire - not a separate eligibility product).
- * Leftover in-repo waitlist/qualify/intake routes are legacy - see
+ * Leftover in-repo qualify/intake routes are legacy - see
  * docs/BACKEND-DEFERRED.md.
  *
  * `resolveCta(id)` is the ONLY place that decision should be made.
  * Every CTA button/link in the app calls this instead of hardcoding
- * WAITLIST_PATH or a label - so repointing the site (fully or one CTA
+ * a path or a label - so repointing the site (fully or one CTA
  * at a time) is a one-file edit here, not a hunt through every
  * route/component.
  *
@@ -374,7 +349,7 @@ export function appendQueryParams(
 }
 
 /**
- * Build the query object forwarded into Bask (and internal waitlist links):
+ * Build the query object forwarded into Bask:
  * cta_id + fbclid/gclid + all five utm_* params captured on the marketing site.
  */
 export function buildCtaSearch(ctaId: CtaId): CtaSearchParams {

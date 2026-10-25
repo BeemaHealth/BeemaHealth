@@ -230,7 +230,7 @@ describe("gtm", () => {
       ),
     ).toBe(true);
     expect(isBaskIntakeUrl("https://hive.beemahealth.com")).toBe(false);
-    expect(isBaskIntakeUrl("/waitlist/")).toBe(false);
+    expect(isBaskIntakeUrl("/glp-1-houston/")).toBe(false);
   });
 
   it("pushes intake_handoff with only event + cta_location", () => {

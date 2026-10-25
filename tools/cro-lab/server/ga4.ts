@@ -403,6 +403,12 @@ export function classifyError(e: unknown): {
 
 let memStore: DayStore | null = null;
 let inflight: Promise<LiveResult> | null = null;
+/**
+ * The most recent failed pull, kept until a pull succeeds. Without it the next
+ * cached read (the dashboard asks for rows, then state) would report "connected"
+ * and hide why Refresh did nothing.
+ */
+let lastFailure: { status: AnalyticsStatus; message: string } | null = null;
 
 const toResult = (
   store: DayStore,
@@ -451,6 +457,8 @@ export function getLive(
       const nowIso = opts.now ?? new Date().toISOString();
       const today = denverDate(nowIso);
       const need = datesToFetch(store, RANGE_START, today, !!opts.force);
+      if (!need.length && lastFailure)
+        return toResult(store, lastFailure.status, lastFailure.message);
       if (!need.length)
         return toResult(
           store,
@@ -466,6 +474,7 @@ export function getLive(
       store = applyFetch(store, need, { rows, paths, downstream }, nowIso);
       memStore = store;
       if (opts.persistFile) saveStore(opts.persistFile, store);
+      lastFailure = null;
       return toResult(
         store,
         "connected",
@@ -475,22 +484,25 @@ export function getLive(
       // Keep serving the cache, flagged, rather than blanking the UI.
       const { status, message } = classifyError(e);
       const when = lastPulled(store);
-      return toResult(
-        store,
-        status,
-        store.rows.length
-          ? `${message} Showing cached data last pulled ${fmtDateTime(when ?? opts.now ?? new Date().toISOString())}.`
-          : message,
-      );
-    } finally {
-      inflight = null;
+      const full = store.rows.length
+        ? `${message} Showing cached data last pulled ${fmtDateTime(when ?? opts.now ?? new Date().toISOString())}.`
+        : message;
+      lastFailure = { status, message: full };
+      return toResult(store, status, full);
     }
   })();
-  return inflight;
+  // Cleared after assignment: a cache hit resolves before `inflight` is set, so
+  // clearing inside the async body would leave that stale promise stuck here.
+  const mine = inflight;
+  void mine.finally(() => {
+    if (inflight === mine) inflight = null;
+  });
+  return mine;
 }
 
 /** Forgets the in-memory cache (tests; simulates a server restart). */
 export function resetLiveCache(): void {
   memStore = null;
   inflight = null;
+  lastFailure = null;
 }

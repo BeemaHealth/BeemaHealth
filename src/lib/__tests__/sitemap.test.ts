@@ -162,7 +162,6 @@ describe("public/sitemap.xml", () => {
   it("never lists funnel, portal, staff, or auth routes", () => {
     const disallowed = [
       "/qualify",
-      "/waitlist",
       "/intake",
       "/consent",
       "/submitted",
@@ -207,7 +206,6 @@ describe("public/robots.txt", () => {
   it("blocks funnel, portal, staff, LP, and retired stub paths", () => {
     for (const path of [
       "/qualify",
-      "/waitlist",
       "/intake",
       "/consent",
       "/dashboard",
@@ -256,13 +254,7 @@ describe("public/robots.txt", () => {
       robotsTxt.lastIndexOf("User-agent: *"),
     );
     expect(namedGroup.length).toBeGreaterThan(0);
-    for (const path of [
-      "/dashboard",
-      "/staff",
-      "/waitlist",
-      "/pricing",
-      "/the-comb",
-    ]) {
+    for (const path of ["/dashboard", "/staff", "/pricing", "/the-comb"]) {
       expect(namedGroup).toContain(`Disallow: ${path}`);
     }
   });
@@ -363,14 +355,6 @@ describe("treatment page how-it-works CTAs", () => {
       expect(source, name).toContain('hash="how-it-works"');
       expect(source, name).not.toContain('to="/how-it-works/"');
     }
-  });
-});
-
-describe("waitlistHref", () => {
-  it("puts the trailing slash before the query string", async () => {
-    const { waitlistHref, WAITLIST_PATH } = await import("../cta-ids");
-    expect(WAITLIST_PATH).toBe("/waitlist/");
-    expect(waitlistHref("faq")).toBe("/waitlist/?cta_id=faq");
   });
 });
 

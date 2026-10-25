@@ -291,6 +291,30 @@ test("getLive pulls only the new day, and Refresh re-pulls only recent days", as
   );
 });
 
+test("a failed Refresh keeps reporting the error on later cached reads", async () => {
+  resetLiveCache();
+  const run = pageViewRun([]);
+  await getLive(IDS, "2026-10-19", { run, now: NOW });
+  const failed = await getLive(IDS, "2026-10-19", {
+    run: async () => {
+      throw new Error("invalid_grant: reauth related error (invalid_rapt)");
+    },
+    now: NOW,
+    force: true,
+  });
+  assert.equal(failed.status, "auth-expired");
+  // The dashboard's next call is a plain cached read: it must still say so.
+  const after = await getLive(IDS, "2026-10-19", { run, now: NOW });
+  assert.equal(after.status, "auth-expired");
+  assert.match(after.message, /sign-in expired/);
+  assert.equal(after.rows.length, 1);
+  // A successful Refresh clears it.
+  const ok = await getLive(IDS, "2026-10-19", { run, now: NOW, force: true });
+  assert.equal(ok.status, "connected");
+  const later = await getLive(IDS, "2026-10-19", { run, now: NOW });
+  assert.equal(later.status, "connected");
+});
+
 test("getLive falls back to the cache when Google fails after a restart", async () => {
   resetLiveCache();
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cro-days-"));

@@ -128,16 +128,25 @@ function Banner() {
   const { state, mode, reload, loading } = useLab();
   if (!state) return null;
   const a = state.analytics;
+  const failing =
+    mode === "live" && a.status !== "connected" && a.status !== "no-data";
   return (
     <div
+      role={failing ? "alert" : undefined}
       className={cx(
         "flex flex-wrap items-center gap-x-3 gap-y-1 border-b px-6 py-2 text-xs",
         mode === "demo"
           ? "border-amber/25 bg-amber/8 text-amber"
-          : "border-line bg-surface/60 text-soft",
+          : failing
+            ? "border-rose/30 bg-rose/10 font-medium text-rose"
+            : "border-line bg-surface/60 text-soft",
       )}
     >
-      {mode === "demo" ? <DemoChip /> : <AlertTriangle className="size-3.5" />}
+      {mode === "demo" ? (
+        <DemoChip />
+      ) : failing ? (
+        <AlertTriangle className="size-3.5" />
+      ) : null}
       <span className="flex-1">{a.message}</span>
       <span className="text-faint">
         {a.refreshedAt

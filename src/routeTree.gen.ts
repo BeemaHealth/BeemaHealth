@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WeightLossRouteImport } from './routes/weight-loss'
-import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as TirzepatideHoustonRouteImport } from './routes/tirzepatide-houston'
 import { Route as TirzepatideRouteImport } from './routes/tirzepatide'
@@ -93,11 +92,6 @@ import { Route as StaffQuestionnairesSlugVersionsVersionIdRouteImport } from './
 const WeightLossRoute = WeightLossRouteImport.update({
   id: '/weight-loss',
   path: '/weight-loss',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WaitlistRoute = WaitlistRouteImport.update({
-  id: '/waitlist',
-  path: '/waitlist',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
@@ -536,7 +530,6 @@ export interface FileRoutesByFullPath {
   '/tirzepatide': typeof TirzepatideRoute
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
-  '/waitlist': typeof WaitlistRoute
   '/weight-loss': typeof WeightLossRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
@@ -614,7 +607,6 @@ export interface FileRoutesByTo {
   '/tadalafil-boston': typeof TadalafilBostonRoute
   '/tirzepatide': typeof TirzepatideRoute
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
-  '/waitlist': typeof WaitlistRoute
   '/weight-loss': typeof WeightLossRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
@@ -694,7 +686,6 @@ export interface FileRoutesById {
   '/tirzepatide': typeof TirzepatideRoute
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
-  '/waitlist': typeof WaitlistRoute
   '/weight-loss': typeof WeightLossRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
@@ -778,7 +769,6 @@ export interface FileRouteTypes {
     | '/tirzepatide'
     | '/tirzepatide-houston'
     | '/verify-email'
-    | '/waitlist'
     | '/weight-loss'
     | '/dashboard/account'
     | '/dashboard/documents'
@@ -856,7 +846,6 @@ export interface FileRouteTypes {
     | '/tadalafil-boston'
     | '/tirzepatide'
     | '/tirzepatide-houston'
-    | '/waitlist'
     | '/weight-loss'
     | '/dashboard/account'
     | '/dashboard/documents'
@@ -935,7 +924,6 @@ export interface FileRouteTypes {
     | '/tirzepatide'
     | '/tirzepatide-houston'
     | '/verify-email'
-    | '/waitlist'
     | '/weight-loss'
     | '/dashboard/account'
     | '/dashboard/documents'
@@ -1018,7 +1006,6 @@ export interface RootRouteChildren {
   TirzepatideRoute: typeof TirzepatideRoute
   TirzepatideHoustonRoute: typeof TirzepatideHoustonRoute
   VerifyEmailRoute: typeof VerifyEmailRouteWithChildren
-  WaitlistRoute: typeof WaitlistRoute
   WeightLossRoute: typeof WeightLossRoute
   LegalHipaaRoute: typeof LegalHipaaRoute
   LegalIntakeAcknowledgmentsRoute: typeof LegalIntakeAcknowledgmentsRoute
@@ -1040,13 +1027,6 @@ declare module '@tanstack/react-router' {
       path: '/weight-loss'
       fullPath: '/weight-loss'
       preLoaderRoute: typeof WeightLossRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/waitlist': {
-      id: '/waitlist'
-      path: '/waitlist'
-      fullPath: '/waitlist'
-      preLoaderRoute: typeof WaitlistRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/verify-email': {
@@ -1763,7 +1743,6 @@ const rootRouteChildren: RootRouteChildren = {
   TirzepatideRoute: TirzepatideRoute,
   TirzepatideHoustonRoute: TirzepatideHoustonRoute,
   VerifyEmailRoute: VerifyEmailRouteWithChildren,
-  WaitlistRoute: WaitlistRoute,
   WeightLossRoute: WeightLossRoute,
   LegalHipaaRoute: LegalHipaaRoute,
   LegalIntakeAcknowledgmentsRoute: LegalIntakeAcknowledgmentsRoute,

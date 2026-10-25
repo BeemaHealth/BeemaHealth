@@ -8,13 +8,13 @@ Generate daily social media content for Beema Health and create a Gmail draft wi
 
 - Focus on: helpful health advice, educational content, dieting tips, wellness teaser posts, "coming soon" vibes.
 
-- Every post must include a join-waitlist CTA (see Tracking Rules). Never use a bare beemahealth.com link without UTM params.
+- Every post must include a get-started CTA (see Tracking Rules). Never use a bare beemahealth.com link without UTM params.
 
 
 
 **Tracking Rules (required) — keep it simple**
 
-Base waitlist path: https://beemahealth.com/waitlist/
+Base path: https://beemahealth.com/
 
 ### Evergreen bio / profile links (Instagram + Facebook + Threads)
 
@@ -24,13 +24,13 @@ CTA in those posts: “link in bio” / “link in profile” only.
 Use these fixed URLs (paste as plain text into each platform’s website/bio field once; do not regenerate daily):
 
 - Instagram bio:
-  https://beemahealth.com/waitlist/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
+  https://beemahealth.com/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
 
 - Facebook page / profile website:
-  https://beemahealth.com/waitlist/?utm_source=facebook&utm_medium=social&utm_campaign=facebook_bio&utm_content=facebook_link_in_bio
+  https://beemahealth.com/?utm_source=facebook&utm_medium=social&utm_campaign=facebook_bio&utm_content=facebook_link_in_bio
 
 - Threads bio / website:
-  https://beemahealth.com/waitlist/?utm_source=threads&utm_medium=social&utm_campaign=threads_bio&utm_content=threads_link_in_bio
+  https://beemahealth.com/?utm_source=threads&utm_medium=social&utm_campaign=threads_bio&utm_content=threads_link_in_bio
 
 - X website / profile:
   https://beemahealth.com/?utm_source=x&utm_medium=social&utm_campaign=x_bio&utm_content=x_link_in_bio
@@ -40,7 +40,7 @@ In the Gmail draft, include a one-time reminder block with these bio URLs at the
 ### Per-post trackable links (X, Reddit, GBP only)
 
 Pattern:
-https://beemahealth.com/waitlist/?utm_source=SOURCE&utm_medium=MEDIUM&utm_campaign=CAMPAIGN&utm_content=CONTENT
+https://beemahealth.com/?utm_source=SOURCE&utm_medium=MEDIUM&utm_campaign=CAMPAIGN&utm_content=CONTENT
 
 Where:
 - DATE = today YYYY-MM-DD
@@ -93,7 +93,7 @@ Do not shorten URLs unless the platform requires it.
 
    - Platform-appropriate hashtags.
 
-   - CTA: “Join the waitlist — link in bio” (no per-post URL in the caption).
+   - CTA: “Get started - link in bio” (no per-post URL in the caption).
 
    - Best posting time for each.
 
@@ -101,7 +101,7 @@ Do not shorten URLs unless the platform requires it.
 
 2. **X / TWITTER — 2–3 posts**
 
-   - Educational or teaser; include the full per-post trackable waitlist URL (or CTA + URL in a reply if over 280 chars).
+   - Educational or teaser; include the full per-post trackable URL (or CTA + URL in a reply if over 280 chars).
 
    - Best posting times.
 
@@ -111,7 +111,7 @@ Do not shorten URLs unless the platform requires it.
 
    - Helpful advice tone. Prefer r/beemahealth.
 
-   - Include per-post trackable waitlist CTA.
+   - Include per-post trackable CTA.
 
    - Recommend flair from: Discussion, News, Research, Question, Nutrition, Exercise, GLP-1, Telehealth, Success Story.
 
@@ -135,7 +135,7 @@ Do not shorten URLs unless the platform requires it.
 
    5. Use the post copy below if creating a new GBP post"
 
-   Then 1 GBP-specific post (professional) with the GBP per-post trackable waitlist link.
+   Then 1 GBP-specific post (professional) with the GBP per-post trackable link.
 
 
 
@@ -167,11 +167,11 @@ Campaign tag (X/Reddit/GBP posts): daily_[YYYY-MM-DD]
 
 📌 BIO / PROFILE LINKS (set once — IG / FB / Threads)
 
-Instagram: https://beemahealth.com/waitlist/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
+Instagram: https://beemahealth.com/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
 
-Facebook: https://beemahealth.com/waitlist/?utm_source=facebook&utm_medium=social&utm_campaign=facebook_bio&utm_content=facebook_link_in_bio
+Facebook: https://beemahealth.com/?utm_source=facebook&utm_medium=social&utm_campaign=facebook_bio&utm_content=facebook_link_in_bio
 
-Threads: https://beemahealth.com/waitlist/?utm_source=threads&utm_medium=social&utm_campaign=threads_bio&utm_content=threads_link_in_bio
+Threads: https://beemahealth.com/?utm_source=threads&utm_medium=social&utm_campaign=threads_bio&utm_content=threads_link_in_bio
 
 X: https://beemahealth.com/?utm_source=x&utm_medium=social&utm_campaign=x_bio&utm_content=x_link_in_bio
 
