@@ -81,6 +81,7 @@ export const CTA_IDS = {
   learn_weight_loss: "learn_weight_loss",
   recipes_hub: "recipes_hub",
   recipe_detail: "recipe_detail",
+  not_found: "not_found",
   landing_page: "landing_page",
   login_prompt: "login_prompt",
 } as const;
@@ -225,6 +226,10 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
   },
   recipe_detail: {
     label: "Start an online visit",
+    to: DEFAULT_CTA_TARGET.to,
+  },
+  not_found: {
+    label: "Start a weight loss online visit",
     to: DEFAULT_CTA_TARGET.to,
   },
   learn_weight_loss: {

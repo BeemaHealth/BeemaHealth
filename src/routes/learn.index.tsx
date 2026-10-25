@@ -10,6 +10,7 @@ import {
 } from "@/components/site/primitives";
 import { LearnBreadcrumb } from "@/components/learn/LearnBreadcrumb";
 import { LearnDisclaimer } from "@/components/learn/LearnDisclaimer";
+import { PreferredSourceButton } from "@/components/learn/PreferredSourceButton";
 import {
   LEARN_INDEX_DATE_MODIFIED,
   LEARN_INDEX_INTRO,
@@ -251,6 +252,7 @@ function LearnIndexPage() {
           </Link>
           .
         </p>
+        <PreferredSourceButton className="mt-8 flex justify-center" />
       </Section>
     </MarketingLayout>
   );
