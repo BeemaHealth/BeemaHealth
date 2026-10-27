@@ -1,7 +1,12 @@
 import { ArrowLeft, ExternalLink, FlaskConical } from "lucide-react";
 import { fmtInt, fmtPct } from "@shared/format.ts";
 import { CANONICAL_ORIGIN } from "@shared/pages.ts";
-import { bySource, pageDownstream, sumRows } from "@shared/metrics.ts";
+import {
+  bySource,
+  downstreamRates,
+  pageDownstream,
+  sumRows,
+} from "@shared/metrics.ts";
 import { go, useLab } from "../lab.tsx";
 import { PeriodSelect } from "../components/Period.tsx";
 import {
@@ -18,13 +23,22 @@ import {
 } from "../lib.ts";
 import { Card, DemoChip, Empty } from "../ui.tsx";
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({
+  label,
+  value,
+  sub,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+}) {
   return (
     <div>
       <p className="text-[11px] font-medium uppercase tracking-wide text-faint">
         {label}
       </p>
       <p className="num text-xl font-semibold">{value}</p>
+      {sub && <p className="text-[11px] text-faint">{sub}</p>}
     </div>
   );
 }
@@ -51,6 +65,7 @@ export function ProductPageView({ pageId }: { pageId: string }) {
     t.clickers === null
       ? undefined
       : pageDownstream(downstream, pageId, inRange);
+  const rates = down ? downstreamRates(t, down) : null;
   return (
     <div className="mx-auto max-w-[1400px] space-y-6 p-6">
       <button
@@ -105,6 +120,24 @@ export function ProductPageView({ pageId }: { pageId: string }) {
             <Stat
               label="Bask purchases"
               value={down ? fmtInt(down.purchases) : "n/a"}
+            />
+            <Stat
+              label="Signup rate"
+              value={rates ? fmtPct(rates.signupOfHandoff) : "n/a"}
+              sub={
+                rates
+                  ? `of handoffs · ${fmtPct(rates.signupOfVisitors)} of visitors`
+                  : undefined
+              }
+            />
+            <Stat
+              label="Purchase rate"
+              value={rates ? fmtPct(rates.purchaseOfSignup) : "n/a"}
+              sub={
+                rates
+                  ? `of signups · ${fmtPct(rates.purchaseOfVisitors)} of visitors`
+                  : undefined
+              }
             />
           </div>
           {t.visitors > 0 ? (

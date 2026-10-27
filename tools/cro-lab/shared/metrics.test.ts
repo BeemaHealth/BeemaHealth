@@ -4,6 +4,7 @@ import {
   attributeDays,
   bySource,
   compareToBaseline,
+  downstreamRates,
   downstreamTotals,
   pageDownstream,
   trackingWarningText,
@@ -360,4 +361,28 @@ test("trackingWarningText flags partial and missing handoff tracking", () => {
     null,
   );
   assert.equal(trackingWarningText(sumRows([]), "2026-10-19"), null);
+});
+
+test("downstreamRates divides by handoffs, visitors and signups", () => {
+  const r = downstreamRates(
+    { trackedVisitors: 200, clickers: 50 },
+    { signups: 10, purchases: 4 },
+  );
+  assert.equal(r.signupOfHandoff, 0.2);
+  assert.equal(r.signupOfVisitors, 0.05);
+  assert.equal(r.purchaseOfSignup, 0.4);
+  assert.equal(r.purchaseOfVisitors, 0.02);
+});
+
+test("downstreamRates is null when a denominator is missing or zero", () => {
+  const r = downstreamRates(
+    { trackedVisitors: 0, clickers: null },
+    { signups: 0, purchases: 0 },
+  );
+  assert.deepEqual(r, {
+    signupOfHandoff: null,
+    signupOfVisitors: null,
+    purchaseOfSignup: null,
+    purchaseOfVisitors: null,
+  });
 });

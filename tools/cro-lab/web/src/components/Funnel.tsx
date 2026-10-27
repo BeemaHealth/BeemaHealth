@@ -3,6 +3,7 @@ import { fmtInt, fmtPct } from "@shared/format.ts";
 import {
   pathSummary,
   trackingWarningText,
+  downstreamRates,
   type DownstreamTotals,
   type SourceRow,
   type Totals,
@@ -199,6 +200,7 @@ export function FunnelGraphic({
   // readable. Widths taper; the numbers carry the real values (signups can
   // exceed handoffs, so widths are not proportional).
   const showDown = tracked && down !== undefined;
+  const rates = downstreamRates(totals, down ?? { signups: 0, purchases: 0 });
   const H3 = 72;
   const baskGap = 22; // room for the "Bask takes over" marker
   const y3 = y2 + H2 + baskGap;
@@ -368,7 +370,14 @@ export function FunnelGraphic({
                     y={y3 + H3 / 2 + 5}
                     className="fill-ink text-[13px] font-semibold"
                   >
-                    Bask signups
+                    Bask signups ({fmtPct(rates.signupOfHandoff)} of handoffs)
+                  </text>
+                  <text
+                    x={labelX(spoutW)}
+                    y={y3 + H3 / 2 + 21}
+                    className="fill-soft text-[11px]"
+                  >
+                    {fmtPct(rates.signupOfVisitors)} of landing visitors
                   </text>
                   <polygon
                     points={`${s3l},${y4} ${s3r},${y4} ${s4r},${y4 + H3} ${s4l},${y4 + H3}`}
@@ -387,7 +396,14 @@ export function FunnelGraphic({
                     y={y4 + H3 / 2 + 5}
                     className="fill-ink text-[13px] font-semibold"
                   >
-                    Bask purchases
+                    Bask purchases ({fmtPct(rates.purchaseOfSignup)} of signups)
+                  </text>
+                  <text
+                    x={labelX(w3)}
+                    y={y4 + H3 / 2 + 21}
+                    className="fill-soft text-[11px]"
+                  >
+                    {fmtPct(rates.purchaseOfVisitors)} of landing visitors
                   </text>
                 </>
               )}
@@ -463,6 +479,7 @@ export function MiniFunnel({
   const trim = (t: string) => (t.length > 13 ? `${t.slice(0, 12)}…` : t);
   // Bask stages continue the taper; names sit beside the shapes.
   const showDown = tracked && down !== undefined;
+  const rates = downstreamRates(totals, down ?? { signups: 0, purchases: 0 });
   const H3 = 34;
   const y2 = H1 + 4;
   const y3 = y2 + H2 + 4;
@@ -574,7 +591,14 @@ export function MiniFunnel({
                   y={y3 + H3 / 2 + 3}
                   className="fill-soft text-[9px]"
                 >
-                  Bask signups
+                  {`Signups ${fmtPct(rates.signupOfHandoff)} of handoffs`}
+                </text>
+                <text
+                  x={labelX(spoutW)}
+                  y={y3 + H3 / 2 + 14}
+                  className="fill-soft text-[9px]"
+                >
+                  {`${fmtPct(rates.signupOfVisitors)} of visitors`}
                 </text>
                 <polygon
                   points={`${s3l},${y4} ${s3r},${y4} ${s4r},${y4 + H3} ${s4l},${y4 + H3}`}
@@ -593,7 +617,14 @@ export function MiniFunnel({
                   y={y4 + H3 / 2 + 3}
                   className="fill-soft text-[9px]"
                 >
-                  Bask purchases
+                  {`Purchases ${fmtPct(rates.purchaseOfSignup)} of signups`}
+                </text>
+                <text
+                  x={labelX(w3)}
+                  y={y4 + H3 / 2 + 14}
+                  className="fill-soft text-[9px]"
+                >
+                  {`${fmtPct(rates.purchaseOfVisitors)} of visitors`}
                 </text>
               </>
             )}

@@ -22,6 +22,7 @@ import {
 } from "../components/Funnel.tsx";
 import {
   bySource,
+  downstreamRates,
   downstreamTotals,
   pageDownstream,
   sumRows,
@@ -300,6 +301,7 @@ function Totals({ period, group }: { period: Period; group: PageGroup }) {
   const unmatched = downstreamTotals(
     periodDown.filter((r) => r.pageId === null),
   );
+  const rates = downstreamRates(t, down);
   const toggle = () => {
     const next = !hidden;
     setHidden(next);
@@ -322,6 +324,21 @@ function Totals({ period, group }: { period: Period; group: PageGroup }) {
             label="Bask signups"
             value={fmtInt(down.signups)}
             sub="matched by cta_id"
+          />
+          <Stat
+            label="Signup rate"
+            value={fmtPct(rates.signupOfHandoff)}
+            sub={`of handoffs · ${fmtPct(rates.signupOfVisitors)} of visitors`}
+          />
+          <Stat
+            label="Bask purchases"
+            value={fmtInt(down.purchases)}
+            sub="matched by cta_id"
+          />
+          <Stat
+            label="Purchase rate"
+            value={fmtPct(rates.purchaseOfSignup)}
+            sub={`of signups · ${fmtPct(rates.purchaseOfVisitors)} of visitors`}
           />
         </div>
         <button

@@ -463,6 +463,36 @@ export function downstreamTotals(rows: DownstreamRow[]): DownstreamTotals {
   return { signups, purchases };
 }
 
+export type DownstreamRates = {
+  /** Signups / intake handoffs. null when handoffs are untracked or zero. */
+  signupOfHandoff: number | null;
+  /** Signups / landing visitors on tracked days. */
+  signupOfVisitors: number | null;
+  /** Purchases / signups. */
+  purchaseOfSignup: number | null;
+  /** Purchases / landing visitors on tracked days. */
+  purchaseOfVisitors: number | null;
+};
+
+const ratio = (n: number, d: number | null) => (d && d > 0 ? n / d : null);
+
+/**
+ * Conversion rates for the Bask stages. Visitors are the tracked-day visitors
+ * (the same days `down` is limited to), so numerator and denominator cover the
+ * same period.
+ */
+export function downstreamRates(
+  t: Pick<Totals, "trackedVisitors" | "clickers">,
+  down: DownstreamTotals,
+): DownstreamRates {
+  return {
+    signupOfHandoff: ratio(down.signups, t.clickers),
+    signupOfVisitors: ratio(down.signups, t.trackedVisitors),
+    purchaseOfSignup: ratio(down.purchases, down.signups),
+    purchaseOfVisitors: ratio(down.purchases, t.trackedVisitors),
+  };
+}
+
 /**
  * Bask signups and purchases tied to one page, on the days of `rows` that have
  * handoff tracking (handoff tracking is newer than the signup tag, so older
