@@ -9,7 +9,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogDescription,
@@ -115,7 +114,7 @@ export function EdMintsPickerModal({
    */
   initialSelected?: "rdt" | "odt";
   /**
-   * Optional "Back" button at the bottom - used by GetStartedModal
+   * Optional "Back" button in the top-left corner - used by GetStartedModal
    * (2026-09-04) to return to Sexual Health's product step (Tadalafil /
    * Sildenafil / ED Mints) instead of just closing. /ed-mints doesn't pass
    * this (there's no prior step to return to on that route).
@@ -131,7 +130,19 @@ export function EdMintsPickerModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <FullScreenMobileDialogContent>
-        <DialogHeader>
+        {/* Back sits in the top-left corner, mirroring the close X on the right. */}
+        {onBack ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onBack}
+            className="absolute left-3 top-3 h-10 gap-1 px-3 text-sm"
+          >
+            <ArrowLeft className="size-4" /> Back
+          </Button>
+        ) : null}
+        <DialogHeader className={onBack ? "pt-9" : undefined}>
           <DialogTitle className="text-center text-2xl sm:text-3xl">
             Choose your formulation
           </DialogTitle>
@@ -224,13 +235,6 @@ export function EdMintsPickerModal({
           </span>
         </div>
 
-        {onBack ? (
-          <DialogFooter className="sm:justify-center">
-            <Button type="button" variant="ghost" onClick={onBack}>
-              <ArrowLeft /> Back
-            </Button>
-          </DialogFooter>
-        ) : null}
         <p className="text-center text-xs text-muted-foreground">
           Completing intake does not guarantee a prescription.
         </p>
