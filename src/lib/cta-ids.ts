@@ -16,6 +16,10 @@ export const CTA_IDS = {
   weight_loss_footer: "weight_loss_footer",
   sexual_health_hero: "sexual_health_hero",
   sexual_health_footer: "sexual_health_footer",
+  sexual_health_tadalafil: "sexual_health_tadalafil",
+  sexual_health_sildenafil: "sexual_health_sildenafil",
+  sexual_health_ed_mints_rdt: "sexual_health_ed_mints_rdt",
+  sexual_health_ed_mints_odt: "sexual_health_ed_mints_odt",
   hair_hero: "hair_hero",
   hair_footer: "hair_footer",
   wellness_hero: "wellness_hero",
@@ -321,6 +325,21 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
    */
   sexual_health_hero: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
   sexual_health_footer: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
+  /**
+   * Sexual Health "Get Started" product picker (CRO variant). Each product
+   * keeps its own questionnaire but carries a sexual_health_ id, so the click,
+   * signup and purchase are credited to /sexual-health/ and not the product page.
+   */
+  sexual_health_tadalafil: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
+  sexual_health_sildenafil: { label: "Get Started", to: SILDENAFIL_INTAKE_URL },
+  sexual_health_ed_mints_rdt: {
+    label: "Get Started",
+    to: ED_MINTS_RDT_INTAKE_URL,
+  },
+  sexual_health_ed_mints_odt: {
+    label: "Get Started",
+    to: ED_MINTS_ODT_INTAKE_URL,
+  },
   hair_hero: { label: "Get Started", to: FINASTERIDE_INTAKE_URL },
   hair_footer: { label: "Get Started", to: FINASTERIDE_INTAKE_URL },
   wellness_hero: { label: "Get Started", to: NAD_INTAKE_URL },

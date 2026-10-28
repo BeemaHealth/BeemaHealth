@@ -55,6 +55,14 @@ export const PAGES: PageDef[] = [
     variants: true,
     routeFile: "src/routes/ed-mints-boston.tsx",
   },
+  {
+    id: "sexual-health",
+    path: "/sexual-health/",
+    group: "landing",
+    variants: true,
+    title: "Sexual health",
+    routeFile: "src/routes/sexual-health.tsx",
+  },
 ];
 
 export const TIME_ZONE = "America/Denver";
@@ -104,14 +112,6 @@ export const PRODUCT_PAGES: PageDef[] = [
     variants: false,
     title: "Tirzepatide",
     routeFile: "src/routes/tirzepatide.tsx",
-  },
-  {
-    id: "sexual-health",
-    path: "/sexual-health/",
-    group: "product",
-    variants: false,
-    title: "Sexual health",
-    routeFile: "src/routes/sexual-health.tsx",
   },
   {
     id: "ed",
@@ -284,6 +284,19 @@ export function pageIdFromCtaId(
   if (!ctaId) return null;
   const hit = CTA_PREFIX_TO_PAGE.find(([prefix]) => ctaId.startsWith(prefix));
   return hit ? hit[1] : null;
+}
+
+/**
+ * Tracked page named by the `src_page` param the site stamps on Bask links
+ * (the marketing path the click came from), or null if absent or untracked.
+ */
+export function pageIdFromSrcPage(
+  srcPage: string | null | undefined,
+): string | null {
+  if (!srcPage) return null;
+  return (
+    TRACKED_PAGES.find((p) => p.path === normalizePath(srcPage))?.id ?? null
+  );
 }
 
 /** Pages whose attribution is shared with another page, with a plain note. */

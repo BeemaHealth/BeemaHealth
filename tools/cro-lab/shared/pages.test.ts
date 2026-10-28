@@ -6,6 +6,7 @@ import {
   TRACKED_PAGES,
   pageIdFromCtaId,
   pageIdFromPagePath,
+  pageIdFromSrcPage,
   pagePathFor,
   pagePathRegexp,
 } from "./pages.ts";
@@ -28,6 +29,10 @@ test("pageIdFromCtaId maps every tracked page's CTA ids", () => {
     ["sildenafil_footer", "sildenafil"],
     ["weight_loss_hero", "weight-loss"],
     ["sexual_health_footer", "sexual-health"],
+    ["sexual_health_tadalafil", "sexual-health"],
+    ["sexual_health_sildenafil", "sexual-health"],
+    ["sexual_health_ed_mints_rdt", "sexual-health"],
+    ["sexual_health_ed_mints_odt", "sexual-health"],
     ["hair_hero", "hair-loss"],
     ["hairloss_spray_men_hero", "hair-loss-spray-men"],
     ["hairloss_spray_women_footer", "hair-loss-spray-women"],
@@ -76,4 +81,14 @@ test("pagePathRegexp matches exactly the chosen pages", () => {
     assert.ok(re.test(ok), ok);
   for (const no of ["/semaglutide-houston/", "/learn/", "/semaglutide/x"])
     assert.ok(!re.test(no), no);
+});
+
+test("pageIdFromSrcPage maps the stamped click path to its tracked page", () => {
+  assert.equal(pageIdFromSrcPage("/sexual-health/"), "sexual-health");
+  assert.equal(pageIdFromSrcPage("/sexual-health"), "sexual-health");
+  assert.equal(pageIdFromSrcPage("/"), "home");
+  assert.equal(pageIdFromSrcPage("/learn/weight-loss/x/"), null);
+  assert.equal(pageIdFromSrcPage("/../etc/passwd"), null);
+  assert.equal(pageIdFromSrcPage(""), null);
+  assert.equal(pageIdFromSrcPage(null), null);
 });

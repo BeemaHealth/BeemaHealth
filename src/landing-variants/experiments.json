@@ -84,5 +84,18 @@
         "weight": 0
       }
     }
+  },
+  "sexual-health": {
+    "experimentId": "sexual-health-e1",
+    "variants": {
+      "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v2-get-started-modal": {
+        "status": "live",
+        "weight": 100
+      }
+    }
   }
 }

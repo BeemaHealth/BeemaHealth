@@ -5,6 +5,7 @@ import type { ExperimentConfig } from "./types";
 import { variant as edMintsBostonV0 } from "./ed-mints-boston/v1-control";
 import { variant as glp1HoustonV0 } from "./glp-1-houston/v3-testing-new-principles";
 import { variant as semaglutideHoustonV0 } from "./semaglutide-houston/v1-control";
+import { variant as sexualHealthV0 } from "./sexual-health/v2-get-started-modal";
 import { variant as sildenafilBostonV0 } from "./sildenafil-boston/v1-control";
 import { variant as tadalafilBostonV0 } from "./tadalafil-boston/v1-control";
 import { variant as tirzepatideHoustonV0 } from "./tirzepatide-houston/v1-control";
@@ -21,6 +22,10 @@ export const EXPERIMENTS = {
   "semaglutide-houston": {
     experimentId: "semaglutide-houston-e1",
     variants: [{ variant: semaglutideHoustonV0, weight: 100 }],
+  },
+  "sexual-health": {
+    experimentId: "sexual-health-e1",
+    variants: [{ variant: sexualHealthV0, weight: 100 }],
   },
   "sildenafil-boston": {
     experimentId: "sildenafil-boston-e1",

@@ -210,6 +210,36 @@
       "whyTested": "",
       "expected": "",
       "notes": ""
+    },
+    {
+      "id": "v1-control",
+      "pageId": "sexual-health",
+      "name": "Control (original page)",
+      "description": "Discovered on disk.",
+      "componentPath": "src/landing-variants/sexual-health/v1-control.tsx",
+      "createdAt": "2026-10-28T02:03:21.961Z",
+      "status": "draft",
+      "parentId": null,
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
+    },
+    {
+      "id": "v2-get-started-modal",
+      "pageId": "sexual-health",
+      "name": "Get Started opens a product picker",
+      "description": "Draft copy of Control. Edit it, preview locally, then make it main.",
+      "componentPath": "src/landing-variants/sexual-health/v2-get-started-modal.tsx",
+      "createdAt": "2026-10-28T02:03:21.962Z",
+      "status": "draft",
+      "parentId": "v1-control",
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
     }
   ],
   "deployments": [
@@ -272,6 +302,15 @@
       "pageId": "glp-1-houston",
       "variantId": "v4-editing-the-pricing-large-info-text-at-b",
       "startUtc": "2026-10-22T21:31:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvrhf94j",
+      "pageId": "sexual-health",
+      "variantId": "v1-control",
+      "startUtc": "2026-08-28T02:15:00.000Z",
       "endUtc": null,
       "confirmed": true,
       "notes": "Recorded in the CRO Lab."

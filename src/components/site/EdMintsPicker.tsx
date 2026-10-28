@@ -108,6 +108,7 @@ export function EdMintsPickerModal({
   onOpenChange,
   initialSelected,
   onBack,
+  ctaIds,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -120,6 +121,12 @@ export function EdMintsPickerModal({
    * so its Continue-only footer is unchanged.
    */
   onBack?: () => void;
+  /**
+   * Opt-in CTA id override per formulation, for a caller that must attribute
+   * the click to its own page (the Sexual Health picker). Omitted by default,
+   * so every existing caller keeps the ed_mints_* ids.
+   */
+  ctaIds?: Partial<Record<"rdt" | "odt", CtaId>>;
 }) {
   const [selected, setSelected] = useState<"rdt" | "odt">(initialSelected);
 
@@ -128,7 +135,9 @@ export function EdMintsPickerModal({
   }, [open, initialSelected]);
 
   const activeOption = MINT_OPTIONS.find((o) => o.id === selected)!;
-  const continueCta = resolveCta(activeOption.ctaId);
+  const continueCta = resolveCta(
+    ctaIds?.[activeOption.id] ?? activeOption.ctaId,
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
