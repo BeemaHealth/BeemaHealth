@@ -88,8 +88,6 @@ type Product = {
   name: string;
   kind: string;
   blurb: string;
-  /** Hero tile: price on its own line, a short qualifier under it. */
-  tile: { price: string; sub: string };
   image: { src: string; alt: string; width: number; height: number };
   pricing: ProductPricing;
   /** Main price shown on the card; the dose-level detail sits in a dropdown. */
@@ -104,10 +102,6 @@ const PRODUCTS: readonly Product[] = [
     kind: "Generic Cialis tablet",
     blurb:
       "An oral tablet taken as needed or daily. Known for a longer duration of action than other ED medications.",
-    tile: {
-      price: formatPerPillStartingAt(ED_TADALAFIL_PER_PILL_USD),
-      sub: "starting price",
-    },
     image: {
       src: tadalafilPhoto,
       alt: "Bottle of Beema Health tadalafil oral tablets, generic Cialis",
@@ -127,10 +121,6 @@ const PRODUCTS: readonly Product[] = [
     name: "Sildenafil",
     kind: "Generic Viagra tablet",
     blurb: "An oral tablet taken as needed.",
-    tile: {
-      price: formatPerPillStartingAt(ED_SILDENAFIL_PER_PILL_USD),
-      sub: "starting price",
-    },
     image: {
       src: sildenafilPhoto,
       alt: "Bottle of Beema Health sildenafil oral tablets, generic Viagra",
@@ -151,10 +141,6 @@ const PRODUCTS: readonly Product[] = [
     kind: "Compounded dissolving tablet",
     blurb:
       "A combination tablet that dissolves under the tongue. No water needed. Two formulations, same price.",
-    tile: {
-      price: formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING),
-      sub: "3-month plan",
-    },
     image: {
       src: edMintsPhoto,
       alt: "Beema Health ED Mints - dissolvable erectile dysfunction tablet embossed with the Beema Health logo",
@@ -341,30 +327,6 @@ function SexualHealthGetStartedModal() {
                   prescribed
                 </span>
               </div>
-
-              <div className="mt-6 grid grid-cols-3 gap-3">
-                {PRODUCTS.map((product) => (
-                  <div
-                    key={product.id}
-                    className="rounded-2xl border border-border bg-card p-3 shadow-soft sm:p-4"
-                  >
-                    <p className="text-xs font-semibold text-muted-foreground md:text-sm">
-                      {product.name}
-                    </p>
-                    <p className="mt-1 whitespace-nowrap text-base font-bold leading-tight tracking-tight text-foreground min-[400px]:text-lg sm:text-xl md:text-2xl">
-                      {product.tile.price}
-                    </p>
-                    <p className="text-[0.7rem] leading-tight text-muted-foreground md:text-xs">
-                      {product.tile.sub}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted-foreground">
-                Cash-pay when prescribed. Starting prices shown; full plan
-                pricing below. Prescribing is up to your provider and is never
-                guaranteed.
-              </p>
             </div>
 
             {/* Large clarity shot (desktop). Plain wrapper: LCP image, no initial opacity (see treatment-pages.md). */}
@@ -501,7 +463,7 @@ function SexualHealthGetStartedModal() {
                 <h3 className="mt-1 text-2xl font-bold text-foreground">
                   {product.name}
                 </h3>
-                <p className="mt-3 text-sm md:min-h-[2.75rem] leading-relaxed text-muted-foreground">
+                <p className="mt-3 text-sm md:min-h-[4.25rem] leading-relaxed text-muted-foreground">
                   {product.blurb}
                 </p>
                 <div className="mt-4 md:mt-5 md:min-h-[5.25rem]">
@@ -526,7 +488,7 @@ function SexualHealthGetStartedModal() {
                     }
                   />
                 ) : (
-                  <p className="mt-4 rounded-2xl border border-border px-4 py-[0.85rem] text-sm font-semibold text-foreground">
+                  <p className="mt-4 flex h-11 items-center rounded-full border border-border px-4 text-sm font-semibold text-foreground">
                     Same price for both formulations
                   </p>
                 )}
