@@ -8,7 +8,7 @@ const PREFERRED_SOURCE_SCRIPT_ID = "google-preferred-source-lib";
  * Google "Add as preferred source" button (Search Central, standard JS
  * option). The library scans the DOM for `google-add-preferred-source-btn`
  * once, when it loads, so the script is re-added on each mount to pick up the
- * div after client-side navigation. Only loaded on /learn/ pages.
+ * div after client-side navigation. Only loaded on /learn/ and /blogs/ article pages.
  */
 export function PreferredSourceButton({ className }: { className?: string }) {
   useEffect(() => {

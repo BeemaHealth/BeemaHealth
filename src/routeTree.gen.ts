@@ -46,6 +46,7 @@ import { Route as EdRouteImport } from './routes/ed'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsentRouteImport } from './routes/consent'
+import { Route as BlogsRouteImport } from './routes/blogs'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerifyEmailIndexRouteImport } from './routes/verify-email.index'
@@ -53,6 +54,7 @@ import { Route as StaffIndexRouteImport } from './routes/staff.index'
 import { Route as RecipesIndexRouteImport } from './routes/recipes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as BlogsIndexRouteImport } from './routes/blogs.index'
 import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pending'
 import { Route as StaffVendorsRouteImport } from './routes/staff.vendors'
 import { Route as StaffQuestionnairesRouteImport } from './routes/staff.questionnaires'
@@ -82,6 +84,7 @@ import { Route as DashboardOrdersRouteImport } from './routes/dashboard.orders'
 import { Route as DashboardIntakeRouteImport } from './routes/dashboard.intake'
 import { Route as DashboardDocumentsRouteImport } from './routes/dashboard.documents'
 import { Route as DashboardAccountRouteImport } from './routes/dashboard.account'
+import { Route as BlogsSlugRouteImport } from './routes/blogs.$slug'
 import { Route as StaffQuestionnairesIndexRouteImport } from './routes/staff.questionnaires.index'
 import { Route as LearnVerticalIndexRouteImport } from './routes/learn/$vertical.index'
 import { Route as StaffQuestionnairesSlugRouteImport } from './routes/staff.questionnaires.$slug'
@@ -274,6 +277,11 @@ const ConsentRoute = ConsentRouteImport.update({
   path: '/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogsRoute = BlogsRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -308,6 +316,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRoute,
+} as any)
+const BlogsIndexRoute = BlogsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogsRoute,
 } as any)
 const VerifyEmailPendingRoute = VerifyEmailPendingRouteImport.update({
   id: '/pending',
@@ -457,6 +470,11 @@ const DashboardAccountRoute = DashboardAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => DashboardRoute,
 } as any)
+const BlogsSlugRoute = BlogsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogsRoute,
+} as any)
 const StaffQuestionnairesIndexRoute =
   StaffQuestionnairesIndexRouteImport.update({
     id: '/',
@@ -494,6 +512,7 @@ const StaffQuestionnairesSlugVersionsVersionIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/blogs': typeof BlogsRouteWithChildren
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
@@ -531,6 +550,7 @@ export interface FileRoutesByFullPath {
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
   '/dashboard/intake': typeof DashboardIntakeRoute
@@ -560,6 +580,7 @@ export interface FileRoutesByFullPath {
   '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
   '/staff/vendors': typeof StaffVendorsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/blogs/': typeof BlogsIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/recipes/': typeof RecipesIndexRoute
@@ -608,6 +629,7 @@ export interface FileRoutesByTo {
   '/tirzepatide': typeof TirzepatideRoute
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
   '/weight-loss': typeof WeightLossRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
   '/dashboard/intake': typeof DashboardIntakeRoute
@@ -635,6 +657,7 @@ export interface FileRoutesByTo {
   '/staff/patients': typeof StaffPatientsRoute
   '/staff/vendors': typeof StaffVendorsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/blogs': typeof BlogsIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/learn': typeof LearnIndexRoute
   '/recipes': typeof RecipesIndexRoute
@@ -650,6 +673,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/blogs': typeof BlogsRouteWithChildren
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
@@ -687,6 +711,7 @@ export interface FileRoutesById {
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
   '/dashboard/intake': typeof DashboardIntakeRoute
@@ -716,6 +741,7 @@ export interface FileRoutesById {
   '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
   '/staff/vendors': typeof StaffVendorsRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/blogs/': typeof BlogsIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/recipes/': typeof RecipesIndexRoute
@@ -733,6 +759,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/blogs'
     | '/consent'
     | '/contact'
     | '/dashboard'
@@ -770,6 +797,7 @@ export interface FileRouteTypes {
     | '/tirzepatide-houston'
     | '/verify-email'
     | '/weight-loss'
+    | '/blogs/$slug'
     | '/dashboard/account'
     | '/dashboard/documents'
     | '/dashboard/intake'
@@ -799,6 +827,7 @@ export interface FileRouteTypes {
     | '/staff/questionnaires'
     | '/staff/vendors'
     | '/verify-email/pending'
+    | '/blogs/'
     | '/dashboard/'
     | '/learn/'
     | '/recipes/'
@@ -847,6 +876,7 @@ export interface FileRouteTypes {
     | '/tirzepatide'
     | '/tirzepatide-houston'
     | '/weight-loss'
+    | '/blogs/$slug'
     | '/dashboard/account'
     | '/dashboard/documents'
     | '/dashboard/intake'
@@ -874,6 +904,7 @@ export interface FileRouteTypes {
     | '/staff/patients'
     | '/staff/vendors'
     | '/verify-email/pending'
+    | '/blogs'
     | '/dashboard'
     | '/learn'
     | '/recipes'
@@ -888,6 +919,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/blogs'
     | '/consent'
     | '/contact'
     | '/dashboard'
@@ -925,6 +957,7 @@ export interface FileRouteTypes {
     | '/tirzepatide-houston'
     | '/verify-email'
     | '/weight-loss'
+    | '/blogs/$slug'
     | '/dashboard/account'
     | '/dashboard/documents'
     | '/dashboard/intake'
@@ -954,6 +987,7 @@ export interface FileRouteTypes {
     | '/staff/questionnaires'
     | '/staff/vendors'
     | '/verify-email/pending'
+    | '/blogs/'
     | '/dashboard/'
     | '/learn/'
     | '/recipes/'
@@ -970,6 +1004,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BlogsRoute: typeof BlogsRouteWithChildren
   ConsentRoute: typeof ConsentRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRouteWithChildren
@@ -1281,6 +1316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blogs': {
+      id: '/blogs'
+      path: '/blogs'
+      fullPath: '/blogs'
+      preLoaderRoute: typeof BlogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -1329,6 +1371,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/blogs/': {
+      id: '/blogs/'
+      path: '/'
+      fullPath: '/blogs/'
+      preLoaderRoute: typeof BlogsIndexRouteImport
+      parentRoute: typeof BlogsRoute
     }
     '/verify-email/pending': {
       id: '/verify-email/pending'
@@ -1533,6 +1582,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAccountRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/blogs/$slug': {
+      id: '/blogs/$slug'
+      path: '/$slug'
+      fullPath: '/blogs/$slug'
+      preLoaderRoute: typeof BlogsSlugRouteImport
+      parentRoute: typeof BlogsRoute
+    }
     '/staff/questionnaires/': {
       id: '/staff/questionnaires/'
       path: '/'
@@ -1577,6 +1633,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface BlogsRouteChildren {
+  BlogsSlugRoute: typeof BlogsSlugRoute
+  BlogsIndexRoute: typeof BlogsIndexRoute
+}
+
+const BlogsRouteChildren: BlogsRouteChildren = {
+  BlogsSlugRoute: BlogsSlugRoute,
+  BlogsIndexRoute: BlogsIndexRoute,
+}
+
+const BlogsRouteWithChildren = BlogsRoute._addFileChildren(BlogsRouteChildren)
 
 interface DashboardRouteChildren {
   DashboardAccountRoute: typeof DashboardAccountRoute
@@ -1707,6 +1775,7 @@ const VerifyEmailRouteWithChildren = VerifyEmailRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BlogsRoute: BlogsRouteWithChildren,
   ConsentRoute: ConsentRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRouteWithChildren,

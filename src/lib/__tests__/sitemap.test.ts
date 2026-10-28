@@ -6,6 +6,8 @@ import { RECIPES, recipePath } from "../recipes";
 import { getLearnSitemapEntries } from "@/content/learn/sitemap";
 import { listAllArticles } from "@/content/learn/registry";
 import { learnPath } from "@/content/learn/types";
+import { listArticles } from "@/content/blog/articles";
+import { blogArticlePath } from "@/content/blog/paths";
 
 const sitemapXml = readFileSync(
   resolve(__dirname, "../../../public/sitemap.xml"),
@@ -60,6 +62,8 @@ const EXPECTED_PATHS = [
   "/about/",
   "/safety/",
   "/faq/",
+  "/blogs/",
+  ...listArticles().map((article) => blogArticlePath(article.slug)),
   ...getLearnSitemapEntries().map((entry) => entry.path),
   "/contact/",
   "/legal/privacy/",
