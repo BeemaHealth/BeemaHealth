@@ -155,6 +155,11 @@ const MORE_ITEMS: NavItem[] = [
     to: "/learn/",
     description: "GLP-1 and hormone education",
   },
+  {
+    label: "Tools",
+    to: "/tools/",
+    description: "BMI calculator and peptide quiz",
+  },
   { label: "About us", to: "/about/" },
   { label: "FAQ", to: "/faq/" },
   { label: "Contact us", to: "/contact/" },

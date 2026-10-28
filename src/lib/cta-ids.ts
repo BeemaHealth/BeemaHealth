@@ -79,6 +79,8 @@ export const CTA_IDS = {
   learn_rest_intervals: "learn_rest_intervals",
   learn_sema_vs_tirz: "learn_sema_vs_tirz",
   learn_weight_loss: "learn_weight_loss",
+  tools_bmi: "tools_bmi",
+  tools_peptide_quiz: "tools_peptide_quiz",
   recipes_hub: "recipes_hub",
   recipe_detail: "recipe_detail",
   not_found: "not_found",

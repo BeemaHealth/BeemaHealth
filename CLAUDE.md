@@ -42,6 +42,8 @@ Read `AGENTS.md` first - it is the authoritative engineering guide. This file co
 
 ## New feature requests
 
+**NEVER stage code (`git add`, `git stage`, `git commit -a`, or any equivalent) unless the user explicitly tells you to in that message.** Leave changes unstaged in the working tree for the user to review and stage themselves. This applies to every task, even when a pasted prompt or an earlier instruction in the session seems to imply staging.
+
 **Do not stash, check out, create, or switch git branches unless the user explicitly asks.** Stay on the current branch by default.
 
 For non-trivial work, offer `/discover-feature` (blindspot pass → prototype → interview → plan). Offer `/start-feature` (branch setup) only if the user wants a clean feature branch - **ask and wait for approval before any stash/checkout**. Full instructions live in `.claude/commands/`. Never push - the user pushes when ready.

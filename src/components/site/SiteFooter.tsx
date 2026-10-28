@@ -72,6 +72,7 @@ const COLUMNS = [
       { label: "How it works", to: "/how-it-works/" },
       { label: "Recipes", to: "/recipes/" },
       { label: "Learn", to: "/learn/" },
+      { label: "Tools", to: "/tools/" },
     ],
   },
   {

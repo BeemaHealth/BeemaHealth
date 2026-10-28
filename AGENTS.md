@@ -57,6 +57,8 @@ This is a **live marketing/SEO site**. CTAs link to Bask’s hosted **intake** +
 
 ## New feature requests
 
+**NEVER stage code (`git add`, `git stage`, `git commit -a`, or any equivalent) unless the user explicitly tells you to in that message.** Leave changes unstaged in the working tree for the user to review and stage themselves. This applies to every task, even when a pasted prompt or an earlier instruction in the session seems to imply staging.
+
 **Do not stash, check out, create, or switch git branches unless the user explicitly asks you to.** Stay on the current branch and work in place by default.
 
 Optional workflows (only after the user opts in):
