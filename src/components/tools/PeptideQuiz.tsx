@@ -1,28 +1,35 @@
-import { useReducer, useRef, useEffect } from "react";
+import { useReducer, useRef, useEffect, useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Info } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SurfaceCard } from "@/components/site/primitives";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
+  EMAIL_STEP,
   INITIAL_QUIZ_STATE,
   QUIZ_LENGTH,
+  RESULTS_STEP,
   QUIZ_QUESTIONS,
   getQuizResult,
   quizReducer,
+  type PartialAnswers,
 } from "@/lib/peptide-quiz";
 import {
   CATEGORY_CONTENT,
   INTAKE_CTA_NOTE,
   QUIZ_DISCLAIMER,
+  QUIZ_EMAIL_CONSENT,
+  RESULT_PREVIEW,
   QUIZ_PRIVACY_NOTE,
   SIX_STEPS,
   flagNotes,
   showIntakeCta,
   suggestedStep,
 } from "@/lib/peptide-quiz-content";
+import { isValidQuizEmail, submitQuizLead } from "@/lib/peptide-quiz-submit";
 import { cn } from "@/lib/utils";
 
 function Disclaimer() {
@@ -41,8 +48,10 @@ function Disclaimer() {
 }
 
 /**
- * One question per screen. Answers live only in this reducer: no storage,
- * no analytics, no network. Do not add any of those here.
+ * One question per screen. Answers live only in this reducer: no browser
+ * storage and no analytics or pixels. The only network call is the email gate,
+ * which sends only the email address to Formspree (peptide-quiz-submit.ts).
+ * Quiz answers are never sent anywhere.
  */
 export function PeptideQuiz() {
   const [state, dispatch] = useReducer(quizReducer, INITIAL_QUIZ_STATE);
@@ -59,7 +68,8 @@ export function PeptideQuiz() {
   }, [state.step]);
 
   const question = QUIZ_QUESTIONS[state.step];
-  const result = question ? null : getQuizResult(state.answers);
+  const result =
+    state.step === RESULTS_STEP ? getQuizResult(state.answers) : null;
 
   return (
     <div className="mx-auto max-w-2xl space-y-5">
@@ -69,7 +79,9 @@ export function PeptideQuiz() {
         <div aria-live="polite" className="sr-only">
           {question
             ? `Question ${state.step + 1} of ${QUIZ_LENGTH}: ${question.prompt}`
-            : "Your starting point"}
+            : state.step === EMAIL_STEP
+              ? "Your results are ready: enter your email to see them"
+              : "Your starting point"}
         </div>
 
         {question ? (
@@ -139,6 +151,13 @@ export function PeptideQuiz() {
               </Button>
             </div>
           </div>
+        ) : state.step === EMAIL_STEP ? (
+          <EmailGate
+            answers={state.answers}
+            headingRef={headingRef}
+            onBack={() => dispatch({ type: "back" })}
+            onUnlocked={() => dispatch({ type: "unlock" })}
+          />
         ) : result ? (
           <ResultView
             result={result}
@@ -153,6 +172,147 @@ export function PeptideQuiz() {
         {QUIZ_PRIVACY_NOTE}
       </p>
     </div>
+  );
+}
+
+function EmailGate({
+  answers,
+  headingRef,
+  onBack,
+  onUnlocked,
+}: {
+  answers: PartialAnswers;
+  headingRef: React.RefObject<HTMLHeadingElement | null>;
+  onBack: () => void;
+  onUnlocked: () => void;
+}) {
+  const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (sending) return;
+    if (!isValidQuizEmail(email)) {
+      setError("Enter a valid email address.");
+      return;
+    }
+    // Honeypot tripped: pretend success without sending anything.
+    if (honeypot) {
+      onUnlocked();
+      return;
+    }
+    const complete = getQuizResult(answers);
+    if (!complete) return;
+    setError(null);
+    setSending(true);
+    const res = await submitQuizLead(email);
+    setSending(false);
+    if (res.ok) onUnlocked();
+    else setError(res.error);
+  }
+
+  return (
+    <form onSubmit={handleSubmit} noValidate>
+      <p className="text-sm font-semibold uppercase tracking-widest text-primary">
+        Your results are ready
+      </p>
+      <h2
+        ref={headingRef}
+        tabIndex={-1}
+        className="mt-3 text-balance text-2xl font-semibold tracking-tight text-foreground focus:outline-none"
+      >
+        See your starting point
+      </h2>
+      <p className="mt-3 text-pretty leading-relaxed text-muted-foreground">
+        Your answers pointed to{" "}
+        <span className="font-semibold text-foreground">
+          {CATEGORY_CONTENT[answers.goal ?? "unsure"].title}
+        </span>
+        . Enter your email to see your results list on the next screen.
+      </p>
+      <ul className="mt-4 space-y-1.5 text-sm text-muted-foreground">
+        {RESULT_PREVIEW.map((item) => (
+          <li key={item} className="flex gap-2">
+            <Check
+              aria-hidden="true"
+              className="mt-0.5 size-4 shrink-0 text-primary"
+            />
+            {item}
+          </li>
+        ))}
+      </ul>
+      <div className="mt-5">
+        <Label htmlFor="quiz-email" className="text-sm font-medium">
+          Email address
+        </Label>
+        <Input
+          id="quiz-email"
+          name="email"
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          maxLength={254}
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? "quiz-email-error" : "quiz-email-consent"}
+          className="mt-1.5"
+        />
+        {/* Honeypot: hidden from people and assistive tech; bots fill it in. */}
+        <div
+          aria-hidden="true"
+          className="absolute -left-[9999px] h-0 w-0 overflow-hidden"
+        >
+          <label>
+            Company
+            <input
+              type="text"
+              name="company"
+              tabIndex={-1}
+              autoComplete="off"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+            />
+          </label>
+        </div>
+        {error && (
+          <p
+            id="quiz-email-error"
+            role="alert"
+            className="mt-2 text-sm text-destructive"
+          >
+            {error}
+          </p>
+        )}
+        <p
+          id="quiz-email-consent"
+          className="mt-3 text-sm leading-relaxed text-muted-foreground"
+        >
+          {QUIZ_EMAIL_CONSENT}{" "}
+          <Link to="/legal/privacy/" className="underline underline-offset-4">
+            Privacy Policy
+          </Link>
+          .
+        </p>
+      </div>
+      <div className="mt-6 flex items-center justify-between gap-3">
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={onBack}
+          disabled={sending}
+        >
+          <ArrowLeft aria-hidden="true" /> Back
+        </Button>
+        <Button type="submit" disabled={sending}>
+          {sending ? "One moment..." : "See my results"}
+          <ArrowRight aria-hidden="true" />
+        </Button>
+      </div>
+    </form>
   );
 }
 

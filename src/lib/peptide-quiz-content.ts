@@ -11,9 +11,20 @@ export const QUIZ_DISCLAIMER =
   "This quiz is for general education only. It is not medical advice, does not diagnose any condition, and does not recommend a specific medication or dose. Talk with a licensed clinician before starting any treatment.";
 
 export const QUIZ_PRIVACY_NOTE =
-  "Your answers stay in this browser tab and are not saved or sent anywhere.";
+  "Takes about a minute. At the end you enter your email to see your results list. Your answers stay in this browser tab and are not sent or saved anywhere.";
 
-export const BLOG_ARTICLE_PATH =
+export const QUIZ_EMAIL_CONSENT =
+  "By continuing, you agree that Beema Health may receive your email address. Your quiz answers are not sent. See our";
+
+/** What sits behind the email gate, shown on the gate so the value is clear. */
+export const RESULT_PREVIEW = [
+  "What the evidence looks like for your goal",
+  "Questions to bring to a clinician",
+  "Where to begin in the six steps",
+  "Pages to read next",
+] as const;
+
+export const BLOG_ARTICLE_PATH: string =
   "/blogs/how-to-choose-the-right-peptide-for-your-goals/";
 
 export type ResultLink = { label: string; to: string; note: string };

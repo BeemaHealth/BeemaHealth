@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  EMAIL_STEP,
   GOAL_CATEGORIES,
   HEARD_FROM_OPTIONS,
   INITIAL_QUIZ_STATE,
@@ -7,6 +8,7 @@ import {
   PRIORITY_OPTIONS,
   QUIZ_LENGTH,
   QUIZ_QUESTIONS,
+  RESULTS_STEP,
   TRIED_OPTIONS,
   getQuizResult,
   quizReducer,
@@ -132,7 +134,11 @@ describe("getQuizResult", () => {
 
 describe("quizReducer", () => {
   it("starts on question 1 with no answers", () => {
-    expect(INITIAL_QUIZ_STATE).toEqual({ step: 0, answers: {} });
+    expect(INITIAL_QUIZ_STATE).toEqual({
+      step: 0,
+      answers: {},
+      unlocked: false,
+    });
   });
 
   it("does not advance without an answer", () => {
@@ -150,8 +156,8 @@ describe("quizReducer", () => {
     ).toBe(INITIAL_QUIZ_STATE);
   });
 
-  it("walks forward through all questions to the results step", () => {
-    const end = run(
+  it("walks forward through all questions to the email gate, then results after unlock", () => {
+    const gate = run(
       INITIAL_QUIZ_STATE,
       "weight_metabolic",
       "nothing_yet",
@@ -159,8 +165,46 @@ describe("quizReducer", () => {
       "evidence",
       "learn_basics",
     );
-    expect(end.step).toBe(QUIZ_LENGTH);
+    expect(gate.step).toBe(EMAIL_STEP);
+    expect(gate.unlocked).toBe(false);
+    const end = quizReducer(gate, { type: "unlock" });
+    expect(end.step).toBe(RESULTS_STEP);
+    expect(end.unlocked).toBe(true);
     expect(getQuizResult(end.answers)?.category).toBe("weight_metabolic");
+  });
+
+  it("cannot unlock before the email step or with missing answers", () => {
+    expect(quizReducer(INITIAL_QUIZ_STATE, { type: "unlock" })).toBe(
+      INITIAL_QUIZ_STATE,
+    );
+    const forced: QuizState = {
+      step: EMAIL_STEP,
+      answers: {},
+      unlocked: false,
+    };
+    expect(quizReducer(forced, { type: "unlock" })).toBe(forced);
+  });
+
+  it("re-locks results when an answer changes after unlocking, but not when it is unchanged", () => {
+    const unlocked = quizReducer(
+      run(
+        INITIAL_QUIZ_STATE,
+        "unsure",
+        "nothing_yet",
+        "clinician",
+        "evidence",
+        "learn_basics",
+      ),
+      { type: "unlock" },
+    );
+    let s = quizReducer(unlocked, { type: "back" });
+    expect(s.step).toBe(QUIZ_LENGTH - 1);
+    s = quizReducer(s, { type: "select", value: "learn_basics" });
+    expect(s.unlocked).toBe(true);
+    expect(quizReducer(s, { type: "next" }).step).toBe(RESULTS_STEP);
+    s = quizReducer(s, { type: "select", value: "compare_options" });
+    expect(s.unlocked).toBe(false);
+    expect(quizReducer(s, { type: "next" }).step).toBe(EMAIL_STEP);
   });
 
   it("goes back without losing answers and lets an answer change", () => {
@@ -180,8 +224,8 @@ describe("quizReducer", () => {
     );
   });
 
-  it("can go back from results to the last question", () => {
-    const end = run(
+  it("can go back from the email gate or results to the last question", () => {
+    const gate = run(
       INITIAL_QUIZ_STATE,
       "unsure",
       "nothing_yet",
@@ -189,9 +233,13 @@ describe("quizReducer", () => {
       "evidence",
       "learn_basics",
     );
-    const back = quizReducer(end, { type: "back" });
+    const back = quizReducer(gate, { type: "back" });
     expect(back.step).toBe(QUIZ_LENGTH - 1);
     expect(back.answers.nextStep).toBe("learn_basics");
+    const fromResults = quizReducer(quizReducer(gate, { type: "unlock" }), {
+      type: "back",
+    });
+    expect(fromResults.step).toBe(QUIZ_LENGTH - 1);
   });
 
   it("restart clears everything", () => {

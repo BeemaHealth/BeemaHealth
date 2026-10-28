@@ -5,7 +5,7 @@ import { toolsDocumentMeta } from "@/lib/tools-seo";
 
 const TITLE = "Free Health Tools | Beema Health";
 const DESCRIPTION =
-  "Free educational tools from Beema Health, including a BMI calculator and a peptide goal quiz. Nothing you enter is saved, and none of it is medical advice.";
+  "Free educational tools from Beema Health, including a BMI calculator and a peptide goal quiz. The BMI calculator saves nothing, the quiz asks for your email, and none of it is medical advice.";
 
 export const Route = createFileRoute("/tools/")({
   head: () =>

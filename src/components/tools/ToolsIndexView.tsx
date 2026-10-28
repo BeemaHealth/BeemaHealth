@@ -16,8 +16,9 @@ export function ToolsIndexView() {
               Free tools to help you get your bearings
             </h1>
             <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-              Simple, private tools for general education. Nothing you enter is
-              saved or sent anywhere, and none of them replace advice from a
+              Simple tools for general education. The BMI calculator keeps
+              everything in your browser. The peptide quiz asks for your email
+              before it shows your results. Neither replaces advice from a
               licensed clinician.
             </p>
           </div>

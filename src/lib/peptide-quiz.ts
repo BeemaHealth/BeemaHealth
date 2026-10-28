@@ -182,16 +182,32 @@ export function getQuizResult(answers: PartialAnswers): QuizResult | null {
   };
 }
 
-/** Step index 0..QUIZ_LENGTH-1 is a question; QUIZ_LENGTH is the results screen. */
-export type QuizState = { step: number; answers: PartialAnswers };
+/**
+ * Step index 0..QUIZ_LENGTH-1 is a question, EMAIL_STEP is the email gate, and
+ * RESULTS_STEP is the results screen (reached only after the email is sent).
+ */
+export const EMAIL_STEP = QUIZ_LENGTH;
+export const RESULTS_STEP = QUIZ_LENGTH + 1;
+
+export type QuizState = {
+  step: number;
+  answers: PartialAnswers;
+  /** True once the email and answers have been sent successfully. */
+  unlocked: boolean;
+};
 
 export type QuizAction =
   | { type: "select"; value: string }
   | { type: "next" }
   | { type: "back" }
+  | { type: "unlock" }
   | { type: "restart" };
 
-export const INITIAL_QUIZ_STATE: QuizState = { step: 0, answers: {} };
+export const INITIAL_QUIZ_STATE: QuizState = {
+  step: 0,
+  answers: {},
+  unlocked: false,
+};
 
 function isValidOption(question: QuizQuestion, value: string): boolean {
   return question.options.some((o) => o.value === value);
@@ -199,25 +215,36 @@ function isValidOption(question: QuizQuestion, value: string): boolean {
 
 /**
  * Forward needs an answer for the current question; back keeps every answer so
- * the reader can change one and move on. Unknown option values are ignored.
+ * the reader can change one and move on. Changing an answer after unlocking
+ * re-locks the results so the new answers are sent too. Unknown option values
+ * are ignored.
  */
 export function quizReducer(state: QuizState, action: QuizAction): QuizState {
   switch (action.type) {
     case "select": {
       const question = QUIZ_QUESTIONS[state.step];
       if (!question || !isValidOption(question, action.value)) return state;
+      const changed = state.answers[question.id] !== action.value;
       return {
         ...state,
         answers: { ...state.answers, [question.id]: action.value },
+        unlocked: changed ? false : state.unlocked,
       };
     }
     case "next": {
       const question = QUIZ_QUESTIONS[state.step];
       if (!question || state.answers[question.id] === undefined) return state;
-      return { ...state, step: state.step + 1 };
+      if (state.step < QUIZ_LENGTH - 1) {
+        return { ...state, step: state.step + 1 };
+      }
+      return { ...state, step: state.unlocked ? RESULTS_STEP : EMAIL_STEP };
     }
     case "back":
+      if (state.step >= EMAIL_STEP) return { ...state, step: QUIZ_LENGTH - 1 };
       return state.step > 0 ? { ...state, step: state.step - 1 } : state;
+    case "unlock":
+      if (state.step !== EMAIL_STEP || !isComplete(state.answers)) return state;
+      return { ...state, step: RESULTS_STEP, unlocked: true };
     case "restart":
       return INITIAL_QUIZ_STATE;
   }

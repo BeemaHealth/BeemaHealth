@@ -54,9 +54,9 @@ Key facts:
 - [FAQ](https://beemahealth.com/faq/): common questions about pricing, eligibility, medications, shipping, and refills
 - [Blog](https://beemahealth.com/blogs/): articles on weight management, GLP-1 medications, and making informed treatment decisions
 - [How to choose the right peptide for your goals](https://beemahealth.com/blogs/how-to-choose-the-right-peptide-for-your-goals/): a practical guide to comparing evidence, safety, and medical eligibility before choosing a peptide treatment
-- [Tools](https://beemahealth.com/tools/): free educational tools; nothing entered is saved
+- [Tools](https://beemahealth.com/tools/): free educational tools: a BMI calculator that saves nothing and a peptide quiz that asks for an email before showing results
 - [BMI calculator](https://beemahealth.com/tools/bmi-calculator/): enter height and weight to see Body Mass Index; general education, not a diagnosis
-- [Peptide goal quiz](https://beemahealth.com/tools/peptide-quiz/): five-question educational quiz that points to reading and questions for a clinician; it does not recommend a medication or dose
+- [Peptide goal quiz](https://beemahealth.com/tools/peptide-quiz/): five-question educational quiz that points to reading and questions for a clinician; asks for an email before showing results; it does not recommend a medication or dose
 - [Learn](https://beemahealth.com/learn/): educational hubs on weight-loss medicines, ED treatment, hair loss, testosterone replacement, and HRT
 - [GLP-1 education for weight loss](https://beemahealth.com/learn/weight-loss/): educational hub on GLP-1 medicines, online care, and related topics
 - [ED education](https://beemahealth.com/learn/ed/): educational hub on tadalafil, sildenafil, and compounded ED combination formulations

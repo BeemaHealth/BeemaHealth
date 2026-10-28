@@ -36,7 +36,7 @@ export const TOOLS: readonly ToolEntry[] = [
       "Five short questions to work out what kind of peptide question you are asking, with a reading list and questions to bring to a clinician. It does not recommend a product.",
     metaTitle: "Peptide Goal Quiz",
     metaDescription:
-      "A five-question educational quiz from Beema Health that points you to the right reading and questions for a clinician. It does not recommend a medication or dose. Answers are not saved.",
+      "A five-question educational quiz from Beema Health that points you to the right reading and questions for a clinician. It does not recommend a medication or dose. Enter your email to see your results list.",
   },
 ] as const;
 
