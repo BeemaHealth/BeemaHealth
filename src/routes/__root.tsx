@@ -8,7 +8,11 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { BASK_HREF_SYNC_SCRIPT, capturePageUtms } from "@/lib/utm";
+import {
+  BASK_HREF_SYNC_SCRIPT,
+  capturePageUtms,
+  installBaskSrcPageStamp,
+} from "@/lib/utm";
 import { initAdPixels } from "@/lib/ad-conversions";
 import { GTM_CONTAINER_ID, GTM_HEAD_SCRIPT } from "@/lib/gtm";
 import { CHATBASE_EMBED_SCRIPT } from "@/lib/chatbase";
@@ -243,6 +247,10 @@ function RootComponent() {
   useEffect(() => {
     capturePageUtms();
   }, []);
+
+  // Tag Bask-bound clicks with the page they came from (src_page) so signups
+  // and purchases attribute to the page the visitor clicked on.
+  useEffect(() => installBaskSrcPageStamp(), []);
 
   // Meta Pixel / GA4 / Ads - Google destinations share one gtag.js request.
   // GTM remains in RootShell for the conversion linker and Bask handoff.

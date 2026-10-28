@@ -254,3 +254,66 @@ export function capturePageUtms(): void {
 
   if (Object.keys(patch).length > 0) storePendingUtms(patch);
 }
+
+/** Query key naming the marketing page a Bask-bound click happened on. */
+export const BASK_SRC_PAGE_PARAM = "src_page";
+
+/** Longest page path stamped onto a Bask URL. */
+const SRC_PAGE_MAX = 128;
+
+/**
+ * Sets `src_page` (the current marketing path, e.g. /sexual-health/) on a
+ * Bask intake URL. `cta_id` alone names the button, not the page: the sitewide
+ * Get Started modal sends product ids (sildenafil_hero) from any page, so
+ * signups and purchases need the page the click came from. Returns the URL
+ * unchanged if it is not a Bask intake URL or the path is not a plain path.
+ * The path is public site structure, never PHI.
+ */
+export function withBaskSrcPage(href: string, pathname: string): string {
+  if (!pathname.startsWith("/") || pathname.length > SRC_PAGE_MAX) return href;
+  try {
+    const url = new URL(href);
+    if (url.hostname !== BASK_INTAKE_HOST) return href;
+    url.searchParams.set(BASK_SRC_PAGE_PARAM, pathname);
+    return url.toString();
+  } catch {
+    return href;
+  }
+}
+
+/**
+ * Events that can lead to a Bask link being followed or copied. `click` and
+ * `auxclick` cover normal and middle clicks; the rest stamp the href earlier,
+ * so a link opened from the context menu, copied, keyboard-activated, or read
+ * from the status bar already carries `src_page`.
+ */
+const STAMP_EVENTS = [
+  "pointerover",
+  "focusin",
+  "touchstart",
+  "contextmenu",
+  "click",
+  "auxclick",
+] as const;
+
+/**
+ * Stamps `src_page` on any Bask intake link, so one listener covers every CTA
+ * (prerendered hrefs cannot know the page, and the modal links are built from
+ * product ids and only exist once a dialog opens). Returns a cleanup function.
+ */
+export function installBaskSrcPageStamp(): () => void {
+  if (typeof document === "undefined") return () => {};
+  const stamp = (event: Event) => {
+    const anchor = (event.target as Element | null)?.closest?.("a[href]");
+    if (!(anchor instanceof HTMLAnchorElement)) return;
+    const next = withBaskSrcPage(anchor.href, window.location.pathname);
+    if (next !== anchor.href) anchor.href = next;
+  };
+  // Capture phase: runs before the link navigates.
+  for (const type of STAMP_EVENTS)
+    document.addEventListener(type, stamp, { capture: true, passive: true });
+  return () => {
+    for (const type of STAMP_EVENTS)
+      document.removeEventListener(type, stamp, { capture: true });
+  };
+}
