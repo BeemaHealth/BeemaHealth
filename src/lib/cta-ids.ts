@@ -1,8 +1,5 @@
 import { isBaskIntakeUrl, trackIntakeHandoff } from "@/lib/gtm";
-import {
-  experimentEventParams,
-  sendIntakeHandoffEvent,
-} from "@/lib/experiment-context";
+import { experimentEventParams } from "@/lib/experiment-context";
 import { getBaskHandoffParams } from "@/lib/utm";
 
 /** Stable CTA identifiers for funnel / conversion attribution. */
@@ -410,8 +407,10 @@ export function resolveCta(
     onClick: () => {
       if (isBaskIntakeUrl(target.to)) {
         // cta_location uses the stable CtaId (e.g. home_hero, footer, pricing_hero).
+        // One dataLayer push only: GTM fans it out to GA4 and Meta. A second
+        // gtag("event", "intake_handoff") lands in the dataLayer too and
+        // double-fires the GTM tags.
         trackIntakeHandoff(ctaId, experimentEventParams());
-        sendIntakeHandoffEvent(ctaId);
       }
     },
   };

@@ -8,7 +8,6 @@ import {
 } from "@/landing-variants/assignment";
 import {
   experimentEventParams,
-  sendIntakeHandoffEvent,
   setExperimentContext,
   setExperimentTrackingSuppressed,
   shouldSendExperimentEvents,
@@ -178,7 +177,6 @@ describe("experiment event gating", () => {
     expect(
       shouldSendExperimentEvents({ hostname: "beemahealth.com", search: "" }),
     ).toBe(false);
-    expect(sendIntakeHandoffEvent("hero")).toBe(false);
   });
 
   it("carries only non-personal ids", () => {

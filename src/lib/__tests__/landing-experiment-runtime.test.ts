@@ -157,21 +157,21 @@ describe("LandingExperiment", () => {
     expect(sent.map((e) => e.name)).toEqual(["variant_exposure"]);
   });
 
-  it("tags intake_handoff with the visitor's variant via resolveCta", async () => {
+  it("pushes intake_handoff once, tagged with the variant, and sends no direct GA4 hit", async () => {
     experiments = { p: single };
     const { resolveCta, CTA_IDS } = await import("@/lib/cta-ids");
     await mount("");
     sent.length = 0;
+    window.dataLayer = [];
     resolveCta(CTA_IDS.tirzepatide_houston_hero).onClick();
-    expect(sent).toEqual([
+    expect(sent).toEqual([]);
+    expect(window.dataLayer).toEqual([
       {
-        name: "intake_handoff",
-        params: {
-          cta_id: "tirzepatide_houston_hero",
-          experiment_id: "p-e1",
-          variant_id: "v1-a",
-          landing_page_id: "p",
-        },
+        event: "intake_handoff",
+        cta_location: "tirzepatide_houston_hero",
+        experiment_id: "p-e1",
+        variant_id: "v1-a",
+        landing_page_id: "p",
       },
     ]);
   });

@@ -61,20 +61,3 @@ export function trackVariantExposure(ctx: ExperimentContext): boolean {
   if (!shouldSendExperimentEvents()) return false;
   return trackGaEvent("variant_exposure", experimentEventParams(ctx) ?? {});
 }
-
-/**
- * GA4 `intake_handoff`, sent directly (beacon) so it does not depend on GTM
- * loading before the browser leaves for Bask. Carries experiment ids when the
- * visitor is on an experiment page.
- */
-export function sendIntakeHandoffEvent(ctaId: string): boolean {
-  if (!shouldSendExperimentEvents()) return false;
-  return trackGaEvent(
-    "intake_handoff",
-    {
-      cta_id: ctaId,
-      ...(experimentEventParams() ?? {}),
-    },
-    { beacon: true },
-  );
-}

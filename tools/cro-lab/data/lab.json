@@ -311,6 +311,15 @@
       "pageId": "sexual-health",
       "variantId": "v1-control",
       "startUtc": "2026-08-28T02:15:00.000Z",
+      "endUtc": "2026-10-28T04:19:00.000Z",
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvrlv4pp",
+      "pageId": "sexual-health",
+      "variantId": "v2-get-started-modal",
+      "startUtc": "2026-10-28T04:19:00.000Z",
       "endUtc": null,
       "confirmed": true,
       "notes": "Recorded in the CRO Lab."
