@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -21,7 +20,6 @@ import {
   ED_MINTS_RDT_PRICING,
   formatSimpleQuarterlyStartingAt,
 } from "@/lib/simple-treatment-pricing";
-import { cn } from "@/lib/utils";
 import edMintsRdtPhoto from "@/assets/treatments/ed-mints-tadalafil-sildenafil-rdt.webp";
 import edMintsOdtPhoto from "@/assets/treatments/ed-mints-sildenafil-tadalafil-oxytocin-odt.webp";
 
@@ -106,19 +104,21 @@ export const MINT_OPTIONS: MintOption[] = [
 export function EdMintsPickerModal({
   open,
   onOpenChange,
-  initialSelected,
   onBack,
   ctaIds,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  initialSelected: "rdt" | "odt";
   /**
-   * Optional "Back" button in the footer, next to Continue - used by
-   * GetStartedModal (2026-09-04) to return to Sexual Health's product step
-   * (Tadalafil / Sildenafil / ED Mints) instead of just closing. /ed-mints
-   * doesn't pass this (there's no prior step to return to on that route),
-   * so its Continue-only footer is unchanged.
+   * @deprecated No longer used: there is no select-then-continue step, each
+   * formulation is its own link. Kept so existing callers still compile.
+   */
+  initialSelected?: "rdt" | "odt";
+  /**
+   * Optional "Back" button at the bottom - used by GetStartedModal
+   * (2026-09-04) to return to Sexual Health's product step (Tadalafil /
+   * Sildenafil / ED Mints) instead of just closing. /ed-mints doesn't pass
+   * this (there's no prior step to return to on that route).
    */
   onBack?: () => void;
   /**
@@ -128,17 +128,6 @@ export function EdMintsPickerModal({
    */
   ctaIds?: Partial<Record<"rdt" | "odt", CtaId>>;
 }) {
-  const [selected, setSelected] = useState<"rdt" | "odt">(initialSelected);
-
-  useEffect(() => {
-    if (open) setSelected(initialSelected);
-  }, [open, initialSelected]);
-
-  const activeOption = MINT_OPTIONS.find((o) => o.id === selected)!;
-  const continueCta = resolveCta(
-    ctaIds?.[activeOption.id] ?? activeOption.ctaId,
-  );
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <FullScreenMobileDialogContent>
@@ -147,68 +136,73 @@ export function EdMintsPickerModal({
             Choose your formulation
           </DialogTitle>
           <DialogDescription className="text-center">
-            Both options dissolve under the tongue and are prescription-only,
-            reviewed by licensed providers.
+            Tap one to continue. Both dissolve under the tongue and are
+            prescription-only.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="rounded-2xl border border-primary/40 bg-primary-soft/60 px-4 py-3.5 text-center shadow-soft">
+        <div className="rounded-2xl border border-primary/40 bg-primary-soft/60 px-4 py-3 text-center shadow-soft">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-accent-foreground">
             Both formulations
           </p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          <p className="mt-0.5 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             from {formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING)}
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {MINT_OPTIONS.map((opt) => (
-            <button
-              key={opt.id}
-              type="button"
-              onClick={() => setSelected(opt.id)}
-              aria-pressed={selected === opt.id}
-              className={cn(
-                "flex cursor-pointer flex-col rounded-2xl border p-4 text-left transition-colors",
-                selected === opt.id
-                  ? "border-primary bg-primary-soft/40 ring-2 ring-primary"
-                  : "border-border hover:border-primary/40 hover:bg-muted",
-              )}
-            >
-              <span className="inline-flex w-fit items-center rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-accent-foreground">
-                {opt.badge}
-              </span>
-              <h3 className="mt-3 text-base font-semibold text-foreground">
-                {opt.name}
-              </h3>
-              <p className="text-xs text-muted-foreground">{opt.dose}</p>
-              <img
-                src={opt.photo}
-                alt={opt.photoAlt}
-                width={1024}
-                height={1024}
-                loading="lazy"
-                className="mx-auto my-4 w-24"
-              />
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {opt.description}
-              </p>
-              <ul className="mt-3 space-y-1.5">
-                {opt.bullets.map((b) => (
-                  <li
-                    key={b}
-                    className="flex items-start gap-2 text-xs text-foreground"
-                  >
-                    <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-accent-foreground" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-3 rounded-lg bg-muted/60 px-3 py-2 text-[11px] font-medium text-muted-foreground">
-                {opt.profile}
-              </p>
-            </button>
-          ))}
+        {/* Each option is a link straight to its questionnaire: one tap, no
+            select-then-scroll-then-continue. On a phone the two cards share the
+            sheet's height so both are easy to hit with a thumb. */}
+        <div className="flex flex-1 flex-col gap-4 sm:grid sm:flex-none sm:grid-cols-2">
+          {MINT_OPTIONS.map((opt) => {
+            const cta = resolveCta(ctaIds?.[opt.id] ?? opt.ctaId);
+            return (
+              <Link
+                key={opt.id}
+                to={cta.to}
+                search={cta.search}
+                onClick={cta.onClick}
+                className="group flex flex-1 flex-col justify-between gap-4 rounded-2xl border border-border bg-card p-4 outline-none transition-colors hover:border-primary hover:bg-primary-soft/40 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary sm:flex-none sm:p-5"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <span className="inline-flex w-fit items-center rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-accent-foreground">
+                      {opt.badge}
+                    </span>
+                    <h3 className="mt-3 text-lg font-semibold text-foreground">
+                      {opt.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">{opt.dose}</p>
+                  </div>
+                  <img
+                    src={opt.photo}
+                    alt={opt.photoAlt}
+                    width={1024}
+                    height={1024}
+                    loading="lazy"
+                    className="w-16 shrink-0 sm:w-24"
+                  />
+                </div>
+                <p className="hidden text-sm leading-relaxed text-muted-foreground sm:block">
+                  {opt.description}
+                </p>
+                <ul className="space-y-1.5">
+                  {opt.bullets.map((b) => (
+                    <li
+                      key={b}
+                      className="flex items-start gap-2 text-sm text-foreground"
+                    >
+                      <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-foreground" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+                <span className="flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-base font-semibold text-primary-foreground transition-colors group-hover:bg-primary/90">
+                  Continue <ArrowRight className="size-4" />
+                </span>
+              </Link>
+            );
+          })}
         </div>
 
         <p className="text-center text-xs text-muted-foreground">
@@ -230,22 +224,13 @@ export function EdMintsPickerModal({
           </span>
         </div>
 
-        <DialogFooter className="gap-3 sm:justify-center sm:space-x-0">
-          {onBack ? (
+        {onBack ? (
+          <DialogFooter className="sm:justify-center">
             <Button type="button" variant="ghost" onClick={onBack}>
               <ArrowLeft /> Back
             </Button>
-          ) : null}
-          <Button asChild size="xl" className="w-full sm:w-auto">
-            <Link
-              to={continueCta.to}
-              search={continueCta.search}
-              onClick={continueCta.onClick}
-            >
-              Continue <ArrowRight />
-            </Link>
-          </Button>
-        </DialogFooter>
+          </DialogFooter>
+        ) : null}
         <p className="text-center text-xs text-muted-foreground">
           Completing intake does not guarantee a prescription.
         </p>

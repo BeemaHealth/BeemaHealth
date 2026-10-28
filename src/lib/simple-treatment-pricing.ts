@@ -40,10 +40,19 @@ export type SimpleQuarterlyPlan = {
 };
 
 export type SimpleCompoundedPricing = {
-  /** 1-month cash-pay rate. */
+  /**
+   * 1-month cash-pay rate. For a product sold in several doses (tadalafil)
+   * this is the lowest dose's price, i.e. the "starting at" figure.
+   */
   monthlyUsd: number;
   /** Omitted when no quarterly SKU exists for this product (e.g. TRT). */
   quarterly?: SimpleQuarterlyPlan;
+  /**
+   * Set only when the price depends on dose (tadalafil): every dose's 1-month
+   * and 3-month price, lowest dose first. `monthlyUsd` and `quarterly` then
+   * describe the lowest dose.
+   */
+  doses?: readonly EdDosePlan[];
 };
 
 function quarterlyPlan(
@@ -145,17 +154,64 @@ export const HAIRLOSS_TOPICAL_WOMEN_PRICING: SimpleCompoundedPricing = {
  * sold - only the RDT combo below is live.
  */
 
-/** Single-ingredient tadalafil, Health Warehouse. */
-export const ED_TADALAFIL_PRICING: SimpleCompoundedPricing = {
-  monthlyUsd: 49.67,
-  quarterly: quarterlyPlan(89, 49.67),
+/**
+ * One dose of an ED tablet and its two plans. Source: Matt's ED pricing sheet
+ * (Beema Price column), given 2026-10-27. This file's older ED numbers were
+ * wrong and must not be treated as the source of truth; if a number here is
+ * ever in doubt, ask Matt.
+ */
+export type EdDosePlan = {
+  dose: string;
+  monthly: { tablets: number; usd: number };
+  quarterly: { tablets: number; usd: number };
 };
 
-/** Single-ingredient sildenafil, Health Warehouse. */
-export const ED_SILDENAFIL_PRICING: SimpleCompoundedPricing = {
-  monthlyUsd: 43,
-  quarterly: quarterlyPlan(89, 43),
-};
+/** Tadalafil (Health Warehouse), lowest dose first. */
+export const ED_TADALAFIL_DOSE_PLANS: readonly EdDosePlan[] = [
+  {
+    dose: "5mg",
+    monthly: { tablets: 30, usd: 89 },
+    quarterly: { tablets: 90, usd: 149 },
+  },
+  {
+    dose: "10mg",
+    monthly: { tablets: 16, usd: 99 },
+    quarterly: { tablets: 48, usd: 159 },
+  },
+  {
+    dose: "20mg",
+    monthly: { tablets: 16, usd: 149 },
+    quarterly: { tablets: 48, usd: 249 },
+  },
+];
+
+/** Sildenafil (Health Warehouse): 50mg and 100mg are the same price. */
+export const ED_SILDENAFIL_DOSE_PLANS: readonly EdDosePlan[] = [
+  {
+    dose: "50mg or 100mg",
+    monthly: { tablets: 16, usd: 89 },
+    quarterly: { tablets: 48, usd: 129 },
+  },
+];
+
+function edPricing(plans: readonly EdDosePlan[]): SimpleCompoundedPricing {
+  const lowest = plans[0];
+  return {
+    monthlyUsd: lowest.monthly.usd,
+    quarterly: quarterlyPlan(lowest.quarterly.usd, lowest.monthly.usd),
+    ...(plans.length > 1 ? { doses: plans } : {}),
+  };
+}
+
+/** Single-ingredient tadalafil: starting (lowest-dose) prices. */
+export const ED_TADALAFIL_PRICING: SimpleCompoundedPricing = edPricing(
+  ED_TADALAFIL_DOSE_PLANS,
+);
+
+/** Single-ingredient sildenafil. */
+export const ED_SILDENAFIL_PRICING: SimpleCompoundedPricing = edPricing(
+  ED_SILDENAFIL_DOSE_PLANS,
+);
 
 /**
  * Per-pill "starting at" price for the tadalafil/sildenafil oral tablets
@@ -166,8 +222,14 @@ export const ED_SILDENAFIL_PRICING: SimpleCompoundedPricing = {
  * keep showing the real monthly/quarterly numbers. Oral tablets only - ED
  * Mints (the combo products) are not priced per pill.
  */
-export const ED_TADALAFIL_PER_PILL_USD = 1.66;
-export const ED_SILDENAFIL_PER_PILL_USD = 2.69;
+export const ED_TADALAFIL_PER_PILL_USD = roundMoney(
+  ED_TADALAFIL_DOSE_PLANS[0].quarterly.usd /
+    ED_TADALAFIL_DOSE_PLANS[0].quarterly.tablets,
+);
+export const ED_SILDENAFIL_PER_PILL_USD = roundMoney(
+  ED_SILDENAFIL_DOSE_PLANS[0].quarterly.usd /
+    ED_SILDENAFIL_DOSE_PLANS[0].quarterly.tablets,
+);
 
 /** e.g. "$1.66/pill". */
 export function formatPerPillStartingAt(amountUsd: number): string {
@@ -289,6 +351,21 @@ export function simplePricingSentence(
   treatmentLabel: string,
   pricing: SimpleCompoundedPricing,
 ): string {
+  const doses = pricing.doses;
+  if (doses && doses.length > 1 && pricing.quarterly) {
+    const q = pricing.quarterly;
+    const list = (parts: string[]) =>
+      parts.length > 1
+        ? `${parts.slice(0, -1).join(", ")}, and ${parts[parts.length - 1]}`
+        : parts[0];
+    const monthly = list(
+      doses.map((d) => `${formatUsd(d.monthly.usd)}/month at ${d.dose}`),
+    );
+    const quarterly = list(
+      doses.map((d) => `${formatUsd(d.quarterly.usd)} for ${d.dose}`),
+    );
+    return `${treatmentLabel} is ${monthly}. Quarterly plans are ${quarterly}, billed every 3 months (the ${doses[0].dose} plan works out to about ${formatUsd(q.monthlyEquivalentUsd)}/mo, saving ${formatUsd(q.savingsUsd)} vs. paying monthly). Both are all-inclusive cash-pay pricing with no separate platform membership fee.`;
+  }
   const monthlySentence = `${treatmentLabel} is ${formatUsd(pricing.monthlyUsd)}/month.`;
   if (!pricing.quarterly) {
     return `${monthlySentence} That's all-inclusive cash-pay pricing with no separate platform membership fee.`;
@@ -321,6 +398,13 @@ export function listKnownSimpleTreatmentPricingUsdAmounts(): number[] {
       amounts.add(roundMoney(pricing.quarterly.monthlyEquivalentUsd));
       amounts.add(roundMoney(pricing.quarterly.savingsUsd));
     }
+  }
+  for (const plan of [
+    ...ED_TADALAFIL_DOSE_PLANS,
+    ...ED_SILDENAFIL_DOSE_PLANS,
+  ]) {
+    amounts.add(plan.monthly.usd);
+    amounts.add(plan.quarterly.usd);
   }
   return [...amounts].sort((a, b) => a - b);
 }

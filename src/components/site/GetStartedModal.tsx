@@ -221,7 +221,7 @@ export function autoAdvanceCtaId(category: GetStartedCategory): CtaId | null {
 }
 
 const cardClassName =
-  "flex cursor-pointer flex-col items-center gap-3 rounded-2xl border border-border p-6 text-center text-sm font-semibold text-foreground outline-none transition-colors hover:border-primary/40 hover:bg-accent focus-visible:border-primary/40 focus-visible:bg-accent";
+  "flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border border-border p-6 text-center text-sm font-semibold text-foreground outline-none transition-colors hover:border-primary/40 hover:bg-accent focus-visible:border-primary/40 focus-visible:bg-accent";
 
 type Step = "category" | "sex" | "product";
 type Sex = "male" | "female";
@@ -319,7 +319,7 @@ export function GetStartedModal({
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <div className="grid flex-1 auto-rows-fr grid-cols-2 gap-4 sm:flex-none sm:grid-cols-4">
                 {GET_STARTED_CATEGORIES.map((category) => {
                   const Icon = category.icon;
                   const autoCtaId = autoAdvanceCtaId(category);
@@ -371,7 +371,7 @@ export function GetStartedModal({
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid flex-1 auto-rows-fr gap-4 sm:flex-none sm:grid-cols-2">
                 {(["male", "female"] as const).map((value) => (
                   <button
                     key={value}
@@ -404,7 +404,7 @@ export function GetStartedModal({
 
               <div
                 className={cn(
-                  "grid gap-4",
+                  "grid flex-1 auto-rows-fr gap-4 sm:flex-none",
                   visibleProducts.length > 1
                     ? "sm:grid-cols-2"
                     : "sm:grid-cols-1",

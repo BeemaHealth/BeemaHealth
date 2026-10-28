@@ -3,6 +3,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { DialogPortal, DialogOverlay } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { HideChatWidget } from "@/components/site/HideChatWidget";
 
 /**
  * Full-screen-on-mobile dialog content (2026-09-03, per Matt, originally
@@ -15,6 +16,9 @@ import { cn } from "@/lib/utils";
  * component's default for every other dialog in the app. Base (mobile): true
  * full-screen sheet, edge to edge, own scroll. `sm:` and up: reverts to the
  * same centered-card look `DialogContent` uses.
+ *
+ * Every use hides the sitewide chat launcher while open (HideChatWidget), so it
+ * never covers the dialog's Get Started / Continue buttons.
  */
 export function FullScreenMobileDialogContent({
   className,
@@ -32,6 +36,7 @@ export function FullScreenMobileDialogContent({
         )}
         {...props}
       >
+        <HideChatWidget />
         {children}
         <DialogPrimitive.Close className="absolute right-4 top-4 cursor-pointer rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
           <X className="h-5 w-5" />
