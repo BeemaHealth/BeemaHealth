@@ -35,9 +35,11 @@ import {
   formatUsd,
   getPlan,
   promoFirstMonthUsd,
+  semaThreeMonthPromoTotalUsd,
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
 import { GOOGLE_RATING_VALUE } from "@/lib/google-business";
+import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
 import {
   CASH_PAY_POINTS,
   getGlp1Copy,
@@ -113,7 +115,14 @@ function PatientStoryVideo({ videoId }: { videoId: string }) {
  * benefits (80%), then one feature. No results claims, no guarantee.
  */
 const HERO_LEAD =
-  "Another month of guessing is another month without a plan. A licensed provider reviews your health history, builds a plan around you, and, if appropriate, ships compounded GLP-1 medication to your door. One monthly price covers it. Starting your intake is free.";
+  "Get a plan built around your health history. A licensed provider reviews it and, if appropriate, ships compounded GLP-1 medication to your door. One monthly price covers it. Starting your intake is free.";
+
+/**
+ * Below-the-fold sections skip layout and paint until they near the viewport
+ * (CSS content-visibility). Keeps them in the DOM for SEO and anchor links.
+ */
+const LAZY_SECTION =
+  "[content-visibility:auto] [contain-intrinsic-size:auto_640px]";
 
 const INCLUDED_CALLOUTS = [
   {
@@ -204,6 +213,9 @@ function Glp1HoustonVariantB() {
       name: "Semaglutide",
       price: formatUsd(promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING)),
       unit: "first month",
+      detail: `Then ${formatUsd(COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd)}/mo · ${formatUsd(
+        semaThreeMonthPromoTotalUsd(),
+      )} for 3 months`,
     },
     {
       name: "Tirzepatide",
@@ -213,6 +225,9 @@ function Glp1HoustonVariantB() {
           : getPlan(COMPOUNDED_TIRZEPATIDE_PRICING, 12).monthlyUsd,
       )}`,
       unit: "per month",
+      detail: tirzStarter
+        ? `${formatUsd(tirzStarter.totalUsd)} for ${tirzStarter.months} months`
+        : null,
     },
   ];
 
@@ -226,6 +241,8 @@ function Glp1HoustonVariantB() {
                 <h1 className="text-balance text-[1.7rem] font-bold leading-[1.1] tracking-tight text-foreground sm:text-4xl md:text-5xl">
                   Online GLP-1 weight-loss care in Houston
                 </h1>
+                {/* Desktop seal beside the heading; mobile gets it in the trust row below. */}
+                <LegitScriptSeal className="hidden w-20 lg:inline-block [&_img]:h-auto [&_img]:w-full" />
                 {/* Small clarity shot so the product is visible on a phone without scrolling. */}
                 <div
                   aria-hidden
@@ -263,25 +280,7 @@ function Glp1HoustonVariantB() {
                 </Button>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
-                <span className="inline-flex items-center gap-1.5 font-semibold text-foreground">
-                  <span aria-hidden className="flex gap-0.5">
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <Star
-                        key={i}
-                        className="size-4 fill-primary stroke-primary"
-                      />
-                    ))}
-                  </span>
-                  {GOOGLE_RATING_VALUE} on Google
-                </span>
-                <span className="text-muted-foreground">
-                  You won&apos;t be charged anything if you&apos;re not
-                  prescribed
-                </span>
-              </div>
-
-              <div className="mt-6 grid grid-cols-2 gap-3">
+              <div className="mt-5 grid grid-cols-2 gap-3">
                 {priceTiles.map((tile) => (
                   <div
                     key={tile.name}
@@ -296,14 +295,41 @@ function Glp1HoustonVariantB() {
                     <p className="text-xs text-muted-foreground md:text-sm">
                       {tile.unit}
                     </p>
+                    {tile.detail ? (
+                      <p className="mt-1 text-[0.7rem] leading-snug text-muted-foreground md:text-xs">
+                        {tile.detail}
+                      </p>
+                    ) : null}
                   </div>
                 ))}
               </div>
               <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted-foreground">
                 Cash-pay when prescribed. New-patient pricing shown; details
                 below. Prescribing is up to your provider and is never
-                guaranteed.
+                guaranteed. Product images are illustrative.
               </p>
+
+              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
+                {/* Mobile: seal and Google rating share the row as equal halves. Desktop: seal sits by the heading, so this wrapper collapses. */}
+                <div className="grid w-full grid-cols-2 items-center gap-3 lg:contents">
+                  <LegitScriptSeal className="w-16 justify-self-center lg:hidden [&_img]:h-auto [&_img]:w-full" />
+                  <span className="inline-flex flex-col items-center gap-1 font-semibold text-foreground lg:flex-row lg:gap-1.5">
+                    <span aria-hidden className="flex gap-0.5">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <Star
+                          key={i}
+                          className="size-4 fill-primary stroke-primary"
+                        />
+                      ))}
+                    </span>
+                    {GOOGLE_RATING_VALUE} on Google
+                  </span>
+                </div>
+                <span className="w-full text-center text-muted-foreground lg:w-auto lg:text-left">
+                  You won&apos;t be charged anything if you&apos;re not
+                  prescribed
+                </span>
+              </div>
             </div>
 
             {/* Large clarity shot (desktop). Plain wrapper: LCP image, no initial opacity (see treatment-pages.md). */}
@@ -402,13 +428,16 @@ function Glp1HoustonVariantB() {
           </div>
           <figcaption className="mt-6 text-center text-xs leading-relaxed text-muted-foreground">
             Included when prescribed. Prescribing is up to your provider and is
-            never guaranteed. Cash-pay only.
+            never guaranteed. Cash-pay only. Product images are illustrative.
           </figcaption>
         </motion.figure>
       </Section>
 
       {PATIENT_STORY_YOUTUBE_ID ? (
-        <Section id="patient-story" className="scroll-mt-20">
+        <Section
+          id="patient-story"
+          className={cn("scroll-mt-20", LAZY_SECTION)}
+        >
           <div className="grid items-center gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
             <motion.div {...reveal}>
               <h2 className="text-balance text-3xl font-bold text-foreground md:text-4xl">
@@ -445,7 +474,7 @@ function Glp1HoustonVariantB() {
       <Section className="bg-muted/40 py-14 md:py-20">
         <motion.div {...reveal} className="mx-auto max-w-3xl text-center">
           <h2 className="text-balance text-3xl font-bold text-foreground md:text-4xl">
-            Every month you wait is another month without a plan
+            Your plan starts with a free intake
           </h2>
           <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
             Starting your intake is free, and you won&apos;t be charged anything
@@ -552,9 +581,9 @@ function Glp1HoustonVariantB() {
       />
 
       {/* Team media license: no CTA or pricing adjacent, so keep this section standalone. */}
-      <MedicalTeamSection className="pt-0" />
+      <MedicalTeamSection className={cn("pt-0", LAZY_SECTION)} />
 
-      <Section className="bg-muted/40 py-14 md:py-20">
+      <Section className={cn("bg-muted/40 py-14 md:py-20", LAZY_SECTION)}>
         <motion.div
           {...reveal}
           className="mx-auto flex max-w-3xl flex-col gap-4 sm:flex-row sm:items-start"
@@ -574,7 +603,7 @@ function Glp1HoustonVariantB() {
         </motion.div>
       </Section>
 
-      <Section>
+      <Section className={LAZY_SECTION}>
         <SectionHeading
           title="GLP-1 care, pricing, and getting started"
           description={copy.faqDescription}
@@ -584,7 +613,7 @@ function Glp1HoustonVariantB() {
         </div>
       </Section>
 
-      <Section className="pt-0">
+      <Section className={cn("pt-0", LAZY_SECTION)}>
         <div className="rounded-4xl bg-primary px-6 py-12 text-center text-primary-foreground md:px-12 md:py-16">
           <h2 className="text-balance text-3xl font-bold md:text-4xl">
             Ready to see if GLP-1 care is right for you?
