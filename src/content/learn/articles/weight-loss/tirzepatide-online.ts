@@ -116,7 +116,7 @@ export const article: LearnArticle = {
       id: "steps",
       heading: "Steps for a lawful online start",
       body: [
-        "Complete intake with your location (Texas, Houston, or any other state), history, and current medicines. Disclose prior GLP-1 use and doses. A licensed provider reviews. If they prescribe, pharmacy fulfillment and shipping follow. Follow-up handles titration. No payment is required to begin Beema Health intake. No one can promise approval.",
+        "Complete intake with your location (Texas, Houston, or any other state), history, and current medicines. Disclose prior GLP-1 use and doses. A licensed provider reviews. If they prescribe, pharmacy fulfillment and shipping follow. Follow-up handles titration. You won't be charged anything if you're not prescribed. No one can promise approval.",
         "If you work heat-heavy jobs in Texas or commute long Houston hours, say so. Delayed gastric emptying plus skipped meals is a common nausea setup. That detail helps the clinician pace titration. It is not a reason to buy an unregulated dual-agonist peptide labeled for research.",
       ],
     },

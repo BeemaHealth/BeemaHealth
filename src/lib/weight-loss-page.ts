@@ -66,7 +66,7 @@ export const WEIGHT_LOSS_FAQ: TreatmentFaqItem[] = [
   },
   {
     q: "How does the online weight-loss program work?",
-    a: "You start with a free online medical intake - no payment required to begin. A licensed provider reviews your answers and decides whether treatment may be appropriate. If approved and a compounded medication is prescribed, your plan includes provider care, medication, supplies, and expedited shipping, with follow-up as your care continues. Prescribing is never guaranteed.",
+    a: "You start with a free online medical intake - you won't be charged anything if you're not prescribed. A licensed provider reviews your answers and decides whether treatment may be appropriate. If approved and a compounded medication is prescribed, your plan includes provider care, medication, supplies, and expedited shipping, with follow-up as your care continues. Prescribing is never guaranteed.",
   },
   {
     q: "What is the difference between compounded semaglutide and tirzepatide?",
@@ -74,7 +74,7 @@ export const WEIGHT_LOSS_FAQ: TreatmentFaqItem[] = [
   },
   {
     q: "How do I start medical weight-loss care online?",
-    a: "Select Get Started to open Beema Health's secure online medical intake. Share your health history, current medications, and goals. A licensed provider reviews your case and decides next steps. No payment is required to start the intake, and a prescription is never guaranteed.",
+    a: "Select Get Started to open Beema Health's secure online medical intake. Share your health history, current medications, and goals. A licensed provider reviews your case and decides next steps. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.",
   },
 ];
 

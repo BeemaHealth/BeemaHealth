@@ -316,8 +316,8 @@ function SexualHealthControl() {
               <LineReveal>Get started online</LineReveal>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">
-              Complete intake from home. No payment required to start. A
-              prescription is never guaranteed.
+              Complete intake from home. You won&apos;t be charged anything if
+              you&apos;re not prescribed. A prescription is never guaranteed.
             </p>
             <HoverLiftButton className="mt-8">
               <Button

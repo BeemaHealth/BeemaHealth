@@ -97,7 +97,7 @@ export const SEXUAL_HEALTH_FAQ: TreatmentFaqItem[] = [
   },
   {
     q: "How do I start ED treatment online?",
-    a: "Choose a formulation to open that medication's page, then start its online intake. Tadalafil, sildenafil, and ED mints each have their own visit. No payment is required to start an intake, and a prescription is never guaranteed.",
+    a: "Choose a formulation to open that medication's page, then start its online intake. Tadalafil, sildenafil, and ED mints each have their own visit. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.",
   },
 ];
 

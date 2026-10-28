@@ -72,7 +72,7 @@ const SHARED_FAQ = {
   },
   howItWorks: {
     q: "How does online GLP-1 care work?",
-    a: "You start with a free online medical intake - no payment required to begin. A licensed provider reviews your answers and decides whether treatment may be appropriate. If approved and a compounded medication is prescribed, your plan includes provider care, medication, supplies, and expedited shipping, with follow-up as your care continues. Prescribing is never guaranteed.",
+    a: "You start with a free online medical intake - you won't be charged anything if you're not prescribed. A licensed provider reviews your answers and decides whether treatment may be appropriate. If approved and a compounded medication is prescribed, your plan includes provider care, medication, supplies, and expedited shipping, with follow-up as your care continues. Prescribing is never guaranteed.",
   },
   difference: {
     q: "What is the difference between compounded semaglutide and tirzepatide?",
@@ -80,7 +80,7 @@ const SHARED_FAQ = {
   },
   getStarted: {
     q: "How do I get started online?",
-    a: "Select Get Started to open Beema Health’s secure online medical intake. Share your health history, current medications, and goals. A licensed provider reviews your case and decides next steps. No payment is required to start the intake, and a prescription is never guaranteed.",
+    a: "Select Get Started to open Beema Health’s secure online medical intake. Share your health history, current medications, and goals. A licensed provider reviews your case and decides next steps. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.",
   },
 } as const satisfies Record<string, TreatmentFaqItem>;
 
@@ -137,7 +137,7 @@ const GLP1_COPY: Record<Glp1Market, Glp1LandingCopy> = {
       label: "See GLP-1 care for Houston",
     },
     footerCtaBody:
-      "Complete medical intake from home. No payment required to start. A prescription is never guaranteed.",
+      "Complete medical intake from home. You won't be charged anything if you're not prescribed. A prescription is never guaranteed.",
     dateModified: "2026-08-16",
   },
   houston: {
@@ -174,7 +174,7 @@ const GLP1_COPY: Record<Glp1Market, Glp1LandingCopy> = {
     servingBody:
       "Availability depends on your state. Most US states allow online clinic visits, but some do not. If you're in Houston, or anywhere in Texas where it applies, you complete Beema Health's medical intake online and a licensed provider reviews your case by telehealth. When clinically appropriate and legally available, compounded GLP-1 options may be prescribed and shipped to you. Beema Health does not serve patients outside the United States.",
     footerCtaBody:
-      "Houston patients can complete medical intake from home. No payment required to start. A prescription is never guaranteed.",
+      "Houston patients can complete medical intake from home. You won't be charged anything if you're not prescribed. A prescription is never guaranteed.",
     dateModified: "2026-08-16",
   },
 };

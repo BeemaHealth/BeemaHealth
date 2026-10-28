@@ -134,7 +134,7 @@ export const article: LearnArticle = {
       id: "next",
       heading: "Where to go next on this site",
       body: [
-        "Read GLP-1 diet and exercise pages for medication-era details. Read berberine and ashwagandha pages if those searches brought you here. If you want a provider to review whether a prescription incretin is appropriate, Beema Health offers nationwide telehealth intake. Payment is not required to start. A prescription is never guaranteed.",
+        "Read GLP-1 diet and exercise pages for medication-era details. Read berberine and ashwagandha pages if those searches brought you here. If you want a provider to review whether a prescription incretin is appropriate, Beema Health offers nationwide telehealth intake. You won't be charged anything if you're not prescribed. A prescription is never guaranteed.",
       ],
     },
   ],

@@ -264,7 +264,8 @@ function Glp1HoustonVariantB() {
                   {GOOGLE_RATING_VALUE} on Google
                 </span>
                 <span className="text-muted-foreground">
-                  No payment required to start
+                  You won&apos;t be charged anything if you&apos;re not
+                  prescribed
                 </span>
               </div>
               <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted-foreground">

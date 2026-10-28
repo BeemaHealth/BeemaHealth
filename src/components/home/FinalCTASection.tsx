@@ -36,7 +36,8 @@ export function FinalCTASection() {
 
             <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-primary-foreground/80 md:text-lg">
               Start your online visit in about a minute. {promoIncentiveLine()}.
-              No payment required to start, and no prescription is guaranteed.
+              You won&apos;t be charged anything if you&apos;re not prescribed,
+              and no prescription is guaranteed.
             </p>
 
             <HoverLiftButton className="mt-8">

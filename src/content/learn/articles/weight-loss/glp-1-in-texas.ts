@@ -124,7 +124,7 @@ export const article: LearnArticle = {
       id: "visit",
       heading: "How a Beema Health visit works if you live in Texas",
       body: [
-        "You start the online medical intake from home. No payment is required to begin. A licensed provider reviews your answers. If they prescribe compounded semaglutide or compounded tirzepatide, a pharmacy ships. Follow-up continues. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
+        "You start the online medical intake from home. You won't be charged anything if you're not prescribed. A licensed provider reviews your answers. If they prescribe compounded semaglutide or compounded tirzepatide, a pharmacy ships. Follow-up continues. Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate. Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
         "You do not need to drive I-35 to a city for that sequence. You do need truthful answers. Texas compounding and pharmacy rules can still affect whether a specific preparation can be filled even when the clinician says yes.",
       ],
     },

@@ -276,7 +276,8 @@ function Glp1HoustonVariantB() {
                   {GOOGLE_RATING_VALUE} on Google
                 </span>
                 <span className="text-muted-foreground">
-                  No payment required to start
+                  You won&apos;t be charged anything if you&apos;re not
+                  prescribed
                 </span>
               </div>
 
@@ -447,10 +448,11 @@ function Glp1HoustonVariantB() {
             Every month you wait is another month without a plan
           </h2>
           <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-            Starting your intake is free, and no payment is required to begin. A
-            licensed provider reviews your health history and decides what is
-            right for you. If treatment is appropriate, one monthly price covers
-            your care, medication, supplies, and shipping.
+            Starting your intake is free, and you won&apos;t be charged anything
+            if you&apos;re not prescribed. A licensed provider reviews your
+            health history and decides what is right for you. If treatment is
+            appropriate, one monthly price covers your care, medication,
+            supplies, and shipping.
           </p>
           <Button asChild size="xl" className="mt-8 w-full sm:w-auto">
             <Link

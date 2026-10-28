@@ -474,8 +474,9 @@ function AboutPage() {
                 Ready to start your journey?
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-primary-foreground/80">
-                Complete your medical intake online. No payment required, and no
-                prescription is guaranteed.
+                Complete your medical intake online. You won&apos;t be charged
+                anything if you&apos;re not prescribed, and no prescription is
+                guaranteed.
               </p>
               <HoverLiftButton className="mt-8">
                 <Button

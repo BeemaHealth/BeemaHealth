@@ -139,7 +139,7 @@ export const article: LearnArticle = {
       id: "practical-next-step",
       heading: "A practical next step if you came from a headline",
       body: [
-        "Write down whether your priority is avoiding needles, matching a trial-average percent loss, or starting care that a telehealth program you trust actually provides. Bring that list to a licensed provider. If Beema Health is the program you chose, the intake questionnaire is how a clinician sees your history. Payment is not required to start intake, and a prescription is never guaranteed.",
+        "Write down whether your priority is avoiding needles, matching a trial-average percent loss, or starting care that a telehealth program you trust actually provides. Bring that list to a licensed provider. If Beema Health is the program you chose, the intake questionnaire is how a clinician sees your history. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.",
         "Skip websites selling orforglipron capsules without a prescription. A licensed pharmacy filling a valid prescription is the lawful channel for Foundayo. Unverified online sellers are not.",
       ],
     },

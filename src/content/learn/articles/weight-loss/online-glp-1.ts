@@ -111,7 +111,7 @@ export const article: LearnArticle = {
       heading: "The visit, step by step",
       body: [
         "You create an account and complete a medical questionnaire covering location, history, medicines, and goals. A licensed clinician reviews it. They may ask follow-up questions. If they prescribe, a pharmacy dispenses and ships. Follow-up continues so doses can change. That is the whole product.",
-        "Beema Health's intake is a questionnaire, not a live chat. No payment is required to start the questionnaire. If you later pay, you are paying for a medical visit and, only if a licensed clinician prescribes, for pharmacy fulfillment of that prescription - not for a guaranteed drug in a cart. Additional clinical questions may open after checkout, depending on the visit flow. A prescription is never guaranteed.",
+        "Beema Health's intake is a questionnaire, not a live chat. You won't be charged anything if you're not prescribed. If a licensed clinician prescribes, you pay for your medical visit and pharmacy fulfillment of that prescription - not for a guaranteed drug in a cart. Additional clinical questions may open after checkout, depending on the visit flow. A prescription is never guaranteed.",
       ],
     },
     {
