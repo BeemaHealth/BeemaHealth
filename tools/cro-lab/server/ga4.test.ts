@@ -12,6 +12,7 @@ import {
   getLive,
   resetLiveCache,
   pageIdFromPath,
+  srcPageFromLocation,
 } from "./ga4.ts";
 
 const IDS = ["glp-1-houston", "tirzepatide-houston"];
@@ -337,4 +338,61 @@ test("getLive falls back to the cache when Google fails after a restart", async 
   assert.equal(res.rows.length, 1);
   assert.match(res.message, /Showing cached data last pulled/);
   fs.rmSync(dir, { recursive: true });
+});
+
+test("fetchDownstream credits src_page over cta_id, and falls back to cta_id", async () => {
+  const q = "https://q.beemahealth.com/start-online-visit/x";
+  const out = await fetchDownstream(async () => [
+    // Clicked on /sexual-health/, picked Sildenafil in the sitewide modal.
+    row(
+      [
+        "20261025",
+        "signup",
+        `${q}?cta_id=sildenafil_hero&src_page=%2Fsexual-health%2F`,
+      ],
+      [1, 1],
+    ),
+    // Older link without src_page.
+    row(["20261025", "signup", `${q}?cta_id=sildenafil_hero`], [1, 1]),
+    // Untracked src_page falls back to cta_id.
+    row(
+      ["20261025", "purchase", `${q}?cta_id=nad_hero&src_page=%2Flearn%2Fx%2F`],
+      [1, 1],
+    ),
+  ]);
+  assert.deepEqual(
+    out.map((r) => [r.event, r.pageId, r.users]),
+    [
+      ["purchase", "nad-plus", 1],
+      ["signup", "sexual-health", 1],
+      ["signup", "sildenafil", 1],
+    ],
+  );
+});
+
+test("srcPageFromLocation reads src_page and tolerates bad URLs", () => {
+  assert.equal(
+    srcPageFromLocation("https://q.x.com/a?src_page=%2Fnad-plus%2F"),
+    "/nad-plus/",
+  );
+  assert.equal(srcPageFromLocation("https://q.x.com/a"), null);
+  assert.equal(srcPageFromLocation("not a url"), null);
+});
+
+test("page and handoff reports only count production beemahealth.com", async () => {
+  const requests: string[] = [];
+  const run = async (req: object) => {
+    requests.push(JSON.stringify(req));
+    return [];
+  };
+  await fetchRows(IDS, "2026-10-19", run);
+  await fetchPaths(IDS, "2026-10-19", run);
+  assert.ok(requests.length >= 4);
+  for (const json of requests) {
+    assert.match(
+      json,
+      /"fieldName":"hostName","stringFilter":\{"matchType":"EXACT","value":"beemahealth\.com"\}/,
+    );
+    assert.doesNotMatch(json, /notExpression/);
+  }
 });

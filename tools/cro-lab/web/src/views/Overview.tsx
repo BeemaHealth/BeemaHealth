@@ -502,6 +502,17 @@ export function Overview() {
           {group === "landing" &&
             " Transition days when a variant changed mid-day are excluded."}
         </p>
+        <p className="mt-2">
+          <b className="text-ink">Handoffs</b> count unique users who clicked a
+          Bask CTA on the page. One person clicking three times is one handoff
+          (raw GA4 event counts are higher). <b className="text-ink">Signups</b>{" "}
+          and <b className="text-ink">purchases</b> are credited to the page the
+          visitor clicked from, read from the <code>src_page</code> on the Bask
+          link. Signups before that shipped fall back to the page that owns the
+          CTA id, so a modal click from another page can sit on the wrong page.
+          Draft and GTM Preview test signups are excluded when they carry no CTA
+          id or a <code>gtm_debug</code> flag.
+        </p>
       </Card>
     </div>
   );

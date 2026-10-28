@@ -18,6 +18,7 @@ import {
 } from "./ga4-cache.ts";
 import {
   pageIdFromCtaId,
+  pageIdFromSrcPage,
   pageIdFromPagePath,
   pagePathRegexp,
 } from "../shared/pages.ts";
@@ -78,13 +79,18 @@ export function pageIdFromPath(
   return pageIdFromPagePath(pagePath, pageIds);
 }
 
-/** Marketing-site events only: Bask (q.) also has a "/" and its own paths. */
-const notBask = () => ({
-  notExpression: {
-    filter: {
-      fieldName: "hostName",
-      stringFilter: { matchType: "EXACT", value: BASK_HOST },
-    },
+/** The production marketing site. Staging, localhost, Bask (q.) and Hive are other hosts. */
+const SITE_HOST = "beemahealth.com";
+
+/**
+ * Marketing-site events from production only. An exact host match drops
+ * staging.beemahealth.com, localhost, Bask (q.) and the Hive portal in one
+ * rule, so a test visit on any of them never counts as a page view or handoff.
+ */
+const siteHostOnly = () => ({
+  filter: {
+    fieldName: "hostName",
+    stringFilter: { matchType: "EXACT", value: SITE_HOST },
   },
 });
 
@@ -113,7 +119,7 @@ const reportBase = (
             },
           },
         },
-        notBask(),
+        siteHostOnly(),
         {
           filter: {
             fieldName: "eventName",
@@ -222,7 +228,7 @@ export async function fetchPaths(
               },
             },
           },
-          notBask(),
+          siteHostOnly(),
           {
             filter: {
               fieldName: "eventName",
@@ -288,9 +294,20 @@ export function ctaIdFromLocation(location: string): string | null {
   }
 }
 
+/** src_page (marketing path the click came from) on a Bask URL, or null. */
+export function srcPageFromLocation(location: string): string | null {
+  try {
+    return new URL(location).searchParams.get("src_page");
+  } catch {
+    return null;
+  }
+}
+
 /**
- * Signup and purchase counts per day from Bask's GTM tags, tied to a landing
- * page by the cta_id still on the Bask URL (pageId null when there is none).
+ * Signup and purchase counts per day from Bask's GTM tags, tied to the page
+ * the visitor clicked from: src_page on the Bask URL, else the page that owns
+ * the cta_id (older links, before src_page existed). pageId is null when
+ * neither is present.
  * Excludes GTM Preview sessions (our own testing) so QA runs do not inflate
  * the funnel. Counts are summed over distinct URLs, so a user who fires the
  * event from two different URLs on one day counts twice.
@@ -349,7 +366,10 @@ export async function fetchDownstream(
     const event = DOWNSTREAM_EVENTS.find((e) => e === dv(r, 1));
     if (!event) continue;
     const date = isoDate(dv(r, 0));
-    const pageId = pageIdFromCtaId(ctaIdFromLocation(dv(r, 2)));
+    const location = dv(r, 2);
+    const pageId =
+      pageIdFromSrcPage(srcPageFromLocation(location)) ??
+      pageIdFromCtaId(ctaIdFromLocation(location));
     const key = [date, event, pageId ?? ""].join("\u0000");
     const row = byKey.get(key) ?? { date, event, pageId, users: 0, events: 0 };
     row.users += mv(r, 0);
