@@ -259,13 +259,11 @@ function SexualHealthControl() {
               Online care that&apos;s human and built for success.
             </h2>
             <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-base">
-              Availability depends on your state. Most US states allow online
-              clinic visits, but some do not. Where it applies, adult men
-              complete intake online. A licensed provider reviews health history
-              and current medications, including cardiovascular history, and
-              decides whether treatment may be appropriate. Prescribing is never
-              guaranteed. Beema Health does not serve patients outside the
-              United States.
+              Adult men complete intake online. A licensed provider reviews
+              health history and current medications, including cardiovascular
+              history, and decides whether treatment may be appropriate.
+              Prescribing is never guaranteed. Beema Health does not serve
+              patients outside the United States.
             </p>
             <ul className="mt-5 space-y-2">
               {SEXUAL_HEALTH_SERVING_POINTS.map((item) => (

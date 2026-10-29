@@ -295,7 +295,7 @@ function AboutPage() {
           <SectionHeading
             eyebrow="Where we serve"
             title="Available in all 50 states"
-            description="Beema Health is available to patients nationwide. Medication availability, prescribing, and pharmacy fulfillment still depend on your state's individual requirements and your provider's independent clinical decision."
+            description="Beema Health is available to patients nationwide. Prescribing is always your provider's independent clinical decision."
           />
         </motion.div>
         <motion.div

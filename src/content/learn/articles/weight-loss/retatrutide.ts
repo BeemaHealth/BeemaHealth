@@ -129,7 +129,7 @@ export const article: LearnArticle = {
       id: "beema-status",
       heading: "What Beema Health offers instead, today",
       body: [
-        "Beema Health is a cash-pay telehealth program for medical weight loss. Adults in all 50 U.S. states can complete an online intake. A licensed provider reviews history, medications, and BMI-related factors and decides whether compounded semaglutide, compounded tirzepatide, or no medication is appropriate. Prescribing is never guaranteed. Medication availability can still vary by state compounding rules and pharmacy fulfillment.",
+        "Beema Health is a cash-pay telehealth program for medical weight loss. Adults in all 50 U.S. states can complete an online intake. A licensed provider reviews history, medications, and BMI-related factors and decides whether compounded semaglutide, compounded tirzepatide, or no medication is appropriate. Prescribing is never guaranteed.",
         "If you are comparing headlines about retatrutide with care you can actually start, read the educational overview of GLP-1 medicines for weight loss, then the live program pages for compounded semaglutide and compounded tirzepatide. Those pages list current cash-pay rates. They are not a promise that any pipeline drug will arrive next month.",
       ],
     },

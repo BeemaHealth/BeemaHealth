@@ -79,7 +79,7 @@ export const article: LearnArticle = {
     },
     {
       question: "Does Beema Health ship to my state?",
-      answer: `${LEARN_FIFTY_STATE_SENTENCE} Compounded medication availability can still vary with state rules and pharmacy fulfillment. Eligibility is always individual. ${LEARN_CLINICIAN_RX_SENTENCE} ${LEARN_USA_ONLY_SENTENCE}`,
+      answer: `${LEARN_FIFTY_STATE_SENTENCE} Eligibility is always individual. ${LEARN_CLINICIAN_RX_SENTENCE} ${LEARN_USA_ONLY_SENTENCE}`,
     },
     {
       question: "How fast does treatment start?",

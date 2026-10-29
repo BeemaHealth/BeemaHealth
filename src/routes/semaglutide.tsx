@@ -67,7 +67,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "Is semaglutide right for me?",
-    a: "Whether semaglutide is right for you depends on several factors your licensed provider reviews individually: your BMI, health history, current medications, and any potential contraindications or interactions. During your medical intake questionnaire, you'll share detailed information about your health so your provider can make an informed, independent clinical decision, prescribing is never guaranteed, and not everyone who applies will be approved. Provider approval also depends on applicable state law, since medication availability can vary by state. If semaglutide isn't the right fit for you, your provider may discuss compounded tirzepatide or another approach as part of Beema Health's broader weight-loss program instead. The most reliable way to find out if semaglutide is appropriate for your situation is to complete your intake so a licensed provider can evaluate your case directly.",
+    a: "Whether semaglutide is right for you depends on several factors your licensed provider reviews individually: your BMI, health history, current medications, and any potential contraindications or interactions. During your medical intake questionnaire, you'll share detailed information about your health so your provider can make an informed, independent clinical decision, prescribing is never guaranteed, and not everyone who applies will be approved. If semaglutide isn't the right fit for you, your provider may discuss compounded tirzepatide or another approach as part of Beema Health's broader weight-loss program instead. The most reliable way to find out if semaglutide is appropriate for your situation is to complete your intake so a licensed provider can evaluate your case directly.",
   },
   {
     q: "How does online semaglutide care through Beema Health work?",
@@ -79,7 +79,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "Does Beema Health serve patients nationwide?",
-    a: "Yes, Beema Health is available to patients in all 50 U.S. states, so you can start your medical intake no matter where you live. That said, whether compounded semaglutide specifically is available to you still depends on your state's rules around compounded medications and on pharmacy fulfillment in your area, since compounding regulations and sourcing can vary from state to state. Even where compounded semaglutide is available, eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history, current medications, and BMI, it isn't guaranteed just because you're in a covered state. If compounded semaglutide isn't an option where you live or for your specific case, your provider may discuss compounded tirzepatide or another approach as part of Beema Health's broader weight-loss program. Completing your intake is the fastest way to find out what's available to you.",
+    a: "Yes, Beema Health is available to patients in all 50 U.S. states, so you can start your medical intake no matter where you live. Eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history, current medications, and BMI, it isn't guaranteed just because you're in a covered state. If compounded semaglutide isn't an option for your specific case, your provider may discuss compounded tirzepatide or another approach as part of Beema Health's broader weight-loss program. Completing your intake is the fastest way to find out what's available to you.",
   },
   {
     q: "Is compounded semaglutide FDA-approved?",
@@ -114,7 +114,7 @@ const WHATS_INCLUDED = [
 const ELIGIBILITY_POINTS = [
   "Adults 18 and older",
   "Eligibility considers BMI, health history, and current medications",
-  "Final approval rests with a licensed provider and depends on applicable state law",
+  "Final approval rests with a licensed provider ",
 ];
 
 export const Route = createFileRoute("/semaglutide")({

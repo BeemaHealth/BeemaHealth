@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   CheckCircle2,
+  Info,
   MapPin,
   Pill,
   Play,
@@ -50,13 +51,14 @@ const MEDICATION_PICKER: Record<
   MedicationId,
   { label: string; pricing: CompoundedMedicationPricing }
 > = {
-  semaglutide: {
-    label: "Semaglutide",
-    pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
-  },
+  // Key order is tab order: tirzepatide first (also the default tab below).
   tirzepatide: {
     label: "Tirzepatide",
     pricing: COMPOUNDED_TIRZEPATIDE_PRICING,
+  },
+  semaglutide: {
+    label: "Semaglutide",
+    pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
   },
 };
 
@@ -213,6 +215,7 @@ function Glp1HoustonVariantB() {
       name: "Semaglutide",
       price: formatUsd(promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING)),
       unit: "first month",
+      note: `With code ${COMPOUNDED_SEMAGLUTIDE_PRICING.promoCode} on a 3-month plan`,
       detail: `Then ${formatUsd(COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd)}/mo · ${formatUsd(
         semaThreeMonthPromoTotalUsd(),
       )} for 3 months`,
@@ -225,6 +228,7 @@ function Glp1HoustonVariantB() {
           : getPlan(COMPOUNDED_TIRZEPATIDE_PRICING, 12).monthlyUsd,
       )}`,
       unit: "per month",
+      note: null,
       detail: tirzStarter
         ? `${formatUsd(tirzStarter.totalUsd)} for ${tirzStarter.months} months`
         : null,
@@ -300,19 +304,31 @@ function Glp1HoustonVariantB() {
                         {tile.detail}
                       </p>
                     ) : null}
+                    {tile.note ? (
+                      <p className="mt-1 text-[0.7rem] font-medium leading-snug text-foreground/80 md:text-xs">
+                        {tile.note}
+                      </p>
+                    ) : null}
                   </div>
                 ))}
               </div>
               <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted-foreground">
                 Cash-pay when prescribed. New-patient pricing shown; details
                 below. Prescribing is up to your provider and is never
-                guaranteed. Product images are illustrative.
+                guaranteed. Product images are illustrative. See our{" "}
+                <Link
+                  to="/legal/refund/"
+                  className="underline underline-offset-2 hover:text-foreground"
+                >
+                  cancellation and refund policy
+                </Link>
+                .
               </p>
 
               <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
                 {/* Mobile: seal and Google rating share the row as equal halves. Desktop: seal sits by the heading, so this wrapper collapses. */}
                 <div className="grid w-full grid-cols-2 items-center gap-3 lg:contents">
-                  <LegitScriptSeal className="w-16 justify-self-center lg:hidden [&_img]:h-auto [&_img]:w-full" />
+                  <LegitScriptSeal className="w-[73px] justify-self-center lg:hidden [&_img]:h-auto [&_img]:w-full" />
                   <span className="inline-flex flex-col items-center gap-1 font-semibold text-foreground lg:flex-row lg:gap-1.5">
                     <span aria-hidden className="flex gap-0.5">
                       {Array.from({ length: 5 }, (_, i) => (
@@ -461,11 +477,39 @@ function Glp1HoustonVariantB() {
             </motion.div>
             <motion.div {...reveal}>
               <PatientStoryVideo videoId={PATIENT_STORY_YOUTUBE_ID} />
-              <p className="mt-3 text-pretty text-xs leading-relaxed text-muted-foreground">
-                Results vary and are not typical or guaranteed. Treatment
-                depends on a licensed provider&apos;s review of your health
-                history.
-              </p>
+              <div
+                role="note"
+                className="mt-4 flex items-start gap-3 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-xs leading-snug text-muted-foreground"
+              >
+                <Info
+                  className="mt-0.5 size-3.5 shrink-0 text-trust"
+                  aria-hidden
+                />
+                <div className="space-y-2 text-pretty">
+                  <p>
+                    Individual stories are not typical, and results vary. Weight
+                    and blood sugar changes described in the video are one
+                    person&apos;s experience and are not guaranteed.
+                  </p>
+                  <p>
+                    For context, in trials of FDA-approved tirzepatide, average
+                    weight loss was up to about 20.9% at the highest studied
+                    dose at 72 weeks. Compounded medications are not
+                    FDA-approved and were not the products studied in those
+                    trials.
+                  </p>
+                  <p>
+                    Any change in blood sugar or prediabetes status described in
+                    the video is one person&apos;s experience. The FDA has not
+                    approved tirzepatide to treat, prevent, or reverse
+                    prediabetes, and we make no claim that it does.
+                  </p>
+                  <p>
+                    Treatment depends on a licensed provider&apos;s review of
+                    your health history. Prescribing is never guaranteed.
+                  </p>
+                </div>
+              </div>
             </motion.div>
           </div>
         </Section>
@@ -571,6 +615,14 @@ function Glp1HoustonVariantB() {
             compounded tirzepatide
           </Link>
           .
+        </p>
+        <p className="mt-3 text-center text-xs text-muted-foreground">
+          <Link
+            to="/legal/refund/"
+            className="underline underline-offset-2 hover:text-foreground"
+          >
+            Cancellation and refund policy
+          </Link>
         </p>
       </Section>
 

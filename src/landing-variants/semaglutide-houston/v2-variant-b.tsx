@@ -55,7 +55,7 @@ const WHATS_INCLUDED = [
 const ELIGIBILITY_POINTS = [
   "Adults 18 and older",
   "Eligibility considers BMI, health history, and current medications",
-  "Final approval rests with a licensed provider and depends on applicable state law",
+  "Final approval rests with a licensed provider",
 ];
 
 function SemaglutideHoustonControl() {

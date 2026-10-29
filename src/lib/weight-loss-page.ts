@@ -58,7 +58,7 @@ export const WEIGHT_LOSS_FAQ: TreatmentFaqItem[] = [
   },
   {
     q: "Does Beema Health offer medical weight loss in all 50 states?",
-    a: `Yes. ${LEARN_FIFTY_STATE_SENTENCE} You complete intake online from home; a licensed provider reviews your case remotely. Medication availability still depends on applicable state rules and pharmacy fulfillment, and eligibility is always an individual clinical decision. ${LEARN_USA_ONLY_SENTENCE}`,
+    a: `Yes. ${LEARN_FIFTY_STATE_SENTENCE} You complete intake online from home; a licensed provider reviews your case remotely. Eligibility is always an individual clinical decision. ${LEARN_USA_ONLY_SENTENCE}`,
   },
   {
     q: "How much does online medical weight loss cost?",

@@ -65,7 +65,7 @@ const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "Does Beema Health serve patients nationwide?",
-    a: "Yes, Beema Health is available to patients in all 50 U.S. states. Whether compounded sermorelin specifically is available to you still depends on your state's rules around compounded medications and pharmacy fulfillment in your area, and eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications.",
+    a: "Yes, Beema Health is available to patients in all 50 U.S. states. Eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications.",
   },
 ];
 
@@ -81,7 +81,7 @@ const WHATS_INCLUDED = [
 const ELIGIBILITY_POINTS = [
   "Adults 18 and older",
   "Eligibility considers health history and current medications",
-  "Final approval rests with a licensed provider and depends on applicable state law",
+  "Final approval rests with a licensed provider",
 ];
 
 export const Route = createFileRoute("/sermorelin")({

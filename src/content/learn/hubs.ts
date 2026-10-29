@@ -214,7 +214,7 @@ export const WEIGHT_LOSS_HUB_SECTIONS = [
     heading: 'What "online GLP-1" care actually means',
     body: [
       "Yes, you can get GLP-1 care online in the United States. A legitimate program is telehealth: you complete a medical intake, a licensed provider reviews it, and a licensed pharmacy dispenses only if that provider says yes. Beema Health does that in all 50 states, for compounded semaglutide and compounded tirzepatide when they are legally available and clinically appropriate. Completing intake does not guarantee a prescription. You cannot lawfully add a GLP-1 to a cart like a vitamin, and Beema Health does not sell research peptides. Beema Health does not serve patients outside the United States.",
-      "Beema Health's intake is hosted with our clinical partner. Geographic availability, compounding rules, and formulary options still depend on state law and clinical judgment. Cash-pay pricing is disclosed on the [compounded semaglutide](/semaglutide/) and [compounded tirzepatide](/tirzepatide/) pages. This site does not collect insurance information or promise that a plan will cover treatment.",
+      "Beema Health's intake is hosted with our clinical partner. Prescribing decisions rest with your licensed provider. Cash-pay pricing is disclosed on the [compounded semaglutide](/semaglutide/) and [compounded tirzepatide](/tirzepatide/) pages. This site does not collect insurance information or promise that a plan will cover treatment.",
     ],
   },
   {

@@ -279,13 +279,11 @@ function WeightLossPage() {
               Online care that&apos;s human and built for success.
             </h2>
             <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-base">
-              Availability depends on your state. Most US states allow online
-              clinic visits, but some do not. Where it applies, you complete
-              Beema Health&apos;s medical intake online and a licensed provider
-              reviews your case by telehealth. When clinically appropriate and
-              legally available, compounded semaglutide or tirzepatide may be
-              prescribed and shipped to you. Beema Health does not serve
-              patients outside the United States.
+              You complete Beema Health&apos;s medical intake online and a
+              licensed provider reviews your case by telehealth. When clinically
+              appropriate and legally available, compounded semaglutide or
+              tirzepatide may be prescribed and shipped to you. Beema Health
+              does not serve patients outside the United States.
             </p>
             <ul className="mt-5 space-y-2">
               {WEIGHT_LOSS_SERVING_POINTS.map((item) => (

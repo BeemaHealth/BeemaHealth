@@ -44,6 +44,35 @@ Read `AGENTS.md` and `CLAUDE.md` first; their rules still apply. Also read
   lives in `tools/cro-lab/data/lab.json` (variants, go-live windows, notes).
   Demo mode uses fake data and never touches files.
 
+## Tracking: how it connects (read before touching CTAs or running browser checks)
+
+- Every landing page is an experiment, including a lone control: `experiments.json`
+  gives it `<page>-e1` with one variant at 100%. "Control only" pages still send
+  `experiment_id`, `variant_id`, `landing_page_id`.
+- CTA click: `resolveCta(...).onClick` in `src/lib/cta-ids.ts` calls
+  `trackIntakeHandoff` once. That is **one dataLayer push** (`intake_handoff`,
+  `cta_location` = the CtaId, plus the experiment ids). Never add a second send
+  (no `gtag('event','intake_handoff')`, no extra push): gtag calls also land in
+  the dataLayer and double-fire every GTM tag, which duplicated Meta Leads.
+- GTM container `GTM-MHHJ44GF`: trigger "Intake Handoff Trigger" fires
+  "GA4 - Intake Handoff" (params via Data Layer Variables `cta_location`,
+  `experiment_id`, `variant_id`, `landing_page_id`) and "Meta - Lead (Intake
+  Handoff)". Both are "Once per event". New parameters need a GTM variable and
+  a GA4 tag parameter, plus a GA4 event-scoped custom dimension for reports.
+- `variant_exposure` is a direct GA4 hit (`trackGaEvent`), once per page load.
+- The CRO Lab counts handoffs by event name and landing page, and ties signups
+  and purchases to a page via `cta_id` / `src_page` in the **Bask URL query**
+  (`buildCtaSearch`), not via event parameters. Keep those URL params.
+- Matt's browser usually has `?exp_exclude=1` set, which omits the three
+  experiment ids on purpose. To verify them, visit `?exp_exclude=0`, test, then
+  restore `?exp_exclude=1`. `?ga_debug=1` sends events from non-production
+  hosts and enables DebugView; `?preview_variant=` sends none.
+- Browser-automation sessions (Claude in Chrome): read-only by default. Do not
+  publish GTM, change Meta or GA4 settings, or complete a Bask intake unless
+  the prompt says so. Cancel the navigation to q.beemahealth.com after clicks.
+  Expect exactly 1 `intake_handoff` and 1 Meta Lead per click. The tracking
+  setup page is `tools/cro/index.html`. Give Chrome prompts this section.
+
 ## Status words (do not mix them up)
 
 - **Live**: confirmed in production. Comes only from a recorded go-live window

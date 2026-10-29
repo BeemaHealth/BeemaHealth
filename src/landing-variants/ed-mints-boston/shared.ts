@@ -46,6 +46,6 @@ export const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "Does Beema Health serve Boston and Massachusetts?",
-    a: `Yes. Beema Health serves adults in Boston and across all 50 US states through telehealth - there is no physical Boston office or in-person clinic; care happens entirely online. ${LEARN_FIFTY_STATE_SENTENCE} Whether a specific compounded formulation is available to you still depends on your state's rules around compounded medications and pharmacy fulfillment, and eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications, including cardiovascular history. ${LEARN_USA_ONLY_SENTENCE}`,
+    a: `Yes. Beema Health serves adults in Boston and across all 50 US states through telehealth - there is no physical Boston office or in-person clinic; care happens entirely online. ${LEARN_FIFTY_STATE_SENTENCE} Eligibility is always an individual clinical decision made by a licensed provider after reviewing your health history and current medications, including cardiovascular history. ${LEARN_USA_ONLY_SENTENCE}`,
   },
 ];

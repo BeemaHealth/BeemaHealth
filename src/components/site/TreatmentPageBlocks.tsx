@@ -92,7 +92,7 @@ const PRICING_INCLUDED = [
 ] as const;
 
 const PRICING_FOOTNOTE =
-  "All-inclusive cash-pay pricing. Dose does not change the monthly rate. Availability may vary based on clinical appropriateness, prescription, pharmacy fulfillment, and state requirements.";
+  "All-inclusive cash-pay pricing. Dose does not change the monthly rate. Availability may vary based on clinical appropriateness, prescription, and pharmacy fulfillment.";
 
 export function TreatmentPricingCard({
   pricing,
@@ -209,8 +209,8 @@ export function TreatmentPricingCard({
           All-inclusive cash-pay pricing: provider care, medication, supplies,
           and expedited shipping are included. No separate platform membership
           fee. Dose does not change the monthly rate. Treatment availability may
-          vary based on clinical appropriateness, prescription, pharmacy
-          fulfillment, and state requirements.
+          vary based on clinical appropriateness, prescription, and pharmacy
+          fulfillment.
         </p>
       )}
       {cta ? (
@@ -677,8 +677,8 @@ export function SimpleTreatmentPricingCard({
         All-inclusive cash-pay pricing for {label}: provider care, medication,
         supplies, and shipping are included. No separate platform membership
         fee. Dose does not change the monthly rate. Treatment availability may
-        vary based on clinical appropriateness, prescription, pharmacy
-        fulfillment, and state requirements.
+        vary based on clinical appropriateness, prescription, and pharmacy
+        fulfillment.
       </p>
       {cta ? (
         <Button asChild size="lg" className="mt-6 w-full sm:w-auto">
@@ -822,8 +822,8 @@ function InteractiveSimplePricingCard({
         All-inclusive cash-pay pricing for {label}: provider care, medication,
         supplies, and shipping are included. No separate platform membership
         fee. Dose does not change the monthly rate. Treatment availability may
-        vary based on clinical appropriateness, prescription, pharmacy
-        fulfillment, and state requirements.
+        vary based on clinical appropriateness, prescription, and pharmacy
+        fulfillment.
       </p>
       {cta ? (
         <Button asChild size="lg" className="mt-6 w-full sm:w-auto">
