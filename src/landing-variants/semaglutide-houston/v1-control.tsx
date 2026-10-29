@@ -37,6 +37,14 @@ import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import { learnPath } from "@/content/learn/types";
 import { FAQ_ITEMS } from "./shared";
 import type { LandingVariant } from "../types";
+import { cn } from "@/lib/utils";
+
+/**
+ * Below-the-fold sections skip layout and paint until they near the viewport
+ * (CSS content-visibility). Keeps them in the DOM for SEO and anchor links.
+ */
+const LAZY_SECTION =
+  "[content-visibility:auto] [contain-intrinsic-size:auto_640px]";
 
 const VIAL_IMAGERY = resolveVialImagery("semaglutide");
 
@@ -294,7 +302,7 @@ function SemaglutideHoustonControl() {
         </div>
       </Section>
 
-      <Section className="bg-muted/40 pt-0">
+      <Section className={cn("bg-muted/40 pt-0", LAZY_SECTION)}>
         <SectionHeading
           align="left"
           title="Safety and important information"
@@ -349,9 +357,9 @@ function SemaglutideHoustonControl() {
         </div>
       </Section>
 
-      <MedicalTeamSection className="pt-0" />
+      <MedicalTeamSection className={cn("pt-0", LAZY_SECTION)} />
 
-      <Section className="pt-0">
+      <Section className={cn("pt-0", LAZY_SECTION)}>
         <SectionHeading
           align="left"
           title="Semaglutide vs. tirzepatide"
@@ -370,7 +378,10 @@ function SemaglutideHoustonControl() {
         </p>
       </Section>
 
-      <Section id="faq" className="scroll-mt-20 bg-muted/40 pt-0">
+      <Section
+        id="faq"
+        className={cn("scroll-mt-20 bg-muted/40 pt-0", LAZY_SECTION)}
+      >
         <SectionHeading
           align="left"
           title="Frequently asked questions"
@@ -395,7 +406,7 @@ function SemaglutideHoustonControl() {
         </div>
       </Section>
 
-      <Section className="pt-0">
+      <Section className={cn("pt-0", LAZY_SECTION)}>
         <div className="relative overflow-hidden rounded-4xl bg-primary px-6 py-14 text-center text-primary-foreground md:px-12">
           <div
             aria-hidden

@@ -29,6 +29,14 @@ import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import sildenafilPhoto from "@/assets/treatments/sildenafil-oral-tablets-bottle.webp";
 import { FAQ_ITEMS } from "./shared";
 import type { LandingVariant } from "../types";
+import { cn } from "@/lib/utils";
+
+/**
+ * Below-the-fold sections skip layout and paint until they near the viewport
+ * (CSS content-visibility). Keeps them in the DOM for SEO and anchor links.
+ */
+const LAZY_SECTION =
+  "[content-visibility:auto] [contain-intrinsic-size:auto_640px]";
 
 /**
  * Boston paid-search landing page (2026-09-27) - Google Ads keyword ->
@@ -254,7 +262,7 @@ function SildenafilBostonControl() {
         showCareFollowUpNote
       />
 
-      <Section className="pt-0">
+      <Section className={cn("pt-0", LAZY_SECTION)}>
         <SurfaceCard>
           <h3 className="text-lg font-semibold text-foreground">
             Who may be eligible
@@ -278,7 +286,7 @@ function SildenafilBostonControl() {
         </SurfaceCard>
       </Section>
 
-      <Section className="bg-muted/40 pt-0">
+      <Section className={cn("bg-muted/40 pt-0", LAZY_SECTION)}>
         <SectionHeading
           align="left"
           title="Safety and important information"
@@ -333,9 +341,12 @@ function SildenafilBostonControl() {
         </div>
       </Section>
 
-      <MedicalTeamSection className="pt-0" />
+      <MedicalTeamSection className={cn("pt-0", LAZY_SECTION)} />
 
-      <Section id="faq" className="scroll-mt-20 bg-muted/40 pt-0">
+      <Section
+        id="faq"
+        className={cn("scroll-mt-20 bg-muted/40 pt-0", LAZY_SECTION)}
+      >
         <SectionHeading
           align="left"
           title="Frequently asked questions"
@@ -356,7 +367,7 @@ function SildenafilBostonControl() {
         </div>
       </Section>
 
-      <Section className="pt-0">
+      <Section className={cn("pt-0", LAZY_SECTION)}>
         <div className="relative overflow-hidden rounded-4xl bg-primary px-6 py-14 text-center text-primary-foreground md:px-12">
           <div
             aria-hidden
