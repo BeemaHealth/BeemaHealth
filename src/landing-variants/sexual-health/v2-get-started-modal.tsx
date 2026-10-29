@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   CheckCircle2,
+  Info,
   MapPin,
   Pill,
   Star,
@@ -23,6 +24,8 @@ import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import { GOOGLE_RATING_VALUE } from "@/lib/google-business";
+import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
+import { cn } from "@/lib/utils";
 import { formatUsd } from "@/lib/medication-pricing";
 import {
   COMPOUNDED_ED_MINTS_REQUIRED,
@@ -78,6 +81,13 @@ const FAQ_ITEMS = SEXUAL_HEALTH_FAQ.map((item) =>
 );
 
 const H1 = "Private online ED treatment for men";
+
+/**
+ * Below-the-fold sections skip layout and paint until they near the viewport
+ * (CSS content-visibility). Keeps them in the DOM for SEO and anchor links.
+ */
+const LAZY_SECTION =
+  "[content-visibility:auto] [contain-intrinsic-size:auto_640px]";
 
 /** ~300 characters: benefit first, one feature, true urgency (free to start). */
 const HERO_LEAD =
@@ -218,7 +228,7 @@ function IncludedCallout({
 
 function GoogleRatingLine() {
   return (
-    <span className="inline-flex items-center gap-1.5 font-semibold text-foreground">
+    <span className="inline-flex flex-col items-center gap-1 font-semibold text-foreground lg:flex-row lg:gap-1.5">
       <span aria-hidden className="flex gap-0.5">
         {Array.from({ length: 5 }, (_, i) => (
           <Star key={i} className="size-4 fill-primary stroke-primary" />
@@ -284,6 +294,8 @@ function SexualHealthGetStartedModal() {
                 <h1 className="text-balance text-[1.7rem] font-bold leading-[1.1] tracking-tight text-foreground sm:text-4xl md:text-5xl">
                   {H1}
                 </h1>
+                {/* Desktop seal beside the heading; mobile gets it in the trust row below. */}
+                <LegitScriptSeal className="hidden w-20 lg:inline-block [&_img]:h-auto [&_img]:w-full" />
                 {/* Small clarity shot so the products are visible on a phone without scrolling. */}
                 <div
                   aria-hidden
@@ -320,9 +332,13 @@ function SexualHealthGetStartedModal() {
                 </Button>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
-                <GoogleRatingLine />
-                <span className="text-muted-foreground">
+              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
+                {/* Mobile: seal and Google rating share the row as equal halves. Desktop: seal sits by the heading, so this wrapper collapses. */}
+                <div className="grid w-full grid-cols-2 items-center gap-3 lg:contents">
+                  <LegitScriptSeal className="w-[73px] justify-self-center lg:hidden [&_img]:h-auto [&_img]:w-full" />
+                  <GoogleRatingLine />
+                </div>
+                <span className="w-full text-center text-muted-foreground lg:w-auto lg:text-left">
                   You won&apos;t be charged anything if you&apos;re not
                   prescribed
                 </span>
@@ -387,7 +403,10 @@ function SexualHealthGetStartedModal() {
 
       {/* 3. Founder and patient story. */}
       {PATIENT_STORY_YOUTUBE_ID ? (
-        <Section id="our-story" className="scroll-mt-20 bg-muted/40">
+        <Section
+          id="our-story"
+          className={cn("scroll-mt-20 bg-muted/40", LAZY_SECTION)}
+        >
           <div className="grid items-center gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
             <motion.div {...reveal}>
               <h2 className="text-balance text-3xl font-bold text-foreground md:text-4xl">
@@ -405,11 +424,39 @@ function SexualHealthGetStartedModal() {
             </motion.div>
             <motion.div {...reveal}>
               <PatientStoryVideo videoId={PATIENT_STORY_YOUTUBE_ID} />
-              <p className="mt-3 text-pretty text-xs leading-relaxed text-muted-foreground">
-                Results vary and are not typical or guaranteed. Treatment
-                depends on a licensed provider&apos;s review of your health
-                history.
-              </p>
+              <div
+                role="note"
+                className="mt-4 flex items-start gap-3 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-xs leading-snug text-muted-foreground"
+              >
+                <Info
+                  className="mt-0.5 size-3.5 shrink-0 text-trust"
+                  aria-hidden
+                />
+                <div className="space-y-2 text-pretty">
+                  <p>
+                    Individual stories are not typical, and results vary. Weight
+                    and blood sugar changes described in the video are one
+                    person&apos;s experience and are not guaranteed.
+                  </p>
+                  <p>
+                    For context, in trials of FDA-approved tirzepatide, average
+                    weight loss was up to about 20.9% at the highest studied
+                    dose at 72 weeks. Compounded medications are not
+                    FDA-approved and were not the products studied in those
+                    trials.
+                  </p>
+                  <p>
+                    Any change in blood sugar or prediabetes status described in
+                    the video is one person&apos;s experience. The FDA has not
+                    approved tirzepatide to treat, prevent, or reverse
+                    prediabetes, and we make no claim that it does.
+                  </p>
+                  <p>
+                    Treatment depends on a licensed provider&apos;s review of
+                    your health history. Prescribing is never guaranteed.
+                  </p>
+                </div>
+              </div>
               <Button
                 type="button"
                 size="xl"
@@ -513,7 +560,15 @@ function SexualHealthGetStartedModal() {
           <p>
             All prices are cash-pay when prescribed, with no membership fee and
             no insurance billed. Your provider decides the medication and dose;
-            prescribing is never guaranteed.
+            prescribing is never guaranteed. Product images are illustrative.
+            See our{" "}
+            <Link
+              to="/legal/refund/"
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              cancellation and refund policy
+            </Link>
+            .
           </p>
           <p>{GENERIC_TADALAFIL_REQUIRED}</p>
           <p>{GENERIC_SILDENAFIL_REQUIRED}</p>
@@ -570,7 +625,7 @@ function SexualHealthGetStartedModal() {
           </div>
           <figcaption className="mt-6 text-center text-xs leading-relaxed text-muted-foreground">
             Included when prescribed. Prescribing is up to your provider and is
-            never guaranteed. Cash-pay only.
+            never guaranteed. Cash-pay only. Product images are illustrative.
           </figcaption>
         </motion.figure>
       </Section>
@@ -602,7 +657,7 @@ function SexualHealthGetStartedModal() {
       </Section>
 
       {/* 8. Who it is for, and where. */}
-      <Section className="bg-muted/40 py-14 md:py-20">
+      <Section className={cn("bg-muted/40 py-14 md:py-20", LAZY_SECTION)}>
         <motion.div
           {...reveal}
           className="mx-auto flex max-w-3xl flex-col gap-4 sm:flex-row sm:items-start"
@@ -635,10 +690,10 @@ function SexualHealthGetStartedModal() {
       </Section>
 
       {/* Team media license: no CTA or pricing adjacent, so keep this section standalone. */}
-      <MedicalTeamSection />
+      <MedicalTeamSection className={LAZY_SECTION} />
 
       {/* 9. FAQ (same items as the page's FAQ structured data). */}
-      <Section>
+      <Section className={LAZY_SECTION}>
         <SectionHeading
           title="ED treatment, pricing, and getting started"
           description="Straight answers about how online ED care works with Beema Health."
@@ -649,7 +704,7 @@ function SexualHealthGetStartedModal() {
       </Section>
 
       {/* 10. Final CTA. */}
-      <Section className="pt-0">
+      <Section className={cn("pt-0", LAZY_SECTION)}>
         <div className="rounded-4xl bg-primary px-6 py-12 text-center text-primary-foreground md:px-12 md:py-16">
           <h2 className="text-balance text-3xl font-bold md:text-4xl">
             Ready to see if ED treatment is right for you?
