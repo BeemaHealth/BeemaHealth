@@ -3,29 +3,29 @@
 // Only live variants are imported, so drafts and paused variants never ship.
 import type { ExperimentConfig } from "./types";
 import { variant as edV0 } from "./ed/v1-control";
-import { variant as edMintsV0 } from "./ed-mints/v1-control";
+import { variant as edMintsV0 } from "./ed-mints/v3-new-layout";
 import { variant as edMintsBostonV0 } from "./ed-mints-boston/v3-new-layout";
-import { variant as glp1V0 } from "./glp-1/v1-control";
+import { variant as glp1V0 } from "./glp-1/v3-new-layout";
 import { variant as glp1HoustonV0 } from "./glp-1-houston/v3-testing-new-principles";
 import { variant as hairLossV0 } from "./hair-loss/v1-control";
-import { variant as hairLossSprayMenV0 } from "./hair-loss-spray-men/v1-control";
-import { variant as hairLossSprayWomenV0 } from "./hair-loss-spray-women/v1-control";
+import { variant as hairLossSprayMenV0 } from "./hair-loss-spray-men/v3-new-layout";
+import { variant as hairLossSprayWomenV0 } from "./hair-loss-spray-women/v3-new-layout";
 import { variant as homeV0 } from "./home/v1-control";
-import { variant as nadPlusV0 } from "./nad-plus/v1-control";
-import { variant as oralFinasterideV0 } from "./oral-finasteride/v1-control";
-import { variant as oralMinoxidilMenV0 } from "./oral-minoxidil-men/v1-control";
-import { variant as oralMinoxidilWomenV0 } from "./oral-minoxidil-women/v1-control";
-import { variant as semaglutideV0 } from "./semaglutide/v1-control";
+import { variant as nadPlusV0 } from "./nad-plus/v3-new-layout";
+import { variant as oralFinasterideV0 } from "./oral-finasteride/v3-new-layout";
+import { variant as oralMinoxidilMenV0 } from "./oral-minoxidil-men/v3-new-layout";
+import { variant as oralMinoxidilWomenV0 } from "./oral-minoxidil-women/v3-new-layout";
+import { variant as semaglutideV0 } from "./semaglutide/v3-new-layout";
 import { variant as semaglutideHoustonV0 } from "./semaglutide-houston/v3-new-layout";
-import { variant as sermorelinV0 } from "./sermorelin/v1-control";
+import { variant as sermorelinV0 } from "./sermorelin/v3-new-layout";
 import { variant as sexualHealthV0 } from "./sexual-health/v2-get-started-modal";
-import { variant as sildenafilV0 } from "./sildenafil/v1-control";
+import { variant as sildenafilV0 } from "./sildenafil/v3-new-layout";
 import { variant as sildenafilBostonV0 } from "./sildenafil-boston/v3-new-layout";
-import { variant as tadalafilV0 } from "./tadalafil/v1-control";
+import { variant as tadalafilV0 } from "./tadalafil/v3-new-layout";
 import { variant as tadalafilBostonV0 } from "./tadalafil-boston/v3-new-layout";
 import { variant as tirzepatideV0 } from "./tirzepatide/v3-new-layout";
 import { variant as tirzepatideHoustonV0 } from "./tirzepatide-houston/v3-new-layout";
-import { variant as weightLossV0 } from "./weight-loss/v1-control";
+import { variant as weightLossV0 } from "./weight-loss/v3-new-layout";
 
 export const EXPERIMENTS = {
   ed: {

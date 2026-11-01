@@ -222,9 +222,11 @@ function Glp1HoustonVariantB() {
 
               <div className="mt-6 grid grid-cols-2 gap-3">
                 {priceTiles.map((tile) => (
-                  <div
+                  <a
                     key={tile.name}
-                    className="rounded-2xl border border-border bg-card p-4 shadow-soft"
+                    href="#cash-pricing"
+                    aria-label={`${tile.name}, ${tile.price} ${tile.unit}. See pricing and get started`}
+                    className="block rounded-2xl border border-border bg-card p-4 shadow-soft transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <p className="text-xs font-semibold text-muted-foreground md:text-sm">
                       {tile.name}
@@ -235,7 +237,7 @@ function Glp1HoustonVariantB() {
                     <p className="text-xs text-muted-foreground md:text-sm">
                       {tile.unit}
                     </p>
-                  </div>
+                  </a>
                 ))}
               </div>
 
@@ -390,7 +392,7 @@ function Glp1HoustonVariantB() {
         </div>
       </Section>
 
-      <Section id="cash-pricing">
+      <Section id="cash-pricing" className="scroll-mt-20">
         <motion.div {...reveal}>
           <SectionHeading
             title="GLP-1 weight-loss pricing in Houston"

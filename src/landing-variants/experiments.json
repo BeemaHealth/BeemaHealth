@@ -122,12 +122,12 @@
     "experimentId": "semaglutide-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
-      },
-      "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -148,12 +148,12 @@
     "experimentId": "sildenafil-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
-      },
-      "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -161,12 +161,12 @@
     "experimentId": "tadalafil-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
-      },
-      "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -174,12 +174,12 @@
     "experimentId": "ed-mints-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
-      },
-      "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -187,12 +187,12 @@
     "experimentId": "hair-loss-spray-men-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
-      },
-      "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -200,12 +200,12 @@
     "experimentId": "hair-loss-spray-women-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
-      },
-      "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -213,12 +213,12 @@
     "experimentId": "oral-finasteride-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
-      },
-      "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -226,12 +226,12 @@
     "experimentId": "oral-minoxidil-men-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
-      },
-      "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -239,12 +239,12 @@
     "experimentId": "oral-minoxidil-women-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
-      },
-      "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -252,12 +252,12 @@
     "experimentId": "nad-plus-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
-      },
-      "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -265,12 +265,12 @@
     "experimentId": "sermorelin-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
-      },
-      "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -287,6 +287,10 @@
     "experimentId": "weight-loss-e1",
     "variants": {
       "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v3-new-layout": {
         "status": "live",
         "weight": 100
       }
@@ -296,6 +300,10 @@
     "experimentId": "glp-1-e1",
     "variants": {
       "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v3-new-layout": {
         "status": "live",
         "weight": 100
       }

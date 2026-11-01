@@ -9,7 +9,9 @@ import unbrandedTirzepatide from "@/assets/treatments/unbranded-tirzepatide-vial
  * ---------------------------------------------------------------------
  * During LegitScript review we shipped colour product photography without
  * a brand name/logo on the vial. Certification is complete (August 2026);
- * the site now ships branded Beema Health-wordmark vials. Unbranded shots remain
+ * the site now ships branded vials. As of 2026-11-01 the branded set is the
+ * "Compounded Injection" vial-and-syringe renders (label states compounded,
+ * sterile injectable, Rx only), no Beema Health wordmark. Unbranded shots remain
  * imported so flipping `VIAL_IMAGERY_MODE` back to `"unbranded"` is still
  * a one-line edit.
  *
@@ -70,7 +72,7 @@ const IMAGERY: Record<VialImageryMode, Record<MedicationId, VialImagery>> = {
       src: brandedSemaglutide,
       width: 1024,
       height: 1280,
-      alt: "Beema Health compounded semaglutide sterile injectable vial",
+      alt: "Compounded semaglutide injection vial and syringe, labeled sterile injectable, Rx only",
       // Portrait cutout in a letterbox crop: bias upward so the cap stays in.
       wideCropClass: "object-[center_40%]",
     },
@@ -78,7 +80,7 @@ const IMAGERY: Record<VialImageryMode, Record<MedicationId, VialImagery>> = {
       src: brandedTirzepatide,
       width: 1024,
       height: 1280,
-      alt: "Beema Health compounded tirzepatide sterile injectable vial",
+      alt: "Compounded tirzepatide injection vial and syringe, labeled sterile injectable, Rx only",
       wideCropClass: "object-[center_40%]",
     },
   },

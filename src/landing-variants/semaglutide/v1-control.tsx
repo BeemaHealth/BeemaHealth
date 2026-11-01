@@ -188,22 +188,22 @@ function SemaglutideControl() {
         >
           <SectionHeading
             align="left"
-            title="What is semaglutide?"
+            title="What is compounded semaglutide?"
             className="mx-0 max-w-2xl"
           />
         </motion.div>
         <div className="mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-muted-foreground">
           <p>
-            Semaglutide helps you feel full sooner and stay full longer, by
-            slowing down how fast food leaves your stomach. When you feel full
-            longer, it's easier to eat less without feeling hungry all the time.
-            Eating less, over time, can lead to weight loss.
+            Compounded semaglutide helps you feel full sooner and stay full
+            longer, by slowing down how fast food leaves your stomach. When you
+            feel full longer, it's easier to eat less without feeling hungry all
+            the time. Eating less, over time, can lead to weight loss.
           </p>
           <p>
-            Semaglutide is a GLP-1 medication used in medical weight-management
-            care. Like tirzepatide, it comes in an FDA-approved branded form
-            and, separately, as a compounded version made by a licensed
-            compounding pharmacy.
+            Compounded semaglutide is a GLP-1 medication used in medical
+            weight-management care, made by a licensed compounding pharmacy.
+            Semaglutide also comes in an FDA-approved branded form, which is a
+            separate product.
           </p>
           <p>
             Compounded semaglutide is a different product from the branded
@@ -213,7 +213,7 @@ function SemaglutideControl() {
             individually.
           </p>
           <p>
-            Not sure semaglutide is the right fit? Learn about our{" "}
+            Not sure compounded semaglutide is the right fit? Learn about our{" "}
             <Link to="/weight-loss/" className="text-primary underline">
               weight-loss program
             </Link>{" "}
@@ -245,7 +245,7 @@ function SemaglutideControl() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema Health's semaglutide care works"
+        title="How Beema Health's compounded semaglutide care works"
         showCareFollowUpNote
       />
 
@@ -262,9 +262,9 @@ function SemaglutideControl() {
                 Who may be eligible
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Not everyone qualifies for semaglutide. Your provider weighs
-                BMI, health history, current medications, and applicable state
-                law before making an independent decision.
+                Not everyone qualifies for compounded semaglutide. Your provider
+                weighs BMI, health history, current medications, and applicable
+                state law before making an independent decision.
               </p>
               <ul className="mt-5 space-y-2">
                 {ELIGIBILITY_POINTS.map((t) => (
@@ -313,9 +313,9 @@ function SemaglutideControl() {
                   Prescription medical care
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Semaglutide is a prescription medication and isn't appropriate
-                  for everyone. Compounded semaglutide is not FDA-approved and
-                  is considered only when legally available and clinically
+                  Compounded semaglutide is a prescription medication and isn't
+                  appropriate for everyone. It is not FDA-approved and is
+                  considered only when legally available and clinically
                   appropriate. It should not be assumed identical to branded
                   semaglutide.
                 </p>
@@ -364,7 +364,7 @@ function SemaglutideControl() {
       <Section className="pt-0">
         <SectionHeading
           align="left"
-          title="Semaglutide vs. tirzepatide"
+          title="Compounded semaglutide vs. compounded tirzepatide"
           description="Both are GLP-1 medications used in medical weight-management care. Neither is universally better, your provider decides what's appropriate for you."
           className="mx-0 max-w-2xl"
         />

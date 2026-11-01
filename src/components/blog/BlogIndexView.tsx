@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { BlogSubmitSection } from "@/components/blog/BlogSubmitSection";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { blogArticlePath, formatBlogDate } from "@/content/blog/paths";
 import type { BlogArticle } from "@/content/blog/types";
@@ -67,6 +68,8 @@ export function BlogIndexView({
           )}
         </div>
       </section>
+
+      <BlogSubmitSection />
     </MarketingLayout>
   );
 }

@@ -277,9 +277,11 @@ export function HeroSection({
                   )}
                 >
                   {tiles.map((tile) => (
-                    <div
+                    <a
                       key={tile.name}
-                      className="rounded-2xl border border-border bg-card p-4 shadow-soft"
+                      href="#pricing"
+                      aria-label={`${tile.name}, ${tile.price} ${tile.unit}. See pricing and get started`}
+                      className="block rounded-2xl border border-border bg-card p-4 shadow-soft transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <p className="text-xs font-semibold text-muted-foreground md:text-sm">
                         {tile.name}
@@ -300,7 +302,7 @@ export function HeroSection({
                           {tile.note}
                         </p>
                       ) : null}
-                    </div>
+                    </a>
                   ))}
                 </div>
               </>

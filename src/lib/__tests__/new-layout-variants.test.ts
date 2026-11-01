@@ -41,6 +41,7 @@ describe("new-layout (shared template) variants", () => {
       [
         "ed-mints",
         "ed-mints-boston",
+        "glp-1",
         "hair-loss-spray-men",
         "hair-loss-spray-women",
         "nad-plus",
@@ -56,12 +57,14 @@ describe("new-layout (shared template) variants", () => {
         "tadalafil-boston",
         "tirzepatide",
         "tirzepatide-houston",
+        "weight-loss",
       ].sort(),
     );
   });
 
   const NATIONWIDE_PRODUCT_PAGES = [
     "ed-mints",
+    "glp-1",
     "hair-loss-spray-men",
     "hair-loss-spray-women",
     "nad-plus",

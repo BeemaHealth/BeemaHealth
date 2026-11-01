@@ -1,7 +1,20 @@
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ChevronDown, Hexagon, Phone } from "lucide-react";
+import {
+  BookOpen,
+  Calculator,
+  ChevronDown,
+  CircleHelp,
+  Hexagon,
+  Info,
+  Mail,
+  Newspaper,
+  Phone,
+  Route as RouteIcon,
+  Salad,
+  type LucideIcon,
+} from "lucide-react";
 import { Logo, HeaderLogo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { CircleRevealMenu } from "@/components/site/CircleRevealMenu";
@@ -14,7 +27,13 @@ import { RECIPES_COUNT } from "@/lib/recipes-meta";
 import { SOCIAL_LINKS } from "@/lib/social-links";
 import { cn } from "@/lib/utils";
 
-type NavItem = { label: string; to: string; description?: string };
+type NavItem = {
+  label: string;
+  to: string;
+  description?: string;
+  /** Optional leading icon - only rendered in sectioned panels. */
+  icon?: LucideIcon;
+};
 /** Two-column grouping for a dropdown (e.g. Hair's For Men / For Women). */
 type NavSection = { heading: string; items: readonly NavItem[] };
 
@@ -140,30 +159,65 @@ const WELLNESS_ITEMS: NavItem[] = [
  * not compete with Hive (the patient portal at hive.beemahealth.com). Add
  * new no-account resource hubs here and in SiteFooter COLUMNS.
  */
-const MORE_ITEMS: NavItem[] = [
+const MORE_SECTIONS: NavSection[] = [
   {
-    label: "How it works",
-    to: "/how-it-works/",
-    description: "Intake, review, and delivery",
+    heading: "Explore",
+    items: [
+      {
+        label: "Blog",
+        to: "/blogs/",
+        description: "Articles and reader submissions",
+        icon: Newspaper,
+      },
+      {
+        label: "Learn",
+        to: "/learn/",
+        description: "GLP-1 and hormone education",
+        icon: BookOpen,
+      },
+      {
+        label: "Recipes",
+        to: "/recipes/",
+        description: `${RECIPES_COUNT} meals for changing appetites`,
+        icon: Salad,
+      },
+      {
+        label: "Tools",
+        to: "/tools/",
+        description: "BMI calculator and peptide quiz",
+        icon: Calculator,
+      },
+    ],
   },
   {
-    label: "Recipes",
-    to: "/recipes/",
-    description: `${RECIPES_COUNT} meals for changing appetites`,
+    heading: "Company",
+    items: [
+      {
+        label: "How it works",
+        to: "/how-it-works/",
+        description: "Intake, review, and delivery",
+        icon: RouteIcon,
+      },
+      {
+        label: "About us",
+        to: "/about/",
+        description: "Who we are",
+        icon: Info,
+      },
+      {
+        label: "FAQ",
+        to: "/faq/",
+        description: "Quick answers",
+        icon: CircleHelp,
+      },
+      {
+        label: "Contact us",
+        to: "/contact/",
+        description: "Call, text, or email",
+        icon: Mail,
+      },
+    ],
   },
-  {
-    label: "Learn",
-    to: "/learn/",
-    description: "GLP-1 and hormone education",
-  },
-  {
-    label: "Tools",
-    to: "/tools/",
-    description: "BMI calculator and peptide quiz",
-  },
-  { label: "About us", to: "/about/" },
-  { label: "FAQ", to: "/faq/" },
-  { label: "Contact us", to: "/contact/" },
 ];
 
 /**
@@ -256,7 +310,7 @@ function DesktopNav() {
     },
     { id: "hair", label: "Hair Loss", sections: HAIR_SECTIONS },
     { id: "wellness", label: "Wellness", items: WELLNESS_ITEMS },
-    { id: "more", label: "More", items: MORE_ITEMS },
+    { id: "more", label: "More", sections: MORE_SECTIONS },
   ] as const;
 
   return (
@@ -322,6 +376,9 @@ function DesktopNavDropdown({
 }) {
   const flatItems = items ?? [];
   const hasDescriptions = flatItems.some((item) => item.description);
+  const hasSectionDescriptions = (sections ?? []).some((section) =>
+    section.items.some((item) => item.description),
+  );
   const menuId = `${id}-menu`;
 
   return (
@@ -366,7 +423,9 @@ function DesktopNavDropdown({
               "absolute left-0 top-full z-50 pt-2",
               sections
                 ? sections.length > 1
-                  ? "min-w-[24rem]"
+                  ? hasSectionDescriptions
+                    ? "min-w-[34rem]"
+                    : "min-w-[24rem]"
                   : "min-w-[14rem]"
                 : hasDescriptions
                   ? "min-w-[16rem]"
@@ -391,10 +450,29 @@ function DesktopNavDropdown({
                           key={item.label}
                           to={item.to}
                           role="menuitem"
-                          className="block whitespace-nowrap rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent"
+                          className={cn(
+                            "rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent",
+                            item.icon || item.description
+                              ? "flex items-start gap-3"
+                              : "block whitespace-nowrap",
+                          )}
                           onClick={onToggle}
                         >
-                          {item.label}
+                          {item.icon ? (
+                            <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+                              <item.icon className="size-4" aria-hidden />
+                            </span>
+                          ) : null}
+                          <span className="block">
+                            <span className="block font-medium">
+                              {item.label}
+                            </span>
+                            {item.description ? (
+                              <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+                                {item.description}
+                              </span>
+                            ) : null}
+                          </span>
                         </Link>
                       ))}
                     </div>
@@ -703,7 +781,7 @@ export function SiteHeader() {
               />
               <MobileNavDropdown
                 label="More"
-                items={MORE_ITEMS}
+                sections={MORE_SECTIONS}
                 onNavigate={() => setOpen(false)}
               />
               {NAV.map((item) => (

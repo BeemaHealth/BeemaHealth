@@ -750,6 +750,36 @@
       "whyTested": "",
       "expected": "",
       "notes": ""
+    },
+    {
+      "id": "v3-new-layout",
+      "pageId": "weight-loss",
+      "name": "New layout (shared template)",
+      "description": "Draft copy of Control. Edit it, preview locally, then make it main.",
+      "componentPath": "src/landing-variants/weight-loss/v3-new-layout.tsx",
+      "createdAt": "2026-11-01T23:20:21.831Z",
+      "status": "draft",
+      "parentId": "v1-control",
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
+    },
+    {
+      "id": "v3-new-layout",
+      "pageId": "glp-1",
+      "name": "New layout (nationwide)",
+      "description": "Draft copy of Control. Edit it, preview locally, then make it main.",
+      "componentPath": "src/landing-variants/glp-1/v3-new-layout.tsx",
+      "createdAt": "2026-11-01T23:20:21.831Z",
+      "status": "draft",
+      "parentId": "v1-control",
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
     }
   ],
   "deployments": [

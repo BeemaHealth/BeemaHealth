@@ -53,11 +53,11 @@ const MEDICATION_PICKER: Record<
   { label: string; pricing: CompoundedMedicationPricing }
 > = {
   semaglutide: {
-    label: "Semaglutide",
+    label: "Compounded semaglutide",
     pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
   },
   tirzepatide: {
-    label: "Tirzepatide",
+    label: "Compounded tirzepatide",
     pricing: COMPOUNDED_TIRZEPATIDE_PRICING,
   },
 };
@@ -205,7 +205,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
           <div
             role="tablist"
             aria-label="Choose a medication"
-            className="inline-flex gap-1.5 rounded-full bg-muted p-1.5"
+            className="flex w-full max-w-md gap-1.5 rounded-full bg-muted p-1.5"
           >
             {(Object.keys(MEDICATION_PICKER) as MedicationId[]).map((id) => (
               <button
@@ -215,7 +215,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
                 aria-selected={selectedMedication === id}
                 onClick={() => setSelectedMedication(id)}
                 className={cn(
-                  "min-h-11 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "min-h-11 flex-1 rounded-full px-4 py-2.5 text-center text-sm font-semibold leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   selectedMedication === id
                     ? "bg-primary text-primary-foreground shadow-soft"
                     : "text-muted-foreground hover:text-foreground",

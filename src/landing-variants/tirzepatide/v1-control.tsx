@@ -190,22 +190,23 @@ function TirzepatideControl() {
         >
           <SectionHeading
             align="left"
-            title="What is tirzepatide?"
+            title="What is compounded tirzepatide?"
             className="mx-0 max-w-2xl"
           />
         </motion.div>
         <div className="mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-muted-foreground">
           <p>
-            Tirzepatide helps you feel full sooner and stay full longer, and it
-            may also help your body respond better to the food you eat. When you
-            feel full longer, it's easier to eat less without feeling hungry all
-            the time. Eating less, over time, can lead to weight loss.
+            Compounded tirzepatide helps you feel full sooner and stay full
+            longer, and it may also help your body respond better to the food
+            you eat. When you feel full longer, it's easier to eat less without
+            feeling hungry all the time. Eating less, over time, can lead to
+            weight loss.
           </p>
           <p>
-            Tirzepatide is a GLP-1/GIP medication used in medical
-            weight-management care. It's available both as an FDA-approved
-            branded medication and, separately, as a compounded version prepared
-            by a licensed compounding pharmacy.
+            Compounded tirzepatide is a GLP-1/GIP medication used in medical
+            weight-management care, prepared by a licensed compounding pharmacy.
+            Tirzepatide is also available as an FDA-approved branded medication,
+            which is a separate product.
           </p>
           <p>
             Compounded tirzepatide is not the same product as the branded
@@ -215,7 +216,7 @@ function TirzepatideControl() {
             part of your care.
           </p>
           <p>
-            Not sure tirzepatide is the right fit? Learn about our{" "}
+            Not sure compounded tirzepatide is the right fit? Learn about our{" "}
             <Link to="/weight-loss/" className="text-primary underline">
               weight-loss program
             </Link>{" "}
@@ -247,7 +248,7 @@ function TirzepatideControl() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema Health's tirzepatide care works"
+        title="How Beema Health's compounded tirzepatide care works"
         showCareFollowUpNote
       />
 
@@ -315,11 +316,10 @@ function TirzepatideControl() {
                   Prescription medical care
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Tirzepatide is a prescription medication and is not
-                  appropriate for everyone. Compounded tirzepatide is not
-                  FDA-approved and is considered only when legally available and
-                  clinically appropriate. It is not identical to branded
-                  tirzepatide.
+                  Compounded tirzepatide is a prescription medication and is not
+                  appropriate for everyone. It is not FDA-approved and is
+                  considered only when legally available and clinically
+                  appropriate. It is not identical to branded tirzepatide.
                 </p>
               </div>
             </div>
@@ -359,7 +359,7 @@ function TirzepatideControl() {
       <Section className="pt-0">
         <SectionHeading
           align="left"
-          title="Tirzepatide vs. semaglutide"
+          title="Compounded tirzepatide vs. compounded semaglutide"
           description="Both are GLP-1 medications used in medical weight-management care. Neither is universally better, appropriateness is an individual clinical decision."
           className="mx-0 max-w-2xl"
         />
