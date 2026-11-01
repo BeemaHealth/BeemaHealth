@@ -155,3 +155,37 @@ export function syncWithDisk(
   }
   return changed;
 }
+
+/**
+ * A page that has a control file but no go-live record yet (a page newly moved
+ * onto the variant system) is recorded as running its control since before
+ * tracking began, but only when the code serves that control (`mainOf`).
+ * Pages whose live variant is something else are left for Matt to set. Returns
+ * true if changed.
+ */
+export function backfillBaselines(
+  data: LabData,
+  pageIds: string[],
+  mainOf: (pageId: string) => string | null,
+  sinceUtc: string,
+): boolean {
+  let changed = false;
+  for (const pageId of pageIds) {
+    if (data.deployments.some((d) => d.pageId === pageId)) continue;
+    const hasControl = data.variants.some(
+      (v) => v.pageId === pageId && v.id === "v1-control",
+    );
+    if (!hasControl || mainOf(pageId) !== "v1-control") continue;
+    data.deployments.push({
+      id: `d0-${pageId}`,
+      pageId,
+      variantId: "v1-control",
+      startUtc: sinceUtc,
+      endUtc: null,
+      confirmed: true,
+      notes: "Initial version (variant 0), live before tracking began.",
+    });
+    changed = true;
+  }
+  return changed;
+}

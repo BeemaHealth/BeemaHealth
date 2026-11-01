@@ -135,12 +135,187 @@
     "experimentId": "tirzepatide-e1",
     "variants": {
       "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
+      }
+    }
+  },
+  "sildenafil": {
+    "experimentId": "sildenafil-e1",
+    "variants": {
+      "v1-control": {
         "status": "live",
         "weight": 100
       },
       "v3-new-layout": {
         "status": "draft",
         "weight": 0
+      }
+    }
+  },
+  "tadalafil": {
+    "experimentId": "tadalafil-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "ed-mints": {
+    "experimentId": "ed-mints-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "hair-loss-spray-men": {
+    "experimentId": "hair-loss-spray-men-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "hair-loss-spray-women": {
+    "experimentId": "hair-loss-spray-women-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "oral-finasteride": {
+    "experimentId": "oral-finasteride-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "oral-minoxidil-men": {
+    "experimentId": "oral-minoxidil-men-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "oral-minoxidil-women": {
+    "experimentId": "oral-minoxidil-women-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "nad-plus": {
+    "experimentId": "nad-plus-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "sermorelin": {
+    "experimentId": "sermorelin-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "home": {
+    "experimentId": "home-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      }
+    }
+  },
+  "weight-loss": {
+    "experimentId": "weight-loss-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      }
+    }
+  },
+  "glp-1": {
+    "experimentId": "glp-1-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      }
+    }
+  },
+  "ed": {
+    "experimentId": "ed-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      }
+    }
+  },
+  "hair-loss": {
+    "experimentId": "hair-loss-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
       }
     }
   }

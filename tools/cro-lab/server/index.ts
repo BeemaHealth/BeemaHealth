@@ -21,7 +21,8 @@ import {
   DEMO_TRACKING_START,
 } from "./demo.ts";
 import { seedLive } from "./seed-live.ts";
-import { getLive } from "./ga4.ts";
+import { RANGE_START, getLive } from "./ga4.ts";
+import { denverDayStartMs } from "../shared/time.ts";
 import {
   mainVariantId,
   readExperiments,
@@ -32,6 +33,7 @@ import { StagingDeployer, scriptRunner } from "./staging.ts";
 import {
   duplicateVariantFile,
   nextVariantId,
+  backfillBaselines,
   syncWithDisk,
 } from "./variants.ts";
 
@@ -67,7 +69,15 @@ const staging = new StagingDeployer(
   currentMains,
 );
 // Pick up variant files created outside the dashboard (e.g. by Claude Code).
-stores.live.update((d) => void syncWithDisk(d, repoRoot, PAGE_IDS));
+stores.live.update((d) => {
+  syncWithDisk(d, repoRoot, PAGE_IDS);
+  backfillBaselines(
+    d,
+    PAGE_IDS,
+    (id) => currentMains()[id] ?? null,
+    new Date(denverDayStartMs(RANGE_START)).toISOString(),
+  );
+});
 
 class HttpError extends Error {
   status: number;

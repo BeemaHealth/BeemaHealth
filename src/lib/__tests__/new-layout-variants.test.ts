@@ -35,19 +35,52 @@ async function render(variant: LandingVariant): Promise<string> {
 describe("new-layout (shared template) variants", () => {
   const entries = Object.entries(modules);
 
-  it("exists for the seven Houston, Boston and nationwide pages", () => {
+  it("exists for every landing and product page that has a new layout", () => {
     const pages = entries.map(([p]) => p.split("/").at(-2)).sort();
     expect(pages).toEqual(
       [
+        "ed-mints",
         "ed-mints-boston",
+        "hair-loss-spray-men",
+        "hair-loss-spray-women",
+        "nad-plus",
+        "oral-finasteride",
+        "oral-minoxidil-men",
+        "oral-minoxidil-women",
         "semaglutide",
         "semaglutide-houston",
+        "sermorelin",
+        "sildenafil",
         "sildenafil-boston",
+        "tadalafil",
         "tadalafil-boston",
         "tirzepatide",
         "tirzepatide-houston",
       ].sort(),
     );
+  });
+
+  const NATIONWIDE_PRODUCT_PAGES = [
+    "ed-mints",
+    "hair-loss-spray-men",
+    "hair-loss-spray-women",
+    "nad-plus",
+    "oral-finasteride",
+    "oral-minoxidil-men",
+    "oral-minoxidil-women",
+    "sermorelin",
+    "sildenafil",
+    "tadalafil",
+  ];
+
+  it.each(
+    entries.filter(([p]) =>
+      NATIONWIDE_PRODUCT_PAGES.includes(p.split("/").at(-2) ?? ""),
+    ),
+  )("%s has no Boston or Houston copy", async (_p, mod) => {
+    const html = await render(mod.variant);
+    expect(html).not.toContain("Boston");
+    expect(html).not.toContain("Houston");
   });
 
   it.each(entries)("%s renders with the required pieces", async (_p, mod) => {

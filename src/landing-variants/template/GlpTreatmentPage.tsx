@@ -19,6 +19,7 @@ import {
   formatUsd,
   promoFirstMonthUsd,
   semaThreeMonthPromoTotalUsd,
+  starterPackTitle,
 } from "@/lib/medication-pricing";
 import { GOOGLE_RATING_VALUE } from "@/lib/google-business";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
@@ -166,9 +167,9 @@ function heroTile(med: Med): PriceTile {
   }
   const starter = COMPOUNDED_TIRZEPATIDE_PRICING.starterPack;
   return {
-    name: "Tirzepatide",
-    price: starter ? `from ${formatUsd(starter.monthlyEquivalentUsd)}` : "",
-    unit: "per month",
+    name: starter ? `Tirzepatide ${starterPackTitle(starter)}` : "Tirzepatide",
+    price: starter ? formatUsd(starter.monthlyEquivalentUsd) : "",
+    unit: "per month for new patients",
     detail: starter
       ? `${formatUsd(starter.totalUsd)} for ${starter.months} months`
       : null,
@@ -223,6 +224,7 @@ export function GlpTreatmentPage({
           ? {
               videoId: TIRZEPATIDE_STORY_YOUTUBE_ID,
               poster: TIRZEPATIDE_STORY_POSTER,
+              heading: "Patient and founder story",
               disclaimer: "glp1",
             }
           : undefined

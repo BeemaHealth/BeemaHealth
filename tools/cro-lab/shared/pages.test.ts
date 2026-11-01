@@ -52,11 +52,13 @@ test("pageIdFromCtaId ignores sitewide, untracked and empty ids", () => {
     assert.equal(pageIdFromCtaId(cta), null, String(cta));
 });
 
-test("every tracked page id is unique and every product page is analytics-only", () => {
+test("every tracked page id is unique and product pages with variants stay in the product group", () => {
   const ids = TRACKED_PAGES.map((p) => p.id);
   assert.equal(new Set(ids).size, ids.length);
-  assert.ok(PAGES.every((p) => p.group === "landing" && p.variants));
-  assert.ok(PRODUCT_PAGES.every((p) => p.group === "product" && !p.variants));
+  assert.ok(PAGES.every((p) => p.variants));
+  assert.ok(PRODUCT_PAGES.every((p) => p.group === "product"));
+  assert.ok(PRODUCT_PAGES.some((p) => p.id === "home" && p.path === "/"));
+  assert.ok(PAGES.some((p) => p.id === "nad-plus" && p.group === "product"));
   assert.ok(PRODUCT_PAGES.some((p) => p.id === "home" && p.path === "/"));
 });
 

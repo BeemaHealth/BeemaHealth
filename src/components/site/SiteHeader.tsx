@@ -5,6 +5,7 @@ import { ChevronDown, Hexagon, Phone } from "lucide-react";
 import { Logo, HeaderLogo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { CircleRevealMenu } from "@/components/site/CircleRevealMenu";
+import { HideChatWidget } from "@/components/site/HideChatWidget";
 import { EASE_OUT } from "@/components/home/home-motion";
 import { HIVE_LOGIN_URL } from "@/lib/cta-ids";
 import { FIRST_MONTH_PROMO_SHORT } from "@/lib/marketing-copy";
@@ -673,6 +674,7 @@ export function SiteHeader() {
             onOpenChange={setOpen}
             trigger={<HexMenuButton aria-label="Open menu" />}
           >
+            <HideChatWidget />
             <div className="mb-2 mt-8 px-8">
               <span className="inline-flex rounded-lg bg-background px-3 py-2">
                 <HeaderLogo className="h-9" />

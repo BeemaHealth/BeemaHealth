@@ -482,7 +482,7 @@ describe("recipe compliance and SEO markup", () => {
     "utf-8",
   );
   const weightLossRoute = readFileSync(
-    resolve(__dirname, "../../routes/weight-loss.tsx"),
+    resolve(__dirname, "../../landing-variants/weight-loss/v1-control.tsx"),
     "utf-8",
   );
   const howItWorksRoute = readFileSync(

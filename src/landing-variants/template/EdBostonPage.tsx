@@ -82,6 +82,28 @@ const BOSTON_LEAD =
 const BOSTON_FINAL_BODY =
   "Boston patients can complete intake from home. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.";
 
+const NATIONWIDE_LEAD =
+  "Skip the waiting room and the pharmacy counter. Answer a private health questionnaire online and a licensed provider reviews it. If treatment is right for you, your medication ships to your door. Prescribing is never guaranteed.";
+
+const NATIONWIDE_FINAL_BODY =
+  "Complete intake from home. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.";
+
+export type EdMarket = "boston" | "nationwide";
+
+function nationwideBody(what: string) {
+  return (
+    <>
+      <p>
+        Beema Health is available to adults in all 50 US states. You can
+        complete the medical intake entirely online, from home. A licensed
+        provider reviews your case by telehealth and decides, on an individual
+        basis, whether {what} may be appropriate for you. When prescribed,
+        medication ships directly to your door.
+      </p>
+    </>
+  );
+}
+
 function servingBody(what: string) {
   return (
     <>
@@ -186,29 +208,48 @@ const GENERIC: Record<"sildenafil" | "tadalafil", GenericConfig> = {
   },
 };
 
+const OTHER_NATIONWIDE = {
+  sildenafil: "/tadalafil/",
+  tadalafil: "/sildenafil/",
+} as const;
+
 export type GenericEdBostonPageProps = {
   product: "sildenafil" | "tadalafil";
   faqItems: TreatmentFaqItem[];
+  /** Defaults to "boston" (the live Boston pages). */
+  market?: EdMarket;
 } & Pick<LandingTemplateProps, "overrides" | "insertAfter">;
 
 /** New-layout Boston page for a single generic ED tablet. */
 export function GenericEdBostonPage({
   product,
   faqItems,
+  market = "boston",
   overrides,
   insertAfter,
 }: GenericEdBostonPageProps) {
   const c = GENERIC[product];
   const lower = c.name.toLowerCase();
-  const heroCta = resolveCta(CTA_IDS[c.heroCtaId]);
-  const footerCta = resolveCta(CTA_IDS[c.footerCtaId]);
+  const nationwide = market === "nationwide";
+  const heroCta = resolveCta(
+    nationwide
+      ? CTA_IDS[product === "sildenafil" ? "sildenafil_hero" : "tadalafil_hero"]
+      : CTA_IDS[c.heroCtaId],
+  );
+  const footerCta = resolveCta(
+    nationwide
+      ? CTA_IDS[
+          product === "sildenafil" ? "sildenafil_footer" : "tadalafil_footer"
+        ]
+      : CTA_IDS[c.footerCtaId],
+  );
 
   return (
     <LandingTemplate
-      pagePath={c.pagePath}
+      pagePath={nationwide ? c.nationwidePath : c.pagePath}
       hero={{
-        h1: `${c.name} online in Boston`,
-        lead: BOSTON_LEAD,
+        h1: nationwide ? `${c.name} online` : `${c.name} online in Boston`,
+        lead: nationwide ? NATIONWIDE_LEAD : BOSTON_LEAD,
         cta: heroCta,
         images: [c.image],
         tiles: [
@@ -308,8 +349,12 @@ export function GenericEdBostonPage({
         body: "Starting your intake is free. A licensed provider reviews your health history and decides whether treatment is right for you, and you won't be charged anything if you're not prescribed. If you are, one cash-pay price covers your care and medication.",
       }}
       where={{
-        title: `Telehealth ${lower} care for Boston, Massachusetts`,
-        body: (
+        title: nationwide
+          ? `Telehealth ${lower} care in all 50 states`
+          : `Telehealth ${lower} care for Boston, Massachusetts`,
+        body: nationwide ? (
+          nationwideBody(lower)
+        ) : (
           <>
             {servingBody(lower)}
             <p>
@@ -330,7 +375,7 @@ export function GenericEdBostonPage({
       }}
       finalCta={{
         heading: "Ready to see if ED treatment is right for you?",
-        body: BOSTON_FINAL_BODY,
+        body: nationwide ? NATIONWIDE_FINAL_BODY : BOSTON_FINAL_BODY,
         cta: footerCta,
       }}
       overrides={overrides}
@@ -344,14 +389,20 @@ export function GenericEdBostonPage({
               intended use as the brand-name product, dispensed by a licensed
               pharmacy, not a compounded formulation. Looking for {c.otherLabel}{" "}
               instead? See{" "}
-              <Link to={c.otherPath} className="text-primary underline">
-                {c.otherLabel.charAt(0).toUpperCase() + c.otherLabel.slice(1)}{" "}
-                in Boston
+              <Link
+                to={nationwide ? OTHER_NATIONWIDE[product] : c.otherPath}
+                className="text-primary underline"
+              >
+                {c.otherLabel.charAt(0).toUpperCase() + c.otherLabel.slice(1)}
+                {nationwide ? "" : " in Boston"}
               </Link>
               . Looking for a dissolve-under-the-tongue combination formulation?
               See{" "}
-              <Link to="/ed-mints-boston/" className="text-primary underline">
-                ED Mints in Boston
+              <Link
+                to={nationwide ? "/ed-mints/" : "/ed-mints-boston/"}
+                className="text-primary underline"
+              >
+                ED Mints{nationwide ? "" : " in Boston"}
               </Link>
               , a separate compounded product.
             </p>
@@ -486,20 +537,26 @@ function FormulationChooser() {
 
 export type EdMintsBostonPageProps = {
   faqItems: TreatmentFaqItem[];
+  /** Defaults to "boston" (the live Boston page). */
+  market?: EdMarket;
 } & Pick<LandingTemplateProps, "overrides" | "insertAfter">;
 
 /** New-layout Boston ED Mints page. Every Get Started opens the picker. */
 export function EdMintsBostonNewPage({
   faqItems,
+  market = "boston",
   overrides,
   insertAfter,
 }: EdMintsBostonPageProps) {
+  const nationwide = market === "nationwide";
   // Every Get Started jumps to the formulation cards on this page; each card
   // links straight to its own questionnaire (ed_mints_*_hero CTA ids).
   const startCta = { label: "Get Started", onClick: scrollToFormulations };
   const image: HeroImage = {
     src: edMintsPhoto,
-    alt: "Beema Health ED Mints - blue four-part scored dissolvable ED tablet for Boston patients",
+    alt: nationwide
+      ? "Beema Health ED Mints - blue four-part scored dissolvable ED tablet"
+      : "Beema Health ED Mints - blue four-part scored dissolvable ED tablet for Boston patients",
     width: 1024,
     height: 1024,
   };
@@ -507,10 +564,10 @@ export function EdMintsBostonNewPage({
 
   return (
     <LandingTemplate
-      pagePath="/ed-mints-boston/"
+      pagePath={nationwide ? "/ed-mints/" : "/ed-mints-boston/"}
       hero={{
-        h1: "ED Mints online in Boston",
-        lead: BOSTON_LEAD,
+        h1: nationwide ? "ED Mints online" : "ED Mints online in Boston",
+        lead: nationwide ? NATIONWIDE_LEAD : BOSTON_LEAD,
         cta: startCta,
         images: [image],
         tiles: [
@@ -564,8 +621,12 @@ export function EdMintsBostonNewPage({
         cta: startCta,
       }}
       where={{
-        title: "Telehealth ED care for Boston, Massachusetts",
-        body: servingBody("an ED Mints formulation"),
+        title: nationwide
+          ? "Telehealth ED care in all 50 states"
+          : "Telehealth ED care for Boston, Massachusetts",
+        body: nationwide
+          ? nationwideBody("an ED Mints formulation")
+          : servingBody("an ED Mints formulation"),
       }}
       faq={{
         title: "ED treatment, pricing, and getting started",
@@ -575,7 +636,7 @@ export function EdMintsBostonNewPage({
       }}
       finalCta={{
         heading: "Ready to see if ED treatment is right for you?",
-        body: BOSTON_FINAL_BODY,
+        body: nationwide ? NATIONWIDE_FINAL_BODY : BOSTON_FINAL_BODY,
         cta: startCta,
       }}
       overrides={overrides}

@@ -1,6 +1,7 @@
 import type { PageDef } from "./types.ts";
 
-export const PAGES: PageDef[] = [
+/** Ad landing pages (variants, experiments, go-live windows, ad market). */
+export const LANDING_PAGES: PageDef[] = [
   {
     id: "glp-1-houston",
     path: "/glp-1-houston/",
@@ -61,7 +62,8 @@ export const TIME_ZONE = "America/Denver";
 
 /**
  * Product pages and the home page: tracked in GA4 (visitors, handoffs, Bask
- * signups) but with no variant files, experiments or go-live windows. Learn
+ * signups). Those with `variants: true` also have variant files, experiments
+ * and go-live windows, even if only a control exists. Learn
  * articles and recipes are not tracked here yet.
  */
 export const PRODUCT_PAGES: PageDef[] = [
@@ -69,7 +71,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "home",
     path: "/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Home page",
     routeFile: "src/routes/index.tsx",
   },
@@ -77,7 +79,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "weight-loss",
     path: "/weight-loss/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Weight loss",
     routeFile: "src/routes/weight-loss.tsx",
   },
@@ -85,7 +87,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "glp-1",
     path: "/glp-1/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "GLP-1",
     routeFile: "src/routes/glp-1.tsx",
   },
@@ -93,7 +95,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "semaglutide",
     path: "/semaglutide/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Semaglutide",
     routeFile: "src/routes/semaglutide.tsx",
   },
@@ -101,7 +103,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "tirzepatide",
     path: "/tirzepatide/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Tirzepatide",
     routeFile: "src/routes/tirzepatide.tsx",
   },
@@ -109,7 +111,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "sexual-health",
     path: "/sexual-health/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Sexual health",
     routeFile: "src/routes/sexual-health.tsx",
   },
@@ -117,7 +119,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "ed",
     path: "/ed/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "ED",
     routeFile: "src/routes/ed.tsx",
   },
@@ -125,7 +127,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "ed-mints",
     path: "/ed-mints/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "ED mints",
     routeFile: "src/routes/ed-mints.tsx",
   },
@@ -133,7 +135,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "tadalafil",
     path: "/tadalafil/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Tadalafil",
     routeFile: "src/routes/tadalafil.tsx",
   },
@@ -141,7 +143,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "sildenafil",
     path: "/sildenafil/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Sildenafil",
     routeFile: "src/routes/sildenafil.tsx",
   },
@@ -149,7 +151,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "hair-loss",
     path: "/hair-loss/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Hair loss",
     routeFile: "src/routes/hair-loss.tsx",
   },
@@ -157,7 +159,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "hair-loss-spray-men",
     path: "/hair-loss-spray-men/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Hair loss spray (men)",
     routeFile: "src/routes/hair-loss-spray-men.tsx",
   },
@@ -165,7 +167,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "hair-loss-spray-women",
     path: "/hair-loss-spray-women/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Hair loss spray (women)",
     routeFile: "src/routes/hair-loss-spray-women.tsx",
   },
@@ -173,7 +175,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "oral-finasteride",
     path: "/oral-finasteride/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Oral finasteride",
     routeFile: "src/routes/oral-finasteride.tsx",
   },
@@ -181,7 +183,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "oral-minoxidil-men",
     path: "/oral-minoxidil-men/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Oral minoxidil (men)",
     routeFile: "src/routes/oral-minoxidil-men.tsx",
   },
@@ -189,7 +191,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "oral-minoxidil-women",
     path: "/oral-minoxidil-women/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Oral minoxidil (women)",
     routeFile: "src/routes/oral-minoxidil-women.tsx",
   },
@@ -197,7 +199,7 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "nad-plus",
     path: "/nad-plus/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "NAD+",
     routeFile: "src/routes/nad-plus.tsx",
   },
@@ -205,14 +207,24 @@ export const PRODUCT_PAGES: PageDef[] = [
     id: "sermorelin",
     path: "/sermorelin/",
     group: "product",
-    variants: false,
+    variants: true,
     title: "Sermorelin",
     routeFile: "src/routes/sermorelin.tsx",
   },
 ];
 
-/** Every page the lab reads analytics for. Variant tooling uses PAGES only. */
-export const TRACKED_PAGES: PageDef[] = [...PAGES, ...PRODUCT_PAGES];
+/**
+ * Every page that has variant files, experiments and go-live windows: the ad
+ * landing pages plus the product pages that have a control and variants. The
+ * product pages stay in the "product" sidebar group.
+ */
+export const PAGES: PageDef[] = [
+  ...LANDING_PAGES,
+  ...PRODUCT_PAGES.filter((p) => p.variants),
+];
+
+/** Every page the lab reads analytics for. */
+export const TRACKED_PAGES: PageDef[] = [...LANDING_PAGES, ...PRODUCT_PAGES];
 
 /** Canonical path of a tracked page id ("/" for home), or null. */
 export function pagePathFor(pageId: string): string | null {

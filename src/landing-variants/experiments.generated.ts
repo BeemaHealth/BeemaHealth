@@ -2,24 +2,83 @@
 // Use "Make main" in the dashboard; it rewrites experiments.json and this file.
 // Only live variants are imported, so drafts and paused variants never ship.
 import type { ExperimentConfig } from "./types";
+import { variant as edV0 } from "./ed/v1-control";
+import { variant as edMintsV0 } from "./ed-mints/v1-control";
 import { variant as edMintsBostonV0 } from "./ed-mints-boston/v3-new-layout";
+import { variant as glp1V0 } from "./glp-1/v1-control";
 import { variant as glp1HoustonV0 } from "./glp-1-houston/v3-testing-new-principles";
+import { variant as hairLossV0 } from "./hair-loss/v1-control";
+import { variant as hairLossSprayMenV0 } from "./hair-loss-spray-men/v1-control";
+import { variant as hairLossSprayWomenV0 } from "./hair-loss-spray-women/v1-control";
+import { variant as homeV0 } from "./home/v1-control";
+import { variant as nadPlusV0 } from "./nad-plus/v1-control";
+import { variant as oralFinasterideV0 } from "./oral-finasteride/v1-control";
+import { variant as oralMinoxidilMenV0 } from "./oral-minoxidil-men/v1-control";
+import { variant as oralMinoxidilWomenV0 } from "./oral-minoxidil-women/v1-control";
 import { variant as semaglutideV0 } from "./semaglutide/v1-control";
 import { variant as semaglutideHoustonV0 } from "./semaglutide-houston/v3-new-layout";
+import { variant as sermorelinV0 } from "./sermorelin/v1-control";
 import { variant as sexualHealthV0 } from "./sexual-health/v2-get-started-modal";
+import { variant as sildenafilV0 } from "./sildenafil/v1-control";
 import { variant as sildenafilBostonV0 } from "./sildenafil-boston/v3-new-layout";
+import { variant as tadalafilV0 } from "./tadalafil/v1-control";
 import { variant as tadalafilBostonV0 } from "./tadalafil-boston/v3-new-layout";
-import { variant as tirzepatideV0 } from "./tirzepatide/v1-control";
+import { variant as tirzepatideV0 } from "./tirzepatide/v3-new-layout";
 import { variant as tirzepatideHoustonV0 } from "./tirzepatide-houston/v3-new-layout";
+import { variant as weightLossV0 } from "./weight-loss/v1-control";
 
 export const EXPERIMENTS = {
+  ed: {
+    experimentId: "ed-e1",
+    variants: [{ variant: edV0, weight: 100 }],
+  },
+  "ed-mints": {
+    experimentId: "ed-mints-e1",
+    variants: [{ variant: edMintsV0, weight: 100 }],
+  },
   "ed-mints-boston": {
     experimentId: "ed-mints-boston-e1",
     variants: [{ variant: edMintsBostonV0, weight: 100 }],
   },
+  "glp-1": {
+    experimentId: "glp-1-e1",
+    variants: [{ variant: glp1V0, weight: 100 }],
+  },
   "glp-1-houston": {
     experimentId: "glp-1-houston-e1",
     variants: [{ variant: glp1HoustonV0, weight: 100 }],
+  },
+  "hair-loss": {
+    experimentId: "hair-loss-e1",
+    variants: [{ variant: hairLossV0, weight: 100 }],
+  },
+  "hair-loss-spray-men": {
+    experimentId: "hair-loss-spray-men-e1",
+    variants: [{ variant: hairLossSprayMenV0, weight: 100 }],
+  },
+  "hair-loss-spray-women": {
+    experimentId: "hair-loss-spray-women-e1",
+    variants: [{ variant: hairLossSprayWomenV0, weight: 100 }],
+  },
+  home: {
+    experimentId: "home-e1",
+    variants: [{ variant: homeV0, weight: 100 }],
+  },
+  "nad-plus": {
+    experimentId: "nad-plus-e1",
+    variants: [{ variant: nadPlusV0, weight: 100 }],
+  },
+  "oral-finasteride": {
+    experimentId: "oral-finasteride-e1",
+    variants: [{ variant: oralFinasterideV0, weight: 100 }],
+  },
+  "oral-minoxidil-men": {
+    experimentId: "oral-minoxidil-men-e1",
+    variants: [{ variant: oralMinoxidilMenV0, weight: 100 }],
+  },
+  "oral-minoxidil-women": {
+    experimentId: "oral-minoxidil-women-e1",
+    variants: [{ variant: oralMinoxidilWomenV0, weight: 100 }],
   },
   semaglutide: {
     experimentId: "semaglutide-e1",
@@ -29,13 +88,25 @@ export const EXPERIMENTS = {
     experimentId: "semaglutide-houston-e1",
     variants: [{ variant: semaglutideHoustonV0, weight: 100 }],
   },
+  sermorelin: {
+    experimentId: "sermorelin-e1",
+    variants: [{ variant: sermorelinV0, weight: 100 }],
+  },
   "sexual-health": {
     experimentId: "sexual-health-e1",
     variants: [{ variant: sexualHealthV0, weight: 100 }],
   },
+  sildenafil: {
+    experimentId: "sildenafil-e1",
+    variants: [{ variant: sildenafilV0, weight: 100 }],
+  },
   "sildenafil-boston": {
     experimentId: "sildenafil-boston-e1",
     variants: [{ variant: sildenafilBostonV0, weight: 100 }],
+  },
+  tadalafil: {
+    experimentId: "tadalafil-e1",
+    variants: [{ variant: tadalafilV0, weight: 100 }],
   },
   "tadalafil-boston": {
     experimentId: "tadalafil-boston-e1",
@@ -48,5 +119,9 @@ export const EXPERIMENTS = {
   "tirzepatide-houston": {
     experimentId: "tirzepatide-houston-e1",
     variants: [{ variant: tirzepatideHoustonV0, weight: 100 }],
+  },
+  "weight-loss": {
+    experimentId: "weight-loss-e1",
+    variants: [{ variant: weightLossV0, weight: 100 }],
   },
 } as const satisfies Record<string, ExperimentConfig>;

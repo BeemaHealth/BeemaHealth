@@ -367,6 +367,10 @@ function StarterPackPanel({
       <p className="mt-1.5 text-sm text-foreground">
         {formatUsd(pack.totalUsd)} total for {pack.months} months
       </p>
+      <p className="mt-1.5 text-sm text-foreground">
+        {pack.dosePathLabel.charAt(0).toUpperCase() +
+          pack.dosePathLabel.slice(1)}
+      </p>
       <p className="mt-1.5 text-sm font-bold text-foreground">
         New patient starter pack
       </p>
