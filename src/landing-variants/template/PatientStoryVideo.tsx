@@ -6,7 +6,13 @@ import { PATIENT_STORY_POSTER } from "./story";
  * Click-to-load YouTube embed: no YouTube JS or cookies load until the
  * visitor taps play, which keeps the page fast on mobile.
  */
-export function PatientStoryVideo({ videoId }: { videoId: string }) {
+export function PatientStoryVideo({
+  videoId,
+  poster = PATIENT_STORY_POSTER,
+}: {
+  videoId: string;
+  poster?: string;
+}) {
   const [playing, setPlaying] = useState(false);
   return (
     <div className="relative aspect-video overflow-hidden rounded-3xl bg-foreground shadow-lift ring-1 ring-border/60">
@@ -26,7 +32,7 @@ export function PatientStoryVideo({ videoId }: { videoId: string }) {
           className="group absolute inset-0 size-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <img
-            src={PATIENT_STORY_POSTER}
+            src={poster}
             alt="Still frame from the Beema Health patient and founder story video"
             loading="lazy"
             decoding="async"

@@ -59,8 +59,12 @@ describe("new-layout (shared template) variants", () => {
     // Cancellation policy link and illustrative-image note.
     expect(html).toContain("/legal/refund");
     expect(html).toContain("Product images are illustrative");
-    // Founder story disclaimer renders as an info note.
-    expect(html).toContain('role="note"');
+    // Story video claims note only appears under the tirzepatide video.
+    if (/\/tirzepatide(-houston)?\//.test(_p)) {
+      expect(html).toContain("one person");
+    } else {
+      expect(html).not.toContain("Individual stories are not typical");
+    }
     // Safety section and prescribing disclaimer.
     expect(html).toContain("Safety and important information");
     expect(html).toContain("Prescribing is never guaranteed");

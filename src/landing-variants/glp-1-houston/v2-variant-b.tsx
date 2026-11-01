@@ -430,7 +430,6 @@ function Glp1HoustonVariantB() {
           className="mx-auto mt-6 max-w-xl lg:max-w-4xl"
         >
           <TreatmentPricingCard
-            compact
             pricing={MEDICATION_PICKER[selectedMedication].pricing}
             imagery={vialImagery[selectedMedication]}
             cta={midCta}

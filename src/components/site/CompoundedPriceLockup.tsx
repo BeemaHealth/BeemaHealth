@@ -1,6 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { CircleHelp, Link as LinkIcon } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { CircleHelp } from "lucide-react";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   MouseEvent as ReactMouseEvent,
@@ -27,6 +26,14 @@ import {
   type PlanLengthMonths,
 } from "@/lib/medication-pricing";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -50,11 +57,6 @@ type CompoundedPriceLockupProps = {
    * teaser that still links out for full pricing.
    */
   interactive?: boolean;
-  /**
-   * Opt-in sectioned layout for CRO variants (starter pack as labeled lines,
-   * shorter semaglutide teaser). Defaults to false: original copy and layout.
-   */
-  compact?: boolean;
 };
 
 /**
@@ -68,7 +70,6 @@ export function CompoundedPriceLockup({
   className,
   size = "default",
   interactive = true,
-  compact = false,
 }: CompoundedPriceLockupProps) {
   if (!interactive) {
     return (
@@ -81,12 +82,7 @@ export function CompoundedPriceLockup({
   }
 
   return (
-    <PlanSelectorLockup
-      pricing={pricing}
-      className={className}
-      size={size}
-      compact={compact}
-    />
+    <PlanSelectorLockup pricing={pricing} className={className} size={size} />
   );
 }
 
@@ -217,13 +213,13 @@ function PricingDetailsButton({
   );
 }
 
-const PLAN_TAB_ORDER: PlanLengthMonths[] = [1, 3, 6, 12];
+/** Tabs shown in the box. 6- and 12-month plans live in the "See all plans" modal. */
+const PLAN_TAB_ORDER: PlanLengthMonths[] = [1, 3];
 
 function PlanSelectorLockup({
   pricing,
   className,
   size = "default",
-  compact = false,
 }: CompoundedPriceLockupProps) {
   const hasStarter = hasStarterPack(pricing);
   const [selection, setSelection] = useState<Selection>(
@@ -233,8 +229,6 @@ function PlanSelectorLockup({
 
   const selectedPlan =
     selection.kind === "plan" ? getPlan(pricing, selection.months) : null;
-  const couponOk =
-    selectedPlan != null && isPromoEligibleMonths(selectedPlan.months);
 
   return (
     <div
@@ -242,12 +236,9 @@ function PlanSelectorLockup({
       onClick={stopCardNavigation}
       onPointerDown={stopCardNavigation}
     >
-      <div className="flex items-center gap-1.5">
-        <p className="text-sm font-semibold text-foreground">
-          Explore our pricing
-        </p>
-        <PricingDetailsButton pricing={pricing} />
-      </div>
+      <p className="text-sm font-semibold text-foreground">
+        Explore our pricing
+      </p>
 
       <div
         role="tablist"
@@ -262,50 +253,23 @@ function PlanSelectorLockup({
             hint="3 mo"
           />
         )}
-        {PLAN_TAB_ORDER.map((months) => {
-          const plan = getPlan(pricing, months);
-          const semaThreeMonth = isSemaThreeMonthPromoPlan(pricing, plan);
-          return (
-            <PlanTab
-              key={months}
-              selected={
-                selection.kind === "plan" && selection.months === months
-              }
-              onSelect={() => setSelection({ kind: "plan", months })}
-              label={
-                months === 1 ? "1 mo" : months === 12 ? "12 mo" : `${months} mo`
-              }
-              hint={
-                semaThreeMonth ? (
-                  <>
-                    from{" "}
-                    <span className="font-bold">
-                      {formatUsd(promoFirstMonthUsd(pricing))}
-                    </span>
-                  </>
-                ) : plan.savingsUsd > 0 ? (
-                  <>
-                    Save <SaveAmount amount={plan.savingsUsd} />
-                  </>
-                ) : undefined
-              }
-            />
-          );
-        })}
+        {PLAN_TAB_ORDER.map((months) => (
+          <PlanTab
+            key={months}
+            selected={selection.kind === "plan" && selection.months === months}
+            onSelect={() => setSelection({ kind: "plan", months })}
+            label={`${months} mo`}
+          />
+        ))}
       </div>
 
       {selection.kind === "starter" && hasStarter ? (
-        <StarterPackPanel pricing={pricing} large={large} compact={compact} />
+        <StarterPackPanel pricing={pricing} large={large} />
       ) : selectedPlan ? (
-        <PlanPanel
-          pricing={pricing}
-          plan={selectedPlan}
-          couponOk={couponOk}
-          large={large}
-        />
+        <PlanPanel pricing={pricing} plan={selectedPlan} large={large} />
       ) : null}
 
-      {!hasStarter && <TirzValueTeaser className="mt-1" compact={compact} />}
+      <AllPlansDialog pricing={pricing} />
     </div>
   );
 }
@@ -352,68 +316,60 @@ function PlanTab({
   );
 }
 
+function PriceFigure({
+  amount,
+  suffix,
+  strike,
+  large,
+}: {
+  amount: number;
+  suffix: string;
+  strike?: number;
+  large: boolean;
+}) {
+  return (
+    <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+      <span
+        className={cn(
+          "font-bold tracking-tight text-foreground",
+          large ? "text-3xl md:text-4xl" : "text-2xl",
+        )}
+      >
+        {formatUsd(amount)}
+      </span>
+      <span className="text-sm text-muted-foreground">{suffix}</span>
+      {strike != null ? (
+        <span className="text-base font-medium text-muted-foreground line-through decoration-muted-foreground/70">
+          {formatUsd(strike)}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
 function StarterPackPanel({
   pricing,
   large,
-  compact,
 }: {
   pricing: CompoundedMedicationPricing & {
     starterPack: NonNullable<CompoundedMedicationPricing["starterPack"]>;
   };
   large: boolean;
-  compact: boolean;
 }) {
   const pack = pricing.starterPack;
   return (
     <div className="rounded-xl bg-background/80 px-3.5 py-3 ring-1 ring-border/70">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-foreground">
-          {starterPackTitle(pack)}
-        </p>
-        <p className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-          New patients
-        </p>
-      </div>
-      <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-        <span
-          className={cn(
-            "font-bold tracking-tight text-foreground",
-            large ? "text-3xl md:text-4xl" : "text-2xl",
-          )}
-        >
-          {formatUsd(pack.monthlyEquivalentUsd)}
-        </span>
-        <span className="text-sm text-muted-foreground">/mo</span>
-        <span className="text-sm text-muted-foreground">
-          · {formatUsd(pack.totalUsd)} for {pack.months} months
-          <span className="font-normal">†</span>
-        </span>
-      </div>
-      {compact ? (
-        <ul className="mt-3 space-y-1.5 border-t border-border/60 pt-3 text-xs leading-snug text-muted-foreground">
-          <li>
-            <span className="font-semibold text-foreground">Doses: </span>
-            {pack.dosePathLabel}
-          </li>
-          <li>
-            <span className="font-semibold text-foreground">
-              Who it is for:{" "}
-            </span>
-            brand-new patients beginning tirzepatide. Typically one-time.
-          </li>
-          <li>
-            <span className="font-semibold text-foreground">To get it: </span>
-            {STARTER_PACK_INTAKE_HINT}
-          </li>
-          <li>Checkout coupon does not apply to the starter pack.</li>
-        </ul>
-      ) : (
-        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-          {pack.dosePathLabel}. Typically one-time for brand-new patients
-          beginning tirzepatide. {STARTER_PACK_INTAKE_HINT} Checkout coupon does
-          not apply to the starter pack.
-        </p>
-      )}
+      <PriceFigure
+        amount={pack.monthlyEquivalentUsd}
+        suffix="/mo"
+        large={large}
+      />
+      <p className="mt-1.5 text-sm text-foreground">
+        {formatUsd(pack.totalUsd)} total for {pack.months} months
+      </p>
+      <p className="mt-1.5 text-sm font-bold text-foreground">
+        New patient starter pack
+      </p>
     </div>
   );
 }
@@ -421,194 +377,162 @@ function StarterPackPanel({
 function PlanPanel({
   pricing,
   plan,
-  couponOk,
   large,
 }: {
   pricing: CompoundedMedicationPricing;
   plan: ReturnType<typeof getPlan>;
-  couponOk: boolean;
   large: boolean;
 }) {
-  const withCouponMonthly = planMonthlyWithCouponUsd(plan);
-  const withCouponTotal = planTotalWithCouponUsd(plan);
   const baseline = pricing.monthlyUsd;
-  const semaThreeMonth = isSemaThreeMonthPromoPlan(pricing, plan);
-  const firstMonth = promoFirstMonthUsd(pricing);
-  const threeMonthPromoTotal = semaThreeMonthPromoTotalUsd(pricing);
 
-  if (semaThreeMonth) {
+  if (isSemaThreeMonthPromoPlan(pricing, plan)) {
     return (
       <div className="rounded-xl bg-background/80 px-3.5 py-3 ring-1 ring-border/70">
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold text-foreground">{plan.label}</p>
-          <p className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-            First-month promo
-          </p>
-        </div>
-
-        <div className="mt-2 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-          <span
-            className={cn(
-              "font-bold tracking-tight text-foreground",
-              large ? "text-3xl md:text-4xl" : "text-2xl",
-            )}
-          >
-            {formatUsd(firstMonth)}
-          </span>
-          <span className="text-base font-medium text-muted-foreground line-through decoration-muted-foreground/70">
-            {formatUsd(baseline)}
-          </span>
-          <span className="text-sm text-muted-foreground">first month</span>
-        </div>
-
-        <p className="mt-1.5 text-xs text-muted-foreground">
+        <PriceFigure
+          amount={promoFirstMonthUsd(pricing)}
+          suffix="first month"
+          strike={baseline}
+          large={large}
+        />
+        <p className="mt-1.5 text-sm text-foreground">
           Then {formatUsd(baseline)}/mo for months 2 and 3 ·{" "}
-          {formatUsd(threeMonthPromoTotal)} total for 3 months
+          {formatUsd(semaThreeMonthPromoTotalUsd(pricing))} total for 3 months
         </p>
-
-        <div className="mt-3 rounded-lg bg-primary-soft/50 px-3 py-2.5">
-          <p className="text-sm leading-snug text-foreground">
-            One-time promo code:{" "}
-            <span className="font-bold tracking-wide">{pricing.promoCode}</span>
-          </p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            ${PROMO_CODE_DISCOUNT_USD} off your first month on a 3-month plan.
-            Redeemable once per patient. Not valid on a 1-month purchase.
-          </p>
-        </div>
+        <p className="mt-1.5 text-sm font-bold text-foreground">
+          Use code {pricing.promoCode} at checkout
+        </p>
       </div>
     );
   }
 
   return (
     <div className="rounded-xl bg-background/80 px-3.5 py-3 ring-1 ring-border/70">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-foreground">{plan.label}</p>
-        {plan.savingsUsd > 0 ? (
-          <p className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-accent-foreground">
-            Save <SaveAmount amount={plan.savingsUsd} />
-          </p>
-        ) : (
-          <p className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-            Standard rate
-          </p>
-        )}
-      </div>
-
-      <div className="mt-2 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-        <span
-          className={cn(
-            "font-bold tracking-tight text-foreground",
-            large ? "text-3xl md:text-4xl" : "text-2xl",
-          )}
-        >
-          {formatUsd(plan.monthlyUsd)}
-        </span>
-        <span className="text-sm text-muted-foreground">/mo</span>
-        {plan.months > 1 && plan.monthlyUsd < baseline ? (
-          <span className="text-base font-medium text-muted-foreground line-through decoration-muted-foreground/70">
-            {formatUsd(baseline)}
-          </span>
-        ) : null}
-      </div>
-
+      <PriceFigure
+        amount={plan.monthlyUsd}
+        suffix="/mo"
+        strike={
+          plan.months > 1 && plan.monthlyUsd < baseline ? baseline : undefined
+        }
+        large={large}
+      />
       {plan.months > 1 ? (
-        <p className="mt-1.5 text-xs text-muted-foreground">
-          {formatUsd(plan.totalUsd)} prepaid for {plan.months} months
-          {plan.savingsUsd > 0 ? (
-            <>
-              {" "}
-              · Save <SaveAmount amount={plan.savingsUsd} />
-            </>
-          ) : null}
+        <p className="mt-1.5 text-sm text-foreground">
+          {formatUsd(plan.totalUsd)} total for {plan.months} months
         </p>
       ) : (
-        <p className="mt-1.5 text-xs text-muted-foreground">
-          Billed monthly. Multi-month plans unlock lower per-month rates.
-        </p>
+        <p className="mt-1.5 text-sm text-foreground">Billed monthly</p>
       )}
-
-      {couponOk ? (
-        <div className="mt-3 rounded-lg bg-primary-soft/50 px-3 py-2.5">
-          <p className="text-sm leading-snug text-foreground">
-            One-time promo code:{" "}
-            <span className="font-bold tracking-wide">{pricing.promoCode}</span>
-          </p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Additional ${PROMO_CODE_DISCOUNT_USD} off at checkout →{" "}
-            {formatUsd(withCouponTotal)} total ({formatUsd(withCouponMonthly)}
-            /mo avg). Redeemable once per patient. Not valid on 1-month
-            {hasStarterPack(pricing) ? " or the starter pack" : ""}.
-          </p>
-        </div>
-      ) : plan.months === 1 ? (
-        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-          Checkout coupon applies to 3-, 6-, and 12-month plans only (one-time
-          use, once per patient).
+      {plan.savingsUsd > 0 ? (
+        <p className="mt-1.5 text-sm font-bold text-foreground">
+          Save {formatUsd(plan.savingsUsd)}
         </p>
       ) : null}
     </div>
   );
 }
 
-/** Semaglutide-only teaser pointing at tirz savings + starter pack (no outcome claims). */
-function TirzValueTeaser({
-  className,
-  compact = false,
-}: {
-  className?: string;
-  compact?: boolean;
-}) {
-  const tirz = COMPOUNDED_TIRZEPATIDE_PRICING;
-  const pack = tirz.starterPack;
-  const m6 = getPlan(tirz, 6);
-  const m12 = getPlan(tirz, 12);
+/** "See all plans" button and the modal with every plan in detail. */
+function AllPlansDialog({ pricing }: { pricing: CompoundedMedicationPricing }) {
+  const isTirz = hasStarterPack(pricing);
+  const medName = isTirz ? "tirzepatide" : "semaglutide";
+  const tirzDetails = tirzepatidePricingDetailsCopy();
+  const semaDetails = semaglutidePricingDetailsCopy();
+  const months: PlanLengthMonths[] = [1, 3, 6, 12];
 
   return (
-    <div
-      className={cn(
-        "rounded-xl border border-dashed border-primary/30 bg-primary-soft/20 px-3.5 py-3",
-        className,
-      )}
-    >
-      <p className="text-sm font-semibold text-foreground">
-        Larger multi-month savings on tirzepatide
-      </p>
-      {compact ? (
-        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-          Save up to <SaveAmount amount={m12.savingsUsd} /> on annual (
-          <span className="line-through decoration-muted-foreground/70">
-            {formatUsd(tirz.monthlyUsd)}
-          </span>{" "}
-          → {formatUsd(m12.monthlyUsd)}/mo), or start with the{" "}
-          {starterPackTitle(pack)} at {formatUsd(pack.totalUsd)} (
-          {formatUsd(pack.monthlyEquivalentUsd)}/mo) as a new patient. Your
-          provider decides which option, if any, fits.
-        </p>
-      ) : (
-        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-          Maintenance plans: Save up to <SaveAmount amount={m12.savingsUsd} />{" "}
-          on annual (
-          <span className="line-through decoration-muted-foreground/70">
-            {formatUsd(tirz.monthlyUsd)}
-          </span>{" "}
-          → {formatUsd(m12.monthlyUsd)}/mo), or {formatUsd(m6.monthlyUsd)}/mo on
-          6 months. New patients can start with the Tirzepatide{" "}
-          {starterPackTitle(pack)} at {formatUsd(pack.totalUsd)} (
-          {formatUsd(pack.monthlyEquivalentUsd)}/mo) for {pack.dosePathLabel}.{" "}
-          {STARTER_PACK_INTAKE_HINT} Your provider decides which option, if any,
-          fits - prescribing is never guaranteed.
-        </p>
-      )}
-      <Link
-        to="/tirzepatide/"
-        className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-primary underline-offset-2 hover:underline"
+    <Dialog>
+      <DialogTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex min-h-11 cursor-pointer items-center text-sm font-semibold text-primary underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          onClick={stopCardNavigation}
+        >
+          See all plans
+        </button>
+      </DialogTrigger>
+      <DialogContent
+        className="max-h-[90vh] max-w-lg overflow-y-auto"
         onClick={stopCardNavigation}
         onPointerDown={stopCardNavigation}
       >
-        See tirzepatide pricing <LinkIcon className="size-3" aria-hidden />
-      </Link>
-    </div>
+        <DialogHeader>
+          <DialogTitle>All {medName} plans</DialogTitle>
+          <DialogDescription>
+            All-inclusive cash-pay pricing: provider care, medication, supplies,
+            and expedited shipping. No membership fee. Dose does not change the
+            monthly rate.
+          </DialogDescription>
+        </DialogHeader>
+
+        <ul className="space-y-3">
+          {isTirz ? (
+            <li className="rounded-xl bg-muted/40 px-4 py-3 ring-1 ring-border/70">
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-sm font-semibold text-foreground">
+                  {starterPackTitle(pricing.starterPack)}
+                </p>
+                <p className="text-sm font-bold text-foreground">
+                  {formatUsd(pricing.starterPack.monthlyEquivalentUsd)}/mo
+                </p>
+              </div>
+              <p className="mt-1 text-sm text-foreground">
+                {formatUsd(pricing.starterPack.totalUsd)} total for{" "}
+                {pricing.starterPack.months} months
+              </p>
+              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                {tirzDetails.starter}
+              </p>
+            </li>
+          ) : null}
+          {months.map((m) => {
+            const plan = getPlan(pricing, m);
+            const promoPlan = isSemaThreeMonthPromoPlan(pricing, plan);
+            return (
+              <li
+                key={m}
+                className="rounded-xl bg-muted/40 px-4 py-3 ring-1 ring-border/70"
+              >
+                <div className="flex items-baseline justify-between gap-3">
+                  <p className="text-sm font-semibold text-foreground">
+                    {plan.label}
+                  </p>
+                  <p className="text-sm font-bold text-foreground">
+                    {promoPlan
+                      ? `${formatUsd(promoFirstMonthUsd(pricing))} first month`
+                      : `${formatUsd(plan.monthlyUsd)}/mo`}
+                  </p>
+                </div>
+                <p className="mt-1 text-sm text-foreground">
+                  {promoPlan
+                    ? `Then ${formatUsd(pricing.monthlyUsd)}/mo for months 2 and 3 · ${formatUsd(semaThreeMonthPromoTotalUsd(pricing))} total`
+                    : m === 1
+                      ? "Billed monthly"
+                      : `${formatUsd(plan.totalUsd)} prepaid for ${m} months`}
+                </p>
+                {plan.savingsUsd > 0 ? (
+                  <p className="mt-1 text-sm font-bold text-foreground">
+                    Save {formatUsd(plan.savingsUsd)}
+                  </p>
+                ) : null}
+                {isPromoEligibleMonths(m) && !promoPlan ? (
+                  <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                    Code {pricing.promoCode} takes an additional $
+                    {PROMO_CODE_DISCOUNT_USD} off at checkout (
+                    {formatUsd(planTotalWithCouponUsd(plan))} total).
+                  </p>
+                ) : null}
+              </li>
+            );
+          })}
+        </ul>
+
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          {isTirz ? tirzDetails.coupon : semaDetails.coupon} Your licensed
+          provider decides which option, if any, is appropriate. Prescribing is
+          never guaranteed.
+        </p>
+      </DialogContent>
+    </Dialog>
   );
 }
 

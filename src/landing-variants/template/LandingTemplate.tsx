@@ -240,7 +240,7 @@ export function HeroSection({
               <h1 className="text-balance text-[1.7rem] font-bold leading-[1.1] tracking-tight text-foreground sm:text-4xl md:text-5xl">
                 {h1}
               </h1>
-              {/* Desktop seal beside the heading; mobile gets it in the trust row below. */}
+              {/* Desktop seal beside the heading; mobile gets it in the site footer. */}
               <LegitScriptSeal className="hidden w-20 lg:inline-block [&_img]:h-auto [&_img]:w-full" />
               {/* Small clarity shot so the product is visible on a phone without scrolling. */}
               <div
@@ -303,24 +303,14 @@ export function HeroSection({
                     </div>
                   ))}
                 </div>
-                {priceNote ? (
-                  <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted-foreground">
-                    {priceNote}
-                  </p>
-                ) : null}
               </>
             ) : null}
 
-            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
-              {/* Mobile: seal and Google rating share the row as equal halves. Desktop: seal sits by the heading, so this wrapper collapses. */}
-              <div className="grid w-full grid-cols-2 items-center gap-3 lg:contents">
-                <LegitScriptSeal className="w-[73px] justify-self-center lg:hidden [&_img]:h-auto [&_img]:w-full" />
-                <GoogleRatingLine />
-              </div>
-              <span className="w-full text-center text-muted-foreground lg:w-auto lg:text-left">
-                You won&apos;t be charged anything if you&apos;re not prescribed
-              </span>
-            </div>
+            <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted-foreground">
+              {priceNote}
+              {priceNote ? " " : null}
+              You won&apos;t be charged anything if you&apos;re not prescribed.
+            </p>
           </div>
 
           {/* Large clarity shot (desktop). Plain wrapper: LCP image, no initial opacity (see treatment-pages.md). */}
@@ -368,6 +358,7 @@ export function StoryDisclaimerNote({
 }: {
   kind?: StoryDisclaimer;
 }) {
+  if (kind === "none") return null;
   return (
     <div
       role="note"
@@ -376,9 +367,9 @@ export function StoryDisclaimerNote({
       <Info className="mt-0.5 size-3.5 shrink-0 text-trust" aria-hidden />
       <div className="space-y-2 text-pretty">
         <p>
-          {kind === "glp1"
-            ? "Individual stories are not typical, and results vary. Weight and blood sugar changes described in the video are one person's experience and are not guaranteed."
-            : "Individual stories are not typical, and results vary. Nothing in the video is a guarantee of any result."}
+          Individual stories are not typical, and results vary. Weight and blood
+          sugar changes described in the video are one person&apos;s experience
+          and are not guaranteed.
         </p>
         {kind === "glp1" ? (
           <>
@@ -408,12 +399,14 @@ export function StoryDisclaimerNote({
 export function StorySection({
   cta,
   videoId = PATIENT_STORY_YOUTUBE_ID,
+  poster,
   heading = "Hear why we built Beema Health",
   body = "Watch the Beema Health patient and founder story in their own words, then see if care is right for you.",
   disclaimer = STORY_DISCLAIMER,
 }: {
   cta: TemplateCta;
   videoId?: string;
+  poster?: string;
   heading?: string;
   body?: string;
   disclaimer?: StoryDisclaimer;
@@ -438,7 +431,7 @@ export function StorySection({
           </div>
         </motion.div>
         <motion.div {...reveal}>
-          <PatientStoryVideo videoId={videoId} />
+          <PatientStoryVideo videoId={videoId} poster={poster} />
           <StoryDisclaimerNote kind={disclaimer} />
           <StartButton cta={cta} className="mt-6 w-full lg:hidden" />
         </motion.div>
@@ -709,6 +702,7 @@ export type LandingTemplateProps = {
   /** Story video settings. Pass `null` to hide the section. */
   story?: {
     videoId?: string;
+    poster?: string;
     heading?: string;
     body?: string;
     disclaimer?: StoryDisclaimer;

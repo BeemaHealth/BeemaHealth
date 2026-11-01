@@ -226,19 +226,6 @@ function IncludedCallout({
   );
 }
 
-function GoogleRatingLine() {
-  return (
-    <span className="inline-flex flex-col items-center gap-1 font-semibold text-foreground lg:flex-row lg:gap-1.5">
-      <span aria-hidden className="flex gap-0.5">
-        {Array.from({ length: 5 }, (_, i) => (
-          <Star key={i} className="size-4 fill-primary stroke-primary" />
-        ))}
-      </span>
-      {GOOGLE_RATING_VALUE} on Google
-    </span>
-  );
-}
-
 function SexualHealthGetStartedModal() {
   const [startOpen, setStartOpen] = useState(false);
   const [edMintsOpen, setEdMintsOpen] = useState(false);
@@ -332,17 +319,10 @@ function SexualHealthGetStartedModal() {
                 </Button>
               </div>
 
-              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
-                {/* Mobile: seal and Google rating share the row as equal halves. Desktop: seal sits by the heading, so this wrapper collapses. */}
-                <div className="grid w-full grid-cols-2 items-center gap-3 lg:contents">
-                  <LegitScriptSeal className="w-[73px] justify-self-center lg:hidden [&_img]:h-auto [&_img]:w-full" />
-                  <GoogleRatingLine />
-                </div>
-                <span className="w-full text-center text-muted-foreground lg:w-auto lg:text-left">
-                  You won&apos;t be charged anything if you&apos;re not
-                  prescribed
-                </span>
-              </div>
+              <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted-foreground">
+                You won&apos;t be charged anything if you&apos;re not
+                prescribed.
+              </p>
             </div>
 
             {/* Large clarity shot (desktop). Plain wrapper: LCP image, no initial opacity (see treatment-pages.md). */}
@@ -424,39 +404,6 @@ function SexualHealthGetStartedModal() {
             </motion.div>
             <motion.div {...reveal}>
               <PatientStoryVideo videoId={PATIENT_STORY_YOUTUBE_ID} />
-              <div
-                role="note"
-                className="mt-4 flex items-start gap-3 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-xs leading-snug text-muted-foreground"
-              >
-                <Info
-                  className="mt-0.5 size-3.5 shrink-0 text-trust"
-                  aria-hidden
-                />
-                <div className="space-y-2 text-pretty">
-                  <p>
-                    Individual stories are not typical, and results vary. Weight
-                    and blood sugar changes described in the video are one
-                    person&apos;s experience and are not guaranteed.
-                  </p>
-                  <p>
-                    For context, in trials of FDA-approved tirzepatide, average
-                    weight loss was up to about 20.9% at the highest studied
-                    dose at 72 weeks. Compounded medications are not
-                    FDA-approved and were not the products studied in those
-                    trials.
-                  </p>
-                  <p>
-                    Any change in blood sugar or prediabetes status described in
-                    the video is one person&apos;s experience. The FDA has not
-                    approved tirzepatide to treat, prevent, or reverse
-                    prediabetes, and we make no claim that it does.
-                  </p>
-                  <p>
-                    Treatment depends on a licensed provider&apos;s review of
-                    your health history. Prescribing is never guaranteed.
-                  </p>
-                </div>
-              </div>
               <Button
                 type="button"
                 size="xl"

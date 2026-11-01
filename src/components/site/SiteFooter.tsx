@@ -18,6 +18,7 @@ import {
   JURISDICTIONAL_NOTICE_BODY,
   JURISDICTIONAL_NOTICE_TITLE,
 } from "@/lib/jurisdictional-notice";
+import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
 import { TRUST_SIGNALS } from "@/lib/trust-signals";
 
 /**
@@ -205,6 +206,9 @@ export function SiteFooter() {
             </span>
           ))}
         </div>
+
+        {/* Mobile only: desktop landing pages show the seal beside the hero heading. */}
+        <LegitScriptSeal className="mt-8 w-[88px] lg:hidden [&_img]:h-auto [&_img]:w-full" />
 
         <div className="mt-8 space-y-4 border-t border-ink-foreground/15 pt-8 text-xs leading-relaxed text-ink-foreground/60">
           <p>

@@ -249,7 +249,7 @@ function SemaglutideHoustonControl() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema Health's semaglutide care works for Houston patients"
+        title="How it works"
         showCareFollowUpNote
       />
 

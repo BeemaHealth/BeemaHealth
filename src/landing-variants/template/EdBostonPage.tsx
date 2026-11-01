@@ -530,8 +530,8 @@ export function EdMintsBostonNewPage({
         ),
       }}
       proofStats={statsFor({
-        value: "503B",
-        label: "FDA-registered outsourcing facility",
+        value: "503A/B",
+        label: "FDA-registered outsourcing pharmacies",
         stars: false,
       })}
       howItWorksTitle="How Beema Health's ED Mints care works"

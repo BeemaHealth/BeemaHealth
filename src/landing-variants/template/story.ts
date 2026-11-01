@@ -1,13 +1,16 @@
 /**
  * Founder / patient story video shown on every page that uses the shared
- * landing template. Change the id or poster here and every new-layout page
- * updates. When the generic "why we started Beema Health" video replaces the
- * tirzepatide story, switch STORY_DISCLAIMER to "general" so the disclaimer
- * under the video stops quoting GLP-1 trial results.
+ * landing template. The default is the general Beema Health video. The
+ * tirzepatide story video discusses tirzepatide results, so it is only used
+ * on tirzepatide pages (see TIRZEPATIDE_STORY and GlpTreatmentPage).
  */
-export const PATIENT_STORY_YOUTUBE_ID = "ZRzKvDBRjYs";
-export const PATIENT_STORY_POSTER = "/videos/patient-story-glp1-poster.jpg";
+export const PATIENT_STORY_YOUTUBE_ID = "16ZYihb0Wfo";
+export const PATIENT_STORY_POSTER = "/videos/patient-story-general-poster.jpg";
 
-/** "glp1": the video discusses a GLP-1 result. "general": a company story only. */
-export type StoryDisclaimer = "glp1" | "general";
-export const STORY_DISCLAIMER: StoryDisclaimer = "glp1";
+/** The tirzepatide story. Use on tirzepatide pages only. */
+export const TIRZEPATIDE_STORY_YOUTUBE_ID = "ZRzKvDBRjYs";
+export const TIRZEPATIDE_STORY_POSTER = "/videos/patient-story-glp1-poster.jpg";
+
+/** "glp1": the video discusses a GLP-1 result. "none": a company story with no claims. */
+export type StoryDisclaimer = "glp1" | "none";
+export const STORY_DISCLAIMER: StoryDisclaimer = "none";

@@ -34,7 +34,7 @@ type Step = {
 const STEPS: Step[] = [
   {
     icon: ClipboardCheck,
-    title: "Complete your medical intake",
+    title: "Complete your medical intake online",
     blurb:
       "Create a secure account and complete a full medical intake covering your health history, medications, and goals, at your own pace.",
   },

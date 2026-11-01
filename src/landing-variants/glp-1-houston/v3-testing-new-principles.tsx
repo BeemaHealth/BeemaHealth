@@ -230,7 +230,7 @@ function Glp1HoustonVariantB() {
       unit: "per month",
       note: null,
       detail: tirzStarter
-        ? `${formatUsd(tirzStarter.totalUsd)} for ${tirzStarter.months} months`
+        ? `${formatUsd(tirzStarter.totalUsd)} starter pack for ${tirzStarter.months} months`
         : null,
     },
   ];
@@ -322,30 +322,9 @@ function Glp1HoustonVariantB() {
                 >
                   cancellation and refund policy
                 </Link>
-                .
+                . You won&apos;t be charged anything if you&apos;re not
+                prescribed.
               </p>
-
-              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
-                {/* Mobile: seal and Google rating share the row as equal halves. Desktop: seal sits by the heading, so this wrapper collapses. */}
-                <div className="grid w-full grid-cols-2 items-center gap-3 lg:contents">
-                  <LegitScriptSeal className="w-[73px] justify-self-center lg:hidden [&_img]:h-auto [&_img]:w-full" />
-                  <span className="inline-flex flex-col items-center gap-1 font-semibold text-foreground lg:flex-row lg:gap-1.5">
-                    <span aria-hidden className="flex gap-0.5">
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <Star
-                          key={i}
-                          className="size-4 fill-primary stroke-primary"
-                        />
-                      ))}
-                    </span>
-                    {GOOGLE_RATING_VALUE} on Google
-                  </span>
-                </div>
-                <span className="w-full text-center text-muted-foreground lg:w-auto lg:text-left">
-                  You won&apos;t be charged anything if you&apos;re not
-                  prescribed
-                </span>
-              </div>
             </div>
 
             {/* Large clarity shot (desktop). Plain wrapper: LCP image, no initial opacity (see treatment-pages.md). */}
@@ -582,7 +561,6 @@ function Glp1HoustonVariantB() {
           className="mx-auto mt-6 max-w-xl lg:max-w-4xl"
         >
           <TreatmentPricingCard
-            compact
             pricing={MEDICATION_PICKER[selectedMedication].pricing}
             imagery={vialImagery[selectedMedication]}
             cta={midCta}

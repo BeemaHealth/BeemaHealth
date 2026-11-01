@@ -62,17 +62,7 @@ const MEDICATION_PICKER: Record<
   },
 };
 
-export function Glp1LandingPage({
-  market,
-  compactPricing = false,
-}: {
-  market: Glp1Market;
-  /**
-   * Opt-in for CRO variants: shorter pricing card text. Defaults to false so
-   * the live control and /glp-1 render exactly as before.
-   */
-  compactPricing?: boolean;
-}) {
+export function Glp1LandingPage({ market }: { market: Glp1Market }) {
   const copy = getGlp1Copy(market);
   const heroCta = resolveCta(CTA_IDS.glp1_hero);
   const midCta = resolveCta(CTA_IDS.glp1_mid);
@@ -247,7 +237,6 @@ export function Glp1LandingPage({
             pricing={MEDICATION_PICKER[selectedMedication].pricing}
             imagery={vialImagery[selectedMedication]}
             cta={midCta}
-            compact={compactPricing}
           />
         </motion.div>
         <ul className="mx-auto mt-8 max-w-2xl space-y-2">

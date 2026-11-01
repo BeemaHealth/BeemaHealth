@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Play } from "lucide-react";
 
 /**
- * Beema Health patient and founder story, hosted on YouTube. Same video and
- * poster the GLP-1 Houston page uses. Do not add paraphrased quotes or results
- * claims next to it; the video speaks for itself and the disclaimer under it
+ * Beema Health patient and founder story, hosted on YouTube.
+ * General company video, not a tirzepatide story. Do not add paraphrased quotes
+ * or results claims next to it; the video speaks for itself and the disclaimer under it
  * is required.
  */
-export const PATIENT_STORY_YOUTUBE_ID = "ZRzKvDBRjYs";
-const PATIENT_STORY_POSTER = "/videos/patient-story-glp1-poster.jpg";
+export const PATIENT_STORY_YOUTUBE_ID = "16ZYihb0Wfo";
+const PATIENT_STORY_POSTER = "/videos/patient-story-general-poster.jpg";
 
 /**
  * Click-to-load YouTube embed: no YouTube JS or cookies load until the

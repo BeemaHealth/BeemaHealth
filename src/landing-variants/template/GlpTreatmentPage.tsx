@@ -37,6 +37,10 @@ import {
   TalkToProviderBody,
 } from "./blocks";
 import { NO_MEMBERSHIP_FEE_STAT } from "./proof";
+import {
+  TIRZEPATIDE_STORY_POSTER,
+  TIRZEPATIDE_STORY_YOUTUBE_ID,
+} from "./story";
 
 type Med = "tirzepatide" | "semaglutide";
 
@@ -214,6 +218,15 @@ export function GlpTreatmentPage({
   return (
     <LandingTemplate
       pagePath={ids.pagePath}
+      story={
+        med === "tirzepatide"
+          ? {
+              videoId: TIRZEPATIDE_STORY_YOUTUBE_ID,
+              poster: TIRZEPATIDE_STORY_POSTER,
+              disclaimer: "glp1",
+            }
+          : undefined
+      }
       hero={{
         h1: `${c.name} weight-loss care${where || " online"}`,
         lead: `Get a plan built around your health history. A licensed provider reviews it and, if appropriate, ships compounded ${lower} to your door${where}. One monthly price covers it. Starting your intake is free.`,
@@ -241,11 +254,7 @@ export function GlpTreatmentPage({
         { value: "503A", label: "U.S. licensed pharmacies", stars: false },
         NO_MEMBERSHIP_FEE_STAT,
       ]}
-      howItWorksTitle={
-        houston
-          ? `How Beema Health's ${lower} care works for Houston patients`
-          : `How Beema Health's ${lower} care works`
-      }
+      howItWorksTitle={`How it works`}
       pricing={{
         title: `${c.name} pricing${where}`,
         description: `Clear cash-pay rates for compounded ${lower}. No membership fee. Your licensed provider decides what medication and dose is appropriate for you - pricing below is cash-pay when prescribed.`,
@@ -256,7 +265,6 @@ export function GlpTreatmentPage({
               points={c.eligibilityPoints}
             />
             <TreatmentPricingCard
-              compact
               pricing={pricing}
               imagery={imagery}
               cta={heroCta}

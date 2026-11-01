@@ -291,7 +291,6 @@ function TirzepatideHoustonControl() {
             }}
           >
             <TreatmentPricingCard
-              compact
               pricing={COMPOUNDED_TIRZEPATIDE_PRICING}
               className="h-full"
             />

@@ -241,7 +241,7 @@ function SemaglutideHoustonControl() {
       <HowItWorksSteps
         className="bg-muted/40"
         eyebrow="How it works"
-        title="How Beema Health's semaglutide care works for Houston patients"
+        title="How it works"
         showCareFollowUpNote
       />
 
@@ -287,7 +287,6 @@ function SemaglutideHoustonControl() {
             }}
           >
             <TreatmentPricingCard
-              compact
               pricing={COMPOUNDED_SEMAGLUTIDE_PRICING}
               className="h-full"
             />
