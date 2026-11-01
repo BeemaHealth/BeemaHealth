@@ -2,13 +2,15 @@
 // Use "Make main" in the dashboard; it rewrites experiments.json and this file.
 // Only live variants are imported, so drafts and paused variants never ship.
 import type { ExperimentConfig } from "./types";
-import { variant as edMintsBostonV0 } from "./ed-mints-boston/v1-control";
+import { variant as edMintsBostonV0 } from "./ed-mints-boston/v3-new-layout";
 import { variant as glp1HoustonV0 } from "./glp-1-houston/v3-testing-new-principles";
-import { variant as semaglutideHoustonV0 } from "./semaglutide-houston/v1-control";
+import { variant as semaglutideV0 } from "./semaglutide/v1-control";
+import { variant as semaglutideHoustonV0 } from "./semaglutide-houston/v3-new-layout";
 import { variant as sexualHealthV0 } from "./sexual-health/v2-get-started-modal";
-import { variant as sildenafilBostonV0 } from "./sildenafil-boston/v1-control";
-import { variant as tadalafilBostonV0 } from "./tadalafil-boston/v1-control";
-import { variant as tirzepatideHoustonV0 } from "./tirzepatide-houston/v1-control";
+import { variant as sildenafilBostonV0 } from "./sildenafil-boston/v3-new-layout";
+import { variant as tadalafilBostonV0 } from "./tadalafil-boston/v3-new-layout";
+import { variant as tirzepatideV0 } from "./tirzepatide/v1-control";
+import { variant as tirzepatideHoustonV0 } from "./tirzepatide-houston/v3-new-layout";
 
 export const EXPERIMENTS = {
   "ed-mints-boston": {
@@ -18,6 +20,10 @@ export const EXPERIMENTS = {
   "glp-1-houston": {
     experimentId: "glp-1-houston-e1",
     variants: [{ variant: glp1HoustonV0, weight: 100 }],
+  },
+  semaglutide: {
+    experimentId: "semaglutide-e1",
+    variants: [{ variant: semaglutideV0, weight: 100 }],
   },
   "semaglutide-houston": {
     experimentId: "semaglutide-houston-e1",
@@ -34,6 +40,10 @@ export const EXPERIMENTS = {
   "tadalafil-boston": {
     experimentId: "tadalafil-boston-e1",
     variants: [{ variant: tadalafilBostonV0, weight: 100 }],
+  },
+  tirzepatide: {
+    experimentId: "tirzepatide-e1",
+    variants: [{ variant: tirzepatideV0, weight: 100 }],
   },
   "tirzepatide-houston": {
     experimentId: "tirzepatide-houston-e1",

@@ -1,6 +1,6 @@
 ---
 name: landing-page-clarity
-description: Framework for writing and reviewing the first screen of Beema Health landing pages and CRO variants so a visitor instantly knows what the product is, what it will do for them, and why to act now. Covers the 3-second test, the 40-character title formula, 300-character benefit-led lead copy (80/20 rule), urgency rules, and the product photo mix (clarity shots, lifestyle, infographics). Use whenever Matt asks to write, redesign, score, or critique a landing page, hero, H1, product description, or product imagery, or when creating a new CRO variant.
+description: Framework for writing and reviewing the first screen of Beema Health landing pages and CRO variants so a visitor instantly knows what the product is, what it will do for them, and why Beema Health is worth a look. Covers the 3-second test, the 40-character title formula, 300-character benefit-led lead copy (80/20 rule), the no-pressure copy rules, and the product photo mix (clarity shots, lifestyle, infographics). Use whenever Matt asks to write, redesign, score, or critique a landing page, hero, H1, product description, or product imagery, or when creating a new CRO variant.
 ---
 
 # Landing page clarity
@@ -59,14 +59,15 @@ Nobody reads 800 words on a first screen. Write a punchy lead of roughly
 - **80/20 rule:** 80% benefits, 20% features. A feature describes the product;
   a benefit speaks to an outcome and an emotion. Every feature must be
   translated into a benefit or cut as noise.
-- **Open with urgency:** a problem, an agitation, or the cost of inaction, so
-  the reader feels "I need to deal with this now". Then the benefit, then one
-  feature as proof.
+- **Open with a patient-centered value statement:** what the visitor gets
+  (a plan built around their health history, licensed provider review, one
+  monthly price, free intake). Then the benefit, then one feature as proof.
+  Do not open with a problem, an agitation, or the cost of inaction.
 - Write for the emotion: feeling in control, being supported, not doing it
   alone, finally having a plan. Not for the mechanism.
 - Keep sentences short. No jargon the visitor did not use to search.
 
-### Compliance guardrails on benefit and urgency copy
+### Compliance guardrails on benefit copy (no pressure)
 
 These are non-negotiable and they limit the framework:
 
@@ -78,13 +79,18 @@ These are non-negotiable and they limit the framework:
 - **Outcome-adjacent benefit language is fine**: "medical support for your
   weight-loss goals", "a licensed provider builds your plan", "no waiting
   room". Outcome promises are not.
-- **No fake urgency.** No countdown timers that reset, no invented scarcity
-  ("only 3 spots left"), no fabricated social proof or counts. It is deceptive
-  and it risks ad-account bans. Urgency must be **true**:
-  - a real, dated promotion (confirm terms and expiry with Matt first),
-  - the real cost of waiting ("every month you wait is another month without
-    a plan", stated without shame or fear),
-  - the low-friction start ("no payment required to start", a few minutes),
+- **No pressure-based copy.** Do not use cost-of-waiting or cost-of-inaction
+  lines ("every month you wait is another month without a plan", "another
+  month of guessing"), guilt or fear framing, countdown timers, invented
+  scarcity ("only 3 spots left"), or fabricated social proof or counts. It is
+  manipulative, it risks ad-account bans, and it does not fit a medical
+  brand. Say what the patient gets instead:
+  - the low-friction start ("starting your intake is free", "you won't be
+    charged if you're not prescribed", a few minutes),
+  - what is included ("one monthly price covers your care, medication,
+    supplies, and shipping"),
+  - a real, dated promotion only when Matt has confirmed the terms and expiry,
+    stated plainly with no countdown,
   - real price anchors from `src/lib/medication-pricing.ts`.
 - Cash-pay, compounded-medication, and LegitScript wording follow the
   compliance skills. "Beema Health" always, never bare "Beema". No em dashes.
@@ -138,11 +144,11 @@ The finish matters most. Aim for a mix of:
 ## Review checklist (copy into your answer when scoring a page)
 
 ```
-3-second test        what it is [ ]   what it does for me [ ]   why now [ ]
+3-second test        what it is [ ]   what it does for me [ ]   why it's worth a look [ ]
 Title                category [ ] benefit [ ] context [ ]   <= 40 chars [ ]   count: __
-Lead copy            ~300 chars [ ]   80% benefit [ ]   opens with real urgency [ ]
+Lead copy            ~300 chars [ ]   80% benefit [ ]   opens with a value statement [ ]
 Photos               clarity shot [ ] lifestyle (real only) [ ] infographic [ ]   count: __
-Compliance           no results claims [ ]  no guarantees [ ]  no fake urgency [ ]
+Compliance           no results claims [ ]  no guarantees [ ]  no pressure copy [ ]
                      prices from pricing lib [ ]  no em dashes [ ]  "Beema Health" [ ]
 Mobile               CTA above the fold [ ]  product shot visible [ ]
 ```

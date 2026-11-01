@@ -55,14 +55,6 @@ export const PAGES: PageDef[] = [
     variants: true,
     routeFile: "src/routes/ed-mints-boston.tsx",
   },
-  {
-    id: "sexual-health",
-    path: "/sexual-health/",
-    group: "landing",
-    variants: true,
-    title: "Sexual health",
-    routeFile: "src/routes/sexual-health.tsx",
-  },
 ];
 
 export const TIME_ZONE = "America/Denver";
@@ -112,6 +104,14 @@ export const PRODUCT_PAGES: PageDef[] = [
     variants: false,
     title: "Tirzepatide",
     routeFile: "src/routes/tirzepatide.tsx",
+  },
+  {
+    id: "sexual-health",
+    path: "/sexual-health/",
+    group: "product",
+    variants: false,
+    title: "Sexual health",
+    routeFile: "src/routes/sexual-health.tsx",
   },
   {
     id: "ed",

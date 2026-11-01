@@ -188,7 +188,7 @@
       "description": "Duplicate of Changing Header text.",
       "componentPath": "src/landing-variants/glp-1-houston/v3-testing-new-principles.tsx",
       "createdAt": "2026-10-22T20:40:22.208Z",
-      "status": "ready",
+      "status": "draft",
       "parentId": "v2-variant-b",
       "hypothesis": "Going to try changing it entirely to match what this guy said as i believe he gave some good tips. the skill based off his tips is: .claude/skills/landing-page-clarity/SKILL.md.",
       "element": "Lots",
@@ -233,6 +233,81 @@
       "description": "Draft copy of Control. Edit it, preview locally, then make it main.",
       "componentPath": "src/landing-variants/sexual-health/v2-get-started-modal.tsx",
       "createdAt": "2026-10-28T02:03:21.962Z",
+      "status": "draft",
+      "parentId": "v1-control",
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
+    },
+    {
+      "id": "v3-new-layout",
+      "pageId": "semaglutide-houston",
+      "name": "New layout (shared template)",
+      "description": "Draft copy of Control. Edit it, preview locally, then make it main.",
+      "componentPath": "src/landing-variants/semaglutide-houston/v3-new-layout.tsx",
+      "createdAt": "2026-10-29T19:14:59.401Z",
+      "status": "draft",
+      "parentId": "v1-control",
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
+    },
+    {
+      "id": "v3-new-layout",
+      "pageId": "tirzepatide-houston",
+      "name": "New layout (shared template)",
+      "description": "Draft copy of Control. Edit it, preview locally, then make it main.",
+      "componentPath": "src/landing-variants/tirzepatide-houston/v3-new-layout.tsx",
+      "createdAt": "2026-10-29T19:14:59.401Z",
+      "status": "draft",
+      "parentId": "v1-control",
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
+    },
+    {
+      "id": "v3-new-layout",
+      "pageId": "sildenafil-boston",
+      "name": "New layout (shared template)",
+      "description": "Draft copy of Control. Edit it, preview locally, then make it main.",
+      "componentPath": "src/landing-variants/sildenafil-boston/v3-new-layout.tsx",
+      "createdAt": "2026-10-29T19:14:59.402Z",
+      "status": "draft",
+      "parentId": "v1-control",
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
+    },
+    {
+      "id": "v3-new-layout",
+      "pageId": "tadalafil-boston",
+      "name": "New layout (shared template)",
+      "description": "Draft copy of Control. Edit it, preview locally, then make it main.",
+      "componentPath": "src/landing-variants/tadalafil-boston/v3-new-layout.tsx",
+      "createdAt": "2026-10-29T19:14:59.402Z",
+      "status": "draft",
+      "parentId": "v1-control",
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
+    },
+    {
+      "id": "v3-new-layout",
+      "pageId": "ed-mints-boston",
+      "name": "New layout (shared template)",
+      "description": "Draft copy of Control. Edit it, preview locally, then make it main.",
+      "componentPath": "src/landing-variants/ed-mints-boston/v3-new-layout.tsx",
+      "createdAt": "2026-10-29T19:14:59.402Z",
       "status": "draft",
       "parentId": "v1-control",
       "hypothesis": "",
@@ -302,7 +377,7 @@
       "pageId": "glp-1-houston",
       "variantId": "v4-editing-the-pricing-large-info-text-at-b",
       "startUtc": "2026-10-22T21:31:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-10-28T02:46:00.000Z",
       "confirmed": true,
       "notes": "Recorded in the CRO Lab."
     },
@@ -323,6 +398,15 @@
       "endUtc": null,
       "confirmed": true,
       "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvudfs4o",
+      "pageId": "glp-1-houston",
+      "variantId": "v3-testing-new-principles",
+      "startUtc": "2026-10-28T02:46:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
     }
   ],
   "tests": [
@@ -338,7 +422,5 @@
       "followUp": ""
     }
   ],
-  "readyToDeploy": {
-    "glp-1-houston": "v3-testing-new-principles"
-  }
+  "readyToDeploy": {}
 }

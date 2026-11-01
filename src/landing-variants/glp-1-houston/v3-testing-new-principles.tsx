@@ -113,8 +113,8 @@ function PatientStoryVideo({ videoId }: { videoId: string }) {
 }
 
 /**
- * Lead copy, about 300 characters: opens with the true cost of waiting, then
- * benefits (80%), then one feature. No results claims, no guarantee.
+ * Lead copy, about 300 characters: opens with a patient-centered value
+ * statement, then benefits (80%), then one feature. No results claims, no guarantee.
  */
 const HERO_LEAD =
   "Get a plan built around your health history. A licensed provider reviews it and, if appropriate, ships compounded GLP-1 medication to your door. One monthly price covers it. Starting your intake is free.";

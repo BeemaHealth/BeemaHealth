@@ -153,7 +153,7 @@ const PRODUCTS: readonly Product[] = [
       "A combination tablet that dissolves under the tongue. No water needed. Two formulations, same price.",
     image: {
       src: edMintsPhoto,
-      alt: "Beema Health ED Mints - dissolvable erectile dysfunction tablet embossed with the Beema Health logo",
+      alt: "Beema Health ED Mints - blue four-part scored dissolvable erectile dysfunction tablet",
       width: 1024,
       height: 1024,
     },

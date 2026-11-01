@@ -166,7 +166,7 @@ function EdMintsBostonControl() {
               <div className="relative aspect-square overflow-hidden rounded-4xl bg-primary-soft shadow-lift">
                 <img
                   src={edMintsHeroPhoto}
-                  alt="Beema Health ED Mints - dissolvable ED tablet for Boston patients, embossed with the Beema Health logo"
+                  alt="Beema Health ED Mints - blue four-part scored dissolvable ED tablet for Boston patients"
                   width={1024}
                   height={1024}
                   fetchPriority="high"

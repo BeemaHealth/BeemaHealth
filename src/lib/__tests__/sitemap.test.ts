@@ -338,11 +338,11 @@ describe("internal marketing links (trailing slash)", () => {
 describe("treatment page how-it-works CTAs", () => {
   const routes = {
     tirzepatide: readFileSync(
-      resolve(__dirname, "../../routes/tirzepatide.tsx"),
+      resolve(__dirname, "../../landing-variants/tirzepatide/v1-control.tsx"),
       "utf-8",
     ),
     semaglutide: readFileSync(
-      resolve(__dirname, "../../routes/semaglutide.tsx"),
+      resolve(__dirname, "../../landing-variants/semaglutide/v1-control.tsx"),
       "utf-8",
     ),
     glp1: readFileSync(

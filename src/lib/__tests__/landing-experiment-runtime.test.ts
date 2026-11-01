@@ -172,6 +172,7 @@ describe("LandingExperiment", () => {
         experiment_id: "p-e1",
         variant_id: "v1-a",
         landing_page_id: "p",
+        event_id: expect.any(String),
       },
     ]);
   });

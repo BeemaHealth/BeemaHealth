@@ -66,7 +66,7 @@ const LINEUP: CategoryLineupItem[] = [
     icon: Pill,
     image: {
       src: edMintsHeroPhoto,
-      alt: "Beema Health ED Mints - dissolvable erectile dysfunction tablet embossed with the Beema Health logo",
+      alt: "Beema Health ED Mints - blue four-part scored dissolvable erectile dysfunction tablet",
       width: 1024,
       height: 1024,
     },
@@ -184,7 +184,7 @@ function SexualHealthControl() {
                 />
                 <img
                   src={edMintsHeroPhoto}
-                  alt="Beema Health ED Mints - dissolvable erectile dysfunction tablet embossed with the Beema Health logo"
+                  alt="Beema Health ED Mints - blue four-part scored dissolvable erectile dysfunction tablet"
                   width={1024}
                   height={1024}
                   className="absolute right-[6%] top-[5%] h-[42%] w-auto object-contain drop-shadow-xl"

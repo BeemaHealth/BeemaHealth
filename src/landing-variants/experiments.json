@@ -3,12 +3,16 @@
     "experimentId": "tirzepatide-houston-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
+        "status": "draft",
+        "weight": 0
       },
       "v2-variant-b": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -37,12 +41,16 @@
     "experimentId": "semaglutide-houston-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
+        "status": "draft",
+        "weight": 0
       },
       "v2-variant-b": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -50,12 +58,16 @@
     "experimentId": "sildenafil-boston-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
+        "status": "draft",
+        "weight": 0
       },
       "v2-variant-b": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -63,12 +75,16 @@
     "experimentId": "tadalafil-boston-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
+        "status": "draft",
+        "weight": 0
       },
       "v2-variant-b": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -76,12 +92,16 @@
     "experimentId": "ed-mints-boston-e1",
     "variants": {
       "v1-control": {
-        "status": "live",
-        "weight": 100
+        "status": "draft",
+        "weight": 0
       },
       "v2-variant-b": {
         "status": "draft",
         "weight": 0
+      },
+      "v3-new-layout": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -95,6 +115,32 @@
       "v2-get-started-modal": {
         "status": "live",
         "weight": 100
+      }
+    }
+  },
+  "semaglutide": {
+    "experimentId": "semaglutide-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      }
+    }
+  },
+  "tirzepatide": {
+    "experimentId": "tirzepatide-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      },
+      "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
       }
     }
   }

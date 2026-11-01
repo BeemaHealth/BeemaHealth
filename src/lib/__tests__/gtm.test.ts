@@ -233,18 +233,30 @@ describe("gtm", () => {
     expect(isBaskIntakeUrl("/glp-1-houston/")).toBe(false);
   });
 
-  it("pushes intake_handoff with only event + cta_location", () => {
+  it("pushes intake_handoff with only event + cta_location + event_id", () => {
     const dataLayer: unknown[] = [];
     vi.stubGlobal("window", { dataLayer });
 
-    trackIntakeHandoff("home_hero");
+    const id = trackIntakeHandoff("home_hero");
 
     expect(dataLayer).toHaveLength(1);
     expect(dataLayer[0]).toEqual({
       event: "intake_handoff",
       cta_location: "home_hero",
+      event_id: id,
     });
+    expect(id).toMatch(/^[0-9a-f-]{36}$/);
     expect(JSON.stringify(dataLayer[0])).not.toMatch(/@|email|phone|name/i);
+  });
+
+  it("uses a fresh event_id per handoff", () => {
+    const dataLayer: unknown[] = [];
+    vi.stubGlobal("window", { dataLayer });
+
+    const a = trackIntakeHandoff("home_hero");
+    const b = trackIntakeHandoff("home_hero");
+
+    expect(a).not.toBe(b);
   });
 
   it("resolveCta onClick fires handoff for Bask destinations", () => {
@@ -262,6 +274,7 @@ describe("gtm", () => {
     expect(dataLayer[0]).toEqual({
       event: "intake_handoff",
       cta_location: "home_hero",
+      event_id: expect.any(String),
     });
   });
 
@@ -288,6 +301,7 @@ describe("gtm", () => {
         {
           event: "intake_handoff",
           cta_location: expectedLocation,
+          event_id: expect.any(String),
         },
       ]);
       expect(JSON.stringify(dataLayer)).not.toMatch(

@@ -27,7 +27,11 @@ describe("404 page", () => {
 
     cta.onClick();
     expect(dataLayer).toEqual([
-      { event: "intake_handoff", cta_location: "not_found" },
+      {
+        event: "intake_handoff",
+        cta_location: "not_found",
+        event_id: expect.any(String),
+      },
     ]);
     vi.unstubAllGlobals();
   });
