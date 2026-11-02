@@ -210,7 +210,7 @@ function WeightLossNewLayout() {
       pagePath={WEIGHT_LOSS_LINK}
       hero={{
         h1: "Online medical weight-loss care",
-        lead: "Get a plan built around your health history. A licensed provider reviews it and, if appropriate, prescribes compounded semaglutide or tirzepatide and ships it to your door. One monthly price covers it. Starting your intake is free.",
+        lead: "Get a plan built around your health history. A licensed provider reviews it and, if appropriate, prescribes compounded semaglutide or tirzepatide and ships it to your door. Your plan price covers it. Starting your intake is free.",
         cta: heroCta,
         images: [sema, tirz],
         imageLayout: "duo",

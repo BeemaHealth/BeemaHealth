@@ -231,7 +231,7 @@ export function GlpTreatmentPage({
       }
       hero={{
         h1: `${c.name} weight-loss care${where || " online"}`,
-        lead: `Get a plan built around your health history. A licensed provider reviews it and, if appropriate, ships compounded ${lower} to your door${where}. One monthly price covers it. Starting your intake is free.`,
+        lead: `Get a plan built around your health history. A licensed provider reviews it and, if appropriate, ships compounded ${lower} to your door${where}. Your plan price covers it. Starting your intake is free.`,
         cta: heroCta,
         images: [imagery],
         tiles: [heroTile(med)],

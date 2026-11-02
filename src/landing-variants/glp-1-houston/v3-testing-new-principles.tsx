@@ -123,7 +123,7 @@ function PatientStoryVideo({ videoId }: { videoId: string }) {
  * statement, then benefits (80%), then one feature. No results claims, no guarantee.
  */
 const HERO_LEAD =
-  "Get a plan built around your health history. A licensed provider reviews it and, if appropriate, ships compounded GLP-1 medication to your door. One monthly price covers it. Starting your intake is free.";
+  "Get a plan built around your health history. A licensed provider reviews it and, if appropriate, ships compounded GLP-1 medication to your door. Your plan price covers it. Starting your intake is free.";
 
 /**
  * Below-the-fold sections skip layout and paint until they near the viewport
