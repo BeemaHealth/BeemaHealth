@@ -37,6 +37,7 @@ import {
   WEIGHT_LOSS_SERVING_POINTS,
 } from "@/lib/weight-loss-page";
 import { cn } from "@/lib/utils";
+import { useMedicationFromUrl } from "@/lib/medication-param";
 import type { LandingVariant } from "../types";
 import {
   CancellationLink,
@@ -94,7 +95,7 @@ function heroTiles(): PriceTile[] {
 
 function PricingPicker() {
   const heroCta = resolveCta(CTA_IDS.weight_loss_hero);
-  const [selected, setSelected] = useState<MedicationId>("tirzepatide");
+  const [selected, setSelected] = useMedicationFromUrl();
   const imagery: Record<MedicationId, ReturnType<typeof resolveVialImagery>> = {
     semaglutide: resolveVialImagery("semaglutide"),
     tirzepatide: resolveVialImagery("tirzepatide"),

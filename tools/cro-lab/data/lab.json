@@ -1211,6 +1211,15 @@
       "endUtc": null,
       "confirmed": true,
       "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "d0-mots-c",
+      "pageId": "mots-c",
+      "variantId": "v1-control",
+      "startUtc": "2026-08-01T06:00:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Initial version (variant 0), live before tracking began."
     }
   ],
   "tests": [

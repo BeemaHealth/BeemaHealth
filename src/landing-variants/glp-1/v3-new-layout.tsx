@@ -15,6 +15,7 @@ import {
   Truck,
   type LucideIcon,
 } from "lucide-react";
+import { useMedicationFromUrl } from "@/lib/medication-param";
 import type { LandingVariant } from "../types";
 import { SafetySection, TalkToProviderBody } from "../template/blocks";
 import { trackPageViewed } from "@/lib/analytics";
@@ -200,8 +201,7 @@ function Glp1NationalNewLayout() {
     semaglutide: semaImagery,
     tirzepatide: tirzImagery,
   };
-  const [selectedMedication, setSelectedMedication] =
-    useState<MedicationId>("tirzepatide");
+  const [selectedMedication, setSelectedMedication] = useMedicationFromUrl();
 
   useEffect(() => {
     trackPageViewed(copy.analyticsPage);
