@@ -57,6 +57,11 @@ const SECTIONS: LegalSection[] = [
           </a>
           .
         </LegalP>
+        <LegalP>
+          Prepaid plans are final. If you prepay for a multi-month plan (for
+          example, 6 months upfront) and decide not to continue after part of it
+          has shipped, we cannot refund the months that have not yet shipped.
+        </LegalP>
       </>
     ),
   },
@@ -75,8 +80,8 @@ function RefundPage() {
     <MarketingLayout>
       <Section>
         <LegalDocument
-          title="Refund Policy"
-          lastUpdated="July 29, 2026"
+          title="Refund and Cancellation Policy"
+          lastUpdated="November 2, 2026"
           description="How Beema Health handles returns and refunds for prescription products."
           sections={SECTIONS}
           showToc={false}
