@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Surmount1Sources } from "@/components/site/Surmount1Sources";
 import { ImageDisclaimer } from "@/components/site/ImageDisclaimer";
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
@@ -487,7 +488,7 @@ function Glp1HoustonVariantB() {
                     weight loss was up to about 20.9% at the highest studied
                     dose at 72 weeks. Compounded medications are not
                     FDA-approved and were not the products studied in those
-                    trials.
+                    trials. <Surmount1Sources />
                   </p>
                   <p>
                     Any change in blood sugar or prediabetes status described in

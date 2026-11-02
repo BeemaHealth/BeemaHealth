@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState, type ReactNode } from "react";
+import { Surmount1Sources } from "@/components/site/Surmount1Sources";
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -447,7 +448,7 @@ export function StoryDisclaimerNote({
               For context, in trials of FDA-approved tirzepatide, average weight
               loss was up to about 20.9% at the highest studied dose at 72
               weeks. Compounded medications are not FDA-approved and were not
-              the products studied in those trials.
+              the products studied in those trials. <Surmount1Sources />
             </p>
             <p>
               Any change in blood sugar or prediabetes status described in the
