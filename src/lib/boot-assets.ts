@@ -21,6 +21,7 @@ import hairLossSprayWomenPhoto from "@/assets/treatments/hair-loss-spray-women-b
 import oralMinoxidilPhoto from "@/assets/treatments/oral-minoxidil-tablets-bottle.webp";
 import nadInjectionPhoto from "@/assets/treatments/nad-injection-vial.webp";
 import sermorelinInjectionPhoto from "@/assets/treatments/sermorelin-injection-vial.webp";
+import motsCInjectionPhoto from "@/assets/treatments/mots-c-injection-vial.webp";
 import { LEGITSCRIPT_SEAL_SRC } from "@/lib/legitscript";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 
@@ -100,6 +101,8 @@ export function criticalBootImageUrls(pathname: string): string[] {
       return [nadInjectionPhoto];
     case "/sermorelin":
       return [sermorelinInjectionPhoto];
+    case "/mots-c":
+      return [motsCInjectionPhoto];
     default:
       return [];
   }

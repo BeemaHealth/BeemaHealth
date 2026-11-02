@@ -11,6 +11,7 @@ import { variant as hairLossV0 } from "./hair-loss/v1-control";
 import { variant as hairLossSprayMenV0 } from "./hair-loss-spray-men/v3-new-layout";
 import { variant as hairLossSprayWomenV0 } from "./hair-loss-spray-women/v3-new-layout";
 import { variant as homeV0 } from "./home/v1-control";
+import { variant as motsCV0 } from "./mots-c/v1-control";
 import { variant as nadPlusV0 } from "./nad-plus/v3-new-layout";
 import { variant as oralFinasterideV0 } from "./oral-finasteride/v3-new-layout";
 import { variant as oralMinoxidilMenV0 } from "./oral-minoxidil-men/v3-new-layout";
@@ -63,6 +64,10 @@ export const EXPERIMENTS = {
   home: {
     experimentId: "home-e1",
     variants: [{ variant: homeV0, weight: 100 }],
+  },
+  "mots-c": {
+    experimentId: "mots-c-e1",
+    variants: [{ variant: motsCV0, weight: 100 }],
   },
   "nad-plus": {
     experimentId: "nad-plus-e1",

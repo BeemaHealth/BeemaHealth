@@ -146,6 +146,17 @@ const WELLNESS_ITEMS: NavItem[] = [
 ];
 
 /**
+ * Peptides (new 2026-11-02, per Matt) - MOTS-C is the first product on its
+ * own money page, /mots-c. Sermorelin is listed here as well as under
+ * Wellness (same /sermorelin page, per Matt: "copy over"). More peptides
+ * will be added here as they launch.
+ */
+const PEPTIDES_ITEMS: NavItem[] = [
+  { label: "MOTS-C", to: "/mots-c/" },
+  { label: "Sermorelin", to: "/sermorelin/" },
+];
+
+/**
  * Free content library, the care-process overview, and the company cluster
  * (About/FAQ/Contact), combined into one "More" dropdown (2026-08-27) so the
  * 4 treatment-category dropdowns (Weight Loss / Sexual Health / Hair /
@@ -309,6 +320,7 @@ function DesktopNav() {
       sections: SEXUAL_HEALTH_SECTIONS,
     },
     { id: "hair", label: "Hair Loss", sections: HAIR_SECTIONS },
+    { id: "peptides", label: "Peptides", items: PEPTIDES_ITEMS },
     { id: "wellness", label: "Wellness", items: WELLNESS_ITEMS },
     { id: "more", label: "More", sections: MORE_SECTIONS },
   ] as const;
@@ -551,7 +563,10 @@ function MobileNavDropdown({
         type="button"
         aria-expanded={expanded}
         onClick={() => setExpanded((e) => !e)}
-        className="flex w-full cursor-pointer items-center justify-between rounded-xl px-1 py-2.5 text-xl font-semibold text-ink-foreground transition-colors hover:text-primary"
+        className={cn(
+          "flex w-full cursor-pointer items-center justify-between rounded-xl px-1 py-2.5 text-xl font-semibold transition-colors hover:text-primary",
+          expanded ? "text-primary" : "text-ink-foreground",
+        )}
       >
         {label}
         <ChevronDown
@@ -772,6 +787,11 @@ export function SiteHeader() {
               <MobileNavDropdown
                 label="Hair Loss"
                 sections={HAIR_SECTIONS}
+                onNavigate={() => setOpen(false)}
+              />
+              <MobileNavDropdown
+                label="Peptides"
+                items={PEPTIDES_ITEMS}
                 onNavigate={() => setOpen(false)}
               />
               <MobileNavDropdown

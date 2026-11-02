@@ -211,6 +211,14 @@ export const PRODUCT_PAGES: PageDef[] = [
     title: "Sermorelin",
     routeFile: "src/routes/sermorelin.tsx",
   },
+  {
+    id: "mots-c",
+    path: "/mots-c/",
+    group: "product",
+    variants: true,
+    title: "MOTS-C",
+    routeFile: "src/routes/mots-c.tsx",
+  },
 ];
 
 /**
@@ -286,6 +294,7 @@ const CTA_PREFIX_TO_PAGE: readonly [string, string][] = [
   ["oral_minoxidil_women_", "oral-minoxidil-women"],
   ["nad_", "nad-plus"],
   ["sermorelin_", "sermorelin"],
+  ["mots_c_", "mots-c"],
   ["home_", "home"],
 ];
 

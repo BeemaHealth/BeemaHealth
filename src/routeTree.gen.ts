@@ -30,6 +30,7 @@ import { Route as OralMinoxidilWomenRouteImport } from './routes/oral-minoxidil-
 import { Route as OralMinoxidilMenRouteImport } from './routes/oral-minoxidil-men'
 import { Route as OralFinasterideRouteImport } from './routes/oral-finasteride'
 import { Route as NadPlusRouteImport } from './routes/nad-plus'
+import { Route as MotsCRouteImport } from './routes/mots-c'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as IntakeRouteImport } from './routes/intake'
@@ -199,6 +200,11 @@ const OralFinasterideRoute = OralFinasterideRouteImport.update({
 const NadPlusRoute = NadPlusRouteImport.update({
   id: '/nad-plus',
   path: '/nad-plus',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MotsCRoute = MotsCRouteImport.update({
+  id: '/mots-c',
+  path: '/mots-c',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -554,6 +560,7 @@ export interface FileRoutesByFullPath {
   '/intake': typeof IntakeRoute
   '/learn': typeof LearnRouteWithChildren
   '/login': typeof LoginRoute
+  '/mots-c': typeof MotsCRoute
   '/nad-plus': typeof NadPlusRoute
   '/oral-finasteride': typeof OralFinasterideRoute
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
@@ -639,6 +646,7 @@ export interface FileRoutesByTo {
   '/how-it-works': typeof HowItWorksRoute
   '/intake': typeof IntakeRoute
   '/login': typeof LoginRoute
+  '/mots-c': typeof MotsCRoute
   '/nad-plus': typeof NadPlusRoute
   '/oral-finasteride': typeof OralFinasterideRoute
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
@@ -722,6 +730,7 @@ export interface FileRoutesById {
   '/intake': typeof IntakeRoute
   '/learn': typeof LearnRouteWithChildren
   '/login': typeof LoginRoute
+  '/mots-c': typeof MotsCRoute
   '/nad-plus': typeof NadPlusRoute
   '/oral-finasteride': typeof OralFinasterideRoute
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
@@ -812,6 +821,7 @@ export interface FileRouteTypes {
     | '/intake'
     | '/learn'
     | '/login'
+    | '/mots-c'
     | '/nad-plus'
     | '/oral-finasteride'
     | '/oral-minoxidil-men'
@@ -897,6 +907,7 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/intake'
     | '/login'
+    | '/mots-c'
     | '/nad-plus'
     | '/oral-finasteride'
     | '/oral-minoxidil-men'
@@ -979,6 +990,7 @@ export interface FileRouteTypes {
     | '/intake'
     | '/learn'
     | '/login'
+    | '/mots-c'
     | '/nad-plus'
     | '/oral-finasteride'
     | '/oral-minoxidil-men'
@@ -1068,6 +1080,7 @@ export interface RootRouteChildren {
   IntakeRoute: typeof IntakeRoute
   LearnRoute: typeof LearnRouteWithChildren
   LoginRoute: typeof LoginRoute
+  MotsCRoute: typeof MotsCRoute
   NadPlusRoute: typeof NadPlusRoute
   OralFinasterideRoute: typeof OralFinasterideRoute
   OralMinoxidilMenRoute: typeof OralMinoxidilMenRoute
@@ -1249,6 +1262,13 @@ declare module '@tanstack/react-router' {
       path: '/nad-plus'
       fullPath: '/nad-plus'
       preLoaderRoute: typeof NadPlusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mots-c': {
+      id: '/mots-c'
+      path: '/mots-c'
+      fullPath: '/mots-c'
+      preLoaderRoute: typeof MotsCRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -1882,6 +1902,7 @@ const rootRouteChildren: RootRouteChildren = {
   IntakeRoute: IntakeRoute,
   LearnRoute: LearnRouteWithChildren,
   LoginRoute: LoginRoute,
+  MotsCRoute: MotsCRoute,
   NadPlusRoute: NadPlusRoute,
   OralFinasterideRoute: OralFinasterideRoute,
   OralMinoxidilMenRoute: OralMinoxidilMenRoute,

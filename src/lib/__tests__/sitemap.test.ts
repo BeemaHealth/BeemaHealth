@@ -38,6 +38,7 @@ const EXPECTED_PATHS = [
   "/ed-mints-boston/",
   "/nad-plus/",
   "/sermorelin/",
+  "/mots-c/",
   "/sexual-health/",
   "/hair-loss/",
   "/glp-1/",

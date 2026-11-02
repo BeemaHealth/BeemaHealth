@@ -303,6 +303,19 @@ export const SERMORELIN_PRICING: SimpleCompoundedPricing = {
   quarterly: quarterlyPlan(597, 249),
 };
 
+/**
+ * MOTS-C (new 2026-11-02, per Matt's cost-sheet screenshot, the first
+ * product on the Peptides nav dropdown). Interactive 3-month/1-month picker
+ * like sermorelin/NAD+: 3 months (15 mL, quarterly) at $597 total (~$199/mo,
+ * saving $240) is the default tab, 1 month (5 mL) at $279/mo is the explicit
+ * alternate tab. The hero leads with the $199/mo quarterly rate via
+ * `formatSimpleQuarterlyStartingAt()`.
+ */
+export const MOTS_C_PRICING: SimpleCompoundedPricing = {
+  monthlyUsd: 279,
+  quarterly: quarterlyPlan(597, 279),
+};
+
 /** Short card headline, e.g. "$169/mo". */
 export function formatSimpleStartingAt(
   pricing: SimpleCompoundedPricing,
@@ -391,6 +404,7 @@ export function listKnownSimpleTreatmentPricingUsdAmounts(): number[] {
     ED_MINTS_ODT_PRICING,
     NAD_PRICING,
     SERMORELIN_PRICING,
+    MOTS_C_PRICING,
   ]) {
     amounts.add(roundMoney(pricing.monthlyUsd));
     if (pricing.quarterly) {

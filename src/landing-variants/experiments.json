@@ -326,5 +326,14 @@
         "weight": 100
       }
     }
+  },
+  "mots-c": {
+    "experimentId": "mots-c-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      }
+    }
   }
 }

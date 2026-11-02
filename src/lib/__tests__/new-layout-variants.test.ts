@@ -20,6 +20,12 @@ const modules = import.meta.glob<{ variant: LandingVariant }>(
   "../../landing-variants/*/v3-new-layout.tsx",
   { eager: true },
 );
+// MOTS-C launched straight on the new layout, so its control (v1-control) is
+// the new-layout variant and there is no separate v3 file.
+const motsCModules = import.meta.glob<{ variant: LandingVariant }>(
+  "../../landing-variants/mots-c/v1-control.tsx",
+  { eager: true },
+);
 
 async function render(variant: LandingVariant): Promise<string> {
   const Page = variant.Component;
@@ -33,7 +39,7 @@ async function render(variant: LandingVariant): Promise<string> {
 }
 
 describe("new-layout (shared template) variants", () => {
-  const entries = Object.entries(modules);
+  const entries = Object.entries({ ...modules, ...motsCModules });
 
   it("exists for every landing and product page that has a new layout", () => {
     const pages = entries.map(([p]) => p.split("/").at(-2)).sort();
@@ -44,6 +50,7 @@ describe("new-layout (shared template) variants", () => {
         "glp-1",
         "hair-loss-spray-men",
         "hair-loss-spray-women",
+        "mots-c",
         "nad-plus",
         "oral-finasteride",
         "oral-minoxidil-men",
@@ -67,6 +74,7 @@ describe("new-layout (shared template) variants", () => {
     "glp-1",
     "hair-loss-spray-men",
     "hair-loss-spray-women",
+    "mots-c",
     "nad-plus",
     "oral-finasteride",
     "oral-minoxidil-men",

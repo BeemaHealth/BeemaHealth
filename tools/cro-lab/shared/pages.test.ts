@@ -41,6 +41,7 @@ test("pageIdFromCtaId maps every tracked page's CTA ids", () => {
     ["oral_minoxidil_women_footer", "oral-minoxidil-women"],
     ["nad_hero", "nad-plus"],
     ["sermorelin_footer", "sermorelin"],
+    ["mots_c_footer", "mots-c"],
     ["home_mid", "home"],
   ];
   for (const [cta, page] of cases)

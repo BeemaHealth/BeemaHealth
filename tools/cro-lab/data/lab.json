@@ -780,6 +780,21 @@
       "whyTested": "",
       "expected": "",
       "notes": ""
+    },
+    {
+      "id": "v1-control",
+      "pageId": "mots-c",
+      "name": "Control (new layout)",
+      "description": "Discovered on disk.",
+      "componentPath": "src/landing-variants/mots-c/v1-control.tsx",
+      "createdAt": "2026-11-02T19:12:17.434Z",
+      "status": "draft",
+      "parentId": null,
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
     }
   ],
   "deployments": [
