@@ -8,7 +8,7 @@ import { Play } from "lucide-react";
  * is required.
  */
 export const PATIENT_STORY_YOUTUBE_ID = "16ZYihb0Wfo";
-const PATIENT_STORY_POSTER = "/videos/patient-story-general-poster.jpg";
+const PATIENT_STORY_POSTER = "/videos/patient-story-general-poster.webp";
 
 /**
  * Click-to-load YouTube embed: no YouTube JS or cookies load until the

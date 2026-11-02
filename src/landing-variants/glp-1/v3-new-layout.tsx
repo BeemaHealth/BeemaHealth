@@ -71,7 +71,7 @@ const MEDICATION_PICKER: Record<
  * pages. Do not add paraphrased quotes or results claims next to it.
  */
 const PATIENT_STORY_YOUTUBE_ID = "16ZYihb0Wfo";
-const PATIENT_STORY_POSTER = "/videos/patient-story-general-poster.jpg";
+const PATIENT_STORY_POSTER = "/videos/patient-story-general-poster.webp";
 
 /**
  * Click-to-load YouTube embed: no YouTube JS or cookies load until the

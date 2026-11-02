@@ -69,7 +69,7 @@ const MEDICATION_PICKER: Record<
  * video speaks for itself and the disclaimer below it is required.
  */
 const PATIENT_STORY_YOUTUBE_ID = "ZRzKvDBRjYs";
-const PATIENT_STORY_POSTER = "/videos/patient-story-glp1-poster.jpg";
+const PATIENT_STORY_POSTER = "/videos/patient-story-glp1-poster.webp";
 
 /**
  * Click-to-load YouTube embed: no YouTube JS or cookies load until the

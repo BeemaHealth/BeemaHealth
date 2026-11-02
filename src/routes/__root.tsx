@@ -21,6 +21,10 @@ import { duplicateHomepageRedirectTarget } from "@/lib/canonicalize-url";
 import { SITE_CHROME_PRELOAD_LINK } from "@/lib/boot-assets";
 
 import appCss from "../styles.css?url";
+// Fonts the first screen paints with (H1 = Outfit 700, body/lead = Figtree 400).
+// Preloaded so they download alongside the stylesheet instead of after it.
+import outfit700 from "@fontsource/outfit/files/outfit-latin-700-normal.woff2?url";
+import figtree400 from "@fontsource/figtree/files/figtree-latin-400-normal.woff2?url";
 import { AuthProvider } from "../context/AuthContext";
 import { NotFoundPage } from "@/components/site/NotFoundPage";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -188,6 +192,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         {
           rel: "stylesheet",
           href: appCss,
+        },
+        // Fonts are same-origin but still need crossOrigin: font fetches are
+        // always CORS-mode, so a preload without it is discarded and the file
+        // downloads twice.
+        {
+          rel: "preload",
+          as: "font",
+          type: "font/woff2",
+          href: outfit700,
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "preload",
+          as: "font",
+          type: "font/woff2",
+          href: figtree400,
+          crossOrigin: "anonymous",
         },
         SITE_CHROME_PRELOAD_LINK,
       ],

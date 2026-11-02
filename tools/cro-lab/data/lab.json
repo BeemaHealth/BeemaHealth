@@ -797,7 +797,7 @@
       "pageId": "semaglutide-houston",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:31:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -806,7 +806,7 @@
       "pageId": "tirzepatide-houston",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:31:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -815,7 +815,7 @@
       "pageId": "sildenafil-boston",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:31:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -824,7 +824,7 @@
       "pageId": "tadalafil-boston",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:31:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -833,7 +833,7 @@
       "pageId": "ed-mints-boston",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:31:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -878,7 +878,7 @@
       "pageId": "semaglutide",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:31:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -887,7 +887,7 @@
       "pageId": "tirzepatide",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:31:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -896,7 +896,7 @@
       "pageId": "ed-mints",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:32:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -905,7 +905,7 @@
       "pageId": "tadalafil",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:32:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -914,7 +914,7 @@
       "pageId": "sildenafil",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:32:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -923,7 +923,7 @@
       "pageId": "hair-loss-spray-men",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:32:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -932,7 +932,7 @@
       "pageId": "hair-loss-spray-women",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:32:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -941,7 +941,7 @@
       "pageId": "oral-finasteride",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:32:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -950,7 +950,7 @@
       "pageId": "oral-minoxidil-men",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:32:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -959,7 +959,7 @@
       "pageId": "oral-minoxidil-women",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:32:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -968,7 +968,7 @@
       "pageId": "nad-plus",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:32:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -977,7 +977,7 @@
       "pageId": "sermorelin",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:32:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -995,7 +995,7 @@
       "pageId": "weight-loss",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:31:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -1004,7 +1004,7 @@
       "pageId": "glp-1",
       "variantId": "v1-control",
       "startUtc": "2026-08-01T06:00:00.000Z",
-      "endUtc": null,
+      "endUtc": "2026-11-01T23:31:00.000Z",
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
     },
@@ -1025,6 +1025,177 @@
       "endUtc": null,
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
+    },
+    {
+      "id": "dmvygrd45",
+      "pageId": "semaglutide-houston",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:31:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygrmdw",
+      "pageId": "tirzepatide-houston",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:31:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygrqdv",
+      "pageId": "sildenafil-boston",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:31:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygrvcy",
+      "pageId": "tadalafil-boston",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:31:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygrzq5",
+      "pageId": "ed-mints-boston",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:31:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygs4uu",
+      "pageId": "weight-loss",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:31:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygs7o7",
+      "pageId": "glp-1",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:31:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygsb4q",
+      "pageId": "tirzepatide",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:31:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygsdzq",
+      "pageId": "semaglutide",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:31:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygso5p",
+      "pageId": "tadalafil",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:32:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygsqvc",
+      "pageId": "ed-mints",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:32:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygsto2",
+      "pageId": "sildenafil",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:32:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygsxra",
+      "pageId": "hair-loss-spray-men",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:32:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygt0vl",
+      "pageId": "hair-loss-spray-women",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:32:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygt7fg",
+      "pageId": "oral-finasteride",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:32:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygtagq",
+      "pageId": "oral-minoxidil-men",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:32:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygtdtb",
+      "pageId": "oral-minoxidil-women",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:32:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygth96",
+      "pageId": "nad-plus",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:32:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
+    },
+    {
+      "id": "dmvygtk2a",
+      "pageId": "sermorelin",
+      "variantId": "v3-new-layout",
+      "startUtc": "2026-11-01T23:32:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Recorded in the CRO Lab."
     }
   ],
   "tests": [
