@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -95,6 +95,71 @@ export function StartButton({
     >
       {label}
     </Button>
+  );
+}
+
+/** Marks the hero so `StickyGetStarted` knows when the visitor has scrolled past it. */
+export const STICKY_HERO_ATTR = "data-sticky-hero";
+
+/**
+ * Mobile-only Get Started bar pinned to the bottom of the viewport once the
+ * hero has scrolled out of view (hidden again when the site footer is in
+ * view). Uses the page's own hero CTA, so click attribution and destination
+ * match the hero button exactly. Always rendered (collapsed and inert until
+ * shown) so server and client markup stay identical.
+ */
+export function StickyGetStarted({ cta }: { cta: TemplateCta }) {
+  const [pastHero, setPastHero] = useState(false);
+  const [footerVisible, setFooterVisible] = useState(false);
+
+  useEffect(() => {
+    const hero = document.querySelector(`[${STICKY_HERO_ATTR}]`);
+    const footer = document.querySelector("footer");
+    if (typeof IntersectionObserver === "undefined") return;
+
+    const observers: IntersectionObserver[] = [];
+    if (hero) {
+      const o = new IntersectionObserver(([entry]) => {
+        // Past the hero = it is off screen AND above the viewport (not below it).
+        setPastHero(
+          !entry.isIntersecting && entry.boundingClientRect.bottom <= 0,
+        );
+      });
+      o.observe(hero);
+      observers.push(o);
+    }
+    if (footer) {
+      const o = new IntersectionObserver(([entry]) =>
+        setFooterVisible(entry.isIntersecting),
+      );
+      o.observe(footer);
+      observers.push(o);
+    }
+    return () => observers.forEach((o) => o.disconnect());
+  }, []);
+
+  const visible = pastHero && !footerVisible;
+
+  return (
+    <>
+      {visible ? (
+        // Lift the sitewide chat launcher and its greeting bubble above the
+        // bar (bar is about 4.5rem tall). `translate` is independent of the
+        // `transform` Chatbase may animate with. Chat window is left alone.
+        <style>{`@media (max-width:767px){#chatbase-bubble-button,#chatbase-message-bubbles{translate:0 calc(-4.75rem - env(safe-area-inset-bottom))!important;transition:translate .3s ease}}`}</style>
+      ) : null}
+      <div
+        aria-hidden={!visible}
+        inert={!visible}
+        className={cn(
+          "fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 px-4 pt-3 shadow-lift backdrop-blur-md transition-transform duration-300 motion-reduce:transition-none md:hidden",
+          "pb-[max(0.75rem,env(safe-area-inset-bottom))]",
+          visible ? "translate-y-0" : "translate-y-full",
+        )}
+      >
+        <StartButton cta={cta} size="lg" className="w-full" />
+      </div>
+    </>
   );
 }
 
@@ -232,7 +297,10 @@ export function HeroSection({
 }: HeroProps) {
   const thumb = imageLayout === "single" ? "single" : "duo";
   return (
-    <section className="bg-background pb-12 pt-6 md:pb-20 md:pt-14">
+    <section
+      {...{ [STICKY_HERO_ATTR]: "" }}
+      className="bg-background pb-12 pt-6 md:pb-20 md:pt-14"
+    >
       <div className="veya-container">
         <div className="grid items-center gap-9 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
           <div>
@@ -790,6 +858,7 @@ export function LandingTemplate(props: LandingTemplateProps) {
         </Fragment>
       ))}
       {props.children}
+      <StickyGetStarted cta={props.hero.cta} />
     </MarketingLayout>
   );
 }

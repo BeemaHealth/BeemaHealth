@@ -107,4 +107,19 @@ describe("new-layout (shared template) variants", () => {
     // No em dashes anywhere in shipped copy.
     expect(html).not.toContain("—");
   });
+
+  it.each(entries)(
+    "%s has a hero marker and a collapsed mobile sticky Get Started bar",
+    async (_p, mod) => {
+      const html = await render(mod.variant);
+      // The bar watches this marker to know when the hero has scrolled away.
+      expect(html).toContain("data-sticky-hero");
+      // Server markup renders the bar hidden and inert (shown only client-side
+      // after scroll), and mobile-only.
+      expect(html).toMatch(
+        /<div[^>]*class="[^"]*md:hidden[^"]*translate-y-full"/,
+      );
+      expect(html).toMatch(/<div[^>]*aria-hidden="true"[^>]*inert=""/);
+    },
+  );
 });

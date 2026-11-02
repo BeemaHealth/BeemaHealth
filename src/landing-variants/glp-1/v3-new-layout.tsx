@@ -28,6 +28,10 @@ import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
 import { EASE_OUT } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
+import {
+  STICKY_HERO_ATTR,
+  StickyGetStarted,
+} from "../template/LandingTemplate";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import { cn } from "@/lib/utils";
 import { resolveVialImagery, type MedicationId } from "@/lib/treatment-imagery";
@@ -239,7 +243,10 @@ function Glp1NationalNewLayout() {
 
   return (
     <MarketingLayout>
-      <section className="bg-background pb-12 pt-6 md:pb-20 md:pt-14">
+      <section
+        {...{ [STICKY_HERO_ATTR]: "" }}
+        className="bg-background pb-12 pt-6 md:pb-20 md:pt-14"
+      >
         <div className="veya-container">
           <div className="grid items-center gap-9 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
             <div>
@@ -655,6 +662,7 @@ function Glp1NationalNewLayout() {
         </div>
       </Section>
       <MoneyPageGuides path="/glp-1/" />
+      <StickyGetStarted cta={heroCta} />
     </MarketingLayout>
   );
 }
