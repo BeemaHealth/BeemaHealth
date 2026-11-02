@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { ImageDisclaimer } from "@/components/site/ImageDisclaimer";
 import { useEffect, useState, type ReactNode } from "react";
 import { ArrowRight, CheckCircle2, type LucideIcon } from "lucide-react";
 import {
@@ -157,6 +158,7 @@ export function TreatmentPricingCard({
               height={imagery.height}
               className="absolute inset-0 h-full w-full object-contain p-8 sm:p-10 lg:p-10"
             />
+            <ImageDisclaimer overlay />
           </div>
           <div className="p-6 md:p-8">{pricingContent}</div>
         </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ImageDisclaimer } from "@/components/site/ImageDisclaimer";
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -182,6 +183,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
                   fetchPriority="high"
                   className="absolute bottom-[5%] left-[6%] h-[66%] w-auto object-contain drop-shadow-2xl"
                 />
+                <ImageDisclaimer overlay />
               </div>
             </div>
           </div>

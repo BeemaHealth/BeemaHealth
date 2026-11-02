@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ImageDisclaimer } from "@/components/site/ImageDisclaimer";
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -356,6 +357,7 @@ function Glp1NationalNewLayout() {
                   fetchPriority="high"
                   className="absolute bottom-[5%] left-[6%] h-[66%] w-auto object-contain drop-shadow-2xl"
                 />
+                <ImageDisclaimer overlay />
               </div>
             </div>
           </div>
@@ -424,6 +426,7 @@ function Glp1NationalNewLayout() {
                   decoding="async"
                   className="absolute bottom-[5%] left-[6%] h-[66%] w-auto object-contain drop-shadow-2xl"
                 />
+                <ImageDisclaimer overlay />
               </div>
             </div>
             <ul className="order-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
