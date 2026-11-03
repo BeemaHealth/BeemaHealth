@@ -5,8 +5,6 @@ import { HeaderLogo } from "@/components/brand/Logo";
 import { HoverLiftButton, InfinityMotif } from "@/components/site/primitives";
 import { GetStartedModal } from "@/components/site/GetStartedModal";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
-import { FIRST_MONTH_PROMO_LINE } from "@/lib/marketing-copy";
-import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
 import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
 import {
   GOOGLE_REVIEW_LINK_LABEL,
@@ -122,10 +120,9 @@ export function SiteFooter() {
               <HeaderLogo className="h-10" />
             </span>
             <p className="mt-4 text-sm leading-relaxed text-ink-foreground/70">
-              Weight-loss care guided by independent medical professionals,
-              503A-licensed pharmacies, with transparent cash pricing (
-              {dualCompoundedShortPricingLine()}), and support designed for
-              success.
+              Medical care guided by independent medical professionals,
+              USA 503A-licensed pharmacies, with transparent cash pricing, and
+              support designed for success.
             </p>
             <HoverLiftButton className="mt-6 block">
               <button
@@ -136,9 +133,6 @@ export function SiteFooter() {
                 {cta.label}
               </button>
             </HoverLiftButton>
-            <p className="mt-3 text-xs font-medium text-primary">
-              Offer: {FIRST_MONTH_PROMO_LINE}
-            </p>
 
             <div className="mt-6 flex items-center gap-5 border-t border-ink-foreground/15 pt-6">
               <a
