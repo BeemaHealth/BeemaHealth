@@ -29,7 +29,8 @@ describe("404 page", () => {
     expect(dataLayer).toEqual([
       {
         event: "intake_handoff",
-        cta_location: "not_found",
+        cta_id: "not_found",
+        cta_location: "mid_page",
         event_id: expect.any(String),
       },
     ]);

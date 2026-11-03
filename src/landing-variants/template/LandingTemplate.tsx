@@ -22,7 +22,7 @@ import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import { EASE_OUT } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import type { resolveCta } from "@/lib/cta-ids";
+import type { CtaPosition, resolveCta } from "@/lib/cta-ids";
 import { GOOGLE_RATING_VALUE } from "@/lib/google-business";
 import { cn } from "@/lib/utils";
 import { PatientStoryVideo } from "./PatientStoryVideo";
@@ -59,6 +59,20 @@ export const LAZY_SECTION =
 export type TemplateCta =
   | ReturnType<typeof resolveCta>
   | { label: string; onClick: () => void; to?: undefined; search?: undefined };
+
+/**
+ * Report a CTA from the spot it actually sits in (`cta_location`), not the
+ * position of the id it was resolved with. Pages pass the hero CTA into the
+ * story, mid-page, final and sticky blocks; without this every one of those
+ * clicks would be reported as "hero". Plain `{ label, onClick }` CTAs (modal
+ * openers) pass through unchanged.
+ */
+export function atPosition(
+  cta: TemplateCta,
+  position: CtaPosition,
+): TemplateCta {
+  return "withPosition" in cta ? cta.withPosition(position) : cta;
+}
 
 function isLinkCta(cta: TemplateCta): cta is ReturnType<typeof resolveCta> {
   return typeof (cta as { to?: unknown }).to === "string";
@@ -158,7 +172,11 @@ export function StickyGetStarted({ cta }: { cta: TemplateCta }) {
           visible ? "translate-y-0" : "translate-y-full",
         )}
       >
-        <StartButton cta={cta} size="lg" className="w-full" />
+        <StartButton
+          cta={atPosition(cta, "sticky")}
+          size="lg"
+          className="w-full"
+        />
       </div>
     </>
   );
@@ -498,13 +516,16 @@ export function StorySection({
             {body}
           </p>
           <div className="mt-6 hidden lg:block">
-            <StartButton cta={cta} size="lg" />
+            <StartButton cta={atPosition(cta, "mid_page")} size="lg" />
           </div>
         </motion.div>
         <motion.div {...reveal}>
           <PatientStoryVideo videoId={videoId} poster={poster} />
           <StoryDisclaimerNote kind={disclaimer} />
-          <StartButton cta={cta} className="mt-6 w-full lg:hidden" />
+          <StartButton
+            cta={atPosition(cta, "mid_page")}
+            className="mt-6 w-full lg:hidden"
+          />
         </motion.div>
       </div>
     </Section>
@@ -628,7 +649,10 @@ export function MidCtaSection({
         <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
           {body}
         </p>
-        <StartButton cta={cta} className="mt-8 w-full sm:w-auto" />
+        <StartButton
+          cta={atPosition(cta, "mid_page")}
+          className="mt-8 w-full sm:w-auto"
+        />
         <p className="mt-3 text-xs text-muted-foreground">
           Prescribing is never guaranteed.
         </p>
@@ -721,7 +745,7 @@ export function FinalCtaSection({
           {body}
         </p>
         <StartButton
-          cta={cta}
+          cta={atPosition(cta, "footer")}
           className="mt-8 w-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 sm:w-auto"
         />
         <p className="mt-4 text-xs text-primary-foreground/70">

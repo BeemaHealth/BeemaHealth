@@ -1,4 +1,10 @@
-import { isBaskIntakeUrl, trackIntakeHandoff } from "@/lib/gtm";
+import {
+  isBaskIntakeUrl,
+  trackIntakeHandoff,
+  type CtaPosition,
+} from "@/lib/gtm";
+
+export type { CtaPosition };
 import { experimentEventParams } from "@/lib/experiment-context";
 import { getBaskHandoffParams } from "@/lib/utm";
 
@@ -404,17 +410,42 @@ export function buildCtaSearch(ctaId: CtaId): CtaSearchParams {
 }
 
 /**
+ * Default position for a CTA id, from its suffix: `*_hero` is hero, `*_footer`
+ * / `footer` is footer, `*_pricing*` is pricing; everything else (mid-page
+ * blocks, BMI calculators, article and utility-page CTAs) is mid_page. Callers
+ * override with `resolveCta(id, position)` or `cta.withPosition(position)`
+ * when the same id is reused somewhere else on the page (pricing card, sticky).
+ */
+export function defaultCtaPosition(ctaId: CtaId): CtaPosition {
+  if (ctaId === "footer" || ctaId.endsWith("_footer")) return "footer";
+  if (ctaId.endsWith("_hero")) return "hero";
+  if (ctaId.includes("pricing")) return "pricing";
+  return "mid_page";
+}
+
+export type ResolvedCta = CtaTarget & {
+  search: CtaSearchParams;
+  onClick: () => void;
+  /** Same destination and cta_id, reported from a different spot on the page. */
+  withPosition: (position: CtaPosition) => ResolvedCta;
+};
+
+/**
  * Resolve a CTA id to its current label, destination, attribution search
  * params, and click handler. `onClick` pushes `intake_handoff` to the GTM
- * dataLayer (event + cta_location only - no PHI) when the destination is
- * Bask intake (`q.beemahealth.com`). Wire it on every marketing CTA Link.
+ * dataLayer (event + cta_id + cta_location only - no PHI) when the destination
+ * is Bask intake (`q.beemahealth.com`). Wire it on every marketing CTA Link.
+ *
+ * `position` is the on-page location reported as `cta_location`; it defaults
+ * from the id suffix (see `defaultCtaPosition`).
  *
  * For Bask (absolute) destinations, attribution params are baked into `to`
  * because TanStack Link does not apply `search` to external hrefs.
  */
 export function resolveCta(
   ctaId: CtaId,
-): CtaTarget & { search: CtaSearchParams; onClick: () => void } {
+  position: CtaPosition = defaultCtaPosition(ctaId),
+): ResolvedCta {
   const target = CTA_OVERRIDES[ctaId] ?? DEFAULT_CTA_TARGET;
   const search = buildCtaSearch(ctaId);
   const to = isAbsoluteHttpUrl(target.to)
@@ -427,12 +458,12 @@ export function resolveCta(
     search,
     onClick: () => {
       if (isBaskIntakeUrl(target.to)) {
-        // cta_location uses the stable CtaId (e.g. home_hero, footer, pricing_hero).
         // One dataLayer push only: GTM fans it out to GA4 and Meta. A second
         // gtag("event", "intake_handoff") lands in the dataLayer too and
         // double-fires the GTM tags.
-        trackIntakeHandoff(ctaId, experimentEventParams());
+        trackIntakeHandoff(ctaId, position, experimentEventParams());
       }
     },
+    withPosition: (next) => resolveCta(ctaId, next),
   };
 }

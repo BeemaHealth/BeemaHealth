@@ -10,7 +10,7 @@ import {
   isGtmProductionHost,
   trackIntakeHandoff,
 } from "@/lib/gtm";
-import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
+import { CTA_IDS, defaultCtaPosition, resolveCta } from "@/lib/cta-ids";
 
 describe("gtm", () => {
   const rootRoute = readFileSync(
@@ -233,16 +233,17 @@ describe("gtm", () => {
     expect(isBaskIntakeUrl("/glp-1-houston/")).toBe(false);
   });
 
-  it("pushes intake_handoff with only event + cta_location + event_id", () => {
+  it("pushes intake_handoff with only event + cta_id + cta_location + event_id", () => {
     const dataLayer: unknown[] = [];
     vi.stubGlobal("window", { dataLayer });
 
-    const id = trackIntakeHandoff("home_hero");
+    const id = trackIntakeHandoff("home_hero", "hero");
 
     expect(dataLayer).toHaveLength(1);
     expect(dataLayer[0]).toEqual({
       event: "intake_handoff",
-      cta_location: "home_hero",
+      cta_id: "home_hero",
+      cta_location: "hero",
       event_id: id,
     });
     expect(id).toMatch(/^[0-9a-f-]{36}$/);
@@ -253,8 +254,8 @@ describe("gtm", () => {
     const dataLayer: unknown[] = [];
     vi.stubGlobal("window", { dataLayer });
 
-    const a = trackIntakeHandoff("home_hero");
-    const b = trackIntakeHandoff("home_hero");
+    const a = trackIntakeHandoff("home_hero", "hero");
+    const b = trackIntakeHandoff("home_hero", "hero");
 
     expect(a).not.toBe(b);
   });
@@ -273,9 +274,54 @@ describe("gtm", () => {
 
     expect(dataLayer[0]).toEqual({
       event: "intake_handoff",
-      cta_location: "home_hero",
+      cta_id: "home_hero",
+      cta_location: "hero",
       event_id: expect.any(String),
     });
+  });
+
+  it.each([
+    [CTA_IDS.tirzepatide_hero, "hero"],
+    [CTA_IDS.tirzepatide_footer, "footer"],
+    [CTA_IDS.footer, "footer"],
+    [CTA_IDS.glp1_mid, "mid_page"],
+    [CTA_IDS.tirzepatide_bmi, "mid_page"],
+    [CTA_IDS.pricing_hero, "hero"],
+    [CTA_IDS.pricing_footer, "footer"],
+    [CTA_IDS.faq, "mid_page"],
+  ] as const)("derives cta_location for %s as %s", (ctaId, expected) => {
+    expect(defaultCtaPosition(ctaId)).toBe(expected);
+  });
+
+  it("withPosition reports the same cta_id from a different spot", () => {
+    const dataLayer: unknown[] = [];
+    vi.stubGlobal("window", {
+      dataLayer,
+      location: { search: "", pathname: "/" },
+    });
+
+    const hero = resolveCta(CTA_IDS.tirzepatide_hero);
+    const pricing = hero.withPosition("pricing");
+    expect(pricing.to).toBe(hero.to);
+
+    hero.onClick();
+    pricing.onClick();
+    resolveCta(CTA_IDS.tirzepatide_hero, "sticky").onClick();
+
+    expect(dataLayer).toEqual([
+      expect.objectContaining({
+        cta_id: "tirzepatide_hero",
+        cta_location: "hero",
+      }),
+      expect.objectContaining({
+        cta_id: "tirzepatide_hero",
+        cta_location: "pricing",
+      }),
+      expect.objectContaining({
+        cta_id: "tirzepatide_hero",
+        cta_location: "sticky",
+      }),
+    ]);
   });
 
   it.each([
@@ -300,7 +346,8 @@ describe("gtm", () => {
       expect(dataLayer).toEqual([
         {
           event: "intake_handoff",
-          cta_location: expectedLocation,
+          cta_id: expectedLocation,
+          cta_location: "mid_page",
           event_id: expect.any(String),
         },
       ]);

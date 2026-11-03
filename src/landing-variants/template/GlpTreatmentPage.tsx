@@ -269,7 +269,7 @@ export function GlpTreatmentPage({
             <TreatmentPricingCard
               pricing={pricing}
               imagery={imagery}
-              cta={heroCta}
+              cta={heroCta.withPosition("pricing")}
               className="h-full"
             />
           </div>

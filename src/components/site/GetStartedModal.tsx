@@ -18,7 +18,12 @@ import {
 } from "@/components/ui/dialog";
 import { FullScreenMobileDialogContent } from "@/components/site/FullScreenMobileDialog";
 import { EdMintsPickerModal } from "@/components/site/EdMintsPicker";
-import { CTA_IDS, resolveCta, type CtaId } from "@/lib/cta-ids";
+import {
+  CTA_IDS,
+  resolveCta,
+  type CtaId,
+  type CtaPosition,
+} from "@/lib/cta-ids";
 import { cn } from "@/lib/utils";
 
 /**
@@ -231,9 +236,15 @@ const SEX_LABEL: Record<Sex, string> = { male: "Male", female: "Female" };
 export function GetStartedModal({
   open,
   onOpenChange,
+  position,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /**
+   * Where on the page the button that opened this modal sits, reported as
+   * `cta_location`. Omit to derive it from each product's id (hero).
+   */
+  position?: CtaPosition;
 }) {
   const [step, setStep] = useState<Step>("category");
   const [categoryId, setCategoryId] = useState<string | null>(null);
@@ -325,7 +336,7 @@ export function GetStartedModal({
                   const autoCtaId = autoAdvanceCtaId(category);
 
                   if (autoCtaId) {
-                    const cta = resolveCta(autoCtaId);
+                    const cta = resolveCta(autoCtaId, position);
                     return (
                       <Link
                         key={category.id}
@@ -424,7 +435,7 @@ export function GetStartedModal({
                     );
                   }
 
-                  const cta = resolveCta(product.ctaId);
+                  const cta = resolveCta(product.ctaId, position);
                   return (
                     <Link
                       key={product.ctaId}
@@ -458,6 +469,7 @@ export function GetStartedModal({
         onOpenChange={setEdMintsOpen}
         initialSelected="odt"
         onBack={backFromEdMints}
+        position={position}
       />
     </>
   );

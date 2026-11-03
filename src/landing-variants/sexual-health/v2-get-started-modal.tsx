@@ -230,8 +230,8 @@ function SexualHealthGetStartedModal() {
   const [startOpen, setStartOpen] = useState(false);
   const [edMintsOpen, setEdMintsOpen] = useState(false);
   const reduceMotion = useReducedMotion();
-  const tadalafilCta = resolveCta(CTA_IDS.sexual_health_tadalafil);
-  const sildenafilCta = resolveCta(CTA_IDS.sexual_health_sildenafil);
+  const tadalafilCta = resolveCta(CTA_IDS.sexual_health_tadalafil, "pricing");
+  const sildenafilCta = resolveCta(CTA_IDS.sexual_health_sildenafil, "pricing");
 
   const reveal = {
     initial: reduceMotion ? false : { opacity: 0, y: 24 },

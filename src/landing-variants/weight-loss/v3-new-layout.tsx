@@ -133,7 +133,7 @@ function PricingPicker() {
           key={selected}
           pricing={MEDICATION_PICKER[selected].pricing}
           imagery={imagery[selected]}
-          cta={heroCta}
+          cta={heroCta.withPosition("pricing")}
         />
       </div>
       <ul className="mx-auto mt-8 max-w-2xl space-y-2">

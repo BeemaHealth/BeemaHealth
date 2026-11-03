@@ -215,7 +215,7 @@ function WeightLossControl() {
             key={selectedMedication}
             pricing={MEDICATION_PICKER[selectedMedication].pricing}
             imagery={vialImagery[selectedMedication]}
-            cta={heroCta}
+            cta={heroCta.withPosition("pricing")}
           />
         </div>
         <ul className="mx-auto mt-8 max-w-2xl space-y-2">

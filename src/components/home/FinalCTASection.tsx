@@ -19,7 +19,11 @@ export function FinalCTASection() {
   const [getStartedOpen, setGetStartedOpen] = useState(false);
   return (
     <section className="pb-16 md:pb-24">
-      <GetStartedModal open={getStartedOpen} onOpenChange={setGetStartedOpen} />
+      <GetStartedModal
+        open={getStartedOpen}
+        onOpenChange={setGetStartedOpen}
+        position="mid_page"
+      />
       <div className="veya-container">
         <div className="relative overflow-hidden rounded-4xl bg-primary px-6 py-16 text-center text-primary-foreground md:px-12 md:py-24">
           <div

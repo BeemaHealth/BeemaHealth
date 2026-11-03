@@ -14,7 +14,12 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { FullScreenMobileDialogContent } from "@/components/site/FullScreenMobileDialog";
-import { CTA_IDS, resolveCta, type CtaId } from "@/lib/cta-ids";
+import {
+  CTA_IDS,
+  resolveCta,
+  type CtaId,
+  type CtaPosition,
+} from "@/lib/cta-ids";
 import {
   ED_MINTS_RDT_PRICING,
   formatSimpleQuarterlyStartingAt,
@@ -105,6 +110,7 @@ export function EdMintsPickerModal({
   onOpenChange,
   onBack,
   ctaIds,
+  position,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -126,6 +132,8 @@ export function EdMintsPickerModal({
    * so every existing caller keeps the ed_mints_* ids.
    */
   ctaIds?: Partial<Record<"rdt" | "odt", CtaId>>;
+  /** `cta_location` for the formulation links. Omit to derive it from the id. */
+  position?: CtaPosition;
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -166,7 +174,7 @@ export function EdMintsPickerModal({
             sheet's height so both are easy to hit with a thumb. */}
         <div className="flex flex-1 flex-col gap-4 sm:grid sm:flex-none sm:grid-cols-2">
           {MINT_OPTIONS.map((opt) => {
-            const cta = resolveCta(ctaIds?.[opt.id] ?? opt.ctaId);
+            const cta = resolveCta(ctaIds?.[opt.id] ?? opt.ctaId, position);
             return (
               <Link
                 key={opt.id}

@@ -310,9 +310,13 @@ export function GenericEdBostonPage({
                 <ProductPlansDialog
                   name={c.name}
                   pricing={PRODUCT_PRICING[product]}
-                  cta={heroCta}
+                  cta={heroCta.withPosition("pricing")}
                 />
-                <StartButton cta={heroCta} size="lg" className="mt-4 w-full" />
+                <StartButton
+                  cta={heroCta.withPosition("pricing")}
+                  size="lg"
+                  className="mt-4 w-full"
+                />
               </div>
             </div>
             <EligibilityCard
@@ -467,7 +471,7 @@ function FormulationChooser() {
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         {MINT_OPTIONS.map((opt) => {
-          const cta = resolveCta(opt.ctaId);
+          const cta = resolveCta(opt.ctaId, "pricing");
           return (
             <Link
               key={opt.id}

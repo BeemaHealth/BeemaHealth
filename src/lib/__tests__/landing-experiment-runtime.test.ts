@@ -168,7 +168,8 @@ describe("LandingExperiment", () => {
     expect(window.dataLayer).toEqual([
       {
         event: "intake_handoff",
-        cta_location: "tirzepatide_houston_hero",
+        cta_id: "tirzepatide_houston_hero",
+        cta_location: "hero",
         experiment_id: "p-e1",
         variant_id: "v1-a",
         landing_page_id: "p",

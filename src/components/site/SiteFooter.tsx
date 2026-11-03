@@ -109,7 +109,11 @@ export function SiteFooter() {
   const [getStartedOpen, setGetStartedOpen] = useState(false);
   return (
     <footer className="bg-grad-ink relative overflow-hidden text-ink-foreground">
-      <GetStartedModal open={getStartedOpen} onOpenChange={setGetStartedOpen} />
+      <GetStartedModal
+        open={getStartedOpen}
+        onOpenChange={setGetStartedOpen}
+        position="footer"
+      />
       <InfinityMotif className="pointer-events-none absolute -right-16 -top-20 w-80 text-primary/10" />
       <div className="veya-container relative py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,minmax(0,1fr))]">

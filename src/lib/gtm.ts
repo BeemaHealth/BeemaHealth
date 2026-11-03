@@ -91,16 +91,33 @@ export function isBaskIntakeUrl(url: string): boolean {
 }
 
 /**
+ * Where on the page an intake CTA sits. Reported to GA4 as `cta_location`.
+ * `sticky` is the mobile bottom bar; kept separate so it is not counted as hero.
+ */
+export const CTA_POSITIONS = [
+  "hero",
+  "pricing",
+  "mid_page",
+  "footer",
+  "sticky",
+] as const;
+export type CtaPosition = (typeof CTA_POSITIONS)[number];
+
+/**
  * Push intake_handoff to dataLayer immediately before navigating to Bask.
- * Only `event` + `cta_location` + `event_id` (+ non-PHI experiment ids) - never
- * email, phone, name, or form values.
+ * Only `event` + `cta_id` + `cta_location` + `event_id` (+ non-PHI experiment
+ * ids) - never email, phone, name, or form values.
+ *
+ * `cta_id` is the stable per-button id (e.g. `tirzepatide_hero`); `cta_location`
+ * is its position on the page (hero, pricing, mid_page, footer, sticky).
  *
  * `event_id` is a random per-click UUID (not tied to a person). The GTM Meta
  * Lead tag sends it as the pixel eventID so a server-side Conversions API
  * Lead carrying the same id deduplicates. Returns the id for that purpose.
  */
 export function trackIntakeHandoff(
-  ctaLocation: string,
+  ctaId: string,
+  ctaLocation: CtaPosition,
   experiment?: Record<string, string>,
 ): string {
   const eventId = newEventId();
@@ -108,6 +125,7 @@ export function trackIntakeHandoff(
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: "intake_handoff",
+    cta_id: ctaId,
     cta_location: ctaLocation,
     ...experiment,
     event_id: eventId,
