@@ -22,6 +22,7 @@ import oralMinoxidilPhoto from "@/assets/treatments/oral-minoxidil-tablets-bottl
 import nadInjectionPhoto from "@/assets/treatments/nad-injection-vial.webp";
 import sermorelinInjectionPhoto from "@/assets/treatments/sermorelin-injection-vial.webp";
 import motsCInjectionPhoto from "@/assets/treatments/mots-c-injection-vial.webp";
+import bpc157InjectionPhoto from "@/assets/treatments/bpc-157-injection-vial.webp";
 import { LEGITSCRIPT_SEAL_SRC } from "@/lib/legitscript";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 
@@ -103,6 +104,8 @@ export function criticalBootImageUrls(pathname: string): string[] {
       return [sermorelinInjectionPhoto];
     case "/mots-c":
       return [motsCInjectionPhoto];
+    case "/bpc-157":
+      return [bpc157InjectionPhoto];
     default:
       return [];
   }

@@ -2,6 +2,7 @@
 // Use "Make main" in the dashboard; it rewrites experiments.json and this file.
 // Only live variants are imported, so drafts and paused variants never ship.
 import type { ExperimentConfig } from "./types";
+import { variant as bpc157V0 } from "./bpc-157/v1-control";
 import { variant as edV0 } from "./ed/v1-control";
 import { variant as edMintsV0 } from "./ed-mints/v3-new-layout";
 import { variant as edMintsBostonV0 } from "./ed-mints-boston/v3-new-layout";
@@ -29,6 +30,10 @@ import { variant as tirzepatideHoustonV0 } from "./tirzepatide-houston/v3-new-la
 import { variant as weightLossV0 } from "./weight-loss/v3-new-layout";
 
 export const EXPERIMENTS = {
+  "bpc-157": {
+    experimentId: "bpc-157-e1",
+    variants: [{ variant: bpc157V0, weight: 100 }],
+  },
   ed: {
     experimentId: "ed-e1",
     variants: [{ variant: edV0, weight: 100 }],

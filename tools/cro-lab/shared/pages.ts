@@ -219,6 +219,14 @@ export const PRODUCT_PAGES: PageDef[] = [
     title: "MOTS-C",
     routeFile: "src/routes/mots-c.tsx",
   },
+  {
+    id: "bpc-157",
+    path: "/bpc-157/",
+    group: "product",
+    variants: true,
+    title: "BPC-157",
+    routeFile: "src/routes/bpc-157.tsx",
+  },
 ];
 
 /**
@@ -295,6 +303,7 @@ const CTA_PREFIX_TO_PAGE: readonly [string, string][] = [
   ["nad_", "nad-plus"],
   ["sermorelin_", "sermorelin"],
   ["mots_c_", "mots-c"],
+  ["bpc_157_", "bpc-157"],
   ["home_", "home"],
 ];
 

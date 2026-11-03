@@ -316,6 +316,16 @@ export const MOTS_C_PRICING: SimpleCompoundedPricing = {
   quarterly: quarterlyPlan(597, 279),
 };
 
+/**
+ * BPC-157 (new 2026-11-03, per Matt: "pricing is exactly the same as
+ * MOTS-C"). Same interactive 3-month/1-month picker and the same numbers as
+ * `MOTS_C_PRICING`, kept as its own constant so the two can diverge later.
+ */
+export const BPC_157_PRICING: SimpleCompoundedPricing = {
+  monthlyUsd: 279,
+  quarterly: quarterlyPlan(597, 279),
+};
+
 /** Short card headline, e.g. "$169/mo". */
 export function formatSimpleStartingAt(
   pricing: SimpleCompoundedPricing,
@@ -405,6 +415,7 @@ export function listKnownSimpleTreatmentPricingUsdAmounts(): number[] {
     NAD_PRICING,
     SERMORELIN_PRICING,
     MOTS_C_PRICING,
+    BPC_157_PRICING,
   ]) {
     amounts.add(roundMoney(pricing.monthlyUsd));
     if (pricing.quarterly) {

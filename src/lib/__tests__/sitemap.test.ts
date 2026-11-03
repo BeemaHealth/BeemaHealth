@@ -39,6 +39,7 @@ const EXPECTED_PATHS = [
   "/nad-plus/",
   "/sermorelin/",
   "/mots-c/",
+  "/bpc-157/",
   "/sexual-health/",
   "/hair-loss/",
   "/glp-1/",

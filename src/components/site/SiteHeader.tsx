@@ -146,12 +146,13 @@ const WELLNESS_ITEMS: NavItem[] = [
 ];
 
 /**
- * Peptides (new 2026-11-02, per Matt) - MOTS-C is the first product on its
- * own money page, /mots-c. Sermorelin is listed here as well as under
- * Wellness (same /sermorelin page, per Matt: "copy over"). More peptides
- * will be added here as they launch.
+ * Peptides (new 2026-11-02, per Matt) - MOTS-C was the first product on its
+ * own money page, /mots-c; BPC-157 followed 2026-11-03 (/bpc-157).
+ * Sermorelin is listed here as well as under Wellness (same /sermorelin page,
+ * per Matt: "copy over"). More peptides will be added here as they launch.
  */
 const PEPTIDES_ITEMS: NavItem[] = [
+  { label: "BPC-157", to: "/bpc-157/" },
   { label: "MOTS-C", to: "/mots-c/" },
   { label: "Sermorelin", to: "/sermorelin/" },
 ];

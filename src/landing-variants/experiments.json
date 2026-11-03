@@ -335,5 +335,14 @@
         "weight": 100
       }
     }
+  },
+  "bpc-157": {
+    "experimentId": "bpc-157-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      }
+    }
   }
 }

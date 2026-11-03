@@ -48,6 +48,7 @@ import { Route as EdRouteImport } from './routes/ed'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsentRouteImport } from './routes/consent'
+import { Route as Bpc157RouteImport } from './routes/bpc-157'
 import { Route as BlogsRouteImport } from './routes/blogs'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -290,6 +291,11 @@ const ContactRoute = ContactRouteImport.update({
 const ConsentRoute = ConsentRouteImport.update({
   id: '/consent',
   path: '/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Bpc157Route = Bpc157RouteImport.update({
+  id: '/bpc-157',
+  path: '/bpc-157',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogsRoute = BlogsRouteImport.update({
@@ -543,6 +549,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/blogs': typeof BlogsRouteWithChildren
+  '/bpc-157': typeof Bpc157Route
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
@@ -631,6 +638,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/bpc-157': typeof Bpc157Route
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
   '/ed': typeof EdRoute
@@ -713,6 +721,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/blogs': typeof BlogsRouteWithChildren
+  '/bpc-157': typeof Bpc157Route
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
@@ -804,6 +813,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/blogs'
+    | '/bpc-157'
     | '/consent'
     | '/contact'
     | '/dashboard'
@@ -892,6 +902,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/bpc-157'
     | '/consent'
     | '/contact'
     | '/ed'
@@ -973,6 +984,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/blogs'
+    | '/bpc-157'
     | '/consent'
     | '/contact'
     | '/dashboard'
@@ -1063,6 +1075,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   BlogsRoute: typeof BlogsRouteWithChildren
+  Bpc157Route: typeof Bpc157Route
   ConsentRoute: typeof ConsentRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRouteWithChildren
@@ -1388,6 +1401,13 @@ declare module '@tanstack/react-router' {
       path: '/consent'
       fullPath: '/consent'
       preLoaderRoute: typeof ConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bpc-157': {
+      id: '/bpc-157'
+      path: '/bpc-157'
+      fullPath: '/bpc-157'
+      preLoaderRoute: typeof Bpc157RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blogs': {
@@ -1885,6 +1905,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   BlogsRoute: BlogsRouteWithChildren,
+  Bpc157Route: Bpc157Route,
   ConsentRoute: ConsentRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRouteWithChildren,

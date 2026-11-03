@@ -795,6 +795,36 @@
       "whyTested": "",
       "expected": "",
       "notes": ""
+    },
+    {
+      "id": "v1-control",
+      "pageId": "bpc-157",
+      "name": "Control (new layout)",
+      "description": "Draft copy of Control. Edit it, preview locally, then make it main.",
+      "componentPath": "src/landing-variants/bpc-157/v1-control.tsx",
+      "createdAt": "2026-11-03T15:56:02.655Z",
+      "status": "draft",
+      "parentId": null,
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
+    },
+    {
+      "id": "v1-control",
+      "pageId": "bpc-157",
+      "name": "Control (new layout)",
+      "description": "Discovered on disk.",
+      "componentPath": "src/landing-variants/bpc-157/v1-control.tsx",
+      "createdAt": "2026-11-03T18:00:00.000Z",
+      "status": "draft",
+      "parentId": null,
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
     }
   ],
   "deployments": [
@@ -1220,6 +1250,15 @@
       "endUtc": null,
       "confirmed": true,
       "notes": "Initial version (variant 0), live before tracking began."
+    },
+    {
+      "id": "d0-bpc-157",
+      "pageId": "bpc-157",
+      "variantId": "v1-control",
+      "startUtc": "2026-11-03T18:00:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Initial version (variant 0), launched on the new layout."
     }
   ],
   "tests": [
