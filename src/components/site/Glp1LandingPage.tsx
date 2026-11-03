@@ -238,7 +238,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
           <TreatmentPricingCard
             pricing={MEDICATION_PICKER[selectedMedication].pricing}
             imagery={vialImagery[selectedMedication]}
-            cta={midCta}
+            cta={midCta.withPosition("pricing")}
           />
         </motion.div>
         <ul className="mx-auto mt-8 max-w-2xl space-y-2">

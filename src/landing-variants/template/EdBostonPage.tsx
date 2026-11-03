@@ -482,10 +482,7 @@ function FormulationChooser() {
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <span className="inline-flex w-fit items-center rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-accent-foreground">
-                    {opt.badge}
-                  </span>
-                  <h3 className="mt-3 text-lg font-semibold text-foreground">
+                  <h3 className="text-lg font-semibold text-foreground">
                     {opt.name}
                   </h3>
                   <p className="text-xs text-muted-foreground">{opt.dose}</p>
@@ -521,12 +518,6 @@ function FormulationChooser() {
           );
         })}
       </div>
-      <p className="text-center text-xs text-muted-foreground">
-        &quot;{MINT_OPTIONS[0].badge}&quot; and &quot;{MINT_OPTIONS[1].badge}
-        &quot; are directional labels based on ingredient mix and dose, not a
-        guarantee of results. Your provider decides which formulation, if any,
-        is clinically appropriate for you.
-      </p>
       <EligibilityCard
         intro={ELIGIBILITY_INTRO}
         points={[

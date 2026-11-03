@@ -36,27 +36,21 @@ import edMintsOdtPhoto from "@/assets/treatments/ed-mints-sildenafil-tadalafil-o
  */
 
 /**
- * Picker modal options (2026-09-03, labels per Matt 2026-09-03). "Most
- * Common" / "Highest Strength" are directional labels based on ingredient
- * mix and dose (product 2 has a higher tadalafil dose - 20mg vs 12mg - plus
- * a 3rd ingredient), not an efficacy/outcome claim - the disclaimer under
- * the cards says so explicitly, matching the site's no-outcome-guarantee
- * rule (docs/features/treatment-pages.md). Both formulations are the same
- * price - a shared price line renders once above the cards rather than
- * per-card (2026-09-27, reversing the 2026-09-03 "no pricing anywhere here"
- * decision - Google Ads flagged the hidden pricing as a landing-page-
- * experience problem; see docs/features/treatment-pages.md). Each option
- * has its own real product photo - grey for the RDT (2026-09-03, per Matt),
- * blue for the ODT (2026-09-27, replacing the earlier orange shot to match
- * the ed-mints.tsx page hero, which switched to the same blue tablet photo
- * the same day) - stored under descriptive filenames in
- * src/assets/treatments/ for image-search SEO, with per-product `alt` text
- * naming the exact formulation and dose.
+ * Picker modal options (2026-09-03). No "Highest Strength" / "Most Common"
+ * tags or directional-label disclaimer (removed 2026-11-03, per Matt). Both
+ * formulations are the same price - a shared price line renders once above
+ * the cards rather than per-card (2026-09-27, reversing the 2026-09-03 "no
+ * pricing anywhere here" decision - Google Ads flagged the hidden pricing as
+ * a landing-page-experience problem; see docs/features/treatment-pages.md).
+ * Each option has its own real product photo - grey for the RDT (2026-09-03,
+ * per Matt), blue for the ODT (2026-09-27, replacing the earlier orange shot
+ * to match the ed-mints.tsx page hero) - stored under descriptive filenames
+ * in src/assets/treatments/ for image-search SEO, with per-product `alt`
+ * text naming the exact formulation and dose.
  */
 export type MintOption = {
   id: "rdt" | "odt";
   ctaId: CtaId;
-  badge: string;
   name: string;
   dose: string;
   photo: string;
@@ -70,7 +64,6 @@ export const MINT_OPTIONS: MintOption[] = [
   {
     id: "odt",
     ctaId: CTA_IDS.ed_mints_odt_hero,
-    badge: "Highest Strength",
     name: "Sildenafil + Tadalafil + Oxytocin",
     dose: "50mg / 20mg / 125 IU ODT",
     photo: edMintsOdtPhoto,
@@ -88,7 +81,6 @@ export const MINT_OPTIONS: MintOption[] = [
   {
     id: "rdt",
     ctaId: CTA_IDS.ed_mints_rdt_hero,
-    badge: "Most Common",
     name: "Tadalafil + Sildenafil",
     dose: "12mg / 60mg RDT",
     photo: edMintsRdtPhoto,
@@ -185,10 +177,7 @@ export function EdMintsPickerModal({
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <span className="inline-flex w-fit items-center rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-accent-foreground">
-                      {opt.badge}
-                    </span>
-                    <h3 className="mt-3 text-lg font-semibold text-foreground">
+                    <h3 className="text-lg font-semibold text-foreground">
                       {opt.name}
                     </h3>
                     <p className="text-xs text-muted-foreground">{opt.dose}</p>
@@ -223,13 +212,6 @@ export function EdMintsPickerModal({
             );
           })}
         </div>
-
-        <p className="text-center text-xs text-muted-foreground">
-          &quot;{MINT_OPTIONS[0].badge}&quot; and &quot;
-          {MINT_OPTIONS[1].badge}&quot; are directional labels based on
-          ingredient mix and dose, not a guarantee of results. Your provider
-          decides which formulation, if any, is clinically appropriate for you.
-        </p>
 
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 rounded-xl bg-muted/40 px-4 py-3 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
