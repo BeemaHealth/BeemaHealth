@@ -183,7 +183,7 @@ function EdControl() {
         <SectionHeading
           align="left"
           title="Choose your formulation"
-          description="Your provider decides which formulation, if any, is clinically appropriate - this is a starting point, not a self-selected order."
+          description="A licensed provider reviews your intake first and decides which formulation, if any, is right for you. You won't be charged anything if you're not prescribed."
           className="mx-0 max-w-2xl"
         />
         <div className="mt-8 grid gap-6 md:grid-cols-2">

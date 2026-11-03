@@ -43,7 +43,7 @@ function NewLayout() {
           stars: false,
         },
         pricingDescription:
-          "Your provider decides whether NAD+ is clinically appropriate - this is a starting point, not a self-selected order.",
+          "A licensed provider reviews your intake first. You won't be charged anything if you're not prescribed.",
         pricingCard: (
           <SimpleTreatmentPricingCard
             label="NAD+"

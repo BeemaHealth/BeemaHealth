@@ -180,7 +180,7 @@ function OralMinoxidilMenControl() {
         <SectionHeading
           align="left"
           title="Transparent pricing"
-          description="Your provider decides whether oral minoxidil is clinically appropriate - this is a starting point, not a self-selected order."
+          description="A licensed provider reviews your intake first. You won't be charged anything if you're not prescribed."
           className="mx-0 max-w-2xl"
         />
         <div className="mt-8 max-w-sm">

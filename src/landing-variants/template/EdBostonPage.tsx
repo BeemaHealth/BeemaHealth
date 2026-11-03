@@ -595,7 +595,7 @@ export function EdMintsBostonNewPage({
       pricing={{
         id: "formulations",
         title: "Choose your formulation",
-        description: `Your provider decides which formulation, if any, is clinically appropriate - this is a starting point, not a self-selected order. Both are ${price}, and each has its own intake.`,
+        description: `A licensed provider reviews your intake first and decides which formulation, if any, is right for you. You won't be charged anything if you're not prescribed. Both are ${price}, and each has its own intake.`,
         children: <FormulationChooser />,
         footnote: (
           <>
