@@ -40,6 +40,7 @@ import { Route as HairLossSprayMenRouteImport } from './routes/hair-loss-spray-m
 import { Route as HairLossRouteImport } from './routes/hair-loss'
 import { Route as Glp1HoustonRouteImport } from './routes/glp-1-houston'
 import { Route as Glp1RouteImport } from './routes/glp-1'
+import { Route as GhkCuRouteImport } from './routes/ghk-cu'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
 import { Route as EdMintsBostonRouteImport } from './routes/ed-mints-boston'
@@ -253,6 +254,11 @@ const Glp1HoustonRoute = Glp1HoustonRouteImport.update({
 const Glp1Route = Glp1RouteImport.update({
   id: '/glp-1',
   path: '/glp-1',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GhkCuRoute = GhkCuRouteImport.update({
+  id: '/ghk-cu',
+  path: '/ghk-cu',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -572,6 +578,7 @@ export interface FileRoutesByFullPath {
   '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
+  '/ghk-cu': typeof GhkCuRoute
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
   '/hair-loss': typeof HairLossRoute
@@ -662,6 +669,7 @@ export interface FileRoutesByTo {
   '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
+  '/ghk-cu': typeof GhkCuRoute
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
   '/hair-loss': typeof HairLossRoute
@@ -748,6 +756,7 @@ export interface FileRoutesById {
   '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
+  '/ghk-cu': typeof GhkCuRoute
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
   '/hair-loss': typeof HairLossRoute
@@ -842,6 +851,7 @@ export interface FileRouteTypes {
     | '/ed-mints-boston'
     | '/eligibility'
     | '/faq'
+    | '/ghk-cu'
     | '/glp-1'
     | '/glp-1-houston'
     | '/hair-loss'
@@ -932,6 +942,7 @@ export interface FileRouteTypes {
     | '/ed-mints-boston'
     | '/eligibility'
     | '/faq'
+    | '/ghk-cu'
     | '/glp-1'
     | '/glp-1-houston'
     | '/hair-loss'
@@ -1017,6 +1028,7 @@ export interface FileRouteTypes {
     | '/ed-mints-boston'
     | '/eligibility'
     | '/faq'
+    | '/ghk-cu'
     | '/glp-1'
     | '/glp-1-houston'
     | '/hair-loss'
@@ -1110,6 +1122,7 @@ export interface RootRouteChildren {
   EdMintsBostonRoute: typeof EdMintsBostonRoute
   EligibilityRoute: typeof EligibilityRoute
   FaqRoute: typeof FaqRoute
+  GhkCuRoute: typeof GhkCuRoute
   Glp1Route: typeof Glp1Route
   Glp1HoustonRoute: typeof Glp1HoustonRoute
   HairLossRoute: typeof HairLossRoute
@@ -1371,6 +1384,13 @@ declare module '@tanstack/react-router' {
       path: '/glp-1'
       fullPath: '/glp-1'
       preLoaderRoute: typeof Glp1RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ghk-cu': {
+      id: '/ghk-cu'
+      path: '/ghk-cu'
+      fullPath: '/ghk-cu'
+      preLoaderRoute: typeof GhkCuRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -1956,6 +1976,7 @@ const rootRouteChildren: RootRouteChildren = {
   EdMintsBostonRoute: EdMintsBostonRoute,
   EligibilityRoute: EligibilityRoute,
   FaqRoute: FaqRoute,
+  GhkCuRoute: GhkCuRoute,
   Glp1Route: Glp1Route,
   Glp1HoustonRoute: Glp1HoustonRoute,
   HairLossRoute: HairLossRoute,

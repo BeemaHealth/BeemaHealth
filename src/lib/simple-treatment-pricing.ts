@@ -346,6 +346,16 @@ export const BPC_TB500_GHK_CU_PRICING: SimpleCompoundedPricing = {
   quarterly: quarterlyPlan(729, 329),
 };
 
+/**
+ * GHK-Cu (new 2026-11-04, per Matt: $299 for 1 month, $597 for 3 months).
+ * Interactive 3-month/1-month picker like the other peptides; the hero leads
+ * with the ~$199/mo quarterly rate.
+ */
+export const GHK_CU_PRICING: SimpleCompoundedPricing = {
+  monthlyUsd: 299,
+  quarterly: quarterlyPlan(597, 299),
+};
+
 /** Short card headline, e.g. "$169/mo". */
 export function formatSimpleStartingAt(
   pricing: SimpleCompoundedPricing,
@@ -438,6 +448,7 @@ export function listKnownSimpleTreatmentPricingUsdAmounts(): number[] {
     BPC_157_PRICING,
     BPC_157_CAPSULES_PRICING,
     BPC_TB500_GHK_CU_PRICING,
+    GHK_CU_PRICING,
   ]) {
     amounts.add(roundMoney(pricing.monthlyUsd));
     if (pricing.quarterly) {

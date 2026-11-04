@@ -362,5 +362,14 @@
         "weight": 100
       }
     }
+  },
+  "ghk-cu": {
+    "experimentId": "ghk-cu-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      }
+    }
   }
 }

@@ -243,6 +243,14 @@ export const PRODUCT_PAGES: PageDef[] = [
     title: "BPC-157 / TB-500 / GHK-Cu",
     routeFile: "src/routes/bpc-157-tb-500-ghk-cu.tsx",
   },
+  {
+    id: "ghk-cu",
+    path: "/ghk-cu/",
+    group: "product",
+    variants: true,
+    title: "GHK-Cu",
+    routeFile: "src/routes/ghk-cu.tsx",
+  },
 ];
 
 /**
@@ -319,6 +327,7 @@ const CTA_PREFIX_TO_PAGE: readonly [string, string][] = [
   ["nad_", "nad-plus"],
   ["sermorelin_", "sermorelin"],
   ["mots_c_", "mots-c"],
+  ["ghk_cu_", "ghk-cu"],
   ["peptide_blend_", "bpc-157-tb-500-ghk-cu"],
   ["bpc_157_capsules_", "bpc-157-capsules"],
   ["bpc_157_", "bpc-157"],

@@ -23,7 +23,7 @@ const modules = import.meta.glob<{ variant: LandingVariant }>(
 // MOTS-C and BPC-157 launched straight on the new layout, so their control
 // (v1-control) is the new-layout variant and there is no separate v3 file.
 const motsCModules = import.meta.glob<{ variant: LandingVariant }>(
-  "../../landing-variants/{mots-c,bpc-157,bpc-157-capsules,bpc-157-tb-500-ghk-cu}/v1-control.tsx",
+  "../../landing-variants/{mots-c,bpc-157,bpc-157-capsules,bpc-157-tb-500-ghk-cu,ghk-cu}/v1-control.tsx",
   { eager: true },
 );
 
@@ -50,6 +50,7 @@ describe("new-layout (shared template) variants", () => {
         "bpc-157-tb-500-ghk-cu",
         "ed-mints",
         "ed-mints-boston",
+        "ghk-cu",
         "glp-1",
         "hair-loss-spray-men",
         "hair-loss-spray-women",
@@ -76,6 +77,7 @@ describe("new-layout (shared template) variants", () => {
     "bpc-157",
     "bpc-157-capsules",
     "bpc-157-tb-500-ghk-cu",
+    "ghk-cu",
     "ed-mints",
     "glp-1",
     "hair-loss-spray-men",

@@ -45,6 +45,7 @@ test("pageIdFromCtaId maps every tracked page's CTA ids", () => {
     ["bpc_157_footer", "bpc-157"],
     ["bpc_157_capsules_footer", "bpc-157-capsules"],
     ["peptide_blend_footer", "bpc-157-tb-500-ghk-cu"],
+    ["ghk_cu_footer", "ghk-cu"],
     ["home_mid", "home"],
   ];
   for (const [cta, page] of cases)

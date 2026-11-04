@@ -8,6 +8,7 @@ import { variant as bpcTb500GhkCuV0 } from "./bpc-157-tb-500-ghk-cu/v1-control";
 import { variant as edV0 } from "./ed/v1-control";
 import { variant as edMintsV0 } from "./ed-mints/v3-new-layout";
 import { variant as edMintsBostonV0 } from "./ed-mints-boston/v3-new-layout";
+import { variant as ghkCuV0 } from "./ghk-cu/v1-control";
 import { variant as glp1V0 } from "./glp-1/v3-new-layout";
 import { variant as glp1HoustonV0 } from "./glp-1-houston/v3-testing-new-principles";
 import { variant as hairLossV0 } from "./hair-loss/v1-control";
@@ -43,6 +44,10 @@ export const EXPERIMENTS = {
   "bpc-157-tb-500-ghk-cu": {
     experimentId: "bpc-157-tb-500-ghk-cu-e1",
     variants: [{ variant: bpcTb500GhkCuV0, weight: 100 }],
+  },
+  "ghk-cu": {
+    experimentId: "ghk-cu-e1",
+    variants: [{ variant: ghkCuV0, weight: 100 }],
   },
   ed: {
     experimentId: "ed-e1",
