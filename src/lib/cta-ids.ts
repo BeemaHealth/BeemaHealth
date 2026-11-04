@@ -81,6 +81,8 @@ export const CTA_IDS = {
   bpc_157_footer: "bpc_157_footer",
   bpc_157_capsules_hero: "bpc_157_capsules_hero",
   bpc_157_capsules_footer: "bpc_157_capsules_footer",
+  peptide_blend_hero: "peptide_blend_hero",
+  peptide_blend_footer: "peptide_blend_footer",
   how_it_works: "how_it_works",
   faq: "faq",
   safety: "safety",
@@ -233,6 +235,13 @@ const BPC_157_CAPSULES_INTAKE_URL =
   "https://q.beemahealth.com/start-online-visit/bpccapsules";
 
 /**
+ * Confirmed production Bask questionnaire URL (2026-11-04) for the BPC-157 /
+ * TB-500 / GHK-Cu blend, given directly by Matt.
+ */
+const PEPTIDE_BLEND_INTAKE_URL =
+  "https://q.beemahealth.com/start-online-visit/bpc157tb500ghkcu";
+
+/**
  * Money-page architecture (2026-09-03): each product that has a confirmed
  * Bask URL gets its own dedicated landing page (/tadalafil, /sildenafil,
  * /oral-finasteride, /ed-mints, /tirzepatide, /semaglutide) whose CTA goes
@@ -355,6 +364,8 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
     label: "Get Started",
     to: BPC_157_CAPSULES_INTAKE_URL,
   },
+  peptide_blend_hero: { label: "Get Started", to: PEPTIDE_BLEND_INTAKE_URL },
+  peptide_blend_footer: { label: "Get Started", to: PEPTIDE_BLEND_INTAKE_URL },
   /**
    * Category hub pages (2026-08-27) mix multiple products each, so there's
    * no single correct Bask intake path - these default to one product in

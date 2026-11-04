@@ -41,6 +41,7 @@ const EXPECTED_PATHS = [
   "/mots-c/",
   "/bpc-157/",
   "/bpc-157-capsules/",
+  "/bpc-157-tb-500-ghk-cu/",
   "/sexual-health/",
   "/hair-loss/",
   "/glp-1/",
