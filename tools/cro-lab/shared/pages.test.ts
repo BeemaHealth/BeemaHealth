@@ -43,6 +43,7 @@ test("pageIdFromCtaId maps every tracked page's CTA ids", () => {
     ["sermorelin_footer", "sermorelin"],
     ["mots_c_footer", "mots-c"],
     ["bpc_157_footer", "bpc-157"],
+    ["bpc_157_capsules_footer", "bpc-157-capsules"],
     ["home_mid", "home"],
   ];
   for (const [cta, page] of cases)

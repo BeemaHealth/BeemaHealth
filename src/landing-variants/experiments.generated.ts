@@ -3,6 +3,7 @@
 // Only live variants are imported, so drafts and paused variants never ship.
 import type { ExperimentConfig } from "./types";
 import { variant as bpc157V0 } from "./bpc-157/v1-control";
+import { variant as bpc157CapsulesV0 } from "./bpc-157-capsules/v1-control";
 import { variant as edV0 } from "./ed/v1-control";
 import { variant as edMintsV0 } from "./ed-mints/v3-new-layout";
 import { variant as edMintsBostonV0 } from "./ed-mints-boston/v3-new-layout";
@@ -33,6 +34,10 @@ export const EXPERIMENTS = {
   "bpc-157": {
     experimentId: "bpc-157-e1",
     variants: [{ variant: bpc157V0, weight: 100 }],
+  },
+  "bpc-157-capsules": {
+    experimentId: "bpc-157-capsules-e1",
+    variants: [{ variant: bpc157CapsulesV0, weight: 100 }],
   },
   ed: {
     experimentId: "ed-e1",

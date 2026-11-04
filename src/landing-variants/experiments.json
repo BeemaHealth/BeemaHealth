@@ -344,5 +344,14 @@
         "weight": 100
       }
     }
+  },
+  "bpc-157-capsules": {
+    "experimentId": "bpc-157-capsules-e1",
+    "variants": {
+      "v1-control": {
+        "status": "live",
+        "weight": 100
+      }
+    }
   }
 }

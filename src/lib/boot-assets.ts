@@ -23,6 +23,7 @@ import nadInjectionPhoto from "@/assets/treatments/nad-injection-vial.webp";
 import sermorelinInjectionPhoto from "@/assets/treatments/sermorelin-injection-vial.webp";
 import motsCInjectionPhoto from "@/assets/treatments/mots-c-injection-vial.webp";
 import bpc157InjectionPhoto from "@/assets/treatments/bpc-157-injection-vial.webp";
+import bpc157CapsulesPhoto from "@/assets/treatments/bpc-157-capsules-bottle.webp";
 import { LEGITSCRIPT_SEAL_SRC } from "@/lib/legitscript";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 
@@ -106,6 +107,8 @@ export function criticalBootImageUrls(pathname: string): string[] {
       return [motsCInjectionPhoto];
     case "/bpc-157":
       return [bpc157InjectionPhoto];
+    case "/bpc-157-capsules":
+      return [bpc157CapsulesPhoto];
     default:
       return [];
   }

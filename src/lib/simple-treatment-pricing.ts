@@ -326,6 +326,16 @@ export const BPC_157_PRICING: SimpleCompoundedPricing = {
   quarterly: quarterlyPlan(597, 279),
 };
 
+/**
+ * BPC-157 capsules (new 2026-11-03). PLACEHOLDER pricing: the numbers mirror
+ * `BPC_157_PRICING` (injections) until Matt confirms the capsule price from
+ * his sheet. Its own constant so it can diverge without touching injections.
+ */
+export const BPC_157_CAPSULES_PRICING: SimpleCompoundedPricing = {
+  monthlyUsd: 279,
+  quarterly: quarterlyPlan(597, 279),
+};
+
 /** Short card headline, e.g. "$169/mo". */
 export function formatSimpleStartingAt(
   pricing: SimpleCompoundedPricing,
@@ -416,6 +426,7 @@ export function listKnownSimpleTreatmentPricingUsdAmounts(): number[] {
     SERMORELIN_PRICING,
     MOTS_C_PRICING,
     BPC_157_PRICING,
+    BPC_157_CAPSULES_PRICING,
   ]) {
     amounts.add(roundMoney(pricing.monthlyUsd));
     if (pricing.quarterly) {

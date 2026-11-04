@@ -79,6 +79,8 @@ export const CTA_IDS = {
   mots_c_footer: "mots_c_footer",
   bpc_157_hero: "bpc_157_hero",
   bpc_157_footer: "bpc_157_footer",
+  bpc_157_capsules_hero: "bpc_157_capsules_hero",
+  bpc_157_capsules_footer: "bpc_157_capsules_footer",
   how_it_works: "how_it_works",
   faq: "faq",
   safety: "safety",
@@ -224,6 +226,13 @@ const BPC_157_INTAKE_URL =
   "https://q.beemahealth.com/start-online-visit/bpc157";
 
 /**
+ * Confirmed production Bask questionnaire URL (2026-11-03) for BPC-157
+ * capsules, given directly by Matt at launch.
+ */
+const BPC_157_CAPSULES_INTAKE_URL =
+  "https://q.beemahealth.com/start-online-visit/bpccapsules";
+
+/**
  * Money-page architecture (2026-09-03): each product that has a confirmed
  * Bask URL gets its own dedicated landing page (/tadalafil, /sildenafil,
  * /oral-finasteride, /ed-mints, /tirzepatide, /semaglutide) whose CTA goes
@@ -338,6 +347,14 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
   mots_c_footer: { label: "Get Started", to: MOTS_C_INTAKE_URL },
   bpc_157_hero: { label: "Get Started", to: BPC_157_INTAKE_URL },
   bpc_157_footer: { label: "Get Started", to: BPC_157_INTAKE_URL },
+  bpc_157_capsules_hero: {
+    label: "Get Started",
+    to: BPC_157_CAPSULES_INTAKE_URL,
+  },
+  bpc_157_capsules_footer: {
+    label: "Get Started",
+    to: BPC_157_CAPSULES_INTAKE_URL,
+  },
   /**
    * Category hub pages (2026-08-27) mix multiple products each, so there's
    * no single correct Bask intake path - these default to one product in

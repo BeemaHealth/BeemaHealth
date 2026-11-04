@@ -48,6 +48,7 @@ import { Route as EdRouteImport } from './routes/ed'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsentRouteImport } from './routes/consent'
+import { Route as Bpc157CapsulesRouteImport } from './routes/bpc-157-capsules'
 import { Route as Bpc157RouteImport } from './routes/bpc-157'
 import { Route as BlogsRouteImport } from './routes/blogs'
 import { Route as AboutRouteImport } from './routes/about'
@@ -291,6 +292,11 @@ const ContactRoute = ContactRouteImport.update({
 const ConsentRoute = ConsentRouteImport.update({
   id: '/consent',
   path: '/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Bpc157CapsulesRoute = Bpc157CapsulesRouteImport.update({
+  id: '/bpc-157-capsules',
+  path: '/bpc-157-capsules',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Bpc157Route = Bpc157RouteImport.update({
@@ -550,6 +556,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/blogs': typeof BlogsRouteWithChildren
   '/bpc-157': typeof Bpc157Route
+  '/bpc-157-capsules': typeof Bpc157CapsulesRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
@@ -639,6 +646,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/bpc-157': typeof Bpc157Route
+  '/bpc-157-capsules': typeof Bpc157CapsulesRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
   '/ed': typeof EdRoute
@@ -722,6 +730,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/blogs': typeof BlogsRouteWithChildren
   '/bpc-157': typeof Bpc157Route
+  '/bpc-157-capsules': typeof Bpc157CapsulesRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
@@ -814,6 +823,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/blogs'
     | '/bpc-157'
+    | '/bpc-157-capsules'
     | '/consent'
     | '/contact'
     | '/dashboard'
@@ -903,6 +913,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/bpc-157'
+    | '/bpc-157-capsules'
     | '/consent'
     | '/contact'
     | '/ed'
@@ -985,6 +996,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/blogs'
     | '/bpc-157'
+    | '/bpc-157-capsules'
     | '/consent'
     | '/contact'
     | '/dashboard'
@@ -1076,6 +1088,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   BlogsRoute: typeof BlogsRouteWithChildren
   Bpc157Route: typeof Bpc157Route
+  Bpc157CapsulesRoute: typeof Bpc157CapsulesRoute
   ConsentRoute: typeof ConsentRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRouteWithChildren
@@ -1401,6 +1414,13 @@ declare module '@tanstack/react-router' {
       path: '/consent'
       fullPath: '/consent'
       preLoaderRoute: typeof ConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bpc-157-capsules': {
+      id: '/bpc-157-capsules'
+      path: '/bpc-157-capsules'
+      fullPath: '/bpc-157-capsules'
+      preLoaderRoute: typeof Bpc157CapsulesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bpc-157': {
@@ -1906,6 +1926,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   BlogsRoute: BlogsRouteWithChildren,
   Bpc157Route: Bpc157Route,
+  Bpc157CapsulesRoute: Bpc157CapsulesRoute,
   ConsentRoute: ConsentRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRouteWithChildren,

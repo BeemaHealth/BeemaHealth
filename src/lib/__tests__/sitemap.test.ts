@@ -40,6 +40,7 @@ const EXPECTED_PATHS = [
   "/sermorelin/",
   "/mots-c/",
   "/bpc-157/",
+  "/bpc-157-capsules/",
   "/sexual-health/",
   "/hair-loss/",
   "/glp-1/",

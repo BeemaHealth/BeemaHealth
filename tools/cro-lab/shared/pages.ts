@@ -227,6 +227,14 @@ export const PRODUCT_PAGES: PageDef[] = [
     title: "BPC-157",
     routeFile: "src/routes/bpc-157.tsx",
   },
+  {
+    id: "bpc-157-capsules",
+    path: "/bpc-157-capsules/",
+    group: "product",
+    variants: true,
+    title: "BPC-157 Capsules",
+    routeFile: "src/routes/bpc-157-capsules.tsx",
+  },
 ];
 
 /**
@@ -303,6 +311,7 @@ const CTA_PREFIX_TO_PAGE: readonly [string, string][] = [
   ["nad_", "nad-plus"],
   ["sermorelin_", "sermorelin"],
   ["mots_c_", "mots-c"],
+  ["bpc_157_capsules_", "bpc-157-capsules"],
   ["bpc_157_", "bpc-157"],
   ["home_", "home"],
 ];
