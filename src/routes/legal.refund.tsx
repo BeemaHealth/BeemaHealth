@@ -11,6 +11,7 @@ import { trackPageViewed } from "@/lib/analytics";
 import { MarketingLayout } from "@/components/site/MarketingLayout";
 import { Section } from "@/components/site/primitives";
 import { SUPPORT_EMAIL, SUPPORT_EMAIL_HREF } from "@/lib/contact-info";
+import { HIVE_LOGIN_URL } from "@/lib/cta-ids";
 
 export const Route = createFileRoute("/legal/refund")({
   head: () => ({
@@ -66,6 +67,45 @@ const SECTIONS: LegalSection[] = [
     ),
   },
   {
+    id: "cancel-refills",
+    title: "How to Cancel Future Refills",
+    content: (
+      <>
+        <LegalP>
+          You can pause your future refills at any time from your patient
+          account. To do so:
+        </LegalP>
+        <ol className="list-decimal space-y-1 pl-6 text-muted-foreground">
+          <li>
+            Log in to your account at{" "}
+            <a
+              href={HIVE_LOGIN_URL}
+              className="text-foreground underline-offset-2 hover:underline"
+            >
+              hive.beemahealth.com
+            </a>
+            .
+          </li>
+          <li>Select the Treatments tab.</li>
+          <li>Click your treatment.</li>
+          <li>Click Manage.</li>
+          <li>Click Pause Refills.</li>
+        </ol>
+        <LegalP>
+          Pausing refills stops your next refill from being processed. If you
+          have trouble pausing your refills, contact us at{" "}
+          <a
+            href={SUPPORT_EMAIL_HREF}
+            className="text-foreground underline-offset-2 hover:underline"
+          >
+            {SUPPORT_EMAIL}
+          </a>{" "}
+          and we will help you.
+        </LegalP>
+      </>
+    ),
+  },
+  {
     id: "contact",
     title: "Contact",
     content: <LegalBusinessContact />,
@@ -81,7 +121,7 @@ function RefundPage() {
       <Section>
         <LegalDocument
           title="Refund and Cancellation Policy"
-          lastUpdated="November 2, 2026"
+          lastUpdated="November 3, 2026"
           description="How Beema Health handles returns and refunds for prescription products."
           sections={SECTIONS}
           showToc={false}
