@@ -813,11 +813,41 @@
     },
     {
       "id": "v1-control",
-      "pageId": "bpc-157",
+      "pageId": "bpc-157-capsules",
       "name": "Control (new layout)",
       "description": "Discovered on disk.",
-      "componentPath": "src/landing-variants/bpc-157/v1-control.tsx",
-      "createdAt": "2026-11-03T18:00:00.000Z",
+      "componentPath": "src/landing-variants/bpc-157-capsules/v1-control.tsx",
+      "createdAt": "2026-11-11T19:42:00.028Z",
+      "status": "draft",
+      "parentId": null,
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
+    },
+    {
+      "id": "v1-control",
+      "pageId": "bpc-157-tb-500-ghk-cu",
+      "name": "Control (new layout)",
+      "description": "Discovered on disk.",
+      "componentPath": "src/landing-variants/bpc-157-tb-500-ghk-cu/v1-control.tsx",
+      "createdAt": "2026-11-11T19:42:00.028Z",
+      "status": "draft",
+      "parentId": null,
+      "hypothesis": "",
+      "element": "",
+      "whyTested": "",
+      "expected": "",
+      "notes": ""
+    },
+    {
+      "id": "v1-control",
+      "pageId": "ghk-cu",
+      "name": "Control (new layout)",
+      "description": "Discovered on disk.",
+      "componentPath": "src/landing-variants/ghk-cu/v1-control.tsx",
+      "createdAt": "2026-11-11T19:42:00.028Z",
       "status": "draft",
       "parentId": null,
       "hypothesis": "",
@@ -1259,6 +1289,33 @@
       "endUtc": null,
       "confirmed": true,
       "notes": "Initial version (variant 0), launched on the new layout."
+    },
+    {
+      "id": "d0-bpc-157-capsules",
+      "pageId": "bpc-157-capsules",
+      "variantId": "v1-control",
+      "startUtc": "2026-08-01T06:00:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Initial version (variant 0), live before tracking began."
+    },
+    {
+      "id": "d0-bpc-157-tb-500-ghk-cu",
+      "pageId": "bpc-157-tb-500-ghk-cu",
+      "variantId": "v1-control",
+      "startUtc": "2026-08-01T06:00:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Initial version (variant 0), live before tracking began."
+    },
+    {
+      "id": "d0-ghk-cu",
+      "pageId": "ghk-cu",
+      "variantId": "v1-control",
+      "startUtc": "2026-08-01T06:00:00.000Z",
+      "endUtc": null,
+      "confirmed": true,
+      "notes": "Initial version (variant 0), live before tracking began."
     }
   ],
   "tests": [

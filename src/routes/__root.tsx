@@ -16,6 +16,7 @@ import {
 import { initAdPixels } from "@/lib/ad-conversions";
 import { GTM_CONTAINER_ID, GTM_HEAD_SCRIPT } from "@/lib/gtm";
 import { CHATBASE_EMBED_SCRIPT } from "@/lib/chatbase";
+import { CLARITY_EMBED_SCRIPT } from "@/lib/clarity";
 import { absoluteUrl, ORGANIZATION_JSONLD } from "@/lib/seo";
 import { duplicateHomepageRedirectTarget } from "@/lib/canonicalize-url";
 import { SITE_CHROME_PRELOAD_LINK } from "@/lib/boot-assets";
@@ -116,8 +117,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           httpEquiv: "Content-Security-Policy",
           content:
             "default-src 'self'; " +
-            `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co https://news.google.com; ` +
-            `script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co https://news.google.com; ` +
+            `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co https://news.google.com https://www.clarity.ms https://scripts.clarity.ms; ` +
+            `script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co https://news.google.com https://www.clarity.ms https://scripts.clarity.ms; ` +
             `style-src 'self' 'unsafe-inline'${import.meta.env.DEV ? " https://tagmanager.google.com" : ""}; ` +
             // worker-src: not needed in production (no app code spins up
             // workers). In dev, Vite's HMR client creates a SharedWorker
@@ -129,7 +130,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             `worker-src 'self'${import.meta.env.DEV ? " blob:" : ""}; ` +
             "font-src 'self' data:; " +
             "img-src 'self' data: https:; " +
-            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com https://www.chatbase.co https://backend.chatbase.co https://news.google.com; " +
+            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com https://www.chatbase.co https://backend.chatbase.co https://news.google.com https://*.clarity.ms https://c.bing.com; " +
             "frame-src https://www.youtube-nocookie.com https://www.googletagmanager.com https://td.doubleclick.net https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.chatbase.co https://backend.chatbase.co https://news.google.com; " +
             "form-action 'self' https://formspree.io; " +
             "base-uri 'self'; " +
@@ -254,6 +255,8 @@ function RootShell({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: BASK_HREF_SYNC_SCRIPT }} />
         {/* Chatbase bubble. Waits for window load inside the snippet. */}
         <script dangerouslySetInnerHTML={{ __html: CHATBASE_EMBED_SCRIPT }} />
+        {/* Microsoft Clarity recordings. Production host only, deferred. */}
+        <script dangerouslySetInnerHTML={{ __html: CLARITY_EMBED_SCRIPT }} />
         <Scripts />
       </body>
     </html>
