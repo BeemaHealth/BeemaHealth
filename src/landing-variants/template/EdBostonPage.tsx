@@ -534,12 +534,15 @@ export type EdMintsBostonPageProps = {
   faqItems: TreatmentFaqItem[];
   /** Defaults to "boston" (the live Boston page). */
   market?: EdMarket;
+  /** Opt-in: where the hero price tile links. Defaults to "#pricing". */
+  heroTileHref?: string;
 } & Pick<LandingTemplateProps, "overrides" | "insertAfter">;
 
 /** New-layout Boston ED Mints page. Every Get Started opens the picker. */
 export function EdMintsBostonNewPage({
   faqItems,
   market = "boston",
+  heroTileHref,
   overrides,
   insertAfter,
 }: EdMintsBostonPageProps) {
@@ -571,6 +574,7 @@ export function EdMintsBostonNewPage({
             price,
             unit: "Same price for either formulation",
             detail: `${formatUsd(ED_MINTS_RDT_PRICING.quarterly?.totalUsd ?? 0)} billed every 3 months. Or ${formatUsd(ED_MINTS_RDT_PRICING.monthlyUsd)} for 1 month.`,
+            href: heroTileHref,
           },
         ],
         priceNote: (

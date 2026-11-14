@@ -184,12 +184,10 @@ function AboutPage() {
 
       {/* Mission - black band, honey accents */}
       <Section className="pt-0">
-        <motion.div
-          initial={reduceMotion ? undefined : { opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: reduceMotion ? 0 : 0.7, ease: EASE_OUT }}
-        >
+        {/* CSS-only slide-up (not whileInView): this band sits inside the first
+            mobile screen, so a JS reveal kept it at opacity 0 until hydration
+            and made it a late LCP element. */}
+        <div className="fade-up-on-load">
           <div className="bg-grad-ink relative overflow-hidden rounded-4xl px-6 py-14 text-ink-foreground md:px-16 md:py-20">
             <div
               aria-hidden
@@ -229,7 +227,7 @@ function AboutPage() {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
       </Section>
 
       {/* Five pillars */}

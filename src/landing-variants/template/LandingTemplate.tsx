@@ -243,6 +243,8 @@ export type PriceTile = {
   note?: string | null;
   /** Small muted line, e.g. the multi-month total. */
   detail?: string | null;
+  /** Anchor the tile links to. Opt-in; defaults to "#pricing". */
+  href?: string;
 };
 
 export type ProofStat = { value: string; label: string; stars?: boolean };
@@ -366,7 +368,7 @@ export function HeroSection({
                   {tiles.map((tile) => (
                     <a
                       key={tile.name}
-                      href="#pricing"
+                      href={tile.href ?? "#pricing"}
                       aria-label={`${tile.name}, ${tile.price} ${tile.unit}. See pricing and get started`}
                       className="block rounded-2xl border border-border bg-card p-4 shadow-soft transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >

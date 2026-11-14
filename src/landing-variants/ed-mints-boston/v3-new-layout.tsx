@@ -1,6 +1,7 @@
 import type { LandingVariant } from "../types";
 import { EdMintsBostonNewPage } from "../template/EdBostonPage";
 import { FAQ_ITEMS } from "./shared";
+import { MintsPlanComparison } from "./MintsPlanComparison";
 
 /**
  * New shared landing layout (same design as GLP-1 Houston and sexual health).
@@ -9,7 +10,13 @@ import { FAQ_ITEMS } from "./shared";
  * this page only, pass `overrides` or `insertAfter` below.
  */
 function EdMintsBostonNewLayout() {
-  return <EdMintsBostonNewPage faqItems={FAQ_ITEMS} />;
+  return (
+    <EdMintsBostonNewPage
+      faqItems={FAQ_ITEMS}
+      heroTileHref="#plan-comparison"
+      insertAfter={{ pricing: <MintsPlanComparison /> }}
+    />
+  );
 }
 
 export const variant: LandingVariant = {

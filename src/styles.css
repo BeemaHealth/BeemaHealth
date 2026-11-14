@@ -503,3 +503,22 @@
     visibility: visible;
   }
 }
+
+/* Slide-up that starts at first paint with no JS and NO opacity change.
+   Large above-the-fold text must not fade in: Chrome does not record an LCP
+   candidate for text until its opacity animation settles, and a JS reveal
+   (opacity 0 until hydration) is worse. Transform-only keeps LCP at first
+   paint. */
+.fade-up-on-load {
+  animation: fade-up-on-load 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes fade-up-on-load {
+  from {
+    transform: translateY(28px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fade-up-on-load {
+    animation: none;
+  }
+}
