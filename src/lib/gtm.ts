@@ -100,6 +100,13 @@ export const CTA_POSITIONS = [
   "mid_page",
   "footer",
   "sticky",
+  // Finer spots on template landing pages (added 2026-11-14 so reports can
+  // tell the story video, mid banner, and closing banner apart).
+  "story_video",
+  "mid_banner",
+  "final_banner",
+  "formulation_picker",
+  "plan_comparison",
 ] as const;
 export type CtaPosition = (typeof CTA_POSITIONS)[number];
 

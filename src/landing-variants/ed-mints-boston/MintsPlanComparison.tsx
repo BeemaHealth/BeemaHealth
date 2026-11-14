@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, BadgeCheck } from "lucide-react";
 import { Section, SectionHeading } from "@/components/site/primitives";
 import { MINT_OPTIONS } from "@/components/site/EdMintsPicker";
-import { resolveCta } from "@/lib/cta-ids";
+import { resolveCta, type CtaId } from "@/lib/cta-ids";
 import { formatUsd } from "@/lib/medication-pricing";
 import { MINT_PLAN_COMPARISONS } from "./plan-comparison";
 
@@ -14,7 +14,11 @@ const money = (n: number) =>
  * formulations. Real <table>s (one per formulation) so the numbers are
  * crawlable, and they fit a 360px screen: 3 columns, short labels.
  */
-export function MintsPlanComparison() {
+export function MintsPlanComparison({
+  ctaIds,
+}: {
+  ctaIds: Record<"rdt" | "odt", CtaId>;
+}) {
   return (
     <Section id="plan-comparison" className="scroll-mt-24 pt-0">
       <SectionHeading
@@ -26,7 +30,7 @@ export function MintsPlanComparison() {
         {MINT_PLAN_COMPARISONS.map((p) => {
           const opt = MINT_OPTIONS.find((o) => o.id === p.id);
           if (!opt) return null;
-          const cta = resolveCta(opt.ctaId, "pricing");
+          const cta = resolveCta(ctaIds[p.id], "plan_comparison");
           const rows: { label: string; one: string; three: string }[] = [
             {
               label: "Billed",

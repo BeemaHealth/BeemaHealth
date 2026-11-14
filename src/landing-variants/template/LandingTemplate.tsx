@@ -518,14 +518,14 @@ export function StorySection({
             {body}
           </p>
           <div className="mt-6 hidden lg:block">
-            <StartButton cta={atPosition(cta, "mid_page")} size="lg" />
+            <StartButton cta={atPosition(cta, "story_video")} size="lg" />
           </div>
         </motion.div>
         <motion.div {...reveal}>
           <PatientStoryVideo videoId={videoId} poster={poster} />
           <StoryDisclaimerNote kind={disclaimer} />
           <StartButton
-            cta={atPosition(cta, "mid_page")}
+            cta={atPosition(cta, "story_video")}
             className="mt-6 w-full lg:hidden"
           />
         </motion.div>
@@ -652,7 +652,7 @@ export function MidCtaSection({
           {body}
         </p>
         <StartButton
-          cta={atPosition(cta, "mid_page")}
+          cta={atPosition(cta, "mid_banner")}
           className="mt-8 w-full sm:w-auto"
         />
         <p className="mt-3 text-xs text-muted-foreground">
@@ -747,7 +747,7 @@ export function FinalCtaSection({
           {body}
         </p>
         <StartButton
-          cta={atPosition(cta, "footer")}
+          cta={atPosition(cta, "final_banner")}
           className="mt-8 w-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 sm:w-auto"
         />
         <p className="mt-4 text-xs text-primary-foreground/70">

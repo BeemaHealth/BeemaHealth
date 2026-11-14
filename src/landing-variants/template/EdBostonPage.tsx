@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MINT_OPTIONS } from "@/components/site/EdMintsPicker";
 import type { TreatmentFaqItem } from "@/components/site/TreatmentPageBlocks";
-import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
+import { CTA_IDS, resolveCta, type CtaId } from "@/lib/cta-ids";
 import {
   COMPOUNDED_ED_MINTS_REQUIRED,
   GENERIC_SILDENAFIL_REQUIRED,
@@ -47,6 +47,8 @@ import {
   TalkToProviderBody,
 } from "./blocks";
 import { NO_MEMBERSHIP_FEE_STAT } from "./proof";
+
+export type MintCtaIds = Record<"rdt" | "odt", CtaId>;
 
 type EdProduct = "sildenafil" | "tadalafil" | "ed-mints";
 
@@ -458,7 +460,12 @@ function scrollToFormulations() {
  * questionnaire with the ed_mints_* CTA id, so attribution matches the
  * popup it replaces.
  */
-function FormulationChooser() {
+function FormulationChooser({
+  ctaIds,
+}: {
+  /** Opt-in: own cta ids for these cards. Defaults to MINT_OPTIONS ids. */
+  ctaIds?: MintCtaIds;
+}) {
   return (
     <div className="space-y-6">
       <div className="mx-auto max-w-md rounded-2xl border border-primary/40 bg-primary-soft/60 px-4 py-3 text-center shadow-soft">
@@ -471,7 +478,9 @@ function FormulationChooser() {
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         {MINT_OPTIONS.map((opt) => {
-          const cta = resolveCta(opt.ctaId, "pricing");
+          const cta = ctaIds
+            ? resolveCta(ctaIds[opt.id], "formulation_picker")
+            : resolveCta(opt.ctaId, "pricing");
           return (
             <Link
               key={opt.id}
@@ -536,6 +545,8 @@ export type EdMintsBostonPageProps = {
   market?: EdMarket;
   /** Opt-in: where the hero price tile links. Defaults to "#pricing". */
   heroTileHref?: string;
+  /** Opt-in: own cta ids for the formulation picker cards. */
+  formulationCtaIds?: MintCtaIds;
 } & Pick<LandingTemplateProps, "overrides" | "insertAfter">;
 
 /** New-layout Boston ED Mints page. Every Get Started opens the picker. */
@@ -543,6 +554,7 @@ export function EdMintsBostonNewPage({
   faqItems,
   market = "boston",
   heroTileHref,
+  formulationCtaIds,
   overrides,
   insertAfter,
 }: EdMintsBostonPageProps) {
@@ -595,7 +607,7 @@ export function EdMintsBostonNewPage({
         id: "formulations",
         title: "Choose your formulation",
         description: `A licensed provider reviews your intake first and decides which formulation, if any, is right for you. You won't be charged anything if you're not prescribed. Both are ${price}, and each has its own intake.`,
-        children: <FormulationChooser />,
+        children: <FormulationChooser ctaIds={formulationCtaIds} />,
         footnote: (
           <>
             <p>

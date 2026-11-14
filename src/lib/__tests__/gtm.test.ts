@@ -324,6 +324,102 @@ describe("gtm", () => {
     ]);
   });
 
+  it("reports the finer landing-page positions as cta_location", () => {
+    const dataLayer: unknown[] = [];
+    vi.stubGlobal("window", {
+      dataLayer,
+      location: { search: "", pathname: "/" },
+    });
+    const hero = resolveCta(CTA_IDS.tirzepatide_hero);
+    for (const position of [
+      "story_video",
+      "mid_banner",
+      "final_banner",
+    ] as const) {
+      hero.withPosition(position).onClick();
+    }
+    expect(dataLayer).toEqual([
+      expect.objectContaining({ cta_location: "story_video" }),
+      expect.objectContaining({ cta_location: "mid_banner" }),
+      expect.objectContaining({ cta_location: "final_banner" }),
+    ]);
+  });
+
+  it("ED Mints Boston picker and plan cards report their own id and position", () => {
+    const dataLayer: unknown[] = [];
+    vi.stubGlobal("window", {
+      dataLayer,
+      location: { search: "", pathname: "/" },
+    });
+    const picker = resolveCta(
+      CTA_IDS.ed_mints_boston_rdt_picker,
+      "formulation_picker",
+    );
+    const plans = resolveCta(
+      CTA_IDS.ed_mints_boston_odt_plans,
+      "plan_comparison",
+    );
+    // Same Bask intake as the nationwide formulation ids.
+    expect(picker.to).toContain(
+      resolveCta(CTA_IDS.ed_mints_rdt_hero).to.split("?")[0],
+    );
+    expect(plans.to).toContain(
+      resolveCta(CTA_IDS.ed_mints_odt_hero).to.split("?")[0],
+    );
+    picker.onClick();
+    plans.onClick();
+    expect(dataLayer).toEqual([
+      expect.objectContaining({
+        cta_id: "ed_mints_boston_rdt_picker",
+        cta_location: "formulation_picker",
+      }),
+      expect.objectContaining({
+        cta_id: "ed_mints_boston_odt_plans",
+        cta_location: "plan_comparison",
+      }),
+    ]);
+  });
+
+  it("new ED Mints Boston ids carry every UTM and click id exactly like the old ids", () => {
+    vi.stubGlobal("window", {
+      dataLayer: [],
+      location: {
+        search:
+          "?utm_source=meta&utm_medium=paid&utm_campaign=c1&utm_term=t1&utm_content=ad9&fbclid=FB123&gclid=G456",
+        pathname: "/ed-mints-boston/",
+      },
+    });
+    const pairs = [
+      [CTA_IDS.ed_mints_rdt_hero, CTA_IDS.ed_mints_boston_rdt_picker],
+      [CTA_IDS.ed_mints_rdt_hero, CTA_IDS.ed_mints_boston_rdt_plans],
+      [CTA_IDS.ed_mints_odt_hero, CTA_IDS.ed_mints_boston_odt_picker],
+      [CTA_IDS.ed_mints_odt_hero, CTA_IDS.ed_mints_boston_odt_plans],
+    ] as const;
+    for (const [oldId, newId] of pairs) {
+      const oldUrl = new URL(resolveCta(oldId).to);
+      const newUrl = new URL(resolveCta(newId).to);
+      expect(newUrl.origin + newUrl.pathname).toBe(
+        oldUrl.origin + oldUrl.pathname,
+      );
+      expect(newUrl.searchParams.get("cta_id")).toBe(newId);
+      for (const key of [
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_term",
+        "utm_content",
+        "fbclid",
+        "gclid",
+      ]) {
+        expect(newUrl.searchParams.get(key)).toBe(oldUrl.searchParams.get(key));
+        expect(newUrl.searchParams.get(key)).toBeTruthy();
+      }
+      oldUrl.searchParams.delete("cta_id");
+      newUrl.searchParams.delete("cta_id");
+      expect(newUrl.toString()).toBe(oldUrl.toString());
+    }
+  });
+
   it.each([
     [CTA_IDS.recipes_hub, "recipes_hub"],
     [CTA_IDS.recipe_detail, "recipe_detail"],

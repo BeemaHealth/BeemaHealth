@@ -67,6 +67,12 @@ export const CTA_IDS = {
   ed_mints_odt_footer: "ed_mints_odt_footer",
   ed_mints_boston_hero: "ed_mints_boston_hero",
   ed_mints_boston_footer: "ed_mints_boston_footer",
+  // ED Mints Boston: one id per button spot so GA4 can tell the formulation
+  // picker cards apart from the monthly vs 3-month comparison cards.
+  ed_mints_boston_rdt_picker: "ed_mints_boston_rdt_picker",
+  ed_mints_boston_odt_picker: "ed_mints_boston_odt_picker",
+  ed_mints_boston_rdt_plans: "ed_mints_boston_rdt_plans",
+  ed_mints_boston_odt_plans: "ed_mints_boston_odt_plans",
   tadalafil_boston_hero: "tadalafil_boston_hero",
   tadalafil_boston_footer: "tadalafil_boston_footer",
   sildenafil_boston_hero: "sildenafil_boston_hero",
@@ -348,6 +354,22 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
   ed_mints_boston_footer: {
     label: "Get Started",
     to: ED_MINTS_RDT_INTAKE_URL,
+  },
+  ed_mints_boston_rdt_picker: {
+    label: "Get Started",
+    to: ED_MINTS_RDT_INTAKE_URL,
+  },
+  ed_mints_boston_odt_picker: {
+    label: "Get Started",
+    to: ED_MINTS_ODT_INTAKE_URL,
+  },
+  ed_mints_boston_rdt_plans: {
+    label: "Get Started",
+    to: ED_MINTS_RDT_INTAKE_URL,
+  },
+  ed_mints_boston_odt_plans: {
+    label: "Get Started",
+    to: ED_MINTS_ODT_INTAKE_URL,
   },
   tadalafil_boston_hero: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
   tadalafil_boston_footer: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
