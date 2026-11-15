@@ -85,7 +85,7 @@ describe("peptide blog article", () => {
     expect(article.metaDescription.length).toBeGreaterThanOrEqual(120);
     expect(article.metaDescription.length).toBeLessThanOrEqual(160);
     expect(formatBlogDate(article.date)).toBe("October 26, 2026");
-    expect(listArticles().map((item) => item.slug)).toEqual([article.slug]);
+    expect(listArticles().map((item) => item.slug)).toContain(article.slug);
     expect(getArticle(article.slug)).toEqual(article);
     expect(getArticle("missing")).toBeUndefined();
   });

@@ -27,6 +27,8 @@ export type BlogBlock =
 
 export type BlogArticle = {
   title: string;
+  /** Optional shorter document title for search results; the H1 stays `title`. */
+  seoTitle?: string;
   slug: string;
   metaDescription: string;
   excerpt: string;

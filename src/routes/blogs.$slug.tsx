@@ -22,7 +22,7 @@ export const Route = createFileRoute("/blogs/$slug")({
       };
     }
     return blogDocumentMeta({
-      title: article.title,
+      title: article.seoTitle ?? article.title,
       description: article.metaDescription,
       path: blogArticlePath(article.slug),
       ogType: "article",
