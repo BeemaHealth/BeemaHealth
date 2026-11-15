@@ -19,7 +19,7 @@ export function BlogIndexView({
               The Beema Health blog
             </p>
             <h1 className="mt-3 text-balance text-4xl font-bold tracking-tight text-foreground md:text-5xl">
-              Straight answers on weight loss and GLP-1 care
+              Straight answers on weight loss, peptides, and sexual health
             </h1>
             <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
               Plain-language articles to help you weigh the evidence, ask better
