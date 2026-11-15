@@ -1,5 +1,7 @@
 import type { LandingVariant } from "../types";
 import { EdMintsBostonNewPage } from "../template/EdBostonPage";
+import { CTA_IDS } from "@/lib/cta-ids";
+import { MintsPlanComparison } from "../ed-mints-boston/MintsPlanComparison";
 import { FAQ_ITEMS } from "./shared";
 
 /**
@@ -9,7 +11,27 @@ import { FAQ_ITEMS } from "./shared";
  * only, pass `overrides` or `insertAfter` below.
  */
 function NewLayout() {
-  return <EdMintsBostonNewPage market="nationwide" faqItems={FAQ_ITEMS} />;
+  return (
+    <EdMintsBostonNewPage
+      market="nationwide"
+      faqItems={FAQ_ITEMS}
+      heroTileHref="#plan-comparison"
+      formulationCtaIds={{
+        rdt: CTA_IDS.ed_mints_rdt_picker,
+        odt: CTA_IDS.ed_mints_odt_picker,
+      }}
+      insertAfter={{
+        pricing: (
+          <MintsPlanComparison
+            ctaIds={{
+              rdt: CTA_IDS.ed_mints_rdt_plans,
+              odt: CTA_IDS.ed_mints_odt_plans,
+            }}
+          />
+        ),
+      }}
+    />
+  );
 }
 
 export const variant: LandingVariant = {
