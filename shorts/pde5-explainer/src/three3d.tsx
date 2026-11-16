@@ -159,7 +159,7 @@ export const Tunnel: React.FC<{relax: number; t: number; rings?: number; spacing
 };
 
 /* ---------- molecular parts ---------- */
-const Mesh: React.FC<{g: THREE.BufferGeometry; p?: V3; s?: number | V3; r?: V3; color: string; emissive?: string; ei?: number; opacity?: number; rough?: number}> = ({
+export const Mesh: React.FC<{g: THREE.BufferGeometry; p?: V3; s?: number | V3; r?: V3; color: string; emissive?: string; ei?: number; opacity?: number; rough?: number}> = ({
   g, p = [0, 0, 0], s = 1, r = [0, 0, 0], color, emissive, ei = 0, opacity = 1, rough = 0.45,
 }) => (
   <mesh geometry={g} position={p} scale={s as number} rotation={r}>

@@ -7,14 +7,14 @@ import {CGMP3, Ca3, CellStage, Drug3, ENDO, Halo, NO3, Network, NET_TARGET, NET_
 
 type P = {t: number; dur: number};
 
-const Stage: React.FC<{children: React.ReactNode}> = ({children}) => (
+export const Stage: React.FC<{children: React.ReactNode}> = ({children}) => (
   <AbsoluteFill>
     <ThreeCanvas width={W} height={H} camera={{fov: 45, position: [0, 0, 10]}} gl={{antialias: true}}>
       {children}
     </ThreeCanvas>
   </AbsoluteFill>
 );
-const Overlay: React.FC<{children: React.ReactNode; bg?: boolean; t?: number}> = ({children, bg, t = 0}) => (
+export const Overlay: React.FC<{children: React.ReactNode; bg?: boolean; t?: number}> = ({children, bg, t = 0}) => (
   <AbsoluteFill>
     <svg width="100%" height="100%" viewBox={`0 0 ${W} ${H}`} style={{display: 'block'}}>
       {bg && <Backdrop t={t} />}
@@ -23,7 +23,7 @@ const Overlay: React.FC<{children: React.ReactNode; bg?: boolean; t?: number}> =
   </AbsoluteFill>
 );
 /** soft dark gradient so text stays readable over 3D (top title zone + mid caption zone) */
-const Scrim: React.FC<{mid?: boolean; cap?: boolean}> = ({mid, cap}) => (
+export const Scrim: React.FC<{mid?: boolean; cap?: boolean}> = ({mid, cap}) => (
   <g>
     <defs>
       <linearGradient id="scT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#000" stopOpacity="0.7" /><stop offset="1" stopColor="#000" stopOpacity="0" /></linearGradient>
@@ -36,13 +36,13 @@ const Scrim: React.FC<{mid?: boolean; cap?: boolean}> = ({mid, cap}) => (
   </g>
 );
 /** two-line caption, kept inside TikTok's safe area (above y=1380) */
-const Caption: React.FC<{main: string; sub?: string; color: string; o: number}> = ({main, sub, color, o}) => (
+export const Caption: React.FC<{main: string; sub?: string; color: string; o: number}> = ({main, sub, color, o}) => (
   <g opacity={o}>
     <Label x={W / 2 - 20} y={1290} text={main} color={color} size={46} />
     {sub && <Label x={W / 2 - 20} y={1345} text={sub} color="#c9d0ee" size={30} weight={500} />}
   </g>
 );
-const win = (t: number, a: number, b: number, fade = 0.4) => seg(t, a, a + fade) * (1 - seg(t, b - fade, b));
+export const win = (t: number, a: number, b: number, fade = 0.4) => seg(t, a, a + fade) * (1 - seg(t, b - fade, b));
 
 type Cm = Cam;
 const NDOT = 16;
