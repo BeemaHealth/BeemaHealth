@@ -98,6 +98,7 @@ export const Instanced: React.FC<{items: Inst[]; max: number; geometry: THREE.Bu
 
 /* ---------- artery tunnel (inside view of a vessel wall) ---------- */
 export const tunnelLumen = (relax: number) => lerp(0.95, 2.7, relax);
+export const tunnelWallR = (relax: number) => tunnelLumen(relax) + 0.1 + lerp(1.15, 0.6, relax) / 2;
 
 export const Tunnel: React.FC<{relax: number; t: number; rings?: number; spacing?: number; zStart?: number; flow?: number; nRbc?: number}> = ({
   relax, t, rings = 18, spacing = 1.0, zStart = 2, flow = 1.6, nRbc = 30,
@@ -190,10 +191,10 @@ export const SGC3: React.FC<{p: V3; glow: number; t: number}> = ({p, glow, t}) =
   </group>
 );
 /** PDE5: lumpy protein with a visible dark substrate pocket on local +x. */
-export const PDE3: React.FC<{p: V3; yaw: number; plugged?: number; t: number; seed?: number}> = ({p, yaw, plugged = 0, t, seed = 1}) => {
+export const PDE3: React.FC<{p: V3; yaw: number; plugged?: number; t: number; seed?: number; size?: number}> = ({p, yaw, plugged = 0, t, seed = 1, size = 0.6}) => {
   const col = plugged > 0.5 ? '#b5733a' : C.pde;
   return (
-    <group position={p} rotation={[0.2 * Math.sin(t * 0.8 + seed), yaw, 0]} scale={0.72}>
+    <group position={p} rotation={[0.2 * Math.sin(t * 0.8 + seed), yaw, 0]} scale={size}>
       <Mesh g={blobGeo(seed + 11, 0.28)} s={0.95} color={col} ei={0.18} rough={0.35} />
       <Mesh g={blobGeo(seed + 23, 0.3)} p={[-0.7, 0.45, 0]} s={0.6} color={col} ei={0.18} rough={0.35} />
       <Mesh g={G.sph} p={[0.78, 0, 0]} s={0.4} color="#2b1200" emissive="#000000" ei={0} rough={1} />
@@ -203,48 +204,133 @@ export const PDE3: React.FC<{p: V3; yaw: number; plugged?: number; t: number; se
 /** Inhibitor molecule docking into the PDE5 pocket (local frame of enzyme). */
 export const Drug3: React.FC<{p: V3; rot?: number}> = ({p, rot = 0}) => (
   <group position={p} rotation={[0, rot, Math.PI / 2]}>
-    <Mesh g={G.capsule} s={[0.3, 0.44, 0.3]} color={C.drug} ei={0.9} rough={0.25} />
+    <Mesh g={G.capsule} s={[0.36, 0.52, 0.36]} color={C.drug} ei={1.0} rough={0.25} />
+    <Mesh g={G.sphLo} s={0.8} color={C.drug} ei={1} opacity={0.14} />
   </group>
 );
 
-/* ---------- cell interior environment ---------- */
+/* ---------- whole-cell view ---------- */
 export const vol = (i: number, salt: number, R: number): V3 => {
   const u = rnd(i, salt), v = rnd(i, salt + 1), w = rnd(i, salt + 2);
   const th = Math.acos(2 * v - 1), ph = 2 * Math.PI * w, r = R * Math.cbrt(u);
   return [r * Math.sin(th) * Math.cos(ph), r * Math.cos(th), r * Math.sin(th) * Math.sin(ph)];
 };
+export const CELL_R: V3 = [3.1, 2.6, 2.6];
+/** point inside the muscle cell (above the nucleus), i in any range */
+export const inCell = (i: number, salt: number, k = 0.8): V3 => {
+  const v = vol(i, salt, 1);
+  return [v[0] * CELL_R[0] * k, v[1] * CELL_R[1] * k * 0.75 + 0.55, v[2] * CELL_R[2] * k];
+};
+export const ENDO: V3[] = [[-2.6, 3.95, 0.2], [0.1, 4.1, 0.5], [2.7, 3.95, -0.4]];
 
-const RIBO: Inst[] = Array.from({length: 90}).map((_, i) => ({p: vol(i, 90, 12), s: 0.07 + rnd(i, 8) * 0.07, c: i % 3 ? '#c46a86' : '#8f5a78'}));
-const MITO: Inst[] = Array.from({length: 6}).map((_, i) => {
-  const a = (i / 6) * Math.PI * 2 + 0.4;
-  return {p: [Math.cos(a) * 10.5, (rnd(i, 14) - 0.5) * 8, Math.sin(a) * 10.5] as V3, s: [0.9, 1.7, 0.9] as V3, r: [rnd(i, 15), 0, 1.2 + rnd(i, 16)] as V3};
+export const Halo: React.FC<{p: V3; r: number; color: string; o: number; t: number}> = ({p, r, color, o, t}) =>
+  o < 0.02 ? null : (
+    <mesh position={p} scale={r * (1 + 0.12 * Math.sin(t * 6))} geometry={G.sphLo}>
+      <meshBasicMaterial color={color} transparent opacity={0.22 * o} depthWrite={false} />
+    </mesh>
+  );
+
+const BOKEH: Inst[] = Array.from({length: 70}).map((_, i) => {
+  const v = vol(i, 95, 1);
+  const k = 9 + rnd(i, 7) * 8;
+  return {p: [v[0] * k, v[1] * k, v[2] * k] as V3, s: 0.05 + rnd(i, 8) * 0.12, c: i % 2 ? '#3d5aa8' : '#7a4a8a'};
 });
 
-export const CellEnv: React.FC<{t: number; glow?: number}> = ({t, glow = 0}) => (
-  <>
-    <color attach="background" args={['#240a1f']} />
-    <fog attach="fog" args={['#240a1f', 11, 44]} />
-    <ambientLight intensity={1.0} />
-    <directionalLight position={[5, 8, 6]} intensity={2.4} />
-    <pointLight position={[0, 0, 0]} intensity={30 + glow * 40} color="#bfffd0" distance={16} />
-    <mesh scale={24}>
-      <sphereGeometry args={[1, 40, 28]} />
-      <meshStandardMaterial color="#6e2a48" side={THREE.BackSide} roughness={0.9} emissive="#3a1228" emissiveIntensity={0.6} />
-    </mesh>
-    <mesh geometry={blobGeo(4, 0.1)} position={[0, -9, -3]} scale={4.2}>
-      <meshStandardMaterial color="#8b3a5c" roughness={0.7} emissive="#4a1a34" emissiveIntensity={0.4} />
-    </mesh>
-    <Instanced items={RIBO} max={90} geometry={G.sphLo} colors>
-      <meshStandardMaterial roughness={0.6} />
-    </Instanced>
-    <Instanced items={MITO} max={6} geometry={G.capsule}>
-      <meshStandardMaterial color="#d98a4a" roughness={0.5} transparent opacity={0.5} emissive="#6a3a10" emissiveIntensity={0.4} />
-    </Instanced>
-  </>
-);
+export const CellStage: React.FC<{t: number; glow?: number; len?: number; showEndo?: boolean}> = ({t, glow = 0, len = 1, showEndo = true}) => {
+  const sx = CELL_R[0] * len, sy = CELL_R[1] / Math.sqrt(len), sz = CELL_R[2] / Math.sqrt(len);
+  return (
+    <>
+      <color attach="background" args={['#070a1c']} />
+      <fog attach="fog" args={['#070a1c', 16, 46]} />
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[4, 8, 7]} intensity={2.3} />
+      <pointLight position={[0, 0.5, 0]} intensity={18 + glow * 30} color="#bfffd0" distance={10} />
+      {/* membrane: translucent shell + soft rim */}
+      <mesh geometry={G.sph} scale={[sx, sy, sz]}>
+        <meshPhysicalMaterial color="#f3a3b0" transparent opacity={0.17} roughness={0.25} side={THREE.DoubleSide} depthWrite={false} emissive="#a04a63" emissiveIntensity={0.35} />
+      </mesh>
+      <mesh geometry={G.sph} scale={[sx * 1.025, sy * 1.025, sz * 1.025]}>
+        <meshBasicMaterial color="#ffb3c4" transparent opacity={0.16} side={THREE.BackSide} depthWrite={false} />
+      </mesh>
+      {/* nucleus */}
+      <mesh geometry={blobGeo(4, 0.1)} position={[0, -1.35, 0]} scale={[1.45, 0.85, 0.95]}>
+        <meshStandardMaterial color="#7a3f8c" roughness={0.6} emissive="#3a1a4a" emissiveIntensity={0.4} />
+      </mesh>
+      {/* neighbouring vessel-lining cells */}
+      {showEndo &&
+        ENDO.map((p, i) => (
+          <mesh key={i} geometry={blobGeo(30 + i, 0.12)} position={p} scale={[1.45, 0.62, 1.3]}>
+            <meshStandardMaterial color={C.endo} roughness={0.5} emissive="#7a3a2a" emissiveIntensity={0.35} />
+          </mesh>
+        ))}
+    </>
+  );
+};
 
-export const cellCam = (t: number, a0 = 0.6): {pos: V3; look: V3} => {
-  const a = a0 + t * 0.11;
-  const rad = 10.5 - Math.min(t, 12) * 0.08;
-  return {pos: [Math.cos(a) * rad, 1.2 + 0.6 * Math.sin(t * 0.3), Math.sin(a) * rad], look: [0, 0, 0]};
+export const cellCam = (t: number, a0 = 0): {pos: V3; look: V3; fov: number} => {
+  const a = a0 + 0.5 * Math.sin(0.22 * t + 0.6);
+  const rad = 15.5 - Math.min(t, 10) * 0.1;
+  return {pos: [Math.sin(a) * rad, 2.6 + 0.4 * Math.sin(t * 0.3), Math.cos(a) * rad], look: [0, -0.2, 0], fov: 52};
+};
+
+/* ---------- bird's-eye artery network ---------- */
+type Seg = {curve: THREE.CatmullRomCurve3; r: number};
+const buildNet = () => {
+  const segs: Seg[] = [];
+  const mk = (pts: V3[], r: number) => {
+    const curve = new THREE.CatmullRomCurve3(pts.map((q) => new THREE.Vector3(q[0], q[1], q[2])));
+    segs.push({curve, r});
+    return curve;
+  };
+  const trunk = mk([[0.3, 0, 14], [1.0, 0, 7], [-0.7, 0, 1], [0.6, 0, -6], [0, 0, -14]], 0.42);
+  for (let k = 0; k < 6; k++) {
+    const u = 0.12 + k * 0.15;
+    const o = trunk.getPoint(u);
+    const side = k % 2 ? 1 : -1;
+    const len = 6 + rnd(k, 2) * 2;
+    const mid: V3 = [o.x + side * len * 0.45, 0, o.z - 1.2 - rnd(k, 3)];
+    const end: V3 = [o.x + side * len, 0, o.z - 3 + (rnd(k, 4) - 0.5) * 3];
+    const b = mk([[o.x, 0, o.z], mid, end], 0.24);
+    for (let j = 0; j < 2; j++) {
+      const q = b.getPoint(j === 0 ? 0.55 : 1);
+      const dz = j === 0 ? 3.5 : -3.2;
+      mk([[q.x, 0, q.z], [q.x + side * 1.4, 0, q.z + dz * 0.5], [q.x + side * (2.4 + rnd(k * 2 + j, 5)), 0, q.z + dz]], 0.13);
+    }
+  }
+  return segs;
+};
+const NET = buildNet();
+const NET_GEO = NET.map((s) => new THREE.TubeGeometry(s.curve, 56, s.r, 12, false));
+/** the highlighted small artery we "zoom into" */
+export const NET_TARGET: V3 = (() => {
+  const c = NET[NET.length - 2].curve.getPoint(1);
+  return [c.x, 0, c.z] as V3;
+})();
+export const NET_TRUNK_MID: V3 = [0.2, 0, 0];
+
+export const Network: React.FC<{t: number}> = ({t}) => {
+  const flow: Inst[] = [];
+  NET.forEach((s, si) => {
+    const n = s.r > 0.3 ? 16 : s.r > 0.2 ? 9 : 5;
+    for (let i = 0; i < n; i++) {
+      const u = (rnd(i + si * 50, 1) + t * (0.05 + 0.03 * rnd(si, 3))) % 1;
+      const q = s.curve.getPoint(u);
+      flow.push({p: [q.x, q.y + 0.02, q.z], s: s.r * 0.55, r: [Math.PI / 2, 0, t + i]});
+    }
+  });
+  return (
+    <>
+      <color attach="background" args={['#070b18']} />
+      <ambientLight intensity={0.9} />
+      <directionalLight position={[3, 12, 4]} intensity={2.2} />
+      {NET_GEO.map((g, i) => (
+        <mesh key={i} geometry={g}>
+          <meshStandardMaterial color="#b83048" emissive="#5a0c20" emissiveIntensity={0.55} roughness={0.4} transparent opacity={0.82} />
+        </mesh>
+      ))}
+      <Instanced items={flow} max={flow.length} geometry={G.rbc}>
+        <meshStandardMaterial color="#ff8a9a" emissive="#ff4060" emissiveIntensity={0.7} roughness={0.4} side={THREE.DoubleSide} />
+      </Instanced>
+    </>
+  );
 };

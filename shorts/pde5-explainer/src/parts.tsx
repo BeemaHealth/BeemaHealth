@@ -1,5 +1,6 @@
 import React from 'react';
 import {C, W, H, clamp01, ease, rnd} from './theme';
+import type {V3} from './three3d';
 
 export const FONT = '-apple-system, "SF Pro Display", "Helvetica Neue", Arial, sans-serif';
 
@@ -21,13 +22,12 @@ export const Backdrop: React.FC<{t: number}> = ({t}) => (
   </g>
 );
 
-export const StepTitle: React.FC<{step?: string; title: string; sub?: string; t: number}> = ({step, title, sub, t}) => {
-  const o = ease(t / 0.6);
+export const StepTitle: React.FC<{step?: string; title: string; sub?: string; t: number}> = ({step, title, t}) => {
+  const o = ease(t / 0.5);
   return (
     <g opacity={o} transform={`translate(0 ${(1 - o) * 16})`} fontFamily={FONT}>
-      {step && <text x={W / 2} y={170} textAnchor="middle" fontSize={34} fontWeight={700} letterSpacing={6} fill={C.dim}>{step}</text>}
-      <text x={W / 2} y={246} textAnchor="middle" fontSize={68} fontWeight={800} fill={C.text}>{title}</text>
-      {sub && <text x={W / 2} y={300} textAnchor="middle" fontSize={34} fill={C.dim}>{sub}</text>}
+      {step && <text x={W / 2} y={215} textAnchor="middle" fontSize={30} fontWeight={700} letterSpacing={6} fill="#b9c2ea" stroke="#000" strokeOpacity={0.5} strokeWidth={5} paintOrder="stroke">{step}</text>}
+      <text x={W / 2} y={285} textAnchor="middle" fontSize={58} fontWeight={800} fill={C.text} stroke="#000" strokeOpacity={0.55} strokeWidth={8} paintOrder="stroke">{title}</text>
     </g>
   );
 };
@@ -162,6 +162,50 @@ export const Meter: React.FC<{x: number; y: number; h: number; value: number; la
       <rect x={x} y={y} width={40} height={h} rx={20} fill="#1b2347" stroke={C.dim} strokeWidth={2} />
       <rect x={x + 4} y={y + 4 + (h - 8) * (1 - v)} width={32} height={(h - 8) * v} rx={16} fill={col} />
       <text x={x + 20} y={y + h + 44} textAnchor="middle" fontSize={26} fontWeight={700} fill={C.dim}>{label}</text>
+    </g>
+  );
+};
+
+/* ---------- screen-space callouts that track 3D points ---------- */
+export type Cam = {pos: V3; look: V3; fov: number; roll?: number};
+export const project = (c: Cam, p: V3) => {
+  const d = [p[0] - c.pos[0], p[1] - c.pos[1], p[2] - c.pos[2]];
+  const fl = [c.look[0] - c.pos[0], c.look[1] - c.pos[1], c.look[2] - c.pos[2]];
+  const fn = Math.hypot(fl[0], fl[1], fl[2]);
+  const f = fl.map((v) => v / fn);
+  const r = c.roll ?? 0;
+  const up0 = [Math.sin(r), Math.cos(r), 0];
+  let rt = [f[1] * up0[2] - f[2] * up0[1], f[2] * up0[0] - f[0] * up0[2], f[0] * up0[1] - f[1] * up0[0]];
+  const rn = Math.hypot(rt[0], rt[1], rt[2]);
+  rt = rt.map((v) => v / rn);
+  const up = [rt[1] * f[2] - rt[2] * f[1], rt[2] * f[0] - rt[0] * f[2], rt[0] * f[1] - rt[1] * f[0]];
+  const x = d[0] * rt[0] + d[1] * rt[1] + d[2] * rt[2];
+  const y = d[0] * up[0] + d[1] * up[1] + d[2] * up[2];
+  const z = d[0] * f[0] + d[1] * f[1] + d[2] * f[2];
+  const th = Math.tan((c.fov * Math.PI) / 360);
+  const nx = x / (z * th * (W / H));
+  const ny = y / (z * th);
+  return {x: ((nx + 1) / 2) * W, y: ((1 - ny) / 2) * H, z};
+};
+
+export const SAFE = {top: 330, bottom: 1250, left: 110, right: 930};
+
+export const Tag: React.FC<{cam: Cam; p: V3; text: string; color: string; dx?: number; dy?: number; o?: number; size?: number; t?: number}> = ({
+  cam, p, text, color, dx = 0, dy = -140, o = 1, size = 38, t = 0,
+}) => {
+  const q = project(cam, p);
+  if (o < 0.02 || q.z < 0.5) return null;
+  const wTxt = text.length * size * 0.54 + 44;
+  const lx = Math.max(SAFE.left + wTxt / 2, Math.min(SAFE.right - wTxt / 2, q.x + dx));
+  const ly = Math.max(SAFE.top, Math.min(SAFE.bottom, q.y + dy));
+  const pulse = 1 + 0.12 * Math.sin(t * 6);
+  return (
+    <g opacity={o} fontFamily={FONT}>
+      <line x1={q.x} y1={q.y} x2={lx} y2={ly} stroke={color} strokeWidth={4} strokeLinecap="round" />
+      <circle cx={q.x} cy={q.y} r={34 * pulse} fill="none" stroke={color} strokeWidth={5} />
+      <circle cx={q.x} cy={q.y} r={7} fill={color} />
+      <rect x={lx - wTxt / 2} y={ly - size * 0.78} width={wTxt} height={size * 1.45} rx={size * 0.5} fill="#050814" fillOpacity={0.82} stroke={color} strokeWidth={3} />
+      <text x={lx} y={ly + size * 0.28} textAnchor="middle" fontSize={size} fontWeight={700} fill={color}>{text}</text>
     </g>
   );
 };

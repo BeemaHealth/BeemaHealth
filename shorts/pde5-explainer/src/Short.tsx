@@ -15,8 +15,8 @@ const SCENES = [
   {id: 'safety', C: SceneSafety},
 ] as const;
 
-const LEAD = 0.35; // seconds of picture before the voice starts
-const PAD = 0.9; // seconds of picture after the voice ends
+const LEAD = 0.12; // seconds of picture before the voice starts
+const PAD = 0.3; // seconds of picture after the voice ends
 
 type Dur = {id: string; start: number; len: number};
 export const TIMELINE: Dur[] = (() => {
@@ -41,7 +41,7 @@ export const Short: React.FC = () => {
         if (local < 0 || local >= s.len) return null;
         const t = local / FPS;
         const dur = s.len / FPS;
-        const o = seg(t, 0, 0.35) * (1 - seg(t, dur - 0.35, dur));
+        const o = seg(t, 0, 0.25) * (1 - seg(t, dur - 0.25, dur));
         return (
           <AbsoluteFill key={s.id} style={{opacity: o}}>
             <Comp t={t} dur={dur} />
