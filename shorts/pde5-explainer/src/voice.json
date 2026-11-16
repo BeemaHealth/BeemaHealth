@@ -1,34 +1,34 @@
 {
  "hook": {
   "text": "Sildenafil and tadalafil don't create an erection. They stop your body from switching one off.",
-  "dur": 5.46
+  "dur": 5.9
  },
  "vessel": {
   "text": "An erection is a blood flow event. Inside the penis, two spongy chambers are fed by arteries wrapped in smooth muscle. At rest, that muscle stays tense, and the arteries stay narrow.",
-  "dur": 11.05
+  "dur": 12.03
  },
  "signal": {
   "text": "With arousal, nerves and the vessel lining release nitric oxide. It slips into the muscle cells and switches on an enzyme that makes a messenger molecule called cyclic G M P.",
-  "dur": 9.93
+  "dur": 11.62
  },
  "relax": {
   "text": "Cyclic G M P tells the muscle to relax. Calcium inside the cell drops, the arteries widen, blood fills the chambers, and the swelling squeezes the exit veins shut.",
-  "dur": 10.39
+  "dur": 11.3
  },
  "pde5": {
   "text": "But the body always builds in an off switch. An enzyme called P D E 5 chops cyclic G M P into an inactive fragment, and the signal fades.",
-  "dur": 8.44
+  "dur": 9.93
  },
  "inhibit": {
   "text": "Sildenafil and tadalafil are P D E 5 inhibitors. They compete for the enzyme's active site, so cyclic G M P is broken down more slowly, and the relaxation signal lasts longer.",
-  "dur": 11.3
+  "dur": 12.8
  },
  "timing": {
   "text": "Nothing starts without stimulation, because no nitric oxide means no signal to protect. The big difference is time. Sildenafil's half-life is about four hours. Tadalafil's is about seventeen.",
-  "dur": 12.15
+  "dur": 13.2
  },
  "safety": {
   "text": "These drugs also widen other blood vessels, which is why mixing them with nitrate medicines can drop blood pressure dangerously. Same enzyme, same vessels, different timing.",
-  "dur": 10.3
+  "dur": 11.47
  }
 }

@@ -1,8 +1,7 @@
 import React from 'react';
-import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import voice from './voice.json';
-import {Backdrop} from './parts';
-import {W, H, FPS, seg} from './theme';
+import {FPS, seg} from './theme';
 import {SceneHook, SceneVessel, SceneSignal, SceneRelax, ScenePde5, SceneInhibit, SceneTiming, SceneSafety} from './scenes';
 
 const SCENES = [
@@ -34,18 +33,21 @@ export const TOTAL = TIMELINE.reduce((a, b) => a + b.len, 0);
 
 export const Short: React.FC = () => {
   const f = useCurrentFrame();
-  const {width, height} = useVideoConfig();
   return (
-    <AbsoluteFill>
-      <svg width={width} height={height} viewBox={`0 0 ${W} ${H}`}>
-        <Backdrop t={f / FPS} />
-        {TIMELINE.map((s, i) => {
-          const C = SCENES[i].C;
-          const local = f - s.start;
-          if (local < 0 || local >= s.len) return null;
-          return <SceneWrapNoAudio key={s.id} Comp={C} t={local / FPS} dur={s.len / FPS} />;
-        })}
-      </svg>
+    <AbsoluteFill style={{background: '#000'}}>
+      {TIMELINE.map((s, i) => {
+        const Comp = SCENES[i].C;
+        const local = f - s.start;
+        if (local < 0 || local >= s.len) return null;
+        const t = local / FPS;
+        const dur = s.len / FPS;
+        const o = seg(t, 0, 0.35) * (1 - seg(t, dur - 0.35, dur));
+        return (
+          <AbsoluteFill key={s.id} style={{opacity: o}}>
+            <Comp t={t} dur={dur} />
+          </AbsoluteFill>
+        );
+      })}
       {TIMELINE.map((s) => (
         <Sequence key={s.id} from={s.start + Math.round(LEAD * FPS)} durationInFrames={s.len}>
           <Audio src={staticFile(`voice/${s.id}.wav`)} />
@@ -53,9 +55,4 @@ export const Short: React.FC = () => {
       ))}
     </AbsoluteFill>
   );
-};
-
-const SceneWrapNoAudio: React.FC<{Comp: React.FC<{t: number; dur: number}>; t: number; dur: number}> = ({Comp, t, dur}) => {
-  const o = seg(t, 0, 0.35) * (1 - seg(t, dur - 0.35, dur));
-  return <g opacity={o}><Comp t={t} dur={dur} /></g>;
 };
