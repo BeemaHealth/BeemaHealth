@@ -10,6 +10,8 @@
     "render:ad": "remotion render src/index.ts AdEd out/ad-ed.mp4 --codec h264 --crf 17"
   },
   "dependencies": {
+    "@fontsource/figtree": "^5.3.0",
+    "@fontsource/outfit": "^5.3.0",
     "@react-three/fiber": "^9.0.0",
     "@remotion/cli": "^4.0.544",
     "@remotion/three": "^4.0.544",

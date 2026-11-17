@@ -1,0 +1,183 @@
+{
+  "site": "https://beemahealth.com",
+  "phase": 1,
+  "phase_notes": "1 = test hooks (fixed control meat M1 + CTA C1 per product). 2 = test meats using top hooks. 3 = test CTAs using top hook+meat. Advance manually in this file after reviewing registry recommendations.",
+  "control": {
+    "meat": "M1",
+    "cta": "C1"
+  },
+  "daily": {
+    "product_rotation": [
+      "tadalafil",
+      "tirzepatide",
+      "sildenafil",
+      "semaglutide",
+      "ed-mints"
+    ],
+    "min_days_between_same_product": 2,
+    "no_repeat_meat_back_to_back": true,
+    "no_repeat_hook_angle_back_to_back": true,
+    "slack_channel_id": "C0BUDF3CNAD",
+    "slack_channel_name": "#nikki-matt-charlie-marketing",
+    "delivery_time_local": "08:30",
+    "timezone": "America/Denver",
+    "max_render_retries": 3
+  },
+  "voice": {
+    "provider": "kokoro",
+    "voice": "am_michael",
+    "speed": 1.06,
+    "candidates": [
+      "am_michael",
+      "am_adam",
+      "am_liam",
+      "am_eric",
+      "am_onyx",
+      "af_heart",
+      "af_nicole",
+      "af_sarah"
+    ],
+    "pause_ms": {
+      "hook_to_meat": 300,
+      "beat": 130,
+      "meat_to_cta": 260
+    },
+    "elevenlabs": {
+      "voice_id": null,
+      "model_id": "eleven_multilingual_v2",
+      "note": "Set ELEVENLABS_API_KEY in env. UNTESTED adapter."
+    },
+    "sentence_gap_s": [
+      0.08,
+      0.16
+    ],
+    "question_gap_s": [
+      0.16,
+      0.26
+    ]
+  },
+  "pronunciation": {
+    "GLP-1": "G L P one",
+    "PDE5": "P D E 5",
+    "cGMP": "cyclic G M P",
+    "ED": "E D",
+    "RDT": "R D T",
+    "ODT": "O D T",
+    "mg": "milligrams",
+    "Rx": "prescription",
+    "beemahealth.com": "beema health dot com",
+    "Beema": "Bee-ma",
+    "BPC-157": "B P C one fifty seven",
+    "tirzepatide": "ter ZEP uh tide",
+    "semaglutide": "sem uh GLOO tide",
+    "GIP": "G I P"
+  },
+  "posting_times": {
+    "status": "NO_AUDIENCE_DATA",
+    "note": "No social analytics are connected. These are generic placeholders, NOT audience-derived. Import platform insights with `beema.py registry import-metrics` and run `beema.py times` to replace them.",
+    "defaults_local": {
+      "instagram": [
+        "12:00",
+        "19:00"
+      ],
+      "facebook": [
+        "12:00",
+        "18:00"
+      ],
+      "threads": [
+        "12:00",
+        "20:00"
+      ],
+      "tiktok": [
+        "18:00",
+        "21:00"
+      ],
+      "youtube": [
+        "12:00",
+        "17:00"
+      ],
+      "x": [
+        "08:00",
+        "12:00"
+      ]
+    }
+  },
+  "platform_specs": {
+    "instagram": {
+      "caption_max": 500,
+      "note": "Same caption reused for Facebook and Threads"
+    },
+    "facebook": {
+      "caption_max": 500
+    },
+    "threads": {
+      "caption_max": 500
+    },
+    "x": {
+      "caption_max": 280,
+      "hashtags_max": 2
+    },
+    "tiktok": {
+      "caption_max": 2200,
+      "hashtags": [
+        3,
+        5
+      ]
+    },
+    "youtube": {
+      "title_max": 100,
+      "description_max": 5000
+    }
+  },
+  "ad_aspects": {
+    "9x16": [
+      1080,
+      1920
+    ],
+    "4x5": [
+      1080,
+      1350
+    ],
+    "1x1": [
+      1080,
+      1080
+    ]
+  },
+  "use_labeled_photos": false,
+  "phonemes": {
+    "tirzepatide": "tɜɹzˈɛpʌtˌaɪd",
+    "semaglutide": "sˌɛmʌɡlˈutˌaɪd",
+    "Beema": "bˈimɐ",
+    "tadalafil": "tɑdˈælʌfɪl",
+    "lives": "lˈɪvz"
+  },
+  "nightly": {
+    "hour": 4,
+    "minute": 0,
+    "count": 2,
+    "min_seconds": 15,
+    "max_seconds": 45,
+    "candidate_attempts": 6,
+    "hook_repeat_blocked": true,
+    "categories": {
+      "weight_loss": [
+        "tirzepatide",
+        "semaglutide"
+      ],
+      "mens_sexual_health": [
+        "sildenafil",
+        "tadalafil",
+        "ed-mints"
+      ],
+      "peptides": [
+        "bpc-157"
+      ]
+    },
+    "peptide_score_multiplier": 0.5,
+    "recent_facet_penalty_days": 4,
+    "note": "Nightly job: finds highly searched topics, makes 2 organic videos of 15-45 seconds, delivers them to the Slack channel in daily.slack_channel_id for human review. Never publishes. Peptide videos are educational only (gate BLOCKs anything ad-like).",
+    "peptide_at_least_every_nights": 4,
+    "slack_channel_id": "C0CKEHHHE1W",
+    "slack_channel_name": "#daily-ai-videos-for-socials"
+  }
+}

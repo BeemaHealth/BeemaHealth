@@ -1,0 +1,1603 @@
+{
+  "product": "tirzepatide",
+  "prefix": "TRZ",
+  "hooks": [
+    {
+      "id": "TRZ-H01",
+      "product": "tirzepatide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Tirzepatide works on two hormone signals at once. Here's what that means.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H02",
+      "product": "tirzepatide",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "Why does hunger feel different when two hormones are involved?",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H03",
+      "product": "tirzepatide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "GIP and GLP-1. Two signals, one medicine.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H04",
+      "product": "tirzepatide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "What does 'dual agonist' actually mean? Plain English.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H05",
+      "product": "tirzepatide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Your gut talks to your brain all day. Here's how this medicine joins the conversation.",
+      "words": 15,
+      "est_seconds": 5.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H06",
+      "product": "tirzepatide",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "Why does your stomach send a 'full' message, and what interferes with it?",
+      "words": 13,
+      "est_seconds": 5.0,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H07",
+      "product": "tirzepatide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Hunger isn't just willpower. Here's the biology.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H08",
+      "product": "tirzepatide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "One medicine, two receptors. Let's break it down.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H09",
+      "product": "tirzepatide",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "What happens to stomach emptying on a GLP-1 medicine?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H10",
+      "product": "tirzepatide",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "Where does the 'food noise' feeling come from?",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H11",
+      "product": "tirzepatide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Compounded tirzepatide is not FDA-approved. Here's what that means.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H12",
+      "product": "tirzepatide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "What 'compounded' means, without the marketing.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H13",
+      "product": "tirzepatide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Compounded versus brand-name. A clear explanation.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H14",
+      "product": "tirzepatide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "There's a lot of noise about compounded GLP-1s. Here's the plain version.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H15",
+      "product": "tirzepatide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Prescribing is never guaranteed. Here's why.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H16",
+      "product": "tirzepatide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "A provider decides, not an algorithm.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H17",
+      "product": "tirzepatide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Not everyone is a candidate. Here's how that's decided.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H18",
+      "product": "tirzepatide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Honest answers about compounded tirzepatide.",
+      "words": 5,
+      "est_seconds": 1.9,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H19",
+      "product": "tirzepatide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "What compounded tirzepatide is, and what it isn't.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H20",
+      "product": "tirzepatide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Compounded medications are made by a pharmacy for a patient. Here's what that involves.",
+      "words": 14,
+      "est_seconds": 5.4,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H21",
+      "product": "tirzepatide",
+      "angle": "process",
+      "kind": "question",
+      "text": "How does medical weight loss work online?",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H22",
+      "product": "tirzepatide",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Questionnaire, provider review, pharmacy. The whole path.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H23",
+      "product": "tirzepatide",
+      "angle": "process",
+      "kind": "question",
+      "text": "What does a provider look at before considering tirzepatide?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H24",
+      "product": "tirzepatide",
+      "angle": "process",
+      "kind": "question",
+      "text": "What happens to your questionnaire after you submit it?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H25",
+      "product": "tirzepatide",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Telehealth weight care: what the first week looks like.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H26",
+      "product": "tirzepatide",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Who checks your medications and history? A licensed provider.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H27",
+      "product": "tirzepatide",
+      "angle": "process",
+      "kind": "statement",
+      "text": "A medical visit without the clinic. How it works.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H28",
+      "product": "tirzepatide",
+      "angle": "education",
+      "kind": "question",
+      "text": "What does BMI actually tell a provider, and what doesn't it?",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H29",
+      "product": "tirzepatide",
+      "angle": "education",
+      "kind": "question",
+      "text": "Why do providers ask about your full health history first?",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H30",
+      "product": "tirzepatide",
+      "angle": "education",
+      "kind": "statement",
+      "text": "Medical weight loss isn't a shortcut. It's a medical decision.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H31",
+      "product": "tirzepatide",
+      "angle": "education",
+      "kind": "statement",
+      "text": "Medication isn't the whole picture. Here's what else a provider considers.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H32",
+      "product": "tirzepatide",
+      "angle": "education",
+      "kind": "statement",
+      "text": "Nutrition and movement still matter. Here's how they fit in.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H33",
+      "product": "tirzepatide",
+      "angle": "education",
+      "kind": "question",
+      "text": "What does ongoing care look like, not just a first prescription?",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H34",
+      "product": "tirzepatide",
+      "angle": "education",
+      "kind": "statement",
+      "text": "Questions worth asking a provider before starting any GLP-1.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H35",
+      "product": "tirzepatide",
+      "angle": "education",
+      "kind": "question",
+      "text": "What should you tell a provider about your medications?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H36",
+      "product": "tirzepatide",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Side effects, plainly: what's common and what's serious.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H37",
+      "product": "tirzepatide",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Nausea is the most common one. Here's what else to know.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H38",
+      "product": "tirzepatide",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "The thyroid warning, explained in plain English.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H39",
+      "product": "tirzepatide",
+      "angle": "safety",
+      "kind": "question",
+      "text": "Who should not take a GLP-1 medicine?",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H40",
+      "product": "tirzepatide",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "When to call your provider about a side effect.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H41",
+      "product": "tirzepatide",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Pancreatitis and gallbladder issues: what the labels say.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H42",
+      "product": "tirzepatide",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Why a health history comes before a prescription.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H43",
+      "product": "tirzepatide",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Constant thoughts about food can be exhausting. There's biology behind that.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H44",
+      "product": "tirzepatide",
+      "angle": "relatable",
+      "kind": "question",
+      "text": "Why does hunger feel so loud sometimes?",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H45",
+      "product": "tirzepatide",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Asking about weight medication shouldn't feel awkward.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H46",
+      "product": "tirzepatide",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Weight care that happens on your schedule.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H47",
+      "product": "tirzepatide",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "No clinic visit needed to find out if you're a candidate.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H48",
+      "product": "tirzepatide",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "Skip the drive. Start with a questionnaire.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H49",
+      "product": "tirzepatide",
+      "angle": "trust",
+      "kind": "statement",
+      "text": "Cash pay. No insurance games. A licensed provider decides.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H50",
+      "product": "tirzepatide",
+      "angle": "trust",
+      "kind": "statement",
+      "text": "Who's behind your prescription? Licensed providers and a licensed pharmacy.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-H51",
+      "product": "tirzepatide",
+      "angle": "metaphor",
+      "kind": "question",
+      "text": "What do your gut and your brain actually say to each other?",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "meats": [
+    {
+      "id": "TRZ-M1",
+      "product": "tirzepatide",
+      "title": "Two signals, one medicine",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "After you eat, your gut sends hormone signals to your brain that say, you're getting full.",
+          "visual": {
+            "type": "diagram",
+            "preset": "gut_brain",
+            "stage": "signal",
+            "bg": "ink"
+          },
+          "screen": "Gut to brain",
+          "emph": [
+            "hormone"
+          ]
+        },
+        {
+          "text": "Tirzepatide mimics two of those signals, called GIP and GLP-1.",
+          "visual": {
+            "type": "diagram",
+            "preset": "gut_brain",
+            "stage": "dual",
+            "bg": "ink"
+          },
+          "screen": "GIP and GLP-1",
+          "emph": [
+            "GIP",
+            "GLP-1"
+          ]
+        },
+        {
+          "text": "Those signals act on appetite centers in the brain, and slow how fast the stomach empties.",
+          "visual": {
+            "type": "diagram",
+            "preset": "gut_brain",
+            "stage": "stomach",
+            "bg": "ink"
+          },
+          "screen": "Appetite and stomach",
+          "emph": [
+            "appetite"
+          ]
+        },
+        {
+          "text": "It's a medicine, not a shortcut, and a provider decides if it's appropriate.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey"
+          },
+          "screen": null,
+          "emph": [
+            "provider"
+          ]
+        }
+      ],
+      "words": 55,
+      "est_seconds": 22.6,
+      "caption_bodies": [
+        "Tirzepatide acts on two hormone signals, GIP and GLP-1, that affect appetite and how fast the stomach empties. A provider decides if it's appropriate."
+      ],
+      "claims": [
+        "glp1_appetite",
+        "tirz_dual"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-M2",
+      "product": "tirzepatide",
+      "title": "What compounded means",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "Let's be clear about one word. Compounded.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "Compounded"
+          ]
+        },
+        {
+          "text": "Compounded tirzepatide is prepared by a licensed pharmacy for an individual patient.",
+          "visual": {
+            "type": "product",
+            "bg": "cream",
+            "tags": [
+              "Compounded"
+            ]
+          },
+          "screen": "Prepared by a pharmacy",
+          "emph": [
+            "pharmacy"
+          ]
+        },
+        {
+          "text": "It is not FDA-approved. It's considered only when legally available and clinically appropriate.",
+          "visual": {
+            "type": "warn",
+            "title": "Not FDA-approved",
+            "bg": "cream"
+          },
+          "screen": "Not FDA-approved",
+          "emph": [
+            "not FDA-approved"
+          ]
+        },
+        {
+          "text": "Your provider decides whether it fits. Prescribing is never guaranteed.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey"
+          },
+          "screen": null,
+          "emph": [
+            "never guaranteed"
+          ]
+        }
+      ],
+      "words": 42,
+      "est_seconds": 17.6,
+      "caption_bodies": [
+        "Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate."
+      ],
+      "claims": [
+        "compounded_not_approved"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-M3",
+      "product": "tirzepatide",
+      "title": "The online process",
+      "style": "process",
+      "beats": [
+        {
+          "text": "First, a secure health questionnaire. Your history, your medications, your goals.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 1,
+            "bg": "cream"
+          },
+          "screen": "Questionnaire",
+          "emph": [
+            "questionnaire"
+          ]
+        },
+        {
+          "text": "Then a licensed provider reviews it and decides if tirzepatide is appropriate for you.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 2,
+            "bg": "cream"
+          },
+          "screen": "Provider review",
+          "emph": [
+            "provider"
+          ]
+        },
+        {
+          "text": "If they prescribe it, a licensed pharmacy ships it. And if not, you'll hear that too.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 3,
+            "bg": "cream"
+          },
+          "screen": "Pharmacy ships",
+          "emph": [
+            "pharmacy"
+          ]
+        },
+        {
+          "text": "It's compounded and not FDA-approved.",
+          "visual": {
+            "type": "warn",
+            "title": "Compounded. Not FDA-approved.",
+            "bg": "ink"
+          },
+          "screen": "Not FDA-approved",
+          "emph": [
+            "not FDA-approved"
+          ]
+        }
+      ],
+      "words": 46,
+      "est_seconds": 19.1,
+      "caption_bodies": [
+        "Questionnaire, provider review, pharmacy ships if appropriate. Compounded and not FDA-approved."
+      ],
+      "claims": [
+        "process",
+        "compounded_not_approved"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-M4",
+      "product": "tirzepatide",
+      "title": "What a provider looks at",
+      "style": "checklist",
+      "beats": [
+        {
+          "text": "Before any prescription, a provider looks at the full picture.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "full picture"
+          ]
+        },
+        {
+          "text": "Your health history, your current medications, your BMI, and any conditions that matter.",
+          "visual": {
+            "type": "checklist",
+            "items": [
+              "Health history",
+              "Current medications",
+              "BMI",
+              "Conditions that matter"
+            ],
+            "bg": "cream"
+          },
+          "screen": "What they review",
+          "emph": [
+            "history",
+            "medications"
+          ]
+        },
+        {
+          "text": "Some people aren't candidates, and that's exactly why the review exists.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey"
+          },
+          "screen": null,
+          "emph": [
+            "aren't candidates"
+          ]
+        },
+        {
+          "text": "Compounded tirzepatide is not FDA-approved. Prescribing is never guaranteed.",
+          "visual": {
+            "type": "warn",
+            "title": "Not FDA-approved",
+            "bg": "cream"
+          },
+          "screen": "Not FDA-approved",
+          "emph": [
+            "not FDA-approved"
+          ]
+        }
+      ],
+      "words": 43,
+      "est_seconds": 17.9,
+      "caption_bodies": [
+        "A provider reviews your history, medications, and BMI before considering tirzepatide. Compounded, not FDA-approved."
+      ],
+      "claims": [
+        "process",
+        "compounded_not_approved"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-M5",
+      "product": "tirzepatide",
+      "title": "Side effects, plainly",
+      "style": "safety",
+      "beats": [
+        {
+          "text": "Let's talk side effects, because every medicine has them.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "side effects"
+          ]
+        },
+        {
+          "text": "The common ones are nausea, vomiting, diarrhea, and constipation.",
+          "visual": {
+            "type": "checklist",
+            "items": [
+              "Nausea",
+              "Vomiting",
+              "Diarrhea",
+              "Constipation"
+            ],
+            "bg": "cream"
+          },
+          "screen": "Common side effects",
+          "emph": [
+            "nausea"
+          ]
+        },
+        {
+          "text": "Serious risks include pancreatitis and gallbladder problems. Tell your provider about any severe symptoms.",
+          "visual": {
+            "type": "warn",
+            "title": "Serious symptoms: call your provider",
+            "bg": "cream"
+          },
+          "screen": "Serious risks",
+          "emph": [
+            "pancreatitis"
+          ]
+        },
+        {
+          "text": "It's compounded, not FDA-approved, and not for everyone. A provider decides.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey"
+          },
+          "screen": null,
+          "emph": [
+            "not for everyone"
+          ]
+        }
+      ],
+      "words": 43,
+      "est_seconds": 17.9,
+      "caption_bodies": [
+        "Common GLP-1 side effects include nausea, vomiting, diarrhea and constipation. Serious risks exist. Compounded, not FDA-approved."
+      ],
+      "claims": [
+        "glp1_side_effects",
+        "compounded_not_approved"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required",
+        "safety_education_full_check"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-M6",
+      "product": "tirzepatide",
+      "title": "The gut-brain text messages",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "After a meal, the gut sends hormone messages up to the brain, like tiny text alerts.",
+          "visual": {
+            "type": "story3d",
+            "mode": "gutmsg",
+            "bg": "ink",
+            "hold_s": 0.7,
+            "cues": [
+              "meal",
+              "gut",
+              "messages",
+              "brain",
+              "alerts"
+            ],
+            "stages": [
+              {
+                "t": "A meal",
+                "cue": "meal"
+              },
+              {
+                "t": "The gut",
+                "cue": "gut"
+              },
+              {
+                "t": "Hormone messages",
+                "cue": "messages"
+              },
+              {
+                "t": "The brain",
+                "cue": "brain"
+              },
+              {
+                "t": "Message received",
+                "cue": "alerts"
+              }
+            ],
+            "texts": [
+              "New message!"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "gut",
+            "brain"
+          ]
+        },
+        {
+          "text": "Two of those hormones are called GLP-1 and GIP. Tirzepatide is a medicine built to activate both of those receptors, like one key that fits two locks.",
+          "visual": {
+            "type": "story3d",
+            "mode": "receptors",
+            "bg": "ink",
+            "hold_s": 0.9,
+            "cues": [
+              "glp-1",
+              "gip",
+              "tirzepatide",
+              "both",
+              "key",
+              "locks"
+            ],
+            "stages": [
+              {
+                "t": "GLP-1",
+                "cue": "glp-1"
+              },
+              {
+                "t": "GIP",
+                "cue": "gip"
+              },
+              {
+                "t": "Tirzepatide",
+                "cue": "tirzepatide"
+              },
+              {
+                "t": "Both receptors",
+                "cue": "both"
+              },
+              {
+                "t": "One key, two locks",
+                "cue": "key"
+              }
+            ],
+            "texts": [
+              "GLP-1",
+              "GIP",
+              "Tirzepatide"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "GLP-1",
+            "GIP",
+            "both"
+          ]
+        },
+        {
+          "text": "Those signals play a part in appetite, and in how quickly the stomach empties.",
+          "visual": {
+            "type": "story3d",
+            "mode": "appetite",
+            "bg": "ink",
+            "hold_s": 0.6,
+            "cues": [
+              "signals",
+              "appetite",
+              "stomach",
+              "empties"
+            ],
+            "stages": [
+              {
+                "t": "Signals",
+                "cue": "signals"
+              },
+              {
+                "t": "Appetite",
+                "cue": "appetite"
+              },
+              {
+                "t": "The stomach",
+                "cue": "stomach"
+              },
+              {
+                "t": "Emptying",
+                "cue": "empties"
+              }
+            ],
+            "texts": [
+              "Appetite signal",
+              "Stomach emptying"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "appetite",
+            "stomach"
+          ]
+        },
+        {
+          "text": "Here at Beema Health, we offer a compounded version. That means a licensed pharmacy prepares it for each patient.",
+          "visual": {
+            "type": "story3d",
+            "mode": "compound",
+            "bg": "ink",
+            "hold_s": 0.7,
+            "cues": [
+              "compounded",
+              "pharmacy",
+              "prepares",
+              "patient"
+            ],
+            "stages": [
+              {
+                "t": "Compounded",
+                "cue": "compounded"
+              },
+              {
+                "t": "Licensed pharmacy",
+                "cue": "pharmacy"
+              },
+              {
+                "t": "Prepared",
+                "cue": "prepares"
+              },
+              {
+                "t": "Made for one patient",
+                "cue": "patient"
+              }
+            ],
+            "texts": [
+              "Licensed pharmacy",
+              "Rx",
+              "Compounded",
+              "Made for one patient"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "compounded",
+            "pharmacy"
+          ]
+        },
+        {
+          "text": "To be clear, compounded tirzepatide is not FDA-approved.",
+          "visual": {
+            "type": "story3d",
+            "mode": "fda",
+            "bg": "ink",
+            "hold_s": 1.3,
+            "cues": [
+              "clear",
+              "not",
+              "fda-approved"
+            ],
+            "stages": [
+              {
+                "t": "To be clear",
+                "cue": "clear"
+              },
+              {
+                "t": "Not FDA-approved",
+                "cue": "not"
+              }
+            ],
+            "texts": [
+              "FDA",
+              "Compounded tirzepatide",
+              "Compounded medication",
+              "NOT FDA-APPROVED"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "not",
+            "FDA-approved"
+          ]
+        },
+        {
+          "text": "A licensed provider looks over your health history, then decides if it's appropriate.",
+          "visual": {
+            "type": "story3d",
+            "mode": "provider",
+            "bg": "ink",
+            "hold_s": 0.7,
+            "cues": [
+              "provider",
+              "history",
+              "decides"
+            ],
+            "stages": [
+              {
+                "t": "Licensed provider",
+                "cue": "provider"
+              },
+              {
+                "t": "Health history",
+                "cue": "history"
+              },
+              {
+                "t": "Provider decides",
+                "cue": "decides"
+              }
+            ],
+            "texts": [
+              "Licensed provider",
+              "Health history",
+              "Current medications",
+              "Allergies",
+              "Is it appropriate?",
+              "Provider decides"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "provider",
+            "decides"
+          ]
+        },
+        {
+          "text": "And if you're not prescribed, you won't be charged anything.",
+          "visual": {
+            "type": "story3d",
+            "mode": "nocharge",
+            "bg": "ink",
+            "hold_s": 0.9,
+            "cues": [
+              "prescribed",
+              "charged"
+            ],
+            "stages": [
+              {
+                "t": "Not prescribed",
+                "cue": "prescribed"
+              },
+              {
+                "t": "No charge",
+                "cue": "charged"
+              }
+            ],
+            "texts": [
+              "Rx",
+              "Not prescribed",
+              "$0",
+              "Charged: $0"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "prescribed",
+            "charged"
+          ]
+        }
+      ],
+      "words": 107,
+      "est_seconds": 43.6,
+      "caption_bodies": [
+        "Tirzepatide is a medicine that acts on two gut-hormone receptors, GLP-1 and GIP. Compounded tirzepatide is not FDA-approved. A licensed provider decides, and you won't be charged if you aren't prescribed."
+      ],
+      "claims": [
+        "gut_hormone_signals",
+        "tirz_dual",
+        "glp1_appetite",
+        "compounded_not_approved",
+        "process"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required",
+        "agency_building_and_gavel_imagery_review",
+        "metaphor_animations_are_illustrations",
+        "product_photo_label_says_weight_loss_medication_review"
+      ],
+      "price_dependent": false,
+      "notes": "Seven metaphor scenes (gut texting the brain, one key two locks, appetite dial and stomach clock, pharmacy flask and vial, FDA-style building with gavel and red NOT FDA-APPROVED stamp, provider and clipboard, Rx crossed out and $0 coin). All are illustrations. The building is generic (no seal or logo).",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "ctas": [
+    {
+      "id": "TRZ-C1",
+      "product": "tirzepatide",
+      "title": "Start the questionnaire",
+      "goal": "questionnaire_start",
+      "text": "If you're curious, start the questionnaire at beemahealth dot com. A licensed provider decides if compounded tirzepatide is appropriate.",
+      "screen": "Learn more at beemahealth.com",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 19,
+      "est_seconds": 7.3,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-C2",
+      "product": "tirzepatide",
+      "title": "Read first",
+      "goal": "landing_read",
+      "text": "Want to read first? The details and safety information are at beemahealth dot com slash tirzepatide.",
+      "screen": "beemahealth.com/tirzepatide",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 16,
+      "est_seconds": 6.2,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-C3",
+      "product": "tirzepatide",
+      "title": "Brand trust",
+      "goal": "brand_trust",
+      "text": "Beema Health. Licensed providers, a licensed pharmacy, and honest answers about what's compounded.",
+      "screen": "Beema Health",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 13,
+      "est_seconds": 5.0,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TRZ-C4",
+      "product": "tirzepatide",
+      "title": "Starter pack price",
+      "goal": "price_plan",
+      "text": "Our starter pack is $199 a month, or head to beemahealth dot com slash tirzepatide for more pricing plans.",
+      "screen": "More pricing plans",
+      "price": {
+        "label": "Starter pack",
+        "amount": 199,
+        "per": "month",
+        "fine": "For new GLP-1 patients. Terms and more plans on the site."
+      },
+      "claims": [
+        "starter_pack_price"
+      ],
+      "no_url": false,
+      "words": 19,
+      "est_seconds": 7.3,
+      "created": "2026-11-16",
+      "version": 2,
+      "history": [
+        {
+          "version": 1,
+          "text": "Our starter pack is $197 a month, or head to beemahealth dot com slash tirzepatide for more pricing plans.",
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    }
+  ],
+  "combinations": 1224
+}

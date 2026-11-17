@@ -32,7 +32,10 @@ import { Button } from "@/components/ui/button";
 import { trackPageViewed } from "@/lib/analytics";
 import { GetStartedModal } from "@/components/site/GetStartedModal";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
-import { patientQuestionsGuidance } from "@/lib/marketing-copy";
+import {
+  PROVIDER_REVIEW_TIME_SENTENCE,
+  patientQuestionsGuidance,
+} from "@/lib/marketing-copy";
 import { RECIPES } from "@/lib/recipes";
 
 const TITLE = "How it works | Beema Health";
@@ -185,13 +188,14 @@ function HowItWorksPage() {
                 It depends. Some people finish the medical intake in one
                 sitting, while others take longer to gather medication and
                 health history details first. Provider review and pharmacy
-                fulfillment happen after that, and both depend on factors
-                outside our control: provider volume, your state&rsquo;s
-                requirements, and how quickly a pharmacy can prepare your
-                medication. We intentionally don&rsquo;t promise a specific
-                number of days for the whole process, because doing so before a
-                licensed provider has evaluated your case would get ahead of a
-                medical decision that has to stay independent.
+                fulfillment happen after that. {PROVIDER_REVIEW_TIME_SENTENCE}{" "}
+                Review and pharmacy timing both depend on factors outside our
+                control: provider volume, your state&rsquo;s requirements, and
+                how quickly a pharmacy can prepare your medication. We
+                intentionally don&rsquo;t promise a specific number of days for
+                the whole process, because doing so before a licensed provider
+                has evaluated your case would get ahead of a medical decision
+                that has to stay independent.
               </p>
             </SurfaceCard>
           </motion.div>

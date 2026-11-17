@@ -1,0 +1,1301 @@
+{
+  "product": "sildenafil",
+  "prefix": "SIL",
+  "hooks": [
+    {
+      "id": "SIL-H01",
+      "product": "sildenafil",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Sildenafil has been around for decades. Here's how it actually works.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H02",
+      "product": "sildenafil",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "The short version of how sildenafil works: one enzyme, one signal.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H03",
+      "product": "sildenafil",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "What does 'PDE5 inhibitor' even mean?",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H04",
+      "product": "sildenafil",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Think of blood vessels as tiny pipes. Sildenafil works on the valve.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H05",
+      "product": "sildenafil",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Ever heard of cyclic G M P? It's the real star here.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H06",
+      "product": "sildenafil",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "It's not a hormone and it's not a stimulant. So what is it?",
+      "words": 13,
+      "est_seconds": 5.0,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H07",
+      "product": "sildenafil",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "What happens inside a blood vessel when sildenafil is in the picture?",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H08",
+      "product": "sildenafil",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Ordering sildenafil online: what really happens, step by step.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H09",
+      "product": "sildenafil",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Skip the waiting room. Here's what replaces it.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H10",
+      "product": "sildenafil",
+      "angle": "process",
+      "kind": "question",
+      "text": "You fill out a form. Then what?",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H11",
+      "product": "sildenafil",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Questionnaire, provider, pharmacy. That's the whole path.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H12",
+      "product": "sildenafil",
+      "angle": "process",
+      "kind": "question",
+      "text": "What does a licensed provider look at before prescribing sildenafil?",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H13",
+      "product": "sildenafil",
+      "angle": "process",
+      "kind": "question",
+      "text": "How does a pharmacy get involved in an online prescription?",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H14",
+      "product": "sildenafil",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Who ships it, and who decides? Let's go through it.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H15",
+      "product": "sildenafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "Myth: sildenafil makes things happen automatically.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H16",
+      "product": "sildenafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "Myth: you need an in-person appointment for ED medicine.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H17",
+      "product": "sildenafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "Myth: ordering online means skipping the doctor.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H18",
+      "product": "sildenafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "Myth: all ED medications are basically the same.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H19",
+      "product": "sildenafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "Four words that clear up most ED medication myths: it needs stimulation.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H20",
+      "product": "sildenafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "Online doesn't mean no review. Here's the proof.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H21",
+      "product": "sildenafil",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Asking about ED can feel awkward. It shouldn't.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H22",
+      "product": "sildenafil",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "You don't have to explain it to a stranger in a waiting room.",
+      "words": 13,
+      "est_seconds": 5.0,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H23",
+      "product": "sildenafil",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "It's more common than people admit, and it's treatable.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H24",
+      "product": "sildenafil",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "A private way to ask a medical question.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H25",
+      "product": "sildenafil",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Plenty of men wait too long to ask. Here's an easier way in.",
+      "words": 13,
+      "est_seconds": 5.0,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H26",
+      "product": "sildenafil",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "A medical conversation, from your own couch.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H27",
+      "product": "sildenafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "What does sildenafil cost online? No tricks.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H28",
+      "product": "sildenafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "Eighty-nine dollars for the first month. Here's what's in it.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H29",
+      "product": "sildenafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "Forty-three dollars a month on the three-month plan. Here's how.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H30",
+      "product": "sildenafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "Provider visit, shipping, and medication in one price.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H31",
+      "product": "sildenafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "No insurance needed. Here's what you'd pay.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H32",
+      "product": "sildenafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "Sixteen tablets, one clear price.",
+      "words": 5,
+      "est_seconds": 1.9,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H33",
+      "product": "sildenafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "The one thing sildenafil must never be taken with.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H34",
+      "product": "sildenafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "If you take nitrates, read this before anything else.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H35",
+      "product": "sildenafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "An erection lasting over four hours? That's an emergency. Here's what to know.",
+      "words": 13,
+      "est_seconds": 5.0,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H36",
+      "product": "sildenafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Sudden vision or hearing changes while on ED medicine? Do this.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H37",
+      "product": "sildenafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "The common side effects, listed plainly.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H38",
+      "product": "sildenafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Prescribing is never guaranteed. Here's what decides it.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H39",
+      "product": "sildenafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Why a good provider will sometimes say no.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H40",
+      "product": "sildenafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Before you ask about sildenafil, here is the safety information.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 2,
+      "history": [
+        {
+          "version": 1,
+          "text": "Two minutes on sildenafil safety before you ask about it.",
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H41",
+      "product": "sildenafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "What to tell your provider before sildenafil. All of it.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H42",
+      "product": "sildenafil",
+      "angle": "compare",
+      "kind": "question",
+      "text": "Sildenafil or tadalafil: how do providers think about it?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H43",
+      "product": "sildenafil",
+      "angle": "compare",
+      "kind": "statement",
+      "text": "Same drug class, two different medicines. Here's the difference.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H44",
+      "product": "sildenafil",
+      "angle": "compare",
+      "kind": "statement",
+      "text": "Generic sildenafil: what the word actually means.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H45",
+      "product": "sildenafil",
+      "angle": "trust",
+      "kind": "question",
+      "text": "A licensed pharmacy ships it. Why does that matter?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H46",
+      "product": "sildenafil",
+      "angle": "trust",
+      "kind": "question",
+      "text": "FDA-approved generic. What does that actually tell you?",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H47",
+      "product": "sildenafil",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "Your ED appointment shouldn't take your whole afternoon.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H48",
+      "product": "sildenafil",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "Doctor's visit without the doctor's office.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H49",
+      "product": "sildenafil",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "Here is how online ED care works, start to finish.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 2,
+      "history": [
+        {
+          "version": 1,
+          "text": "Sixty seconds on how online ED care works.",
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-H50",
+      "product": "sildenafil",
+      "angle": "curiosity",
+      "kind": "statement",
+      "text": "Where did sildenafil come from? A short history.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": "history_claim",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "meats": [
+    {
+      "id": "SIL-M1",
+      "product": "sildenafil",
+      "title": "How sildenafil works, simply",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "Sildenafil is a PDE5 inhibitor. That's the medical name for what it does.",
+          "visual": {
+            "type": "product",
+            "bg": "cream",
+            "tags": [
+              "Sildenafil",
+              "PDE5 inhibitor"
+            ]
+          },
+          "screen": "PDE5 inhibitor",
+          "emph": [
+            "PDE5"
+          ]
+        },
+        {
+          "text": "Normally, a signal called cyclic G M P tells blood vessels to relax. An enzyme, PDE5, clears that signal away.",
+          "visual": {
+            "type": "diagram",
+            "preset": "pde5_flow",
+            "stage": "enzyme",
+            "bg": "ink"
+          },
+          "screen": "Signal and enzyme",
+          "emph": [
+            "PDE5"
+          ]
+        },
+        {
+          "text": "Sildenafil blocks the enzyme. The signal sticks around, and vessels can widen when there's stimulation.",
+          "visual": {
+            "type": "diagram",
+            "preset": "pde5_flow",
+            "stage": "blocked",
+            "bg": "ink"
+          },
+          "screen": "Enzyme blocked",
+          "emph": [
+            "blocks"
+          ]
+        },
+        {
+          "text": "Stimulation is still required. The medicine only supports what the body already does.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey"
+          },
+          "screen": null,
+          "emph": [
+            "still required"
+          ]
+        }
+      ],
+      "words": 61,
+      "est_seconds": 24.9,
+      "caption_bodies": [
+        "Sildenafil blocks the enzyme PDE5, so a natural relaxation signal lasts longer. Stimulation is still required."
+      ],
+      "claims": [
+        "pde5_mechanism",
+        "needs_stimulation"
+      ],
+      "review_flags": [],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-M2",
+      "product": "sildenafil",
+      "title": "The online process",
+      "style": "process",
+      "beats": [
+        {
+          "text": "Step one. A secure health questionnaire that covers your history and medications.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Licensed pharmacy ships"
+              }
+            ],
+            "reveal": 1,
+            "bg": "cream"
+          },
+          "screen": "Questionnaire",
+          "emph": [
+            "questionnaire"
+          ]
+        },
+        {
+          "text": "Step two. A licensed provider reads it and decides whether sildenafil is appropriate for you.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Licensed pharmacy ships"
+              }
+            ],
+            "reveal": 2,
+            "bg": "cream"
+          },
+          "screen": "Provider review",
+          "emph": [
+            "provider"
+          ]
+        },
+        {
+          "text": "Step three. If it is, a licensed pharmacy ships it. If it isn't, you hear that too.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Licensed pharmacy ships"
+              }
+            ],
+            "reveal": 3,
+            "bg": "cream"
+          },
+          "screen": "Pharmacy ships",
+          "emph": [
+            "pharmacy"
+          ]
+        }
+      ],
+      "words": 44,
+      "est_seconds": 18.0,
+      "caption_bodies": [
+        "Questionnaire, licensed provider review, licensed pharmacy ships if appropriate. Prescribing is never guaranteed."
+      ],
+      "claims": [
+        "process"
+      ],
+      "review_flags": [],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 2,
+      "history": [
+        {
+          "version": 1,
+          "text": [
+            {
+              "text": "Step one. A secure health questionnaire. It takes a few minutes and covers your history and medications.",
+              "visual": {
+                "type": "steps",
+                "items": [
+                  {
+                    "n": 1,
+                    "t": "Secure health questionnaire"
+                  },
+                  {
+                    "n": 2,
+                    "t": "Licensed provider reviews"
+                  },
+                  {
+                    "n": 3,
+                    "t": "Licensed pharmacy ships"
+                  }
+                ],
+                "reveal": 1,
+                "bg": "cream"
+              },
+              "screen": "Questionnaire",
+              "emph": [
+                "questionnaire"
+              ]
+            },
+            {
+              "text": "Step two. A licensed provider reads it and decides whether sildenafil is appropriate for you.",
+              "visual": {
+                "type": "steps",
+                "items": [
+                  {
+                    "n": 1,
+                    "t": "Secure health questionnaire"
+                  },
+                  {
+                    "n": 2,
+                    "t": "Licensed provider reviews"
+                  },
+                  {
+                    "n": 3,
+                    "t": "Licensed pharmacy ships"
+                  }
+                ],
+                "reveal": 2,
+                "bg": "cream"
+              },
+              "screen": "Provider review",
+              "emph": [
+                "provider"
+              ]
+            },
+            {
+              "text": "Step three. If it is, a licensed pharmacy ships it. If it isn't, you hear that too.",
+              "visual": {
+                "type": "steps",
+                "items": [
+                  {
+                    "n": 1,
+                    "t": "Secure health questionnaire"
+                  },
+                  {
+                    "n": 2,
+                    "t": "Licensed provider reviews"
+                  },
+                  {
+                    "n": 3,
+                    "t": "Licensed pharmacy ships"
+                  }
+                ],
+                "reveal": 3,
+                "bg": "cream"
+              },
+              "screen": "Pharmacy ships",
+              "emph": [
+                "pharmacy"
+              ]
+            }
+          ],
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-M3",
+      "product": "sildenafil",
+      "title": "Myth versus fact",
+      "style": "myth",
+      "beats": [
+        {
+          "text": "Myth: sildenafil works automatically. Fact: it needs stimulation.",
+          "visual": {
+            "type": "versus",
+            "myth": "It works automatically",
+            "fact": "Stimulation is still needed",
+            "bg": "cream"
+          },
+          "screen": "Myth 1",
+          "emph": [
+            "Fact"
+          ]
+        },
+        {
+          "text": "Myth: online means no medical review. Fact: a licensed provider reviews every questionnaire.",
+          "visual": {
+            "type": "versus",
+            "myth": "Online means no review",
+            "fact": "A licensed provider reviews it",
+            "bg": "ink"
+          },
+          "screen": "Myth 2",
+          "emph": [
+            "Fact"
+          ]
+        },
+        {
+          "text": "Myth: you'll always get a prescription. Fact: prescribing is never guaranteed.",
+          "visual": {
+            "type": "versus",
+            "myth": "You'll always get one",
+            "fact": "Prescribing is never guaranteed",
+            "bg": "cream"
+          },
+          "screen": "Myth 3",
+          "emph": [
+            "Fact"
+          ]
+        }
+      ],
+      "words": 32,
+      "est_seconds": 13.4,
+      "caption_bodies": [
+        "Three quick myths about ED medicine, answered plainly."
+      ],
+      "claims": [
+        "needs_stimulation",
+        "process"
+      ],
+      "review_flags": [],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-M4",
+      "product": "sildenafil",
+      "title": "Safety first",
+      "style": "safety",
+      "beats": [
+        {
+          "text": "Before anything else, here's what to know about sildenafil safety.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "safety"
+          ]
+        },
+        {
+          "text": "Never take it with nitrates or riociguat. That combination can drop blood pressure dangerously.",
+          "visual": {
+            "type": "warn",
+            "title": "Never with nitrates or riociguat",
+            "bg": "cream"
+          },
+          "screen": "Not with nitrates",
+          "emph": [
+            "nitrates"
+          ]
+        },
+        {
+          "text": "Get emergency help for an erection lasting more than four hours, or sudden vision or hearing loss.",
+          "visual": {
+            "type": "warn",
+            "title": "Emergency: 4+ hours, or sudden vision or hearing loss",
+            "bg": "cream"
+          },
+          "screen": "Get help fast",
+          "emph": [
+            "four hours"
+          ]
+        },
+        {
+          "text": "And tell your provider your full history. That's what the questionnaire is for.",
+          "visual": {
+            "type": "checklist",
+            "items": [
+              "Full medical history",
+              "Every medication",
+              "Any past reactions"
+            ],
+            "bg": "honey"
+          },
+          "screen": "Tell your provider",
+          "emph": [
+            "full history"
+          ]
+        }
+      ],
+      "words": 54,
+      "est_seconds": 22.2,
+      "caption_bodies": [
+        "Plain-language sildenafil safety: nitrates, riociguat, 4-hour erections, sudden vision or hearing loss, and why history matters."
+      ],
+      "claims": [
+        "nitrate_contraindication",
+        "priapism",
+        "vision_hearing"
+      ],
+      "review_flags": [
+        "safety_education_full_check"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-M5",
+      "product": "sildenafil",
+      "title": "Transparent price",
+      "style": "price",
+      "beats": [
+        {
+          "text": "Here's what sildenafil costs through Beema Health.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "costs"
+          ]
+        },
+        {
+          "text": "Eighty-nine dollars for one month, or one twenty-nine for three. That's forty-three a month.",
+          "visual": {
+            "type": "price",
+            "rows": [
+              {
+                "l": "1 month",
+                "v": "$89"
+              },
+              {
+                "l": "3 months",
+                "v": "$129"
+              }
+            ],
+            "foot": "Sildenafil 50 or 100 mg",
+            "bg": "cream"
+          },
+          "screen": "Starting at $89",
+          "emph": [
+            "eighty-nine"
+          ]
+        },
+        {
+          "text": "Provider visit and shipping are included. Cash pay. No insurance.",
+          "visual": {
+            "type": "checklist",
+            "items": [
+              "Provider visit included",
+              "Shipping included",
+              "Cash pay, no insurance"
+            ],
+            "bg": "honey"
+          },
+          "screen": "Included",
+          "emph": [
+            "included"
+          ]
+        }
+      ],
+      "words": 31,
+      "est_seconds": 13.0,
+      "caption_bodies": [
+        "Sildenafil: $89 for a month or $129 for three. Provider visit and shipping included. Cash pay."
+      ],
+      "claims": [
+        "process"
+      ],
+      "review_flags": [
+        "price_dependent"
+      ],
+      "price_dependent": true,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "ctas": [
+    {
+      "id": "SIL-C1",
+      "product": "sildenafil",
+      "title": "Start the questionnaire",
+      "goal": "questionnaire_start",
+      "text": "Curious? The questionnaire is at beemahealth dot com. A licensed provider decides if sildenafil is right for you.",
+      "screen": "Learn more at beemahealth.com",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 18,
+      "est_seconds": 6.9,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-C2",
+      "product": "sildenafil",
+      "title": "Read first",
+      "goal": "landing_read",
+      "text": "Want to read first? Pricing, process, and full safety information are at beemahealth dot com slash sildenafil.",
+      "screen": "beemahealth.com/sildenafil",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 17,
+      "est_seconds": 6.5,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SIL-C3",
+      "product": "sildenafil",
+      "title": "Brand trust",
+      "goal": "brand_trust",
+      "text": "Beema Health. Real providers, a licensed pharmacy, and a plain answer either way.",
+      "screen": "Beema Health",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 13,
+      "est_seconds": 5.0,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "combinations": 750
+}

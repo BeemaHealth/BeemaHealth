@@ -1,0 +1,1904 @@
+{
+  "product": "semaglutide",
+  "prefix": "SMG",
+  "hooks": [
+    {
+      "id": "SMG-H01",
+      "product": "semaglutide",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "Why does a GLP-1 medicine change how hungry you feel?",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H02",
+      "product": "semaglutide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "GLP-1 is a hormone your body already makes. Here's what it does.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H03",
+      "product": "semaglutide",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "How does a hormone tell your brain you're full?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H04",
+      "product": "semaglutide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Slower stomach, quieter appetite. Here's the science.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H05",
+      "product": "semaglutide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "What is a GLP-1 receptor agonist? Plain English.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H06",
+      "product": "semaglutide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Your gut and your brain are in constant contact. Let's listen in.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H07",
+      "product": "semaglutide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Appetite isn't just willpower. It's signaling.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H08",
+      "product": "semaglutide",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "One hormone, several jobs. What GLP-1 actually does.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H09",
+      "product": "semaglutide",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "How does semaglutide differ from the hormone your body makes?",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H10",
+      "product": "semaglutide",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "Why is the 'full' signal sometimes so faint?",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H11",
+      "product": "semaglutide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Compounded semaglutide is not FDA-approved. Here's what that means.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H12",
+      "product": "semaglutide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "'Compounded' gets thrown around a lot. Here's the plain definition.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H13",
+      "product": "semaglutide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Compounded versus brand-name, without the spin.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H14",
+      "product": "semaglutide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "What a compounded medication is, and what it isn't.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H15",
+      "product": "semaglutide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Prescribing is never guaranteed. Here's why that matters.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H16",
+      "product": "semaglutide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "A licensed provider decides. Not an app, not an ad.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H17",
+      "product": "semaglutide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Honest answers about compounded semaglutide.",
+      "words": 5,
+      "est_seconds": 1.9,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H18",
+      "product": "semaglutide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Is compounded semaglutide right for everyone? No. Here's why.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H19",
+      "product": "semaglutide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "How compounding pharmacies make a medication for one patient.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H20",
+      "product": "semaglutide",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Compounded, not FDA-approved: what that means for a patient.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H21",
+      "product": "semaglutide",
+      "angle": "process",
+      "kind": "question",
+      "text": "How does online medical weight care actually work?",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H22",
+      "product": "semaglutide",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Three steps: questionnaire, provider, pharmacy.",
+      "words": 5,
+      "est_seconds": 1.9,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H23",
+      "product": "semaglutide",
+      "angle": "process",
+      "kind": "question",
+      "text": "What does a provider review before semaglutide?",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H24",
+      "product": "semaglutide",
+      "angle": "process",
+      "kind": "question",
+      "text": "Where does your questionnaire go after you submit it?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H25",
+      "product": "semaglutide",
+      "angle": "process",
+      "kind": "statement",
+      "text": "A weight-care visit without a waiting room.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H26",
+      "product": "semaglutide",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Who checks your medications? A licensed provider does.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H27",
+      "product": "semaglutide",
+      "angle": "process",
+      "kind": "statement",
+      "text": "From questionnaire to doorstep: the real timeline of steps.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H28",
+      "product": "semaglutide",
+      "angle": "education",
+      "kind": "question",
+      "text": "Why do providers ask about your whole health history?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H29",
+      "product": "semaglutide",
+      "angle": "education",
+      "kind": "question",
+      "text": "What does a provider think about besides weight?",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H30",
+      "product": "semaglutide",
+      "angle": "education",
+      "kind": "question",
+      "text": "Medication is one piece. What else matters in medical weight care?",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H31",
+      "product": "semaglutide",
+      "angle": "education",
+      "kind": "question",
+      "text": "What questions should you ask before starting a GLP-1?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H32",
+      "product": "semaglutide",
+      "angle": "education",
+      "kind": "question",
+      "text": "What's food noise, and where does it come from?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H33",
+      "product": "semaglutide",
+      "angle": "education",
+      "kind": "question",
+      "text": "How does stomach emptying connect to feeling full?",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H34",
+      "product": "semaglutide",
+      "angle": "education",
+      "kind": "question",
+      "text": "What's the difference between hunger and appetite?",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H35",
+      "product": "semaglutide",
+      "angle": "education",
+      "kind": "question",
+      "text": "How do hormones shape cravings?",
+      "words": 5,
+      "est_seconds": 1.9,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H36",
+      "product": "semaglutide",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Side effects, plainly. What's common, what's serious.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H37",
+      "product": "semaglutide",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Nausea and your first weeks: what to know.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H38",
+      "product": "semaglutide",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "The thyroid warning in plain English.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H39",
+      "product": "semaglutide",
+      "angle": "safety",
+      "kind": "question",
+      "text": "Who should skip GLP-1 medicines entirely?",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H40",
+      "product": "semaglutide",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Pancreatitis and gallbladder: what the labels say.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H41",
+      "product": "semaglutide",
+      "angle": "safety",
+      "kind": "question",
+      "text": "When should you call a provider about a side effect?",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H42",
+      "product": "semaglutide",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Constant thoughts about food are tiring. Biology plays a part.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H43",
+      "product": "semaglutide",
+      "angle": "relatable",
+      "kind": "question",
+      "text": "Why does hunger feel so loud some days?",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H44",
+      "product": "semaglutide",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Plenty of people have tried everything. Here's what a provider adds.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H45",
+      "product": "semaglutide",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Asking about weight medication shouldn't feel awkward.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H46",
+      "product": "semaglutide",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Medical care on your own schedule.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H47",
+      "product": "semaglutide",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "No clinic visit to find out if you're a candidate.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H48",
+      "product": "semaglutide",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "Skip the waiting room. Start with a questionnaire.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H49",
+      "product": "semaglutide",
+      "angle": "trust",
+      "kind": "statement",
+      "text": "Cash pay, no insurance games. A licensed provider decides.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H50",
+      "product": "semaglutide",
+      "angle": "trust",
+      "kind": "statement",
+      "text": "Who's behind the prescription? Licensed providers and a licensed pharmacy.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-H51",
+      "product": "semaglutide",
+      "angle": "metaphor",
+      "kind": "question",
+      "text": "Why can the same meal leave one person full, and another still hungry?",
+      "words": 13,
+      "est_seconds": 5.0,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "meats": [
+    {
+      "id": "SMG-M1",
+      "product": "semaglutide",
+      "title": "Why GLP-1 changes hunger signals",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "After a meal, your gut releases a hormone called GLP-1.",
+          "visual": {
+            "type": "diagram",
+            "preset": "gut_brain",
+            "stage": "signal",
+            "bg": "ink"
+          },
+          "screen": "GLP-1 hormone",
+          "emph": [
+            "GLP-1"
+          ]
+        },
+        {
+          "text": "It tells the brain's appetite centers you've had enough, and it slows stomach emptying.",
+          "visual": {
+            "type": "diagram",
+            "preset": "gut_brain",
+            "stage": "stomach",
+            "bg": "ink"
+          },
+          "screen": "Fullness signal",
+          "emph": [
+            "appetite"
+          ]
+        },
+        {
+          "text": "Semaglutide is a medicine that acts on the same receptor, so those signals can be amplified.",
+          "visual": {
+            "type": "diagram",
+            "preset": "gut_brain",
+            "stage": "single",
+            "bg": "ink"
+          },
+          "screen": "Receptor",
+          "emph": [
+            "receptor"
+          ]
+        },
+        {
+          "text": "It's a medicine, not a shortcut, and a provider decides if it's appropriate.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey"
+          },
+          "screen": null,
+          "emph": [
+            "provider"
+          ]
+        }
+      ],
+      "words": 53,
+      "est_seconds": 21.8,
+      "caption_bodies": [
+        "GLP-1 is a gut hormone that signals fullness to the brain and slows stomach emptying. Semaglutide acts on that same receptor. A provider decides if it's appropriate."
+      ],
+      "claims": [
+        "glp1_appetite"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required",
+        "no_same_active_ingredient_claim"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-M2",
+      "product": "semaglutide",
+      "title": "What compounded means",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "One word deserves a clear definition. Compounded.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "Compounded"
+          ]
+        },
+        {
+          "text": "Compounded semaglutide is prepared by a licensed pharmacy for an individual patient.",
+          "visual": {
+            "type": "product",
+            "bg": "cream",
+            "tags": [
+              "Compounded"
+            ]
+          },
+          "screen": "Prepared by a pharmacy",
+          "emph": [
+            "pharmacy"
+          ]
+        },
+        {
+          "text": "It is not FDA-approved. It's considered only when legally available and clinically appropriate.",
+          "visual": {
+            "type": "warn",
+            "title": "Not FDA-approved",
+            "bg": "cream"
+          },
+          "screen": "Not FDA-approved",
+          "emph": [
+            "not FDA-approved"
+          ]
+        },
+        {
+          "text": "Your provider decides whether it fits, and prescribing is never guaranteed.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey"
+          },
+          "screen": null,
+          "emph": [
+            "never guaranteed"
+          ]
+        }
+      ],
+      "words": 43,
+      "est_seconds": 17.9,
+      "caption_bodies": [
+        "Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate."
+      ],
+      "claims": [
+        "compounded_not_approved"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-M3",
+      "product": "semaglutide",
+      "title": "The online process",
+      "style": "process",
+      "beats": [
+        {
+          "text": "It starts with a secure health questionnaire about your history and medications.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 1,
+            "bg": "cream"
+          },
+          "screen": "Questionnaire",
+          "emph": [
+            "questionnaire"
+          ]
+        },
+        {
+          "text": "A licensed provider reviews it and decides whether semaglutide is appropriate.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 2,
+            "bg": "cream"
+          },
+          "screen": "Provider review",
+          "emph": [
+            "provider"
+          ]
+        },
+        {
+          "text": "If it is, a licensed pharmacy ships it. If it isn't, you'll be told that too.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 3,
+            "bg": "cream"
+          },
+          "screen": "Pharmacy ships",
+          "emph": [
+            "pharmacy"
+          ]
+        },
+        {
+          "text": "It's compounded and not FDA-approved.",
+          "visual": {
+            "type": "warn",
+            "title": "Compounded. Not FDA-approved.",
+            "bg": "ink"
+          },
+          "screen": "Not FDA-approved",
+          "emph": [
+            "not FDA-approved"
+          ]
+        }
+      ],
+      "words": 44,
+      "est_seconds": 18.3,
+      "caption_bodies": [
+        "Questionnaire, provider review, pharmacy ships if appropriate. Compounded and not FDA-approved."
+      ],
+      "claims": [
+        "process",
+        "compounded_not_approved"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-M4",
+      "product": "semaglutide",
+      "title": "Questions to ask a provider",
+      "style": "checklist",
+      "beats": [
+        {
+          "text": "Before starting any GLP-1 medicine, here's what's worth asking.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "worth asking"
+          ]
+        },
+        {
+          "text": "Is it appropriate for my health history? What could it interact with? What side effects should I watch for?",
+          "visual": {
+            "type": "checklist",
+            "items": [
+              "Right for my history?",
+              "Interactions?",
+              "Side effects to watch?",
+              "What if it's not a fit?"
+            ],
+            "bg": "cream"
+          },
+          "screen": "Ask your provider",
+          "emph": [
+            "interact"
+          ]
+        },
+        {
+          "text": "A good provider welcomes those questions. That's the point of the review.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey"
+          },
+          "screen": null,
+          "emph": [
+            "review"
+          ]
+        },
+        {
+          "text": "Compounded semaglutide is not FDA-approved. Prescribing is never guaranteed.",
+          "visual": {
+            "type": "warn",
+            "title": "Not FDA-approved",
+            "bg": "cream"
+          },
+          "screen": "Not FDA-approved",
+          "emph": [
+            "not FDA-approved"
+          ]
+        }
+      ],
+      "words": 49,
+      "est_seconds": 20.2,
+      "caption_bodies": [
+        "Questions worth asking a provider before starting a GLP-1. Compounded semaglutide is not FDA-approved."
+      ],
+      "claims": [
+        "compounded_not_approved"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-M5",
+      "product": "semaglutide",
+      "title": "Side effects, plainly",
+      "style": "safety",
+      "beats": [
+        {
+          "text": "Every medicine has side effects. Here are the plain facts.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "side effects"
+          ]
+        },
+        {
+          "text": "Common ones are nausea, vomiting, diarrhea, and constipation.",
+          "visual": {
+            "type": "checklist",
+            "items": [
+              "Nausea",
+              "Vomiting",
+              "Diarrhea",
+              "Constipation"
+            ],
+            "bg": "cream"
+          },
+          "screen": "Common side effects",
+          "emph": [
+            "nausea"
+          ]
+        },
+        {
+          "text": "Serious risks include pancreatitis and gallbladder problems. Tell your provider about any severe symptoms.",
+          "visual": {
+            "type": "warn",
+            "title": "Serious symptoms: call your provider",
+            "bg": "cream"
+          },
+          "screen": "Serious risks",
+          "emph": [
+            "pancreatitis"
+          ]
+        },
+        {
+          "text": "It's compounded and not FDA-approved. A provider decides if it's right for you.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey"
+          },
+          "screen": null,
+          "emph": [
+            "provider"
+          ]
+        }
+      ],
+      "words": 45,
+      "est_seconds": 18.7,
+      "caption_bodies": [
+        "Common GLP-1 side effects include nausea, vomiting, diarrhea and constipation. Serious risks exist. Compounded, not FDA-approved."
+      ],
+      "claims": [
+        "glp1_side_effects",
+        "compounded_not_approved"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required",
+        "safety_education_full_check"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-M6",
+      "product": "semaglutide",
+      "title": "Hunger is a signal",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "Willpower is one weight on a balance. Biology adds weight too: hormones, and gut-to-brain signals.",
+          "visual": {
+            "type": "story3d",
+            "mode": "balance",
+            "bg": "ink",
+            "hold_s": 0.8,
+            "cues": [
+              "willpower",
+              "balance",
+              "biology",
+              "hormones",
+              "signals"
+            ],
+            "stages": [
+              {
+                "t": "Willpower",
+                "cue": "willpower"
+              },
+              {
+                "t": "Biology",
+                "cue": "biology"
+              },
+              {
+                "t": "Hormones",
+                "cue": "hormones"
+              },
+              {
+                "t": "Signals",
+                "cue": "signals"
+              }
+            ],
+            "texts": [
+              "Willpower",
+              "Biology",
+              "Hormones",
+              "Signals"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "willpower",
+            "biology"
+          ]
+        },
+        {
+          "text": "After a meal, your gut broadcasts a fullness signal. Your brain tunes in like a radio, with hunger as part of the static.",
+          "visual": {
+            "type": "story3d",
+            "mode": "radio",
+            "bg": "ink",
+            "hold_s": 0.6,
+            "cues": [
+              "meal",
+              "broadcasts",
+              "tunes",
+              "radio",
+              "static"
+            ],
+            "stages": [
+              {
+                "t": "After a meal",
+                "cue": "meal"
+              },
+              {
+                "t": "Gut broadcasts",
+                "cue": "broadcasts"
+              },
+              {
+                "t": "Brain tunes in",
+                "cue": "tunes"
+              },
+              {
+                "t": "Hunger static",
+                "cue": "static"
+              }
+            ],
+            "texts": [
+              "Fullness signal",
+              "Gut",
+              "Brain",
+              "Hunger static"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "gut",
+            "static"
+          ]
+        },
+        {
+          "text": "GLP-1 is one of those signals. Semaglutide is a medicine built to act on the GLP-1 receptor, like a key made for one lock.",
+          "visual": {
+            "type": "story3d",
+            "mode": "glp1key",
+            "bg": "ink",
+            "hold_s": 0.9,
+            "cues": [
+              "glp-1",
+              "semaglutide",
+              "receptor",
+              "key",
+              "lock"
+            ],
+            "stages": [
+              {
+                "t": "GLP-1 signal",
+                "cue": "glp-1"
+              },
+              {
+                "t": "Semaglutide",
+                "cue": "semaglutide"
+              },
+              {
+                "t": "GLP-1 receptor",
+                "cue": "receptor"
+              },
+              {
+                "t": "One key, one lock",
+                "cue": "key"
+              }
+            ],
+            "texts": [
+              "GLP-1",
+              "Semaglutide",
+              "GLP-1 receptor"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "GLP-1",
+            "receptor"
+          ]
+        },
+        {
+          "text": "That receptor plays a part in how appetite centers in the brain respond.",
+          "visual": {
+            "type": "story3d",
+            "mode": "centers",
+            "bg": "ink",
+            "hold_s": 0.6,
+            "cues": [
+              "receptor",
+              "appetite",
+              "brain",
+              "respond"
+            ],
+            "stages": [
+              {
+                "t": "GLP-1 receptor",
+                "cue": "receptor"
+              },
+              {
+                "t": "Appetite centers",
+                "cue": "appetite"
+              },
+              {
+                "t": "The brain responds",
+                "cue": "respond"
+              }
+            ],
+            "texts": [
+              "GLP-1 receptor",
+              "Appetite centers"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "appetite",
+            "brain"
+          ]
+        },
+        {
+          "text": "It can also slow how fast the stomach empties, like a conveyor belt running slower.",
+          "visual": {
+            "type": "story3d",
+            "mode": "belt",
+            "bg": "ink",
+            "hold_s": 0.7,
+            "cues": [
+              "slow",
+              "stomach",
+              "empties",
+              "conveyor",
+              "slower"
+            ],
+            "stages": [
+              {
+                "t": "The stomach",
+                "cue": "stomach"
+              },
+              {
+                "t": "Emptying",
+                "cue": "empties"
+              },
+              {
+                "t": "Conveyor belt",
+                "cue": "conveyor"
+              },
+              {
+                "t": "Running slower",
+                "cue": "slower"
+              }
+            ],
+            "texts": [
+              "Stomach",
+              "Emptying",
+              "Running slower"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "stomach",
+            "empties"
+          ]
+        },
+        {
+          "text": "Beema Health offers compounded semaglutide. A licensed pharmacy prepares it for each patient.",
+          "visual": {
+            "type": "story3d",
+            "mode": "compound",
+            "bg": "ink",
+            "hold_s": 0.5,
+            "cues": [
+              "compounded",
+              "pharmacy",
+              "prepares",
+              "patient"
+            ],
+            "stages": [
+              {
+                "t": "Compounded",
+                "cue": "compounded"
+              },
+              {
+                "t": "Licensed pharmacy",
+                "cue": "pharmacy"
+              },
+              {
+                "t": "Prepared",
+                "cue": "prepares"
+              },
+              {
+                "t": "Made for one patient",
+                "cue": "patient"
+              }
+            ],
+            "texts": [
+              "Licensed pharmacy",
+              "Rx",
+              "Compounded",
+              "Made for one patient"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "compounded",
+            "pharmacy"
+          ]
+        },
+        {
+          "text": "To be clear, compounded semaglutide is not FDA-approved.",
+          "visual": {
+            "type": "story3d",
+            "mode": "fda",
+            "bg": "ink",
+            "hold_s": 1.3,
+            "card": "Compounded semaglutide",
+            "cues": [
+              "clear",
+              "not",
+              "fda-approved"
+            ],
+            "stages": [
+              {
+                "t": "To be clear",
+                "cue": "clear"
+              },
+              {
+                "t": "Not FDA-approved",
+                "cue": "not"
+              }
+            ],
+            "texts": [
+              "FDA",
+              "Compounded semaglutide",
+              "Compounded medication",
+              "NOT FDA-APPROVED"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "not",
+            "FDA-approved"
+          ]
+        }
+      ],
+      "words": 111,
+      "est_seconds": 45.1,
+      "caption_bodies": [
+        "Semaglutide is a medicine that acts on the GLP-1 receptor, one of the gut-brain signals that plays a part in appetite and stomach emptying. Compounded semaglutide is not FDA-approved. A licensed provider decides."
+      ],
+      "claims": [
+        "appetite_signaling_not_willpower_alone",
+        "semaglutide_glp1_receptor",
+        "glp1_appetite",
+        "compounded_not_approved",
+        "mechanism_metaphor_illustrations"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required",
+        "no_same_active_ingredient_claim",
+        "agency_building_and_gavel_imagery_review",
+        "metaphor_animations_are_illustrations",
+        "radio_static_and_belt_metaphors_imply_an_effect_review",
+        "willpower_versus_biology_framing_review",
+        "product_photo_label_says_weight_loss_medication_review",
+        "product_photo_shows_syringe_and_needle_review"
+      ],
+      "price_dependent": false,
+      "notes": "Seven metaphor scenes: willpower versus biology on a balance, hunger as radio static with a fullness signal, one key and one GLP-1 lock, appetite centers lighting in a brain, a conveyor belt slowing for stomach emptying, pharmacy flask and vial, FDA-style building with gavel and red NOT FDA-APPROVED stamp. All are illustrations. The building is generic (no seal or logo).",
+      "created": "2026-11-16",
+      "version": 2,
+      "history": [
+        {
+          "version": 1,
+          "text": [
+            {
+              "text": "Willpower is one weight on a balance. Biology adds weight too: hormones, and signals between your gut and your brain.",
+              "visual": {
+                "type": "story3d",
+                "mode": "balance",
+                "bg": "ink",
+                "hold_s": 0.8,
+                "cues": [
+                  "willpower",
+                  "balance",
+                  "biology",
+                  "hormones",
+                  "signals"
+                ],
+                "stages": [
+                  {
+                    "t": "Willpower",
+                    "cue": "willpower"
+                  },
+                  {
+                    "t": "Biology",
+                    "cue": "biology"
+                  },
+                  {
+                    "t": "Hormones",
+                    "cue": "hormones"
+                  },
+                  {
+                    "t": "Signals",
+                    "cue": "signals"
+                  }
+                ],
+                "texts": [
+                  "Willpower",
+                  "Biology",
+                  "Hormones",
+                  "Signals"
+                ]
+              },
+              "screen": null,
+              "emph": [
+                "willpower",
+                "biology"
+              ]
+            },
+            {
+              "text": "After a meal, your gut broadcasts a fullness signal. Your brain tunes in like a radio, and hunger is part of the static.",
+              "visual": {
+                "type": "story3d",
+                "mode": "radio",
+                "bg": "ink",
+                "hold_s": 0.8,
+                "cues": [
+                  "meal",
+                  "broadcasts",
+                  "tunes",
+                  "radio",
+                  "static"
+                ],
+                "stages": [
+                  {
+                    "t": "After a meal",
+                    "cue": "meal"
+                  },
+                  {
+                    "t": "Gut broadcasts",
+                    "cue": "broadcasts"
+                  },
+                  {
+                    "t": "Brain tunes in",
+                    "cue": "tunes"
+                  },
+                  {
+                    "t": "Hunger static",
+                    "cue": "static"
+                  }
+                ],
+                "texts": [
+                  "Fullness signal",
+                  "Gut",
+                  "Brain",
+                  "Hunger static"
+                ]
+              },
+              "screen": null,
+              "emph": [
+                "gut",
+                "static"
+              ]
+            },
+            {
+              "text": "GLP-1 is one of those signals. Semaglutide is a medicine built to act on the GLP-1 receptor, like a key made for one lock.",
+              "visual": {
+                "type": "story3d",
+                "mode": "glp1key",
+                "bg": "ink",
+                "hold_s": 0.9,
+                "cues": [
+                  "glp-1",
+                  "semaglutide",
+                  "receptor",
+                  "key",
+                  "lock"
+                ],
+                "stages": [
+                  {
+                    "t": "GLP-1 signal",
+                    "cue": "glp-1"
+                  },
+                  {
+                    "t": "Semaglutide",
+                    "cue": "semaglutide"
+                  },
+                  {
+                    "t": "GLP-1 receptor",
+                    "cue": "receptor"
+                  },
+                  {
+                    "t": "One key, one lock",
+                    "cue": "key"
+                  }
+                ],
+                "texts": [
+                  "GLP-1",
+                  "Semaglutide",
+                  "GLP-1 receptor"
+                ]
+              },
+              "screen": null,
+              "emph": [
+                "GLP-1",
+                "receptor"
+              ]
+            },
+            {
+              "text": "That receptor plays a part in how appetite centers in the brain respond.",
+              "visual": {
+                "type": "story3d",
+                "mode": "centers",
+                "bg": "ink",
+                "hold_s": 0.9,
+                "cues": [
+                  "receptor",
+                  "appetite",
+                  "brain",
+                  "respond"
+                ],
+                "stages": [
+                  {
+                    "t": "GLP-1 receptor",
+                    "cue": "receptor"
+                  },
+                  {
+                    "t": "Appetite centers",
+                    "cue": "appetite"
+                  },
+                  {
+                    "t": "The brain responds",
+                    "cue": "respond"
+                  }
+                ],
+                "texts": [
+                  "GLP-1 receptor",
+                  "Appetite centers"
+                ]
+              },
+              "screen": null,
+              "emph": [
+                "appetite",
+                "brain"
+              ]
+            },
+            {
+              "text": "It can also slow how fast the stomach empties, like a conveyor belt running slower.",
+              "visual": {
+                "type": "story3d",
+                "mode": "belt",
+                "bg": "ink",
+                "hold_s": 0.9,
+                "cues": [
+                  "slow",
+                  "stomach",
+                  "empties",
+                  "conveyor",
+                  "slower"
+                ],
+                "stages": [
+                  {
+                    "t": "The stomach",
+                    "cue": "stomach"
+                  },
+                  {
+                    "t": "Emptying",
+                    "cue": "empties"
+                  },
+                  {
+                    "t": "Conveyor belt",
+                    "cue": "conveyor"
+                  },
+                  {
+                    "t": "Running slower",
+                    "cue": "slower"
+                  }
+                ],
+                "texts": [
+                  "Stomach",
+                  "Emptying",
+                  "Running slower"
+                ]
+              },
+              "screen": null,
+              "emph": [
+                "stomach",
+                "empties"
+              ]
+            },
+            {
+              "text": "Beema Health offers compounded semaglutide. That means a licensed pharmacy prepares it for each patient.",
+              "visual": {
+                "type": "story3d",
+                "mode": "compound",
+                "bg": "ink",
+                "hold_s": 0.7,
+                "cues": [
+                  "compounded",
+                  "pharmacy",
+                  "prepares",
+                  "patient"
+                ],
+                "stages": [
+                  {
+                    "t": "Compounded",
+                    "cue": "compounded"
+                  },
+                  {
+                    "t": "Licensed pharmacy",
+                    "cue": "pharmacy"
+                  },
+                  {
+                    "t": "Prepared",
+                    "cue": "prepares"
+                  },
+                  {
+                    "t": "Made for one patient",
+                    "cue": "patient"
+                  }
+                ],
+                "texts": [
+                  "Licensed pharmacy",
+                  "Rx",
+                  "Compounded",
+                  "Made for one patient"
+                ]
+              },
+              "screen": null,
+              "emph": [
+                "compounded",
+                "pharmacy"
+              ]
+            },
+            {
+              "text": "To be clear, compounded semaglutide is not FDA-approved.",
+              "visual": {
+                "type": "story3d",
+                "mode": "fda",
+                "bg": "ink",
+                "hold_s": 1.3,
+                "card": "Compounded semaglutide",
+                "cues": [
+                  "clear",
+                  "not",
+                  "fda-approved"
+                ],
+                "stages": [
+                  {
+                    "t": "To be clear",
+                    "cue": "clear"
+                  },
+                  {
+                    "t": "Not FDA-approved",
+                    "cue": "not"
+                  }
+                ],
+                "texts": [
+                  "FDA",
+                  "Compounded semaglutide",
+                  "Compounded medication",
+                  "NOT FDA-APPROVED"
+                ]
+              },
+              "screen": null,
+              "emph": [
+                "not",
+                "FDA-approved"
+              ]
+            }
+          ],
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    }
+  ],
+  "ctas": [
+    {
+      "id": "SMG-C1",
+      "product": "semaglutide",
+      "title": "Start the questionnaire",
+      "goal": "questionnaire_start",
+      "text": "If you're curious, start the questionnaire at beemahealth dot com. A licensed provider decides if compounded semaglutide is appropriate.",
+      "screen": "Learn more at beemahealth.com",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 19,
+      "est_seconds": 7.3,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-C2",
+      "product": "semaglutide",
+      "title": "Read first",
+      "goal": "landing_read",
+      "text": "Want to read first? The details and safety information are at beemahealth dot com slash semaglutide.",
+      "screen": "beemahealth.com/semaglutide",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 16,
+      "est_seconds": 6.2,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-C3",
+      "product": "semaglutide",
+      "title": "Brand trust",
+      "goal": "brand_trust",
+      "text": "Beema Health. Licensed providers, a licensed pharmacy, and honest answers about what's compounded.",
+      "screen": "Beema Health",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 13,
+      "est_seconds": 5.0,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "SMG-C4",
+      "product": "semaglutide",
+      "title": "Plans and details",
+      "goal": "landing_read",
+      "text": "Plans and safety information are at beemahealth dot com slash semaglutide. A licensed provider decides if it's appropriate.",
+      "screen": "Plans and details",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 18,
+      "est_seconds": 6.9,
+      "created": "2026-11-16",
+      "version": 2,
+      "history": [
+        {
+          "version": 1,
+          "text": "Want the details? Plans and safety information are at beemahealth dot com slash semaglutide. A licensed provider decides if it's appropriate.",
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    }
+  ],
+  "combinations": 1224
+}

@@ -1,0 +1,258 @@
+{
+  "_note": "Single source of product truth for the video engine. Prices are cash-pay and copied from src/lib/simple-treatment-pricing.ts (Matt's sheet, 2026-10-27 / ED Mints 2026-09-03). The pricing lib has been stale before: re-verify with Matt before paid spend. `beema.py check-prices` diffs this file against that lib.",
+  "tadalafil": {
+    "label": "Tadalafil",
+    "category": "ed",
+    "fda_status": "fda_approved_generic",
+    "compounded": false,
+    "landing_path": "/tadalafil",
+    "price_verified_on": "2026-10-27",
+    "prices": {
+      "1mo_start": 89,
+      "3mo_total_start": 149,
+      "plans": [
+        {
+          "dose": "5 mg",
+          "1mo": 89,
+          "1mo_qty": 30,
+          "3mo": 149,
+          "3mo_qty": 90
+        },
+        {
+          "dose": "10 mg",
+          "1mo": 99,
+          "1mo_qty": 16,
+          "3mo": 159,
+          "3mo_qty": 48
+        },
+        {
+          "dose": "20 mg",
+          "1mo": 149,
+          "1mo_qty": 16,
+          "3mo": 249,
+          "3mo_qty": 48
+        }
+      ],
+      "included": "Provider visit and shipping included. Cash-pay, no insurance."
+    },
+    "mechanism": "PDE5 inhibitor. Blocks the enzyme that breaks down cGMP so blood-vessel smooth muscle in the penis can relax with sexual stimulation. Does not cause arousal on its own.",
+    "safety_on_screen": "Do not take with nitrates or riociguat. Seek emergency care for an erection lasting over 4 hours or sudden vision or hearing loss. Common side effects: headache, flushing, upset stomach, back or muscle aches. Tell your provider your full medical history.",
+    "safety_short": "Rx only. Not for use with nitrates. Prescribing is never guaranteed.",
+    "disclosure_required_on_screen": [
+      "Prescription required",
+      "Prescribing is never guaranteed"
+    ],
+    "hashtags": [
+      "#EDTreatment",
+      "#MensHealth",
+      "#Telehealth"
+    ],
+    "audience": "Adult men 18+",
+    "photo_labeled": "engine/products/tadalafil-oral-tablets-bottle.webp",
+    "photo": null,
+    "photo_note": "Real bottle photo is at photo_labeled. Its label reads 'Generic Cialis' / 'Generic Viagra' (brand name on screen). Default is to NOT use it; set config.use_labeled_photos=true only with compliance sign-off. When off, videos show the Beema mark instead.",
+    "no_charge": {
+      "line": "You won't be charged if you aren't prescribed.",
+      "verified": true,
+      "source": "Beema live copy: src/lib/sexual-health-page.ts (tadalafil, sildenafil, ED mints: 'You won't be charged anything if you're not prescribed')."
+    }
+  },
+  "sildenafil": {
+    "label": "Sildenafil",
+    "category": "ed",
+    "fda_status": "fda_approved_generic",
+    "compounded": false,
+    "landing_path": "/sildenafil",
+    "price_verified_on": "2026-10-27",
+    "prices": {
+      "1mo_start": 89,
+      "3mo_total_start": 129,
+      "plans": [
+        {
+          "dose": "50 or 100 mg",
+          "1mo": 89,
+          "1mo_qty": 16,
+          "3mo": 129,
+          "3mo_qty": 48
+        }
+      ],
+      "included": "Provider visit and shipping included. Cash-pay, no insurance."
+    },
+    "mechanism": "PDE5 inhibitor. Same mechanism class as tadalafil.",
+    "safety_on_screen": "Do not take with nitrates or riociguat. Seek emergency care for an erection lasting over 4 hours or sudden vision or hearing loss. Common side effects: headache, flushing, upset stomach, nasal congestion. Tell your provider your full medical history.",
+    "safety_short": "Rx only. Not for use with nitrates. Prescribing is never guaranteed.",
+    "disclosure_required_on_screen": [
+      "Prescription required",
+      "Prescribing is never guaranteed"
+    ],
+    "hashtags": [
+      "#EDTreatment",
+      "#MensHealth",
+      "#Telehealth"
+    ],
+    "audience": "Adult men 18+",
+    "photo_labeled": "engine/products/sildenafil-oral-tablets-bottle.webp",
+    "photo": null,
+    "photo_note": "Real bottle photo is at photo_labeled. Its label reads 'Generic Cialis' / 'Generic Viagra' (brand name on screen). Default is to NOT use it; set config.use_labeled_photos=true only with compliance sign-off. When off, videos show the Beema mark instead.",
+    "no_charge": {
+      "line": "You won't be charged if you aren't prescribed.",
+      "verified": true,
+      "source": "Beema live copy: src/lib/sexual-health-page.ts (tadalafil, sildenafil, ED mints: 'You won't be charged anything if you're not prescribed')."
+    }
+  },
+  "ed-mints": {
+    "label": "ED Mints",
+    "category": "ed",
+    "fda_status": "compounded_not_fda_approved",
+    "compounded": true,
+    "landing_path": "/ed-mints",
+    "photo": "engine/products/ed-mints-tadalafil-sildenafil-rdt.webp",
+    "photo_alt": "engine/products/ed-mints-sildenafil-tadalafil-oxytocin-odt.webp",
+    "price_verified_on": "2026-09-27",
+    "prices": {
+      "1mo_start": 149,
+      "3mo_total_start": 199,
+      "monthly_equiv_3mo": 66.33,
+      "included": "Cash-pay, no insurance."
+    },
+    "formulations": [
+      "Tadalafil + sildenafil 12 mg / 60 mg RDT (rapidly dissolving tablet)",
+      "Sildenafil 50 mg / tadalafil 20 mg / oxytocin 125 IU ODT (orally dissolving tablet)"
+    ],
+    "directions_page_wording": "Dissolve under the tongue, no water needed. Most patients take one about 30 minutes before sexual activity, no more than one dose in 24 hours. Provider confirms timing and dosing. Medicines do not cause arousal by themselves.",
+    "directions_status": "PAGE_WORDING_ONLY. Matt asked about '30 to 60 minutes'; the live page says 'about 30 minutes'. Not yet verified against pharmacy documentation (Pharmacy Formularies/Optimal Balance Formulary.pdf not machine-read). Do not say 30-60 until confirmed. Never transfer tablet onset/duration claims to Mints.",
+    "disclosure_required": "ED Mints are compounded at an FDA-registered 503B outsourcing facility. They are not FDA-approved and are considered only when legally available and clinically appropriate.",
+    "mechanism": "Combination PDE5-inhibitor formulations that dissolve under the tongue instead of being swallowed.",
+    "safety_on_screen": "Compounded, not FDA-approved. Do not take with nitrates or riociguat. Seek emergency care for an erection lasting over 4 hours or sudden vision or hearing loss. Tell your provider your full medical history.",
+    "safety_short": "Compounded, not FDA-approved. Rx only. Not for use with nitrates. Prescribing is never guaranteed.",
+    "disclosure_required_on_screen": [
+      "Compounded",
+      "not FDA-approved",
+      "Prescription required"
+    ],
+    "hashtags": [
+      "#EDTreatment",
+      "#MensHealth",
+      "#Telehealth"
+    ],
+    "audience": "Adult men 18+",
+    "no_charge": {
+      "line": "You won't be charged if you aren't prescribed.",
+      "verified": true,
+      "source": "Beema live copy: src/lib/sexual-health-page.ts (tadalafil, sildenafil, ED mints: 'You won't be charged anything if you're not prescribed')."
+    }
+  },
+  "semaglutide": {
+    "label": "Compounded semaglutide",
+    "category": "glp1",
+    "fda_status": "compounded_not_fda_approved",
+    "compounded": true,
+    "landing_path": "/semaglutide",
+    "photo": "engine/products/compounded-semaglutide-vial.webp",
+    "price_verified_on": null,
+    "prices": {
+      "note": "Prices intentionally NOT used in creative: plans/promos are complex and FDA says price cannot justify compounding. Link to the page."
+    },
+    "disclosure_required": "Compounded semaglutide is not FDA-approved and is considered only when legally available and clinically appropriate.",
+    "mechanism": "GLP-1 receptor agonist. Acts on appetite and fullness signaling in the brain and slows stomach emptying.",
+    "safety_on_screen": "Compounded, not FDA-approved. Prescription required. Possible side effects include nausea, vomiting, diarrhea, constipation. Serious risks include pancreatitis, gallbladder problems, and thyroid C-cell tumor warnings on approved GLP-1 labels. Not for people with a personal or family history of medullary thyroid cancer or MEN 2. Tell your provider your full history.",
+    "safety_short": "Compounded, not FDA-approved. Rx only. Prescribing is never guaranteed.",
+    "disclosure_required_on_screen": [
+      "Compounded",
+      "not FDA-approved",
+      "Prescription required"
+    ],
+    "hashtags": [
+      "#WeightLoss",
+      "#GLP1",
+      "#Telehealth"
+    ],
+    "audience": "Adults 18+",
+    "no_charge": {
+      "line": "You won't be charged if you aren't prescribed.",
+      "verified": true,
+      "source": "Beema live copy: src/lib/weight-loss-page.ts and src/lib/glp-1-landing.ts ('you won't be charged anything if you're not prescribed')."
+    }
+  },
+  "tirzepatide": {
+    "label": "Compounded tirzepatide",
+    "category": "glp1",
+    "fda_status": "compounded_not_fda_approved",
+    "compounded": true,
+    "landing_path": "/tirzepatide",
+    "photo": "engine/products/compounded-tirzepatide-vial.webp",
+    "price_verified_on": "2026-11-16",
+    "prices": {
+      "1mo_start": 199,
+      "starter_pack": {
+        "per_month": 199,
+        "source": "Matt corrected to $199/month on 2026-11-16 (starter pack; more plans on the site).",
+        "conflict": "src/lib/medication-pricing.ts COMPOUNDED_TIRZEPATIDE_PRICING.starterPack says $597 for 3 months ($199/month), doses 1-2-3, only for patients who mark they are new to GLP-1 at intake. Price now matches; pack length and eligibility wording still need confirming."
+      },
+      "note": "Only the starter-pack monthly price is allowed in creative. No savings, 'cheaper', or comparison language (FDA: price cannot justify compounding)."
+    },
+    "disclosure_required": "Compounded tirzepatide is not FDA-approved and is considered only when legally available and clinically appropriate.",
+    "mechanism": "Dual GIP and GLP-1 receptor agonist. Acts on appetite and fullness signaling and slows stomach emptying.",
+    "safety_on_screen": "Compounded, not FDA-approved. Prescription required. Possible side effects include nausea, vomiting, diarrhea, constipation. Serious risks include pancreatitis, gallbladder problems, and thyroid C-cell tumor warnings on approved GLP-1/GIP labels. Not for people with a personal or family history of medullary thyroid cancer or MEN 2. Tell your provider your full history.",
+    "safety_short": "Compounded, not FDA-approved. Rx only. Prescribing is never guaranteed.",
+    "disclosure_required_on_screen": [
+      "Compounded",
+      "not FDA-approved",
+      "Prescription required"
+    ],
+    "hashtags": [
+      "#WeightLoss",
+      "#GLP1",
+      "#Telehealth"
+    ],
+    "audience": "Adults 18+",
+    "no_charge": {
+      "line": "You won't be charged if you aren't prescribed.",
+      "verified": true,
+      "source": "Beema live copy: src/lib/weight-loss-page.ts and src/lib/glp-1-landing.ts ('you won't be charged anything if you're not prescribed')."
+    }
+  },
+  "bpc-157": {
+    "label": "Compounded BPC-157",
+    "category": "peptide",
+    "fda_status": "not_fda_approved_compounded_eligibility_unresolved",
+    "compounded": true,
+    "landing_path": "/bpc-157",
+    "photo": null,
+    "photo_note": "EDUCATIONAL MODE (2026-11-16, per Matt): the vial-and-syringe photo is OFF so the video does not look like a product ad; the hook shows the 3D chain instead (hook_hero). The image is at photo_available (same one the live /bpc-157 page uses). If ever turned on: confirm it is a cleared asset, not an invented package, and that needle imagery is acceptable per platform.",
+    "price_verified_on": null,
+    "prices": {
+      "note": "Prices intentionally NOT used in this educational creative. Do not add prices without Matt's sheet."
+    },
+    "sold_forms": [
+      "Injection (live page /bpc-157)",
+      "Oral capsules (live page /bpc-157-capsules, separate page)"
+    ],
+    "fda_status_note": "As of the FDA page 'Certain bulk drug substances for use in compounding that may present significant safety risks' (content current as of 2026-04-22), BPC-157 is NOT in the category 2 table and appears under 'nominated but withdrawn', with FDA text: limited safety-related information for proposed routes, possible immunogenicity risk, peptide-related impurity and API characterization complexities. Whether BPC-157 may lawfully be compounded today is NOT settled in this file. Secondary sources conflict about 2026 changes. Needs counsel and a fresh FDA check before any posting.",
+    "disclosure_required": "Compounded BPC-157 is not FDA-approved and is considered only when legally available and clinically appropriate.",
+    "mechanism": "Not established in humans. Do not describe how it works.",
+    "safety_on_screen": "Education only, not medical advice. Compounded BPC-157 is not FDA-approved. Human safety data is limited, so side effects and risks are not fully known. Ask your doctor about your own health. REVIEW: clinical lead must approve this safety text.",
+    "safety_short": "Compounded, not FDA-approved. Rx only. Prescribing is never guaranteed.",
+    "disclosure_required_on_screen": [
+      "Compounded",
+      "not FDA-approved",
+      "Prescription required"
+    ],
+    "hashtags": [
+      "#BPC157",
+      "#Peptides",
+      "#HealthEducation"
+    ],
+    "audience": "Adults 18+",
+    "no_charge": {
+      "line": "You won't be charged if you aren't prescribed.",
+      "verified": false,
+      "source": "NOT on the /bpc-157 or /bpc-157-capsules page copy. The same Bask intake flow probably applies, but Matt/Bask must confirm before this ships on a BPC-157 video. Not used in the educational BPC-157 video (Matt: say little about selling).",
+      "use": false
+    },
+    "photo_available": "engine/products/bpc-157-injection-vial.webp",
+    "hook_hero": "chain",
+    "educational": true,
+    "no_links": true
+  }
+}

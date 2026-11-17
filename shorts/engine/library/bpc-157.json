@@ -1,0 +1,1150 @@
+{
+  "product": "bpc-157",
+  "prefix": "BPC",
+  "hooks": [
+    {
+      "id": "BPC-H01",
+      "product": "bpc-157",
+      "angle": "education",
+      "kind": "question",
+      "text": "What exactly is BPC-157?",
+      "words": 4,
+      "est_seconds": 1.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "BPC-H02",
+      "product": "bpc-157",
+      "angle": "regulatory",
+      "kind": "question",
+      "text": "Does BPC-157 have FDA approval?",
+      "words": 5,
+      "est_seconds": 1.9,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 2,
+      "history": [
+        {
+          "version": 1,
+          "text": "Is BPC-157 FDA-approved?",
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "BPC-H03",
+      "product": "bpc-157",
+      "angle": "education",
+      "kind": "question",
+      "text": "What do we actually know about BPC-157?",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "meats": [
+    {
+      "id": "BPC-M1",
+      "product": "bpc-157",
+      "title": "What BPC-157 is, where it comes from, and what is unknown",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "So, BPC-157 is a peptide, which is just amino acids linked together. This one is lab-made, and it's fifteen amino acids long.",
+          "visual": {
+            "type": "story3d",
+            "mode": "build",
+            "n": 15,
+            "bg": "ink",
+            "cues": [
+              "peptide",
+              "amino",
+              "linked",
+              "lab",
+              "fifteen"
+            ],
+            "hold_s": 0.8,
+            "stages": [
+              {
+                "t": "A peptide",
+                "cue": "peptide"
+              },
+              {
+                "t": "Amino acids",
+                "cue": "amino"
+              },
+              {
+                "t": "Linked together",
+                "cue": "linked"
+              },
+              {
+                "t": "Lab-made",
+                "cue": "lab"
+              },
+              {
+                "t": "15 amino acids",
+                "cue": "fifteen"
+              }
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "peptide",
+            "linked",
+            "fifteen"
+          ]
+        },
+        {
+          "text": "Where does it come from? Start with the human stomach. The fluid in there has a protein, a long chain of amino acids. And BPC-157 is based on one short piece of that chain.",
+          "visual": {
+            "type": "story3d",
+            "mode": "origin",
+            "n": 15,
+            "bg": "ink",
+            "cues": [
+              "stomach",
+              "fluid",
+              "protein",
+              "long",
+              "based",
+              "short",
+              "piece"
+            ],
+            "hold_s": 1.2,
+            "stages": [
+              {
+                "t": "Human stomach",
+                "cue": "stomach"
+              },
+              {
+                "t": "Stomach fluid",
+                "cue": "fluid"
+              },
+              {
+                "t": "A protein in it",
+                "cue": "protein"
+              },
+              {
+                "t": "A long chain of amino acids",
+                "cue": "long"
+              },
+              {
+                "t": "Based on one short piece",
+                "cue": "based"
+              },
+              {
+                "t": "That piece: 15 amino acids",
+                "cue": "piece"
+              }
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "stomach",
+            "protein",
+            "short piece"
+          ]
+        },
+        {
+          "text": "Here's the thing, most of what's been published comes from lab and animal studies.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "cream",
+            "callouts": [
+              {
+                "t": "Lab studies",
+                "at": "lab"
+              },
+              {
+                "t": "Animal studies",
+                "at": "animal"
+              }
+            ]
+          },
+          "screen": "The research",
+          "emph": [
+            "lab",
+            "animal"
+          ]
+        },
+        {
+          "text": "Human research is very limited, so the big questions are still open: does it work in people, and is it safe?",
+          "visual": {
+            "type": "versus",
+            "labels": [
+              "So far",
+              "Still open"
+            ],
+            "myth": "Lab and animal research",
+            "fact": "Does it work in people? Is it safe?",
+            "cue2": "does",
+            "bg": "cream"
+          },
+          "screen": "What we know",
+          "emph": [
+            "limited",
+            "open"
+          ]
+        },
+        {
+          "text": "It's also not an FDA-approved drug.",
+          "visual": {
+            "type": "warn",
+            "title": "Not FDA-approved",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "not an FDA-approved drug"
+          ]
+        },
+        {
+          "text": "So if anyone talks like those answers are settled, it's worth asking where that comes from.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey",
+            "callouts": [
+              {
+                "t": "Ask for sources",
+                "at": "asking"
+              }
+            ]
+          },
+          "screen": "Worth asking",
+          "emph": [
+            "asking"
+          ]
+        }
+      ],
+      "words": 113,
+      "est_seconds": 45.6,
+      "caption_bodies": [
+        "BPC-157 is a short lab-made peptide. Most research is in lab and animal studies, human research is very limited, and it is not FDA-approved."
+      ],
+      "claims": [
+        "bpc_what_it_is",
+        "bpc_gastric_protein_origin",
+        "bpc_human_evidence_limited",
+        "bpc_not_fda_approved",
+        "bpc_compounding_eligibility"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required",
+        "peptide_human_evidence_claim_needs_primary_source",
+        "peptide_safety_text_needs_clinical_review",
+        "peptide_gastric_protein_origin_needs_primary_source"
+      ],
+      "price_dependent": false,
+      "notes": "Educational, not a sales pitch: no prescribing, pricing, or provider language; the CTA is only 'read more'. The 3D animations are illustrations (stomach, fluid, protein chain, helix) and are labelled as such. Steps fire on the spoken words. The 'protein in human stomach fluid' origin comes from Beema's /bpc-157 FAQ only; a primary source has not been read.",
+      "created": "2026-11-16",
+      "version": 7,
+      "history": [
+        {
+          "version": 1,
+          "text": [
+            {
+              "text": "It's a short, lab-made peptide, a chain of fifteen amino acids.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "honey"
+              },
+              "screen": "A short peptide",
+              "emph": [
+                "peptide",
+                "fifteen"
+              ]
+            },
+            {
+              "text": "Its sequence is based on part of a protein found in human stomach fluid.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "cream"
+              },
+              "screen": "Based on a stomach protein",
+              "emph": [
+                "stomach"
+              ]
+            },
+            {
+              "text": "Most published research comes from lab and animal studies. Human research is very limited.",
+              "visual": {
+                "type": "versus",
+                "labels": [
+                  "So far",
+                  "Still unknown"
+                ],
+                "myth": "Mostly lab and animal research",
+                "fact": "Human safety and benefit",
+                "bg": "cream"
+              },
+              "screen": "What the research shows",
+              "emph": [
+                "animal",
+                "limited"
+              ]
+            },
+            {
+              "text": "So whether it works in people, and how safe it is, hasn't been established.",
+              "visual": {
+                "type": "warn",
+                "title": "Not established in humans",
+                "bg": "ink"
+              },
+              "screen": "Not established in humans",
+              "emph": [
+                "hasn't been established"
+              ]
+            },
+            {
+              "text": "And it is not an FDA-approved drug. Be careful with anyone who talks like those answers are settled.",
+              "visual": {
+                "type": "warn",
+                "title": "Not FDA-approved",
+                "bg": "cream"
+              },
+              "screen": "Not FDA-approved",
+              "emph": [
+                "not an FDA-approved drug"
+              ]
+            }
+          ],
+          "until": "2026-11-16"
+        },
+        {
+          "version": 2,
+          "text": [
+            {
+              "text": "It's a short, lab-made peptide, a chain of fifteen amino acids.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "honey"
+              },
+              "screen": "A short peptide",
+              "emph": [
+                "peptide",
+                "fifteen"
+              ]
+            },
+            {
+              "text": "Its sequence is based on part of a protein found in human stomach fluid.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "cream"
+              },
+              "screen": "Based on a stomach protein",
+              "emph": [
+                "stomach"
+              ]
+            },
+            {
+              "text": "Most published research comes from lab and animal studies. Human research is very limited.",
+              "visual": {
+                "type": "versus",
+                "labels": [
+                  "So far",
+                  "Still unknown"
+                ],
+                "myth": "Mostly lab and animal research",
+                "fact": "Human safety and benefit",
+                "bg": "cream"
+              },
+              "screen": "What we know so far",
+              "emph": [
+                "animal",
+                "limited"
+              ]
+            },
+            {
+              "text": "So whether it works in people, and how safe it is, hasn't been established.",
+              "visual": {
+                "type": "warn",
+                "title": "Not established in humans",
+                "bg": "ink"
+              },
+              "screen": "Not established in humans",
+              "emph": [
+                "hasn't been established"
+              ]
+            },
+            {
+              "text": "And it is not an FDA-approved drug. Be careful with anyone who talks like those answers are settled.",
+              "visual": {
+                "type": "warn",
+                "title": "Not FDA-approved",
+                "bg": "cream"
+              },
+              "screen": "Not FDA-approved",
+              "emph": [
+                "not an FDA-approved drug"
+              ]
+            }
+          ],
+          "until": "2026-11-16"
+        },
+        {
+          "version": 3,
+          "text": [
+            {
+              "text": "It's a short, lab-made peptide, a chain of fifteen amino acids.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "honey"
+              },
+              "screen": "A short peptide",
+              "emph": [
+                "peptide",
+                "fifteen"
+              ]
+            },
+            {
+              "text": "Its sequence is based on part of a protein found in human stomach fluid.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "cream"
+              },
+              "screen": "Based on a stomach protein",
+              "emph": [
+                "stomach"
+              ]
+            },
+            {
+              "text": "Most published research comes from lab and animal studies. Human research is very limited.",
+              "visual": {
+                "type": "versus",
+                "labels": [
+                  "So far",
+                  "Still unknown"
+                ],
+                "myth": "Mostly lab and animal research",
+                "fact": "Human safety and benefit",
+                "bg": "cream"
+              },
+              "screen": "What we know so far",
+              "emph": [
+                "animal",
+                "limited"
+              ]
+            },
+            {
+              "text": "So the big questions are still open: does it work in people, and is it safe?",
+              "visual": {
+                "type": "warn",
+                "title": "Not established in humans",
+                "bg": "ink"
+              },
+              "screen": "Not established in humans",
+              "emph": [
+                "still open"
+              ]
+            },
+            {
+              "text": "And it is not an FDA-approved drug. Be careful with anyone who talks like those answers are settled.",
+              "visual": {
+                "type": "warn",
+                "title": "Not FDA-approved",
+                "bg": "cream"
+              },
+              "screen": "Not FDA-approved",
+              "emph": [
+                "not an FDA-approved drug"
+              ]
+            }
+          ],
+          "until": "2026-11-16"
+        },
+        {
+          "version": 4,
+          "text": [
+            {
+              "text": "It's a short, lab-made peptide, a chain of fifteen amino acids.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "honey"
+              },
+              "screen": "A short peptide",
+              "emph": [
+                "peptide",
+                "fifteen"
+              ]
+            },
+            {
+              "text": "Its sequence is based on part of a protein found in human stomach fluid.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "cream"
+              },
+              "screen": "Based on a stomach protein",
+              "emph": [
+                "stomach"
+              ]
+            },
+            {
+              "text": "Most published research comes from lab and animal studies. Human research is very limited.",
+              "visual": {
+                "type": "versus",
+                "labels": [
+                  "So far",
+                  "Still unknown"
+                ],
+                "myth": "Mostly lab and animal research",
+                "fact": "Human safety and benefit",
+                "bg": "cream"
+              },
+              "screen": "What we know so far",
+              "emph": [
+                "animal",
+                "limited"
+              ]
+            },
+            {
+              "text": "So the big questions are still open: does it work in people, and is it safe?",
+              "visual": {
+                "type": "warn",
+                "title": "Not established in humans",
+                "bg": "ink"
+              },
+              "screen": null,
+              "emph": [
+                "still open"
+              ]
+            },
+            {
+              "text": "And it is not an FDA-approved drug. Be careful with anyone who talks like those answers are settled.",
+              "visual": {
+                "type": "warn",
+                "title": "Not FDA-approved",
+                "bg": "cream"
+              },
+              "screen": null,
+              "emph": [
+                "not an FDA-approved drug"
+              ]
+            }
+          ],
+          "until": "2026-11-16"
+        },
+        {
+          "version": 5,
+          "text": [
+            {
+              "text": "So, BPC-157 is a peptide, basically a short, lab-made chain of fifteen amino acids.",
+              "visual": {
+                "type": "chain3d",
+                "n": 15,
+                "unit": "amino acids",
+                "callouts": [
+                  "Lab-made",
+                  "Short chain"
+                ],
+                "bg": "ink"
+              },
+              "screen": "What it is",
+              "emph": [
+                "peptide",
+                "fifteen"
+              ]
+            },
+            {
+              "text": "Its sequence is based on part of a protein that's found in human stomach fluid.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "honey",
+                "callouts": [
+                  "Based on a stomach protein"
+                ]
+              },
+              "screen": "Where it comes from",
+              "emph": [
+                "stomach"
+              ]
+            },
+            {
+              "text": "Here's the thing, most of what's been published comes from lab and animal studies.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "cream",
+                "callouts": [
+                  "Lab studies",
+                  "Animal studies"
+                ]
+              },
+              "screen": "The research",
+              "emph": [
+                "lab",
+                "animal"
+              ]
+            },
+            {
+              "text": "Human research is very limited, so the big questions are still open: does it work in people, and is it safe?",
+              "visual": {
+                "type": "versus",
+                "labels": [
+                  "So far",
+                  "Still open"
+                ],
+                "myth": "Lab and animal research",
+                "fact": "Does it work in people? Is it safe?",
+                "bg": "cream"
+              },
+              "screen": "What we know",
+              "emph": [
+                "limited",
+                "open"
+              ]
+            },
+            {
+              "text": "It's also not an FDA-approved drug.",
+              "visual": {
+                "type": "warn",
+                "title": "Not FDA-approved",
+                "bg": "ink"
+              },
+              "screen": null,
+              "emph": [
+                "not an FDA-approved drug"
+              ]
+            },
+            {
+              "text": "So if anyone talks like those answers are settled, it's worth asking where that comes from.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "honey",
+                "callouts": [
+                  "Ask for sources"
+                ]
+              },
+              "screen": "Worth asking",
+              "emph": [
+                "asking"
+              ]
+            }
+          ],
+          "until": "2026-11-16"
+        },
+        {
+          "version": 6,
+          "text": [
+            {
+              "text": "So, BPC-157 is a peptide, which is just amino acids linked together. This one is lab-made, and it's fifteen amino acids long.",
+              "visual": {
+                "type": "story3d",
+                "mode": "build",
+                "n": 15,
+                "bg": "ink",
+                "cues": [
+                  "peptide",
+                  "amino",
+                  "linked",
+                  "lab",
+                  "fifteen"
+                ],
+                "stages": [
+                  {
+                    "t": "A peptide",
+                    "cue": "peptide"
+                  },
+                  {
+                    "t": "Amino acids",
+                    "cue": "amino"
+                  },
+                  {
+                    "t": "Linked together",
+                    "cue": "linked"
+                  },
+                  {
+                    "t": "Lab-made",
+                    "cue": "lab"
+                  },
+                  {
+                    "t": "15 amino acids",
+                    "cue": "fifteen"
+                  }
+                ]
+              },
+              "screen": null,
+              "emph": [
+                "peptide",
+                "linked",
+                "fifteen"
+              ]
+            },
+            {
+              "text": "Where does it come from? Start with the human stomach. The fluid in there has a protein, a long chain of amino acids. And BPC-157 is based on one short piece of that chain.",
+              "visual": {
+                "type": "story3d",
+                "mode": "origin",
+                "n": 15,
+                "bg": "ink",
+                "cues": [
+                  "stomach",
+                  "fluid",
+                  "protein",
+                  "long",
+                  "based",
+                  "short",
+                  "chain"
+                ],
+                "stages": [
+                  {
+                    "t": "Human stomach",
+                    "cue": "stomach"
+                  },
+                  {
+                    "t": "Stomach fluid",
+                    "cue": "fluid"
+                  },
+                  {
+                    "t": "A protein in it",
+                    "cue": "protein"
+                  },
+                  {
+                    "t": "A long chain of amino acids",
+                    "cue": "long"
+                  },
+                  {
+                    "t": "Based on one short piece",
+                    "cue": "based"
+                  },
+                  {
+                    "t": "That piece: 15 amino acids",
+                    "cue": "chain"
+                  }
+                ]
+              },
+              "screen": null,
+              "emph": [
+                "stomach",
+                "protein",
+                "short piece"
+              ]
+            },
+            {
+              "text": "Here's the thing, most of what's been published comes from lab and animal studies.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "cream",
+                "callouts": [
+                  {
+                    "t": "Lab studies",
+                    "at": "lab"
+                  },
+                  {
+                    "t": "Animal studies",
+                    "at": "animal"
+                  }
+                ]
+              },
+              "screen": "The research",
+              "emph": [
+                "lab",
+                "animal"
+              ]
+            },
+            {
+              "text": "Human research is very limited, so the big questions are still open: does it work in people, and is it safe?",
+              "visual": {
+                "type": "versus",
+                "labels": [
+                  "So far",
+                  "Still open"
+                ],
+                "myth": "Lab and animal research",
+                "fact": "Does it work in people? Is it safe?",
+                "cue2": "does",
+                "bg": "cream"
+              },
+              "screen": "What we know",
+              "emph": [
+                "limited",
+                "open"
+              ]
+            },
+            {
+              "text": "It's also not an FDA-approved drug.",
+              "visual": {
+                "type": "warn",
+                "title": "Not FDA-approved",
+                "bg": "ink"
+              },
+              "screen": null,
+              "emph": [
+                "not an FDA-approved drug"
+              ]
+            },
+            {
+              "text": "So if anyone talks like those answers are settled, it's worth asking where that comes from.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "honey",
+                "callouts": [
+                  {
+                    "t": "Ask for sources",
+                    "at": "asking"
+                  }
+                ]
+              },
+              "screen": "Worth asking",
+              "emph": [
+                "asking"
+              ]
+            }
+          ],
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "BPC-M2",
+      "product": "bpc-157",
+      "title": "What BPC-157 is, in a short video",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "BPC-157 is a peptide, which is just amino acids linked together. It's lab-made, a chain of fifteen amino acids.",
+          "visual": {
+            "type": "story3d",
+            "mode": "build",
+            "n": 15,
+            "bg": "ink",
+            "hold_s": 0.6,
+            "cues": [
+              "peptide",
+              "amino",
+              "linked",
+              "lab",
+              "fifteen"
+            ],
+            "stages": [
+              {
+                "t": "A peptide",
+                "cue": "peptide"
+              },
+              {
+                "t": "Amino acids",
+                "cue": "amino"
+              },
+              {
+                "t": "Linked together",
+                "cue": "linked"
+              },
+              {
+                "t": "Lab-made",
+                "cue": "lab"
+              },
+              {
+                "t": "15 amino acids",
+                "cue": "fifteen"
+              }
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "peptide",
+            "linked",
+            "fifteen"
+          ]
+        },
+        {
+          "text": "Most of what's been published comes from lab and animal studies, and human research is very limited.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "cream",
+            "callouts": [
+              {
+                "t": "Lab studies",
+                "at": "lab"
+              },
+              {
+                "t": "Animal studies",
+                "at": "animal"
+              }
+            ]
+          },
+          "screen": "The research",
+          "emph": [
+            "lab",
+            "animal",
+            "limited"
+          ]
+        },
+        {
+          "text": "And it is not an FDA-approved drug.",
+          "visual": {
+            "type": "warn",
+            "title": "Not FDA-approved",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "not an FDA-approved drug"
+          ]
+        }
+      ],
+      "words": 43,
+      "est_seconds": 17.6,
+      "caption_bodies": [
+        "BPC-157 is a short lab-made peptide. Most research is in lab and animal studies, human research is very limited, and it is not FDA-approved."
+      ],
+      "claims": [
+        "bpc_what_it_is",
+        "bpc_human_evidence_limited",
+        "bpc_not_fda_approved"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required",
+        "peptide_human_evidence_claim_needs_primary_source"
+      ],
+      "price_dependent": false,
+      "notes": "Short educational version (about 35 s). No selling, no links.",
+      "created": "2026-11-16",
+      "version": 2,
+      "history": [
+        {
+          "version": 1,
+          "text": [
+            {
+              "text": "BPC-157 is a peptide, which is just amino acids linked together. It's lab-made, and fifteen amino acids long.",
+              "visual": {
+                "type": "story3d",
+                "mode": "build",
+                "n": 15,
+                "bg": "ink",
+                "hold_s": 0.6,
+                "cues": [
+                  "peptide",
+                  "amino",
+                  "linked",
+                  "lab",
+                  "fifteen"
+                ],
+                "stages": [
+                  {
+                    "t": "A peptide",
+                    "cue": "peptide"
+                  },
+                  {
+                    "t": "Amino acids",
+                    "cue": "amino"
+                  },
+                  {
+                    "t": "Linked together",
+                    "cue": "linked"
+                  },
+                  {
+                    "t": "Lab-made",
+                    "cue": "lab"
+                  },
+                  {
+                    "t": "15 amino acids",
+                    "cue": "fifteen"
+                  }
+                ]
+              },
+              "screen": null,
+              "emph": [
+                "peptide",
+                "linked",
+                "fifteen"
+              ]
+            },
+            {
+              "text": "Most of what's been published comes from lab and animal studies, and human research is very limited.",
+              "visual": {
+                "type": "kinetic",
+                "bg": "cream",
+                "callouts": [
+                  {
+                    "t": "Lab studies",
+                    "at": "lab"
+                  },
+                  {
+                    "t": "Animal studies",
+                    "at": "animal"
+                  }
+                ]
+              },
+              "screen": "The research",
+              "emph": [
+                "lab",
+                "animal",
+                "limited"
+              ]
+            },
+            {
+              "text": "And it is not an FDA-approved drug.",
+              "visual": {
+                "type": "warn",
+                "title": "Not FDA-approved",
+                "bg": "ink"
+              },
+              "screen": null,
+              "emph": [
+                "not an FDA-approved drug"
+              ]
+            }
+          ],
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "BPC-M3",
+      "product": "bpc-157",
+      "title": "BPC-157 and FDA approval",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "To be clear, BPC-157 is not an FDA-approved drug.",
+          "visual": {
+            "type": "story3d",
+            "mode": "fda",
+            "bg": "ink",
+            "hold_s": 1.3,
+            "cues": [
+              "clear",
+              "not",
+              "fda-approved"
+            ],
+            "card": "BPC-157",
+            "card_sub": "Peptide",
+            "stages": [
+              {
+                "t": "To be clear",
+                "cue": "clear"
+              },
+              {
+                "t": "Not FDA-approved",
+                "cue": "not"
+              }
+            ],
+            "texts": [
+              "FDA",
+              "BPC-157",
+              "Peptide",
+              "NOT FDA-APPROVED"
+            ]
+          },
+          "screen": null,
+          "emph": [
+            "not",
+            "FDA-approved"
+          ]
+        },
+        {
+          "text": "In plain terms, it hasn't been through FDA's approval process, so what it does in people isn't established.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey",
+            "callouts": [
+              {
+                "t": "Not approved",
+                "at": "approval"
+              },
+              {
+                "t": "Human data: limited",
+                "at": "established"
+              }
+            ]
+          },
+          "screen": "What that means",
+          "emph": [
+            "approval",
+            "established"
+          ]
+        }
+      ],
+      "words": 27,
+      "est_seconds": 11.1,
+      "caption_bodies": [
+        "BPC-157 is not an FDA-approved drug, and what it does in people is not established."
+      ],
+      "claims": [
+        "bpc_not_fda_approved",
+        "bpc_human_evidence_limited"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required",
+        "agency_building_and_gavel_imagery_review"
+      ],
+      "price_dependent": false,
+      "notes": "Short educational FDA-status explainer (about 25 s). No selling, no links.",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "ctas": [
+    {
+      "id": "BPC-C1",
+      "product": "bpc-157",
+      "title": "Ask a doctor",
+      "goal": "education_close",
+      "text": "That's the plain-language version. For questions about your own health, a doctor is the right person to ask.",
+      "screen": "For education only",
+      "price": null,
+      "claims": [],
+      "no_url": true,
+      "words": 18,
+      "est_seconds": 6.9,
+      "created": "2026-11-16",
+      "version": 4,
+      "history": [
+        {
+          "version": 1,
+          "text": "If you want the details and the safety information, they're at beemahealth dot com slash bpc-157. A licensed provider decides if it's appropriate, and prescribing is never guaranteed.",
+          "until": "2026-11-16"
+        },
+        {
+          "version": 2,
+          "text": "Want the details and the safety information? They're at beemahealth dot com slash bpc-157, and a licensed provider decides if it's appropriate.",
+          "until": "2026-11-16"
+        },
+        {
+          "version": 3,
+          "text": "If you want to read more, there's a page on it at beemahealth dot com slash bpc-157.",
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "BPC-C2",
+      "product": "bpc-157",
+      "title": "Sources matter",
+      "goal": "education_close",
+      "text": "Sources matter, so be careful with anyone who talks like it's settled, and ask a doctor before you decide anything about your own health.",
+      "screen": "Ask a doctor",
+      "price": null,
+      "claims": [],
+      "no_url": true,
+      "words": 24,
+      "est_seconds": 9.2,
+      "created": "2026-11-16",
+      "version": 2,
+      "history": [
+        {
+          "version": 1,
+          "text": "Sources matter, so look for human studies, and ask a doctor before you decide anything about your own health.",
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    }
+  ],
+  "combinations": 18
+}

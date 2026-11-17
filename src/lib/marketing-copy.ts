@@ -34,6 +34,14 @@ export const FIRST_MONTH_PROMO_LINE = `Semaglutide from ${formatUsd(promoFirstMo
 export const FIRST_MONTH_PROMO_SHORT = `Sema ${formatUsd(promoFirstMonthUsd(semaPromo))} first mo · Tirz starter from ${formatUsd(tirzStarterPack.monthlyEquivalentUsd)}/mo`;
 
 /**
+ * Provider-review timing statement (stated by Matt, 2026-11-17). Single source
+ * of truth: use this exact sentence wherever the site talks about how long
+ * provider review takes. It describes review time only, never approval.
+ */
+export const PROVIDER_REVIEW_TIME_SENTENCE =
+  "Provider-review times vary, but most reviews are completed within five hours.";
+
+/**
  * How patients get answers: intake is a questionnaire only (no live Q&A
  * inside it). Site AI chat covers quick pre-intake questions; dedicated human
  * support is available by call, text, or email. Follow-up questions also open

@@ -3,7 +3,10 @@ import {
   COMPOUNDED_TIRZEPATIDE_PRICING,
   compoundedMonthlyPricingSentence,
 } from "@/lib/medication-pricing";
-import { patientQuestionsGuidance } from "@/lib/marketing-copy";
+import {
+  PROVIDER_REVIEW_TIME_SENTENCE,
+  patientQuestionsGuidance,
+} from "@/lib/marketing-copy";
 
 // Head metadata and FAQ stay identical across variants: SEO, JSON-LD, and
 // ad-policy-reviewed copy do not change when the page body is swapped.
@@ -38,7 +41,7 @@ export const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "How quickly can treatment begin?",
-    a: "How quickly you can start depends on a few factors: how fast you complete your medical intake questionnaire, how quickly a licensed provider reviews your information and makes an independent clinical decision, and how quickly the pharmacy can fulfill and ship your prescription if one is issued. Because intake is self-paced and provider review takes real clinical judgment rather than an automatic approval, we cannot promise a specific start date for any individual patient. Shipping is expedited once a prescription is issued as part of your included care, but pharmacy timelines can still vary. It's also worth remembering that prescribing is never guaranteed: a licensed provider may determine that tirzepatide, or any treatment, is not appropriate for you based on your health history, current medications, or applicable state law, regardless of how quickly you move through intake. If you're unsure how long to expect, our how-it-works overview walks through each stage in more detail.",
+    a: `How quickly you can start depends on a few factors: how fast you complete your medical intake questionnaire, how quickly a licensed provider reviews your information and makes an independent clinical decision, and how quickly the pharmacy can fulfill and ship your prescription if one is issued. ${PROVIDER_REVIEW_TIME_SENTENCE} Because intake is self-paced and provider review takes real clinical judgment rather than an automatic approval, we cannot promise a specific start date for any individual patient. Shipping is expedited once a prescription is issued as part of your included care, but pharmacy timelines can still vary. It's also worth remembering that prescribing is never guaranteed: a licensed provider may determine that tirzepatide, or any treatment, is not appropriate for you based on your health history, current medications, or applicable state law, regardless of how quickly you move through intake. If you're unsure how long to expect, our how-it-works overview walks through each stage in more detail.`,
   },
   {
     q: "Can I switch to Beema Health if I'm already on tirzepatide elsewhere?",

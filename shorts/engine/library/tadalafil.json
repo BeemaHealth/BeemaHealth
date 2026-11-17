@@ -1,0 +1,1206 @@
+{
+  "product": "tadalafil",
+  "prefix": "TAD",
+  "hooks": [
+    {
+      "id": "TAD-H01",
+      "product": "tadalafil",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "Ever wondered what tadalafil actually does inside the body?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H02",
+      "product": "tadalafil",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "It doesn't flip a switch. Here's what it really does.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H03",
+      "product": "tadalafil",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Tadalafil targets one enzyme. Let me show you which one.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H04",
+      "product": "tadalafil",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "This whole thing comes down to blood flow.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H05",
+      "product": "tadalafil",
+      "angle": "mechanism",
+      "kind": "question",
+      "text": "What's PDE5, and why does everyone keep mentioning it?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H06",
+      "product": "tadalafil",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Two letters, one number, and a lot of confusion. PDE5.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H07",
+      "product": "tadalafil",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "There's an enzyme whose whole job is to tighten blood vessels back up.",
+      "words": 13,
+      "est_seconds": 5.0,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H08",
+      "product": "tadalafil",
+      "angle": "process",
+      "kind": "question",
+      "text": "How does getting a prescription online actually work?",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H09",
+      "product": "tadalafil",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Three steps between a questionnaire and your front door.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H10",
+      "product": "tadalafil",
+      "angle": "process",
+      "kind": "statement",
+      "text": "No waiting room. Here's the whole process.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H11",
+      "product": "tadalafil",
+      "angle": "process",
+      "kind": "question",
+      "text": "What happens after you submit a medical questionnaire?",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H12",
+      "product": "tadalafil",
+      "angle": "process",
+      "kind": "question",
+      "text": "Who actually reads your health questionnaire?",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H13",
+      "product": "tadalafil",
+      "angle": "process",
+      "kind": "statement",
+      "text": "A licensed provider reviews it first. Every time.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H14",
+      "product": "tadalafil",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Here's what a telehealth ED visit really looks like.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H15",
+      "product": "tadalafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "Myth: tadalafil works on its own, no stimulation needed.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H16",
+      "product": "tadalafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "Myth: you have to see someone in person for this.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H17",
+      "product": "tadalafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "Myth: it's the same prescription for everybody.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H18",
+      "product": "tadalafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "Three things people get wrong about ED medication.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H19",
+      "product": "tadalafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "Not every online prescription process is the same. Here's the difference.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H20",
+      "product": "tadalafil",
+      "angle": "myth",
+      "kind": "statement",
+      "text": "No, an ED medicine doesn't cause arousal. Here's why.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H21",
+      "product": "tadalafil",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Awkward to bring up at the doctor's office? That's common.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H22",
+      "product": "tadalafil",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Some conversations are easier from your couch.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H23",
+      "product": "tadalafil",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "It's a medical topic. It should feel like one.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H24",
+      "product": "tadalafil",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "Let's talk about ED like adults.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H25",
+      "product": "tadalafil",
+      "angle": "relatable",
+      "kind": "question",
+      "text": "Why do so many men put off asking a doctor about this?",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H26",
+      "product": "tadalafil",
+      "angle": "relatable",
+      "kind": "statement",
+      "text": "ED is a medical issue. Not a personality flaw.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H27",
+      "product": "tadalafil",
+      "angle": "dosing",
+      "kind": "statement",
+      "text": "Daily or as needed? Tadalafil can be prescribed both ways.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H28",
+      "product": "tadalafil",
+      "angle": "dosing",
+      "kind": "question",
+      "text": "Why do some people take tadalafil every single day?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H29",
+      "product": "tadalafil",
+      "angle": "dosing",
+      "kind": "statement",
+      "text": "A small daily dose, or one when needed? A provider helps decide.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H30",
+      "product": "tadalafil",
+      "angle": "dosing",
+      "kind": "question",
+      "text": "Five, ten, or twenty milligrams. What's the difference?",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H31",
+      "product": "tadalafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "What does an online ED visit actually cost? Here's the real number.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H32",
+      "product": "tadalafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "Eighty-nine dollars. Here's what that includes.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H33",
+      "product": "tadalafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "Doctor visit and shipping included. It's in the price.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H34",
+      "product": "tadalafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "Hidden fees in telehealth? Let's look at the actual price.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H35",
+      "product": "tadalafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "Cash pay. No insurance. No surprise bills.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H36",
+      "product": "tadalafil",
+      "angle": "price",
+      "kind": "statement",
+      "text": "Under fifty dollars a month? Here's the math.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H37",
+      "product": "tadalafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "The first warning on every ED medication label.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H38",
+      "product": "tadalafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Before you ask about tadalafil, know this one safety rule.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H39",
+      "product": "tadalafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Nitrates and ED medicine don't mix. Here's why that matters.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H40",
+      "product": "tadalafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "What a licensed provider checks before prescribing tadalafil.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H41",
+      "product": "tadalafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Why the health questionnaire matters more than you'd think.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H42",
+      "product": "tadalafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Is it safe? Honestly, that depends on your health history.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H43",
+      "product": "tadalafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Prescribing is never guaranteed. Here's why that's a good thing.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H44",
+      "product": "tadalafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "A provider might say no. That's the system working.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H45",
+      "product": "tadalafil",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Ever read the whole safety section? Let's go through it.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H46",
+      "product": "tadalafil",
+      "angle": "compare",
+      "kind": "question",
+      "text": "How is tadalafil different from sildenafil?",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H47",
+      "product": "tadalafil",
+      "angle": "compare",
+      "kind": "statement",
+      "text": "Sildenafil or tadalafil? Same family, different details.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H48",
+      "product": "tadalafil",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "Your ED appointment shouldn't need a day off.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H49",
+      "product": "tadalafil",
+      "angle": "trust",
+      "kind": "question",
+      "text": "What does 'licensed pharmacy' actually mean for your prescription?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-H50",
+      "product": "tadalafil",
+      "angle": "compare",
+      "kind": "statement",
+      "text": "Tadalafil, explained like you're hearing it for the first time.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "meats": [
+    {
+      "id": "TAD-M1",
+      "product": "tadalafil",
+      "title": "How tadalafil works, simply",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "Tadalafil belongs to a group of medicines called PDE5 inhibitors.",
+          "visual": {
+            "type": "product",
+            "bg": "cream",
+            "tags": [
+              "Tadalafil",
+              "PDE5 inhibitor"
+            ]
+          },
+          "screen": "PDE5 inhibitor",
+          "emph": [
+            "PDE5"
+          ]
+        },
+        {
+          "text": "PDE5 is an enzyme. It breaks down a signal that tells blood vessels to relax.",
+          "visual": {
+            "type": "diagram",
+            "preset": "pde5_flow",
+            "stage": "enzyme",
+            "bg": "ink"
+          },
+          "screen": "The enzyme",
+          "emph": [
+            "enzyme"
+          ]
+        },
+        {
+          "text": "Tadalafil blocks that enzyme, so the signal lasts longer and vessels can widen when there's stimulation.",
+          "visual": {
+            "type": "diagram",
+            "preset": "pde5_flow",
+            "stage": "blocked",
+            "bg": "ink"
+          },
+          "screen": "Blocked",
+          "emph": [
+            "blocks",
+            "stimulation"
+          ]
+        },
+        {
+          "text": "It doesn't create arousal on its own. That part still has to happen.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey"
+          },
+          "screen": null,
+          "emph": [
+            "arousal"
+          ]
+        }
+      ],
+      "words": 54,
+      "est_seconds": 22.2,
+      "caption_bodies": [
+        "PDE5 inhibitors block the enzyme that breaks down a relaxation signal, so blood vessels can widen with stimulation. It doesn't cause arousal on its own."
+      ],
+      "claims": [
+        "pde5_mechanism",
+        "needs_stimulation"
+      ],
+      "review_flags": [],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-M2",
+      "product": "tadalafil",
+      "title": "The online process in three steps",
+      "style": "process",
+      "beats": [
+        {
+          "text": "Here's the process. One: you fill out a secure health questionnaire.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Provider review"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 1,
+            "bg": "cream"
+          },
+          "screen": "Step 1",
+          "emph": [
+            "questionnaire"
+          ]
+        },
+        {
+          "text": "Two: a licensed provider reviews your answers and decides if it's appropriate.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Provider review"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 2,
+            "bg": "cream"
+          },
+          "screen": "Step 2",
+          "emph": [
+            "licensed provider"
+          ]
+        },
+        {
+          "text": "Three: if they prescribe it, a licensed pharmacy ships it to you.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Provider review"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 3,
+            "bg": "cream"
+          },
+          "screen": "Step 3",
+          "emph": [
+            "licensed pharmacy"
+          ]
+        },
+        {
+          "text": "No waiting room. And prescribing is never guaranteed.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "never guaranteed"
+          ]
+        }
+      ],
+      "words": 43,
+      "est_seconds": 17.9,
+      "caption_bodies": [
+        "Questionnaire, provider review, pharmacy ships if appropriate. No waiting room, and prescribing is never guaranteed."
+      ],
+      "claims": [
+        "process"
+      ],
+      "review_flags": [],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-M3",
+      "product": "tadalafil",
+      "title": "Three myths",
+      "style": "myth",
+      "beats": [
+        {
+          "text": "Myth one: it works like a switch. Fact: it needs stimulation to do anything.",
+          "visual": {
+            "type": "versus",
+            "myth": "It works like a switch",
+            "fact": "Stimulation is still needed",
+            "bg": "cream"
+          },
+          "screen": "Myth 1",
+          "emph": [
+            "Fact"
+          ]
+        },
+        {
+          "text": "Myth two: you have to go in person. Fact: a licensed provider can review it online.",
+          "visual": {
+            "type": "versus",
+            "myth": "You must go in person",
+            "fact": "Licensed providers can review online",
+            "bg": "ink"
+          },
+          "screen": "Myth 2",
+          "emph": [
+            "Fact"
+          ]
+        },
+        {
+          "text": "Myth three: everyone gets the same thing. Fact: your provider looks at your health history first.",
+          "visual": {
+            "type": "versus",
+            "myth": "Everyone gets the same thing",
+            "fact": "Your health history decides",
+            "bg": "cream"
+          },
+          "screen": "Myth 3",
+          "emph": [
+            "Fact"
+          ]
+        }
+      ],
+      "words": 46,
+      "est_seconds": 18.7,
+      "caption_bodies": [
+        "Three myths about ED medication: it isn't a switch, it can be reviewed online by a licensed provider, and it isn't one-size-fits-all."
+      ],
+      "claims": [
+        "needs_stimulation",
+        "process"
+      ],
+      "review_flags": [],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-M4",
+      "product": "tadalafil",
+      "title": "Daily or as needed",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "Tadalafil can be prescribed two ways.",
+          "visual": {
+            "type": "product",
+            "bg": "honey",
+            "tags": [
+              "Tadalafil"
+            ]
+          },
+          "screen": "Two ways",
+          "emph": [
+            "two"
+          ]
+        },
+        {
+          "text": "A lower dose taken daily, or a higher dose taken when needed.",
+          "visual": {
+            "type": "versus",
+            "myth": "Lower dose, every day",
+            "fact": "Higher dose, when needed",
+            "labels": [
+              "Daily",
+              "As needed"
+            ],
+            "bg": "cream"
+          },
+          "screen": "Daily or as needed",
+          "emph": [
+            "daily",
+            "when needed"
+          ]
+        },
+        {
+          "text": "Which one fits depends on your health and your preferences. That's your provider's call, not a guess.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "provider"
+          ]
+        }
+      ],
+      "words": 35,
+      "est_seconds": 14.5,
+      "caption_bodies": [
+        "Tadalafil can be prescribed as a lower daily dose or a higher as-needed dose. Which one fits is a provider's decision."
+      ],
+      "claims": [
+        "process"
+      ],
+      "review_flags": [
+        "dosing_education: confirm with prescriber guidance"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-M5",
+      "product": "tadalafil",
+      "title": "Transparent price",
+      "style": "price",
+      "beats": [
+        {
+          "text": "Let's talk price, because it's rarely clear.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "price"
+          ]
+        },
+        {
+          "text": "Tadalafil starts at eighty-nine dollars for a month, or one forty-nine for three months.",
+          "visual": {
+            "type": "price",
+            "rows": [
+              {
+                "l": "1 month",
+                "v": "$89"
+              },
+              {
+                "l": "3 months",
+                "v": "$149"
+              }
+            ],
+            "foot": "Tadalafil 5 mg",
+            "bg": "cream"
+          },
+          "screen": "Starting at $89",
+          "emph": [
+            "eighty-nine"
+          ]
+        },
+        {
+          "text": "Your provider visit and shipping are included. It's cash pay, with no insurance involved.",
+          "visual": {
+            "type": "checklist",
+            "items": [
+              "Provider visit included",
+              "Shipping included",
+              "Cash pay, no insurance"
+            ],
+            "bg": "honey"
+          },
+          "screen": "What's included",
+          "emph": [
+            "included"
+          ]
+        }
+      ],
+      "words": 35,
+      "est_seconds": 14.5,
+      "caption_bodies": [
+        "Tadalafil starts at $89 for a month. Provider visit and shipping included. Cash pay, no insurance."
+      ],
+      "claims": [
+        "process"
+      ],
+      "review_flags": [
+        "price_dependent"
+      ],
+      "price_dependent": true,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "ctas": [
+    {
+      "id": "TAD-C1",
+      "product": "tadalafil",
+      "title": "Start the questionnaire",
+      "goal": "questionnaire_start",
+      "text": "If you're curious, the questionnaire is at beemahealth dot com. A licensed provider decides if tadalafil is right for you.",
+      "screen": "Learn more at beemahealth.com",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 20,
+      "est_seconds": 7.7,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-C2",
+      "product": "tadalafil",
+      "title": "Read first",
+      "goal": "landing_read",
+      "text": "Want the details first? Everything's laid out at beemahealth dot com slash tadalafil, including the safety information.",
+      "screen": "beemahealth.com/tadalafil",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 17,
+      "est_seconds": 6.5,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "TAD-C3",
+      "product": "tadalafil",
+      "title": "Talk to a provider",
+      "goal": "brand_trust",
+      "text": "If it's a fit, a licensed provider will say so. If it isn't, they'll tell you that too. Beema Health.",
+      "screen": "Beema Health",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 20,
+      "est_seconds": 7.7,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "combinations": 750
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "src/styles.css + ~/Desktop/Beema Health/Logos/Color_scheme.md (2026-10-29). Never hardcode other colors.",
+  "colors": {
+    "honey": "#EEB318",
+    "honeyDeep": "#D6A21E",
+    "honeyLight": "#F4C855",
+    "cream": "#F9EBBE",
+    "creamSoft": "#FDF2D0",
+    "ink": "#121419",
+    "foreground": "#14161B",
+    "onHoney": "#241C0C",
+    "slate": "#32353D",
+    "healthBrown": "#6D4700",
+    "white": "#FFFFFF"
+  },
+  "fonts": { "display": "Outfit", "body": "Figtree" },
+  "logos": {
+    "mark": "engine/brand/mark.png",
+    "stacked": "engine/brand/stacked.png",
+    "inline": "engine/brand/inline.png",
+    "note": "Real brand files only. Logos are white-background art: place them on white cards, never recolor or redraw."
+  },
+  "voice_of_brand": "Plain, calm, adult. Clear over clever. No hype, no pressure, no fear framing.",
+  "safe_zones_9x16": { "top": 230, "bottom": 400, "left": 70, "right": 150, "note": "TikTok/Reels UI covers the bottom ~400px and right ~150px; keep text and logos inside." },
+  "always_say": "Beema Health (never bare 'Beema')"
+}

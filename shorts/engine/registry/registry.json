@@ -1,0 +1,617 @@
+{
+  "version": 1,
+  "videos": {
+    "2026-11-16_tadalafil_TAD-H02_TAD-M1_TAD-C1_organic_v1": {
+      "id": "2026-11-16_tadalafil_TAD-H02_TAD-M1_TAD-C1_organic_v1",
+      "product": "tadalafil",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-16",
+      "hook_id": "TAD-H02",
+      "meat_id": "TAD-M1",
+      "cta_id": "TAD-C1",
+      "creative_style": "explainer",
+      "hook_angle": "mechanism",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "AUTO_CHECKS_PASSED",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 0
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_tadalafil_TAD-H02_TAD-M1_TAD-C1_organic_v1/2026-11-16_tadalafil_TAD-H02_TAD-M1_TAD-C1_organic_v1.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_tadalafil_TAD-H02_TAD-M1_TAD-C1_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_tadalafil_TAD-H02_TAD-M1_TAD-C1_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/brand/mark.png",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 0.01,
+        "tts_chars": 567,
+        "tts_sentences": 13,
+        "tts_cache_hits": 13,
+        "tts_usd": 0.0,
+        "render_seconds": 13.0
+      },
+      "status": "rendered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v1": {
+      "id": "2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v1",
+      "product": "sildenafil",
+      "format": "ad",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-16",
+      "hook_id": "SIL-H09",
+      "meat_id": "SIL-M2",
+      "cta_id": "SIL-C1",
+      "creative_style": "process",
+      "hook_angle": "process",
+      "extra_ed_mints_mention": true,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 2
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v1/2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v1.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/brand/mark.png",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 11.24,
+        "tts_chars": 922,
+        "tts_sentences": 21,
+        "tts_cache_hits": 0,
+        "tts_usd": 0.0,
+        "render_seconds": 18.5
+      },
+      "status": "rendered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v2": {
+      "id": "2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v2",
+      "product": "sildenafil",
+      "format": "ad",
+      "aspect": "9x16",
+      "version": 2,
+      "date": "2026-11-16",
+      "hook_id": "SIL-H09",
+      "meat_id": "SIL-M2",
+      "cta_id": "SIL-C1",
+      "creative_style": "process",
+      "hook_angle": "process",
+      "extra_ed_mints_mention": true,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 2
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v2/2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v2.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v2/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-H09_SIL-M2_SIL-C1_ad_mints_v2/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/brand/mark.png",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 10.89,
+        "tts_chars": 899,
+        "tts_sentences": 20,
+        "tts_cache_hits": 0,
+        "tts_usd": 0.0,
+        "render_seconds": 17.5
+      },
+      "status": "rendered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-16_tirzepatide_TRZ-H47_TRZ-M1_TRZ-C1_organic_v1": {
+      "id": "2026-11-16_tirzepatide_TRZ-H47_TRZ-M1_TRZ-C1_organic_v1",
+      "product": "tirzepatide",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-16",
+      "hook_id": "TRZ-H47",
+      "meat_id": "TRZ-M1",
+      "cta_id": "TRZ-C1",
+      "creative_style": "explainer",
+      "hook_angle": "convenience",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 2
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_tirzepatide_TRZ-H47_TRZ-M1_TRZ-C1_organic_v1/2026-11-16_tirzepatide_TRZ-H47_TRZ-M1_TRZ-C1_organic_v1.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_tirzepatide_TRZ-H47_TRZ-M1_TRZ-C1_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_tirzepatide_TRZ-H47_TRZ-M1_TRZ-C1_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/products/compounded-tirzepatide-vial.webp",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 8.32,
+        "tts_chars": 592,
+        "tts_sentences": 10,
+        "tts_cache_hits": 0,
+        "tts_usd": 0.0,
+        "render_seconds": 13.1
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-16_tirzepatide_TRZ-H51_TRZ-M6_TRZ-C4_organic_v1": {
+      "id": "2026-11-16_tirzepatide_TRZ-H51_TRZ-M6_TRZ-C4_organic_v1",
+      "product": "tirzepatide",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-16",
+      "hook_id": "TRZ-H51",
+      "meat_id": "TRZ-M6",
+      "cta_id": "TRZ-C4",
+      "creative_style": "explainer",
+      "hook_angle": "metaphor",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 7
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_tirzepatide_TRZ-H51_TRZ-M6_TRZ-C4_organic_v1/2026-11-16_tirzepatide_TRZ-H51_TRZ-M6_TRZ-C4_organic_v1.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_tirzepatide_TRZ-H51_TRZ-M6_TRZ-C4_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_tirzepatide_TRZ-H51_TRZ-M6_TRZ-C4_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/products/compounded-tirzepatide-vial.webp",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 0.01,
+        "tts_chars": 917,
+        "tts_sentences": 11,
+        "tts_cache_hits": 11,
+        "tts_usd": 0.0,
+        "render_seconds": 23.7
+      },
+      "status": "rendered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-16_sildenafil_SIL-H03_SIL-M1_SIL-C3_organic_v1": {
+      "id": "2026-11-16_sildenafil_SIL-H03_SIL-M1_SIL-C3_organic_v1",
+      "product": "sildenafil",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-16",
+      "hook_id": "SIL-H03",
+      "meat_id": "SIL-M1",
+      "cta_id": "SIL-C3",
+      "creative_style": "explainer",
+      "hook_angle": "mechanism",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 1
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-H03_SIL-M1_SIL-C3_organic_v1/2026-11-16_sildenafil_SIL-H03_SIL-M1_SIL-C3_organic_v1.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-H03_SIL-M1_SIL-C3_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-H03_SIL-M1_SIL-C3_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/brand/mark.png",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 0.01,
+        "tts_chars": 622,
+        "tts_sentences": 7,
+        "tts_cache_hits": 7,
+        "tts_usd": 0.0,
+        "render_seconds": 17.8
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-16_bpc-157_BPC-H01_BPC-M2_BPC-C1_organic_v1": {
+      "id": "2026-11-16_bpc-157_BPC-H01_BPC-M2_BPC-C1_organic_v1",
+      "product": "bpc-157",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-16",
+      "hook_id": "BPC-H01",
+      "meat_id": "BPC-M2",
+      "cta_id": "BPC-C1",
+      "creative_style": "explainer",
+      "hook_angle": "education",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 7
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_bpc-157_BPC-H01_BPC-M2_BPC-C1_organic_v1/2026-11-16_bpc-157_BPC-H01_BPC-M2_BPC-C1_organic_v1.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_bpc-157_BPC-H01_BPC-M2_BPC-C1_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_bpc-157_BPC-H01_BPC-M2_BPC-C1_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/brand/mark.png",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 4.58,
+        "tts_chars": 461,
+        "tts_sentences": 6,
+        "tts_cache_hits": 5,
+        "tts_usd": 0.0,
+        "render_seconds": 14.4
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-16_semaglutide_SMG-H09_SMG-M1_SMG-C3_organic_v1": {
+      "id": "2026-11-16_semaglutide_SMG-H09_SMG-M1_SMG-C3_organic_v1",
+      "product": "semaglutide",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-16",
+      "hook_id": "SMG-H09",
+      "meat_id": "SMG-M1",
+      "cta_id": "SMG-C3",
+      "creative_style": "explainer",
+      "hook_angle": "mechanism",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 3
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_semaglutide_SMG-H09_SMG-M1_SMG-C3_organic_v1/2026-11-16_semaglutide_SMG-H09_SMG-M1_SMG-C3_organic_v1.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_semaglutide_SMG-H09_SMG-M1_SMG-C3_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_semaglutide_SMG-H09_SMG-M1_SMG-C3_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/products/compounded-semaglutide-vial.webp",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 7.86,
+        "tts_chars": 605,
+        "tts_sentences": 7,
+        "tts_cache_hits": 0,
+        "tts_usd": 0.0,
+        "render_seconds": 14.8
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-16_bpc-157_BPC-H03_BPC-M2_BPC-C1_organic_v1": {
+      "id": "2026-11-16_bpc-157_BPC-H03_BPC-M2_BPC-C1_organic_v1",
+      "product": "bpc-157",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-16",
+      "hook_id": "BPC-H03",
+      "meat_id": "BPC-M2",
+      "cta_id": "BPC-C1",
+      "creative_style": "explainer",
+      "hook_angle": "education",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 7
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_bpc-157_BPC-H03_BPC-M2_BPC-C1_organic_v1/2026-11-16_bpc-157_BPC-H03_BPC-M2_BPC-C1_organic_v1.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_bpc-157_BPC-H03_BPC-M2_BPC-C1_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_bpc-157_BPC-H03_BPC-M2_BPC-C1_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/brand/mark.png",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 0.98,
+        "tts_chars": 476,
+        "tts_sentences": 6,
+        "tts_cache_hits": 5,
+        "tts_usd": 0.0,
+        "render_seconds": 13.5
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-16_sildenafil_SIL-G20261116aH_SIL-G20261116aM_SIL-G20261116aC_organic_v1": {
+      "id": "2026-11-16_sildenafil_SIL-G20261116aH_SIL-G20261116aM_SIL-G20261116aC_organic_v1",
+      "product": "sildenafil",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-16",
+      "hook_id": "SIL-G20261116aH",
+      "meat_id": "SIL-G20261116aM",
+      "cta_id": "SIL-G20261116aC",
+      "creative_style": "generated",
+      "hook_angle": "generated",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 5
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-G20261116aH_SIL-G20261116aM_SIL-G20261116aC_organic_v1/2026-11-16_sildenafil_SIL-G20261116aH_SIL-G20261116aM_SIL-G20261116aC_organic_v1.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-G20261116aH_SIL-G20261116aM_SIL-G20261116aC_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_sildenafil_SIL-G20261116aH_SIL-G20261116aM_SIL-G20261116aC_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/brand/mark.png",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 0.01,
+        "tts_chars": 538,
+        "tts_sentences": 8,
+        "tts_cache_hits": 8,
+        "tts_usd": 0.0,
+        "render_seconds": 14.3
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-16_bpc-157_BPC-G20261116bH_BPC-G20261116bM_BPC-G20261116bC_organic_v1": {
+      "id": "2026-11-16_bpc-157_BPC-G20261116bH_BPC-G20261116bM_BPC-G20261116bC_organic_v1",
+      "product": "bpc-157",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-16",
+      "hook_id": "BPC-G20261116bH",
+      "meat_id": "BPC-G20261116bM",
+      "cta_id": "BPC-G20261116bC",
+      "creative_style": "generated",
+      "hook_angle": "generated",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 5
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_bpc-157_BPC-G20261116bH_BPC-G20261116bM_BPC-G20261116bC_organic_v1/2026-11-16_bpc-157_BPC-G20261116bH_BPC-G20261116bM_BPC-G20261116bC_organic_v1.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_bpc-157_BPC-G20261116bH_BPC-G20261116bM_BPC-G20261116bC_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-16_bpc-157_BPC-G20261116bH_BPC-G20261116bM_BPC-G20261116bC_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/brand/mark.png",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 0.01,
+        "tts_chars": 539,
+        "tts_sentences": 7,
+        "tts_cache_hits": 7,
+        "tts_usd": 0.0,
+        "render_seconds": 15.4
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-17_semaglutide_SMG-G20261117aH_SMG-G20261117aM_SMG-G20261117aC_organic_v1": {
+      "id": "2026-11-17_semaglutide_SMG-G20261117aH_SMG-G20261117aM_SMG-G20261117aC_organic_v1",
+      "product": "semaglutide",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-17",
+      "hook_id": "SMG-G20261117aH",
+      "meat_id": "SMG-G20261117aM",
+      "cta_id": "SMG-G20261117aC",
+      "creative_style": "generated",
+      "hook_angle": "generated",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 4
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-17_semaglutide_SMG-G20261117aH_SMG-G20261117aM_SMG-G20261117aC_organic_v1/2026-11-17_semaglutide_how-does-semaglutide-help-you-lose-weight.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-17_semaglutide_SMG-G20261117aH_SMG-G20261117aM_SMG-G20261117aC_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-17_semaglutide_SMG-G20261117aH_SMG-G20261117aM_SMG-G20261117aC_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/products/compounded-semaglutide-vial.webp",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 9.19,
+        "tts_chars": 645,
+        "tts_sentences": 7,
+        "tts_cache_hits": 0,
+        "tts_usd": 0.0,
+        "render_seconds": 16.2
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1": {
+      "id": "2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1",
+      "product": "tadalafil",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-17",
+      "hook_id": "TAD-G20261117bH",
+      "meat_id": "TAD-G20261117bM",
+      "cta_id": "TAD-G20261117bC",
+      "creative_style": "generated",
+      "hook_angle": "generated",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 2
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1/2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/brand/mark.png",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 3.96,
+        "tts_chars": 560,
+        "tts_sentences": 7,
+        "tts_cache_hits": 2,
+        "tts_usd": 0.0,
+        "render_seconds": 16.1
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    }
+  },
+  "notes": []
+}

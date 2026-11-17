@@ -3,7 +3,10 @@ import {
   COMPOUNDED_SEMAGLUTIDE_PRICING,
   compoundedMonthlyPricingSentence,
 } from "@/lib/medication-pricing";
-import { patientQuestionsGuidance } from "@/lib/marketing-copy";
+import {
+  PROVIDER_REVIEW_TIME_SENTENCE,
+  patientQuestionsGuidance,
+} from "@/lib/marketing-copy";
 
 // Head metadata and FAQ stay identical across variants: SEO, JSON-LD, and
 // ad-policy-reviewed copy do not change when the page body is swapped.
@@ -39,7 +42,7 @@ export const FAQ_ITEMS: TreatmentFaqItem[] = [
   },
   {
     q: "How quickly can treatment begin?",
-    a: "How quickly treatment can begin depends on a few things you influence and a few your provider and pharmacy control. On your end, it depends on how quickly you complete your full medical intake questionnaire, since incomplete or inaccurate information can slow provider review. From there, timing depends on how fast a licensed provider can review your case and make an independent clinical decision, and, if approved, how quickly the pharmacy can fulfill and ship your prescription with expedited shipping. Because prescribing is never guaranteed and depends on your individual health history, current medications, and applicable state law, Beema Health can't guarantee a specific start date or that treatment will be approved at all. If you're switching from another provider, sharing your current dose accurately can also help your provider determine your correct starting dose without unnecessary delay.",
+    a: `How quickly treatment can begin depends on a few things you influence and a few your provider and pharmacy control. On your end, it depends on how quickly you complete your full medical intake questionnaire, since incomplete or inaccurate information can slow provider review. ${PROVIDER_REVIEW_TIME_SENTENCE} From there, timing depends on how fast a licensed provider can review your case and make an independent clinical decision, and, if approved, how quickly the pharmacy can fulfill and ship your prescription with expedited shipping. Because prescribing is never guaranteed and depends on your individual health history, current medications, and applicable state law, Beema Health can't guarantee a specific start date or that treatment will be approved at all. If you're switching from another provider, sharing your current dose accurately can also help your provider determine your correct starting dose without unnecessary delay.`,
   },
   {
     q: "Can I switch to Beema Health if I'm already on semaglutide elsewhere?",

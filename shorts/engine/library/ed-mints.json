@@ -1,0 +1,1232 @@
+{
+  "product": "ed-mints",
+  "prefix": "MNT",
+  "hooks": [
+    {
+      "id": "MNT-H01",
+      "product": "ed-mints",
+      "angle": "format",
+      "kind": "statement",
+      "text": "An ED medicine that dissolves under the tongue. No water.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H02",
+      "product": "ed-mints",
+      "angle": "format",
+      "kind": "question",
+      "text": "What if ED medication didn't have to be swallowed?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H03",
+      "product": "ed-mints",
+      "angle": "format",
+      "kind": "statement",
+      "text": "Meet ED Mints. A dissolving option, not a pill you swallow.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H04",
+      "product": "ed-mints",
+      "angle": "format",
+      "kind": "statement",
+      "text": "Dissolves under the tongue. That's the whole idea.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H05",
+      "product": "ed-mints",
+      "angle": "format",
+      "kind": "statement",
+      "text": "Not a pill. Not a gummy. A dissolving tablet.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H06",
+      "product": "ed-mints",
+      "angle": "format",
+      "kind": "statement",
+      "text": "No glass of water needed. Here's what ED Mints are.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H07",
+      "product": "ed-mints",
+      "angle": "format",
+      "kind": "statement",
+      "text": "Two medicines, one dissolving tablet.",
+      "words": 5,
+      "est_seconds": 1.9,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H08",
+      "product": "ed-mints",
+      "angle": "what",
+      "kind": "question",
+      "text": "What are ED Mints, exactly?",
+      "words": 5,
+      "est_seconds": 1.9,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H09",
+      "product": "ed-mints",
+      "angle": "what",
+      "kind": "statement",
+      "text": "ED Mints, explained simply.",
+      "words": 4,
+      "est_seconds": 1.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 2,
+      "history": [
+        {
+          "version": 1,
+          "text": "ED Mints, explained in under a minute.",
+          "until": "2026-11-16"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H10",
+      "product": "ed-mints",
+      "angle": "what",
+      "kind": "statement",
+      "text": "Sildenafil and tadalafil together. Dissolved, not swallowed.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H11",
+      "product": "ed-mints",
+      "angle": "what",
+      "kind": "statement",
+      "text": "There are two ED Mints formulations. Here's the difference.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H12",
+      "product": "ed-mints",
+      "angle": "what",
+      "kind": "question",
+      "text": "What does 'compounded' actually mean?",
+      "words": 5,
+      "est_seconds": 1.9,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H13",
+      "product": "ed-mints",
+      "angle": "what",
+      "kind": "statement",
+      "text": "Compounded, not FDA-approved. Here's what that means for you.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H14",
+      "product": "ed-mints",
+      "angle": "what",
+      "kind": "question",
+      "text": "A 503B outsourcing facility makes these. Why does that matter?",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H15",
+      "product": "ed-mints",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Here's the honest difference between ED Mints and regular tablets.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H16",
+      "product": "ed-mints",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Mints aren't for everyone. Here's how a provider decides.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H17",
+      "product": "ed-mints",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Tablets are FDA-approved generics. Mints are compounded. Both are explained here.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H18",
+      "product": "ed-mints",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "One of these is FDA-approved and one isn't. Know which is which.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H19",
+      "product": "ed-mints",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Why a provider might choose tablets over mints, or the other way around.",
+      "words": 13,
+      "est_seconds": 5.0,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H20",
+      "product": "ed-mints",
+      "angle": "honest",
+      "kind": "statement",
+      "text": "Before you ask about ED Mints, understand what compounded means.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H21",
+      "product": "ed-mints",
+      "angle": "process",
+      "kind": "statement",
+      "text": "How do you get ED Mints? Questionnaire first.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H22",
+      "product": "ed-mints",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Online questionnaire, provider review, pharmacy ships. That's it.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H23",
+      "product": "ed-mints",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Who decides if ED Mints are appropriate? A licensed provider.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H24",
+      "product": "ed-mints",
+      "angle": "process",
+      "kind": "question",
+      "text": "What happens after you apply for ED Mints?",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H25",
+      "product": "ed-mints",
+      "angle": "process",
+      "kind": "question",
+      "text": "Two formulations, two questionnaires. Why?",
+      "words": 5,
+      "est_seconds": 1.9,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H26",
+      "product": "ed-mints",
+      "angle": "process",
+      "kind": "statement",
+      "text": "Your provider confirms the dose and the timing. Always.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H27",
+      "product": "ed-mints",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Same medicines, different way to take them.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H28",
+      "product": "ed-mints",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "ED medicine doesn't create arousal, even when it dissolves.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H29",
+      "product": "ed-mints",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "Under the tongue, blood vessels and PDE5. A quick explanation.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H30",
+      "product": "ed-mints",
+      "angle": "mechanism",
+      "kind": "statement",
+      "text": "What PDE5 inhibitors do, and why they come in different forms.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H31",
+      "product": "ed-mints",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "Discreet, no water, no big production.",
+      "words": 6,
+      "est_seconds": 2.3,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H32",
+      "product": "ed-mints",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "Something that fits in a pocket, not a pill organizer.",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H33",
+      "product": "ed-mints",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "Taking ED medicine without the glass of water.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H34",
+      "product": "ed-mints",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "A simpler way to take a familiar medicine class.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H35",
+      "product": "ed-mints",
+      "angle": "convenience",
+      "kind": "statement",
+      "text": "The ED option you can take anywhere there's a quiet moment.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H36",
+      "product": "ed-mints",
+      "angle": "price",
+      "kind": "statement",
+      "text": "ED Mints start at a hundred and forty-nine dollars a month.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H37",
+      "product": "ed-mints",
+      "angle": "price",
+      "kind": "statement",
+      "text": "Under seventy dollars a month on the three-month plan? Here's the math.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H38",
+      "product": "ed-mints",
+      "angle": "price",
+      "kind": "question",
+      "text": "One hundred ninety-nine dollars for three months. What's included?",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H39",
+      "product": "ed-mints",
+      "angle": "price",
+      "kind": "statement",
+      "text": "Cash pay, no insurance. Here's what ED Mints cost.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": true,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H40",
+      "product": "ed-mints",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Nitrates and ED Mints don't mix either.",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H41",
+      "product": "ed-mints",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "The safety rule that applies to every ED medicine, mints included.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H42",
+      "product": "ed-mints",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "What to tell a provider before ED Mints. All of it.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H43",
+      "product": "ed-mints",
+      "angle": "safety",
+      "kind": "statement",
+      "text": "Prescribing is never guaranteed. Here's what decides it.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H44",
+      "product": "ed-mints",
+      "angle": "safety",
+      "kind": "question",
+      "text": "Why is a health questionnaire required for something this simple?",
+      "words": 10,
+      "est_seconds": 3.8,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H45",
+      "product": "ed-mints",
+      "angle": "timing",
+      "kind": "statement",
+      "text": "Most patients take one about thirty minutes ahead. Your provider confirms.",
+      "words": 11,
+      "est_seconds": 4.2,
+      "price_dependent": false,
+      "review": "mints_timing",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H46",
+      "product": "ed-mints",
+      "angle": "timing",
+      "kind": "statement",
+      "text": "Timing matters with ED medicine. Your provider sets it, not the internet.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": "mints_timing",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H47",
+      "product": "ed-mints",
+      "angle": "timing",
+      "kind": "statement",
+      "text": "Thirty minutes ahead, no more than one dose a day. Provider confirmed.",
+      "words": 12,
+      "est_seconds": 4.6,
+      "price_dependent": false,
+      "review": "mints_timing",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H48",
+      "product": "ed-mints",
+      "angle": "trust",
+      "kind": "statement",
+      "text": "Who actually makes ED Mints? Here's the plain answer.",
+      "words": 9,
+      "est_seconds": 3.5,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H49",
+      "product": "ed-mints",
+      "angle": "trust",
+      "kind": "statement",
+      "text": "FDA-registered facility. Not FDA-approved product. Both are true.",
+      "words": 8,
+      "est_seconds": 3.1,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-H50",
+      "product": "ed-mints",
+      "angle": "curiosity",
+      "kind": "question",
+      "text": "Why do dissolving medicines exist at all?",
+      "words": 7,
+      "est_seconds": 2.7,
+      "price_dependent": false,
+      "review": null,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "meats": [
+    {
+      "id": "MNT-M1",
+      "product": "ed-mints",
+      "title": "What ED Mints are",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "ED Mints are compounded tablets that dissolve under the tongue. No water needed.",
+          "visual": {
+            "type": "product",
+            "bg": "cream",
+            "tags": [
+              "ED Mints",
+              "Compounded"
+            ]
+          },
+          "screen": "Dissolves under the tongue",
+          "emph": [
+            "dissolve"
+          ]
+        },
+        {
+          "text": "They combine sildenafil and tadalafil, two medicines from the PDE5 inhibitor family.",
+          "visual": {
+            "type": "diagram",
+            "preset": "pde5_flow",
+            "stage": "blocked",
+            "bg": "ink"
+          },
+          "screen": "PDE5 inhibitors",
+          "emph": [
+            "PDE5"
+          ]
+        },
+        {
+          "text": "They're compounded at an FDA-registered facility, but they are not FDA-approved. A provider decides if they're appropriate.",
+          "visual": {
+            "type": "warn",
+            "title": "Compounded. Not FDA-approved.",
+            "bg": "cream"
+          },
+          "screen": "Not FDA-approved",
+          "emph": [
+            "not FDA-approved"
+          ]
+        }
+      ],
+      "words": 42,
+      "est_seconds": 17.2,
+      "caption_bodies": [
+        "ED Mints are compounded dissolving tablets with sildenafil and tadalafil. They are not FDA-approved. A provider decides if they're appropriate."
+      ],
+      "claims": [
+        "mints_503b",
+        "pde5_mechanism"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required",
+        "formulation_accuracy: one formulation also contains oxytocin"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-M2",
+      "product": "ed-mints",
+      "title": "Why dissolve?",
+      "style": "explainer",
+      "beats": [
+        {
+          "text": "Most ED medicine is a swallowed tablet.",
+          "visual": {
+            "type": "product",
+            "bg": "honey",
+            "tags": [
+              "Tablet"
+            ]
+          },
+          "screen": "Usually a swallowed tablet",
+          "emph": [
+            "swallowed"
+          ]
+        },
+        {
+          "text": "ED Mints dissolve under the tongue instead. No water, nothing to swallow.",
+          "visual": {
+            "type": "product",
+            "bg": "cream",
+            "tags": [
+              "ED Mints"
+            ]
+          },
+          "screen": "Dissolves instead",
+          "emph": [
+            "dissolve"
+          ]
+        },
+        {
+          "text": "It's a different way to take the medicine. It isn't a promise of different results.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "isn't a promise"
+          ]
+        },
+        {
+          "text": "They're compounded, not FDA-approved, and your provider decides if they fit.",
+          "visual": {
+            "type": "warn",
+            "title": "Compounded. Not FDA-approved.",
+            "bg": "cream"
+          },
+          "screen": "Not FDA-approved",
+          "emph": [
+            "not FDA-approved"
+          ]
+        }
+      ],
+      "words": 45,
+      "est_seconds": 18.7,
+      "caption_bodies": [
+        "A dissolving tablet is a different way to take the medicine, not a promise of different results. Compounded, not FDA-approved."
+      ],
+      "claims": [
+        "mints_503b"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required",
+        "no_absorption_or_speed_claims"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-M3",
+      "product": "ed-mints",
+      "title": "How to get ED Mints",
+      "style": "process",
+      "beats": [
+        {
+          "text": "Start with a secure health questionnaire for the formulation you're curious about.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 1,
+            "bg": "cream"
+          },
+          "screen": "Questionnaire",
+          "emph": [
+            "questionnaire"
+          ]
+        },
+        {
+          "text": "A licensed provider reviews it and decides if ED Mints are appropriate.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 2,
+            "bg": "cream"
+          },
+          "screen": "Provider review",
+          "emph": [
+            "provider"
+          ]
+        },
+        {
+          "text": "If they are, a pharmacy prepares and ships them. Prescribing is never guaranteed.",
+          "visual": {
+            "type": "steps",
+            "items": [
+              {
+                "n": 1,
+                "t": "Secure health questionnaire"
+              },
+              {
+                "n": 2,
+                "t": "Licensed provider reviews"
+              },
+              {
+                "n": 3,
+                "t": "Pharmacy ships, if appropriate"
+              }
+            ],
+            "reveal": 3,
+            "bg": "cream"
+          },
+          "screen": "Pharmacy ships",
+          "emph": [
+            "never guaranteed"
+          ]
+        },
+        {
+          "text": "ED Mints are compounded and not FDA-approved.",
+          "visual": {
+            "type": "warn",
+            "title": "Compounded. Not FDA-approved.",
+            "bg": "ink"
+          },
+          "screen": "Not FDA-approved",
+          "emph": [
+            "not FDA-approved"
+          ]
+        }
+      ],
+      "words": 44,
+      "est_seconds": 18.3,
+      "caption_bodies": [
+        "Questionnaire, provider review, pharmacy ships if appropriate. ED Mints are compounded and not FDA-approved."
+      ],
+      "claims": [
+        "process",
+        "mints_503b"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-M4",
+      "product": "ed-mints",
+      "title": "Mints versus tablets, honestly",
+      "style": "versus",
+      "beats": [
+        {
+          "text": "Here's the honest difference between ED Mints and regular tablets.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "honest"
+          ]
+        },
+        {
+          "text": "Beema Health's tadalafil and sildenafil tablets are FDA-approved generics.",
+          "visual": {
+            "type": "versus",
+            "myth": "Tablets",
+            "fact": "FDA-approved generics",
+            "labels": [
+              "Tadalafil, sildenafil",
+              "Status"
+            ],
+            "bg": "cream"
+          },
+          "screen": "Tablets",
+          "emph": [
+            "FDA-approved"
+          ]
+        },
+        {
+          "text": "ED Mints are compounded. They dissolve under the tongue, and they are not FDA-approved.",
+          "visual": {
+            "type": "versus",
+            "myth": "ED Mints",
+            "fact": "Compounded, not FDA-approved",
+            "labels": [
+              "ED Mints",
+              "Status"
+            ],
+            "bg": "cream"
+          },
+          "screen": "Mints",
+          "emph": [
+            "not FDA-approved"
+          ]
+        },
+        {
+          "text": "Your provider decides which one, if either, fits your health history.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "honey"
+          },
+          "screen": null,
+          "emph": [
+            "provider"
+          ]
+        }
+      ],
+      "words": 44,
+      "est_seconds": 18.3,
+      "caption_bodies": [
+        "Tablets are FDA-approved generics. ED Mints are compounded and not FDA-approved. Your provider decides which, if either."
+      ],
+      "claims": [
+        "generic_fda_approved",
+        "mints_503b"
+      ],
+      "review_flags": [
+        "compounded_disclosure_required",
+        "comparison_framing_review"
+      ],
+      "price_dependent": false,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-M5",
+      "product": "ed-mints",
+      "title": "Transparent price",
+      "style": "price",
+      "beats": [
+        {
+          "text": "What do ED Mints cost? Let's be direct.",
+          "visual": {
+            "type": "kinetic",
+            "bg": "ink"
+          },
+          "screen": null,
+          "emph": [
+            "cost"
+          ]
+        },
+        {
+          "text": "A hundred and forty-nine dollars for a month, or a hundred and ninety-nine for three months.",
+          "visual": {
+            "type": "price",
+            "rows": [
+              {
+                "l": "1 month",
+                "v": "$149"
+              },
+              {
+                "l": "3 months",
+                "v": "$199"
+              }
+            ],
+            "foot": "ED Mints, either formulation",
+            "bg": "cream"
+          },
+          "screen": "Starting at $149",
+          "emph": [
+            "hundred and forty-nine"
+          ]
+        },
+        {
+          "text": "It's cash pay with no insurance. ED Mints are compounded and not FDA-approved.",
+          "visual": {
+            "type": "warn",
+            "title": "Compounded. Not FDA-approved.",
+            "bg": "cream"
+          },
+          "screen": "Not FDA-approved",
+          "emph": [
+            "not FDA-approved"
+          ]
+        }
+      ],
+      "words": 37,
+      "est_seconds": 15.3,
+      "caption_bodies": [
+        "ED Mints: $149 a month or $199 for three months. Cash pay. Compounded, not FDA-approved."
+      ],
+      "claims": [
+        "mints_503b"
+      ],
+      "review_flags": [
+        "price_dependent",
+        "compounded_disclosure_required"
+      ],
+      "price_dependent": true,
+      "notes": "",
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "ctas": [
+    {
+      "id": "MNT-C1",
+      "product": "ed-mints",
+      "title": "Start the questionnaire",
+      "goal": "questionnaire_start",
+      "text": "Curious? Start with the questionnaire at beemahealth dot com. A licensed provider decides if ED Mints are appropriate.",
+      "screen": "Learn more at beemahealth.com",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 18,
+      "est_seconds": 6.9,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-C2",
+      "product": "ed-mints",
+      "title": "Read first",
+      "goal": "landing_read",
+      "text": "Want the details first? Formulations, pricing, and safety information are at beemahealth dot com slash ed mints.",
+      "screen": "beemahealth.com/ed-mints",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 17,
+      "est_seconds": 6.5,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    },
+    {
+      "id": "MNT-C3",
+      "product": "ed-mints",
+      "title": "Brand trust",
+      "goal": "brand_trust",
+      "text": "Beema Health. Clear about what's compounded, clear about what isn't.",
+      "screen": "Beema Health",
+      "price": null,
+      "claims": [],
+      "no_url": false,
+      "words": 10,
+      "est_seconds": 3.8,
+      "created": "2026-11-16",
+      "version": 1,
+      "history": [],
+      "status": "draft"
+    }
+  ],
+  "combinations": 750
+}

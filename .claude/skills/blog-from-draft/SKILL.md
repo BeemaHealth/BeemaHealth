@@ -30,6 +30,12 @@ implementation: `src/content/blog/articles/how-to-choose-the-right-peptide-for-y
 - Run ESLint only on specific changed files. Never `eslint --fix src/lib` or
   any directory (it reformatted nine unrelated files once).
 - Claude-in-chrome is unreliable for visual checks. Matt screenshots himself.
+- Every blog article carries Google's "Add as preferred source" button. It is
+  rendered by the shared `BlogArticleView.tsx` header (via
+  `src/components/learn/PreferredSourceButton.tsx`), so a new article gets it
+  automatically with no per-article code. Never remove it, never gate it
+  behind a per-article flag, and never replace it with hand-written markup.
+  Verify it on every new article (workflow step 12) and say so in the report.
 
 ## Ask once, up front (only what you cannot infer)
 
@@ -172,7 +178,8 @@ tables, rules or decorative boxes: drop them from the draft.
     - `npm run build`, then inspect `dist/client/blogs/<slug>/index.html`
       with Python or grep from the repo root (cwd quirks have produced false
       zeros): canonical `https://beemahealth.com/blogs/<slug>/`, one
-      og:image, BlogPosting + FAQPage JSON-LD, no `noindex`, byline,
+      og:image, BlogPosting + FAQPage JSON-LD, no `noindex`, byline, the
+      `preferred-source` button markup (`"preferred-source" in html`),
       "min read". `dist/` is untracked build output.
 13. **Stage** only the blog-related files (`git add` by explicit path). Do not
     commit.
@@ -189,6 +196,8 @@ tables, rules or decorative boxes: drop them from the draft.
 - Link to three kinds of pages: a service page, the homepage, another blog
   post or guide.
 - Add images or graphics with real alt text.
+- "Add as preferred source" button on every article (automatic via the
+  shared article view; confirm it is present in the built HTML).
 - Publish, then submit the URL in Search Console (Matt does this; mention it).
 
 ## Final report template

@@ -1,0 +1,1955 @@
+{
+  "format_checked": "ad",
+  "rows": [
+    {
+      "id": "TAD-H01",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H02",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H03",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H04",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H05",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H06",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H07",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H08",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H09",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H10",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H11",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H12",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H13",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H14",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H15",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H16",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H17",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H18",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H19",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H20",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H21",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H22",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H23",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H24",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H25",
+      "kind": "hooks",
+      "status": "NEEDS_HUMAN_REVIEW",
+      "findings": [
+        {
+          "level": "REVIEW",
+          "rule": "many_men",
+          "field": "TAD-H25",
+          "msg": "Unquantified prevalence statement. Needs a cited source or rewording.",
+          "snippet": "so many men"
+        }
+      ]
+    },
+    {
+      "id": "TAD-H26",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H27",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H28",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H29",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H30",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H31",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H32",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H33",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H34",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H35",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H36",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H37",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H38",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H39",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H40",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H41",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H42",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H43",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H44",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H45",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H46",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H47",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H48",
+      "kind": "hooks",
+      "status": "BLOCKED",
+      "findings": [
+        {
+          "level": "BLOCK",
+          "rule": "ad_personal_attribute",
+          "field": "TAD-H48",
+          "msg": "Ad copy asserting or implying a personal health condition.",
+          "snippet": "Your ED"
+        }
+      ]
+    },
+    {
+      "id": "TAD-H49",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-H50",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-M1",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-M2",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-M3",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-M4",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-M5",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-C1",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-C2",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TAD-C3",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H01",
+      "kind": "hooks",
+      "status": "NEEDS_HUMAN_REVIEW",
+      "findings": [
+        {
+          "level": "REVIEW",
+          "rule": "history_claim",
+          "field": "SIL-H01",
+          "msg": "History/study reference. Needs a cited source.",
+          "snippet": "decades"
+        }
+      ]
+    },
+    {
+      "id": "SIL-H02",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H03",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H04",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H05",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H06",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H07",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H08",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H09",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H10",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H11",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H12",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H13",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H14",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H15",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H16",
+      "kind": "hooks",
+      "status": "BLOCKED",
+      "findings": [
+        {
+          "level": "BLOCK",
+          "rule": "ad_personal_attribute",
+          "field": "SIL-H16",
+          "msg": "Ad copy asserting or implying a personal health condition.",
+          "snippet": "you need an in-person appointment for ED"
+        }
+      ]
+    },
+    {
+      "id": "SIL-H17",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H18",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H19",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H20",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H21",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H22",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H23",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H24",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H25",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H26",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H27",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H28",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H29",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H30",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H31",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H32",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H33",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H34",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H35",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H36",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H37",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H38",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H39",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H40",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H41",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H42",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H43",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H44",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H45",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H46",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H47",
+      "kind": "hooks",
+      "status": "BLOCKED",
+      "findings": [
+        {
+          "level": "BLOCK",
+          "rule": "ad_personal_attribute",
+          "field": "SIL-H47",
+          "msg": "Ad copy asserting or implying a personal health condition.",
+          "snippet": "Your ED"
+        }
+      ]
+    },
+    {
+      "id": "SIL-H48",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H49",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-H50",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-M1",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-M2",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-M3",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-M4",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-M5",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-C1",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-C2",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SIL-C3",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H01",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H02",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H03",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H04",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H05",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H06",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H07",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H08",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H09",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H10",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H11",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H12",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H13",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H14",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H15",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H16",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H17",
+      "kind": "hooks",
+      "status": "NEEDS_HUMAN_REVIEW",
+      "findings": [
+        {
+          "level": "REVIEW",
+          "rule": "comparison_framing",
+          "field": "MNT-H17",
+          "msg": "FDA-approved reference in a tablet comparison. Make sure it is clearly about tablets, not Mints.",
+          "snippet": "Tablets are FDA-approved generics."
+        }
+      ]
+    },
+    {
+      "id": "MNT-H18",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H19",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H20",
+      "kind": "hooks",
+      "status": "BLOCKED",
+      "findings": [
+        {
+          "level": "BLOCK",
+          "rule": "ad_personal_attribute",
+          "field": "MNT-H20",
+          "msg": "Ad copy asserting or implying a personal health condition.",
+          "snippet": "you ask about ED"
+        }
+      ]
+    },
+    {
+      "id": "MNT-H21",
+      "kind": "hooks",
+      "status": "BLOCKED",
+      "findings": [
+        {
+          "level": "BLOCK",
+          "rule": "ad_personal_attribute",
+          "field": "MNT-H21",
+          "msg": "Ad copy asserting or implying a personal health condition.",
+          "snippet": "you get ED"
+        }
+      ]
+    },
+    {
+      "id": "MNT-H22",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H23",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H24",
+      "kind": "hooks",
+      "status": "BLOCKED",
+      "findings": [
+        {
+          "level": "BLOCK",
+          "rule": "ad_personal_attribute",
+          "field": "MNT-H24",
+          "msg": "Ad copy asserting or implying a personal health condition.",
+          "snippet": "you apply for ED"
+        }
+      ]
+    },
+    {
+      "id": "MNT-H25",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H26",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H27",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H28",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H29",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H30",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H31",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H32",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H33",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H34",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H35",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H36",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H37",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H38",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H39",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H40",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H41",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H42",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H43",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H44",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H45",
+      "kind": "hooks",
+      "status": "NEEDS_HUMAN_REVIEW",
+      "findings": [
+        {
+          "level": "REVIEW",
+          "rule": "timing_claim",
+          "field": "MNT-H45",
+          "msg": "Onset/timing statement. Verify against pharmacy/label documentation; never transfer tablet timing to Mints.",
+          "snippet": "thirty minutes"
+        },
+        {
+          "level": "REVIEW",
+          "rule": "many_men",
+          "field": "MNT-H45",
+          "msg": "Unquantified prevalence statement. Needs a cited source or rewording.",
+          "snippet": "Most patients"
+        }
+      ]
+    },
+    {
+      "id": "MNT-H46",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H47",
+      "kind": "hooks",
+      "status": "NEEDS_HUMAN_REVIEW",
+      "findings": [
+        {
+          "level": "REVIEW",
+          "rule": "timing_claim",
+          "field": "MNT-H47",
+          "msg": "Onset/timing statement. Verify against pharmacy/label documentation; never transfer tablet timing to Mints.",
+          "snippet": "Thirty minutes"
+        }
+      ]
+    },
+    {
+      "id": "MNT-H48",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H49",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-H50",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-M1",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-M2",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-M3",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-M4",
+      "kind": "meats",
+      "status": "NEEDS_HUMAN_REVIEW",
+      "findings": [
+        {
+          "level": "REVIEW",
+          "rule": "comparison_framing",
+          "field": "MNT-M4",
+          "msg": "FDA-approved reference in a tablet comparison. Make sure it is clearly about tablets, not Mints.",
+          "snippet": "kinetic ink Beema Health's tadalafil and sildenafil tablets are FDA-approved gen"
+        },
+        {
+          "level": "REVIEW",
+          "rule": "comparison_framing",
+          "field": "MNT-M4",
+          "msg": "FDA-approved reference in a tablet comparison. Make sure it is clearly about tablets, not Mints.",
+          "snippet": "Tablets versus Tablets FDA-approved generics Tadalafil, sildenafil Status cream "
+        }
+      ]
+    },
+    {
+      "id": "MNT-M5",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-C1",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-C2",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "MNT-C3",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H01",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H02",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H03",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H04",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H05",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H06",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H07",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H08",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H09",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H10",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H11",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H12",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H13",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H14",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H15",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H16",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H17",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H18",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H19",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H20",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H21",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H22",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H23",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H24",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H25",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H26",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H27",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H28",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H29",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H30",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H31",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H32",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H33",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H34",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H35",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H36",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H37",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H38",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H39",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H40",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H41",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H42",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H43",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H44",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H45",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H46",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H47",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H48",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H49",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H50",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-H51",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-M1",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-M2",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-M3",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-M4",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-M5",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-M6",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-C1",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-C2",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-C3",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "TRZ-C4",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H01",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H02",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H03",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H04",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H05",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H06",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H07",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H08",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H09",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H10",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H11",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H12",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H13",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H14",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H15",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H16",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H17",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H18",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H19",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H20",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H21",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H22",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H23",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H24",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H25",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H26",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H27",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H28",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H29",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H30",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H31",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H32",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H33",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H34",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H35",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H36",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H37",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H38",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H39",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H40",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H41",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H42",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H43",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H44",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H45",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H46",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H47",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H48",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H49",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H50",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-H51",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-M1",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-M2",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-M3",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-M4",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-M5",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-M6",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-C1",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-C2",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-C3",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "SMG-C4",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "BPC-H01",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "BPC-H02",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "BPC-H03",
+      "kind": "hooks",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "BPC-M1",
+      "kind": "meats",
+      "status": "NEEDS_HUMAN_REVIEW",
+      "findings": [
+        {
+          "level": "REVIEW",
+          "rule": "history_claim",
+          "field": "BPC-M1",
+          "msg": "History/study reference. Needs a cited source.",
+          "snippet": "studies"
+        }
+      ]
+    },
+    {
+      "id": "BPC-M2",
+      "kind": "meats",
+      "status": "NEEDS_HUMAN_REVIEW",
+      "findings": [
+        {
+          "level": "REVIEW",
+          "rule": "history_claim",
+          "field": "BPC-M2",
+          "msg": "History/study reference. Needs a cited source.",
+          "snippet": "studies"
+        }
+      ]
+    },
+    {
+      "id": "BPC-M3",
+      "kind": "meats",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "BPC-C1",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    },
+    {
+      "id": "BPC-C2",
+      "kind": "ctas",
+      "status": "AUTO_CHECKS_PASSED",
+      "findings": []
+    }
+  ]
+}

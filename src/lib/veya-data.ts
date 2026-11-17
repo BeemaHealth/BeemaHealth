@@ -6,7 +6,10 @@ import {
   compoundedMonthlyPricingSentence,
   dualCompoundedFaqPricingParagraph,
 } from "@/lib/medication-pricing";
-import { patientQuestionsGuidance } from "@/lib/marketing-copy";
+import {
+  PROVIDER_REVIEW_TIME_SENTENCE,
+  patientQuestionsGuidance,
+} from "@/lib/marketing-copy";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
 import {
   JURISDICTIONAL_NOTICE_BODY,
@@ -162,6 +165,10 @@ export const FAQ_GROUPS: FaqGroup[] = [
       {
         q: "Will I be guaranteed a prescription?",
         a: "No. A licensed clinician independently reviews your medical intake and makes the final decision about whether treatment is appropriate for you - Beema Health itself never makes or influences that clinical judgment. Your clinician looks at your medical history, current health, and any conditions that could affect the safety of a given medication, including things like a personal or family history of certain thyroid cancers, pancreatitis, gallbladder issues, pregnancy or breastfeeding, or a history of eating disorders. Completing intake, paying for the visit, or having a BMI in a particular range does not guarantee you'll receive a prescription; it simply starts the clinical review process. If your clinician determines that a GLP-1 medication isn't safe or appropriate for you, they'll explain why and, where relevant, discuss alternatives or next steps rather than leaving you without guidance. This independent review is part of why intake questions matter - thorough, accurate answers help your clinician make a safe, well-informed decision more quickly.",
+      },
+      {
+        q: "How long does provider review take?",
+        a: `${PROVIDER_REVIEW_TIME_SENTENCE} Review starts after you submit your completed medical intake, and incomplete or unclear answers can take longer. Beema Health can't guarantee a specific start date, and a faster review is never a promise of approval: your provider makes an independent clinical decision about whether treatment is appropriate for you.`,
       },
       {
         q: "Which medications does Beema Health support?",
