@@ -3678,24 +3678,6 @@
       "added": "2026-11-16T19:42:44"
     },
     {
-      "date": "2026-11-17",
-      "product": "tadalafil",
-      "category": "mens_sexual_health",
-      "facet": "mechanism",
-      "question": "How does tadalafil work for ED?",
-      "summary": "A sink metaphor: stimulation is the tap, PDE5 is the drain, and tadalafil plugs the drain.",
-      "hook": "Picture a sink. Where's the drain in how tadalafil works?",
-      "narration": "Stimulation turns on the tap. The body makes cGMP, a messenger that lets smooth muscle in the penis relax. But there's a drain. An enzyme called PDE5 keeps clearing cGMP away, so the relaxing doesn't last. Tadalafil is built to plug that drain. It still needs the tap, though, because it doesn't turn anything on itself.",
-      "package_id": "2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1",
-      "source": "nightly",
-      "status": "delivered",
-      "slack": {
-        "transport": "claude-cli",
-        "reply": "DELIVERED message ts 1794927903.137579, file F0CJFCWHX8E"
-      },
-      "added": "2026-11-17T08:04:25"
-    },
-    {
       "date": null,
       "product": "tadalafil",
       "category": null,
@@ -4042,8 +4024,11 @@
       "narration": "Your brain is the crew boss. Willpower sits on one side, hunger signals on the other, and biology can outvote a good plan. Eating makes your gut send a natural fullness message. Semaglutide is built like a spare key, made to activate that same GLP-1 receptor. It also slows stomach emptying, so the getaway is slower and fullness can come sooner. Side effects like nausea and constipation are common.",
       "package_id": "2026-11-17_semaglutide_SMG-G20261117aH_SMG-G20261117aM_SMG-G20261117aC_organic_v1",
       "source": "nightly",
-      "status": "built",
-      "slack": null,
+      "status": "delivered",
+      "slack": {
+        "transport": "claude-cli",
+        "reply": "DELIVERED. Message ts 1794942595.965139, file F0CJJ9AQX8W."
+      },
       "style": {
         "voice": "am_adam",
         "speed": 1.06,
@@ -4055,6 +4040,146 @@
         "price": false
       },
       "added": "2026-11-17T12:07:43"
+    },
+    {
+      "date": "2026-11-17",
+      "product": "tadalafil",
+      "category": "mens_sexual_health",
+      "facet": "mechanism",
+      "question": "what is tadalafil used for",
+      "summary": "A courtroom countdown: the enzyme objection, the injunction that blocks it, and the warning label.",
+      "hook": "Does tadalafil start the show, or just unlock the room?",
+      "narration": "Three, the objection. An enzyme, PDE5, keeps breaking down cGMP, the signal telling blood vessel muscle to relax. Two, the injunction. Tadalafil blocks that enzyme, so vessels can widen, but only with stimulation. No stimulation, no ruling. One, the warning label: never with nitrates. Erection past four hours, or sudden vision or hearing loss, means get medical help.",
+      "package_id": "2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1",
+      "source": "nightly",
+      "status": "delivered",
+      "slack": {
+        "transport": "claude-cli",
+        "reply": "DELIVERED message ts 1794942624.926999, file F0CJJ9FUN14"
+      },
+      "style": {
+        "voice": "af_sarah",
+        "speed": 1.01,
+        "palette": "emerald",
+        "caption": "box",
+        "hook_style": "a quick either/or question the viewer answers in their head",
+        "format": "COUNTDOWN: three, two, one - three short points, each introduced by its number on screen",
+        "world": "a courtroom",
+        "price": false
+      },
+      "added": "2026-11-17T12:09:38"
+    },
+    {
+      "date": "2026-11-18",
+      "product": "tirzepatide",
+      "category": "weight_loss",
+      "facet": "mechanism",
+      "question": "how does tirzepatide help you lose weight",
+      "summary": "A farm-bell story of two gut hormone signals, a key that fits two receptors, and a slower feed line in the stomach.",
+      "hook": "Two messengers walk into a barn. That's tirzepatide's whole trick.",
+      "narration": "After dinner, the gut rings a farm bell. GIP and GLP-1 tell the brain the barn is filling up. Receptors are gates, and tirzepatide is a key cut to fit two of them. The feed line slows, so the stomach empties gradually. Nausea and diarrhea are common side effects.",
+      "package_id": "2026-11-18_tirzepatide_TRZ-G20261118aH_TRZ-G20261118aM_TRZ-G20261118aC_organic_v1",
+      "source": "nightly",
+      "status": "delivered",
+      "slack": {
+        "transport": "claude-cli",
+        "reply": "DELIVERED message ts 1795019934.933259, file F0CKSLDA0E4"
+      },
+      "style": {
+        "voice": "bm_george",
+        "speed": 1.09,
+        "palette": "magenta pop",
+        "caption": "bare",
+        "hook_style": "a number-led hook (use only a number that is in your facts, such as 'two' or 'one')",
+        "format": "ONE EXTENDED ANALOGY: explain the whole idea through a single everyday world and never leave it; every beat is another scene in that world",
+        "world": "a farm",
+        "price": false
+      },
+      "added": "2026-11-18T09:36:33"
+    },
+    {
+      "date": "2026-11-18",
+      "product": "sildenafil",
+      "category": "mens_sexual_health",
+      "facet": "mechanism",
+      "question": "what is sildenafil used for",
+      "summary": "Follow one cGMP signal through a stadium: sildenafil blocks the enzyme that cuts it short, but stimulation still starts the game.",
+      "hook": "Okay, so here's the odd part: sildenafil doesn't start the game.",
+      "narration": "Stimulation is the kickoff. It sends cGMP through the stadium, telling blood vessels to relax. But an enzyme called PDE5 plays steward, chomping that signal before the gates stay open. Sildenafil blocks that steward, so the signal lingers. No stimulation, no kickoff, though.",
+      "package_id": "2026-11-18_sildenafil_SIL-G20261118bH_SIL-G20261118bM_SIL-G20261118bC_organic_v1",
+      "source": "nightly",
+      "status": "delivered",
+      "slack": {
+        "transport": "claude-cli",
+        "reply": "DELIVERED. Message ts 1795019960.399769, file F0CKSLJ8WSC."
+      },
+      "style": {
+        "voice": "am_michael",
+        "speed": 1.0,
+        "palette": "violet hour",
+        "caption": "box",
+        "hook_style": "starts mid-thought, as if the viewer walked in on the explanation ('Okay, so here's the odd part...')",
+        "format": "FOLLOW THE JOURNEY: follow one thing (a molecule, a signal, a message) from where it starts to where it ends, beat by beat",
+        "world": "a stadium and a game",
+        "price": false
+      },
+      "added": "2026-11-18T09:38:39"
+    },
+    {
+      "date": "2026-11-19",
+      "product": "tirzepatide",
+      "category": "weight_loss",
+      "facet": "side_effects",
+      "question": "why does tirzepatide cause diarrhea",
+      "summary": "A chain reaction from a fullness signal to a slower stomach to a gut that has to adjust, with honesty that the exact reason for diarrhea isn't fully mapped.",
+      "hook": "Bet you can't guess why one signal can rattle your whole gut.",
+      "narration": "Picture a radio tower tuned to two receptors, GIP and GLP-1. Now the station broadcasts fullness. That signal slows the stomach down, like a conveyor belt crawling. Food sits longer, and the gut down the line has to wait. Diarrhea, nausea and constipation are common with these medicines. Exactly why the gut reacts that way isn't fully mapped, so it's worth raising with a provider.",
+      "package_id": "2026-11-19_tirzepatide_TRZ-G20261119aH_TRZ-G20261119aM_TRZ-G20261119aC_organic_v1",
+      "source": "nightly",
+      "status": "delivered",
+      "slack": {
+        "transport": "claude-cli",
+        "reply": "DELIVERED. Message ts 1795106804.473109 (channel C0CKEHHHE1W), file ID F0CL5EFVA2U."
+      },
+      "style": {
+        "voice": "af_heart",
+        "speed": 1.01,
+        "palette": "coral dusk",
+        "caption": "bare",
+        "hook_style": "a direct challenge: 'Try to guess what...' / 'Bet you didn't know...'",
+        "format": "DOMINO CHAIN: each beat is one step that causes the next, so the picture is a visible chain reaction",
+        "world": "a radio station",
+        "price": false
+      },
+      "added": "2026-11-19T09:45:00"
+    },
+    {
+      "date": "2026-11-19",
+      "product": "sildenafil",
+      "category": "mens_sexual_health",
+      "facet": "mechanism",
+      "question": "why does sildenafil cause headaches",
+      "summary": "A pill aimed at one place affects blood vessels in other places too, which is the usual explanation for the headache.",
+      "hook": "Nobody explains why a pill for one thing gives you a headache.",
+      "narration": "Picture a restaurant rush, one ticket marked table nine only. So why's the whole room buzzing, and why's your head pounding? Here's the clue: the pill blocks one enzyme, and that enzyme isn't only at table nine. It's in blood vessels all over the body. The answer: those vessels widen, the usual explanation. And here's the thing, never mix the pill with nitrates. Your provider needs to know.",
+      "package_id": "2026-11-19_sildenafil_SIL-G20261119bH_SIL-G20261119bM_SIL-G20261119bC_organic_v1",
+      "source": "nightly",
+      "status": "delivered",
+      "slack": {
+        "transport": "claude-cli",
+        "reply": "DELIVERED message ts 1795106828.403219, file F0CKATJU38S"
+      },
+      "style": {
+        "voice": "am_fenrir",
+        "speed": 1.01,
+        "palette": "sky blue",
+        "caption": "box",
+        "hook_style": "a 'nobody explains this part' confession",
+        "format": "MINI MYSTERY: beat 1 sets a puzzle, beat 2 gives the clue, beat 3 reveals the answer",
+        "world": "a restaurant rush",
+        "price": false
+      },
+      "added": "2026-11-19T09:46:28"
     }
   ]
 }

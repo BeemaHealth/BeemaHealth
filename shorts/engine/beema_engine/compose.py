@@ -127,6 +127,7 @@ def synthesize(pkg, outdir=None, cfg=None):
     tail = 0.9
     audio.append(np.zeros(int(tail * SR), dtype=np.float32)); t += tail
     wav = np.concatenate(audio)
+    wav = tts.humanize(wav)
     peak = float(np.max(np.abs(wav)) or 1.0)
     wav = wav * min(1.0, 0.89 / peak)
     p = outdir / "voice.wav"

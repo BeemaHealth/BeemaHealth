@@ -5,6 +5,7 @@ import {GutBrain, Pde5Flow} from './diagrams';
 import {Chain3D} from './three';
 import {BuildScene, OriginScene, Cues} from './story3d';
 import {StageScene, StageSpec} from './stage3d';
+import {PeptideWorld} from './world3d';
 import {GutMsgScene, ReceptorScene, AppetiteScene, CompoundScene, FdaScene, ProviderScene, NoChargeScene, BalanceScene, RadioScene, Glp1KeyScene, CentersScene, BeltScene} from './scenes3d';
 
 const METAPHOR_SCENES: Record<string, React.FC<{w: number; h: number; t: number; T: Cues; C: Record<string, string>; v?: Record<string, unknown>}>> = {gutmsg: GutMsgScene, receptors: ReceptorScene, appetite: AppetiteScene, compound: CompoundScene, fda: FdaScene, provider: ProviderScene, nocharge: NoChargeScene, balance: BalanceScene, radio: RadioScene, glp1key: Glp1KeyScene, centers: CentersScene, belt: BeltScene};
@@ -332,6 +333,12 @@ export const StageV: React.FC<VP> = ({seg, t, z, C, words}) => {
       {cur && <div key={cur.t} style={{position: 'absolute', left: z.side, top: z.vt + 8, transform: `rotateX(${(1 - clamp(k)) * 70}deg) scale(${0.92 + 0.08 * clamp(k)})`, transformOrigin: '0 0', opacity: clamp(k * 2), background: C.ink, color: C.honey, border: `4px solid ${C.honey}`, borderRadius: 999, padding: '12px 32px', fontFamily: F.display, fontWeight: 800, fontSize: z.W * 0.05, letterSpacing: 0.5, boxShadow: '0 12px 26px rgba(0,0,0,.35)'}}>{cur.t}</div>}
     </div>
   );
+};
+
+/** One continuous 3D world for the whole video (all adjacent world3d segments are merged by Clip.tsx); the camera flies on the spoken words. */
+export const WorldV: React.FC<VP> = ({seg, t, z, C, words}) => {
+  const dy = z.H / 2 - (z.vt + z.vb) / 2;       // slide the picture up so the action sits above the caption zone
+  return <div style={{position: 'absolute', left: 0, top: 0, width: z.W, height: z.H}}><PeptideWorld w={z.W} h={z.H} dy={dy} tg={seg.t0 + t} words={words} C={C} /></div>;
 };
 
 export const IsiV: React.FC<VP> = ({seg, t, dur, z, C, props}) => {

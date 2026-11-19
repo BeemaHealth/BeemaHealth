@@ -186,3 +186,19 @@ def synth_segment(text, seed, cfg=None):
             gap = lo + rnd.uniform(0.0, hi - lo)
             audio_all.append(np.zeros(int(gap * SR), dtype=np.float32)); t += gap
     return np.concatenate(audio_all), words_all, hits, len(sents)
+
+
+def humanize(wav, sr=SR):
+    """Finishing pass that takes the synthetic edge off: tame the 6-12 kHz hiss, even out loudness with a soft compressor,
+    and add a very small room so the voice sits in a space instead of in a vacuum. Length is unchanged."""
+    x = wav.astype(np.float32); n = len(x)
+    lp = np.copy(x); a = np.exp(-2 * np.pi * 7500 / sr)                # one-pole low-pass: the glassy top end is the robot tell
+    for i in range(1, n): lp[i] = (1 - a) * x[i] + a * lp[i - 1]
+    x = 0.65 * lp + 0.35 * x
+    env = np.abs(x); k = int(0.02 * sr); env = np.convolve(env, np.ones(k) / k, mode="same")      # 20 ms level follower
+    gain = 1.0 / np.maximum(1.0, (env / 0.18) ** 0.35)                                            # soft compression above the knee
+    x = x * gain
+    rng = np.random.default_rng(7); L = int(0.16 * sr)
+    ir = rng.standard_normal(L).astype(np.float32) * np.exp(-np.arange(L) / (0.045 * sr)); ir[0] = 0; ir /= (np.abs(ir).sum() or 1)
+    wet = np.convolve(x, ir * 2.2)[:n]
+    return (x + 0.35 * wet).astype(np.float32)

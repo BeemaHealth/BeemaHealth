@@ -26,7 +26,7 @@ export const SLOTS: Record<string, [number, number]> = {
 };
 
 /* ------------------------------------------------------------------ text plane (fonts must be loaded) */
-const useFontReady = () => {
+export const useFontReady = () => {
   const [ok, setOk] = useState(false);
   const [h] = useState(() => delayRender('stage-fonts'));
   useEffect(() => {
@@ -39,7 +39,7 @@ const useFontReady = () => {
 const rr = (g: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
   g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
 };
-const Txt: React.FC<{text: string; w: number; h: number; pos?: V3; rot?: V3; s?: number; o?: number; color?: string; bg?: string | null; border?: string | null; ready: boolean; radius?: number}> = ({text, w, h, pos = [0, 0, 0], rot = [0, 0, 0], s = 1, o = 1, color = '#fff', bg = null, border = null, ready, radius = 0.25}) => {
+export const Txt: React.FC<{text: string; w: number; h: number; pos?: V3; rot?: V3; s?: number; o?: number; color?: string; bg?: string | null; border?: string | null; ready: boolean; radius?: number}> = ({text, w, h, pos = [0, 0, 0], rot = [0, 0, 0], s = 1, o = 1, color = '#fff', bg = null, border = null, ready, radius = 0.25}) => {
   const tex = useMemo(() => {
     const cw = Math.round(w * 160), ch = Math.round(h * 160);
     const c = document.createElement('canvas'); c.width = cw; c.height = ch;

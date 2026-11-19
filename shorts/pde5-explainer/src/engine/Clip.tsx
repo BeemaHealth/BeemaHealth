@@ -5,9 +5,9 @@ import '@fontsource/outfit/800.css';
 import '@fontsource/figtree/600.css';
 import {Scene3D} from './three';
 import {ClipProps, F, Seg, Word, clamp, eio, eo3, tone, useZones} from './ui';
-import {ChainV, StageV, StoryV, ChecklistV, DiagramV, EndcardV, HookV, IsiV, KineticV, PriceV, ProductV, StepsV, VersusV, VP, WarnV} from './visuals';
+import {ChainV, StageV, WorldV, StoryV, ChecklistV, DiagramV, EndcardV, HookV, IsiV, KineticV, PriceV, ProductV, StepsV, VersusV, VP, WarnV} from './visuals';
 
-const VIS: Record<string, React.FC<VP>> = {hook: HookV, product: ProductV, diagram: DiagramV, steps: StepsV, versus: VersusV, price: PriceV, checklist: ChecklistV, warn: WarnV, kinetic: KineticV, chain3d: ChainV, story3d: StoryV, stage3d: StageV, isi: IsiV, endcard: EndcardV};
+const VIS: Record<string, React.FC<VP>> = {hook: HookV, product: ProductV, diagram: DiagramV, steps: StepsV, versus: VersusV, price: PriceV, checklist: ChecklistV, warn: WarnV, kinetic: KineticV, chain3d: ChainV, story3d: StoryV, stage3d: StageV, world3d: WorldV, isi: IsiV, endcard: EndcardV};
 const NO_CAPTIONS = new Set(['hook', 'kinetic', 'isi']);
 
 const useFonts = () => {
@@ -79,7 +79,7 @@ export const Clip: React.FC<ClipProps> = (props) => {
   const scenes: {segs: Seg[]; t0: number; end: number; first: Seg}[] = [];
   segs.forEach((s) => {
     const last = scenes[scenes.length - 1];
-    if (last && s.visual.type === 'endcard' && last.first.visual.type === 'endcard') { last.segs.push(s); last.end = s.end; } else scenes.push({segs: [s], t0: s.t0, end: s.end, first: s});
+    if (last && ((s.visual.type === 'endcard' && last.first.visual.type === 'endcard') || (s.visual.type === 'world3d' && last.first.visual.type === 'world3d'))) { last.segs.push(s); last.end = s.end; } else scenes.push({segs: [s], t0: s.t0, end: s.end, first: s});
   });
   scenes[scenes.length - 1].end = props.duration;
   const curSeg = segs.find((s) => T >= s.t0 && T < s.end) ?? segs[segs.length - 1];
@@ -112,7 +112,7 @@ const SceneBody: React.FC<{sc: {segs: Seg[]; t0: number; end: number; first: Seg
   const drift = 1 + 0.012 * u;
   return (
     <Reveal i={i} t={t} w={z.W} h={z.H} skip={same || i === 0}>
-      <Bg bg={seg.visual.bg ?? 'ink'} C={C} t={sc.t0 + t} w={z.W} h={z.H} pose={pose} prevPose={pose} blend={1} u={u} dim={seg.visual.type === 'story3d' || seg.visual.type === 'stage3d'} theme={seg.visual.bg3d} />
+      {seg.visual.type !== 'world3d' && <Bg bg={seg.visual.bg ?? 'ink'} C={C} t={sc.t0 + t} w={z.W} h={z.H} pose={pose} prevPose={pose} blend={1} u={u} dim={seg.visual.type === 'story3d' || seg.visual.type === 'stage3d'} theme={seg.visual.bg3d} />}
       <AbsoluteFill style={{transform: `scale(${drift})`, transformOrigin: '50% 40%'}}>
         <Vis seg={seg} t={t} dur={dur} cont={same} z={z} C={C} props={props} words={props.words} />
       </AbsoluteFill>

@@ -48,8 +48,9 @@ FORMATS = [
 WORLDS = ["a busy kitchen", "a post office sorting mail", "a city's traffic and roads", "an orchestra", "an airport", "a theme park",
           "a library", "a stadium and a game", "a farm", "a heist movie", "a radio station", "a train network", "a hotel front desk",
           "a construction site", "a space station", "a restaurant rush", "a courtroom", "a garden", "a switchboard of phone calls", "a lighthouse"]
-VOICES = ["am_michael", "am_adam", "am_liam", "am_eric", "am_onyx", "af_heart", "af_nicole", "af_sarah", "af_bella", "bm_george", "bf_emma"]
-SPEEDS = (1.0, 1.1)
+# only Kokoro's best-rated voices: the other male voices (adam, liam, eric, onyx) are the ones that sound flat and robotic
+VOICES = ["af_heart", "af_bella", "af_nicole", "af_sarah", "bf_emma", "am_michael", "am_fenrir", "am_puck"]
+SPEEDS = (0.93, 1.02)         # a touch slower than the default reads as talking, not reading
 
 PRICE_PHRASES = {   # the ONLY prices a video may state, from products.json (Matt's pricing sheet). Education videos never state a price.
     "tirzepatide": ("Starter pack", "starter_pack_price"),

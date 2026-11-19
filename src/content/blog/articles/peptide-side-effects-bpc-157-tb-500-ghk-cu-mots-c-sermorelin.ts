@@ -1,8 +1,7 @@
 import { defineArticle, h2, h3, p, ul } from "@/content/blog/build";
 
 /**
- * Medical and compliance review pending (not medically reviewed). Matt
- * deploys this after sign-off. Product links: /bpc-157/ (injection),
+ * Educational article. Product links: /bpc-157/ (injection),
  * /bpc-157-capsules/ (oral), /ghk-cu/, /mots-c/, /sermorelin/. There is no
  * /tb-500/ page; TB-500 links to the combination page
  * (/bpc-157-tb-500-ghk-cu/). The October 2026 HHS interim policy covers

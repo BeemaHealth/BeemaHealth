@@ -70,7 +70,13 @@
     "BPC-157": "B P C one fifty seven",
     "tirzepatide": "ter ZEP uh tide",
     "semaglutide": "sem uh GLOO tide",
-    "GIP": "G I P"
+    "GIP": "G I P",
+    "TB-500": "T B five hundred",
+    "GHK-Cu": "G H K copper",
+    "MOTS-C": "mots C",
+    "sermorelin": "sir MORE uh lin",
+    "FDA": "F D A",
+    "911": "nine one one"
   },
   "posting_times": {
     "status": "NO_AUDIENCE_DATA",
@@ -145,11 +151,11 @@
   },
   "use_labeled_photos": false,
   "phonemes": {
-    "tirzepatide": "tɜɹzˈɛpʌtˌaɪd",
-    "semaglutide": "sˌɛmʌɡlˈutˌaɪd",
-    "Beema": "bˈimɐ",
-    "tadalafil": "tɑdˈælʌfɪl",
-    "lives": "lˈɪvz"
+    "tirzepatide": "t\u025c\u0279z\u02c8\u025bp\u028ct\u02cca\u026ad",
+    "semaglutide": "s\u02cc\u025bm\u028c\u0261l\u02c8ut\u02cca\u026ad",
+    "Beema": "b\u02c8im\u0250",
+    "tadalafil": "t\u0251d\u02c8\u00e6l\u028cf\u026al",
+    "lives": "l\u02c8\u026avz"
   },
   "nightly": {
     "hour": 4,

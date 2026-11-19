@@ -587,7 +587,7 @@
         "human_signoff": null
       },
       "files": {
-        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1/2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1.mp4",
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1/2026-11-17_tadalafil_what-is-tadalafil-used-for.mp4",
         "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1/package.json",
         "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-17_tadalafil_TAD-G20261117bH_TAD-G20261117bM_TAD-G20261117bC_organic_v1/voice.wav"
       },
@@ -600,12 +600,200 @@
         "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
       },
       "cost": {
-        "tts_seconds": 3.96,
-        "tts_chars": 560,
-        "tts_sentences": 7,
+        "tts_seconds": 2.75,
+        "tts_chars": 606,
+        "tts_sentences": 6,
+        "tts_cache_hits": 3,
+        "tts_usd": 0.0,
+        "render_seconds": 15.7
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-18_tirzepatide_TRZ-G20261118aH_TRZ-G20261118aM_TRZ-G20261118aC_organic_v1": {
+      "id": "2026-11-18_tirzepatide_TRZ-G20261118aH_TRZ-G20261118aM_TRZ-G20261118aC_organic_v1",
+      "product": "tirzepatide",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-18",
+      "hook_id": "TRZ-G20261118aH",
+      "meat_id": "TRZ-G20261118aM",
+      "cta_id": "TRZ-G20261118aC",
+      "creative_style": "generated",
+      "hook_angle": "generated",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 4
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-18_tirzepatide_TRZ-G20261118aH_TRZ-G20261118aM_TRZ-G20261118aC_organic_v1/2026-11-18_tirzepatide_how-does-tirzepatide-help-you-lose-weight.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-18_tirzepatide_TRZ-G20261118aH_TRZ-G20261118aM_TRZ-G20261118aC_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-18_tirzepatide_TRZ-G20261118aH_TRZ-G20261118aM_TRZ-G20261118aC_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/products/compounded-tirzepatide-vial.webp",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 2.15,
+        "tts_chars": 519,
+        "tts_sentences": 6,
+        "tts_cache_hits": 3,
+        "tts_usd": 0.0,
+        "render_seconds": 15.1
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-18_sildenafil_SIL-G20261118bH_SIL-G20261118bM_SIL-G20261118bC_organic_v1": {
+      "id": "2026-11-18_sildenafil_SIL-G20261118bH_SIL-G20261118bM_SIL-G20261118bC_organic_v1",
+      "product": "sildenafil",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-18",
+      "hook_id": "SIL-G20261118bH",
+      "meat_id": "SIL-G20261118bM",
+      "cta_id": "SIL-G20261118bC",
+      "creative_style": "generated",
+      "hook_angle": "generated",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 2
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-18_sildenafil_SIL-G20261118bH_SIL-G20261118bM_SIL-G20261118bC_organic_v1/2026-11-18_sildenafil_what-is-sildenafil-used-for.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-18_sildenafil_SIL-G20261118bH_SIL-G20261118bM_SIL-G20261118bC_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-18_sildenafil_SIL-G20261118bH_SIL-G20261118bM_SIL-G20261118bC_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/brand/mark.png",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 3.04,
+        "tts_chars": 552,
+        "tts_sentences": 6,
         "tts_cache_hits": 2,
         "tts_usd": 0.0,
         "render_seconds": 16.1
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-19_tirzepatide_TRZ-G20261119aH_TRZ-G20261119aM_TRZ-G20261119aC_organic_v1": {
+      "id": "2026-11-19_tirzepatide_TRZ-G20261119aH_TRZ-G20261119aM_TRZ-G20261119aC_organic_v1",
+      "product": "tirzepatide",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-19",
+      "hook_id": "TRZ-G20261119aH",
+      "meat_id": "TRZ-G20261119aM",
+      "cta_id": "TRZ-G20261119aC",
+      "creative_style": "generated",
+      "hook_angle": "generated",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 5
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-19_tirzepatide_TRZ-G20261119aH_TRZ-G20261119aM_TRZ-G20261119aC_organic_v1/2026-11-19_tirzepatide_why-does-tirzepatide-cause-diarrhea.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-19_tirzepatide_TRZ-G20261119aH_TRZ-G20261119aM_TRZ-G20261119aC_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-19_tirzepatide_TRZ-G20261119aH_TRZ-G20261119aM_TRZ-G20261119aC_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/products/compounded-tirzepatide-vial.webp",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 9.9,
+        "tts_chars": 637,
+        "tts_sentences": 7,
+        "tts_cache_hits": 0,
+        "tts_usd": 0.0,
+        "render_seconds": 19.0
+      },
+      "status": "delivered",
+      "posts": [],
+      "ads": [],
+      "label": null
+    },
+    "2026-11-19_sildenafil_SIL-G20261119bH_SIL-G20261119bM_SIL-G20261119bC_organic_v1": {
+      "id": "2026-11-19_sildenafil_SIL-G20261119bH_SIL-G20261119bM_SIL-G20261119bC_organic_v1",
+      "product": "sildenafil",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-19",
+      "hook_id": "SIL-G20261119bH",
+      "meat_id": "SIL-G20261119bM",
+      "cta_id": "SIL-G20261119bC",
+      "creative_style": "generated",
+      "hook_angle": "generated",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 5
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-19_sildenafil_SIL-G20261119bH_SIL-G20261119bM_SIL-G20261119bC_organic_v1/2026-11-19_sildenafil_why-does-sildenafil-cause-headaches.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-19_sildenafil_SIL-G20261119bH_SIL-G20261119bM_SIL-G20261119bC_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-19_sildenafil_SIL-G20261119bH_SIL-G20261119bM_SIL-G20261119bC_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/brand/mark.png",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 5.41,
+        "tts_chars": 638,
+        "tts_sentences": 7,
+        "tts_cache_hits": 0,
+        "tts_usd": 0.0,
+        "render_seconds": 14.7
       },
       "status": "delivered",
       "posts": [],
