@@ -2,7 +2,7 @@
 from __future__ import annotations
 import subprocess, time, json
 from .common import REMOTION, OUT, jsave
-from . import compose
+from . import compose, firstframe
 
 def _run(cmd, cwd):
     r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
@@ -16,10 +16,21 @@ def write_props(pkg):
     jsave(d / "props.json", props)
     return d / "props.json", props
 
+def assert_first_frame(pkg, pj):
+    """Rule: a video never opens on an empty frame (socials use frame 0 as the preview). Renders frame 0 and refuses a blank one."""
+    d = OUT / pkg["id"]; d.mkdir(parents=True, exist_ok=True)
+    f0 = d / "first_frame.png"
+    _run(["npx", "remotion", "still", "src/index.ts", f"Clip{pkg['aspect']}", str(f0), f"--props={pj}", "--frame=0", "--log=error", "--overwrite"], REMOTION)
+    blank, frac = firstframe.is_blank(f0)
+    pkg.setdefault("checks", {})["first_frame_content"] = round(frac, 3)
+    if blank:
+        raise RuntimeError(f"first frame is blank (content {frac:.3f} < {firstframe.MIN_FRACTION}): every video must open on something visible. See {f0}")
+
 def render(pkg, preview=False):
     """Returns path of mp4. preview=True renders at 40% scale / high CRF for fast review."""
     pj, props = write_props(pkg)
     d = OUT / pkg["id"]
+    assert_first_frame(pkg, pj)
     name = "preview.mp4" if preview else f"{pkg['id']}.mp4"
     out = d / name
     cmd = ["npx", "remotion", "render", "src/index.ts", f"Clip{pkg['aspect']}", str(out), f"--props={pj}", "--codec=h264",

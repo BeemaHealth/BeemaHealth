@@ -9,6 +9,7 @@ Same engine as organic (`shorts/engine/`, see its README) with `--format ad`. Di
 
 ## Hard rules
 - **Never launch, edit, pause-resume, or increase spend** in any ad account, and never use the meta-ads write tools, without Matt's explicit approval in that message. Reading/reporting is fine. Hand off creative; Matt uploads.
+- **Never start a video on an empty frame** (unless Matt explicitly asks). Frame 0 must show the opening picture and first words; the engine gate in `render.render()` enforces it for composed ads, and hand-built ad compositions must do the same. Details in the organic skill and `beema_engine/firstframe.py`.
 - All organic hard rules apply (no brands, no FDA-approved claims for compounded products, no testimonials, no performance claims, no staging code).
 - **Platform gate first.** Before recommending spend, confirm for THIS product and platform: active LegitScript certification, Meta Prescription Drug authorization, Google healthcare pre-approval, TikTok's current Rx policy (sources conflict). Use the `legitscript-compliance`, `meta-ads-compliance` and `google-ads-compliance` skills. Compounded GLP-1 ads are the highest risk. Do not assume LegitScript covers every ad.
 - **No LegitScript seal or certification claim in ad creative.** Ad format also blocks second-person condition/body copy (Meta personal attributes); `library lint` writes `compliance/library_report_ad.json` listing which hooks are ad-safe.

@@ -49,11 +49,11 @@ const Captions: React.FC<{words: Word[]; T: number; seg: Seg; z: ReturnType<type
     if (end) { pages.push(cur); cur = []; }
   });
   if (cur.length) pages.push(cur);
-  const idx = pages.findIndex((p, i) => T < (pages[i + 1]?.[0].t0 ?? 1e9) - 0.02 && T >= p[0].t0 - 0.12);
+  const idx = pages.findIndex((p, i) => T < (pages[i + 1]?.[0].t0 ?? 1e9) - 0.02 && (i === 0 || T >= p[0].t0 - 0.12));
   const page = pages[idx];
   if (!page) return null;
   const first = page[0].t0;
-  const k = eo3((T - first + 0.12) / 0.18);
+  const k = idx === 0 && T < first ? 1 : eo3((T - first + 0.12) / 0.18);
   const fs = z.W * 0.064;
   return (
     <div style={{position: 'absolute', left: z.side, width: z.W - z.side * 2, top: z.ct, height: z.ch, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -82,18 +82,20 @@ export const Clip: React.FC<ClipProps> = (props) => {
     if (last && ((s.visual.type === 'endcard' && last.first.visual.type === 'endcard') || (s.visual.type === 'world3d' && last.first.visual.type === 'world3d'))) { last.segs.push(s); last.end = s.end; } else scenes.push({segs: [s], t0: s.t0, end: s.end, first: s});
   });
   scenes[scenes.length - 1].end = props.duration;
-  const curSeg = segs.find((s) => T >= s.t0 && T < s.end) ?? segs[segs.length - 1];
+  const curSeg = segs.find((s) => T >= s.t0 && T < s.end) ?? (T < segs[0].t0 ? segs[0] : segs[segs.length - 1]);   // lead-in belongs to the first segment
   return (
     <AbsoluteFill style={{background: C.ink}}>
       <Audio src={staticFile(props.audio)} />
       {scenes.map((sc, i) => {
         const prev = scenes[i - 1];
         const same = !!prev && prev.first.visual.type === sc.first.visual.type && prev.first.visual.bg === sc.first.visual.bg;
-        const from = Math.round(sc.t0 * fps), dur = Math.max(1, Math.round((sc.end - sc.t0) * fps) + (i < scenes.length - 1 ? 8 : 0));
+        const t0f = Math.round(sc.t0 * fps), dur0 = Math.max(1, Math.round((sc.end - sc.t0) * fps) + (i < scenes.length - 1 ? 8 : 0));
+        // The first scene always starts at frame 0 (the voice lead-in must never be an empty frame: socials use frame 0 as the preview). Its clock still starts at t0.
+        const from = i === 0 ? 0 : t0f, dur = i === 0 ? dur0 + t0f : dur0, lead = i === 0 ? t0f : 0;
         const Vis = VIS[sc.first.visual.type] ?? KineticV;
         return (
           <Sequence key={i} from={from} durationInFrames={dur} layout="none">
-            <SceneBody sc={sc} i={i} same={same} props={props} z={z} C={sc.first.visual.type === 'endcard' ? brandC : C} Vis={Vis} fps={fps} />
+            <SceneBody sc={sc} i={i} same={same} props={props} z={z} C={sc.first.visual.type === 'endcard' ? brandC : C} Vis={Vis} fps={fps} lead={lead} />
           </Sequence>
         );
       })}
@@ -103,9 +105,9 @@ export const Clip: React.FC<ClipProps> = (props) => {
 };
 
 /** The backdrop camera never jumps: one steady pose per scene with a very slow drift. Motion that matters is in the foreground and keyed to the words. */
-const SceneBody: React.FC<{sc: {segs: Seg[]; t0: number; end: number; first: Seg}; i: number; same: boolean; props: ClipProps; z: any; C: Record<string, string>; Vis: React.FC<VP>; fps: number}> = ({sc, i, same, props, z, C, Vis, fps}) => {
+const SceneBody: React.FC<{sc: {segs: Seg[]; t0: number; end: number; first: Seg}; i: number; same: boolean; props: ClipProps; z: any; C: Record<string, string>; Vis: React.FC<VP>; fps: number; lead: number}> = ({sc, i, same, props, z, C, Vis, fps, lead}) => {
   const frame = useCurrentFrame();
-  const t = frame / fps;
+  const t = Math.max(0, frame - lead) / fps;      // during the lead-in the scene holds its opening pose
   const seg = sc.first;
   const dur = sc.end - sc.t0;
   const pose = i, u = clamp(t / Math.max(1, dur));

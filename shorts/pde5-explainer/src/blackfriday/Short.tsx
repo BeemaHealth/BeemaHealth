@@ -67,8 +67,8 @@ const Slam: React.FC<{f: number}> = ({f}) => {
     <AbsoluteFill style={{opacity: o, transform: `scale(${1 - 0.06 * span(f, 40, 46)})`}}>
       <AbsoluteFill style={{background: '#fff', opacity: flash, mixBlendMode: 'soft-light'}} />
       <div style={{position: 'absolute', left: Z.left, width: CONTENT_W, top: 660, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6}}>
-        {line('BLACK', 2)}
-        {line('FRIDAY', 9)}
+        {line('BLACK', -4)}
+        {line('FRIDAY', 3)}
         <div style={{marginTop: 30, fontFamily: BODY, fontWeight: 600, fontSize: 62, color: B.cream, opacity: sub, transform: `translateY(${(1 - sub) * 20}px)`, letterSpacing: 1}}>at Beema Health</div>
       </div>
     </AbsoluteFill>
