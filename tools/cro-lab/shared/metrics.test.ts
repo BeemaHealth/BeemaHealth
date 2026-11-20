@@ -284,10 +284,25 @@ test("downstreamTotals adds unique users per event across days", () => {
   const rows: DownstreamRow[] = [
     { date: "2026-10-20", event: "signup", pageId: null, users: 2, events: 2 },
     { date: "2026-10-21", event: "signup", pageId: "p", users: 1, events: 4 },
+    {
+      date: "2026-10-21",
+      event: "begin_checkout",
+      pageId: "p",
+      users: 2,
+      events: 3,
+    },
     { date: "2026-10-21", event: "purchase", pageId: "p", users: 1, events: 1 },
   ];
-  assert.deepEqual(downstreamTotals(rows), { signups: 3, purchases: 1 });
-  assert.deepEqual(downstreamTotals([]), { signups: 0, purchases: 0 });
+  assert.deepEqual(downstreamTotals(rows), {
+    signups: 3,
+    checkouts: 2,
+    purchases: 1,
+  });
+  assert.deepEqual(downstreamTotals([]), {
+    signups: 0,
+    checkouts: 0,
+    purchases: 0,
+  });
 });
 
 test("pageDownstream keeps one page's events on handoff-tracked days only", () => {
@@ -324,10 +339,18 @@ test("pageDownstream keeps one page's events on handoff-tracked days only", () =
       events: 7,
     },
     { date: "2026-10-20", event: "signup", pageId: null, users: 4, events: 4 },
+    {
+      date: "2026-10-20",
+      event: "begin_checkout",
+      pageId: "p",
+      users: 1,
+      events: 1,
+    },
     { date: "2026-10-20", event: "purchase", pageId: "p", users: 1, events: 1 },
   ];
   assert.deepEqual(pageDownstream(down, "p", rows), {
     signups: 2,
+    checkouts: 1,
     purchases: 1,
   });
 });
@@ -366,8 +389,11 @@ test("trackingWarningText flags partial and missing handoff tracking", () => {
 test("downstreamRates divides by handoffs, visitors and signups", () => {
   const r = downstreamRates(
     { trackedVisitors: 200, clickers: 50 },
-    { signups: 10, purchases: 4 },
+    { signups: 10, checkouts: 8, purchases: 4 },
   );
+  assert.equal(r.checkoutOfSignup, 0.8);
+  assert.equal(r.checkoutOfVisitors, 0.04);
+  assert.equal(r.purchaseOfCheckout, 0.5);
   assert.equal(r.signupOfHandoff, 0.2);
   assert.equal(r.signupOfVisitors, 0.05);
   assert.equal(r.purchaseOfSignup, 0.4);
@@ -377,11 +403,14 @@ test("downstreamRates divides by handoffs, visitors and signups", () => {
 test("downstreamRates is null when a denominator is missing or zero", () => {
   const r = downstreamRates(
     { trackedVisitors: 0, clickers: null },
-    { signups: 0, purchases: 0 },
+    { signups: 0, checkouts: 0, purchases: 0 },
   );
   assert.deepEqual(r, {
     signupOfHandoff: null,
     signupOfVisitors: null,
+    checkoutOfSignup: null,
+    checkoutOfVisitors: null,
+    purchaseOfCheckout: null,
     purchaseOfSignup: null,
     purchaseOfVisitors: null,
   });

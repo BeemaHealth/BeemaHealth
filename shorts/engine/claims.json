@@ -144,5 +144,45 @@
     "text": "ED Mints plans start at $149 a month, cash-pay, no insurance. Cash-pay, no insurance.",
     "source": "products.json prices (Matt's pricing sheet, verified 2026-09-27); copied from src/lib/simple-treatment-pricing.ts. The pricing lib has been stale before: re-check before spend.",
     "status": "stated_by_matt_pricing_sheet"
+  },
+  "well_hairloss_lineup": {
+    "text": "Beema Health offers hair loss care: oral finasteride and oral minoxidil tablets, and a compounded topical hair loss spray.",
+    "source": "Live routes /hair-loss, /oral-finasteride, /oral-minoxidil-men, /oral-minoxidil-women, /hair-loss-spray-men, /hair-loss-spray-women; docs/features/treatment-pages.md product table (all Live).",
+    "status": "verified"
+  },
+  "well_minoxidil_off_label": {
+    "text": "Oral minoxidil is an FDA-approved generic medication approved for high blood pressure; its use for hair loss is off-label.",
+    "source": "docs/features/treatment-pages.md (corrected 2026-09-11 per Matt). The video groups minoxidil under 'hair-loss care' without saying off-label.",
+    "status": "needs_human_review_off_label_presentation"
+  },
+  "well_spray_not_fda_approved": {
+    "text": "The compounded hair loss spray is not FDA-approved.",
+    "source": "src/landing-variants/hair-loss-spray-men/shared.ts REQUIRED_COMPOUND_SENTENCE",
+    "status": "verified"
+  },
+  "well_nad_sermorelin_offered": {
+    "text": "Beema Health offers compounded NAD+ and compounded sermorelin.",
+    "source": "Live routes /nad-plus (relaunched 2026-09-16) and /sermorelin (relaunched 2026-09-17), docs/features/treatment-pages.md",
+    "status": "verified"
+  },
+  "well_compounded_not_fda_approved": {
+    "text": "Compounded medications, including compounded NAD+ and sermorelin, are not FDA-approved.",
+    "source": "src/landing-variants/nad-plus/shared.ts and sermorelin/shared.ts FAQ ('Is compounded ... FDA-approved? No.')",
+    "status": "verified"
+  },
+  "well_individual_assessment": {
+    "text": "Each requires an individual clinical assessment by a licensed provider.",
+    "source": "nad-plus/shared.ts and sermorelin/shared.ts: 'made available only when legally permitted in your state and a licensed provider determines it's clinically appropriate for your individual case'.",
+    "status": "verified"
+  },
+  "well_nad_sermorelin_compounding_eligibility": {
+    "text": "Compounded NAD+ and compounded sermorelin may lawfully be prepared and prescribed in every state Beema Health serves.",
+    "source": "UNRESOLVED. Not checked against FDA 503A/503B bulk-substance lists this session. Sermorelin is a peptide (GHRH analog); LegitScript Standard 2 and Meta/TikTok injectable-peptide policy apply.",
+    "status": "unresolved_needs_counsel"
+  },
+  "well_illustration_bottles": {
+    "text": "Bottles and vials are 3D models wearing cropped areas of the live-site product labels; the room, tray, tape measure, tablet, stethoscope and box are illustrations.",
+    "source": "Creative device. Label crops leave out 'Longevity Medication', '1000 mg/mL' and 'Supports Healthier Hair'.",
+    "status": "metaphor_needs_human_review"
   }
 }

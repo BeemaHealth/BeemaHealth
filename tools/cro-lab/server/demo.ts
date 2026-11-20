@@ -504,7 +504,7 @@ export function demoPaths(rows: DailyRow[]): PathRow[] {
 }
 
 /**
- * Synthetic Bask signup and purchase counts derived from demo handoffs so the
+ * Synthetic Bask signup, checkout and purchase counts derived from demo handoffs so the
  * funnel narrows sensibly, attributed to a page like the live data (a share of
  * signups carries no page).
  */
@@ -536,7 +536,12 @@ export function demoDownstream(rows: DailyRow[]): DownstreamRow[] {
     const purchases = Math.round(
       signups * (0.35 + rand(`b|${date}|${pageId}`) * 0.2),
     );
+    const checkouts = Math.max(
+      purchases,
+      Math.round(signups * (0.5 + rand(`c|${date}|${pageId}`) * 0.2)),
+    );
     add(date, "signup", pageId, signups);
+    add(date, "begin_checkout", pageId, checkouts);
     add(date, "purchase", pageId, purchases);
   }
   for (const date of days) {

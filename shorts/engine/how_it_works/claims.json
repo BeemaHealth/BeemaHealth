@@ -1,0 +1,28 @@
+{
+  "_note": "Claims used only by the How It Works video. Merged over shorts/engine/claims.json by how_it_works/build.py (this file never edits the shared registry).",
+  "hiw_account_and_intake": {
+    "text": "You create a secure account and complete a medical intake online (health history, medications, goals), at your own pace.",
+    "source": "Live copy: src/components/site/HowItWorksSteps.tsx step 1 ('Create a secure account and complete a full medical intake ... at your own pace'), used on the homepage, /how-it-works and the GLP-1 pages. Bask runs the intake (docs/features/legitscript.md).",
+    "status": "verified"
+  },
+  "hiw_independent_provider_review": {
+    "text": "An independently licensed provider reviews your medical history and decides whether treatment may be appropriate. It is never guaranteed.",
+    "source": "Live copy: src/components/site/HowItWorksSteps.tsx step 2 ('An independently licensed provider evaluates your case and decides whether treatment may be appropriate. It's never guaranteed.').",
+    "status": "verified"
+  },
+  "hiw_pharmacy_ships": {
+    "text": "If prescribed, a licensed pharmacy prepares and ships the medication, with status updates.",
+    "source": "Live copy: src/components/site/HowItWorksSteps.tsx step 3 ('If approved, your prescription moves to a 503A-licensed pharmacy and ships to your door, with status updates the whole way'). The video says 'licensed pharmacy' (Matt's brief), not '503A'.",
+    "status": "verified"
+  },
+  "hiw_status_labels": {
+    "text": "On-screen status labels 'Under review', 'Being filled' and 'On the way' describe the asynchronous workflow.",
+    "source": "Live copy: src/routes/how-it-works.tsx 'Stay connected' ('whether your intake is under review, your prescription is being filled, or your next refill is on the way'). The video shows no times and no day counts on purpose (/how-it-works: 'We intentionally don't promise a specific number of days').",
+    "status": "verified"
+  },
+  "hiw_phone_mockup": {
+    "text": "The phone shows nonfunctional, recreated mockups: the Get Started category picker (copy from src/components/site/GetStartedModal.tsx) and Bask questionnaire screens styled like the live Beema Health skin (cream page, gold progress bar, serif headings, numbered answer cards, dark Continue button). No real patient data.",
+    "source": "GetStartedModal.tsx (verbatim: 'What are you looking for?', 'Choose a category to get started.', the four category names). Bask screen look from the bask-questionnaire-page-styler skill (palette, fonts, Auth skin with Google button + email + Continue). The question headings ('Create your account', 'Are you currently taking any medications?', 'Do you have any allergies?') are ILLUSTRATIVE, not copied from Bask's live Headings fields, and the real flow asks a few questions before account creation (Auth) and ends at checkout. Serif heading is Georgia (Cormorant Garamond is not installed in the renderer).",
+    "status": "mockup_needs_human_review"
+  }
+}

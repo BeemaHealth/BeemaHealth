@@ -357,13 +357,13 @@ export function groupDownNote(o: {
   unmatched: DownstreamTotals;
 }): string {
   const parts = [
-    `Signups and purchases are matched to a page by the cta_id on the Bask URL (GTM preview sessions excluded), on days with handoff tracking. This funnel counts the ones from ${o.label}.`,
+    `Signups, checkouts and purchases are matched to a page by the cta_id on the Bask URL (GTM preview sessions excluded), on days with handoff tracking. This funnel counts the ones from ${o.label}.`,
   ];
   const left = [
-    o.other.signups + o.other.purchases > 0 &&
-      `${o.other.signups} signups and ${o.other.purchases} purchases came from ${o.otherLabel}`,
-    o.unmatched.signups + o.unmatched.purchases > 0 &&
-      `${o.unmatched.signups} signups and ${o.unmatched.purchases} purchases had no cta_id from a tracked page (the sitewide footer link, untracked pages, or direct)`,
+    o.other.signups + o.other.checkouts + o.other.purchases > 0 &&
+      `${o.other.signups} signups, ${o.other.checkouts} checkouts and ${o.other.purchases} purchases came from ${o.otherLabel}`,
+    o.unmatched.signups + o.unmatched.checkouts + o.unmatched.purchases > 0 &&
+      `${o.unmatched.signups} signups, ${o.unmatched.checkouts} checkouts and ${o.unmatched.purchases} purchases had no cta_id from a tracked page (the sitewide footer link, untracked pages, or direct)`,
   ].filter(Boolean);
   if (left.length) parts.push(`Not included here: ${left.join("; ")}.`);
   return parts.join(" ");
@@ -372,7 +372,7 @@ export function groupDownNote(o: {
 /** Caption under a page or variant funnel: how Bask events were tied to it. */
 export function pageDownNote(pageId: string): string {
   return [
-    "Signups and purchases are matched to this page by the cta_id on the Bask URL (GTM preview sessions excluded), on days with handoff tracking.",
+    "Signups, checkouts and purchases are matched to this page by the cta_id on the Bask URL (GTM preview sessions excluded), on days with handoff tracking.",
     "Any signup that arrives without a cta_id is not counted here.",
     SHARED_CTA_NOTE[pageId],
   ]

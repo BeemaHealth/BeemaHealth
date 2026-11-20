@@ -188,6 +188,35 @@ test("fetchDownstream ties Bask events to a page by cta_id and excludes GTM Prev
   assert.match(request, /gtm_debug/);
 });
 
+test("fetchDownstream requests and attributes begin_checkout like the other Bask events", async () => {
+  let request = "";
+  const q = "https://q.beemahealth.com/start-online-visit/weightloss";
+  const out = await fetchDownstream(async (req) => {
+    request = JSON.stringify(req);
+    return [
+      row(
+        [
+          "20261119",
+          "begin_checkout",
+          `${q}?cta_id=glp1_hero&src_page=/glp-1/`,
+        ],
+        [2, 3],
+      ),
+      row(["20261119", "begin_checkout", `${q}?cta_id=footer`], [1, 1]),
+    ];
+  });
+  assert.match(request, /begin_checkout/);
+  assert.match(request, /tagassistant\.google\.com/);
+  assert.match(request, /gtm_debug/);
+  assert.deepEqual(
+    out.map((r) => [r.date, r.event, r.users, r.events]),
+    [
+      ["2026-11-19", "begin_checkout", 1, 1],
+      ["2026-11-19", "begin_checkout", 2, 3],
+    ].sort(),
+  );
+});
+
 test("ctaIdFromLocation reads cta_id and tolerates bad URLs", () => {
   assert.equal(
     ctaIdFromLocation("https://q.x.com/a?cta_id=glp1_hero&b=1"),

@@ -254,5 +254,48 @@
     "hook_hero": "chain",
     "educational": true,
     "no_links": true
+  },
+  "wellness": {
+    "label": "Hair loss care, compounded NAD+ and compounded sermorelin",
+    "category": "wellness",
+    "fda_status": "mixed: oral finasteride and oral minoxidil are FDA-approved generic tablets (minoxidil tablets are approved for high blood pressure; hair loss use is off-label); the hair loss spray, NAD+ and sermorelin are compounded and not FDA-approved",
+    "compounded": true,
+    "landing_path": "",
+    "trial_only": "ONE-VIDEO TRIAL ENTRY (2026-11-19) for the wellness overview short. Not in product_rotation, no library module. Built by tools/well_wellness_build.py.",
+    "photo": null,
+    "photo_note": "Live-site photos exist (src/assets/treatments/finasteride-oral-tablets-bottle.webp, oral-minoxidil-tablets-bottle.webp, hair-loss-spray-men-bottle.webp, nad-injection-vial.webp, sermorelin-injection-vial.webp). The NAD+ and sermorelin labels read 'Longevity Medication' (and NAD+ shows '1000 mg/mL' and a needle); the spray label reads 'Supports Healthier Hair'. The video uses only cropped label areas without those phrases, wrapped on 3D bottles. Review item.",
+    "price_verified_on": null,
+    "prices": {
+      "note": "No prices in this video. Live prices exist in src/lib/simple-treatment-pricing.ts (NAD+ $199/mo or $439/3 mo; sermorelin $249/mo or $597/3 mo; hair spray $129/mo or $249/3 mo) but are market-rate estimates per docs/features/treatment-pages.md; not Matt-confirmed for creative."
+    },
+    "offerings": {
+      "oral_finasteride": "/oral-finasteride (FDA-approved generic tablet, men only)",
+      "oral_minoxidil": "/oral-minoxidil-men, /oral-minoxidil-women (FDA-approved generic tablet; approved for blood pressure, off-label for hair loss)",
+      "hair_loss_spray": "/hair-loss-spray-men, /hair-loss-spray-women (compounded topical spray, not FDA-approved)",
+      "nad_plus": "/nad-plus (compounded NAD+ injections, relaunched 2026-09-16)",
+      "sermorelin": "/sermorelin (compounded sermorelin injections, relaunched 2026-09-17)"
+    },
+    "disclosure_required": "Compounded hair loss spray, NAD+ and sermorelin are not FDA-approved and are considered only when legally available and clinically appropriate.",
+    "mechanism": "None described in this video. Do not describe benefits of NAD+ or sermorelin.",
+    "safety_on_screen": "Prescription required. A licensed provider decides whether any treatment is appropriate; prescribing is never guaranteed. Compounded hair loss spray, NAD+ and sermorelin are not FDA-approved. Individual clinical assessment required. Finasteride is not for women who are or may become pregnant. Tell your provider your full medical history.",
+    "safety_short": "Compounded options are not FDA-approved. Rx only. Prescribing is never guaranteed.",
+    "disclosure_required_on_screen": [
+      "Compounded",
+      "not FDA-approved",
+      "Prescription required",
+      "Individual clinical assessment required"
+    ],
+    "hashtags": [
+      "#Telehealth",
+      "#HairLossCare",
+      "#BeemaHealth"
+    ],
+    "audience": "Adults 18+",
+    "no_charge": {
+      "line": "You won't be charged if you aren't prescribed.",
+      "verified": false,
+      "use": false,
+      "source": "Appears on the v3-new-layout variants of /nad-plus, /sermorelin, /oral-finasteride, /oral-minoxidil-men and /hair-loss-spray-men (and some v1 controls), not on the NAD+/sermorelin v1 controls. Which variant is live was not confirmed. Not used."
+    }
   }
 }

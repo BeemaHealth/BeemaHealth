@@ -118,6 +118,10 @@ export function ProductPageView({ pageId }: { pageId: string }) {
               value={down ? fmtInt(down.signups) : "n/a"}
             />
             <Stat
+              label="Bask checkouts"
+              value={down ? fmtInt(down.checkouts) : "n/a"}
+            />
+            <Stat
               label="Bask purchases"
               value={down ? fmtInt(down.purchases) : "n/a"}
             />
@@ -131,11 +135,20 @@ export function ProductPageView({ pageId }: { pageId: string }) {
               }
             />
             <Stat
-              label="Purchase rate"
-              value={rates ? fmtPct(rates.purchaseOfSignup) : "n/a"}
+              label="Checkout rate"
+              value={rates ? fmtPct(rates.checkoutOfSignup) : "n/a"}
               sub={
                 rates
-                  ? `of signups · ${fmtPct(rates.purchaseOfVisitors)} of visitors`
+                  ? `of signups · ${fmtPct(rates.checkoutOfVisitors)} of visitors`
+                  : undefined
+              }
+            />
+            <Stat
+              label="Purchase rate"
+              value={rates ? fmtPct(rates.purchaseOfCheckout) : "n/a"}
+              sub={
+                rates
+                  ? `of checkouts · ${fmtPct(rates.purchaseOfVisitors)} of visitors`
                   : undefined
               }
             />
@@ -170,8 +183,8 @@ export function ProductPageView({ pageId }: { pageId: string }) {
       )}
       <p className="max-w-3xl text-xs text-faint">
         This page has no variants yet, so the numbers cover everything shown on
-        it. Handoffs are intake clicks fired from this page; signups and
-        purchases are matched to it by the CTA id on the Bask URL.
+        it. Handoffs are intake clicks fired from this page; signups, checkouts
+        and purchases are matched to it by the CTA id on the Bask URL.
       </p>
     </div>
   );

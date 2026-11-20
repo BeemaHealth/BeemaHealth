@@ -444,6 +444,8 @@ export function variantPaths(opts: {
 export type DownstreamTotals = {
   /** Unique users who fired the Bask signup event. */
   signups: number;
+  /** Unique users who fired begin_checkout (reached Bask checkout). */
+  checkouts: number;
   /** Unique users who fired the Bask purchase event. */
   purchases: number;
 };
@@ -455,12 +457,14 @@ export type DownstreamTotals = {
  */
 export function downstreamTotals(rows: DownstreamRow[]): DownstreamTotals {
   let signups = 0;
+  let checkouts = 0;
   let purchases = 0;
   for (const r of rows) {
     if (r.event === "signup") signups += r.users;
-    else purchases += r.users;
+    else if (r.event === "begin_checkout") checkouts += r.users;
+    else if (r.event === "purchase") purchases += r.users;
   }
-  return { signups, purchases };
+  return { signups, checkouts, purchases };
 }
 
 export type DownstreamRates = {
@@ -468,6 +472,12 @@ export type DownstreamRates = {
   signupOfHandoff: number | null;
   /** Signups / landing visitors on tracked days. */
   signupOfVisitors: number | null;
+  /** Checkouts / signups. */
+  checkoutOfSignup: number | null;
+  /** Checkouts / landing visitors on tracked days. */
+  checkoutOfVisitors: number | null;
+  /** Purchases / checkouts. */
+  purchaseOfCheckout: number | null;
   /** Purchases / signups. */
   purchaseOfSignup: number | null;
   /** Purchases / landing visitors on tracked days. */
@@ -488,13 +498,16 @@ export function downstreamRates(
   return {
     signupOfHandoff: ratio(down.signups, t.clickers),
     signupOfVisitors: ratio(down.signups, t.trackedVisitors),
+    checkoutOfSignup: ratio(down.checkouts, down.signups),
+    checkoutOfVisitors: ratio(down.checkouts, t.trackedVisitors),
+    purchaseOfCheckout: ratio(down.purchases, down.checkouts),
     purchaseOfSignup: ratio(down.purchases, down.signups),
     purchaseOfVisitors: ratio(down.purchases, t.trackedVisitors),
   };
 }
 
 /**
- * Bask signups and purchases tied to one page, on the days of `rows` that have
+ * Bask signups, checkouts and purchases tied to one page, on the days of `rows` that have
  * handoff tracking (handoff tracking is newer than the signup tag, so older
  * days would inflate the ratio). `rows` are the landing rows being summarized,
  * so a variant's windows, period and attribution carry over automatically.

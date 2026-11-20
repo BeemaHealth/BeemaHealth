@@ -238,6 +238,8 @@ function ImageStack({
 export type PriceTile = {
   name: string;
   price: string;
+  /** Opt-in: regular price shown crossed out before `price` (promo pages). */
+  strike?: string;
   unit: string;
   /** Small emphasized line, e.g. the promo code. */
   note?: string | null;
@@ -283,7 +285,7 @@ function useReveal() {
 // ---------------------------------------------------------------------------
 
 export type HeroProps = {
-  h1: string;
+  h1: ReactNode;
   /** About 300 characters: benefit first, one feature, no guarantee. */
   lead: string;
   cta: TemplateCta;
@@ -369,13 +371,22 @@ export function HeroSection({
                     <a
                       key={tile.name}
                       href={tile.href ?? "#pricing"}
-                      aria-label={`${tile.name}, ${tile.price} ${tile.unit}. See pricing and get started`}
+                      aria-label={`${tile.name}, ${tile.strike ? `regularly ${tile.strike}, now ` : ""}${tile.price} ${tile.unit}. See pricing and get started`}
                       className="block rounded-2xl border border-border bg-card p-4 shadow-soft transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <p className="text-xs font-semibold text-muted-foreground md:text-sm">
                         {tile.name}
                       </p>
                       <p className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+                        {tile.strike ? (
+                          <>
+                            <s className="mr-2 text-lg font-semibold text-muted-foreground md:text-xl">
+                              <span className="sr-only">Regular price </span>
+                              {tile.strike}
+                            </s>
+                            <span className="sr-only">Now </span>
+                          </>
+                        ) : null}
                         {tile.price}
                       </p>
                       <p className="text-xs text-muted-foreground md:text-sm">

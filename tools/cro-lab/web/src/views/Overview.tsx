@@ -331,14 +331,24 @@ function Totals({ period, group }: { period: Period; group: PageGroup }) {
             sub={`of handoffs · ${fmtPct(rates.signupOfVisitors)} of visitors`}
           />
           <Stat
+            label="Bask checkouts"
+            value={fmtInt(down.checkouts)}
+            sub="matched by cta_id"
+          />
+          <Stat
+            label="Checkout rate"
+            value={fmtPct(rates.checkoutOfSignup)}
+            sub={`of signups · ${fmtPct(rates.checkoutOfVisitors)} of visitors`}
+          />
+          <Stat
             label="Bask purchases"
             value={fmtInt(down.purchases)}
             sub="matched by cta_id"
           />
           <Stat
             label="Purchase rate"
-            value={fmtPct(rates.purchaseOfSignup)}
-            sub={`of signups · ${fmtPct(rates.purchaseOfVisitors)} of visitors`}
+            value={fmtPct(rates.purchaseOfCheckout)}
+            sub={`of checkouts · ${fmtPct(rates.purchaseOfVisitors)} of visitors`}
           />
         </div>
         <button
@@ -505,8 +515,9 @@ export function Overview() {
         <p className="mt-2">
           <b className="text-ink">Handoffs</b> count unique users who clicked a
           Bask CTA on the page. One person clicking three times is one handoff
-          (raw GA4 event counts are higher). <b className="text-ink">Signups</b>{" "}
-          and <b className="text-ink">purchases</b> are credited to the page the
+          (raw GA4 event counts are higher). <b className="text-ink">Signups</b>
+          , <b className="text-ink">checkouts</b> and{" "}
+          <b className="text-ink">purchases</b> are credited to the page the
           visitor clicked from, read from the <code>src_page</code> on the Bask
           link. Signups before that shipped fall back to the page that owns the
           CTA id, so a modal click from another page can sit on the wrong page.

@@ -115,12 +115,19 @@ export type PathRow = {
   handoffSessions: number | null;
 };
 
-/** Events Bask's GTM container sends after the marketing handoff. */
-export const DOWNSTREAM_EVENTS = ["signup", "purchase"] as const;
+/**
+ * Events Bask's GTM container sends after the marketing handoff, in funnel
+ * order. begin_checkout fires when the visitor reaches Bask checkout.
+ */
+export const DOWNSTREAM_EVENTS = [
+  "signup",
+  "begin_checkout",
+  "purchase",
+] as const;
 export type DownstreamEvent = (typeof DOWNSTREAM_EVENTS)[number];
 
 /**
- * One day of a Bask-side event (signup, purchase). These fire on
+ * One day of a Bask-side event (signup, begin_checkout, purchase). These fire on
  * q.beemahealth.com, where GA4 has no landing page for the session. A row is
  * tied to a landing page only through the `cta_id` still on the Bask URL.
  */

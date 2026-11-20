@@ -1,9 +1,11 @@
+import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, BadgeCheck } from "lucide-react";
 import { Section, SectionHeading } from "@/components/site/primitives";
 import { MINT_OPTIONS } from "@/components/site/EdMintsPicker";
 import { resolveCta, type CtaId } from "@/lib/cta-ids";
 import { formatUsd } from "@/lib/medication-pricing";
+import type { BlackFridayOffer } from "../template/BlackFriday";
 import { MINT_PLAN_COMPARISONS } from "./plan-comparison";
 
 const money = (n: number) =>
@@ -16,9 +18,20 @@ const money = (n: number) =>
  */
 export function MintsPlanComparison({
   ctaIds,
+  blackFriday,
 }: {
   ctaIds: Record<"rdt" | "odt", CtaId>;
+  /** Opt-in: show each plan crossed out and priced with the coupon applied. */
+  blackFriday?: BlackFridayOffer;
 }) {
+  const bfOne = blackFriday?.plans?.find((p) => p.label === "1-month plan");
+  const bfThree = blackFriday?.plans?.find((p) => p.label === "3-month plan");
+  const was = (n: number) => (
+    <s className="mr-1 font-normal text-muted-foreground">
+      <span className="sr-only">Regular price </span>
+      {formatUsd(n)}
+    </s>
+  );
   return (
     <Section id="plan-comparison" className="scroll-mt-24 pt-0">
       <SectionHeading
@@ -31,11 +44,25 @@ export function MintsPlanComparison({
           const opt = MINT_OPTIONS.find((o) => o.id === p.id);
           if (!opt) return null;
           const cta = resolveCta(ctaIds[p.id], "plan_comparison");
-          const rows: { label: string; one: string; three: string }[] = [
+          const rows: { label: string; one: ReactNode; three: ReactNode }[] = [
             {
               label: "Billed",
-              one: `${formatUsd(p.monthly.priceUsd)} monthly`,
-              three: `${formatUsd(p.quarterly.totalUsd)} every 3 months`,
+              one: bfOne ? (
+                <>
+                  {was(bfOne.regularUsd)}
+                  {formatUsd(bfOne.dealUsd)} monthly
+                </>
+              ) : (
+                `${formatUsd(p.monthly.priceUsd)} monthly`
+              ),
+              three: bfThree ? (
+                <>
+                  {was(bfThree.regularUsd)}
+                  {formatUsd(bfThree.dealUsd)} every 3 months
+                </>
+              ) : (
+                `${formatUsd(p.quarterly.totalUsd)} every 3 months`
+              ),
             },
             {
               label: "Tablets included",
@@ -44,13 +71,26 @@ export function MintsPlanComparison({
             },
             {
               label: "Price per tablet",
-              one: money(p.monthly.perTabletUsd),
-              three: money(p.quarterly.perTabletUsd),
+              one: money(
+                bfOne
+                  ? Math.round((bfOne.dealUsd / p.monthly.tablets) * 100) / 100
+                  : p.monthly.perTabletUsd,
+              ),
+              three: money(
+                bfThree
+                  ? Math.round((bfThree.dealUsd / p.quarterly.tablets) * 100) /
+                      100
+                  : p.quarterly.perTabletUsd,
+              ),
             },
             {
               label: "Effective per month",
-              one: formatUsd(p.monthly.priceUsd),
-              three: money(p.quarterly.perMonthUsd),
+              one: formatUsd(bfOne ? bfOne.dealUsd : p.monthly.priceUsd),
+              three: money(
+                bfThree
+                  ? Math.round((bfThree.dealUsd / 3) * 100) / 100
+                  : p.quarterly.perMonthUsd,
+              ),
             },
           ];
           return (
@@ -96,7 +136,13 @@ export function MintsPlanComparison({
                         3 months
                         <span className="mt-1 flex items-center gap-1 text-[10px] normal-case tracking-normal">
                           <BadgeCheck className="size-3.5 shrink-0" />
-                          Save {formatUsd(p.quarterly.savingsUsd)}
+                          Save{" "}
+                          {formatUsd(
+                            p.quarterly.savingsUsd +
+                              (bfThree
+                                ? bfThree.regularUsd - bfThree.dealUsd
+                                : 0),
+                          )}
                         </span>
                       </th>
                     </tr>
@@ -125,6 +171,15 @@ export function MintsPlanComparison({
                   </tbody>
                 </table>
               </div>
+              {blackFriday ? (
+                <p className="px-5 pb-3 text-center text-xs text-muted-foreground">
+                  Prices shown with code{" "}
+                  <strong className="font-mono text-foreground">
+                    {blackFriday.code}
+                  </strong>{" "}
+                  applied at checkout.
+                </p>
+              ) : null}
               <div className="mt-auto p-5 pt-0">
                 <Link
                   to={cta.to}

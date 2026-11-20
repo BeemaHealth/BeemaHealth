@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 import {
   HeartPulse,
   Pill,
@@ -26,7 +27,15 @@ import { resolveVialImagery } from "@/lib/treatment-imagery";
 import { learnPath } from "@/content/learn/types";
 import type { TreatmentFaqItem } from "@/components/site/TreatmentPageBlocks";
 import {
+  BlackFridayText,
+  BlackFridayDealCard,
+  BLACK_FRIDAY_ENDS_LABEL,
+  blackFridayTile,
+  type BlackFridayOffer,
+} from "./BlackFriday";
+import {
   CancellationLink,
+  LAZY_SECTION,
   LandingTemplate,
   type LandingTemplateProps,
   type PriceTile,
@@ -181,6 +190,11 @@ export type GlpTreatmentPageProps = {
   /** "houston" is the city ad page; "nationwide" is /semaglutide or /tirzepatide. */
   market?: "houston" | "nationwide";
   faqItems: TreatmentFaqItem[];
+  /**
+   * Opt-in Black Friday treatment (banner, deal hero, deal card, code
+   * reminders). Omit for the standard page; default output is unchanged.
+   */
+  blackFriday?: BlackFridayOffer;
 } & Pick<LandingTemplateProps, "overrides" | "insertAfter">;
 
 /**
@@ -193,6 +207,7 @@ export function GlpTreatmentPage({
   med,
   market = "houston",
   faqItems,
+  blackFriday,
   overrides,
   insertAfter,
 }: GlpTreatmentPageProps) {
@@ -216,6 +231,46 @@ export function GlpTreatmentPage({
   const footerCta = resolveCta(CTA_IDS[ids.footerCtaId]);
   const where = houston ? " in Houston" : "";
 
+  const bf = blackFriday;
+  const bfPriceNote = (
+    <>
+      The Black Friday code applies to the 3-month plan, through{" "}
+      {BLACK_FRIDAY_ENDS_LABEL}. Medication eligibility and availability are
+      determined by a licensed provider and applicable law. Cash-pay when
+      prescribed. Product images are illustrative. See our <CancellationLink />.
+    </>
+  );
+  const heroProps = {
+    h1: bf ? (
+      <>
+        <BlackFridayText />: {formatUsd(bf.discountUsd)} off {lower}
+        {where}
+      </>
+    ) : (
+      `${c.name} weight-loss care${where || " online"}`
+    ),
+    lead: `Get a plan built around your health history. A licensed provider reviews it and, if appropriate, ships compounded ${lower} to your door${where}. Your plan price covers it. Starting your intake is free.`,
+    cta: heroCta,
+    images: [imagery],
+    tiles: [
+      bf
+        ? { name: `${c.name}, 3-month plan`, ...blackFridayTile(bf) }
+        : heroTile(med),
+    ],
+    priceNote: bf ? (
+      bfPriceNote
+    ) : (
+      <>
+        {med === "tirzepatide"
+          ? "To see the starter pack price, mark that you are new to GLP-1 when asked during intake. Starter pack and Tirz100 can't be used together. "
+          : ""}
+        Medication eligibility and availability are determined by a licensed
+        provider and applicable law. Cash-pay when prescribed. Product images
+        are illustrative. See our <CancellationLink />.
+      </>
+    ),
+  };
+
   return (
     <LandingTemplate
       pagePath={ids.pagePath}
@@ -229,23 +284,7 @@ export function GlpTreatmentPage({
             }
           : undefined
       }
-      hero={{
-        h1: `${c.name} weight-loss care${where || " online"}`,
-        lead: `Get a plan built around your health history. A licensed provider reviews it and, if appropriate, ships compounded ${lower} to your door${where}. Your plan price covers it. Starting your intake is free.`,
-        cta: heroCta,
-        images: [imagery],
-        tiles: [heroTile(med)],
-        priceNote: (
-          <>
-            {med === "tirzepatide"
-              ? "To see the starter pack price, mark that you are new to GLP-1 when asked during intake. Starter pack and Tirz100 can't be used together. "
-              : ""}
-            Medication eligibility and availability are determined by a licensed
-            provider and applicable law. Cash-pay when prescribed. Product
-            images are illustrative. See our <CancellationLink />.
-          </>
-        ),
-      }}
+      hero={heroProps}
       proofStats={[
         { value: GOOGLE_RATING_VALUE, label: "Google rating", stars: true },
         {
@@ -261,18 +300,21 @@ export function GlpTreatmentPage({
         title: `${c.name} pricing${where}`,
         description: `Clear cash-pay rates for compounded ${lower}. No membership fee. Your licensed provider decides what medication and dose is appropriate for you - pricing below is cash-pay when prescribed.`,
         children: (
-          <div className="grid gap-10 lg:grid-cols-2">
-            <EligibilityCard
-              intro={c.eligibilityIntro}
-              points={c.eligibilityPoints}
-            />
-            <TreatmentPricingCard
-              pricing={pricing}
-              imagery={imagery}
-              cta={heroCta.withPosition("pricing")}
-              className="h-full"
-            />
-          </div>
+          <>
+            {bf ? <BlackFridayDealCard offer={bf} /> : null}
+            <div className="grid gap-10 lg:grid-cols-2">
+              <EligibilityCard
+                intro={c.eligibilityIntro}
+                points={c.eligibilityPoints}
+              />
+              <TreatmentPricingCard
+                pricing={pricing}
+                imagery={imagery}
+                cta={heroCta.withPosition("pricing")}
+                className="h-full"
+              />
+            </div>
+          </>
         ),
         footnote: (
           <p>
@@ -312,7 +354,9 @@ export function GlpTreatmentPage({
         ],
       }}
       midCta={{
-        heading: "Your plan starts with a free intake",
+        heading: bf
+          ? `Black Friday: ${formatUsd(bf.discountUsd)} off starts with a free intake`
+          : "Your plan starts with a free intake",
         body: "Starting your intake is free, and you won't be charged anything if you're not prescribed. A licensed provider reviews your health history and decides what is right for you. If treatment is appropriate, one monthly price covers your care, medication, supplies, and shipping.",
       }}
       where={{
@@ -374,15 +418,21 @@ export function GlpTreatmentPage({
       }}
       finalCta={{
         heading: "Ready to see if GLP-1 care is right for you?",
-        body: houston
-          ? "Houston patients can complete medical intake from home. You won't be charged anything if you're not prescribed. A prescription is never guaranteed."
-          : "Complete medical intake from home. You won't be charged anything if you're not prescribed. A prescription is never guaranteed.",
+        body: bf
+          ? `Use code ${bf.code} at checkout for ${formatUsd(bf.discountUsd)} off the 3-month plan through ${BLACK_FRIDAY_ENDS_LABEL}. You won't be charged anything if you're not prescribed. A prescription is never guaranteed.`
+          : houston
+            ? "Houston patients can complete medical intake from home. You won't be charged anything if you're not prescribed. A prescription is never guaranteed."
+            : "Complete medical intake from home. You won't be charged anything if you're not prescribed. A prescription is never guaranteed.",
         cta: footerCta,
       }}
-      overrides={overrides}
+      overrides={bf ? { team: null, ...overrides } : overrides}
       insertAfter={{
         ...(houston
-          ? {}
+          ? bf
+            ? {
+                howItWorks: <MedicalTeamSection className={LAZY_SECTION} />,
+              }
+            : {}
           : {
               howItWorks: (
                 <ProseSection title={`What is ${lower}?`}>

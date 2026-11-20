@@ -156,7 +156,7 @@ export function FunnelGraphic({
 }: {
   totals: Totals;
   sources?: SourceRow[];
-  /** Bask signups and purchases; adds the stages below the handoff. */
+  /** Bask signups, checkouts and purchases; adds the stages below the handoff. */
   down?: DownstreamTotals;
   /** Caption under the diagram explaining what `down` covers. */
   downNote?: string;
@@ -200,16 +200,22 @@ export function FunnelGraphic({
   // readable. Widths taper; the numbers carry the real values (signups can
   // exceed handoffs, so widths are not proportional).
   const showDown = tracked && down !== undefined;
-  const rates = downstreamRates(totals, down ?? { signups: 0, purchases: 0 });
+  const rates = downstreamRates(
+    totals,
+    down ?? { signups: 0, checkouts: 0, purchases: 0 },
+  );
   const H3 = 72;
   const baskGap = 22; // room for the "Bask takes over" marker
   const y3 = y2 + H2 + baskGap;
   const y4 = y3 + H3 + gap;
+  const y5 = y4 + H3 + gap;
   const w3 = Math.max(76, spoutW * 0.78);
-  const w4 = Math.max(60, w3 * 0.72);
+  const w4 = Math.max(66, w3 * 0.85);
+  const w5 = Math.max(56, w4 * 0.85);
   const [s3l, s3r] = x(w3);
   const [s4l, s4r] = x(w4);
-  const bodyH = showDown ? y4 + H3 + 8 : y2 + H2 + 44;
+  const [s5l, s5r] = x(w5);
+  const bodyH = showDown ? y5 + H3 + 8 : y2 + H2 + 44;
   const labelX = (w: number) => cx0 + w / 2 + 18;
   return (
     <div>
@@ -217,7 +223,7 @@ export function FunnelGraphic({
         viewBox={`0 0 ${W} ${TOP + bodyH}`}
         className="mx-auto w-full max-w-[720px]"
         role="img"
-        aria-label={`Funnel: ${totals.visitors} landing visitors${tracked ? `, ${totals.clickers} intake handoffs, ${fmtPct(totals.rate)} rate` : ", handoffs not tracked for this period"}${showDown ? `, ${down.signups} Bask signups, ${down.purchases} Bask purchases` : ""}`}
+        aria-label={`Funnel: ${totals.visitors} landing visitors${tracked ? `, ${totals.clickers} intake handoffs, ${fmtPct(totals.rate)} rate` : ", handoffs not tracked for this period"}${showDown ? `, ${down.signups} Bask signups, ${down.checkouts} Bask checkouts, ${down.purchases} Bask purchases` : ""}`}
       >
         {shown.map((r, i) => {
           const px = ((i + 0.5) / shown.length) * W;
@@ -381,7 +387,7 @@ export function FunnelGraphic({
                   </text>
                   <polygon
                     points={`${s3l},${y4} ${s3r},${y4} ${s4r},${y4 + H3} ${s4l},${y4 + H3}`}
-                    className="fill-teal"
+                    className="fill-amber"
                   />
                   <text
                     x={cx0}
@@ -389,18 +395,45 @@ export function FunnelGraphic({
                     textAnchor="middle"
                     className="num fill-bg text-[28px] font-bold"
                   >
-                    {fmtInt(down.purchases)}
+                    {fmtInt(down.checkouts)}
                   </text>
                   <text
                     x={labelX(w3)}
                     y={y4 + H3 / 2 + 5}
                     className="fill-ink text-[13px] font-semibold"
                   >
-                    Bask purchases ({fmtPct(rates.purchaseOfSignup)} of signups)
+                    Bask checkouts ({fmtPct(rates.checkoutOfSignup)} of signups)
                   </text>
                   <text
                     x={labelX(w3)}
                     y={y4 + H3 / 2 + 21}
+                    className="fill-soft text-[11px]"
+                  >
+                    {fmtPct(rates.checkoutOfVisitors)} of landing visitors
+                  </text>
+                  <polygon
+                    points={`${s4l},${y5} ${s4r},${y5} ${s5r},${y5 + H3} ${s5l},${y5 + H3}`}
+                    className="fill-teal"
+                  />
+                  <text
+                    x={cx0}
+                    y={y5 + H3 / 2 + 10}
+                    textAnchor="middle"
+                    className="num fill-bg text-[28px] font-bold"
+                  >
+                    {fmtInt(down.purchases)}
+                  </text>
+                  <text
+                    x={labelX(w4)}
+                    y={y5 + H3 / 2 + 5}
+                    className="fill-ink text-[13px] font-semibold"
+                  >
+                    Bask purchases ({fmtPct(rates.purchaseOfCheckout)} of
+                    checkouts)
+                  </text>
+                  <text
+                    x={labelX(w4)}
+                    y={y5 + H3 / 2 + 21}
                     className="fill-soft text-[11px]"
                   >
                     {fmtPct(rates.purchaseOfVisitors)} of landing visitors
@@ -445,7 +478,7 @@ export function MiniFunnel({
 }: {
   totals: Totals;
   sources?: SourceRow[];
-  /** Bask signups and purchases for this page; adds stages under the handoff. */
+  /** Bask signups, checkouts and purchases for this page; adds stages under the handoff. */
   down?: DownstreamTotals;
 }) {
   const tracked = totals.clickers !== null;
@@ -479,24 +512,30 @@ export function MiniFunnel({
   const trim = (t: string) => (t.length > 13 ? `${t.slice(0, 12)}…` : t);
   // Bask stages continue the taper; names sit beside the shapes.
   const showDown = tracked && down !== undefined;
-  const rates = downstreamRates(totals, down ?? { signups: 0, purchases: 0 });
+  const rates = downstreamRates(
+    totals,
+    down ?? { signups: 0, checkouts: 0, purchases: 0 },
+  );
   const H3 = 34;
   const y2 = H1 + 4;
   const y3 = y2 + H2 + 4;
   const y4 = y3 + H3 + 3;
+  const y5 = y4 + H3 + 3;
   const spoutW = Math.max(56, midW * 0.6);
   const w3 = Math.max(44, spoutW * 0.8);
-  const w4 = Math.max(36, w3 * 0.75);
+  const w4 = Math.max(38, w3 * 0.85);
+  const w5 = Math.max(32, w4 * 0.85);
   const [s3l, s3r] = edge(w3);
   const [s4l, s4r] = edge(w4);
+  const [s5l, s5r] = edge(w5);
   const labelX = (w: number) => cx0 + w / 2 + 10;
-  const bodyH = tracked ? (showDown ? y4 + H3 : H1 + H2 + 4) : H1;
+  const bodyH = tracked ? (showDown ? y5 + H3 : H1 + H2 + 4) : H1;
   return (
     <svg
       viewBox={`0 0 ${W} ${TOP + bodyH}`}
       className="w-full"
       role="img"
-      aria-label={`${totals.visitors} visitors${tracked ? `, ${totals.clickers} handoffs` : ", handoffs not tracked"}${showDown ? `, ${down.signups} Bask signups, ${down.purchases} Bask purchases` : ""}`}
+      aria-label={`${totals.visitors} visitors${tracked ? `, ${totals.clickers} handoffs` : ", handoffs not tracked"}${showDown ? `, ${down.signups} Bask signups, ${down.checkouts} Bask checkouts, ${down.purchases} Bask purchases` : ""}`}
     >
       {shown.map((r, i) => {
         const px = ((i + 0.5) / shown.length) * W;
@@ -602,7 +641,7 @@ export function MiniFunnel({
                 </text>
                 <polygon
                   points={`${s3l},${y4} ${s3r},${y4} ${s4r},${y4 + H3} ${s4l},${y4 + H3}`}
-                  className="fill-teal"
+                  className="fill-amber"
                 />
                 <text
                   x={cx0}
@@ -610,18 +649,44 @@ export function MiniFunnel({
                   textAnchor="middle"
                   className="num fill-bg text-[14px] font-bold"
                 >
-                  {fmtInt(down.purchases)}
+                  {fmtInt(down.checkouts)}
                 </text>
                 <text
                   x={labelX(w3)}
                   y={y4 + H3 / 2 + 3}
                   className="fill-soft text-[9px]"
                 >
-                  {`Purchases ${fmtPct(rates.purchaseOfSignup)} of signups`}
+                  {`Checkouts ${fmtPct(rates.checkoutOfSignup)} of signups`}
                 </text>
                 <text
                   x={labelX(w3)}
                   y={y4 + H3 / 2 + 14}
+                  className="fill-soft text-[9px]"
+                >
+                  {`${fmtPct(rates.checkoutOfVisitors)} of visitors`}
+                </text>
+                <polygon
+                  points={`${s4l},${y5} ${s4r},${y5} ${s5r},${y5 + H3} ${s5l},${y5 + H3}`}
+                  className="fill-teal"
+                />
+                <text
+                  x={cx0}
+                  y={y5 + H3 / 2 + 5}
+                  textAnchor="middle"
+                  className="num fill-bg text-[14px] font-bold"
+                >
+                  {fmtInt(down.purchases)}
+                </text>
+                <text
+                  x={labelX(w4)}
+                  y={y5 + H3 / 2 + 3}
+                  className="fill-soft text-[9px]"
+                >
+                  {`Purchases ${fmtPct(rates.purchaseOfCheckout)} of checkouts`}
+                </text>
+                <text
+                  x={labelX(w4)}
+                  y={y5 + H3 / 2 + 14}
                   className="fill-soft text-[9px]"
                 >
                   {`${fmtPct(rates.purchaseOfVisitors)} of visitors`}

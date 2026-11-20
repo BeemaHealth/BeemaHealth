@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 import {
   ArrowRight,
   CheckCircle2,
@@ -18,6 +19,13 @@ import {
   GENERIC_TADALAFIL_REQUIRED,
 } from "@/lib/compounded-disclosure";
 import { formatUsd } from "@/lib/medication-pricing";
+import {
+  BlackFridayText,
+  BlackFridayDealCard,
+  BLACK_FRIDAY_ENDS_LABEL,
+  blackFridayTile,
+  type BlackFridayOffer,
+} from "./BlackFriday";
 import { GOOGLE_RATING_VALUE } from "@/lib/google-business";
 import {
   ED_MINTS_RDT_PRICING,
@@ -33,6 +41,7 @@ import { PRODUCT_PRICING } from "../sexual-health/pricing";
 import { ProductPlansDialog } from "../sexual-health/ProductPlansDialog";
 import {
   CancellationLink,
+  LAZY_SECTION,
   LandingTemplate,
   StartButton,
   type Callout,
@@ -220,6 +229,8 @@ export type GenericEdBostonPageProps = {
   faqItems: TreatmentFaqItem[];
   /** Defaults to "boston" (the live Boston pages). */
   market?: EdMarket;
+  /** Opt-in Black Friday treatment. Omit for the standard page. */
+  blackFriday?: BlackFridayOffer;
 } & Pick<LandingTemplateProps, "overrides" | "insertAfter">;
 
 /** New-layout Boston page for a single generic ED tablet. */
@@ -227,6 +238,7 @@ export function GenericEdBostonPage({
   product,
   faqItems,
   market = "boston",
+  blackFriday,
   overrides,
   insertAfter,
 }: GenericEdBostonPageProps) {
@@ -246,29 +258,46 @@ export function GenericEdBostonPage({
       : CTA_IDS[c.footerCtaId],
   );
 
-  return (
-    <LandingTemplate
-      pagePath={nationwide ? c.nationwidePath : c.pagePath}
-      hero={{
-        h1: nationwide ? `${c.name} online` : `${c.name} online in Boston`,
-        lead: nationwide ? NATIONWIDE_LEAD : BOSTON_LEAD,
-        cta: heroCta,
-        images: [c.image],
-        tiles: [
+  const bf = blackFriday;
+  const heroProps = {
+    h1: bf ? (
+      <>
+        <BlackFridayText />: {formatUsd(bf.discountUsd)} off {lower}
+        {nationwide ? "" : " in Boston"}
+      </>
+    ) : nationwide ? (
+      `${c.name} online`
+    ) : (
+      `${c.name} online in Boston`
+    ),
+    lead: nationwide ? NATIONWIDE_LEAD : BOSTON_LEAD,
+    cta: heroCta,
+    images: [c.image],
+    tiles: bf
+      ? [{ name: c.name, ...blackFridayTile(bf) }]
+      : [
           {
             name: c.name,
             price: c.perPill,
             unit: c.headSub,
           },
         ],
-        priceNote: (
-          <>
-            Medication eligibility and availability are determined by a licensed
-            provider and applicable law. Cash-pay when prescribed. Product
-            images are illustrative. See our <CancellationLink />.
-          </>
-        ),
-      }}
+    priceNote: (
+      <>
+        {bf
+          ? `Black Friday code valid through ${BLACK_FRIDAY_ENDS_LABEL}. `
+          : null}
+        Medication eligibility and availability are determined by a licensed
+        provider and applicable law. Cash-pay when prescribed. Product images
+        are illustrative. See our <CancellationLink />.
+      </>
+    ),
+  };
+
+  return (
+    <LandingTemplate
+      pagePath={nationwide ? c.nationwidePath : c.pagePath}
+      hero={heroProps}
       proofStats={statsFor({
         value: "Generic",
         label: `FDA-approved ${lower}`,
@@ -280,56 +309,59 @@ export function GenericEdBostonPage({
         description:
           "Clear cash-pay pricing. A licensed provider decides what, and which dose, is right for you.",
         children: (
-          <div className="grid gap-8 lg:grid-cols-2">
-            <div className="flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
-              <div className="bg-primary-soft p-4 md:p-6">
-                <img
-                  src={c.image.src}
-                  alt={c.image.alt}
-                  width={c.image.width}
-                  height={c.image.height}
-                  loading="lazy"
-                  decoding="async"
-                  className="mx-auto h-36 w-auto object-contain drop-shadow-xl md:h-48"
-                />
+          <>
+            {bf ? <BlackFridayDealCard offer={bf} /> : null}
+            <div className="grid gap-8 lg:grid-cols-2">
+              <div className="flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
+                <div className="bg-primary-soft p-4 md:p-6">
+                  <img
+                    src={c.image.src}
+                    alt={c.image.alt}
+                    width={c.image.width}
+                    height={c.image.height}
+                    loading="lazy"
+                    decoding="async"
+                    className="mx-auto h-36 w-auto object-contain drop-shadow-xl md:h-48"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-5 md:p-6">
+                  <p className="text-sm font-semibold text-muted-foreground">
+                    Generic {c.brand} tablet
+                  </p>
+                  <h3 className="mt-1 text-2xl font-bold text-foreground">
+                    {c.name}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {c.blurb}
+                  </p>
+                  <p className="mt-4 text-3xl font-bold tracking-tight text-foreground">
+                    {c.perPill}
+                  </p>
+                  <p className="mt-1 text-sm leading-snug text-muted-foreground">
+                    {c.headSub}
+                  </p>
+                  <ProductPlansDialog
+                    name={c.name}
+                    pricing={PRODUCT_PRICING[product]}
+                    cta={heroCta.withPosition("pricing")}
+                  />
+                  <StartButton
+                    cta={heroCta.withPosition("pricing")}
+                    size="lg"
+                    className="mt-4 w-full"
+                  />
+                </div>
               </div>
-              <div className="flex flex-1 flex-col p-5 md:p-6">
-                <p className="text-sm font-semibold text-muted-foreground">
-                  Generic {c.brand} tablet
-                </p>
-                <h3 className="mt-1 text-2xl font-bold text-foreground">
-                  {c.name}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {c.blurb}
-                </p>
-                <p className="mt-4 text-3xl font-bold tracking-tight text-foreground">
-                  {c.perPill}
-                </p>
-                <p className="mt-1 text-sm leading-snug text-muted-foreground">
-                  {c.headSub}
-                </p>
-                <ProductPlansDialog
-                  name={c.name}
-                  pricing={PRODUCT_PRICING[product]}
-                  cta={heroCta.withPosition("pricing")}
-                />
-                <StartButton
-                  cta={heroCta.withPosition("pricing")}
-                  size="lg"
-                  className="mt-4 w-full"
-                />
-              </div>
+              <EligibilityCard
+                intro={ELIGIBILITY_INTRO}
+                points={[
+                  "Adult men, 18 and older",
+                  "Eligibility considers cardiovascular history and current medications",
+                  "Final approval rests with a licensed provider",
+                ]}
+              />
             </div>
-            <EligibilityCard
-              intro={ELIGIBILITY_INTRO}
-              points={[
-                "Adult men, 18 and older",
-                "Eligibility considers cardiovascular history and current medications",
-                "Final approval rests with a licensed provider",
-              ]}
-            />
-          </div>
+          </>
         ),
         footnote: (
           <>
@@ -351,7 +383,9 @@ export function GenericEdBostonPage({
         callouts: ED_CALLOUTS,
       }}
       midCta={{
-        heading: "Skip the waiting room. Start from your phone.",
+        heading: bf
+          ? `Black Friday: ${formatUsd(bf.discountUsd)} off starts with a free intake`
+          : "Skip the waiting room. Start from your phone.",
         body: "Starting your intake is free. A licensed provider reviews your health history and decides whether treatment is right for you, and you won't be charged anything if you're not prescribed. If you are, one cash-pay price covers your care and medication.",
       }}
       where={{
@@ -381,44 +415,51 @@ export function GenericEdBostonPage({
       }}
       finalCta={{
         heading: "Ready to see if ED treatment is right for you?",
-        body: nationwide ? NATIONWIDE_FINAL_BODY : BOSTON_FINAL_BODY,
+        body: bf
+          ? `Use code ${bf.code} at checkout for ${formatUsd(bf.discountUsd)} off through ${BLACK_FRIDAY_ENDS_LABEL}. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.`
+          : nationwide
+            ? NATIONWIDE_FINAL_BODY
+            : BOSTON_FINAL_BODY,
         cta: footerCta,
       }}
-      overrides={overrides}
+      overrides={bf ? { team: null, ...overrides } : overrides}
       insertAfter={{
         howItWorks: (
-          <ProseSection title={`What is ${lower}?`}>
-            <p>{c.whatIs}</p>
-            <p>
-              Beema Health&apos;s {lower} is the FDA-approved generic version of{" "}
-              {c.brand} - the identical active ingredient, strength, and
-              intended use as the brand-name product, dispensed by a licensed
-              pharmacy, not a compounded formulation. Looking for {c.otherLabel}{" "}
-              instead? See{" "}
-              <Link
-                to={nationwide ? OTHER_NATIONWIDE[product] : c.otherPath}
-                className="text-primary underline"
-              >
-                {c.otherLabel.charAt(0).toUpperCase() + c.otherLabel.slice(1)}
-                {nationwide ? "" : " in Boston"}
-              </Link>
-              . Looking for a dissolve-under-the-tongue combination formulation?
-              See{" "}
-              <Link
-                to={nationwide ? "/ed-mints/" : "/ed-mints-boston/"}
-                className="text-primary underline"
-              >
-                ED Mints{nationwide ? "" : " in Boston"}
-              </Link>
-              , a separate compounded product.
-            </p>
-            <p>
-              Whether {lower} may be appropriate for you is a decision your
-              licensed provider makes individually, based on your health history
-              and current medications. Completing intake does not guarantee a
-              prescription.
-            </p>
-          </ProseSection>
+          <>
+            {bf ? <MedicalTeamSection className={LAZY_SECTION} /> : null}
+            <ProseSection title={`What is ${lower}?`}>
+              <p>{c.whatIs}</p>
+              <p>
+                Beema Health&apos;s {lower} is the FDA-approved generic version
+                of {c.brand} - the identical active ingredient, strength, and
+                intended use as the brand-name product, dispensed by a licensed
+                pharmacy, not a compounded formulation. Looking for{" "}
+                {c.otherLabel} instead? See{" "}
+                <Link
+                  to={nationwide ? OTHER_NATIONWIDE[product] : c.otherPath}
+                  className="text-primary underline"
+                >
+                  {c.otherLabel.charAt(0).toUpperCase() + c.otherLabel.slice(1)}
+                  {nationwide ? "" : " in Boston"}
+                </Link>
+                . Looking for a dissolve-under-the-tongue combination
+                formulation? See{" "}
+                <Link
+                  to={nationwide ? "/ed-mints/" : "/ed-mints-boston/"}
+                  className="text-primary underline"
+                >
+                  ED Mints{nationwide ? "" : " in Boston"}
+                </Link>
+                , a separate compounded product.
+              </p>
+              <p>
+                Whether {lower} may be appropriate for you is a decision your
+                licensed provider makes individually, based on your health
+                history and current medications. Completing intake does not
+                guarantee a prescription.
+              </p>
+            </ProseSection>
+          </>
         ),
         included: (
           <SafetySection
@@ -462,10 +503,14 @@ function scrollToFormulations() {
  */
 function FormulationChooser({
   ctaIds,
+  blackFriday,
 }: {
+  /** Opt-in: crossed-out regular rate and the rate with the coupon applied. */
+  blackFriday?: BlackFridayOffer;
   /** Opt-in: own cta ids for these cards. Defaults to MINT_OPTIONS ids. */
   ctaIds?: MintCtaIds;
 }) {
+  const bfQuarter = blackFriday?.plans?.find((p) => p.label === "3-month plan");
   return (
     <div className="space-y-6">
       <div className="mx-auto max-w-md rounded-2xl border border-primary/40 bg-primary-soft/60 px-4 py-3 text-center shadow-soft">
@@ -473,8 +518,25 @@ function FormulationChooser({
           Both formulations
         </p>
         <p className="mt-0.5 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-          from {formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING)}
+          {bfQuarter ? (
+            <>
+              <s className="mr-2 text-lg font-medium text-muted-foreground sm:text-xl">
+                <span className="sr-only">Regular rate </span>
+                {formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING)}
+              </s>
+              <span className="sr-only">With code </span>
+              from {formatUsd(bfQuarter.dealUsd / 3)}/mo
+            </>
+          ) : (
+            <>from {formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING)}</>
+          )}
         </p>
+        {bfQuarter && blackFriday ? (
+          <p className="mt-1 text-xs text-muted-foreground">
+            With code {blackFriday.code} on the 3-month plan (
+            {formatUsd(bfQuarter.dealUsd)} total)
+          </p>
+        ) : null}
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         {MINT_OPTIONS.map((opt) => {
@@ -547,6 +609,8 @@ export type EdMintsBostonPageProps = {
   heroTileHref?: string;
   /** Opt-in: own cta ids for the formulation picker cards. */
   formulationCtaIds?: MintCtaIds;
+  /** Opt-in Black Friday treatment. Omit for the standard page. */
+  blackFriday?: BlackFridayOffer;
 } & Pick<LandingTemplateProps, "overrides" | "insertAfter">;
 
 /** New-layout Boston ED Mints page. Every Get Started opens the picker. */
@@ -555,9 +619,11 @@ export function EdMintsBostonNewPage({
   market = "boston",
   heroTileHref,
   formulationCtaIds,
+  blackFriday,
   overrides,
   insertAfter,
 }: EdMintsBostonPageProps) {
+  const bf = blackFriday;
   const nationwide = market === "nationwide";
   // Every Get Started jumps to the formulation cards on this page; each card
   // links straight to its own questionnaire (ed_mints_*_hero CTA ids).
@@ -572,15 +638,23 @@ export function EdMintsBostonNewPage({
   };
   const price = formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING);
 
-  return (
-    <LandingTemplate
-      pagePath={nationwide ? "/ed-mints/" : "/ed-mints-boston/"}
-      hero={{
-        h1: nationwide ? "ED Mints online" : "ED Mints online in Boston",
-        lead: nationwide ? NATIONWIDE_LEAD : BOSTON_LEAD,
-        cta: startCta,
-        images: [image],
-        tiles: [
+  const heroProps = {
+    h1: bf ? (
+      <>
+        <BlackFridayText />: {formatUsd(bf.discountUsd)} off ED Mints
+        {nationwide ? "" : " in Boston"}
+      </>
+    ) : nationwide ? (
+      "ED Mints online"
+    ) : (
+      "ED Mints online in Boston"
+    ),
+    lead: nationwide ? NATIONWIDE_LEAD : BOSTON_LEAD,
+    cta: startCta,
+    images: [image],
+    tiles: bf
+      ? [{ name: "ED Mints", ...blackFridayTile(bf), href: heroTileHref }]
+      : [
           {
             name: "ED Mints",
             price,
@@ -589,14 +663,22 @@ export function EdMintsBostonNewPage({
             href: heroTileHref,
           },
         ],
-        priceNote: (
-          <>
-            Medication eligibility, formulation, and availability are determined
-            by a licensed provider and applicable law. Cash-pay when prescribed.
-            Product images are illustrative. See our <CancellationLink />.
-          </>
-        ),
-      }}
+    priceNote: (
+      <>
+        {bf
+          ? `Black Friday code valid through ${BLACK_FRIDAY_ENDS_LABEL}. `
+          : null}
+        Medication eligibility, formulation, and availability are determined by
+        a licensed provider and applicable law. Cash-pay when prescribed.
+        Product images are illustrative. See our <CancellationLink />.
+      </>
+    ),
+  };
+
+  return (
+    <LandingTemplate
+      pagePath={nationwide ? "/ed-mints/" : "/ed-mints-boston/"}
+      hero={heroProps}
       proofStats={statsFor({
         value: "503A/B",
         label: "FDA-registered outsourcing pharmacies",
@@ -607,7 +689,12 @@ export function EdMintsBostonNewPage({
         id: "formulations",
         title: "Choose your formulation",
         description: `A licensed provider reviews your intake first and decides which formulation, if any, is right for you. You won't be charged anything if you're not prescribed. Both are ${price}, and each has its own intake.`,
-        children: <FormulationChooser ctaIds={formulationCtaIds} />,
+        children: (
+          <>
+            {bf ? <BlackFridayDealCard offer={bf} /> : null}
+            <FormulationChooser ctaIds={formulationCtaIds} blackFriday={bf} />
+          </>
+        ),
         footnote: (
           <>
             <p>
@@ -647,45 +734,52 @@ export function EdMintsBostonNewPage({
       }}
       finalCta={{
         heading: "Ready to see if ED treatment is right for you?",
-        body: nationwide ? NATIONWIDE_FINAL_BODY : BOSTON_FINAL_BODY,
+        body: bf
+          ? `Use code ${bf.code} at checkout for ${formatUsd(bf.discountUsd)} off through ${BLACK_FRIDAY_ENDS_LABEL}. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.`
+          : nationwide
+            ? NATIONWIDE_FINAL_BODY
+            : BOSTON_FINAL_BODY,
         cta: startCta,
       }}
-      overrides={overrides}
+      overrides={bf ? { team: null, ...overrides } : overrides}
       insertAfter={{
         howItWorks: (
-          <ProseSection title="What are ED Mints?">
-            <p>
-              ED Mints are compounded combination formulations that dissolve
-              under the tongue instead of being swallowed with water. Most
-              patients take one about 30 minutes before sexual activity, and no
-              more than one dose in a 24-hour period. They don&apos;t cause
-              arousal by themselves - you still need to be sexually stimulated
-              for them to work.
-            </p>
-            <p>
-              Beema Health offers two ED Mints formulations, each a combination
-              not sold as a single commercial product and prepared at an
-              FDA-registered 503B outsourcing facility. These formulations are
-              not FDA-approved and are considered only when legally available
-              and clinically appropriate. Which option, if any, may be
-              appropriate for you is a decision your licensed provider makes
-              individually.
-            </p>
-            <ul className="space-y-2 text-sm text-foreground">
-              <li>
-                <strong>Tadalafil + Sildenafil 12mg/60mg RDT:</strong> a rapidly
-                dissolving tablet combining tadalafil and sildenafil into one
-                dose.
-              </li>
-              <li>
-                <strong>
-                  Sildenafil 50mg/Tadalafil 20mg/Oxytocin 125 IU ODT:
-                </strong>{" "}
-                an orally dissolving tablet combining sildenafil, tadalafil, and
-                oxytocin into one dose.
-              </li>
-            </ul>
-          </ProseSection>
+          <>
+            {bf ? <MedicalTeamSection className={LAZY_SECTION} /> : null}
+            <ProseSection title="What are ED Mints?">
+              <p>
+                ED Mints are compounded combination formulations that dissolve
+                under the tongue instead of being swallowed with water. Most
+                patients take one about 30 minutes before sexual activity, and
+                no more than one dose in a 24-hour period. They don&apos;t cause
+                arousal by themselves - you still need to be sexually stimulated
+                for them to work.
+              </p>
+              <p>
+                Beema Health offers two ED Mints formulations, each a
+                combination not sold as a single commercial product and prepared
+                at an FDA-registered 503B outsourcing facility. These
+                formulations are not FDA-approved and are considered only when
+                legally available and clinically appropriate. Which option, if
+                any, may be appropriate for you is a decision your licensed
+                provider makes individually.
+              </p>
+              <ul className="space-y-2 text-sm text-foreground">
+                <li>
+                  <strong>Tadalafil + Sildenafil 12mg/60mg RDT:</strong> a
+                  rapidly dissolving tablet combining tadalafil and sildenafil
+                  into one dose.
+                </li>
+                <li>
+                  <strong>
+                    Sildenafil 50mg/Tadalafil 20mg/Oxytocin 125 IU ODT:
+                  </strong>{" "}
+                  an orally dissolving tablet combining sildenafil, tadalafil,
+                  and oxytocin into one dose.
+                </li>
+              </ul>
+            </ProseSection>
+          </>
         ),
         included: (
           <SafetySection
