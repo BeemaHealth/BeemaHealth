@@ -25,8 +25,12 @@ describe("growth programs config", () => {
     }
   });
 
-  it("stays noindex until the launch gate is cleared", () => {
-    expect(GROWTH_PROGRAMS_INDEXABLE).toBe(false);
+  it("indexes only the creator program; story and referral stay noindex", () => {
+    expect(GROWTH_PROGRAMS_INDEXABLE).toEqual({
+      story: false,
+      referral: false,
+      creator: true,
+    });
   });
 
   it("discloses compensation and uses no em dashes or bare brand name", () => {

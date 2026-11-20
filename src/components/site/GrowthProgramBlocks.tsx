@@ -27,6 +27,7 @@ import { canonicalUrl } from "@/lib/seo";
 
 /** Shared <head> pieces for the three program landing pages. */
 export function growthProgramHead(args: {
+  program: GrowthProgramId;
   title: string;
   description: string;
   path: string;
@@ -37,7 +38,7 @@ export function growthProgramHead(args: {
       { name: "description", content: args.description },
       { property: "og:title", content: args.title },
       { property: "og:description", content: args.description },
-      ...(GROWTH_PROGRAMS_INDEXABLE
+      ...(GROWTH_PROGRAMS_INDEXABLE[args.program]
         ? []
         : [{ name: "robots", content: "noindex" }]),
     ],

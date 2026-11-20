@@ -8,6 +8,10 @@
     "render": "remotion render src/index.ts Pde5Short out/pde5.mp4 --codec h264 --crf 18",
     "render:glp1": "remotion render src/index.ts Glp1Short out/glp1.mp4 --codec h264 --crf 18",
     "render:bf": "remotion render src/index.ts BlackFriday out/black-friday.mp4 --codec h264 --crf 17",
+    "render:bf-tirz": "remotion render src/index.ts BfTirz out/bf-tirz.mp4 --codec h264 --crf 17",
+    "render:bf-mints": "remotion render src/index.ts BfMints out/bf-mints.mp4 --codec h264 --crf 17",
+    "render:bf-tadalafil": "remotion render src/index.ts BfTadalafil out/bf-tadalafil.mp4 --codec h264 --crf 17",
+    "render:bf-sildenafil": "remotion render src/index.ts BfSildenafil out/bf-sildenafil.mp4 --codec h264 --crf 17",
     "render:ad": "remotion render src/index.ts AdEd out/ad-ed.mp4 --codec h264 --crf 17"
   },
   "dependencies": {

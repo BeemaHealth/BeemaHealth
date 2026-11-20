@@ -21,7 +21,7 @@ export const Route = createFileRoute("/legal/creator-program-terms")({
         content:
           "Public summary of the Beema Health Creator Program terms, including eligibility, required disclosure, claim rules, and what creators never receive.",
       },
-      ...(GROWTH_PROGRAMS_INDEXABLE
+      ...(GROWTH_PROGRAMS_INDEXABLE.creator
         ? []
         : [{ name: "robots", content: "noindex" }]),
     ],

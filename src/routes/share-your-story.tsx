@@ -26,6 +26,7 @@ import { breadcrumbJsonLd } from "@/lib/seo";
 export const Route = createFileRoute("/share-your-story")({
   head: () => ({
     ...growthProgramHead({
+      program: "story",
       title: "Share Your Beema Health Story | Beema Health",
       description: `Tell us about your experience with Beema Health on a short video and receive a $${STORY_CREDIT_USD} credit toward your care after approval. Any honest experience is welcome.`,
       path: STORY_LANDING_PATH,

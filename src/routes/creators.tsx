@@ -19,11 +19,12 @@ import {
   CREATOR_MIN_FOLLOWERS,
   CREATOR_TERMS_PATH,
 } from "@/lib/growth-programs";
-import { breadcrumbJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/creators")({
   head: () => ({
     ...growthProgramHead({
+      program: "creator",
       title: "Beema Health Creator Program | Beema Health",
       description:
         "Apply to partner with Beema Health as a creator. Paid partnership with clear disclosure, a unique tracking link, and monthly payouts.",
@@ -38,6 +39,10 @@ export const Route = createFileRoute("/creators")({
             { name: "Creators", path: CREATOR_LANDING_PATH },
           ]),
         ),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(faqPageJsonLd(FAQ)),
       },
     ],
   }),

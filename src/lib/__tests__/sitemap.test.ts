@@ -74,6 +74,7 @@ const EXPECTED_PATHS = [
   ...TOOLS.map((tool) => tool.path),
   ...getLearnSitemapEntries().map((entry) => entry.path),
   "/contact/",
+  "/creators/",
   "/legal/privacy/",
   "/legal/terms/",
   "/legal/refund/",
@@ -81,6 +82,7 @@ const EXPECTED_PATHS = [
   "/legal/physician-code-of-conduct/",
   "/legal/hipaa/",
   "/legal/telehealth-consent/",
+  "/legal/creator-program-terms/",
 ];
 
 function sitemapLocs(): string[] {

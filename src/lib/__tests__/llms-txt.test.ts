@@ -147,4 +147,18 @@ describe("llms.txt", () => {
   it("uses no em or en dashes", () => {
     expect(llms).not.toMatch(/[\u2014\u2013]/);
   });
+
+  it("explains the creator program and links its pages, which are in the sitemap", () => {
+    expect(llms).toContain("## Creator program");
+    for (const path of ["/creators/", "/legal/creator-program-terms/"]) {
+      expect(llms).toContain(`https://beemahealth.com${path}`);
+      expect(sitemap).toContain(`<loc>https://beemahealth.com${path}</loc>`);
+    }
+    const section = llms.slice(
+      llms.indexOf("## Creator program"),
+      llms.indexOf("## Policies"),
+    );
+    expect(section).not.toContain("\u2014");
+    expect(section).not.toMatch(/\bBeema\b(?! Health)/);
+  });
 });

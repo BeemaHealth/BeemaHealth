@@ -24,6 +24,7 @@ import { breadcrumbJsonLd } from "@/lib/seo";
 export const Route = createFileRoute("/refer")({
   head: () => ({
     ...growthProgramHead({
+      program: "referral",
       title: "Refer a Friend | Beema Health",
       description: `Beema Health patients can share a personal link. When a friend becomes a patient, you each get a $${REFERRAL_CREDIT_USD} credit toward your own care.`,
       path: REFERRAL_LANDING_PATH,

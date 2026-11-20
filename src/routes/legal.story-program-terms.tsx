@@ -21,7 +21,7 @@ export const Route = createFileRoute("/legal/story-program-terms")({
         content:
           "Terms for the Beema Health patient Story Program, including eligibility, the patient credit, content guidelines, and how to revoke your authorization.",
       },
-      ...(GROWTH_PROGRAMS_INDEXABLE
+      ...(GROWTH_PROGRAMS_INDEXABLE.story
         ? []
         : [{ name: "robots", content: "noindex" }]),
     ],

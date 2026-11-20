@@ -44,7 +44,7 @@ const Notice: React.FC<{T: number; t0: number; t1: number; lines: string[]}> = (
 const Tagline: React.FC<{T: number; t0: number; t1: number; text: string}> = ({T, t0, t1, text}) => {
   const k = eo3((T - t0) / 0.35) * (1 - eo3((T - t1) / 0.25));
   if (k <= 0.01) return null;
-  return <div style={{position: 'absolute', right: 150, top: 452, opacity: k * 0.9, fontFamily: F.body, fontWeight: 600, fontSize: 26, letterSpacing: 2, textTransform: 'uppercase', color: INK, background: 'rgba(253,242,208,.85)', padding: '6px 16px', borderRadius: 999}}>{text}</div>;
+  return <div style={{position: 'absolute', left: 72, top: 426, opacity: k * 0.9, fontFamily: F.body, fontWeight: 600, fontSize: 26, letterSpacing: 2, textTransform: 'uppercase', color: INK, background: 'rgba(253,242,208,.85)', padding: '6px 16px', borderRadius: 999}}>{text}</div>;
 };
 
 const Sub: React.FC<{T: number; t0: number; t1: number; text: string}> = ({T, t0, t1, text}) => {
@@ -91,7 +91,7 @@ export const Wl35Clip: React.FC<Wl35Props> = (props) => {
       <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 55%, rgba(60,38,12,.28) 100%)'}} />
       {/* soft scrim so headlines stay legible over any part of the room */}
       <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(253,242,208,.88) 0%, rgba(253,242,208,.55) 22%, rgba(253,242,208,0) 34%)', opacity: 1 - clamp((T - c.cta) / 0.6)}} />
-      <Head T={T} t0={0} t1={c.b1} top={top} lines={[{text: 'Weight-loss care.'}, {text: 'Without the waiting room.', at: c.without, color: HONEY_DEEP}]} size={88} />
+      <Head T={T} t0={0} t1={c.b1} top={top} lines={[{text: 'Weight-loss care.'}, {text: 'Without the waiting room.', at: c.without, color: HONEY_DEEP}]} size={76} />
       <Head T={T} t0={c.two - 0.1} t1={c.b2} top={top} lines={[{text: 'Two treatment'}, {text: 'categories', color: HONEY_DEEP}]} />
       <Sub T={T} t0={c.evaln - 0.6} t1={c.b2} text="Considered for weight management only after a clinical evaluation" />
       <Head T={T} t0={c.b2} t1={c.b3} top={top} lines={[{text: 'How it works'}]} />

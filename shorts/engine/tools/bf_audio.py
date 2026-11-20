@@ -1,7 +1,7 @@
 """Black Friday ad audio: Kokoro voiceover placed on the scene cuts + a quiet, warm ambient bed (original, no licensed track).
 Calm, clinical-premium feel: no drums, no chiptune synths. Voice is NOT pitch-squeezed; each line is re-synthesized at a faster native
 speed until it fits its scene window.
-Usage: python shorts/engine/tools/bf_audio.py [voice_id]  -> shorts/pde5-explainer/public/engine/tmp/black-friday.wav (10 s, 44.1 kHz mono)."""
+Usage: python shorts/engine/tools/bf_audio.py [voice_id]  -> shorts/pde5-explainer/public/engine/tmp/black-friday.wav (16 s, 44.1 kHz mono)."""
 import sys, copy, wave
 from pathlib import Path
 import numpy as np
@@ -10,16 +10,16 @@ sys.path.insert(0, str(ROOT))
 from beema_engine.common import config
 from beema_engine import tts
 
-SR, DUR = 44100, 10.0
+SR, DUR = 44100, 16.0
 VOICE = sys.argv[1] if len(sys.argv) > 1 else "af_heart"
 OUT = ROOT.parent / "pde5-explainer/public/engine/tmp/black-friday.wav"
 # (start s, window s, text). Starts sit just after each visual cut.
 LINES = [
-    (0.10, 1.42, "Black Friday at Beema Health."),
-    (1.58, 2.40, "Ninety-nine dollars first month, on a three month plan."),
-    (4.10, 2.30, "Use code sema off one hundred at checkout."),
-    (6.50, 1.88, "Online visit, licensed provider."),
-    (8.42, 1.52, "Get started, Rx only."),
+    (0.15, 2.20, "Black Friday at Beema Health."),
+    (2.50, 3.90, "Three hundred dollars off the three month plan. Two ninety-seven total."),
+    (6.55, 3.95, "Use code Beema Health three hundred off Sema three M. Three month plan only."),
+    (10.70, 2.80, "Online visit, licensed provider, shipped to your door."),
+    (13.70, 2.20, "Get started. Rx only."),
 ]
 rng = np.random.default_rng(11)
 
@@ -61,7 +61,7 @@ def music():
     # slow chord changes (Cmaj7 -> Am7 -> Fmaj7 -> G), two seconds each, crossfaded, each note slightly detuned for width
     chords = [(130.81, 164.81, 196.0, 246.94), (110.0, 164.81, 196.0, 261.63), (87.31, 174.61, 220.0, 261.63), (98.0, 196.0, 246.94, 293.66)]
     for ci, ch in enumerate(chords):
-        c0 = ci * 2.5 - 0.5; w = np.clip((t - c0) / 0.9, 0, 1) * np.clip((c0 + 3.4 - t) / 0.9, 0, 1)
+        c0 = ci * 4.0 - 0.8; w = np.clip((t - c0) / 1.4, 0, 1) * np.clip((c0 + 5.4 - t) / 1.4, 0, 1)
         for f in ch:
             for det in (-0.6, 0.6):
                 m += w * np.sin(2 * np.pi * (f + det) * t + rng.uniform(0, 6.28)) * 0.045
@@ -72,11 +72,11 @@ def music():
         i = int(t0 * SR); j = min(len(m), i + len(x))
         if 0 <= i < len(m): m[i:j] += g * x[:j - i]
     # soft sub-swell into the slam and into the end card, no hard hits
-    for t0, g in ((0.1, 1.0), (8.55, 0.7)):
+    for t0, g in ((0.16, 1.0), (13.7, 0.7)):
         d = 1.4; tt = np.arange(int(d * SR)) / SR
         add(t0, np.sin(2 * np.pi * 55 * tt) * np.exp(-tt * 3.2) * np.minimum(1, tt / 0.03), 0.28 * g)
     # air whooshes on the cuts (very quiet)
-    for t0 in (1.25, 3.8, 6.35):
+    for t0 in (2.0, 6.1, 10.2):
         d = 0.5; tt = np.arange(int(d * SR)) / SR
         n = lowpass(rng.standard_normal(len(tt)), 1800) * np.sin(np.pi * tt / d) ** 2
         add(t0, n, 0.07)
@@ -84,9 +84,9 @@ def music():
     def glass(t0, f, g):
         d = 0.9; tt = np.arange(int(d * SR)) / SR
         add(t0, (np.sin(2 * np.pi * f * tt) + 0.25 * np.sin(2 * np.pi * 2.76 * f * tt)) * np.exp(-tt * 5.5) * np.minimum(1, tt / 0.004), g)
-    glass(4.9, 1046.5, 0.16); glass(4.9, 1568.0, 0.08)
-    for t0, f in ((6.64, 784.0), (7.14, 880.0), (7.64, 1046.5)): glass(t0, f, 0.1)
-    glass(8.9, 1174.7, 0.1)
+    glass(7.8, 1046.5, 0.16); glass(7.8, 1568.0, 0.08)
+    for t0, f in ((10.62, 784.0), (11.38, 880.0), (12.14, 1046.5)): glass(t0, f, 0.1)
+    glass(14.2, 1174.7, 0.1)
     return reverb(m, 0.1, 0.6)
 
 def main():

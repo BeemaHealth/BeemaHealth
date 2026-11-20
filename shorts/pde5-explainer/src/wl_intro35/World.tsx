@@ -41,12 +41,11 @@ export const cuesOf = (words: Word[], segs: Seg[]): Cu => {
 };
 
 /* ------------------------------------------------------------------ camera: keyframes on spoken words */
-type Key = {t: number; pos: V3; look: V3};
+type Key = {t: number; pos: V3; look: V3; d?: number};
 const keysOf = (c: Cu, end: number): Key[] => {
   const k: Key[] = [
     {t: 0, pos: [-9.4, 2.2, 7.6], look: [-9, 1.15, 0]},
-    {t: c.without + 0.5, pos: [-7.4, 2.0, 7.4], look: [-7.7, 1.05, 0]},
-    {t: c.b1 + 0.6, pos: [0.3, 2.6, 9.8], look: [0, 1.05, 0]},
+    {t: c.b1 + 0.6, pos: [0.3, 2.6, 9.8], look: [0, 1.05, 0], d: Math.max(1.2, c.b1 + 0.5 - c.without)},
     {t: c.sema + 0.35, pos: [-1.6, 2.0, 7.2], look: [-1.0, 1.15, 0]},
     {t: c.tirz + 0.35, pos: [1.6, 2.0, 7.2], look: [1.0, 1.15, 0]},
     {t: c.evaln + 0.3, pos: [0.2, 2.9, 9.4], look: [0, 1.15, -0.4]},
@@ -66,7 +65,7 @@ const keysOf = (c: Cu, end: number): Key[] => {
 const camAt = (keys: Key[], tg: number) => {
   let i = 0; while (i < keys.length - 2 && tg >= keys[i + 1].t) i++;
   const a = keys[i], b = keys[i + 1];
-  const D = Math.max(0.4, Math.min(1.5, b.t - a.t));          // keys are ARRIVAL times: hold (drifting), then glide in to land on the cue
+  const D = Math.max(0.4, Math.min(b.d ?? 1.5, b.t - a.t));          // keys are ARRIVAL times: hold (drifting), then glide in to land on the cue
   const k = ease((tg - (b.t - D)) / D);
   const pos = lerp3(a.pos, b.pos, k), look = lerp3(a.look, b.look, k);
   // a slow hand-held drift so the camera is never dead still
@@ -93,26 +92,29 @@ const rr = (g: CanvasRenderingContext2D, x: number, y: number, w: number, h: num
 
 const useWoodTex = () => useMemo(() => canvasTex(1024, 1024, (g) => {
   for (let i = 0; i < 8; i++) {
-    const base = 182 + rnd(i) * 26;
-    g.fillStyle = `rgb(${base + 20},${base - 18},${base - 70})`; g.fillRect(0, i * 128, 1024, 128);
+    const base = 150 + rnd(i) * 30;
+    const pg = g.createLinearGradient(0, i * 128, 0, i * 128 + 128); pg.addColorStop(0, `rgb(${base + 34},${base - 4},${base - 62})`); pg.addColorStop(1, `rgb(${base + 22},${base - 16},${base - 72})`);
+    g.fillStyle = pg; g.fillRect(0, i * 128, 1024, 128);
+    for (let n = 0; n < 2; n++) { const kx = rnd(i * 13 + n) * 1024, ky = i * 128 + 30 + rnd(i * 17 + n) * 68; const kg = g.createRadialGradient(kx, ky, 1, kx, ky, 14); kg.addColorStop(0, 'rgba(80,45,15,.55)'); kg.addColorStop(1, 'rgba(80,45,15,0)'); g.fillStyle = kg; g.beginPath(); g.ellipse(kx, ky, 26, 9, 0, 0, Math.PI * 2); g.fill(); }
     for (let k = 0; k < 90; k++) {
       const y = i * 128 + rnd(i * 100 + k) * 128, a = 0.05 + rnd(k * 7 + i) * 0.08;
       g.strokeStyle = `rgba(110,70,30,${a})`; g.lineWidth = 1 + rnd(k) * 2; g.beginPath(); g.moveTo(0, y);
       for (let x = 0; x <= 1024; x += 64) g.lineTo(x, y + Math.sin(x * 0.006 + k) * 3); g.stroke();
     }
-    g.fillStyle = 'rgba(70,45,20,.35)'; g.fillRect(0, i * 128, 1024, 2);
+    g.fillStyle = 'rgba(55,32,12,.6)'; g.fillRect(0, i * 128, 1024, 3);
     const cut = rnd(i * 3) * 1024; g.fillRect(cut, i * 128, 2, 128);
   }
 }, [6, 2.4]), []);
 
 /** Warm cream wall with soft window light falling across it (pre-blurred, so it reads as out of focus behind the subject). */
 const useWallTex = () => useMemo(() => canvasTex(2048, 512, (g) => {
-  const gr = g.createLinearGradient(0, 0, 0, 512); gr.addColorStop(0, '#efe2c4'); gr.addColorStop(1, '#e6d3ad'); g.fillStyle = gr; g.fillRect(0, 0, 2048, 512);
+  const gr = g.createLinearGradient(0, 0, 0, 512); gr.addColorStop(0, '#e9dbbd'); gr.addColorStop(0.75, '#e2cfa8'); gr.addColorStop(1, '#c9b38a'); g.fillStyle = gr; g.fillRect(0, 0, 2048, 512);
+  for (let i = 0; i < 9000; i++) { g.fillStyle = rnd(i * 3) > 0.5 ? `rgba(255,250,235,${rnd(i) * 0.08})` : `rgba(120,95,60,${rnd(i) * 0.06})`; g.fillRect(rnd(i * 5) * 2048, rnd(i * 7) * 512, 2, 2); }
   g.filter = 'blur(26px)';
   for (let w = 0; w < 6; w++) {
     const x0 = 120 + w * 340;
     for (let p = 0; p < 2; p++) for (let q = 0; q < 2; q++) {
-      g.fillStyle = 'rgba(255,240,205,.55)';
+      g.fillStyle = 'rgba(255,236,190,.7)';
       g.beginPath(); const x = x0 + p * 92, y = 70 + q * 120;
       g.moveTo(x, y); g.lineTo(x + 80, y - 10); g.lineTo(x + 120, y + 100); g.lineTo(x + 40, y + 110); g.closePath(); g.fill();
     }
@@ -123,7 +125,7 @@ const useWallTex = () => useMemo(() => canvasTex(2048, 512, (g) => {
 const PAPER = '#f6efe1';
 const useLabelTex = () => useMemo(() => canvasTex(512, 256, (g) => {
   g.fillStyle = PAPER; g.fillRect(0, 0, 512, 256);
-  for (let i = 0; i < 1600; i++) { g.fillStyle = `rgba(120,100,70,${rnd(i) * 0.05})`; g.fillRect(rnd(i * 3) * 512, rnd(i * 5) * 256, 2, 2); }
+  for (let i = 0; i < 4000; i++) { g.fillStyle = `rgba(120,100,70,${rnd(i) * 0.06})`; g.fillRect(rnd(i * 3) * 512, rnd(i * 5) * 256, 2, 2); }
   g.fillStyle = '#EEB318'; g.fillRect(0, 22, 512, 10); g.fillRect(0, 224, 512, 10);
 }), []);
 
@@ -133,7 +135,7 @@ const Env: React.FC = () => {
   useMemo(() => {
     const pm = new THREE.PMREMGenerator(gl);
     scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
-    (scene as THREE.Scene & {environmentIntensity?: number}).environmentIntensity = 0.42;
+    (scene as THREE.Scene & {environmentIntensity?: number}).environmentIntensity = 0.5;
   }, [gl, scene]);
   return null;
 };
@@ -143,7 +145,7 @@ const KeyLight: React.FC<{x: number}> = ({x}) => {
   return (
     <>
       <primitive object={target} />
-      <directionalLight position={[x - 5, 9, 7]} target={target} intensity={3.4} color="#ffdcab" castShadow
+      <directionalLight position={[x - 5, 9, 7]} target={target} intensity={3.9} color="#ffd59a" castShadow
         shadow-mapSize={[2048, 2048]} shadow-bias={-0.0004} shadow-normalBias={0.02}
         shadow-camera-left={-8} shadow-camera-right={8} shadow-camera-top={8} shadow-camera-bottom={-8} shadow-camera-near={1} shadow-camera-far={30} />
     </>
@@ -156,12 +158,19 @@ const faceCam = (at: V3, cam: V3): V3 => {
   return [-Math.atan2(dy, Math.hypot(dx, dz)), Math.atan2(dx, dz), 0];
 };
 const NameChip: React.FC<{top: string; name: string; at: V3; cam: V3; s: number; ready: boolean}> = ({top, name, at, cam, s, ready}) => {
+  // one baked texture (a dark rounded pill with two lines), so transparent planes never sort over each other
+  const tex = useMemo(() => canvasTex(640, 256, (g) => {
+    g.fillStyle = 'rgba(18,20,25,.9)'; rr(g, 6, 6, 628, 244, 64); g.fill();
+    g.strokeStyle = 'rgba(238,179,24,.75)'; g.lineWidth = 6; rr(g, 6, 6, 628, 244, 64); g.stroke();
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = '#F4C855'; g.font = '700 54px Outfit, system-ui'; g.fillText(top, 320, 84);
+    g.fillStyle = '#ffffff'; g.font = '800 84px Outfit, system-ui'; g.fillText(name, 320, 166);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [top, name, ready]);
   if (s <= 0.02) return null;
   return (
     <group position={at} rotation={faceCam(at, cam)} scale={s}>
-      <Txt text=" " w={1.62} h={0.62} color="#fff" bg="rgba(18,20,25,.88)" border="#EEB318aa" ready={ready} radius={0.22} />
-      <Txt text={top} w={1.3} h={0.2} pos={[0, 0.13, 0.005]} color="#F4C855" ready={ready} />
-      <Txt text={name} w={1.42} h={0.3} pos={[0, -0.1, 0.005]} color="#ffffff" ready={ready} />
+      <mesh><planeGeometry args={[1.35, 0.54]} /><meshBasicMaterial map={tex} transparent toneMapped={false} depthWrite={false} /></mesh>
     </group>
   );
 };
@@ -172,11 +181,17 @@ const useKraftTex = () => useMemo(() => canvasTex(512, 512, (g) => {
 }, [1, 1]), []);
 
 /* ------------------------------------------------------------------ hook: the waiting room */
+const useFabricTex = () => useMemo(() => canvasTex(256, 256, (g) => {
+  g.fillStyle = '#525a66'; g.fillRect(0, 0, 256, 256);
+  for (let y = 0; y < 256; y += 2) { g.fillStyle = `rgba(0,0,0,${0.05 + rnd(y) * 0.06})`; g.fillRect(0, y, 256, 1); }
+  for (let x = 0; x < 256; x += 3) { g.fillStyle = `rgba(255,255,255,${0.02 + rnd(x * 3) * 0.03})`; g.fillRect(x, 0, 1, 256); }
+}, [2, 2]), []);
 const Chair: React.FC<{x: number; k: number; i: number}> = ({x, k, i}) => {
   const seat = useMemo(() => new RoundedBoxGeometry(0.92, 0.13, 0.86, 3, 0.05), []);
   const back = useMemo(() => new RoundedBoxGeometry(0.92, 0.82, 0.12, 3, 0.05), []);
   if (k >= 0.99) return null;
-  const fabric = <meshStandardMaterial color="#4a5260" roughness={0.85} />;
+  const fabricTex = useFabricTex();
+  const fabric = <meshStandardMaterial map={fabricTex} roughness={0.95} />;
   return (
     <group position={[x - k * (5 + i * 0.6), k * 0.4, -1.5 - k * 1.2]} rotation={[0, k * 0.8, 0]} scale={1 - k * 0.85}>
       <mesh geometry={seat} position={[0, 0.5, 0]} castShadow receiveShadow>{fabric}</mesh>
@@ -193,7 +208,7 @@ const Clock: React.FC<{tg: number; c: Cu}> = ({tg, c}) => {
     g.strokeStyle = '#121419';
     for (let i = 0; i < 12; i++) { const a = (i * Math.PI) / 6; g.lineWidth = i % 3 === 0 ? 8 : 4; g.beginPath(); g.moveTo(128 + Math.cos(a) * 100, 128 + Math.sin(a) * 100); g.lineTo(128 + Math.cos(a) * 116, 128 + Math.sin(a) * 116); g.stroke(); }
   }), []);
-  const k = win(tg, c.without + 0.3, 0.8); if (k >= 0.99) return null;
+  const k = win(tg, c.b1 + 1.5, 0.8); if (k >= 0.99) return null;
   const spin = Math.min(tg, c.without + 0.2) * 3.2;          // minutes racing by while you wait, then it stops
   return (
     <group position={[S.hook + 1.45, 2.2 + k * 2, -2.88]} scale={(1 - k) * 0.8}>
@@ -215,21 +230,32 @@ const Vial: React.FC<{cap: string; label: THREE.Texture; spin: number}> = ({cap,
   return (
     <group rotation={[0, spin, 0]}>
       <mesh geometry={glass} castShadow>
-        <meshPhysicalMaterial color="#ffffff" transmission={1} thickness={0.25} roughness={0.04} ior={1.5} clearcoat={1} clearcoatRoughness={0.05} specularIntensity={1} />
+        <meshPhysicalMaterial color="#f6fbff" transmission={1} thickness={0.14} roughness={0.02} ior={1.52} clearcoat={1} clearcoatRoughness={0.03} specularIntensity={1} envMapIntensity={1.7} />
       </mesh>
-      <mesh position={[0, 0.44, 0]}><cylinderGeometry args={[0.405, 0.405, 0.78, 48]} /><meshPhysicalMaterial color="#fff7e6" transmission={1} thickness={0.6} roughness={0.02} ior={1.33} attenuationColor="#ffe9b8" attenuationDistance={3} /></mesh>
-      <mesh position={[0, 0.83, 0]} rotation={[-Math.PI / 2, 0, 0]}><circleGeometry args={[0.405, 48]} /><meshPhysicalMaterial color="#fffaf0" transmission={0.85} roughness={0.05} transparent opacity={0.7} /></mesh>
+      <mesh position={[0, 0.045, 0]}><cylinderGeometry args={[0.41, 0.42, 0.09, 48]} /><meshPhysicalMaterial color="#eef6f8" transmission={1} thickness={0.5} roughness={0.05} ior={1.52} envMapIntensity={1.5} /></mesh>
+      <mesh position={[0, 0.47, 0]}><cylinderGeometry args={[0.405, 0.405, 0.74, 48]} /><meshPhysicalMaterial color="#fbfdff" transmission={1} thickness={0.5} roughness={0.0} ior={1.33} envMapIntensity={1.2} /></mesh>
+      <mesh position={[0, 0.84, 0]} rotation={[-Math.PI / 2, 0, 0]}><ringGeometry args={[0.36, 0.405, 48]} /><meshPhysicalMaterial color="#ffffff" transmission={0.7} roughness={0.05} transparent opacity={0.55} envMapIntensity={2} /></mesh>
       <mesh position={[0, 0.56, 0]} castShadow><cylinderGeometry args={[0.448, 0.448, 0.5, 64, 1, true]} /><meshStandardMaterial map={label} roughness={0.92} /></mesh>
-      <mesh position={[0, 1.4, 0]} castShadow><cylinderGeometry args={[0.262, 0.262, 0.15, 40]} /><meshStandardMaterial color="#c9ced6" metalness={1} roughness={0.28} /></mesh>
-      <mesh position={[0, 1.5, 0]} castShadow><cylinderGeometry args={[0.255, 0.262, 0.07, 40]} /><meshStandardMaterial color={cap} roughness={0.45} metalness={0.15} /></mesh>
+      <mesh position={[0, 1.4, 0]} castShadow><cylinderGeometry args={[0.262, 0.262, 0.15, 40]} /><meshStandardMaterial color="#d3d7dd" metalness={1} roughness={0.22} /></mesh>
+      {[1.345, 1.455].map((y) => <mesh key={y} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]}><torusGeometry args={[0.262, 0.012, 8, 40]} /><meshStandardMaterial color="#b9bec6" metalness={1} roughness={0.3} /></mesh>)}
+      <mesh position={[0, 1.5, 0]} castShadow><cylinderGeometry args={[0.25, 0.258, 0.07, 40]} /><meshPhysicalMaterial color={cap} roughness={0.38} clearcoat={0.6} clearcoatRoughness={0.3} /></mesh>
+      <mesh position={[0, 1.536, 0]} rotation={[-Math.PI / 2, 0, 0]}><circleGeometry args={[0.2, 40]} /><meshStandardMaterial color={cap} roughness={0.55} /></mesh>
     </group>
   );
 };
-const Plinth: React.FC<{x: number; k: number}> = ({x, k}) => (
-  <mesh position={[x, 0.25 * k, 0]} scale={[1, Math.max(0.001, k), 1]} castShadow receiveShadow>
-    <cylinderGeometry args={[0.72, 0.78, 0.5, 64]} /><meshStandardMaterial color="#e9dfcf" roughness={0.75} />
-  </mesh>
-);
+const useStoneTex = () => useMemo(() => canvasTex(512, 256, (g) => {
+  g.fillStyle = '#e4d8c3'; g.fillRect(0, 0, 512, 256);
+  for (let i = 0; i < 70; i++) { g.fillStyle = `rgba(150,125,90,${0.05 + rnd(i) * 0.1})`; g.fillRect(0, rnd(i * 3) * 256, 512, 1 + rnd(i * 7) * 3); }
+  for (let i = 0; i < 260; i++) { g.fillStyle = 'rgba(120,95,65,.25)'; g.beginPath(); g.ellipse(rnd(i * 5) * 512, rnd(i * 11) * 256, 1 + rnd(i) * 5, 0.6 + rnd(i * 2) * 1.2, 0, 0, Math.PI * 2); g.fill(); }
+}), []);
+const Plinth: React.FC<{x: number; k: number}> = ({x, k}) => {
+  const stone = useStoneTex();
+  return (
+    <mesh position={[x, 0.25 * k, 0]} scale={[1, Math.max(0.001, k), 1]} castShadow receiveShadow>
+      <cylinderGeometry args={[0.72, 0.76, 0.5, 64]} /><meshStandardMaterial map={stone} roughness={0.7} />
+    </mesh>
+  );
+};
 const Clipboard: React.FC<{tg: number; c: Cu; ready: boolean}> = ({tg, c, ready}) => {
   const k = win(tg, c.evaln - 0.35, 0.7);
   const ticks = Math.min(3, Math.max(0, Math.floor((tg - c.evaln + 0.1) / 0.35) + 1));
@@ -277,8 +303,8 @@ const Phone: React.FC<{tg: number; c: Cu; ready: boolean}> = ({tg, c, ready}) =>
   const body = useMemo(() => new RoundedBoxGeometry(1.05, 2.12, 0.1, 6, 0.13), []);
   const p = clamp((tg - c.phone) / Math.max(1, c.presc - c.phone + 0.6)), q = Math.round(p * 24);
   const screen = useMemo(() => canvasTex(480, 980, (g) => {
-    g.fillStyle = '#ffffff'; g.fillRect(0, 0, 480, 980);
-    g.fillStyle = '#FDF2D0'; g.fillRect(0, 0, 480, 200);
+    g.fillStyle = '#050608'; g.fillRect(0, 0, 480, 980); rr(g, 0, 0, 480, 980, 54); g.save(); g.clip(); g.fillStyle = '#ffffff'; g.fillRect(0, 0, 480, 980);
+    g.fillStyle = '#FDF2D0'; g.fillRect(0, 0, 480, 200); g.fillStyle = '#050608'; rr(g, 186, 22, 108, 32, 16); g.fill();
     g.fillStyle = '#121419'; g.font = '800 46px Outfit, system-ui'; g.fillText('Medical intake', 34, 128);
     g.fillStyle = 'rgba(18,20,25,.12)'; rr(g, 34, 166, 412, 16, 8); g.fill();
     g.fillStyle = '#EEB318'; rr(g, 34, 166, Math.max(16, 412 * (q / 24)), 16, 8); g.fill();
@@ -290,17 +316,21 @@ const Phone: React.FC<{tg: number; c: Cu; ready: boolean}> = ({tg, c, ready}) =>
       if (done) { g.fillStyle = '#EEB318'; g.beginPath(); g.arc(400, y + 58, 22, 0, Math.PI * 2); g.fill(); g.strokeStyle = '#241C0C'; g.lineWidth = 5; g.beginPath(); g.moveTo(390, y + 58); g.lineTo(398, y + 66); g.lineTo(412, y + 50); g.stroke(); }
     });
     g.fillStyle = q >= 23 ? '#EEB318' : 'rgba(238,179,24,.4)'; rr(g, 34, 820, 412, 96, 48); g.fill();
-    g.fillStyle = '#241C0C'; g.font = '800 34px Outfit, system-ui'; g.textAlign = 'center'; g.fillText('Submit for review', 240, 880);
+    g.fillStyle = '#241C0C'; g.font = '800 34px Outfit, system-ui'; g.textAlign = 'center'; g.fillText('Submit for review', 240, 880); g.restore();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [q, ready]);
   const k = eob((tg - c.phone + 0.45) / 0.7), out = win(tg, c.cta + 0.4, 0.8);
   if (k <= 0.01) return null;
   return (
     <group position={[S.s3 - 0.6, 0, 0.1]} scale={clamp(k) * (1 - out * 0.0)}>
-      <mesh position={[0, 0.09, -0.05]} castShadow receiveShadow><boxGeometry args={[0.9, 0.18, 0.7]} /><meshStandardMaterial color="#d8cbb5" roughness={0.7} /></mesh>
+      <mesh position={[0, 0.07, -0.08]} castShadow receiveShadow><boxGeometry args={[0.8, 0.14, 0.62]} /><meshStandardMaterial color="#9c6d42" roughness={0.5} /></mesh>
+      <mesh position={[0, 0.2, -0.2]} rotation={[-0.14, 0, 0]} castShadow><boxGeometry args={[0.8, 0.16, 0.08]} /><meshStandardMaterial color="#8f633b" roughness={0.5} /></mesh>
       <group position={[0, 1.2 + (1 - clamp(k)) * 0.5, 0]} rotation={[-0.14, 0.25 + Math.sin(tg * 0.5) * 0.08, 0]}>
-        <mesh geometry={body} castShadow><meshStandardMaterial color="#1c1f26" metalness={0.7} roughness={0.25} /></mesh>
-        <mesh position={[0, 0, 0.051]}><planeGeometry args={[0.95, 1.98]} /><meshBasicMaterial map={screen} toneMapped={false} /></mesh>
+        <mesh geometry={body} castShadow><meshStandardMaterial color="#8e9096" metalness={0.92} roughness={0.32} /></mesh>
+        <mesh position={[0, 0, 0.0505]}><planeGeometry args={[1.0, 2.07]} /><meshStandardMaterial color="#050608" roughness={0.2} /></mesh>
+        <mesh position={[0, 0, 0.052]}><planeGeometry args={[0.95, 1.98]} /><meshBasicMaterial map={screen} color="#f4f1ea" toneMapped={false} /></mesh>
+        <mesh position={[0, 0, 0.055]}><planeGeometry args={[1.0, 2.07]} /><meshPhysicalMaterial color="#ffffff" transparent opacity={0.08} roughness={0.02} clearcoat={1} envMapIntensity={2.5} depthWrite={false} /></mesh>
+        {[[0.53, 0.45, 0.22], [0.53, 0.15, 0.22], [-0.53, 0.38, 0.32]].map(([x, y, l], j) => <mesh key={j} position={[x, y, 0]}><boxGeometry args={[0.02, l, 0.05]} /><meshStandardMaterial color="#8e9096" metalness={0.9} roughness={0.3} /></mesh>)}
       </group>
     </group>
   );
@@ -327,13 +357,13 @@ const Box: React.FC<{tg: number; c: Cu}> = ({tg, c}) => {
           ? <group key={j} position={[0, H, sgn * D / 2]} rotation={[sgn * a, 0, 0]}><mesh position={[0, 0, -sgn * len / 2]} castShadow><boxGeometry args={[Wd, th, len]} />{kraft}</mesh></group>
           : <group key={j} position={[sgn * Wd / 2, H + th, 0]} rotation={[0, 0, -sgn * a]}><mesh position={[-sgn * len / 2, 0, 0]} castShadow><boxGeometry args={[len, th, D]} />{kraft}</mesh></group>;
       })}
-      {tape > 0.01 && <mesh position={[0, H + th * 2.2, 0]} scale={[tape, 1, 1]}><boxGeometry args={[Wd + 0.04, 0.012, 0.3]} /><meshStandardMaterial color="#EEB318" roughness={0.35} /></mesh>}
+      {tape > 0.01 && <mesh position={[0, H + th * 2.2, 0]} scale={[tape, 1, 1]}><boxGeometry args={[Wd + 0.04, 0.012, 0.3]} /><meshPhysicalMaterial color="#d8b47a" roughness={0.12} clearcoat={1} transparent opacity={0.6} /></mesh>}
     </group>
   );
 };
 const Tag: React.FC<{tg: number; c: Cu; ready: boolean; cam: V3}> = ({tg, c, ready}) => {
   const geo = useMemo(() => new RoundedBoxGeometry(1.9, 1.05, 0.03, 3, 0.06), []);
-  const k = eob((tg - c.transp + 0.2) / 0.6); if (k <= 0.01) return null;
+  const k = eob((tg - c.transp - 0.15) / 0.6); if (k <= 0.01) return null;
   const dt = Math.max(0, tg - c.transp), swing = Math.sin(dt * 3.2) * 0.35 * Math.exp(-dt * 1.1);
   return (
     <group position={[S.s3 + 0.75, 3.15, 0.9]} rotation={[0, -0.25 + Math.sin(tg * 0.7) * 0.06, swing]} scale={clamp(k)}>
@@ -379,7 +409,7 @@ export const Wl35World: React.FC<{w: number; h: number; tg: number; words: Word[
       <fog attach="fog" args={['#e9d9b8', 14, 34]} />
       <Env />
       <Rig pos={pos} look={look} />
-      <hemisphereLight args={['#fff3dc', '#7a5a38', 0.32]} />
+      <hemisphereLight args={['#fff1d6', '#6b4a2a', 0.26]} />
       <KeyLight x={look[0]} />
       <pointLight position={[look[0] + 3.5, 3.2, -1.6]} intensity={14} color="#fff0d2" distance={12} />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[5, 0, 2]} receiveShadow><planeGeometry args={[80, 24]} /><meshStandardMaterial map={wood} roughness={0.55} metalness={0.02} /></mesh>
@@ -387,7 +417,7 @@ export const Wl35World: React.FC<{w: number; h: number; tg: number; words: Word[
       <mesh position={[5, 0.06, -2.97]}><boxGeometry args={[80, 0.12, 0.04]} /><meshStandardMaterial color="#f6efe1" roughness={0.6} /></mesh>
 
       <Plant x={-4.4} z={-2.3} s={1.4} tg={tg} /><Plant x={4.6} z={-2.2} s={1.2} tg={tg} /><Plant x={13.6} z={-2.3} s={1.5} tg={tg} /><Plant x={22.4} z={-2.2} s={1.3} tg={tg} />
-      {[0, 1, 2, 3].map((i) => <Chair key={i} i={i} x={S.hook - 1.6 + i * 1.05} k={chairK(3 - i)} />)}
+      {[0, 1, 2, 3].map((i) => <Chair key={i} i={i} x={S.hook - 1.6 + i * 1.05} k={chairK(3 - i) * 0.12} />)}
       <Clock tg={tg} c={c} />
 
       <group scale={1 - out1 * 0.999} position={[0, -out1 * 0.5, 0]}>
@@ -396,8 +426,8 @@ export const Wl35World: React.FC<{w: number; h: number; tg: number; words: Word[
         {vialK(c.tirz) > 0.01 && <group position={[1.35, 0.5 + (1 - clamp(vialK(c.tirz))) * 1.6, 0]} scale={clamp(vialK(c.tirz))}><Vial cap="#32353D" label={label} spin={-tg * 0.35 + 1.2} /></group>}
         <Clipboard {...sp} />
       </group>
-      <NameChip top="Compounded" name="Semaglutide" at={[-1.35, 2.5, 0.2]} cam={pos} s={clamp(vialK(c.sema)) * (1 - out1)} ready={ready} />
-      <NameChip top="Compounded" name="Tirzepatide" at={[1.35, 2.5, 0.2]} cam={pos} s={clamp(vialK(c.tirz)) * (1 - out1)} ready={ready} />
+      <NameChip top="Compounded" name="Semaglutide" at={[-1.25, 2.45, 0.2]} cam={pos} s={clamp(vialK(c.sema)) * (1 - out1)} ready={ready} />
+      <NameChip top="Compounded" name="Tirzepatide" at={[1.25, 2.45, 0.2]} cam={pos} s={clamp(vialK(c.tirz)) * (1 - out1)} ready={ready} />
 
       {[0, 1, 2].map((i) => <Tile key={i} i={i} {...sp} />)}
 

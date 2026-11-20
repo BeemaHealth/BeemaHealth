@@ -11,12 +11,21 @@
 export type GrowthProgramId = "story" | "referral" | "creator";
 
 /**
- * Pages are built but kept out of search (noindex, no sitemap entry) until the
- * launch gate in docs/features/growth-programs-legal.md section 10 is cleared.
- * Flip to true together with adding the paths to public/sitemap.xml and the
- * sitemap test.
+ * Per-program search visibility. A program set to false is kept out of search
+ * (noindex, no sitemap entry, no llms.txt mention) until its launch gate in
+ * docs/features/growth-programs-legal.md section 10 is cleared. Flip a program
+ * to true together with its paths in public/sitemap.xml, public/llms.txt, and
+ * the sitemap test.
+ *
+ * Creator: indexable (Matt, 2026-11-20) so search and answer engines can
+ * explain how the program works to prospective creators. Story and referral
+ * stay noindex.
  */
-export const GROWTH_PROGRAMS_INDEXABLE = false;
+export const GROWTH_PROGRAMS_INDEXABLE: Record<GrowthProgramId, boolean> = {
+  story: false,
+  referral: false,
+  creator: true,
+};
 
 /**
  * Where each program's action button goes. `null` means the destination is not

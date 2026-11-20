@@ -6,21 +6,23 @@ import '@fontsource/figtree/600.css';
 import {FPS, W, H, clamp01, ease, rnd} from '../theme';
 
 /**
- * Black Friday paid ad, 10 s, 9:16, readable with the sound off (no audio track).
+ * Black Friday paid ad, 16 s, 9:16, readable with the sound off.
  * Brand tokens from shorts/engine/brand.json only. Safe zones: top 230, bottom 400, left 70, right 150.
  * Price and product are props-in-code below so Matt can change them in one place.
- * PRICE IS UNVERIFIED in the repo (only tirzepatide $199 is on file): Matt stated $99 semaglutide on 2026-11-19.
+ * PRICE IS UNVERIFIED in the repo: Matt stated $300 off, $297 total on the 3-month semaglutide plan only (2026-11-19).
  */
-export const TOTAL = 10 * FPS;
+/** Slowed 1.6x from the original 10 s cut: every scene runs on a stretched clock (BASE frames of design time). */
+const BASE = 300, SLOW = 1.6;
+export const TOTAL = Math.round(BASE * SLOW);
 
 const B = {honey: '#EEB318', honeyDeep: '#D6A21E', honeyLight: '#F4C855', cream: '#F9EBBE', creamSoft: '#FDF2D0', ink: '#121419', onHoney: '#241C0C', white: '#FFFFFF'};
 const DISPLAY = 'Outfit, sans-serif', BODY = 'Figtree, sans-serif';
 const GOLD = `linear-gradient(180deg, ${B.honeyLight} 0%, ${B.honey} 48%, ${B.honeyDeep} 100%)`;
 const Z = {top: 230, left: 70, right: 150};
 const CONTENT_W = W - Z.left - Z.right; // 860
-const PRICE = '$99';
-const CODE = 'sema-off100'; // per Matt 2026-11-19: a code IS required at checkout (do not say no code needed)
-const FINE = '$99 first month with one-time code sema-off100 on a 3-month plan, then $199/mo. Once per patient. Not valid on 1-month plans. Compounded semaglutide is not FDA-approved. Rx only. Prescribing is never guaranteed. Adults 18+.';
+const PRICE = '$297';
+const CODE = 'BeemaHealth300offSema3M'; // per Matt 2026-11-19: $300 off the 3-month semaglutide plan only, $297 total. A code IS required at checkout.
+const FINE = '$297 total for the 3-month semaglutide plan ($300 off) with code BeemaHealth300offSema3M. Valid on the 3-month plan only, not on 1-month plans. Once per patient. Compounded semaglutide is not FDA-approved. Rx only. Prescribing is never guaranteed. Adults 18+.';
 
 const pop = (x: number) => { const v = clamp01(x), c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(v - 1, 3) + c1 * Math.pow(v - 1, 2); };
 const span = (f: number, a: number, b: number) => ease((f - a) / (b - a));
@@ -98,7 +100,7 @@ const Vial: React.FC<{f: number}> = ({f}) => {
     <AbsoluteFill style={{opacity: o}}>
       <div style={{position: 'absolute', left: Z.left, width: CONTENT_W, top: 345, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
         <div style={{transform: `scale(${p})`}}><GoldText size={240}>{PRICE}</GoldText></div>
-        <div style={{marginTop: 14, fontFamily: DISPLAY, fontWeight: 700, fontSize: 50, lineHeight: 1.14, textAlign: 'center', color: '#fff', opacity: sub, transform: `translateY(${(1 - sub) * 18}px)`}}>first month of GLP-1 treatment<br /><span style={{color: B.honeyLight}}>on a 3-month plan</span></div>
+        <div style={{marginTop: 14, fontFamily: DISPLAY, fontWeight: 700, fontSize: 50, lineHeight: 1.14, textAlign: 'center', color: '#fff', opacity: sub, transform: `translateY(${(1 - sub) * 18}px)`}}>for the 3-month semaglutide plan<br /><span style={{color: B.honeyLight}}>$300 off with code</span></div>
       </div>
       <div style={{position: 'absolute', left: Z.left + (CONTENT_W - VW) / 2, top: 760, width: VW, height: VH, transform: `translateY(${rise}px) scale(${scale})`, filter: `drop-shadow(0 40px 60px rgba(0,0,0,.6)) drop-shadow(0 0 70px ${B.honey}40)`}}>
         <Img src={src} style={{width: VW, height: VH, display: 'block'}} />
@@ -113,7 +115,7 @@ const Checkout: React.FC<{f: number}> = ({f}) => {
   const s = 120, e = 195, o = win(f, s, e, 8, 8);
   const rise = (1 - span(f, s, s + 14)) * 140;
   const badge = pop((f - 146) / 12);
-  const typed = CODE.slice(0, Math.max(0, Math.min(CODE.length, Math.floor((f - 128) * 0.8))));
+  const typed = CODE.slice(0, Math.max(0, Math.min(CODE.length, Math.floor((f - 128) * 0.7))));
   const txt = span(f, s + 4, s + 14);
   const row = (label: string, val: React.ReactNode, bold = false) => (
     <div style={{display: 'flex', justifyContent: 'space-between', fontFamily: BODY, fontWeight: 600, fontSize: bold ? 38 : 30, color: bold ? B.ink : '#4a4d55', padding: '14px 0'}}><span>{label}</span><span style={{fontFamily: bold ? DISPLAY : BODY, fontWeight: bold ? 800 : 600}}>{val}</span></div>
@@ -122,8 +124,8 @@ const Checkout: React.FC<{f: number}> = ({f}) => {
     <AbsoluteFill style={{opacity: o}}>
       <div style={{position: 'absolute', left: Z.left, width: CONTENT_W, top: 345, textAlign: 'center', opacity: txt, transform: `translateY(${(1 - txt) * 18}px)`}}>
         <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: 64, lineHeight: 1, color: '#fff'}}>Use code</div>
-        <div style={{display: 'inline-block', marginTop: 14, fontFamily: DISPLAY, fontWeight: 800, fontSize: 92, lineHeight: 1, color: B.onHoney, background: GOLD, borderRadius: 28, padding: '12px 40px 16px', boxShadow: `0 10px 0 ${B.honeyDeep}`}}>{CODE}</div>
-        <div style={{marginTop: 22, fontFamily: BODY, fontWeight: 600, fontSize: 44, lineHeight: 1.1, color: B.cream}}>at checkout on a 3-month plan</div>
+        <div style={{display: 'inline-block', marginTop: 14, fontFamily: DISPLAY, fontWeight: 800, fontSize: 54, lineHeight: 1, color: B.onHoney, background: GOLD, borderRadius: 28, padding: '18px 30px 22px', boxShadow: `0 10px 0 ${B.honeyDeep}`}}>{CODE}</div>
+        <div style={{marginTop: 22, fontFamily: BODY, fontWeight: 600, fontSize: 44, lineHeight: 1.1, color: B.cream}}>at checkout. 3-month plan only.</div>
       </div>
       <div style={{position: 'absolute', left: Z.left + (CONTENT_W - 560) / 2, top: 705 + rise, width: 560, height: 680, borderRadius: 64, background: '#0b0c10', border: `10px solid #2a2d35`, boxShadow: `0 40px 90px rgba(0,0,0,.65), 0 0 80px ${B.honey}33`, overflow: 'hidden'}}>
         <div style={{position: 'absolute', top: 14, left: '50%', width: 150, height: 34, borderRadius: 20, background: '#000', transform: 'translateX(-50%)'}} />
@@ -131,15 +133,15 @@ const Checkout: React.FC<{f: number}> = ({f}) => {
           <div style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: 44, color: B.ink, marginBottom: 14}}>Checkout</div>
           <div style={{height: 3, background: `${B.honey}`, opacity: 0.6, marginBottom: 10}} />
           {row('Semaglutide, 3-month plan', '')}
-          {row('Month 1', f >= 150 ? <span><s style={{opacity: 0.5, marginRight: 12}}>$199.00</s>{PRICE}.00</span> : '$199.00')}
+          {row('Subtotal', f >= 150 ? <s style={{opacity: 0.5}}>$597.00</s> : '$597.00')}
           <div style={{margin: '14px 0', padding: '16px 18px', borderRadius: 22, background: B.white, border: `3px dashed ${B.honeyDeep}55`, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 10, minHeight: 92}}>
-            <span style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: 34, color: typed ? B.ink : '#9a9a9a', letterSpacing: 1, whiteSpace: 'nowrap'}}>{typed || 'Enter code'}{typed && typed.length < CODE.length ? '|' : ''}</span>
+            <span style={{fontFamily: DISPLAY, fontWeight: 800, fontSize: 27, color: typed ? B.ink : '#9a9a9a', letterSpacing: 0, whiteSpace: 'nowrap'}}>{typed || 'Enter code'}{typed && typed.length < CODE.length ? '|' : ''}</span>
             <div style={{transform: `scale(${badge})`, opacity: badge > 0.02 ? 1 : 0, display: 'flex', alignItems: 'center', gap: 10, background: GOLD, color: B.onHoney, fontFamily: DISPLAY, fontWeight: 800, fontSize: 26, whiteSpace: 'nowrap', borderRadius: 50, padding: '10px 18px 10px 12px', boxShadow: `0 8px 24px ${B.honey}88`}}>
               <Check size={32} p={clamp01((f - 152) / 8)} fill={false} />Discount applied
             </div>
           </div>
           <div style={{height: 3, background: '#d9d2bc', margin: '8px 0'}} />
-          {row('Months 2 and 3', '$199/mo', true)}
+          {row('3-month total', f >= 150 ? `${PRICE}.00` : '$597.00', true)}
           <div style={{marginTop: 18, height: 84, borderRadius: 50, background: B.ink, color: '#fff', fontFamily: DISPLAY, fontWeight: 800, fontSize: 36, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Place order</div>
         </div>
       </div>
@@ -164,7 +166,7 @@ const Checks: React.FC<{f: number}> = ({f}) => {
           );
         })}
       </div>
-      <div style={{position: 'absolute', left: Z.left, width: CONTENT_W, top: 1240, textAlign: 'center', opacity: span(f, s + 40, s + 52), fontFamily: DISPLAY, fontWeight: 700, fontSize: 44, color: B.honey}}>{PRICE} first month on a 3-month plan</div>
+      <div style={{position: 'absolute', left: Z.left, width: CONTENT_W, top: 1240, textAlign: 'center', opacity: span(f, s + 40, s + 52), fontFamily: DISPLAY, fontWeight: 700, fontSize: 44, color: B.honey}}>{PRICE} total for 3 months</div>
     </AbsoluteFill>
   );
 };
@@ -191,11 +193,11 @@ const End: React.FC<{f: number}> = ({f}) => {
 };
 
 const Fine: React.FC<{f: number}> = ({f}) => (
-  <div style={{position: 'absolute', left: Z.left, width: CONTENT_W, top: 1418, textAlign: 'center', fontFamily: BODY, fontWeight: 600, fontSize: 26, lineHeight: 1.28, color: '#d8d3c0', opacity: win(f, 46, TOTAL, 8, 1) * 0.92}}>{FINE}</div>
+  <div style={{position: 'absolute', left: Z.left, width: CONTENT_W, top: 1418, textAlign: 'center', fontFamily: BODY, fontWeight: 600, fontSize: 26, lineHeight: 1.28, color: '#d8d3c0', opacity: win(f, 46, BASE, 8, 1) * 0.92}}>{FINE}</div>
 );
 
 export const BlackFridayShort: React.FC = () => {
-  const f = useCurrentFrame();
+  const f = useCurrentFrame() / SLOW;
   const [h] = useState(() => delayRender('fonts'));
   useEffect(() => { Promise.all([document.fonts.load('800 60px Outfit'), document.fonts.load('700 40px Outfit'), document.fonts.load('600 30px Figtree')]).then(() => continueRender(h)).catch(() => continueRender(h)); }, [h]);
   return (

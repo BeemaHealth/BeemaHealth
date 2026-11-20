@@ -21,7 +21,7 @@ export const Route = createFileRoute("/legal/referral-terms")({
         content:
           "Terms for the Beema Health patient Referral Program, including who can refer, how credits work, and how we protect your friend's privacy.",
       },
-      ...(GROWTH_PROGRAMS_INDEXABLE
+      ...(GROWTH_PROGRAMS_INDEXABLE.referral
         ? []
         : [{ name: "robots", content: "noindex" }]),
     ],
