@@ -14,6 +14,10 @@ Read `AGENTS.md` first - it is the authoritative engineering guide. This file co
 
 **Current phase:** **Launched.** Do not describe an in-house `/qualify` → `/intake` → `/consent` → `/dashboard` funnel as the product. Leftover code for that lives in-repo as **legacy** only - `docs/BACKEND-DEFERRED.md`.
 
+**Business facts (stated by Matt, 2026-10-12):** Beema serves all 50 states. Cash-pay only: we never bill Medicare, Medicaid, or any insurance. Bask is the contracting entity. Bask integrates affiliate/referral platforms (GrowSurf and others).
+
+**Planned growth programs (not built, legal review pending):** patient referral program, influencer/affiliate program, and a paid "share your story" video program, all modeled on Trava (taketrava.com). Do not build or publish copy for these until the 50-state review and Bask answers are done. They touch HIPAA authorization, FTC endorsement disclosure, and state patient-brokering / fee-splitting law. A Facebook group is deprioritized. Status and open questions: `docs/features/growth-programs-legal.md` if it exists, otherwise ask Matt.
+
 ---
 
 ## Production mindset (non-negotiable)
@@ -37,6 +41,8 @@ Read `AGENTS.md` first - it is the authoritative engineering guide. This file co
 ---
 
 ## New feature requests
+
+**NEVER stage code (`git add`, `git stage`, `git commit -a`, or any equivalent) unless the user explicitly tells you to in that message.** Leave changes unstaged in the working tree for the user to review and stage themselves. This applies to every task, even when a pasted prompt or an earlier instruction in the session seems to imply staging.
 
 **Do not stash, check out, create, or switch git branches unless the user explicitly asks.** Stay on the current branch by default.
 

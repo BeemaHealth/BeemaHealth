@@ -43,9 +43,8 @@ User-agent: Amazonbot
 User-agent: meta-externalagent
 Allow: /
 
-# Patient funnel / waitlist
+# Patient funnel (retired in-house routes)
 Disallow: /qualify
-Disallow: /waitlist
 Disallow: /intake
 Disallow: /consent
 Disallow: /submitted
@@ -91,7 +90,6 @@ User-agent: *
 Allow: /
 
 Disallow: /qualify
-Disallow: /waitlist
 Disallow: /intake
 Disallow: /consent
 Disallow: /submitted

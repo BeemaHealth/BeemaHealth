@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ImageDisclaimer } from "@/components/site/ImageDisclaimer";
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -28,6 +29,7 @@ import {
 } from "@/components/site/TreatmentPageBlocks";
 import { HowItWorksSteps } from "@/components/site/HowItWorksSteps";
 import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
+import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 import { GoogleRatingBadge } from "@/components/site/GoogleRatingBadge";
 import { EASE_OUT, LineReveal } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
@@ -52,11 +54,11 @@ const MEDICATION_PICKER: Record<
   { label: string; pricing: CompoundedMedicationPricing }
 > = {
   semaglutide: {
-    label: "Semaglutide",
+    label: "Compounded semaglutide",
     pricing: COMPOUNDED_SEMAGLUTIDE_PRICING,
   },
   tirzepatide: {
-    label: "Tirzepatide",
+    label: "Compounded tirzepatide",
     pricing: COMPOUNDED_TIRZEPATIDE_PRICING,
   },
 };
@@ -110,7 +112,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
 
               <motion.div
                 className="mt-6"
-                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                initial={false}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
                   duration: reduceMotion ? 0 : 0.6,
@@ -123,7 +125,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
 
               <motion.div
                 className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
-                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                initial={false}
                 animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{
                   duration: reduceMotion ? 0 : 0.6,
@@ -181,6 +183,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
                   fetchPriority="high"
                   className="absolute bottom-[5%] left-[6%] h-[66%] w-auto object-contain drop-shadow-2xl"
                 />
+                <ImageDisclaimer overlay />
               </div>
             </div>
           </div>
@@ -204,7 +207,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
           <div
             role="tablist"
             aria-label="Choose a medication"
-            className="inline-flex gap-1.5 rounded-full bg-muted p-1.5"
+            className="flex w-full max-w-md gap-1.5 rounded-full bg-muted p-1.5"
           >
             {(Object.keys(MEDICATION_PICKER) as MedicationId[]).map((id) => (
               <button
@@ -214,7 +217,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
                 aria-selected={selectedMedication === id}
                 onClick={() => setSelectedMedication(id)}
                 className={cn(
-                  "min-h-11 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "min-h-11 flex-1 rounded-full px-4 py-2.5 text-center text-sm font-semibold leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   selectedMedication === id
                     ? "bg-primary text-primary-foreground shadow-soft"
                     : "text-muted-foreground hover:text-foreground",
@@ -227,7 +230,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
         </div>
         <motion.div
           key={selectedMedication}
-          initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+          initial={false}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: reduceMotion ? 0 : 0.35, ease: EASE_OUT }}
           className="mx-auto mt-6 max-w-xl lg:max-w-4xl"
@@ -235,7 +238,7 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
           <TreatmentPricingCard
             pricing={MEDICATION_PICKER[selectedMedication].pricing}
             imagery={vialImagery[selectedMedication]}
-            cta={midCta}
+            cta={midCta.withPosition("pricing")}
           />
         </motion.div>
         <ul className="mx-auto mt-8 max-w-2xl space-y-2">
@@ -345,6 +348,8 @@ export function Glp1LandingPage({ market }: { market: Glp1Market }) {
           </SurfaceCard>
         </motion.div>
       </Section>
+
+      {market === "houston" ? <MedicalTeamSection className="pt-0" /> : null}
 
       <Section>
         <div className="mb-8 flex justify-center">

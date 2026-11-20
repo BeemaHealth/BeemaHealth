@@ -5,8 +5,6 @@ import { HeaderLogo } from "@/components/brand/Logo";
 import { HoverLiftButton, InfinityMotif } from "@/components/site/primitives";
 import { GetStartedModal } from "@/components/site/GetStartedModal";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
-import { FIRST_MONTH_PROMO_LINE } from "@/lib/marketing-copy";
-import { dualCompoundedShortPricingLine } from "@/lib/medication-pricing";
 import { SUPPORT_PHONE_DISPLAY, SUPPORT_PHONE_HREF } from "@/lib/contact-info";
 import {
   GOOGLE_REVIEW_LINK_LABEL,
@@ -18,6 +16,7 @@ import {
   JURISDICTIONAL_NOTICE_BODY,
   JURISDICTIONAL_NOTICE_TITLE,
 } from "@/lib/jurisdictional-notice";
+import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
 import { TRUST_SIGNALS } from "@/lib/trust-signals";
 
 /**
@@ -72,6 +71,8 @@ const COLUMNS = [
       { label: "How it works", to: "/how-it-works/" },
       { label: "Recipes", to: "/recipes/" },
       { label: "Learn", to: "/learn/" },
+      { label: "Blog", to: "/blogs/" },
+      { label: "Tools", to: "/tools/" },
       { label: "Share your story", to: "/share-your-story/" },
       { label: "Refer a friend", to: "/refer/" },
       { label: "Creator program", to: "/creators/" },
@@ -112,7 +113,11 @@ export function SiteFooter() {
   const [getStartedOpen, setGetStartedOpen] = useState(false);
   return (
     <footer className="bg-grad-ink relative overflow-hidden text-ink-foreground">
-      <GetStartedModal open={getStartedOpen} onOpenChange={setGetStartedOpen} />
+      <GetStartedModal
+        open={getStartedOpen}
+        onOpenChange={setGetStartedOpen}
+        position="footer"
+      />
       <InfinityMotif className="pointer-events-none absolute -right-16 -top-20 w-80 text-primary/10" />
       <div className="veya-container relative py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,minmax(0,1fr))]">
@@ -121,10 +126,9 @@ export function SiteFooter() {
               <HeaderLogo className="h-10" />
             </span>
             <p className="mt-4 text-sm leading-relaxed text-ink-foreground/70">
-              Weight-loss care guided by independent medical professionals,
-              503A-licensed pharmacies, with transparent cash pricing (
-              {dualCompoundedShortPricingLine()}), and support designed for
-              success.
+              Medical care guided by independent medical professionals, USA
+              503A-licensed pharmacies, with transparent cash pricing, and
+              support designed for success.
             </p>
             <HoverLiftButton className="mt-6 block">
               <button
@@ -135,9 +139,6 @@ export function SiteFooter() {
                 {cta.label}
               </button>
             </HoverLiftButton>
-            <p className="mt-3 text-xs font-medium text-primary">
-              Offer: {FIRST_MONTH_PROMO_LINE}
-            </p>
 
             <div className="mt-6 flex items-center gap-5 border-t border-ink-foreground/15 pt-6">
               <a
@@ -210,6 +211,9 @@ export function SiteFooter() {
             </span>
           ))}
         </div>
+
+        {/* Mobile only: desktop landing pages show the seal beside the hero heading. */}
+        <LegitScriptSeal className="mt-8 w-[88px] lg:hidden [&_img]:h-auto [&_img]:w-full" />
 
         <div className="mt-8 space-y-4 border-t border-ink-foreground/15 pt-8 text-xs leading-relaxed text-ink-foreground/60">
           <p>

@@ -1,0 +1,38 @@
+{
+ "hook": {
+  "text": "Hunger isn't just willpower. It's a conversation between your gut and your brain, and GLP-1 medications change that conversation.",
+  "dur": 7.93
+ },
+ "gut": {
+  "text": "After you eat, special cells in your gut release a hormone called GLP-1. It travels through the blood to tell your brain: you're full.",
+  "dur": 7.45
+ },
+ "brain": {
+  "text": "In the hypothalamus, the brain's appetite center, GLP-1 switches on fullness neurons and quiets hunger neurons. It also turns down the reward signals behind cravings.",
+  "dur": 10.45
+ },
+ "stomach": {
+  "text": "It also slows how quickly the stomach empties, so you feel full for longer. That's also why nausea is a common side effect.",
+  "dur": 7.11
+ },
+ "lasting": {
+  "text": "The catch: natural GLP-1 is broken down within minutes. These medications are engineered to last for days, so the fullness signal stays on.",
+  "dur": 8.44
+ },
+ "type1": {
+  "text": "There are three types. The first, a single agonist, activates only the GLP-1 receptor.",
+  "dur": 5.62
+ },
+ "type2": {
+  "text": "The second, a dual agonist, also activates the receptor for a second gut hormone called GIP, which may add appetite effects and help tolerability.",
+  "dur": 9.16
+ },
+ "type3": {
+  "text": "The third, a triple agonist, adds the glucagon receptor, which may increase energy use. This type is research only right now. It is not approved for use.",
+  "dur": 9.08
+ },
+ "beema": {
+  "text": "Beema Health does not sell the third type. Beema Health offers only compounded medications in the first two categories. Compounded medications are not FDA-approved, and a licensed provider decides whether any treatment is appropriate.",
+  "dur": 13.52
+ }
+}

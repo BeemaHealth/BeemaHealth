@@ -21,7 +21,12 @@
     "test:seo-live": "node scripts/check-prod-redirects.mjs",
     "utm": "node scripts/generate-utm-url.mjs",
     "test:backend": "./scripts/test-backend.sh",
-    "test:all": "npm test && npm run test:backend"
+    "test:all": "npm test && npm run test:backend",
+    "cro": "node --watch --watch-path=tools/cro-lab/server --watch-path=tools/cro-lab/shared tools/cro-lab/server/index.ts",
+    "cro:auth-check": "node tools/cro-lab/scripts/check-ga4-auth.mjs",
+    "cro:test": "node --test tools/cro-lab/shared/*.test.ts tools/cro-lab/server/*.test.ts",
+    "cro:legacy": "node --watch tools/cro/server.mjs",
+    "cro:legacy:test": "node --test tools/cro/lib.test.mjs"
   },
   "dependencies": {
     "@fontsource/figtree": "^5.3.0",
@@ -83,6 +88,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+    "@google-analytics/data": "^7.3.0",
     "@lovable.dev/vite-tanstack-config": "^2.3.2",
     "@types/node": "^22.16.5",
     "@types/react": "^19.2.0",
@@ -94,6 +100,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
+    "happy-dom": "^21.0.3",
     "nitro": "3.0.260603-beta",
     "prettier": "^3.7.3",
     "typescript": "^5.8.3",

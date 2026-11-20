@@ -3,7 +3,6 @@ import {
   BASK_HREF_SYNC_SCRIPT,
   capturePageUtms,
   clearPendingUtms,
-  getAttributionForSubmit,
   getPendingUtms,
   readUtmsFromUrl,
 } from "@/lib/utm";
@@ -47,7 +46,7 @@ describe("utm / attribution (frontend-only)", () => {
     vi.stubGlobal("window", {
       location: {
         search: "?utm_source=threads&cta_id=home_hero",
-        pathname: "/waitlist/",
+        pathname: "/glp-1-houston/",
       },
     });
     vi.stubGlobal("document", {
@@ -60,24 +59,8 @@ describe("utm / attribution (frontend-only)", () => {
     expect(pending.cta_id).toBe("home_hero");
     expect(pending.referrer).toBe("https://www.threads.net/@beema");
     expect(pending.landing_path).toBe(
-      "/waitlist/?utm_source=threads&cta_id=home_hero",
+      "/glp-1-houston/?utm_source=threads&cta_id=home_hero",
     );
-  });
-
-  it("builds a Formspree-ready attribution payload without empty fields required", () => {
-    vi.stubGlobal("window", {
-      location: {
-        search: "?utm_source=meta&cta_id=footer",
-        pathname: "/waitlist/",
-      },
-    });
-    vi.stubGlobal("document", { referrer: "" });
-    capturePageUtms();
-
-    const snap = getAttributionForSubmit();
-    expect(snap.utm_source).toBe("meta");
-    expect(snap.cta_id).toBe("footer");
-    expect(snap.page_path).toBe("/waitlist/?utm_source=meta&cta_id=footer");
   });
 
   it("repairs Gmail-style percent-encoded UTM blobs so GA keys exist", () => {

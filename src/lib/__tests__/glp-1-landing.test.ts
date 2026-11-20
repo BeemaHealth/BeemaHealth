@@ -119,10 +119,29 @@ describe("GLP-1 market landing pages", () => {
       "utf-8",
     );
     expect(nationalRoute).toContain('createFileRoute("/glp-1")');
-    expect(nationalRoute).toContain('<Glp1LandingPage market="national" />');
+    // The national page also renders through the variant system.
+    expect(nationalRoute).toContain('<LandingExperiment page="glp-1" />');
+    expect(
+      readFileSync(
+        resolve(__dirname, "../../landing-variants/glp-1/v1-control.tsx"),
+        "utf-8",
+      ),
+    ).toContain('<Glp1LandingPage market="national" />');
     expect(nationalRoute).not.toContain("redirect");
     expect(houstonRoute).toContain('createFileRoute("/glp-1-houston")');
-    expect(houstonRoute).toContain('<Glp1LandingPage market="houston" />');
+    // Houston renders through the variant system; its control wraps the shared page.
+    expect(houstonRoute).toContain(
+      '<LandingExperiment page="glp-1-houston" />',
+    );
+    expect(
+      readFileSync(
+        resolve(
+          __dirname,
+          "../../landing-variants/glp-1-houston/v1-control.tsx",
+        ),
+        "utf-8",
+      ),
+    ).toContain('<Glp1LandingPage market="houston" />');
     expect(houstonRoute).not.toContain("redirect");
   });
 

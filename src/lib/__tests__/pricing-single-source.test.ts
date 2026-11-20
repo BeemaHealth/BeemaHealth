@@ -36,6 +36,14 @@ function walk(dir: string): string[] {
 const COMMERCIAL_SURFACES = [
   "src/routes/semaglutide.tsx",
   "src/routes/tirzepatide.tsx",
+  // The nationwide pages' bodies and FAQ moved into the variant system.
+  "src/landing-variants/semaglutide/v1-control.tsx",
+  "src/landing-variants/semaglutide/shared.ts",
+  "src/landing-variants/semaglutide/v3-new-layout.tsx",
+  "src/landing-variants/tirzepatide/v1-control.tsx",
+  "src/landing-variants/tirzepatide/shared.ts",
+  "src/landing-variants/tirzepatide/v3-new-layout.tsx",
+  "src/landing-variants/template/GlpTreatmentPage.tsx",
   "src/routes/weight-loss.tsx",
   "src/components/site/Glp1LandingPage.tsx",
   "src/lib/glp-1-landing.ts",

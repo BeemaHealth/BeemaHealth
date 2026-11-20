@@ -1,4 +1,5 @@
 import { useRef, type MouseEvent as ReactMouseEvent } from "react";
+import { ImageDisclaimer } from "@/components/site/ImageDisclaimer";
 import { Link } from "@tanstack/react-router";
 import {
   motion,
@@ -202,6 +203,7 @@ function TreatmentCard({
             treatment.imagery.wideCropClass,
           )}
         />
+        <ImageDisclaimer overlay />
       </div>
 
       <div className="space-y-3 px-6 pb-4 pt-4 md:px-8 md:pt-5">

@@ -8,46 +8,27 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { BASK_HREF_SYNC_SCRIPT, capturePageUtms } from "@/lib/utm";
+import {
+  BASK_HREF_SYNC_SCRIPT,
+  capturePageUtms,
+  installBaskSrcPageStamp,
+} from "@/lib/utm";
 import { initAdPixels } from "@/lib/ad-conversions";
 import { GTM_CONTAINER_ID, GTM_HEAD_SCRIPT } from "@/lib/gtm";
 import { CHATBASE_EMBED_SCRIPT } from "@/lib/chatbase";
+import { CLARITY_EMBED_SCRIPT } from "@/lib/clarity";
 import { absoluteUrl, ORGANIZATION_JSONLD } from "@/lib/seo";
 import { duplicateHomepageRedirectTarget } from "@/lib/canonicalize-url";
-import { SiteBootLoader } from "@/components/brand/SiteBootLoader";
-import {
-  HEX_LOADER_DURATION_SCRIPT,
-  isSiteBootLoaderEnabled,
-} from "@/lib/site-boot-loader";
 import { SITE_CHROME_PRELOAD_LINK } from "@/lib/boot-assets";
 
 import appCss from "../styles.css?url";
+// Fonts the first screen paints with (H1 = Outfit 700, body/lead = Figtree 400).
+// Preloaded so they download alongside the stylesheet instead of after it.
+import outfit700 from "@fontsource/outfit/files/outfit-latin-700-normal.woff2?url";
+import figtree400 from "@fontsource/figtree/files/figtree-latin-400-normal.woff2?url";
 import { AuthProvider } from "../context/AuthContext";
+import { NotFoundPage } from "@/components/site/NotFoundPage";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-
-function NotFoundComponent() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">
-          Page not found
-        </h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex cursor-pointer items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
@@ -136,8 +117,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           httpEquiv: "Content-Security-Policy",
           content:
             "default-src 'self'; " +
-            `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co; ` +
-            `script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co; ` +
+            `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co https://news.google.com https://www.clarity.ms https://scripts.clarity.ms; ` +
+            `script-src-elem 'self' 'unsafe-inline' https://www.googletagmanager.com${import.meta.env.DEV ? " https://tagmanager.google.com" : ""} https://connect.facebook.net https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://www.chatbase.co https://news.google.com https://www.clarity.ms https://scripts.clarity.ms; ` +
             `style-src 'self' 'unsafe-inline'${import.meta.env.DEV ? " https://tagmanager.google.com" : ""}; ` +
             // worker-src: not needed in production (no app code spins up
             // workers). In dev, Vite's HMR client creates a SharedWorker
@@ -149,8 +130,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             `worker-src 'self'${import.meta.env.DEV ? " blob:" : ""}; ` +
             "font-src 'self' data:; " +
             "img-src 'self' data: https:; " +
-            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com https://www.chatbase.co https://backend.chatbase.co; " +
-            "frame-src https://www.googletagmanager.com https://td.doubleclick.net https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.chatbase.co https://backend.chatbase.co; " +
+            "connect-src 'self' https://nominatim.openstreetmap.org https://formspree.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://td.doubleclick.net https://ad.doubleclick.net https://stats.g.doubleclick.net https://connect.facebook.net https://www.facebook.com https://www.chatbase.co https://backend.chatbase.co https://news.google.com https://*.clarity.ms https://c.bing.com; " +
+            "frame-src https://www.youtube-nocookie.com https://www.googletagmanager.com https://td.doubleclick.net https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.chatbase.co https://backend.chatbase.co https://news.google.com; " +
             "form-action 'self' https://formspree.io; " +
             "base-uri 'self'; " +
             "object-src 'none'",
@@ -213,6 +194,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           rel: "stylesheet",
           href: appCss,
         },
+        // Fonts are same-origin but still need crossOrigin: font fetches are
+        // always CORS-mode, so a preload without it is discarded and the file
+        // downloads twice.
+        {
+          rel: "preload",
+          as: "font",
+          type: "font/woff2",
+          href: outfit700,
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "preload",
+          as: "font",
+          type: "font/woff2",
+          href: figtree400,
+          crossOrigin: "anonymous",
+        },
         SITE_CHROME_PRELOAD_LINK,
       ],
       scripts: [
@@ -224,7 +222,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     }),
     shellComponent: RootShell,
     component: RootComponent,
-    notFoundComponent: NotFoundComponent,
+    notFoundComponent: NotFoundPage,
     errorComponent: ErrorComponent,
   },
 );
@@ -238,11 +236,6 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: HEX_LOADER_DURATION_SCRIPT,
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
             __html: GTM_HEAD_SCRIPT,
           }}
         />
@@ -250,11 +243,6 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         <noscript>
-          <style
-            dangerouslySetInnerHTML={{
-              __html: ".site-boot-loader{display:none!important}",
-            }}
-          />
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_CONTAINER_ID}`}
             height="0"
@@ -267,6 +255,8 @@ function RootShell({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: BASK_HREF_SYNC_SCRIPT }} />
         {/* Chatbase bubble. Waits for window load inside the snippet. */}
         <script dangerouslySetInnerHTML={{ __html: CHATBASE_EMBED_SCRIPT }} />
+        {/* Microsoft Clarity recordings. Production host only, deferred. */}
+        <script dangerouslySetInnerHTML={{ __html: CLARITY_EMBED_SCRIPT }} />
         <Scripts />
       </body>
     </html>
@@ -277,10 +267,14 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   // Capture UTMs / cta_id from the URL on every page load so Formspree and
-  // GA can attribute waitlist leads and sessions without a backend.
+  // GA can attribute sessions without a backend.
   useEffect(() => {
     capturePageUtms();
   }, []);
+
+  // Tag Bask-bound clicks with the page they came from (src_page) so signups
+  // and purchases attribute to the page the visitor clicked on.
+  useEffect(() => installBaskSrcPageStamp(), []);
 
   // Meta Pixel / GA4 / Ads - Google destinations share one gtag.js request.
   // GTM remains in RootShell for the conversion linker and Bask handoff.
@@ -305,7 +299,6 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        {isSiteBootLoaderEnabled() ? <SiteBootLoader /> : null}
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
       </AuthProvider>

@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { ImageDisclaimer } from "@/components/site/ImageDisclaimer";
 import { useEffect, useState, type ReactNode } from "react";
 import { ArrowRight, CheckCircle2, type LucideIcon } from "lucide-react";
 import {
@@ -79,6 +80,21 @@ export type TreatmentPricingCardCta = {
   label: string;
 };
 
+/**
+ * Short copy for `compact` cards. Plan-by-plan detail (starter pack, 1/3/6/12
+ * months, promo code terms) lives in CompoundedPriceLockup and shows only for
+ * the plan the visitor selects, so it is not repeated here.
+ */
+const PRICING_INCLUDED = [
+  "Provider care",
+  "Medication and supplies",
+  "Expedited shipping",
+  "No membership fee",
+] as const;
+
+const PRICING_FOOTNOTE =
+  "All-inclusive cash-pay pricing. Dose does not change the monthly rate. Availability may vary based on clinical appropriateness, prescription, and pharmacy fulfillment.";
+
 export function TreatmentPricingCard({
   pricing,
   className,
@@ -101,69 +117,19 @@ export function TreatmentPricingCard({
         Transparent pricing
       </p>
       <CompoundedPriceLockup className="mt-5" pricing={pricing} size="lg" />
-      <p className="mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
-        {hasStarterPack(pricing) ? (
-          <>
-            <span className="font-semibold text-foreground">
-              {starterPackTitle(pricing.starterPack)}
-            </span>
-            : brand-new patients beginning tirzepatide get{" "}
-            {pricing.starterPack.dosePathLabel} for{" "}
-            <span className="font-bold text-foreground">
-              {formatUsd(pricing.starterPack.totalUsd)}
-            </span>{" "}
-            over {pricing.starterPack.months} months (
-            {formatUsd(pricing.starterPack.monthlyEquivalentUsd)}/mo).{" "}
-            {STARTER_PACK_INTAKE_HINT}{" "}
-            <span className="font-semibold text-foreground">
-              Standard / maintenance
-            </span>
-            : {formatUsd(pricing.monthlyUsd)}/mo monthly;{" "}
-            {formatUsd(getPlan(pricing, 3).monthlyUsd)}/mo on 3 months (Save{" "}
-            <span className="font-bold text-foreground">
-              {formatUsd(getPlan(pricing, 3).savingsUsd)}
-            </span>
-            ); {formatUsd(getPlan(pricing, 6).monthlyUsd)}/mo on 6 months (Save{" "}
-            <span className="font-bold text-foreground">
-              {formatUsd(getPlan(pricing, 6).savingsUsd)}
-            </span>
-            ); {formatUsd(getPlan(pricing, 12).monthlyUsd)}/mo annually (Save{" "}
-            <span className="font-bold text-foreground">
-              {formatUsd(getPlan(pricing, 12).savingsUsd)}
-            </span>
-            ). Promo code{" "}
-            <span className="font-bold text-foreground">
-              {pricing.promoCode}
-            </span>{" "}
-            takes an additional ${PROMO_CODE_DISCOUNT_USD} off 3-, 6-, and
-            12-month maintenance plans at checkout (one-time use, once per
-            patient) - not valid on the starter pack or a 1-month purchase.
-          </>
-        ) : (
-          <>
-            On a 3-month plan, one-time code{" "}
-            <span className="font-bold text-foreground">
-              {pricing.promoCode}
-            </span>{" "}
-            brings your first month to{" "}
-            <span className="font-bold text-foreground">
-              {formatUsd(promoFirstMonthUsd(pricing))}
-            </span>
-            , then {formatUsd(pricing.monthlyUsd)}/mo for months 2 and 3. Use
-            the plan tabs for 6- and 12-month rates (Save up to{" "}
-            <span className="font-bold text-foreground">
-              {formatUsd(getPlan(pricing, 12).savingsUsd)}
-            </span>
-            ). The same code can take an additional ${PROMO_CODE_DISCOUNT_USD}{" "}
-            off 6- and 12-month plans at checkout - not valid on a 1-month
-            purchase.
-          </>
-        )}{" "}
-        All-inclusive cash-pay pricing: provider care, medication, supplies, and
-        expedited shipping are included. No separate platform membership fee.
-        Dose does not change the monthly rate. Treatment availability may vary
-        based on clinical appropriateness, prescription, pharmacy fulfillment,
-        and state requirements.
+      <ul className="mt-5 grid gap-x-4 gap-y-1.5 text-sm text-foreground sm:grid-cols-2">
+        {PRICING_INCLUDED.map((item) => (
+          <li key={item} className="flex items-center gap-2">
+            <CheckCircle2
+              className="size-4 shrink-0 text-accent-foreground"
+              aria-hidden
+            />
+            {item}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-4 max-w-md text-[11px] leading-relaxed text-muted-foreground">
+        {PRICING_FOOTNOTE}
       </p>
       {cta ? (
         <Button asChild size="lg" className="mt-6 w-full">
@@ -192,6 +158,7 @@ export function TreatmentPricingCard({
               height={imagery.height}
               className="absolute inset-0 h-full w-full object-contain p-8 sm:p-10 lg:p-10"
             />
+            <ImageDisclaimer overlay />
           </div>
           <div className="p-6 md:p-8">{pricingContent}</div>
         </div>
@@ -629,8 +596,8 @@ export function SimpleTreatmentPricingCard({
         All-inclusive cash-pay pricing for {label}: provider care, medication,
         supplies, and shipping are included. No separate platform membership
         fee. Dose does not change the monthly rate. Treatment availability may
-        vary based on clinical appropriateness, prescription, pharmacy
-        fulfillment, and state requirements.
+        vary based on clinical appropriateness, prescription, and pharmacy
+        fulfillment.
       </p>
       {cta ? (
         <Button asChild size="lg" className="mt-6 w-full sm:w-auto">
@@ -774,8 +741,8 @@ function InteractiveSimplePricingCard({
         All-inclusive cash-pay pricing for {label}: provider care, medication,
         supplies, and shipping are included. No separate platform membership
         fee. Dose does not change the monthly rate. Treatment availability may
-        vary based on clinical appropriateness, prescription, pharmacy
-        fulfillment, and state requirements.
+        vary based on clinical appropriateness, prescription, and pharmacy
+        fulfillment.
       </p>
       {cta ? (
         <Button asChild size="lg" className="mt-6 w-full sm:w-auto">

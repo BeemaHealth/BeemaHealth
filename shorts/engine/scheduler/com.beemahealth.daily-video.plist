@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.beemahealth.daily-video</string>
+  <key>ProgramArguments</key><array><string>/bin/zsh</string><string>/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/scheduler/run_daily.sh</string></array>
+  <key>StartCalendarInterval</key><dict><key>Hour</key><integer>8</integer><key>Minute</key><integer>30</integer></dict>
+  <key>StandardErrorPath</key><string>/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/state/launchd.err</string>
+  <key>StandardOutPath</key><string>/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/state/launchd.out</string>
+</dict></plist>

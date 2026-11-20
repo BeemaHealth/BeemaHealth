@@ -10,7 +10,6 @@ import {
   isMetaPixelConfigured,
   readAdPixelConfig,
   trackGaPageView,
-  trackWaitlistLeadConversion,
 } from "@/lib/ad-conversions";
 
 type FakeWindow = {
@@ -86,36 +85,6 @@ describe("ad-conversions", () => {
     expect(isAnyAdPixelConfigured(config)).toBe(false);
   });
 
-  it("no-ops conversion tracking when IDs are missing", () => {
-    const { scripts } = installDomStubs({});
-    expect(() => trackWaitlistLeadConversion()).not.toThrow();
-    expect(scripts.size).toBe(0);
-  });
-
-  it("fires Meta Lead and Google conversion without PHI", () => {
-    vi.stubEnv("VITE_META_PIXEL_ID", "111222333");
-    vi.stubEnv("VITE_GOOGLE_ADS_ID", "AW-999888777");
-    vi.stubEnv("VITE_GOOGLE_ADS_CONVERSION_LABEL", "leadLabel");
-
-    const fbq = vi.fn();
-    const gtag = vi.fn();
-    installDomStubs({ fbq, gtag });
-
-    trackWaitlistLeadConversion();
-
-    expect(fbq).toHaveBeenCalledWith("init", "111222333");
-    expect(fbq).toHaveBeenCalledWith("track", "PageView");
-    expect(fbq).toHaveBeenCalledWith("track", "Lead");
-    expect(gtag).toHaveBeenCalledWith("event", "conversion", {
-      send_to: "AW-999888777/leadLabel",
-    });
-
-    const fbqArgs = JSON.stringify(fbq.mock.calls);
-    const gtagArgs = JSON.stringify(gtag.mock.calls);
-    expect(fbqArgs).not.toMatch(/@/);
-    expect(gtagArgs).not.toMatch(/@/);
-  });
-
   it("delegates to fbevents.js's callMethod once it upgrades the stub, instead of queuing forever", () => {
     vi.stubEnv("VITE_META_PIXEL_ID", "111222333");
     const win: FakeWindow = {};
@@ -186,23 +155,22 @@ describe("ad-conversions", () => {
     installDomStubs({
       gtag,
       location: {
-        href: "https://beemahealth.com/waitlist/?utm_source=instagram&utm_medium=social&utm_campaign=test_manual&utm_content=ig_post_test&cta_id=nav_header",
-        pathname: "/waitlist/",
+        href: "https://beemahealth.com/glp-1-houston/?utm_source=instagram&utm_medium=social&utm_campaign=test_manual&utm_content=ig_post_test&cta_id=nav_header",
+        pathname: "/glp-1-houston/",
         search:
           "?utm_source=instagram&utm_medium=social&utm_campaign=test_manual&utm_content=ig_post_test&cta_id=nav_header",
       },
     });
 
-    trackGaPageView("waitlist", "nav_header");
-    trackWaitlistLeadConversion();
+    trackGaPageView("glp-1-houston", "nav_header");
 
     expect(gtag).toHaveBeenCalledWith(
       "event",
       "page_view",
       expect.objectContaining({
-        page_title: "/waitlist/",
-        page_path: "/waitlist/",
-        screen_name: "waitlist",
+        page_title: "/glp-1-houston/",
+        page_path: "/glp-1-houston/",
+        screen_name: "glp-1-houston",
         page_location: expect.stringContaining("utm_source=instagram"),
         utm_source: "instagram",
         utm_medium: "social",
@@ -217,13 +185,15 @@ describe("ad-conversions", () => {
       expect.objectContaining({
         utm_source: "instagram",
         utm_content: "ig_post_test",
-        landing_page: "waitlist",
-        page_path: "/waitlist/",
+        landing_page: "glp-1-houston",
+        page_path: "/glp-1-houston/",
       }),
     );
-    expect(gtag).toHaveBeenCalledWith("event", "generate_lead", {
-      event_category: "waitlist",
-    });
+    expect(gtag).not.toHaveBeenCalledWith(
+      "event",
+      "generate_lead",
+      expect.anything(),
+    );
     expect(JSON.stringify(gtag.mock.calls)).not.toMatch(/@/);
   });
 

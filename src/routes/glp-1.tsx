@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Glp1LandingPage } from "@/components/site/Glp1LandingPage";
 import { glp1Head } from "@/lib/glp-1-landing";
+import { LandingExperiment } from "@/landing-variants/runtime";
 
 export const Route = createFileRoute("/glp-1")({
   head: () => glp1Head("national"),
@@ -8,5 +8,5 @@ export const Route = createFileRoute("/glp-1")({
 });
 
 function Glp1NationalPage() {
-  return <Glp1LandingPage market="national" />;
+  return <LandingExperiment page="glp-1" />;
 }

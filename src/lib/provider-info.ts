@@ -25,7 +25,6 @@ export const SEAN_ARORA_PROVIDER = {
   role: "Founder and CEO of Arora Health & Aesthetics",
   specialty: "Family Medicine - Adult Medicine",
   npi: "1841729449",
-  bio: "Dr. Sean Arora, MD, is a board-certified physician and the founder and CEO of Arora Health & Aesthetics. His work focuses on family medicine, wellness, weight management, and telehealth clinical oversight.",
 } as const;
 
 /** Plain-text answer for FAQ / FAQPage JSON-LD (no HTML). */
@@ -41,8 +40,10 @@ export function clinicalProviderGroupFaqAnswer(): string {
 
 /** Plain-text answer for FAQ / FAQPage JSON-LD (no HTML). */
 export function seanAroraFaqAnswer(): string {
+  // No biography here: the approved bios (lib/medical-team.ts) may only appear
+  // next to the licensor's required disclaimer.
   return [
-    SEAN_ARORA_PROVIDER.bio,
+    `${SEAN_ARORA_PROVIDER.displayName}, ${SEAN_ARORA_PROVIDER.credentials}, is the ${SEAN_ARORA_PROVIDER.role}.`,
     `Dr. Sean Arora NPI#: ${SEAN_ARORA_PROVIDER.npi} (individual Type 1 National Provider Identifier).`,
   ].join(" ");
 }

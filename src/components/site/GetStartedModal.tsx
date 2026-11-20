@@ -18,7 +18,12 @@ import {
 } from "@/components/ui/dialog";
 import { FullScreenMobileDialogContent } from "@/components/site/FullScreenMobileDialog";
 import { EdMintsPickerModal } from "@/components/site/EdMintsPicker";
-import { CTA_IDS, resolveCta, type CtaId } from "@/lib/cta-ids";
+import {
+  CTA_IDS,
+  resolveCta,
+  type CtaId,
+  type CtaPosition,
+} from "@/lib/cta-ids";
 import { cn } from "@/lib/utils";
 
 /**
@@ -221,7 +226,7 @@ export function autoAdvanceCtaId(category: GetStartedCategory): CtaId | null {
 }
 
 const cardClassName =
-  "flex cursor-pointer flex-col items-center gap-3 rounded-2xl border border-border p-6 text-center text-sm font-semibold text-foreground outline-none transition-colors hover:border-primary/40 hover:bg-accent focus-visible:border-primary/40 focus-visible:bg-accent";
+  "flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border border-border p-6 text-center text-sm font-semibold text-foreground outline-none transition-colors hover:border-primary/40 hover:bg-accent focus-visible:border-primary/40 focus-visible:bg-accent";
 
 type Step = "category" | "sex" | "product";
 type Sex = "male" | "female";
@@ -231,9 +236,15 @@ const SEX_LABEL: Record<Sex, string> = { male: "Male", female: "Female" };
 export function GetStartedModal({
   open,
   onOpenChange,
+  position,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /**
+   * Where on the page the button that opened this modal sits, reported as
+   * `cta_location`. Omit to derive it from each product's id (hero).
+   */
+  position?: CtaPosition;
 }) {
   const [step, setStep] = useState<Step>("category");
   const [categoryId, setCategoryId] = useState<string | null>(null);
@@ -319,13 +330,13 @@ export function GetStartedModal({
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <div className="grid flex-1 auto-rows-fr grid-cols-2 gap-4 sm:flex-none sm:grid-cols-4">
                 {GET_STARTED_CATEGORIES.map((category) => {
                   const Icon = category.icon;
                   const autoCtaId = autoAdvanceCtaId(category);
 
                   if (autoCtaId) {
-                    const cta = resolveCta(autoCtaId);
+                    const cta = resolveCta(autoCtaId, position);
                     return (
                       <Link
                         key={category.id}
@@ -371,7 +382,7 @@ export function GetStartedModal({
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid flex-1 auto-rows-fr gap-4 sm:flex-none sm:grid-cols-2">
                 {(["male", "female"] as const).map((value) => (
                   <button
                     key={value}
@@ -404,7 +415,7 @@ export function GetStartedModal({
 
               <div
                 className={cn(
-                  "grid gap-4",
+                  "grid flex-1 auto-rows-fr gap-4 sm:flex-none",
                   visibleProducts.length > 1
                     ? "sm:grid-cols-2"
                     : "sm:grid-cols-1",
@@ -424,7 +435,7 @@ export function GetStartedModal({
                     );
                   }
 
-                  const cta = resolveCta(product.ctaId);
+                  const cta = resolveCta(product.ctaId, position);
                   return (
                     <Link
                       key={product.ctaId}
@@ -456,8 +467,9 @@ export function GetStartedModal({
       <EdMintsPickerModal
         open={edMintsOpen}
         onOpenChange={setEdMintsOpen}
-        initialSelected="rdt"
+        initialSelected="odt"
         onBack={backFromEdMints}
+        position={position}
       />
     </>
   );

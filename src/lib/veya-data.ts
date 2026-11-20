@@ -6,7 +6,10 @@ import {
   compoundedMonthlyPricingSentence,
   dualCompoundedFaqPricingParagraph,
 } from "@/lib/medication-pricing";
-import { patientQuestionsGuidance } from "@/lib/marketing-copy";
+import {
+  PROVIDER_REVIEW_TIME_SENTENCE,
+  patientQuestionsGuidance,
+} from "@/lib/marketing-copy";
 import { SUPPORT_EMAIL } from "@/lib/contact-info";
 import {
   JURISDICTIONAL_NOTICE_BODY,
@@ -164,6 +167,10 @@ export const FAQ_GROUPS: FaqGroup[] = [
         a: "No. A licensed clinician independently reviews your medical intake and makes the final decision about whether treatment is appropriate for you - Beema Health itself never makes or influences that clinical judgment. Your clinician looks at your medical history, current health, and any conditions that could affect the safety of a given medication, including things like a personal or family history of certain thyroid cancers, pancreatitis, gallbladder issues, pregnancy or breastfeeding, or a history of eating disorders. Completing intake, paying for the visit, or having a BMI in a particular range does not guarantee you'll receive a prescription; it simply starts the clinical review process. If your clinician determines that a GLP-1 medication isn't safe or appropriate for you, they'll explain why and, where relevant, discuss alternatives or next steps rather than leaving you without guidance. This independent review is part of why intake questions matter - thorough, accurate answers help your clinician make a safe, well-informed decision more quickly.",
       },
       {
+        q: "How long does provider review take?",
+        a: `${PROVIDER_REVIEW_TIME_SENTENCE} Review starts after you submit your completed medical intake, and incomplete or unclear answers can take longer. Beema Health can't guarantee a specific start date, and a faster review is never a promise of approval: your provider makes an independent clinical decision about whether treatment is appropriate for you.`,
+      },
+      {
         q: "Which medications does Beema Health support?",
         a: "Beema Health's clinical provider group offers clinically appropriate weight-management medications, most commonly compounded semaglutide and compounded tirzepatide, prescribed based on your individual medical history and your clinician's independent evaluation. These are compounded formulations, and Beema Health does not claim that any compounded product is equivalent to, or interchangeable with, a specific FDA-approved branded medication - your clinician will explain the differences and help you understand what's being prescribed after you're an active patient. Which medication, if any, is right for you depends on factors like your health history, current medications, prior treatment experience, and any contraindications identified during intake; you complete a questionnaire rather than chatting live inside intake, and your clinician decides based on what you submit. If you're switching from another provider, your clinician will also factor in your existing prescription and dose so your treatment can continue as consistently as possible. Pricing for compounded semaglutide and compounded tirzepatide is listed separately in the pricing answers above.",
       },
@@ -225,7 +232,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "Which states is Beema Health available in?",
-        a: `Beema Health is available to patients in all 50 U.S. states: ${US_STATES.join(", ")}. ${JURISDICTIONAL_NOTICE_TITLE}: ${JURISDICTIONAL_NOTICE_BODY} Medication availability, prescribing, and pharmacy fulfillment still depend on your state's individual requirements and your provider's independent clinical decision.`,
+        a: `Beema Health is available to patients in all 50 U.S. states: ${US_STATES.join(", ")}. ${JURISDICTIONAL_NOTICE_TITLE}: ${JURISDICTIONAL_NOTICE_BODY} Prescribing is always your provider's independent clinical decision.`,
       },
     ],
   },

@@ -1,0 +1,34 @@
+{
+  "_note": "Generic (non-product) entry for the 'How It Works' Story video ONLY. Loaded by how_it_works/build.py; NOT in products.json and NOT in product_rotation (the daily planner never sees it). No medication, no price, no drug claims.",
+  "how-it-works": {
+    "label": "Beema Health online visit",
+    "category": "service",
+    "fda_status": "not_applicable_no_medication_named",
+    "compounded": false,
+    "landing_path": "",
+    "price_verified_on": null,
+    "prices": {
+      "note": "No prices in this video. Any $ or 'dollars' is BLOCKED by the gate (no 1mo_start)."
+    },
+    "mechanism": "None. Process explainer only.",
+    "safety_on_screen": "Prescription required. Prescribing is never guaranteed. An independently licensed provider decides whether treatment is appropriate.",
+    "safety_short": "Prescription required. Prescribing is never guaranteed.",
+    "disclosure_required_on_screen": [
+      "Prescription required",
+      "Prescribing is never guaranteed"
+    ],
+    "hashtags": [
+      "#Telehealth",
+      "#HowItWorks",
+      "#OnlineHealthcare"
+    ],
+    "audience": "Adults 18+",
+    "photo": null,
+    "photo_note": "No product photo: no medication is named or shown. Packaging in the 3D scene is generic and labelled only 'Prescription' and 'Rx'.",
+    "no_charge": {
+      "line": "You won't be charged if you aren't prescribed.",
+      "verified": true,
+      "source": "Beema Health sitewide CTA copy, not product pages: src/components/home/FinalCTASection.tsx (homepage) and src/routes/about.tsx ('You won't be charged anything if you're not prescribed, and no prescription is guaranteed'). Also on ED and GLP-1 pages. NOT on the BPC-157 pages (products.json bpc-157.no_charge.verified=false), so Matt must confirm it holds for every product a generic video can lead to."
+    }
+  }
+}

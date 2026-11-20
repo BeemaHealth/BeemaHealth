@@ -1,0 +1,53 @@
+{
+  "_note": "Claims proposed by the nightly script writer. Status ai_proposed_unverified always forces human review. Promote a claim to claims.json (with a real source) after checking it.",
+  "gen_20261116_a_11": {
+    "text": "PDE5 is found in the walls of blood vessels throughout the body.",
+    "source": "AI-proposed by the nightly script writer: basic pharmacology. Needs a human check before it is trusted.",
+    "status": "ai_proposed_unverified"
+  },
+  "gen_20261116_a_21": {
+    "text": "Combining sildenafil with nitrates can lower blood pressure dangerously.",
+    "source": "AI-proposed by the nightly script writer: sildenafil safety labeling. Needs a human check before it is trusted.",
+    "status": "ai_proposed_unverified"
+  },
+  "gen_20261116_a_31": {
+    "text": "Sildenafil can lower blood pressure slightly in some people.",
+    "source": "AI-proposed by the nightly script writer: sildenafil prescribing information. Needs a human check before it is trusted.",
+    "status": "ai_proposed_unverified"
+  },
+  "gen_20261116_b_11": {
+    "text": "FDA's bulk drug substances page lists ingredients that may be considered for use in compounding.",
+    "source": "AI-proposed by the nightly script writer: FDA bulk drug substances page, general description. Needs a human check before it is trusted.",
+    "status": "ai_proposed_unverified"
+  },
+  "gen_20261206_a_21": {
+    "text": "PDE5 is found in blood vessel walls in many parts of the body, not only one area.",
+    "source": "AI-proposed by the nightly script writer: basic pharmacology. Needs a human check before it is trusted.",
+    "status": "ai_proposed_unverified"
+  },
+  "gen_20261206_a_31": {
+    "text": "Headache is a common side effect of sildenafil, thought to relate to blood vessel widening; the exact mechanism is not fully settled.",
+    "source": "AI-proposed by the nightly script writer: general pharmacology and product labeling. Needs a human check before it is trusted.",
+    "status": "ai_proposed_unverified"
+  },
+  "gen_20261119_a_31": {
+    "text": "The exact mechanism behind GLP-1 medicine gastrointestinal side effects is not fully established.",
+    "source": "AI-proposed by the nightly script writer: general clinical pharmacology. Needs a human check before it is trusted.",
+    "status": "ai_proposed_unverified"
+  },
+  "gen_20261119_b_11": {
+    "text": "Headache is a known, labeled side effect of PDE5 inhibitors such as sildenafil.",
+    "source": "AI-proposed by the nightly script writer: general pharmacology education; labeled side effect. Needs a human check before it is trusted.",
+    "status": "ai_proposed_unverified"
+  },
+  "gen_20261119_b_21": {
+    "text": "PDE5 is found in blood vessel walls in many parts of the body, not only in one area.",
+    "source": "AI-proposed by the nightly script writer: general pharmacology education. Needs a human check before it is trusted.",
+    "status": "ai_proposed_unverified"
+  },
+  "gen_20261119_b_31": {
+    "text": "Widening of blood vessels is the commonly cited explanation for headache with PDE5 inhibitors.",
+    "source": "AI-proposed by the nightly script writer: general pharmacology education; labeled side effect. Needs a human check before it is trusted.",
+    "status": "ai_proposed_unverified"
+  }
+}

@@ -11,6 +11,7 @@ import { LearnBreadcrumb } from "@/components/learn/LearnBreadcrumb";
 import { LearnDisclaimer } from "@/components/learn/LearnDisclaimer";
 import { LearnInternalLinks } from "@/components/learn/LearnInternalLinks";
 import { LearnWeightLossCta } from "@/components/learn/LearnWeightLossCta";
+import { PreferredSourceButton } from "@/components/learn/PreferredSourceButton";
 import { resolveLearnArticleCtaId } from "@/content/learn/registry";
 import { trackPageViewed } from "@/lib/analytics";
 import type { LearnArticle } from "@/content/learn/types";
@@ -136,6 +137,7 @@ export function LearnArticleView({ article }: { article: LearnArticle }) {
 
           <LearnInternalLinks article={article} />
           {ctaId ? <LearnWeightLossCta ctaId={ctaId} /> : null}
+          <PreferredSourceButton className="mt-10" />
         </article>
       </Section>
     </MarketingLayout>

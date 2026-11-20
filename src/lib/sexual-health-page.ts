@@ -13,6 +13,7 @@ import {
   LEARN_FIFTY_STATE_SENTENCE,
   LEARN_USA_ONLY_SENTENCE,
 } from "@/lib/learn-trust-copy";
+import { formatUsd } from "@/lib/medication-pricing";
 import { patientQuestionsGuidance } from "@/lib/marketing-copy";
 import {
   breadcrumbJsonLd,
@@ -45,9 +46,14 @@ const CHEAPEST_ED_PER_DAY_NOTE = simplePerDaySentence({
   monthlyUsd: CHEAPEST_ED_MONTHLY_EQUIVALENT,
 });
 
+/**
+ * "Less than $1 a day" only when the cheapest 3-month equivalent really clears
+ * it; otherwise the cheapest monthly equivalent, named as a 3-month-plan price
+ * so it is not read as the 1-month rate.
+ */
 export const SEXUAL_HEALTH_STARTING_AT_PHRASE = CHEAPEST_ED_PER_DAY_NOTE
   ? "from less than $1 a day"
-  : `from ${formatSimpleStartingAt(ED_SILDENAFIL_PRICING)}`;
+  : `from ${formatUsd(CHEAPEST_ED_MONTHLY_EQUIVALENT)}/mo on a 3-month plan`;
 
 export const SEXUAL_HEALTH_TITLE = "Online ED Treatment | Beema Health";
 
@@ -91,7 +97,7 @@ export const SEXUAL_HEALTH_FAQ: TreatmentFaqItem[] = [
   },
   {
     q: "How do I start ED treatment online?",
-    a: "Choose a formulation to open that medication's page, then start its online intake. Tadalafil, sildenafil, and ED mints each have their own visit. No payment is required to start an intake, and a prescription is never guaranteed.",
+    a: "Choose a formulation to open that medication's page, then start its online intake. Tadalafil, sildenafil, and ED mints each have their own visit. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.",
   },
 ];
 

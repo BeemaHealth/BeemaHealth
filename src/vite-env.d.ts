@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  /** Meta Pixel ID for waitlist Lead conversions (public). */
+  /** Meta Pixel ID (public). */
   readonly VITE_META_PIXEL_ID?: string;
   /** Google Ads tag ID, e.g. AW-123456789 (public). */
   readonly VITE_GOOGLE_ADS_ID?: string;
@@ -11,6 +11,6 @@ interface ImportMetaEnv {
   readonly VITE_GA_MEASUREMENT_ID?: string;
   /** GTM container ID, e.g. GTM-XXXXXXX - Bask questionnaire + marketing Preview. */
   readonly VITE_GTM_CONTAINER_ID?: string;
-  /** Optional override for waitlist-page social-proof count. */
-  readonly VITE_WAITLIST_DISPLAY_COUNT?: string;
+  /** "1" bundles every landing variant for ?preview_variant= (staging only). */
+  readonly VITE_PREVIEW_ALL_VARIANTS?: string;
 }

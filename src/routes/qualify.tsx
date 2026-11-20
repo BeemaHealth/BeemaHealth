@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-type WaitlistSearch = {
+type QualifySearch = {
   cta_id?: string;
   utm_source?: string;
   utm_medium?: string;
@@ -8,8 +8,8 @@ type WaitlistSearch = {
   utm_content?: string;
 };
 
-function pickWaitlistSearch(search: Record<string, unknown>): WaitlistSearch {
-  const out: WaitlistSearch = {};
+function pickQualifySearch(search: Record<string, unknown>): QualifySearch {
+  const out: QualifySearch = {};
   for (const key of [
     "cta_id",
     "utm_source",
@@ -29,7 +29,7 @@ function pickWaitlistSearch(search: Record<string, unknown>): WaitlistSearch {
  */
 export const Route = createFileRoute("/qualify")({
   validateSearch: (search: Record<string, unknown>) =>
-    pickWaitlistSearch(search),
+    pickQualifySearch(search),
   beforeLoad: ({ search }) => {
     throw redirect({
       to: "/",

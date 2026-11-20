@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Glp1LandingPage } from "@/components/site/Glp1LandingPage";
+import { LandingExperiment } from "@/landing-variants/runtime";
 import { glp1Head } from "@/lib/glp-1-landing";
 
 export const Route = createFileRoute("/glp-1-houston")({
@@ -8,5 +8,5 @@ export const Route = createFileRoute("/glp-1-houston")({
 });
 
 function Glp1HoustonPage() {
-  return <Glp1LandingPage market="houston" />;
+  return <LandingExperiment page="glp-1-houston" />;
 }

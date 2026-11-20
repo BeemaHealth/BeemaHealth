@@ -40,10 +40,19 @@ export type SimpleQuarterlyPlan = {
 };
 
 export type SimpleCompoundedPricing = {
-  /** 1-month cash-pay rate. */
+  /**
+   * 1-month cash-pay rate. For a product sold in several doses (tadalafil)
+   * this is the lowest dose's price, i.e. the "starting at" figure.
+   */
   monthlyUsd: number;
   /** Omitted when no quarterly SKU exists for this product (e.g. TRT). */
   quarterly?: SimpleQuarterlyPlan;
+  /**
+   * Set only when the price depends on dose (tadalafil): every dose's 1-month
+   * and 3-month price, lowest dose first. `monthlyUsd` and `quarterly` then
+   * describe the lowest dose.
+   */
+  doses?: readonly EdDosePlan[];
 };
 
 function quarterlyPlan(
@@ -145,17 +154,64 @@ export const HAIRLOSS_TOPICAL_WOMEN_PRICING: SimpleCompoundedPricing = {
  * sold - only the RDT combo below is live.
  */
 
-/** Single-ingredient tadalafil, Health Warehouse. */
-export const ED_TADALAFIL_PRICING: SimpleCompoundedPricing = {
-  monthlyUsd: 49.67,
-  quarterly: quarterlyPlan(89, 49.67),
+/**
+ * One dose of an ED tablet and its two plans. Source: Matt's ED pricing sheet
+ * (Beema Price column), given 2026-10-27. This file's older ED numbers were
+ * wrong and must not be treated as the source of truth; if a number here is
+ * ever in doubt, ask Matt.
+ */
+export type EdDosePlan = {
+  dose: string;
+  monthly: { tablets: number; usd: number };
+  quarterly: { tablets: number; usd: number };
 };
 
-/** Single-ingredient sildenafil, Health Warehouse. */
-export const ED_SILDENAFIL_PRICING: SimpleCompoundedPricing = {
-  monthlyUsd: 43,
-  quarterly: quarterlyPlan(89, 43),
-};
+/** Tadalafil (Health Warehouse), lowest dose first. */
+export const ED_TADALAFIL_DOSE_PLANS: readonly EdDosePlan[] = [
+  {
+    dose: "5mg",
+    monthly: { tablets: 30, usd: 89 },
+    quarterly: { tablets: 90, usd: 149 },
+  },
+  {
+    dose: "10mg",
+    monthly: { tablets: 16, usd: 99 },
+    quarterly: { tablets: 48, usd: 159 },
+  },
+  {
+    dose: "20mg",
+    monthly: { tablets: 16, usd: 149 },
+    quarterly: { tablets: 48, usd: 249 },
+  },
+];
+
+/** Sildenafil (Health Warehouse): 50mg and 100mg are the same price. */
+export const ED_SILDENAFIL_DOSE_PLANS: readonly EdDosePlan[] = [
+  {
+    dose: "50mg or 100mg",
+    monthly: { tablets: 16, usd: 89 },
+    quarterly: { tablets: 48, usd: 129 },
+  },
+];
+
+function edPricing(plans: readonly EdDosePlan[]): SimpleCompoundedPricing {
+  const lowest = plans[0];
+  return {
+    monthlyUsd: lowest.monthly.usd,
+    quarterly: quarterlyPlan(lowest.quarterly.usd, lowest.monthly.usd),
+    ...(plans.length > 1 ? { doses: plans } : {}),
+  };
+}
+
+/** Single-ingredient tadalafil: starting (lowest-dose) prices. */
+export const ED_TADALAFIL_PRICING: SimpleCompoundedPricing = edPricing(
+  ED_TADALAFIL_DOSE_PLANS,
+);
+
+/** Single-ingredient sildenafil. */
+export const ED_SILDENAFIL_PRICING: SimpleCompoundedPricing = edPricing(
+  ED_SILDENAFIL_DOSE_PLANS,
+);
 
 /**
  * Per-pill "starting at" price for the tadalafil/sildenafil oral tablets
@@ -166,8 +222,14 @@ export const ED_SILDENAFIL_PRICING: SimpleCompoundedPricing = {
  * keep showing the real monthly/quarterly numbers. Oral tablets only - ED
  * Mints (the combo products) are not priced per pill.
  */
-export const ED_TADALAFIL_PER_PILL_USD = 1.66;
-export const ED_SILDENAFIL_PER_PILL_USD = 2.69;
+export const ED_TADALAFIL_PER_PILL_USD = roundMoney(
+  ED_TADALAFIL_DOSE_PLANS[0].quarterly.usd /
+    ED_TADALAFIL_DOSE_PLANS[0].quarterly.tablets,
+);
+export const ED_SILDENAFIL_PER_PILL_USD = roundMoney(
+  ED_SILDENAFIL_DOSE_PLANS[0].quarterly.usd /
+    ED_SILDENAFIL_DOSE_PLANS[0].quarterly.tablets,
+);
 
 /** e.g. "$1.66/pill". */
 export function formatPerPillStartingAt(amountUsd: number): string {
@@ -241,6 +303,59 @@ export const SERMORELIN_PRICING: SimpleCompoundedPricing = {
   quarterly: quarterlyPlan(597, 249),
 };
 
+/**
+ * MOTS-C (new 2026-11-02, per Matt's cost-sheet screenshot, the first
+ * product on the Peptides nav dropdown). Interactive 3-month/1-month picker
+ * like sermorelin/NAD+: 3 months (15 mL, quarterly) at $597 total (~$199/mo,
+ * saving $240) is the default tab, 1 month (5 mL) at $279/mo is the explicit
+ * alternate tab. The hero leads with the $199/mo quarterly rate via
+ * `formatSimpleQuarterlyStartingAt()`.
+ */
+export const MOTS_C_PRICING: SimpleCompoundedPricing = {
+  monthlyUsd: 279,
+  quarterly: quarterlyPlan(597, 279),
+};
+
+/**
+ * BPC-157 (new 2026-11-03, per Matt: "pricing is exactly the same as
+ * MOTS-C"). Same interactive 3-month/1-month picker and the same numbers as
+ * `MOTS_C_PRICING`, kept as its own constant so the two can diverge later.
+ */
+export const BPC_157_PRICING: SimpleCompoundedPricing = {
+  monthlyUsd: 279,
+  quarterly: quarterlyPlan(597, 279),
+};
+
+/**
+ * BPC-157 capsules (new 2026-11-03). PLACEHOLDER pricing: the numbers mirror
+ * `BPC_157_PRICING` (injections) until Matt confirms the capsule price from
+ * his sheet. Its own constant so it can diverge without touching injections.
+ */
+export const BPC_157_CAPSULES_PRICING: SimpleCompoundedPricing = {
+  monthlyUsd: 279,
+  quarterly: quarterlyPlan(597, 279),
+};
+
+/**
+ * BPC-157 / TB-500 / GHK-Cu blend (new 2026-11-03, per Matt: $329 for 1
+ * month, $729 for 3 months). Interactive 3-month/1-month picker like the
+ * other peptides; the hero leads with the ~$243/mo quarterly rate.
+ */
+export const BPC_TB500_GHK_CU_PRICING: SimpleCompoundedPricing = {
+  monthlyUsd: 329,
+  quarterly: quarterlyPlan(729, 329),
+};
+
+/**
+ * GHK-Cu (new 2026-11-04, per Matt: $299 for 1 month, $597 for 3 months).
+ * Interactive 3-month/1-month picker like the other peptides; the hero leads
+ * with the ~$199/mo quarterly rate.
+ */
+export const GHK_CU_PRICING: SimpleCompoundedPricing = {
+  monthlyUsd: 299,
+  quarterly: quarterlyPlan(597, 299),
+};
+
 /** Short card headline, e.g. "$169/mo". */
 export function formatSimpleStartingAt(
   pricing: SimpleCompoundedPricing,
@@ -289,6 +404,21 @@ export function simplePricingSentence(
   treatmentLabel: string,
   pricing: SimpleCompoundedPricing,
 ): string {
+  const doses = pricing.doses;
+  if (doses && doses.length > 1 && pricing.quarterly) {
+    const q = pricing.quarterly;
+    const list = (parts: string[]) =>
+      parts.length > 1
+        ? `${parts.slice(0, -1).join(", ")}, and ${parts[parts.length - 1]}`
+        : parts[0];
+    const monthly = list(
+      doses.map((d) => `${formatUsd(d.monthly.usd)}/month at ${d.dose}`),
+    );
+    const quarterly = list(
+      doses.map((d) => `${formatUsd(d.quarterly.usd)} for ${d.dose}`),
+    );
+    return `${treatmentLabel} is ${monthly}. Quarterly plans are ${quarterly}, billed every 3 months (the ${doses[0].dose} plan works out to about ${formatUsd(q.monthlyEquivalentUsd)}/mo, saving ${formatUsd(q.savingsUsd)} vs. paying monthly). Both are all-inclusive cash-pay pricing with no separate platform membership fee.`;
+  }
   const monthlySentence = `${treatmentLabel} is ${formatUsd(pricing.monthlyUsd)}/month.`;
   if (!pricing.quarterly) {
     return `${monthlySentence} That's all-inclusive cash-pay pricing with no separate platform membership fee.`;
@@ -314,6 +444,11 @@ export function listKnownSimpleTreatmentPricingUsdAmounts(): number[] {
     ED_MINTS_ODT_PRICING,
     NAD_PRICING,
     SERMORELIN_PRICING,
+    MOTS_C_PRICING,
+    BPC_157_PRICING,
+    BPC_157_CAPSULES_PRICING,
+    BPC_TB500_GHK_CU_PRICING,
+    GHK_CU_PRICING,
   ]) {
     amounts.add(roundMoney(pricing.monthlyUsd));
     if (pricing.quarterly) {
@@ -321,6 +456,13 @@ export function listKnownSimpleTreatmentPricingUsdAmounts(): number[] {
       amounts.add(roundMoney(pricing.quarterly.monthlyEquivalentUsd));
       amounts.add(roundMoney(pricing.quarterly.savingsUsd));
     }
+  }
+  for (const plan of [
+    ...ED_TADALAFIL_DOSE_PLANS,
+    ...ED_SILDENAFIL_DOSE_PLANS,
+  ]) {
+    amounts.add(plan.monthly.usd);
+    amounts.add(plan.quarterly.usd);
   }
   return [...amounts].sort((a, b) => a - b);
 }

@@ -1,23 +1,21 @@
 #!/usr/bin/env node
 /**
- * Generate unique GA4 / Formspree-trackable Beema Health URLs for social posts.
+ * Generate unique GA4-trackable Beema Health URLs for social posts.
  *
  * Examples:
- *   npm run utm -- waitlist --source instagram
+ *   npm run utm -- home --source instagram
  *   npm run utm -- home --source x --medium social
- *   npm run utm -- waitlist --source instagram --content ig_post_launch_a
+ *   npm run utm -- home --source instagram --content ig_post_launch_a
  *   npm run utm -- daily-pack
- *   npm run utm -- waitlist --source instagram --debug   # QA only — never publish ga_debug
+ *   npm run utm -- home --source instagram --debug   # QA only — never publish ga_debug
  *
  * Measurement (no backend required):
  *   - Visits → GA4 (utm_source / medium / campaign / content) when the browser allows GA
- *   - Waitlist signups → Formspree fields with the same UTMs
  */
 
 const ORIGIN = "https://beemahealth.com";
 
 const DESTINATIONS = {
-  waitlist: "/waitlist/",
   home: "/",
 };
 
@@ -64,7 +62,7 @@ function slug(value) {
 
 /**
  * @param {{
- *   dest?: 'waitlist' | 'home',
+ *   dest?: 'home',
  *   source: string,
  *   medium?: string,
  *   campaign?: string,
@@ -74,7 +72,7 @@ function slug(value) {
  * }} opts
  */
 export function buildTrackableUrl(opts) {
-  const destKey = opts.dest === "home" ? "home" : "waitlist";
+  const destKey = "home";
   const path = DESTINATIONS[destKey];
   const date = opts.date || todayDate();
   const source = slug(opts.source || "unknown");
@@ -110,21 +108,21 @@ export function buildTrackableUrl(opts) {
 export function buildBioLinks() {
   return {
     instagram: buildTrackableUrl({
-      dest: "waitlist",
+      dest: "home",
       source: "instagram",
       medium: "social",
       campaign: "instagram_bio",
       content: "instagram_link_in_bio",
     }),
     facebook: buildTrackableUrl({
-      dest: "waitlist",
+      dest: "home",
       source: "facebook",
       medium: "social",
       campaign: "facebook_bio",
       content: "facebook_link_in_bio",
     }),
     threads: buildTrackableUrl({
-      dest: "waitlist",
+      dest: "home",
       source: "threads",
       medium: "social",
       campaign: "threads_bio",
@@ -156,7 +154,7 @@ export function buildDailyPack(date = todayDate()) {
     const content = `x_post_${i}_${date.replace(/-/g, "")}_${shortId(3)}`;
     pack.x.push(
       buildTrackableUrl({
-        dest: "waitlist",
+        dest: "home",
         source: "x",
         medium: "social",
         campaign,
@@ -167,7 +165,7 @@ export function buildDailyPack(date = todayDate()) {
   }
 
   pack.reddit = buildTrackableUrl({
-    dest: "waitlist",
+    dest: "home",
     source: "reddit",
     medium: "social",
     campaign,
@@ -176,7 +174,7 @@ export function buildDailyPack(date = todayDate()) {
   });
 
   pack.gbp = buildTrackableUrl({
-    dest: "waitlist",
+    dest: "home",
     source: "google",
     medium: "gbp",
     campaign,
@@ -191,7 +189,7 @@ function printHelp() {
   console.log(`Beema Health trackable URL generator
 
 Usage:
-  npm run utm -- <waitlist|home> --source <platform> [options]
+  npm run utm -- <home> --source <platform> [options]
   npm run utm -- bio-links
   npm run utm -- daily-pack
   npm run utm -- prompt
@@ -207,7 +205,7 @@ Options:
 
 Examples:
   npm run utm -- bio-links
-  npm run utm -- waitlist -s x
+  npm run utm -- home -s x
   npm run utm -- daily-pack
 `);
 }
@@ -289,9 +287,9 @@ async function main() {
     return;
   }
 
-  if (cmd !== "waitlist" && cmd !== "home") {
+  if (cmd !== "home") {
     console.error(
-      `Unknown destination "${cmd}". Use waitlist, home, bio-links, or daily-pack.`,
+      `Unknown destination "${cmd}". Use home, bio-links, or daily-pack.`,
     );
     process.exit(1);
   }

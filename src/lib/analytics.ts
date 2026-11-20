@@ -1,9 +1,6 @@
 import { trackFunnelEventApi } from "@/lib/api/client";
 import { capturePageUtms, getPendingUtms } from "@/lib/utm";
-import {
-  trackGaPageView,
-  trackWaitlistLeadConversion,
-} from "@/lib/ad-conversions";
+import { trackGaPageView } from "@/lib/ad-conversions";
 
 export type FunnelEventPayload = {
   event_name: string;
@@ -113,13 +110,4 @@ export function trackCtaClicked(ctaId: string, page?: string) {
       ...(page ? { page } : {}),
     },
   });
-}
-
-/**
- * First-party funnel event + Meta/Google/GA lead conversion after a successful
- * waitlist submit. Never pass PHI into ad pixels.
- */
-export function trackWaitlistSubmit(page = "waitlist") {
-  trackCtaClicked("waitlist_submit", page);
-  trackWaitlistLeadConversion();
 }

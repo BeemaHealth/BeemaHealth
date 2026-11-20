@@ -1,0 +1,26 @@
+{
+ "hook": {
+  "text": "Skip the waiting room. Sildenafil and tadalafil, prescription medicines for erectile dysfunction, online.",
+  "dur": 6.83
+ },
+ "steps": {
+  "text": "Complete a secure health questionnaire. A licensed provider reviews it. If appropriate, a licensed pharmacy ships it.",
+  "dur": 7.12
+ },
+ "price": {
+  "text": "Doctor visit and shipping included. Tadalafil starts at eighty-nine dollars a month, or under fifty on a three-month plan. Sildenafil is eighty-nine dollars a month, or forty-three on a three-month plan.",
+  "dur": 13.07
+ },
+ "trust": {
+  "text": "Both are FDA-approved generics from a licensed pharmacy. Prescribing is never guaranteed. A provider decides.",
+  "dur": 7.61
+ },
+ "isi": {
+  "text": "Important safety information. Do not take either medicine with nitrates, often used for chest pain, or riociguat. It can cause a dangerous drop in blood pressure. Seek help right away for an erection lasting over four hours, or sudden vision or hearing loss. Common side effects: headache, flushing, upset stomach. Tell your provider about your health and all medicines you take.",
+  "dur": 23.72
+ },
+ "close": {
+  "text": "Beema Health. Prescription required. Learn more at beemahealth dot com.",
+  "dur": 4.53
+ }
+}

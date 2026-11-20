@@ -90,7 +90,7 @@ export const article: LearnArticle = {
     {
       question: "How fast can a Houston resident start?",
       answer:
-        "Intake is self-paced and the provider review happens after you finish it. Shipping time depends on the pharmacy, not on your ZIP code inside Houston. Nobody can promise a start date, because the clinical decision comes first and some people are told a GLP-1 is not appropriate for them.",
+        "Intake is self-paced and the provider review happens after you finish it. Provider-review times vary, but most reviews are completed within five hours. Shipping time depends on the pharmacy, not on your ZIP code inside Houston. Nobody can promise a start date, because the clinical decision comes first and some people are told a GLP-1 is not appropriate for them.",
     },
     {
       question: "Does Houston heat change anything about taking semaglutide?",

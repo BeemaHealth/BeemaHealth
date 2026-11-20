@@ -72,7 +72,7 @@ const SHARED_FAQ = {
   },
   howItWorks: {
     q: "How does online GLP-1 care work?",
-    a: "You start with a free online medical intake - no payment required to begin. A licensed provider reviews your answers and decides whether treatment may be appropriate. If approved and a compounded medication is prescribed, your plan includes provider care, medication, supplies, and expedited shipping, with follow-up as your care continues. Prescribing is never guaranteed.",
+    a: "You start with a free online medical intake - you won't be charged anything if you're not prescribed. A licensed provider reviews your answers and decides whether treatment may be appropriate. If approved and a compounded medication is prescribed, your plan includes provider care, medication, supplies, and expedited shipping, with follow-up as your care continues. Prescribing is never guaranteed.",
   },
   difference: {
     q: "What is the difference between compounded semaglutide and tirzepatide?",
@@ -80,7 +80,7 @@ const SHARED_FAQ = {
   },
   getStarted: {
     q: "How do I get started online?",
-    a: "Select Get Started to open Beema Health’s secure online medical intake. Share your health history, current medications, and goals. A licensed provider reviews your case and decides next steps. No payment is required to start the intake, and a prescription is never guaranteed.",
+    a: "Select Get Started to open Beema Health’s secure online medical intake. Share your health history, current medications, and goals. A licensed provider reviews your case and decides next steps. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.",
   },
 } as const satisfies Record<string, TreatmentFaqItem>;
 
@@ -119,7 +119,7 @@ const GLP1_COPY: Record<Glp1Market, Glp1LandingCopy> = {
       SHARED_FAQ.whatIs,
       {
         q: "Does Beema Health serve patients nationwide?",
-        a: `Yes. ${LEARN_FIFTY_STATE_SENTENCE} You complete intake online from home; a licensed provider reviews your case remotely. Medication availability still depends on applicable state rules and pharmacy fulfillment, and eligibility is always an individual clinical decision - never guaranteed just because you live in a covered state. ${LEARN_USA_ONLY_SENTENCE}`,
+        a: `Yes. ${LEARN_FIFTY_STATE_SENTENCE} You complete intake online from home; a licensed provider reviews your case remotely. Eligibility is always an individual clinical decision - never guaranteed just because you live in a covered state. ${LEARN_USA_ONLY_SENTENCE}`,
       },
       SHARED_FAQ.pricing,
       SHARED_FAQ.howItWorks,
@@ -131,13 +131,13 @@ const GLP1_COPY: Record<Glp1Market, Glp1LandingCopy> = {
     servingEyebrow: "Nationwide telehealth",
     servingTitle: "Online care that's human and built for success.",
     servingBody:
-      "Availability depends on your state. Most US states allow online clinic visits, but some do not. Where it applies, you complete Beema Health's medical intake online and a licensed provider reviews your case by telehealth. When clinically appropriate and legally available, compounded GLP-1 options may be prescribed and shipped to you. Beema Health does not serve patients outside the United States.",
+      "You complete Beema Health's medical intake online and a licensed provider reviews your case by telehealth. When clinically appropriate and legally available, compounded GLP-1 options may be prescribed and shipped to you. Beema Health does not serve patients outside the United States.",
     servingMarketLink: {
       to: "/glp-1-houston/",
       label: "See GLP-1 care for Houston",
     },
     footerCtaBody:
-      "Complete medical intake from home. No payment required to start. A prescription is never guaranteed.",
+      "Complete medical intake from home. You won't be charged anything if you're not prescribed. A prescription is never guaranteed.",
     dateModified: "2026-08-16",
   },
   houston: {
@@ -160,7 +160,7 @@ const GLP1_COPY: Record<Glp1Market, Glp1LandingCopy> = {
       SHARED_FAQ.whatIs,
       {
         q: "Does Beema Health serve Houston?",
-        a: `Yes. Beema Health serves adults in Houston and across all 50 US states through telehealth. You complete intake online from home; a licensed provider reviews your case remotely. Medication availability still depends on applicable state rules and pharmacy fulfillment, and eligibility is always an individual clinical decision - never guaranteed just because you live in Houston. ${LEARN_USA_ONLY_SENTENCE}`,
+        a: `Yes. Beema Health serves adults in Houston and across all 50 US states through telehealth. You complete intake online from home; a licensed provider reviews your case remotely. Eligibility is always an individual clinical decision - never guaranteed just because you live in Houston. ${LEARN_USA_ONLY_SENTENCE}`,
       },
       SHARED_FAQ.pricing,
       SHARED_FAQ.howItWorks,
@@ -172,9 +172,9 @@ const GLP1_COPY: Record<Glp1Market, Glp1LandingCopy> = {
     servingEyebrow: "Serving Houston",
     servingTitle: "Online care that's human and built for success.",
     servingBody:
-      "Availability depends on your state. Most US states allow online clinic visits, but some do not. If you're in Houston, or anywhere in Texas where it applies, you complete Beema Health's medical intake online and a licensed provider reviews your case by telehealth. When clinically appropriate and legally available, compounded GLP-1 options may be prescribed and shipped to you. Beema Health does not serve patients outside the United States.",
+      "If you're in Houston, or anywhere in Texas, you complete Beema Health's medical intake online and a licensed provider reviews your case by telehealth. When clinically appropriate and legally available, compounded GLP-1 options may be prescribed and shipped to you. Beema Health does not serve patients outside the United States.",
     footerCtaBody:
-      "Houston patients can complete medical intake from home. No payment required to start. A prescription is never guaranteed.",
+      "Houston patients can complete medical intake from home. You won't be charged anything if you're not prescribed. A prescription is never guaranteed.",
     dateModified: "2026-08-16",
   },
 };

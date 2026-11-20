@@ -1,0 +1,34 @@
+{
+  "_note": "Claims and review items for the hand-built video 2026-11-19_wl-intro35 (semaglutide + tirzepatide intro). Kept in its own file so the shared claims.json is not edited while sibling agents work. Merge into claims.json after Matt signs off. Statuses other than verified/verified_by_matt/verified_basic_pharmacology/general_education force a review item.",
+  "claims": {
+    "wl35_two_options": {
+      "text": "Compounded semaglutide and compounded tirzepatide are two options a provider may consider for weight management, only after a clinical evaluation.",
+      "source": "Beema live copy src/lib/glp-1-landing.ts FAQ 'difference': 'Both are compounded options that a licensed provider may consider for medical weight management when clinically appropriate and legally available.'",
+      "status": "verified"
+    },
+    "wl35_process_delivery": {
+      "text": "Online medical intake, licensed provider review, prescription delivered (ships to your door) if approved.",
+      "source": "src/lib/glp-1-landing.ts howItWorks/getStarted FAQ and CASH_PAY_POINTS ('expedited shipping when prescribed'). 'To your door' is a plain reading of shipping, not a timing claim.",
+      "status": "verified"
+    },
+    "wl35_phone_intake": {
+      "text": "The intake can be completed from a phone.",
+      "source": "Bask hosts the intake (web questionnaire). Not stated in so many words on the live page; Matt should confirm the Bask intake is mobile-friendly end to end.",
+      "status": "needs_matt_confirmation"
+    },
+    "wl35_no_membership_fee": {
+      "text": "Transparent cash-pay pricing. No separate membership fee.",
+      "source": "Beema live copy: src/lib/glp-1-landing.ts CASH_PAY_POINTS ('No platform membership fee'), SHARED_HERO_DESCRIPTION ('No membership fee'), src/lib/simple-treatment-pricing.ts ('no separate platform membership fee'). The site says it; nobody has confirmed against Bask's actual checkout that no recurring platform/membership charge exists.",
+      "status": "site_copy_needs_bask_checkout_confirmation"
+    }
+  },
+  "review_flags": {
+    "wl35_two_products_one_video": "Video names two compounded products; it was gated as both tirzepatide and semaglutide. Each needs compounded sign-off.",
+    "wl35_illustrative_vials": "Vials are 3D illustrations (glass, liquid, cap, a blank paper band with two honey stripes, no text). They are not the real Beema Health/pharmacy vial or label and are labeled 'Illustration' on screen. Matt to confirm this is acceptable versus the live-site vial renders (which carry 'Weight loss Medication' and a syringe).",
+    "wl35_generic_shipping_box": "The pharmacy packaging scene is a generic plain kraft box with a white insulated pouch and honey tape. It is not the real pharmacy/Bask packaging. Confirm or supply a real packaging photo.",
+    "wl35_independent_evaluation_wording": "Brief said 'independent clinical evaluation'. Script says 'a clinical evaluation' because 'independent' (providers independent of Beema Health/Bask?) is unverified. Matt decides.",
+    "wl35_notice_vs_spoken_disclosure": "The brief's notice is on screen from the first product mention through the end card, and a shortened disclosure is SPOKEN in the closing line. The standard engine closing line ('Prescription required. Prescribing is never guaranteed, and you won't be charged if you aren't prescribed') is NOT spoken (time budget); the no-charge line is on the end card only. Matt decides whether that satisfies the gate.",
+    "wl35_no_word_captions": "This Story uses kinetic headlines that mirror the narration instead of word-by-word captions. Confirm that is acceptable for accessibility (IG auto-captions can be enabled).",
+    "wl35_waiting_room_metaphor": "Hook shows empty waiting-room chairs leaving. Implies convenience, not an outcome. Confirm no comparison claim against in-person clinics is read into it."
+  }
+}

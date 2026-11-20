@@ -474,15 +474,15 @@ describe("recipe compliance and SEO markup", () => {
     "utf-8",
   );
   const semaglutideRoute = readFileSync(
-    resolve(__dirname, "../../routes/semaglutide.tsx"),
+    resolve(__dirname, "../../landing-variants/semaglutide/v1-control.tsx"),
     "utf-8",
   );
   const tirzepatideRoute = readFileSync(
-    resolve(__dirname, "../../routes/tirzepatide.tsx"),
+    resolve(__dirname, "../../landing-variants/tirzepatide/v1-control.tsx"),
     "utf-8",
   );
   const weightLossRoute = readFileSync(
-    resolve(__dirname, "../../routes/weight-loss.tsx"),
+    resolve(__dirname, "../../landing-variants/weight-loss/v1-control.tsx"),
     "utf-8",
   );
   const howItWorksRoute = readFileSync(

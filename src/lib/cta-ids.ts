@@ -1,4 +1,11 @@
-import { isBaskIntakeUrl, trackIntakeHandoff } from "@/lib/gtm";
+import {
+  isBaskIntakeUrl,
+  trackIntakeHandoff,
+  type CtaPosition,
+} from "@/lib/gtm";
+
+export type { CtaPosition };
+import { experimentEventParams } from "@/lib/experiment-context";
 import { getBaskHandoffParams } from "@/lib/utm";
 
 /** Stable CTA identifiers for funnel / conversion attribution. */
@@ -12,6 +19,10 @@ export const CTA_IDS = {
   weight_loss_footer: "weight_loss_footer",
   sexual_health_hero: "sexual_health_hero",
   sexual_health_footer: "sexual_health_footer",
+  sexual_health_tadalafil: "sexual_health_tadalafil",
+  sexual_health_sildenafil: "sexual_health_sildenafil",
+  sexual_health_ed_mints_rdt: "sexual_health_ed_mints_rdt",
+  sexual_health_ed_mints_odt: "sexual_health_ed_mints_odt",
   hair_hero: "hair_hero",
   hair_footer: "hair_footer",
   wellness_hero: "wellness_hero",
@@ -56,6 +67,18 @@ export const CTA_IDS = {
   ed_mints_odt_footer: "ed_mints_odt_footer",
   ed_mints_boston_hero: "ed_mints_boston_hero",
   ed_mints_boston_footer: "ed_mints_boston_footer",
+  // Nationwide /ed-mints: same per-spot ids (ed_mints_ prefix keeps the CRO Lab
+  // attributing them to /ed-mints/).
+  ed_mints_rdt_picker: "ed_mints_rdt_picker",
+  ed_mints_odt_picker: "ed_mints_odt_picker",
+  ed_mints_rdt_plans: "ed_mints_rdt_plans",
+  ed_mints_odt_plans: "ed_mints_odt_plans",
+  // ED Mints Boston: one id per button spot so GA4 can tell the formulation
+  // picker cards apart from the monthly vs 3-month comparison cards.
+  ed_mints_boston_rdt_picker: "ed_mints_boston_rdt_picker",
+  ed_mints_boston_odt_picker: "ed_mints_boston_odt_picker",
+  ed_mints_boston_rdt_plans: "ed_mints_boston_rdt_plans",
+  ed_mints_boston_odt_plans: "ed_mints_boston_odt_plans",
   tadalafil_boston_hero: "tadalafil_boston_hero",
   tadalafil_boston_footer: "tadalafil_boston_footer",
   sildenafil_boston_hero: "sildenafil_boston_hero",
@@ -64,6 +87,16 @@ export const CTA_IDS = {
   nad_footer: "nad_footer",
   sermorelin_hero: "sermorelin_hero",
   sermorelin_footer: "sermorelin_footer",
+  mots_c_hero: "mots_c_hero",
+  mots_c_footer: "mots_c_footer",
+  bpc_157_hero: "bpc_157_hero",
+  bpc_157_footer: "bpc_157_footer",
+  bpc_157_capsules_hero: "bpc_157_capsules_hero",
+  bpc_157_capsules_footer: "bpc_157_capsules_footer",
+  peptide_blend_hero: "peptide_blend_hero",
+  peptide_blend_footer: "peptide_blend_footer",
+  ghk_cu_hero: "ghk_cu_hero",
+  ghk_cu_footer: "ghk_cu_footer",
   how_it_works: "how_it_works",
   faq: "faq",
   safety: "safety",
@@ -75,8 +108,11 @@ export const CTA_IDS = {
   learn_rest_intervals: "learn_rest_intervals",
   learn_sema_vs_tirz: "learn_sema_vs_tirz",
   learn_weight_loss: "learn_weight_loss",
+  tools_bmi: "tools_bmi",
+  tools_peptide_quiz: "tools_peptide_quiz",
   recipes_hub: "recipes_hub",
   recipe_detail: "recipe_detail",
+  not_found: "not_found",
   landing_page: "landing_page",
   login_prompt: "login_prompt",
 } as const;
@@ -90,43 +126,18 @@ export type CtaId = (typeof CTA_IDS)[keyof typeof CTA_IDS];
  */
 export const HIVE_LOGIN_URL = "https://hive.beemahealth.com" as const;
 
-/** Waitlist route - trailing slash matches sitemap-style canonical URLs. */
-export const WAITLIST_PATH = "/waitlist/" as const;
-
-/** @deprecated Prefer WAITLIST_PATH - alias kept so old imports keep working. */
-export const QUALIFY_PATH = WAITLIST_PATH;
-
-/** Search object for `<Link to={WAITLIST_PATH} search={waitlistSearch(id)} />`. */
-export function waitlistSearch(ctaId: CtaId): { cta_id: CtaId } {
-  return { cta_id: ctaId };
-}
-
-/** @deprecated Prefer waitlistSearch */
-export const qualifySearch = waitlistSearch;
-
-/**
- * Full path+search string for raw anchors / non-Link navigation.
- * Slash before `?` so the path matches the GitHub Pages canonical form.
- */
-export function waitlistHref(ctaId: CtaId): string {
-  return `${WAITLIST_PATH}?cta_id=${encodeURIComponent(ctaId)}`;
-}
-
-/** @deprecated Prefer waitlistHref */
-export const qualifyHref = waitlistHref;
-
 /**
  * ---------------------------------------------------------------------
  * CTA switchboard
  * ---------------------------------------------------------------------
  * Beema Health is live: every marketing CTA sitewide sends visitors to Bask's
  * hosted intake (one questionnaire - not a separate eligibility product).
- * Leftover in-repo waitlist/qualify/intake routes are legacy - see
+ * Leftover in-repo qualify/intake routes are legacy - see
  * docs/BACKEND-DEFERRED.md.
  *
  * `resolveCta(id)` is the ONLY place that decision should be made.
  * Every CTA button/link in the app calls this instead of hardcoding
- * WAITLIST_PATH or a label - so repointing the site (fully or one CTA
+ * a path or a label - so repointing the site (fully or one CTA
  * at a time) is a one-file edit here, not a hunt through every
  * route/component.
  *
@@ -218,6 +229,39 @@ const SERMORELIN_INTAKE_URL =
   "https://q.beemahealth.com/start-online-visit/sermorelin";
 
 /**
+ * Confirmed production Bask questionnaire URL (2026-11-02) for MOTS-C, given
+ * directly by Matt at launch.
+ */
+const MOTS_C_INTAKE_URL = "https://q.beemahealth.com/start-online-visit/motsc";
+
+/**
+ * Confirmed production Bask questionnaire URL (2026-11-03) for BPC-157, given
+ * directly by Matt at launch.
+ */
+const BPC_157_INTAKE_URL =
+  "https://q.beemahealth.com/start-online-visit/bpc157";
+
+/**
+ * Confirmed production Bask questionnaire URL (2026-11-03) for BPC-157
+ * capsules, given directly by Matt at launch.
+ */
+const BPC_157_CAPSULES_INTAKE_URL =
+  "https://q.beemahealth.com/start-online-visit/bpccapsules";
+
+/**
+ * Confirmed production Bask questionnaire URL (2026-11-04) for the BPC-157 /
+ * TB-500 / GHK-Cu blend, given directly by Matt.
+ */
+const PEPTIDE_BLEND_INTAKE_URL =
+  "https://q.beemahealth.com/start-online-visit/bpc157tb500ghkcu";
+
+/**
+ * Confirmed production Bask questionnaire URL (2026-11-04) for GHK-Cu, given
+ * directly by Matt.
+ */
+const GHK_CU_INTAKE_URL = "https://q.beemahealth.com/start-online-visit/ghkcu";
+
+/**
  * Money-page architecture (2026-09-03): each product that has a confirmed
  * Bask URL gets its own dedicated landing page (/tadalafil, /sildenafil,
  * /oral-finasteride, /ed-mints, /tirzepatide, /semaglutide) whose CTA goes
@@ -246,6 +290,10 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
   },
   recipe_detail: {
     label: "Start an online visit",
+    to: DEFAULT_CTA_TARGET.to,
+  },
+  not_found: {
+    label: "Start a weight loss online visit",
     to: DEFAULT_CTA_TARGET.to,
   },
   learn_weight_loss: {
@@ -313,6 +361,26 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
     label: "Get Started",
     to: ED_MINTS_RDT_INTAKE_URL,
   },
+  ed_mints_rdt_picker: { label: "Get Started", to: ED_MINTS_RDT_INTAKE_URL },
+  ed_mints_odt_picker: { label: "Get Started", to: ED_MINTS_ODT_INTAKE_URL },
+  ed_mints_rdt_plans: { label: "Get Started", to: ED_MINTS_RDT_INTAKE_URL },
+  ed_mints_odt_plans: { label: "Get Started", to: ED_MINTS_ODT_INTAKE_URL },
+  ed_mints_boston_rdt_picker: {
+    label: "Get Started",
+    to: ED_MINTS_RDT_INTAKE_URL,
+  },
+  ed_mints_boston_odt_picker: {
+    label: "Get Started",
+    to: ED_MINTS_ODT_INTAKE_URL,
+  },
+  ed_mints_boston_rdt_plans: {
+    label: "Get Started",
+    to: ED_MINTS_RDT_INTAKE_URL,
+  },
+  ed_mints_boston_odt_plans: {
+    label: "Get Started",
+    to: ED_MINTS_ODT_INTAKE_URL,
+  },
   tadalafil_boston_hero: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
   tadalafil_boston_footer: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
   sildenafil_boston_hero: { label: "Get Started", to: SILDENAFIL_INTAKE_URL },
@@ -324,6 +392,22 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
   nad_footer: { label: "Get Started", to: NAD_INTAKE_URL },
   sermorelin_hero: { label: "Get Started", to: SERMORELIN_INTAKE_URL },
   sermorelin_footer: { label: "Get Started", to: SERMORELIN_INTAKE_URL },
+  mots_c_hero: { label: "Get Started", to: MOTS_C_INTAKE_URL },
+  mots_c_footer: { label: "Get Started", to: MOTS_C_INTAKE_URL },
+  bpc_157_hero: { label: "Get Started", to: BPC_157_INTAKE_URL },
+  bpc_157_footer: { label: "Get Started", to: BPC_157_INTAKE_URL },
+  bpc_157_capsules_hero: {
+    label: "Get Started",
+    to: BPC_157_CAPSULES_INTAKE_URL,
+  },
+  bpc_157_capsules_footer: {
+    label: "Get Started",
+    to: BPC_157_CAPSULES_INTAKE_URL,
+  },
+  peptide_blend_hero: { label: "Get Started", to: PEPTIDE_BLEND_INTAKE_URL },
+  peptide_blend_footer: { label: "Get Started", to: PEPTIDE_BLEND_INTAKE_URL },
+  ghk_cu_hero: { label: "Get Started", to: GHK_CU_INTAKE_URL },
+  ghk_cu_footer: { label: "Get Started", to: GHK_CU_INTAKE_URL },
   /**
    * Category hub pages (2026-08-27) mix multiple products each, so there's
    * no single correct Bask intake path - these default to one product in
@@ -335,6 +419,21 @@ const CTA_OVERRIDES: Partial<Record<CtaId, CtaTarget>> = {
    */
   sexual_health_hero: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
   sexual_health_footer: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
+  /**
+   * Sexual Health "Get Started" product picker (CRO variant). Each product
+   * keeps its own questionnaire but carries a sexual_health_ id, so the click,
+   * signup and purchase are credited to /sexual-health/ and not the product page.
+   */
+  sexual_health_tadalafil: { label: "Get Started", to: TADALAFIL_INTAKE_URL },
+  sexual_health_sildenafil: { label: "Get Started", to: SILDENAFIL_INTAKE_URL },
+  sexual_health_ed_mints_rdt: {
+    label: "Get Started",
+    to: ED_MINTS_RDT_INTAKE_URL,
+  },
+  sexual_health_ed_mints_odt: {
+    label: "Get Started",
+    to: ED_MINTS_ODT_INTAKE_URL,
+  },
   hair_hero: { label: "Get Started", to: FINASTERIDE_INTAKE_URL },
   hair_footer: { label: "Get Started", to: FINASTERIDE_INTAKE_URL },
   wellness_hero: { label: "Get Started", to: NAD_INTAKE_URL },
@@ -370,7 +469,7 @@ export function appendQueryParams(
 }
 
 /**
- * Build the query object forwarded into Bask (and internal waitlist links):
+ * Build the query object forwarded into Bask:
  * cta_id + fbclid/gclid + all five utm_* params captured on the marketing site.
  */
 export function buildCtaSearch(ctaId: CtaId): CtaSearchParams {
@@ -381,17 +480,42 @@ export function buildCtaSearch(ctaId: CtaId): CtaSearchParams {
 }
 
 /**
+ * Default position for a CTA id, from its suffix: `*_hero` is hero, `*_footer`
+ * / `footer` is footer, `*_pricing*` is pricing; everything else (mid-page
+ * blocks, BMI calculators, article and utility-page CTAs) is mid_page. Callers
+ * override with `resolveCta(id, position)` or `cta.withPosition(position)`
+ * when the same id is reused somewhere else on the page (pricing card, sticky).
+ */
+export function defaultCtaPosition(ctaId: CtaId): CtaPosition {
+  if (ctaId === "footer" || ctaId.endsWith("_footer")) return "footer";
+  if (ctaId.endsWith("_hero")) return "hero";
+  if (ctaId.includes("pricing")) return "pricing";
+  return "mid_page";
+}
+
+export type ResolvedCta = CtaTarget & {
+  search: CtaSearchParams;
+  onClick: () => void;
+  /** Same destination and cta_id, reported from a different spot on the page. */
+  withPosition: (position: CtaPosition) => ResolvedCta;
+};
+
+/**
  * Resolve a CTA id to its current label, destination, attribution search
  * params, and click handler. `onClick` pushes `intake_handoff` to the GTM
- * dataLayer (event + cta_location only - no PHI) when the destination is
- * Bask intake (`q.beemahealth.com`). Wire it on every marketing CTA Link.
+ * dataLayer (event + cta_id + cta_location only - no PHI) when the destination
+ * is Bask intake (`q.beemahealth.com`). Wire it on every marketing CTA Link.
+ *
+ * `position` is the on-page location reported as `cta_location`; it defaults
+ * from the id suffix (see `defaultCtaPosition`).
  *
  * For Bask (absolute) destinations, attribution params are baked into `to`
  * because TanStack Link does not apply `search` to external hrefs.
  */
 export function resolveCta(
   ctaId: CtaId,
-): CtaTarget & { search: CtaSearchParams; onClick: () => void } {
+  position: CtaPosition = defaultCtaPosition(ctaId),
+): ResolvedCta {
   const target = CTA_OVERRIDES[ctaId] ?? DEFAULT_CTA_TARGET;
   const search = buildCtaSearch(ctaId);
   const to = isAbsoluteHttpUrl(target.to)
@@ -404,9 +528,12 @@ export function resolveCta(
     search,
     onClick: () => {
       if (isBaskIntakeUrl(target.to)) {
-        // cta_location uses the stable CtaId (e.g. home_hero, footer, pricing_hero).
-        trackIntakeHandoff(ctaId);
+        // One dataLayer push only: GTM fans it out to GA4 and Meta. A second
+        // gtag("event", "intake_handoff") lands in the dataLayer too and
+        // double-fires the GTM tags.
+        trackIntakeHandoff(ctaId, position, experimentEventParams());
       }
     },
+    withPosition: (next) => resolveCta(ctaId, next),
   };
 }

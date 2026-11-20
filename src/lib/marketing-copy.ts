@@ -34,10 +34,12 @@ export const FIRST_MONTH_PROMO_LINE = `Semaglutide from ${formatUsd(promoFirstMo
 export const FIRST_MONTH_PROMO_SHORT = `Sema ${formatUsd(promoFirstMonthUsd(semaPromo))} first mo · Tirz starter from ${formatUsd(tirzStarterPack.monthlyEquivalentUsd)}/mo`;
 
 /**
- * Primary waitlist CTA button label sitewide (nav, hero, footer, mid-page).
- * Links still go to `/qualify` with `cta_id`; only the display text lives here.
+ * Provider-review timing statement (stated by Matt, 2026-11-17). Single source
+ * of truth: use this exact sentence wherever the site talks about how long
+ * provider review takes. It describes review time only, never approval.
  */
-export const WAITLIST_CTA_LABEL = "Join waitlist" as const;
+export const PROVIDER_REVIEW_TIME_SENTENCE =
+  "Provider-review times vary, but most reviews are completed within five hours.";
 
 /**
  * How patients get answers: intake is a questionnaire only (no live Q&A
@@ -49,29 +51,7 @@ export function patientQuestionsGuidance(): string {
   return `The medical intake is a questionnaire only; you can't ask questions inside it. For quick answers anytime, use the AI chat on our site. Prefer a person? Call, text, or email ${SUPPORT_EMAIL}. After you complete intake and pay, you can ask us additional questions.`;
 }
 
-/** @see WAITLIST_DISPLAY_COUNT_FALLBACK in waitlist-count.ts */
-export {
-  WAITLIST_DISPLAY_COUNT_FALLBACK,
-  getWaitlistDisplayCount,
-  getWaitlistDisplayCountSeed,
-} from "@/lib/waitlist-count";
-
 /** Sentence fragment used under homepage / footer CTAs. */
 export function promoIncentiveLine(): string {
   return `Save with ${FIRST_MONTH_PROMO_LINE}`;
-}
-
-/** Qualify page body copy referencing the same incentive. */
-export function waitlistIncentiveBody(): string {
-  return `Join the waitlist and we'll email you as soon as we're live. Sign up now for ${FIRST_MONTH_PROMO_LINE}.`;
-}
-
-/** Success-state copy after waitlist submit. */
-export function waitlistSuccessIncentiveLine(): string {
-  return `when we launch. You'll get ${FIRST_MONTH_PROMO_LINE}.`;
-}
-
-/** Formatted social-proof string for the qualify page. */
-export function waitlistSocialProofLine(count: number): string {
-  return `${count.toLocaleString("en-US")} people already on the waitlist`;
 }

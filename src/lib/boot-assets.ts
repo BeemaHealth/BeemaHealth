@@ -21,6 +21,11 @@ import hairLossSprayWomenPhoto from "@/assets/treatments/hair-loss-spray-women-b
 import oralMinoxidilPhoto from "@/assets/treatments/oral-minoxidil-tablets-bottle.webp";
 import nadInjectionPhoto from "@/assets/treatments/nad-injection-vial.webp";
 import sermorelinInjectionPhoto from "@/assets/treatments/sermorelin-injection-vial.webp";
+import motsCInjectionPhoto from "@/assets/treatments/mots-c-injection-vial.webp";
+import bpc157InjectionPhoto from "@/assets/treatments/bpc-157-injection-vial.webp";
+import bpc157CapsulesPhoto from "@/assets/treatments/bpc-157-capsules-bottle.webp";
+import peptideBlendPhoto from "@/assets/treatments/bpc-tb500-ghk-cu-blend-vial.webp";
+import ghkCuPhoto from "@/assets/treatments/ghk-cu-injection-vial.webp";
 import { LEGITSCRIPT_SEAL_SRC } from "@/lib/legitscript";
 import { resolveVialImagery } from "@/lib/treatment-imagery";
 
@@ -100,6 +105,16 @@ export function criticalBootImageUrls(pathname: string): string[] {
       return [nadInjectionPhoto];
     case "/sermorelin":
       return [sermorelinInjectionPhoto];
+    case "/mots-c":
+      return [motsCInjectionPhoto];
+    case "/bpc-157":
+      return [bpc157InjectionPhoto];
+    case "/bpc-157-capsules":
+      return [bpc157CapsulesPhoto];
+    case "/bpc-157-tb-500-ghk-cu":
+      return [peptideBlendPhoto];
+    case "/ghk-cu":
+      return [ghkCuPhoto];
     default:
       return [];
   }

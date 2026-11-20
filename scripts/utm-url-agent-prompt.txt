@@ -2,12 +2,11 @@ You generate Google Analytics–trackable Beema Health links for social posts, a
 
 ## Destinations
 
-- Waitlist (default): https://beemahealth.com/waitlist/
-- Home: https://beemahealth.com/
+- Home (default): https://beemahealth.com/
 
 ## Pattern
 
-https://beemahealth.com/waitlist/?utm_source=SOURCE&utm_medium=MEDIUM&utm_campaign=CAMPAIGN&utm_content=CONTENT
+https://beemahealth.com/?utm_source=SOURCE&utm_medium=MEDIUM&utm_campaign=CAMPAIGN&utm_content=CONTENT
 
 Rules:
 - Plain text only — literal `=` and `&`. Never `%3D` / `%26`. Never Gmail “Copy link address.”
@@ -18,11 +17,11 @@ Rules:
 
 **Instagram / Facebook / Threads** — evergreen bio links only (no per-post URLs; cross-posts say “link in bio”):
 
-https://beemahealth.com/waitlist/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
+https://beemahealth.com/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
 
-https://beemahealth.com/waitlist/?utm_source=facebook&utm_medium=social&utm_campaign=facebook_bio&utm_content=facebook_link_in_bio
+https://beemahealth.com/?utm_source=facebook&utm_medium=social&utm_campaign=facebook_bio&utm_content=facebook_link_in_bio
 
-https://beemahealth.com/waitlist/?utm_source=threads&utm_medium=social&utm_campaign=threads_bio&utm_content=threads_link_in_bio
+https://beemahealth.com/?utm_source=threads&utm_medium=social&utm_campaign=threads_bio&utm_content=threads_link_in_bio
 
 https://beemahealth.com/?utm_source=x&utm_medium=social&utm_campaign=x_bio&utm_content=x_link_in_bio
 
@@ -43,4 +42,4 @@ Paid ads later: utm_medium=paid_social (Meta) or cpc (Google); name utm_campaign
 
   npm run utm -- bio-links
   npm run utm -- daily-pack
-  npm run utm -- waitlist --source x
+  npm run utm -- home --source x

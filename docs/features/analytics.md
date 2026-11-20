@@ -1,6 +1,6 @@
 # Analytics & Tracking
 
-All user behaviour across the site — page views, funnel steps, and conversion events — is stored as `FunnelEvent` rows (first-party). Optional Meta Pixel and Google Ads tags can also fire on waitlist submit when configured via Vite env vars (see **Ad conversions** below). Events are fire-and-forget; they never block the UI.
+All user behaviour across the site — page views, funnel steps, and conversion events — is stored as `FunnelEvent` rows (first-party). Optional Meta Pixel and Google Ads tags can also be configured via Vite env vars (see **Ad conversions** below). Events are fire-and-forget; they never block the UI.
 
 ## Event model
 
@@ -26,7 +26,6 @@ trackPageViewed(page, { landing_page_slug? })   // fires on every route
 trackStepViewed(slug, stepKey, meta?)            // on step render
 trackStepCompleted(slug, stepKey, durationMs, meta?)  // on next/submit
 trackFunnelEvent(payload)                        // raw — used by the above
-trackWaitlistSubmit(page?)                       // waitlist success → FunnelEvent + ad Lead
 ```
 
 `trackPageViewed` also calls `capturePageUtms()` (from `src/lib/utm.ts`) to store UTM params from the current URL into the funnel session on the backend.
@@ -54,16 +53,15 @@ Bask data layer notes: `sessionId`, `eventModel.screen_name`, `eventModel.userId
 
 ## Ad conversions & frontend-only analytics (Meta + Google)
 
-**Site is launched** (Bask questionnaire via `resolveCta()`). Legacy **`/waitlist/`** still exists (and `/qualify/` redirects there) for older links/social-proof tooling, but it is **not** the primary conversion path. Paid-media + visitor analytics run via `src/lib/ad-conversions.ts` (loaded from `__root.tsx` with `initAdPixels()`). **No backend required** for these. LegitScript certified / ads-ready: `docs/features/legitscript.md`.
+**Site is launched** (Bask questionnaire via `resolveCta()`). `/qualify/` redirects home. Paid-media + visitor analytics run via `src/lib/ad-conversions.ts` (loaded from `__root.tsx` with `initAdPixels()`). **No backend required** for these. LegitScript certified / ads-ready: `docs/features/legitscript.md`.
 
 | Env var                            | Purpose                                                                                                 |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `VITE_GA_MEASUREMENT_ID`           | **GA4** (`G-…`) — all page views + UTM/session source                                                   |
 | `VITE_GTM_CONTAINER_ID`            | Legacy/unused configuration; the production-host-gated public GTM ID is centralized in `src/lib/gtm.ts` |
-| `VITE_META_PIXEL_ID`               | Meta Pixel ID — fires `PageView` on load (+ `Lead` on legacy waitlist submit if used)                   |
+| `VITE_META_PIXEL_ID`               | Meta Pixel ID — fires `PageView` on load                   |
 | `VITE_GOOGLE_ADS_ID`               | Google Ads tag ID (`AW-…`)                                                                              |
 | `VITE_GOOGLE_ADS_CONVERSION_LABEL` | Conversion label — with Ads ID, fires `gtag('event','conversion')` on submit                            |
-| `VITE_WAITLIST_DISPLAY_COUNT`      | Optional override for legacy waitlist social-proof number                                               |
 
 If IDs are unset, helpers no-op (safe for local/dev). Do **not** send email, name, or other PHI to pixel/gtag calls.
 
@@ -83,32 +81,29 @@ For near-complete visit counts across those browsers (frontend-only), use a **fi
 
 ### What GA page titles mean
 
-`trackGaPageView` sets `page_title` / `page_path` to the URL path (`/` or `/waitlist/`) so Realtime is readable. Logical route keys (`home`, `waitlist`) go in `screen_name`. With UTMs present, a `campaign_landing` event also fires (`utm_source`, `utm_content`, …) — use Realtime → Event count → `campaign_landing` (or DebugView with `?ga_debug=1`) to inspect them. Prefer turning **off** Enhanced measurement “Page changes based on browser history” for this SPA to avoid duplicate page_views.
-
-After a successful Formspree waitlist submit, `trackWaitlistSubmit("waitlist")` records a first-party event (no-ops without API), fires Meta `Lead` / Google Ads conversion / GA4 `generate_lead`, and Formspree receives attribution fields from `getAttributionForSubmit()`.
+`trackGaPageView` sets `page_title` / `page_path` to the URL path (e.g. `/` or `/glp-1-houston/`) so Realtime is readable. Logical route keys (`home`, `glp-1-houston`) go in `screen_name`. With UTMs present, a `campaign_landing` event also fires (`utm_source`, `utm_content`, …) — use Realtime → Event count → `campaign_landing` (or DebugView with `?ga_debug=1`) to inspect them. Prefer turning **off** Enhanced measurement “Page changes based on browser history” for this SPA to avoid duplicate page_views.
 
 
 ## CTA attribution
 
-Marketing CTAs use stable ids (`src/lib/cta-ids.ts`) via `resolveCta()` (default → Bask). Legacy waitlist links may still carry `?cta_id=`.
+Marketing CTAs use stable ids (`src/lib/cta-ids.ts`) via `resolveCta()` (default → Bask).
 
 | Storage                         | Field                                                         |
 | ------------------------------- | ------------------------------------------------------------- |
 | URL query                       | `cta_id` — which on-site button was clicked                   |
 | `sessionStorage` (non-PHI)      | first-touch UTMs + `cta_id` + referrer + landing path         |
-| Formspree submission            | same fields attached on waitlist join                         |
 | GA4 `page_view`                 | optional `cta_id` event param when present                    |
 | `FunnelSession` / `FunnelEvent` | only when the API is live (optional; not required for launch) |
 
-Staff analytics can compare conversion by CTA placement when the API exists. For a **frontend-only** site, use GA4 Explorations + Formspree fields instead.
+Staff analytics can compare conversion by CTA placement when the API exists. For a **frontend-only** site, use GA4 Explorations instead.
 
 ## Generating trackable social / ad URLs
 
-Use unique UTM params on every published post so GA4 (visits) and Formspree (signups) can attribute traffic. Do **not** put `ga_debug=1` on public links.
+Use unique UTM params on every published post so GA4 can attribute traffic. Do **not** put `ga_debug=1` on public links.
 
 | Tool                            | Path                                                                                                    |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| CLI                             | `npm run utm -- waitlist --source instagram` · `npm run utm -- home -s x` · `npm run utm -- daily-pack` |
+| CLI                             | `npm run utm -- home -s x` · `npm run utm -- daily-pack` |
 | Script                          | `scripts/generate-utm-url.mjs`                                                                          |
 | Phone / AI agent prompt         | `scripts/utm-url-agent-prompt.txt` (`npm run utm -- prompt`)                                            |
 | Daily social Gmail-draft prompt | `scripts/daily-beema-social-posts-prompt.txt`                                                           |
@@ -116,7 +111,7 @@ Use unique UTM params on every published post so GA4 (visits) and Formspree (sig
 Pattern:
 
 ```text
-https://beemahealth.com/waitlist/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
+https://beemahealth.com/?utm_source=instagram&utm_medium=social&utm_campaign=instagram_bio&utm_content=instagram_link_in_bio
 ```
 
 **Ops (simple):** IG / FB / Threads use evergreen **bio** links (`*_bio` campaigns). X / Reddit / GBP get unique per-post UTMs via `npm run utm -- daily-pack`. Cross-post captions say “link in bio.”
@@ -143,8 +138,7 @@ Accessible at `/staff/analytics`. Six aggregated views served by `backend/apps/a
 | Route            | Page name               |
 | ---------------- | ----------------------- |
 | `/`              | `home`                  |
-| `/waitlist`      | `waitlist`              |
-| `/qualify`       | redirects → `/waitlist` |
+| `/qualify`       | redirects → `/` |
 | `/intake`        | `intake`                |
 | `/consent`       | `consent`               |
 | `/lp/:slug`      | `lp:{slug}`             |
@@ -201,7 +195,7 @@ These are mutually exclusive per event — `FunnelEventCreateView` sets exactly 
 | --------------------------------------------- | --------------------------------------------------------- |
 | `src/lib/analytics.ts`                        | All frontend tracking functions                           |
 | `src/lib/ad-conversions.ts`                   | Meta Pixel + Google Ads init / Lead conversion            |
-| `src/lib/marketing-copy.ts`                   | First-month promo + waitlist social-proof constants       |
+| `src/lib/marketing-copy.ts`                   | First-month promo constants       |
 | `src/lib/utm.ts`                              | UTM capture from URL → funnel session                     |
 | `scripts/generate-utm-url.mjs`                | CLI to mint unique social/ad UTM URLs                     |
 | `scripts/utm-url-agent-prompt.txt`            | Prompt for an AI / phone agent to mint URLs               |

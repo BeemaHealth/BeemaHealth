@@ -1,0 +1,188 @@
+{
+  "_note": "Claims the library may rely on, with source and verification status. 'verified' = confirmed against a primary source or Beema's own live page. Anything else forces NEEDS_HUMAN_REVIEW in the compliance gate when a script uses it.",
+  "pde5_mechanism": {
+    "text": "PDE5 inhibitors block the enzyme that breaks down cGMP, so blood vessels can relax and widen when there is sexual stimulation.",
+    "source": "FDA prescribing information for sildenafil and tadalafil (DailyMed); in-repo explainer SCRIPT.md",
+    "status": "verified_basic_pharmacology"
+  },
+  "needs_stimulation": {
+    "text": "These medicines do not cause arousal by themselves; sexual stimulation is still needed.",
+    "source": "Beema /ed-mints FAQ and FDA labeling",
+    "status": "verified"
+  },
+  "nitrate_contraindication": {
+    "text": "Sildenafil and tadalafil must not be taken with nitrates or riociguat.",
+    "source": "FDA labeling; confirmed by search 2026-11-16",
+    "status": "verified"
+  },
+  "priapism": {
+    "text": "An erection lasting more than 4 hours needs emergency care.",
+    "source": "FDA labeling",
+    "status": "verified"
+  },
+  "vision_hearing": {
+    "text": "Sudden vision or hearing loss is a reason to stop and get medical help.",
+    "source": "FDA labeling warnings (NAION, sudden hearing loss). Note: warnings, not contraindications.",
+    "status": "verified"
+  },
+  "generic_fda_approved": {
+    "text": "Beema Health's sildenafil and tadalafil are FDA-approved generic medications dispensed by a licensed pharmacy.",
+    "source": "src/lib/compounded-disclosure.ts (corrected 2026-09-03 per Matt)",
+    "status": "verified_by_matt"
+  },
+  "mints_503b": {
+    "text": "ED Mints are compounded at an FDA-registered 503B outsourcing facility and are not FDA-approved.",
+    "source": "src/lib/compounded-disclosure.ts COMPOUNDED_ED_MINTS_REQUIRED",
+    "status": "verified_by_matt"
+  },
+  "mints_timing": {
+    "text": "Most patients take one about 30 minutes before sexual activity; provider confirms timing and dosing.",
+    "source": "Beema /ed-mints FAQ",
+    "status": "page_wording_not_pharmacy_verified"
+  },
+  "ed_common": {
+    "text": "Erectile dysfunction is common and treatable medical condition.",
+    "source": "General medical consensus; no prevalence number used (NIDDK figure not verified this session)",
+    "status": "general_education"
+  },
+  "glp1_appetite": {
+    "text": "GLP-1 medicines act on appetite centers in the brain and slow stomach emptying, which can reduce hunger and make people feel full sooner.",
+    "source": "FDA labeling for approved GLP-1 products; general pharmacology",
+    "status": "verified_basic_pharmacology"
+  },
+  "tirz_dual": {
+    "text": "Tirzepatide acts on two hormone receptors, GIP and GLP-1.",
+    "source": "FDA labeling for approved tirzepatide product",
+    "status": "verified_basic_pharmacology"
+  },
+  "glp1_side_effects": {
+    "text": "Nausea, vomiting, diarrhea and constipation are common GLP-1 side effects.",
+    "source": "FDA labeling for approved GLP-1 products",
+    "status": "verified_basic_pharmacology"
+  },
+  "compounded_not_approved": {
+    "text": "Compounded semaglutide and tirzepatide are not FDA-approved.",
+    "source": "FDA statements Feb 6 2026; src/lib/compounded-disclosure.ts",
+    "status": "verified"
+  },
+  "process": {
+    "text": "Online questionnaire, licensed provider reviews it, if appropriate a licensed pharmacy ships it. Cash-pay, 50 states, prescribing never guaranteed.",
+    "source": "Beema /sildenafil and /tadalafil pages; CLAUDE.md business facts 2026-10-12",
+    "status": "verified"
+  },
+  "bpc_not_fda_approved": {
+    "text": "BPC-157 is not an FDA-approved drug product.",
+    "source": "Beema /bpc-157 FAQ (src/landing-variants/bpc-157/shared.ts). Not independently checked against Drugs@FDA this session.",
+    "status": "beema_page_wording_not_fda_verified"
+  },
+  "bpc_what_it_is": {
+    "text": "BPC-157 is a short synthetic peptide, a chain of 15 amino acids, based on part of a protein found in human gastric juice.",
+    "source": "Beema /bpc-157 FAQ; consistent with secondary summaries. No primary paper was read.",
+    "status": "page_wording_not_primary_verified"
+  },
+  "bpc_human_evidence_limited": {
+    "text": "Most published BPC-157 research is in lab and animal studies; human research is very limited, so whether it works and how safe it is in people is not established.",
+    "source": "Secondary summaries of the 2025 HSS Journal systematic review (Vasireddi et al., PMID 40756949: 36 included studies, 35 preclinical, 1 clinical case series). The PubMed page could not be fetched, so these figures were NOT confirmed from the primary source. Beema /bpc-157 FAQ says 'mostly in laboratory and animal studies'.",
+    "status": "secondary_source_only_needs_primary_check"
+  },
+  "bpc_fda_safety_info_limited": {
+    "text": "FDA's bulk-drug-substances page says it has identified no, or only limited, safety-related information for BPC-157's proposed routes of administration.",
+    "source": "fda.gov 'Certain bulk drug substances for use in compounding that may present significant safety risks', content current as of 2026-04-22, fetched 2026-11-16. BPC-157 sits under 'nominated but withdrawn'. NOT used in the spoken script; kept for the reviewer.",
+    "status": "verified_primary_may_be_stale"
+  },
+  "bpc_compounding_eligibility": {
+    "text": "Compounded BPC-157 may lawfully be prepared and prescribed in the states Beema serves.",
+    "source": "UNRESOLVED. FDA page status is ambiguous (withdrawn from category 2, not on a 503A bulks list as far as verified) and secondary sources conflict on 2026 changes. Also touches LegitScript Standard 2 (no facilitating unapproved or unauthorized medications) and Beema's own disclosure 'considered only when legally available'.",
+    "status": "unresolved_needs_counsel"
+  },
+  "no_charge_if_not_prescribed": {
+    "text": "You won't be charged anything if you aren't prescribed.",
+    "source": "Beema live pages: sexual-health-page.ts, weight-loss-page.ts, glp-1-landing.ts. Absent from the BPC-157 pages (see products.json bpc-157.no_charge).",
+    "status": "verified_on_ed_and_glp1_pages_unverified_for_bpc157"
+  },
+  "bpc_gastric_protein_origin": {
+    "text": "BPC-157's sequence is based on part of a protein found in human gastric (stomach) fluid; the protein is a long chain of amino acids and BPC-157 is one 15-amino-acid piece of that chain.",
+    "source": "Beema /bpc-157 FAQ ('based on part of a protein found in human gastric juice'). Generic 'proteins are chains of amino acids' is basic biology. No primary paper was read this session.",
+    "status": "page_wording_not_primary_verified"
+  },
+  "gut_hormone_signals": {
+    "text": "After a meal the gut releases hormones that signal the brain (including GLP-1 and GIP); the 'text alerts' framing is a metaphor.",
+    "source": "General physiology; consistent with FDA labeling for approved GLP-1/GIP products.",
+    "status": "general_education"
+  },
+  "starter_pack_price": {
+    "text": "Compounded tirzepatide starter pack is $199 a month; more pricing plans are on beemahealth.com/tirzepatide.",
+    "source": "Matt corrected the price to $199 a month on 2026-11-16 (an earlier $197 was wrong). Matches src/lib/medication-pricing.ts ($597 per 3 months, $199/month, new-to-GLP-1 patients). Pack length and eligibility wording still to confirm.",
+    "status": "stated_by_matt_matches_pricing_lib"
+  },
+  "semaglutide_glp1_receptor": {
+    "text": "Semaglutide is a GLP-1 receptor agonist: a medicine built to activate the GLP-1 receptor.",
+    "source": "FDA labeling for approved semaglutide products (mechanism of the molecule). Says nothing about any compounded preparation's quality or equivalence to an approved product.",
+    "status": "verified_basic_pharmacology"
+  },
+  "appetite_signaling_not_willpower_alone": {
+    "text": "Appetite and fullness are shaped by hormones and gut-brain signaling, not by willpower alone.",
+    "source": "General physiology; reviews are listed in src/lib/__tests__/fixtures/verified-citations.json (Drucker, Cell Metab 2018, GLP-1 mechanisms; Moiz, Am J Med 2025, GLP-1 RA central and peripheral appetite pathways). Titles seen, papers NOT re-read for this video.",
+    "status": "general_education"
+  },
+  "mechanism_metaphor_illustrations": {
+    "text": "Scenes for willpower versus biology (balance), hunger as radio static, a key and one lock, appetite centers lighting up, and a conveyor belt slowing are METAPHORS. They illustrate signaling and stomach emptying in plain language; they are not literal anatomy, not to scale and not a result for any person.",
+    "source": "Creative device, no source. Radio static as a picture of hunger and 'conveyor belt running slower' imply an effect on the viewer; Matt decides whether they stay.",
+    "status": "metaphor_needs_human_review"
+  },
+  "price_from_sildenafil": {
+    "text": "Sildenafil plans start at $89 a month, cash-pay, no insurance. Provider visit and shipping included. Cash-pay, no insurance.",
+    "source": "products.json prices (Matt's pricing sheet, verified 2026-10-27); copied from src/lib/simple-treatment-pricing.ts. The pricing lib has been stale before: re-check before spend.",
+    "status": "stated_by_matt_pricing_sheet"
+  },
+  "price_from_tadalafil": {
+    "text": "Tadalafil plans start at $89 a month, cash-pay, no insurance. Provider visit and shipping included. Cash-pay, no insurance.",
+    "source": "products.json prices (Matt's pricing sheet, verified 2026-10-27); copied from src/lib/simple-treatment-pricing.ts. The pricing lib has been stale before: re-check before spend.",
+    "status": "stated_by_matt_pricing_sheet"
+  },
+  "price_from_ed_mints": {
+    "text": "ED Mints plans start at $149 a month, cash-pay, no insurance. Cash-pay, no insurance.",
+    "source": "products.json prices (Matt's pricing sheet, verified 2026-09-27); copied from src/lib/simple-treatment-pricing.ts. The pricing lib has been stale before: re-check before spend.",
+    "status": "stated_by_matt_pricing_sheet"
+  },
+  "well_hairloss_lineup": {
+    "text": "Beema Health offers hair loss care: oral finasteride and oral minoxidil tablets, and a compounded topical hair loss spray.",
+    "source": "Live routes /hair-loss, /oral-finasteride, /oral-minoxidil-men, /oral-minoxidil-women, /hair-loss-spray-men, /hair-loss-spray-women; docs/features/treatment-pages.md product table (all Live).",
+    "status": "verified"
+  },
+  "well_minoxidil_off_label": {
+    "text": "Oral minoxidil is an FDA-approved generic medication approved for high blood pressure; its use for hair loss is off-label.",
+    "source": "docs/features/treatment-pages.md (corrected 2026-09-11 per Matt). The video groups minoxidil under 'hair-loss care' without saying off-label.",
+    "status": "needs_human_review_off_label_presentation"
+  },
+  "well_spray_not_fda_approved": {
+    "text": "The compounded hair loss spray is not FDA-approved.",
+    "source": "src/landing-variants/hair-loss-spray-men/shared.ts REQUIRED_COMPOUND_SENTENCE",
+    "status": "verified"
+  },
+  "well_nad_sermorelin_offered": {
+    "text": "Beema Health offers compounded NAD+ and compounded sermorelin.",
+    "source": "Live routes /nad-plus (relaunched 2026-09-16) and /sermorelin (relaunched 2026-09-17), docs/features/treatment-pages.md",
+    "status": "verified"
+  },
+  "well_compounded_not_fda_approved": {
+    "text": "Compounded medications, including compounded NAD+ and sermorelin, are not FDA-approved.",
+    "source": "src/landing-variants/nad-plus/shared.ts and sermorelin/shared.ts FAQ ('Is compounded ... FDA-approved? No.')",
+    "status": "verified"
+  },
+  "well_individual_assessment": {
+    "text": "Each requires an individual clinical assessment by a licensed provider.",
+    "source": "nad-plus/shared.ts and sermorelin/shared.ts: 'made available only when legally permitted in your state and a licensed provider determines it's clinically appropriate for your individual case'.",
+    "status": "verified"
+  },
+  "well_nad_sermorelin_compounding_eligibility": {
+    "text": "Compounded NAD+ and compounded sermorelin may lawfully be prepared and prescribed in every state Beema Health serves.",
+    "source": "UNRESOLVED. Not checked against FDA 503A/503B bulk-substance lists this session. Sermorelin is a peptide (GHRH analog); LegitScript Standard 2 and Meta/TikTok injectable-peptide policy apply.",
+    "status": "unresolved_needs_counsel"
+  },
+  "well_illustration_bottles": {
+    "text": "Bottles and vials are 3D models wearing cropped areas of the live-site product labels; the room, tray, tape measure, tablet, stethoscope and box are illustrations.",
+    "source": "Creative device. Label crops leave out 'Longevity Medication', '1000 mg/mL' and 'Supports Healthier Hair'.",
+    "status": "metaphor_needs_human_review"
+  }
+}

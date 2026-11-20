@@ -1,10 +1,27 @@
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ChevronDown, Hexagon, Phone } from "lucide-react";
+import {
+  BookOpen,
+  Calculator,
+  ChevronDown,
+  CircleHelp,
+  Gift,
+  Hexagon,
+  Info,
+  Mail,
+  Megaphone,
+  Newspaper,
+  Phone,
+  Route as RouteIcon,
+  Salad,
+  Video,
+  type LucideIcon,
+} from "lucide-react";
 import { Logo, HeaderLogo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { CircleRevealMenu } from "@/components/site/CircleRevealMenu";
+import { HideChatWidget } from "@/components/site/HideChatWidget";
 import { EASE_OUT } from "@/components/home/home-motion";
 import { HIVE_LOGIN_URL } from "@/lib/cta-ids";
 import { FIRST_MONTH_PROMO_SHORT } from "@/lib/marketing-copy";
@@ -13,20 +30,15 @@ import { RECIPES_COUNT } from "@/lib/recipes-meta";
 import { SOCIAL_LINKS } from "@/lib/social-links";
 import { cn } from "@/lib/utils";
 
-type NavItem = { label: string; to: string; description?: string };
-/** A parent row inside a dropdown that opens its own list of links. */
-type NavGroup = {
+type NavItem = {
   label: string;
+  to: string;
   description?: string;
-  items: readonly NavItem[];
+  /** Optional leading icon - only rendered in sectioned panels. */
+  icon?: LucideIcon;
 };
-type NavEntry = NavItem | NavGroup;
 /** Two-column grouping for a dropdown (e.g. Hair's For Men / For Women). */
 type NavSection = { heading: string; items: readonly NavItem[] };
-
-function isNavGroup(entry: NavEntry): entry is NavGroup {
-  return "items" in entry;
-}
 
 /**
  * Trailing-slash paths - match sitemap.xml / canonicalUrl / GitHub Pages 200
@@ -137,6 +149,21 @@ const WELLNESS_ITEMS: NavItem[] = [
 ];
 
 /**
+ * Peptides (new 2026-11-02, per Matt) - MOTS-C was the first product on its
+ * own money page, /mots-c; BPC-157 followed 2026-11-03 (/bpc-157).
+ * Sermorelin is listed here as well as under Wellness (same /sermorelin page,
+ * per Matt: "copy over"). More peptides will be added here as they launch.
+ */
+const PEPTIDES_ITEMS: NavItem[] = [
+  { label: "BPC-157 Injections", to: "/bpc-157/" },
+  { label: "BPC-157 Capsules", to: "/bpc-157-capsules/" },
+  { label: "BPC-157 / TB-500 / GHK-Cu", to: "/bpc-157-tb-500-ghk-cu/" },
+  { label: "GHK-Cu", to: "/ghk-cu/" },
+  { label: "MOTS-C", to: "/mots-c/" },
+  { label: "Sermorelin", to: "/sermorelin/" },
+];
+
+/**
  * Free content library, the care-process overview, and the company cluster
  * (About/FAQ/Contact), combined into one "More" dropdown (2026-08-27) so the
  * 4 treatment-category dropdowns (Weight Loss / Sexual Health / Hair /
@@ -150,46 +177,88 @@ const WELLNESS_ITEMS: NavItem[] = [
  * not compete with Hive (the patient portal at hive.beemahealth.com). Add
  * new no-account resource hubs here and in SiteFooter COLUMNS.
  */
-const MORE_ITEMS: NavEntry[] = [
+const MORE_SECTIONS: NavSection[] = [
   {
-    label: "How it works",
-    to: "/how-it-works/",
-    description: "Intake, review, and delivery",
+    heading: "Explore",
+    items: [
+      {
+        label: "Blog",
+        to: "/blogs/",
+        description: "Articles and reader submissions",
+        icon: Newspaper,
+      },
+      {
+        label: "Learn",
+        to: "/learn/",
+        description: "GLP-1 and hormone education",
+        icon: BookOpen,
+      },
+      {
+        label: "Recipes",
+        to: "/recipes/",
+        description: `${RECIPES_COUNT} meals for changing appetites`,
+        icon: Salad,
+      },
+      {
+        label: "Tools",
+        to: "/tools/",
+        description: "BMI calculator and peptide quiz",
+        icon: Calculator,
+      },
+    ],
   },
   {
-    label: "Recipes",
-    to: "/recipes/",
-    description: `${RECIPES_COUNT} meals for changing appetites`,
+    heading: "Company",
+    items: [
+      {
+        label: "How it works",
+        to: "/how-it-works/",
+        description: "Intake, review, and delivery",
+        icon: RouteIcon,
+      },
+      {
+        label: "About us",
+        to: "/about/",
+        description: "Who we are",
+        icon: Info,
+      },
+      {
+        label: "FAQ",
+        to: "/faq/",
+        description: "Quick answers",
+        icon: CircleHelp,
+      },
+      {
+        label: "Contact us",
+        to: "/contact/",
+        description: "Call, text, or email",
+        icon: Mail,
+      },
+    ],
   },
   {
-    label: "Learn",
-    to: "/learn/",
-    description: "GLP-1 and hormone education",
-  },
-  {
-    label: "Rewards",
-    description: "Credits and creator partnerships",
+    heading: "Rewards",
     items: [
       {
         label: "Share your story",
         to: "/share-your-story/",
         description: "15 to 45 second video, $100 credit",
+        icon: Video,
       },
       {
         label: "Refer a friend",
         to: "/refer/",
         description: "Give $50, get $50",
+        icon: Gift,
       },
       {
         label: "Creator program",
         to: "/creators/",
         description: "Partner with Beema Health",
+        icon: Megaphone,
       },
     ],
   },
-  { label: "About us", to: "/about/" },
-  { label: "FAQ", to: "/faq/" },
-  { label: "Contact us", to: "/contact/" },
 ];
 
 /**
@@ -281,8 +350,9 @@ function DesktopNav() {
       sections: SEXUAL_HEALTH_SECTIONS,
     },
     { id: "hair", label: "Hair Loss", sections: HAIR_SECTIONS },
+    { id: "peptides", label: "Peptides", items: PEPTIDES_ITEMS },
     { id: "wellness", label: "Wellness", items: WELLNESS_ITEMS },
-    { id: "more", label: "More", items: MORE_ITEMS },
+    { id: "more", label: "More", sections: MORE_SECTIONS },
   ] as const;
 
   return (
@@ -321,84 +391,6 @@ function DesktopNav() {
   );
 }
 
-function NavGroupLinks({
-  group,
-  onNavigate,
-  variant,
-}: {
-  group: NavGroup;
-  onNavigate: () => void;
-  variant: "desktop" | "mobile";
-}) {
-  const desktop = variant === "desktop";
-  return (
-    <details className="accordion-item group border-b-0">
-      <summary
-        className={cn(
-          "flex cursor-pointer list-none items-center justify-between gap-3 marker:content-none [&::-webkit-details-marker]:hidden",
-          desktop
-            ? "rounded-lg px-3 py-2 text-sm text-foreground hover:bg-accent"
-            : "rounded-xl px-1 py-2 text-base font-medium text-ink-foreground/75",
-        )}
-      >
-        <span>
-          {group.label}
-          {group.description ? (
-            <span
-              className={cn(
-                "mt-0.5 block font-normal",
-                desktop
-                  ? "text-xs text-muted-foreground"
-                  : "text-sm text-ink-foreground/55",
-              )}
-            >
-              {group.description}
-            </span>
-          ) : null}
-        </span>
-        <ChevronDown
-          className={cn(
-            "shrink-0 transition-transform duration-200 group-open:rotate-180",
-            desktop
-              ? "size-3.5 text-muted-foreground"
-              : "size-4 text-ink-foreground/70",
-          )}
-          aria-hidden
-        />
-      </summary>
-      <div className={cn("flex flex-col", desktop ? "pb-1 pl-2" : "pb-1 pl-3")}>
-        {group.items.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            role={desktop ? "menuitem" : undefined}
-            onClick={onNavigate}
-            className={cn(
-              desktop
-                ? "block rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent"
-                : "rounded-xl px-1 py-2 text-base font-medium text-ink-foreground/75 transition-colors hover:text-primary",
-            )}
-          >
-            {item.label}
-            {item.description ? (
-              <span
-                className={cn(
-                  "mt-0.5 block font-normal",
-                  desktop
-                    ? "text-xs text-muted-foreground"
-                    : "text-sm text-ink-foreground/55",
-                )}
-              >
-                {item.description}
-              </span>
-            ) : null}
-          </Link>
-        ))}
-      </div>
-    </details>
-  );
-}
-
 function DesktopNavDropdown({
   id,
   label,
@@ -414,7 +406,7 @@ function DesktopNavDropdown({
   id: string;
   label: string;
   /** Flat item list. Ignored when `sections` is set. */
-  items?: readonly NavEntry[];
+  items?: readonly NavItem[];
   /** Two-column For Men / For Women style grouping - see HAIR_SECTIONS. */
   sections?: readonly NavSection[];
   footerItems?: readonly NavItem[];
@@ -426,6 +418,9 @@ function DesktopNavDropdown({
 }) {
   const flatItems = items ?? [];
   const hasDescriptions = flatItems.some((item) => item.description);
+  const hasSectionDescriptions = (sections ?? []).some((section) =>
+    section.items.some((item) => item.description),
+  );
   const menuId = `${id}-menu`;
 
   return (
@@ -470,7 +465,9 @@ function DesktopNavDropdown({
               "absolute left-0 top-full z-50 pt-2",
               sections
                 ? sections.length > 1
-                  ? "min-w-[24rem]"
+                  ? hasSectionDescriptions
+                    ? "min-w-[34rem]"
+                    : "min-w-[24rem]"
                   : "min-w-[14rem]"
                 : hasDescriptions
                   ? "min-w-[16rem]"
@@ -495,44 +492,54 @@ function DesktopNavDropdown({
                           key={item.label}
                           to={item.to}
                           role="menuitem"
-                          className="block whitespace-nowrap rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent"
+                          className={cn(
+                            "rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent",
+                            item.icon || item.description
+                              ? "flex items-start gap-3"
+                              : "block whitespace-nowrap",
+                          )}
                           onClick={onToggle}
                         >
-                          {item.label}
+                          {item.icon ? (
+                            <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+                              <item.icon className="size-4" aria-hidden />
+                            </span>
+                          ) : null}
+                          <span className="block">
+                            <span className="block font-medium">
+                              {item.label}
+                            </span>
+                            {item.description ? (
+                              <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+                                {item.description}
+                              </span>
+                            ) : null}
+                          </span>
                         </Link>
                       ))}
                     </div>
                   ))}
                 </div>
               ) : (
-                flatItems.map((item) =>
-                  isNavGroup(item) ? (
-                    <NavGroupLinks
-                      key={item.label}
-                      group={item}
-                      onNavigate={onToggle}
-                      variant="desktop"
-                    />
-                  ) : (
-                    <Link
-                      key={item.label}
-                      to={item.to}
-                      role="menuitem"
-                      className={cn(
-                        "block rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent",
-                        !hasDescriptions && "whitespace-nowrap",
-                      )}
-                      onClick={onToggle}
-                    >
-                      {item.label}
-                      {item.description ? (
-                        <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
-                          {item.description}
-                        </span>
-                      ) : null}
-                    </Link>
-                  ),
-                )
+                flatItems.map((item) => (
+                  <Link
+                    key={item.label}
+                    to={item.to}
+                    role="menuitem"
+                    className={cn(
+                      "block rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent",
+                      !hasDescriptions && "whitespace-nowrap",
+                    )}
+                    onClick={onToggle}
+                  >
+                    {item.label}
+                    {item.description ? (
+                      <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+                        {item.description}
+                      </span>
+                    ) : null}
+                  </Link>
+                ))
               )}
               {footerItems && footerItems.length > 0 ? (
                 <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border px-3 py-2">
@@ -571,7 +578,7 @@ function MobileNavDropdown({
   onNavigate,
 }: {
   label: string;
-  items?: readonly NavEntry[];
+  items?: readonly NavItem[];
   sections?: readonly NavSection[];
   footerItems?: readonly NavItem[];
   onNavigate: () => void;
@@ -586,7 +593,10 @@ function MobileNavDropdown({
         type="button"
         aria-expanded={expanded}
         onClick={() => setExpanded((e) => !e)}
-        className="flex w-full cursor-pointer items-center justify-between rounded-xl px-1 py-2.5 text-xl font-semibold text-ink-foreground transition-colors hover:text-primary"
+        className={cn(
+          "flex w-full cursor-pointer items-center justify-between rounded-xl px-1 py-2.5 text-xl font-semibold transition-colors hover:text-primary",
+          expanded ? "text-primary" : "text-ink-foreground",
+        )}
       >
         {label}
         <ChevronDown
@@ -626,30 +636,21 @@ function MobileNavDropdown({
                       ))}
                     </div>
                   ))
-                : (items ?? []).map((item) =>
-                    isNavGroup(item) ? (
-                      <NavGroupLinks
-                        key={item.label}
-                        group={item}
-                        onNavigate={onNavigate}
-                        variant="mobile"
-                      />
-                    ) : (
-                      <Link
-                        key={item.label}
-                        to={item.to}
-                        onClick={onNavigate}
-                        className="rounded-xl px-1 py-2 text-base font-medium text-ink-foreground/75 transition-colors hover:text-primary"
-                      >
-                        {item.label}
-                        {item.description ? (
-                          <span className="mt-0.5 block text-sm font-normal text-ink-foreground/55">
-                            {item.description}
-                          </span>
-                        ) : null}
-                      </Link>
-                    ),
-                  )}
+                : (items ?? []).map((item) => (
+                    <Link
+                      key={item.label}
+                      to={item.to}
+                      onClick={onNavigate}
+                      className="rounded-xl px-1 py-2 text-base font-medium text-ink-foreground/75 transition-colors hover:text-primary"
+                    >
+                      {item.label}
+                      {item.description ? (
+                        <span className="mt-0.5 block text-sm font-normal text-ink-foreground/55">
+                          {item.description}
+                        </span>
+                      ) : null}
+                    </Link>
+                  ))}
               {footerItems && footerItems.length > 0 ? (
                 <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-ink-foreground/15 pt-2">
                   {footerItems.map((item) => (
@@ -796,6 +797,7 @@ export function SiteHeader() {
             onOpenChange={setOpen}
             trigger={<HexMenuButton aria-label="Open menu" />}
           >
+            <HideChatWidget />
             <div className="mb-2 mt-8 px-8">
               <span className="inline-flex rounded-lg bg-background px-3 py-2">
                 <HeaderLogo className="h-9" />
@@ -818,13 +820,18 @@ export function SiteHeader() {
                 onNavigate={() => setOpen(false)}
               />
               <MobileNavDropdown
+                label="Peptides"
+                items={PEPTIDES_ITEMS}
+                onNavigate={() => setOpen(false)}
+              />
+              <MobileNavDropdown
                 label="Wellness"
                 items={WELLNESS_ITEMS}
                 onNavigate={() => setOpen(false)}
               />
               <MobileNavDropdown
                 label="More"
-                items={MORE_ITEMS}
+                sections={MORE_SECTIONS}
                 onNavigate={() => setOpen(false)}
               />
               {NAV.map((item) => (

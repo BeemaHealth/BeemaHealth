@@ -1,0 +1,243 @@
+{
+  "_note": "What people search for, and how it maps to the vetted library. Brand names appear ONLY here (as search terms); creative never names a brand. Autocomplete suggestions are a popularity PROXY (ordering of what people type), not search-volume numbers.",
+  "search_terms": {
+    "tirzepatide": [
+      "tirzepatide",
+      "zepbound",
+      "mounjaro"
+    ],
+    "semaglutide": [
+      "semaglutide",
+      "ozempic",
+      "wegovy"
+    ],
+    "sildenafil": [
+      "sildenafil",
+      "viagra"
+    ],
+    "tadalafil": [
+      "tadalafil",
+      "cialis"
+    ],
+    "ed-mints": [
+      "ed mints",
+      "dissolvable ed pills",
+      "ed melts"
+    ],
+    "bpc-157": [
+      "bpc-157",
+      "bpc 157 peptide"
+    ]
+  },
+  "question_prefixes": [
+    "how does {t}",
+    "why does {t}",
+    "what is {t}",
+    "is {t}",
+    "does {t}",
+    "can {t}",
+    "{t}",
+    "{t} reddit",
+    "{t} reddit question"
+  ],
+  "facets": {
+    "mechanism": {
+      "triggers": [
+        "how does",
+        "how it works",
+        "work",
+        "what does",
+        "mechanism",
+        "do ",
+        "effect on"
+      ],
+      "angles": [
+        "mechanism",
+        "what",
+        "format"
+      ],
+      "meat_styles": [
+        "explainer"
+      ],
+      "exclude_meat_titles": [
+        "What compounded means"
+      ]
+    },
+    "hunger": {
+      "triggers": [
+        "appetite",
+        "hunger",
+        "hungry",
+        "food noise",
+        "cravings",
+        "full",
+        "satiety"
+      ],
+      "angles": [
+        "mechanism",
+        "relatable"
+      ],
+      "hook_keywords": [
+        "hunger",
+        "hungry",
+        "appetite",
+        "full",
+        "food noise",
+        "craving",
+        "hormone",
+        "signal"
+      ],
+      "meat_styles": [
+        "explainer"
+      ],
+      "exclude_meat_titles": [
+        "What compounded means"
+      ],
+      "products": [
+        "tirzepatide",
+        "semaglutide"
+      ]
+    },
+    "side_effects": {
+      "triggers": [
+        "side effect",
+        "nausea",
+        "safe",
+        "risk",
+        "warning",
+        "pancreatitis",
+        "thyroid"
+      ],
+      "angles": [
+        "safety"
+      ],
+      "meat_styles": [
+        "safety"
+      ]
+    },
+    "compounded": {
+      "triggers": [
+        "compounded",
+        "compound",
+        "fda",
+        "generic",
+        "vs",
+        "versus",
+        "real"
+      ],
+      "angles": [
+        "honest"
+      ],
+      "meat_styles": [
+        "explainer",
+        "versus"
+      ],
+      "meat_titles": [
+        "What compounded means",
+        "What ED Mints are",
+        "Why dissolve?",
+        "Mints versus tablets, honestly"
+      ],
+      "products": [
+        "tirzepatide",
+        "semaglutide",
+        "ed-mints"
+      ]
+    },
+    "process": {
+      "triggers": [
+        "online",
+        "prescription",
+        "get ",
+        "telehealth",
+        "doctor",
+        "how to"
+      ],
+      "angles": [
+        "process",
+        "convenience",
+        "trust"
+      ],
+      "meat_styles": [
+        "process"
+      ]
+    },
+    "who": {
+      "triggers": [
+        "who can",
+        "who should",
+        "candidate",
+        "qualify",
+        "can i",
+        "can you"
+      ],
+      "angles": [
+        "education"
+      ],
+      "meat_styles": [
+        "checklist"
+      ]
+    },
+    "myths": {
+      "triggers": [
+        "myth",
+        "really work",
+        "actually work",
+        "true"
+      ],
+      "angles": [
+        "myth"
+      ],
+      "meat_styles": [
+        "myth"
+      ],
+      "products": [
+        "tadalafil",
+        "sildenafil"
+      ]
+    },
+    "peptide_what": {
+      "triggers": [
+        "what is",
+        "what does",
+        "how does",
+        "how it works",
+        "work"
+      ],
+      "angles": [
+        "education"
+      ],
+      "meat_titles": [
+        "What BPC-157 is, in a short video"
+      ],
+      "products": [
+        "bpc-157"
+      ]
+    },
+    "peptide_fda": {
+      "triggers": [
+        "fda",
+        "legal",
+        "approved",
+        "banned",
+        "risk",
+        "safe"
+      ],
+      "angles": [
+        "regulatory"
+      ],
+      "meat_titles": [
+        "BPC-157 and FDA approval"
+      ],
+      "products": [
+        "bpc-157"
+      ]
+    }
+  },
+  "skip_meat_styles": [
+    "price"
+  ],
+  "skip_cta_goals": [
+    "price_plan"
+  ]
+}

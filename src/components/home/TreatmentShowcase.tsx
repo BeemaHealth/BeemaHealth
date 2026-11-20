@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { ImageDisclaimer } from "@/components/site/ImageDisclaimer";
 import {
   AnimatePresence,
   motion,
@@ -179,6 +180,7 @@ export function TreatmentShowcase() {
                   style={reduceMotion ? undefined : { y: imageY }}
                   className="relative z-10 h-auto w-full max-w-[240px] object-contain drop-shadow-2xl md:max-w-[280px]"
                 />
+                <ImageDisclaimer overlay />
               </div>
 
               <div className="flex min-w-0 flex-col justify-center p-8 md:p-10 lg:p-12">

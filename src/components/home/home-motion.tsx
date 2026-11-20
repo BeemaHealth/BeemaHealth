@@ -45,6 +45,17 @@ export function LineReveal({
   // on its own and whileInView would never fire.
   const clipRef = useRef<HTMLSpanElement>(null);
   const inView = useInView(clipRef, { once: true, amount: 0.5 });
+  // The line is only hidden after mount, and only when it starts below the
+  // fold. SSR (and above-the-fold lines like the hero H1) render in place:
+  // hiding the H1 in the prerendered HTML left phones blank until hydration.
+  const [belowFold, setBelowFold] = useState(false);
+  useEffect(() => {
+    const clip = clipRef.current;
+    if (!clip) return;
+    if (clip.getBoundingClientRect().top > window.innerHeight) {
+      setBelowFold(true);
+    }
+  }, []);
   return (
     <span
       ref={clipRef}
@@ -52,8 +63,8 @@ export function LineReveal({
     >
       <motion.span
         className={cn("block", innerClassName)}
-        initial={reduceMotion ? false : { y: "112%" }}
-        animate={inView ? { y: "0%" } : undefined}
+        initial={false}
+        animate={{ y: !reduceMotion && belowFold && !inView ? "112%" : "0%" }}
         transition={{
           duration: reduceMotion ? 0 : 0.9,
           ease: EASE_OUT,

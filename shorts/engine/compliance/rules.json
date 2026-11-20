@@ -1,0 +1,183 @@
+{
+  "_note": "Pattern rules for the Beema compliance gate. level BLOCK = cannot ship; REVIEW = needs a human decision. The gate NEVER marks anything 'approved'. Patterns are regex, case-insensitive. Derived from docs/marketing/SEO-AEO-GEO-PLAN.md F1.1/F1.2, FDA statements (Feb 6 2026), legitscript/meta/google compliance skills.",
+  "global_block": [
+    {
+      "id": "em_dash",
+      "re": "\u2014",
+      "msg": "Em dash is banned in all Beema copy."
+    },
+    {
+      "id": "brand_names",
+      "re": "\\b(viagra|cialis|levitra|stendra|revatio|adcirca|ozempic|wegovy|zepbound|mounjaro|rybelsus|saxenda|victoza|trulicity|retatrutide|sema ?glutide ?pills?)\\b",
+      "msg": "Brand or non-offered drug name. Beema creative never names brands."
+    },
+    {
+      "id": "guarantee",
+      "re": "(?<!never )(?<!not )(?<!n't )(?<!no )\\bguarantee[ds]?\\b",
+      "msg": "Guarantee language. Only 'never guaranteed' is allowed."
+    },
+    {
+      "id": "performance_claims",
+      "re": "\\b(last longer|harder|bigger|stamina|virility|bedroom|better sex|sexual performance|satisf(y|ied|action)|rock[- ]hard|powerful|potent)\\b",
+      "msg": "Performance/enhancement claim."
+    },
+    {
+      "id": "efficacy_speed",
+      "re": "\\b(instant(ly)?|immediate(ly)?|within minutes|works fast|fast[- ]acting|works quickly|quick results|miracle|cures?d?|clinically proven|doctor[- ]approved|100 ?%|no side effects|risk[- ]free|completely safe|totally safe|proven to|works for everyone)\\b",
+      "msg": "Efficacy/speed/safety absolute."
+    },
+    {
+      "id": "weight_outcomes",
+      "re": "\\b(lose \\d+|\\d+ ?(lbs|pounds)|melt(s|ing)? (away )?fat|burn(s|ing)? fat|shed(s|ding)? (weight|pounds)|before and after|transformation|drop(ped)? \\d+)\\b",
+      "msg": "Weight-loss outcome claim or before/after framing."
+    },
+    {
+      "id": "testimonials",
+      "re": "\\b(patients? (say|report|love|swear)|customers? (say|love|swear)|real (results|patients|stories)|testimonial|reviews? (say|show)|five[- ]star)\\b",
+      "msg": "Testimonial or invented patient experience. Not allowed without signed releases and legal review."
+    },
+    {
+      "id": "pressure",
+      "re": "\\b(act now|hurry|limited time|today only|last chance|don't wait|before it's too late)\\b",
+      "msg": "Urgency/pressure language."
+    },
+    {
+      "id": "beema_fda_approved",
+      "re": "\\b(beema( health)?|our (service|clinic|pharmacy|providers|platform))\\W+(\\w+\\W+){0,4}fda[- ]approved",
+      "msg": "FDA approval attributed to Beema or its service."
+    },
+    {
+      "id": "fda_approved_facility",
+      "re": "fda[- ]approved (facility|pharmacy|lab|laboratory|manufacturer)",
+      "msg": "Do not call facilities FDA-approved. Use 'FDA-registered 503B outsourcing facility' only where verified."
+    },
+    {
+      "id": "legit_overclaim",
+      "re": "\\b(legitscript[- ]approved|legitscript endorse[ds]?|endorsed by|fda[- ]certified)\\b",
+      "msg": "Certification overclaim."
+    },
+    {
+      "id": "ssn_phi",
+      "re": "\\b\\d{3}-\\d{2}-\\d{4}\\b",
+      "msg": "Looks like PHI/SSN."
+    }
+  ],
+  "compounded_block": [
+    {
+      "id": "equivalence",
+      "re": "\\b(same as|same active|same ingredient|identical|equivalent|interchangeable|generic version|alternative to|copy of|drop-in|just like)\\b",
+      "msg": "Equivalence claim for a compounded product (FDA Feb 6 2026)."
+    },
+    {
+      "id": "glp1_numbers",
+      "re": "\\d+ ?%",
+      "msg": "Percent/efficacy statistic near a compounded GLP-1 (trial data must be walled off)."
+    }
+  ],
+  "peptide_block": [
+    {
+      "id": "peptide_healing_claim",
+      "re": "\\b(heal(s|ed|ing)?|repair(s|ed|ing)?|regenerat\\w*|restor(e|es|ed|ing)|rebuild\\w*|rejuvenat\\w*|recover(y|s|ed)?|reliev\\w*|fix(es|ed)?|treat(s|ed|ing)?|cure[sd]?|prevent(s|ed|ing)?|reduc(e|es|ed|ing) (pain|inflammation|swelling))\\b",
+      "msg": "Healing, repair, recovery, treatment or relief claim. BPC-157 has no established human benefit and no FDA-approved use."
+    },
+    {
+      "id": "peptide_efficacy_safety_claim",
+      "re": "\\b(is|are|be|been|proven) (safe|effective|well[- ]tolerated|natural|powerful)\\b|\\bsafe and\\b|\\bworks (for|in) (people|humans)\\b|\\bshown to\\b|\\bresearch(ers)? (shows?|found|proves?)\\b|\\bstudies (show|prove|found)\\b",
+      "msg": "Safety, efficacy or evidence claim about a peptide with limited human data. Say what is unknown instead."
+    },
+    {
+      "id": "peptide_dosing",
+      "re": "\\b(dos(e|es|ing|age)|\\d+ ?(mg|mcg|micrograms?|milligrams?|iu|units?)|protocol|stack(ing)?|cycle[sd]?)\\b",
+      "msg": "Dosing, protocol or stacking language. Not allowed without clinical review."
+    },
+    {
+      "id": "peptide_body_use",
+      "re": "\\b(injur(y|ies|ed)|tendons?|ligaments?|joints?|muscles?|gut|ulcers?|inflammation|pain|athlet\\w*|gains?|bodybuild\\w*|anti-aging|longevity|biohack\\w*)\\b",
+      "msg": "Names a body part, condition or use case. That implies a benefit; keep the video to what it is and what is unknown."
+    }
+  ],
+  "review": [
+    {
+      "id": "timing_claim",
+      "re": "\\b(\\d+|thirty|sixty|forty[- ]five|ninety|one hundred twenty)( to \\d+| to (thirty|sixty|ninety))? ?(minutes?|mins?)\\b",
+      "msg": "Onset/timing statement. Verify against pharmacy/label documentation; never transfer tablet timing to Mints."
+    },
+    {
+      "id": "duration_claim",
+      "re": "\\b(\\d+|thirty[- ]six|twenty[- ]four) ?(hours?|hrs?)\\b",
+      "msg": "Duration statement. Confirm wording and that 4-hour priapism warning is not confused."
+    },
+    {
+      "id": "provider_credentials",
+      "re": "\\b(board[- ]certified|top[- ]rated|best|leading|#1|number one|award[- ]winning)\\b",
+      "msg": "Credential/superlative. Needs substantiation."
+    },
+    {
+      "id": "legitscript_mention",
+      "re": "legitscript",
+      "msg": "LegitScript named. Seal/certification language must follow certification-language-usage rules; never in ad creative."
+    },
+    {
+      "id": "personal_attribute",
+      "re": "\\byou(r|'re|'ve)?\\b[^.?!]{0,40}\\b(erectile|\\bED\\b|impoten|overweight|obese|obesity|fat\\b|diabet|depress|bald)",
+      "msg": "Second-person condition/body reference (Meta personal-attributes risk)."
+    },
+    {
+      "id": "body_shame",
+      "re": "\\b(fat|obese|obesity|overweight|lazy|ashamed|embarrass(ed|ing)|failure|pathetic)\\b",
+      "msg": "Body-shame or stigma language."
+    },
+    {
+      "id": "many_men",
+      "re": "\\b(many|most|millions of|so many) (men|people|patients)\\b",
+      "msg": "Unquantified prevalence statement. Needs a cited source or rewording."
+    },
+    {
+      "id": "history_claim",
+      "re": "\\b(decades|study|studies|research shows|trial)\\b",
+      "msg": "History/study reference. Needs a cited source."
+    },
+    {
+      "id": "process_time_claim",
+      "re": "\\b(a few|just a few|couple of|two|three|five|ten|\\d+) (minutes|seconds)\\b|takes (just )?(minutes|seconds)|\\bin (minutes|seconds)\\b|under a minute",
+      "msg": "Process or video duration claim. Needs substantiation."
+    }
+  ],
+  "ad_block": [
+    {
+      "id": "ad_personal_attribute",
+      "re": "\\byou(r|'re|'ve)?\\b[^.?!]{0,40}\\b(erectile|\\bED\\b|impoten|overweight|obese|fat\\b|diabet)",
+      "msg": "Ad copy asserting or implying a personal health condition."
+    }
+  ],
+  "required": {
+    "ed": {
+      "endcard_contains": [
+        "Prescription required",
+        "never guaranteed"
+      ],
+      "safety_contains": [
+        "nitrates"
+      ]
+    },
+    "compounded": {
+      "endcard_contains": [
+        "Compounded",
+        "not FDA-approved"
+      ],
+      "caption_contains": [
+        "not FDA-approved"
+      ]
+    },
+    "glp1": {
+      "endcard_contains": [
+        "Prescription required"
+      ]
+    },
+    "ad": {
+      "endcard_contains": [
+        "18+"
+      ]
+    }
+  }
+}

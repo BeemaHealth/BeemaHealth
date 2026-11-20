@@ -19,7 +19,11 @@ export function FinalCTASection() {
   const [getStartedOpen, setGetStartedOpen] = useState(false);
   return (
     <section className="pb-16 md:pb-24">
-      <GetStartedModal open={getStartedOpen} onOpenChange={setGetStartedOpen} />
+      <GetStartedModal
+        open={getStartedOpen}
+        onOpenChange={setGetStartedOpen}
+        position="mid_page"
+      />
       <div className="veya-container">
         <div className="relative overflow-hidden rounded-4xl bg-primary px-6 py-16 text-center text-primary-foreground md:px-12 md:py-24">
           <div
@@ -36,7 +40,8 @@ export function FinalCTASection() {
 
             <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-primary-foreground/80 md:text-lg">
               Start your online visit in about a minute. {promoIncentiveLine()}.
-              No payment required to start, and no prescription is guaranteed.
+              You won&apos;t be charged anything if you&apos;re not prescribed,
+              and no prescription is guaranteed.
             </p>
 
             <HoverLiftButton className="mt-8">

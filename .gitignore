@@ -58,3 +58,7 @@ mailer_pii.wrap
 .idea/
 .vscode/
 *.swp
+
+# Local CRO dashboard: Google credentials and config
+tools/cro/config.json
+tools/cro/.credentials/

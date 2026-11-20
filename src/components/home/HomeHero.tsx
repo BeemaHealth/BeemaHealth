@@ -8,14 +8,17 @@ import {
 import { Link } from "@tanstack/react-router";
 import {
   ArrowRight,
+  BadgeDollarSign,
   HeartPulse,
+  Lock,
+  Pill,
   Scale,
+  ShieldCheck,
   Star,
   type LucideIcon,
 } from "lucide-react";
 import {
   FloatingHexagons,
-  HexMotif,
   HoverLiftButton,
 } from "@/components/site/primitives";
 import { LegitScriptSeal } from "@/components/site/LegitScriptSeal";
@@ -27,11 +30,9 @@ import {
 import {
   EASE_OUT,
   LineReveal,
-  Marquee,
   RotatingBadge,
 } from "@/components/home/home-motion";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
   HERO_BADGE_MESSAGES,
   HERO_MARQUEE_OFFERING_LINE,
@@ -48,15 +49,25 @@ const OFFERING_ICONS: Record<HomeHeroOfferingId, LucideIcon> = {
   ed: HeartPulse,
 };
 
-const MARQUEE_ITEMS = [
-  "Licensed providers",
-  HERO_MARQUEE_OFFERING_LINE,
-  dualCompoundedPromoShortPricingLine(),
-  "USA licensed pharmacies",
-  "Private & secure encrypted intake",
-  "HIPAA-compliant care",
-  "Self-paced online intake",
-] as const;
+/**
+ * Four static trust points in the dark band anchored to the hero's bottom
+ * edge. No rotation or scrolling: all four are always visible.
+ */
+const HERO_BAR_ITEMS: readonly {
+  icon: LucideIcon;
+  label: string;
+  /** Hidden below lg so phones show a single row of two. */
+  desktopOnly?: boolean;
+}[] = [
+  { icon: ShieldCheck, label: HERO_MARQUEE_OFFERING_LINE },
+  { icon: BadgeDollarSign, label: dualCompoundedPromoShortPricingLine() },
+  { icon: Pill, label: "USA licensed pharmacies", desktopOnly: true },
+  {
+    icon: Lock,
+    label: "Private & secure encrypted intake",
+    desktopOnly: true,
+  },
+];
 
 /**
  * Staggered fade-up entrance for the eyebrow/paragraph/CTA column.
@@ -90,7 +101,7 @@ function useHeroColumnStagger(reduceMotion: boolean) {
  * Full-viewport cinematic hero for the homepage redesign. Two-column on
  * lg (headline column left, hexagon-clipped photography right), with a
  * scroll-linked parallax split between the columns for depth, and a
- * full-width infinite marquee band anchored to its bottom edge.
+ * static four-item trust bar anchored to its bottom edge.
  *
  * The lg min-height is deliberately `calc(100svh-4rem)` rather than a full
  * `100svh` - that headroom is what keeps the fixed site header from pushing
@@ -102,17 +113,11 @@ function useHeroColumnStagger(reduceMotion: boolean) {
  * content (vertically centered in the grid) ended up stranded in a wall of
  * empty space above and below on e.g. 1600px+-tall viewports.
  *
- * The marquee band (replacing the old animated "Scroll" cue in that same
- * spot) is viewport-fixed rather than positioned against the hero section's
- * own box - the headline's fluid clamp() can wrap to extra lines at some
- * widths, which grows the section past its `100svh-4rem` target, so
- * anchoring the marquee to the section's bottom edge would just push it
- * off-screen again along with that overflow. Fixing it to the viewport
- * guarantees it's visible on initial load regardless of hero content
- * height, and it fades out (`marqueeOpacity`) over the first slice of hero
- * scroll so it doesn't linger fixed over content further down the page.
- * The content grid's bottom padding (`pb-20`/`pb-24`) reserves room so the
- * CTA row doesn't render underneath it on load.
+ * The trust bar (`HERO_BAR_ITEMS`) is absolutely positioned at the bottom of
+ * the hero section on lg, so it sits at the hero's own edge rather than floating
+ * over later content. The content grid's bottom padding reserves room for it
+ * on lg only. Below lg the bar is an in-flow 1x2 row (the first two items) under the content, so
+ * it never covers the hexagon photo or the CTA row.
  */
 export function HomeHero() {
   const reduceMotion = useReducedMotion();
@@ -145,17 +150,6 @@ export function HomeHero() {
     [0, 1],
     [1, reduceMotion ? 1 : 1.06],
   );
-  // The marquee is viewport-fixed (not tied to the hero section's own,
-  // content-dependent height) so it's guaranteed visible on initial load
-  // regardless of how tall the headline wraps at a given width. This fades
-  // it out over the first slice of hero scroll so it doesn't linger fixed
-  // over content further down the page.
-  const marqueeOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.12],
-    [1, reduceMotion ? 1 : 0],
-  );
-
   return (
     <section
       ref={heroRef}
@@ -172,7 +166,7 @@ export function HomeHero() {
       />
       <FloatingHexagons className="z-0" />
 
-      <div className="veya-container relative z-10 grid min-h-0 items-center gap-10 py-10 pb-20 md:py-12 md:pb-24 lg:min-h-[min(calc(100svh-4rem),50rem)] lg:grid-cols-2 lg:gap-16 lg:py-14 lg:pb-24 xl:gap-20">
+      <div className="veya-container relative z-10 grid min-h-0 items-center gap-10 py-10 pb-12 md:py-12 md:pb-14 lg:min-h-[min(calc(100svh-4rem),50rem)] lg:grid-cols-2 lg:gap-16 lg:py-14 lg:pb-24 xl:gap-20">
         <motion.div
           className="relative z-10"
           initial="hidden"
@@ -369,25 +363,22 @@ export function HomeHero() {
         </motion.div>
       </div>
 
-      <motion.div
-        className={cn(
-          "inset-x-0 bottom-0 z-30 bg-grad-ink py-4 text-ink-foreground md:py-5",
-          reduceMotion ? "absolute" : "fixed pointer-events-none",
-        )}
-        style={reduceMotion ? undefined : { opacity: marqueeOpacity }}
-      >
-        <Marquee duration={30}>
-          {MARQUEE_ITEMS.map((label) => (
-            <span
+      <div className="bg-grad-ink relative z-30 text-ink-foreground lg:absolute lg:inset-x-0 lg:bottom-0">
+        <ul className="veya-container grid grid-cols-2 lg:grid-cols-4">
+          {HERO_BAR_ITEMS.map(({ icon: Icon, label, desktopOnly }) => (
+            <li
               key={label}
-              className="flex shrink-0 items-center gap-8 whitespace-nowrap text-sm font-semibold uppercase tracking-wide sm:gap-10"
+              className={`flex-col items-center justify-center gap-2 border-ink-foreground/15 px-3 py-5 text-center text-[11px] font-semibold uppercase leading-snug tracking-wide max-lg:odd:border-r sm:text-xs lg:flex lg:flex-row lg:gap-3 lg:border-r lg:py-5 lg:last:border-r-0 ${desktopOnly ? "hidden" : "flex"}`}
             >
-              {label}
-              <HexMotif className="size-3 shrink-0 text-primary" />
-            </span>
+              <Icon
+                className="size-6 shrink-0 text-primary lg:size-5"
+                aria-hidden
+              />
+              <span className="text-balance">{label}</span>
+            </li>
           ))}
-        </Marquee>
-      </motion.div>
+        </ul>
+      </div>
     </section>
   );
 }

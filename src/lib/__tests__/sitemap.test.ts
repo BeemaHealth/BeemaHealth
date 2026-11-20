@@ -6,6 +6,9 @@ import { RECIPES, recipePath } from "../recipes";
 import { getLearnSitemapEntries } from "@/content/learn/sitemap";
 import { listAllArticles } from "@/content/learn/registry";
 import { learnPath } from "@/content/learn/types";
+import { listArticles } from "@/content/blog/articles";
+import { blogArticlePath } from "@/content/blog/paths";
+import { TOOLS, TOOLS_INDEX_PATH } from "@/content/tools/tools";
 
 const sitemapXml = readFileSync(
   resolve(__dirname, "../../../public/sitemap.xml"),
@@ -35,6 +38,11 @@ const EXPECTED_PATHS = [
   "/ed-mints-boston/",
   "/nad-plus/",
   "/sermorelin/",
+  "/mots-c/",
+  "/bpc-157/",
+  "/bpc-157-capsules/",
+  "/bpc-157-tb-500-ghk-cu/",
+  "/ghk-cu/",
   "/sexual-health/",
   "/hair-loss/",
   "/glp-1/",
@@ -60,6 +68,10 @@ const EXPECTED_PATHS = [
   "/about/",
   "/safety/",
   "/faq/",
+  "/blogs/",
+  ...listArticles().map((article) => blogArticlePath(article.slug)),
+  TOOLS_INDEX_PATH,
+  ...TOOLS.map((tool) => tool.path),
   ...getLearnSitemapEntries().map((entry) => entry.path),
   "/contact/",
   "/legal/privacy/",
@@ -162,7 +174,6 @@ describe("public/sitemap.xml", () => {
   it("never lists funnel, portal, staff, or auth routes", () => {
     const disallowed = [
       "/qualify",
-      "/waitlist",
       "/intake",
       "/consent",
       "/submitted",
@@ -207,7 +218,6 @@ describe("public/robots.txt", () => {
   it("blocks funnel, portal, staff, LP, and retired stub paths", () => {
     for (const path of [
       "/qualify",
-      "/waitlist",
       "/intake",
       "/consent",
       "/dashboard",
@@ -256,13 +266,7 @@ describe("public/robots.txt", () => {
       robotsTxt.lastIndexOf("User-agent: *"),
     );
     expect(namedGroup.length).toBeGreaterThan(0);
-    for (const path of [
-      "/dashboard",
-      "/staff",
-      "/waitlist",
-      "/pricing",
-      "/the-comb",
-    ]) {
+    for (const path of ["/dashboard", "/staff", "/pricing", "/the-comb"]) {
       expect(namedGroup).toContain(`Disallow: ${path}`);
     }
   });
@@ -339,11 +343,11 @@ describe("internal marketing links (trailing slash)", () => {
 describe("treatment page how-it-works CTAs", () => {
   const routes = {
     tirzepatide: readFileSync(
-      resolve(__dirname, "../../routes/tirzepatide.tsx"),
+      resolve(__dirname, "../../landing-variants/tirzepatide/v1-control.tsx"),
       "utf-8",
     ),
     semaglutide: readFileSync(
-      resolve(__dirname, "../../routes/semaglutide.tsx"),
+      resolve(__dirname, "../../landing-variants/semaglutide/v1-control.tsx"),
       "utf-8",
     ),
     glp1: readFileSync(
@@ -363,14 +367,6 @@ describe("treatment page how-it-works CTAs", () => {
       expect(source, name).toContain('hash="how-it-works"');
       expect(source, name).not.toContain('to="/how-it-works/"');
     }
-  });
-});
-
-describe("waitlistHref", () => {
-  it("puts the trailing slash before the query string", async () => {
-    const { waitlistHref, WAITLIST_PATH } = await import("../cta-ids");
-    expect(WAITLIST_PATH).toBe("/waitlist/");
-    expect(waitlistHref("faq")).toBe("/waitlist/?cta_id=faq");
   });
 });
 

@@ -10,8 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WeightLossRouteImport } from './routes/weight-loss'
-import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
+import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as TirzepatideHoustonRouteImport } from './routes/tirzepatide-houston'
 import { Route as TirzepatideRouteImport } from './routes/tirzepatide'
 import { Route as TadalafilBostonRouteImport } from './routes/tadalafil-boston'
@@ -32,6 +32,7 @@ import { Route as OralMinoxidilWomenRouteImport } from './routes/oral-minoxidil-
 import { Route as OralMinoxidilMenRouteImport } from './routes/oral-minoxidil-men'
 import { Route as OralFinasterideRouteImport } from './routes/oral-finasteride'
 import { Route as NadPlusRouteImport } from './routes/nad-plus'
+import { Route as MotsCRouteImport } from './routes/mots-c'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as IntakeRouteImport } from './routes/intake'
@@ -41,6 +42,7 @@ import { Route as HairLossSprayMenRouteImport } from './routes/hair-loss-spray-m
 import { Route as HairLossRouteImport } from './routes/hair-loss'
 import { Route as Glp1HoustonRouteImport } from './routes/glp-1-houston'
 import { Route as Glp1RouteImport } from './routes/glp-1'
+import { Route as GhkCuRouteImport } from './routes/ghk-cu'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
 import { Route as EdMintsBostonRouteImport } from './routes/ed-mints-boston'
@@ -50,14 +52,22 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CreatorsRouteImport } from './routes/creators'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsentRouteImport } from './routes/consent'
+import { Route as Bpc157Tb500GhkCuRouteImport } from './routes/bpc-157-tb-500-ghk-cu'
+import { Route as Bpc157CapsulesRouteImport } from './routes/bpc-157-capsules'
+import { Route as Bpc157RouteImport } from './routes/bpc-157'
+import { Route as BlogsRouteImport } from './routes/blogs'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerifyEmailIndexRouteImport } from './routes/verify-email.index'
+import { Route as ToolsIndexRouteImport } from './routes/tools.index'
 import { Route as StaffIndexRouteImport } from './routes/staff.index'
 import { Route as RecipesIndexRouteImport } from './routes/recipes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as BlogsIndexRouteImport } from './routes/blogs.index'
 import { Route as VerifyEmailPendingRouteImport } from './routes/verify-email.pending'
+import { Route as ToolsPeptideQuizRouteImport } from './routes/tools.peptide-quiz'
+import { Route as ToolsBmiCalculatorRouteImport } from './routes/tools.bmi-calculator'
 import { Route as StaffVendorsRouteImport } from './routes/staff.vendors'
 import { Route as StaffQuestionnairesRouteImport } from './routes/staff.questionnaires'
 import { Route as StaffPatientsRouteImport } from './routes/staff.patients'
@@ -89,6 +99,7 @@ import { Route as DashboardOrdersRouteImport } from './routes/dashboard.orders'
 import { Route as DashboardIntakeRouteImport } from './routes/dashboard.intake'
 import { Route as DashboardDocumentsRouteImport } from './routes/dashboard.documents'
 import { Route as DashboardAccountRouteImport } from './routes/dashboard.account'
+import { Route as BlogsSlugRouteImport } from './routes/blogs.$slug'
 import { Route as StaffQuestionnairesIndexRouteImport } from './routes/staff.questionnaires.index'
 import { Route as LearnVerticalIndexRouteImport } from './routes/learn/$vertical.index'
 import { Route as StaffQuestionnairesSlugRouteImport } from './routes/staff.questionnaires.$slug'
@@ -101,14 +112,14 @@ const WeightLossRoute = WeightLossRouteImport.update({
   path: '/weight-loss',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WaitlistRoute = WaitlistRouteImport.update({
-  id: '/waitlist',
-  path: '/waitlist',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
   path: '/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsRoute = ToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TirzepatideHoustonRoute = TirzepatideHoustonRouteImport.update({
@@ -211,6 +222,11 @@ const NadPlusRoute = NadPlusRouteImport.update({
   path: '/nad-plus',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MotsCRoute = MotsCRouteImport.update({
+  id: '/mots-c',
+  path: '/mots-c',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -254,6 +270,11 @@ const Glp1HoustonRoute = Glp1HoustonRouteImport.update({
 const Glp1Route = Glp1RouteImport.update({
   id: '/glp-1',
   path: '/glp-1',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GhkCuRoute = GhkCuRouteImport.update({
+  id: '/ghk-cu',
+  path: '/ghk-cu',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -301,6 +322,26 @@ const ConsentRoute = ConsentRouteImport.update({
   path: '/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Bpc157Tb500GhkCuRoute = Bpc157Tb500GhkCuRouteImport.update({
+  id: '/bpc-157-tb-500-ghk-cu',
+  path: '/bpc-157-tb-500-ghk-cu',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Bpc157CapsulesRoute = Bpc157CapsulesRouteImport.update({
+  id: '/bpc-157-capsules',
+  path: '/bpc-157-capsules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Bpc157Route = Bpc157RouteImport.update({
+  id: '/bpc-157',
+  path: '/bpc-157',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogsRoute = BlogsRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -315,6 +356,11 @@ const VerifyEmailIndexRoute = VerifyEmailIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => VerifyEmailRoute,
+} as any)
+const ToolsIndexRoute = ToolsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ToolsRoute,
 } as any)
 const StaffIndexRoute = StaffIndexRouteImport.update({
   id: '/',
@@ -336,10 +382,25 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const BlogsIndexRoute = BlogsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogsRoute,
+} as any)
 const VerifyEmailPendingRoute = VerifyEmailPendingRouteImport.update({
   id: '/pending',
   path: '/pending',
   getParentRoute: () => VerifyEmailRoute,
+} as any)
+const ToolsPeptideQuizRoute = ToolsPeptideQuizRouteImport.update({
+  id: '/peptide-quiz',
+  path: '/peptide-quiz',
+  getParentRoute: () => ToolsRoute,
+} as any)
+const ToolsBmiCalculatorRoute = ToolsBmiCalculatorRouteImport.update({
+  id: '/bmi-calculator',
+  path: '/bmi-calculator',
+  getParentRoute: () => ToolsRoute,
 } as any)
 const StaffVendorsRoute = StaffVendorsRouteImport.update({
   id: '/vendors',
@@ -500,6 +561,11 @@ const DashboardAccountRoute = DashboardAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => DashboardRoute,
 } as any)
+const BlogsSlugRoute = BlogsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogsRoute,
+} as any)
 const StaffQuestionnairesIndexRoute =
   StaffQuestionnairesIndexRouteImport.update({
     id: '/',
@@ -537,6 +603,10 @@ const StaffQuestionnairesSlugVersionsVersionIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/blogs': typeof BlogsRouteWithChildren
+  '/bpc-157': typeof Bpc157Route
+  '/bpc-157-capsules': typeof Bpc157CapsulesRoute
+  '/bpc-157-tb-500-ghk-cu': typeof Bpc157Tb500GhkCuRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
   '/creators': typeof CreatorsRoute
@@ -546,6 +616,7 @@ export interface FileRoutesByFullPath {
   '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
+  '/ghk-cu': typeof GhkCuRoute
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
   '/hair-loss': typeof HairLossRoute
@@ -555,6 +626,7 @@ export interface FileRoutesByFullPath {
   '/intake': typeof IntakeRoute
   '/learn': typeof LearnRouteWithChildren
   '/login': typeof LoginRoute
+  '/mots-c': typeof MotsCRoute
   '/nad-plus': typeof NadPlusRoute
   '/oral-finasteride': typeof OralFinasterideRoute
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
@@ -575,9 +647,10 @@ export interface FileRoutesByFullPath {
   '/tadalafil-boston': typeof TadalafilBostonRoute
   '/tirzepatide': typeof TirzepatideRoute
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
+  '/tools': typeof ToolsRouteWithChildren
   '/verify-email': typeof VerifyEmailRouteWithChildren
-  '/waitlist': typeof WaitlistRoute
   '/weight-loss': typeof WeightLossRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
   '/dashboard/intake': typeof DashboardIntakeRoute
@@ -609,11 +682,15 @@ export interface FileRoutesByFullPath {
   '/staff/patients': typeof StaffPatientsRoute
   '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
   '/staff/vendors': typeof StaffVendorsRoute
+  '/tools/bmi-calculator': typeof ToolsBmiCalculatorRoute
+  '/tools/peptide-quiz': typeof ToolsPeptideQuizRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/blogs/': typeof BlogsIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/recipes/': typeof RecipesIndexRoute
   '/staff/': typeof StaffIndexRoute
+  '/tools/': typeof ToolsIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
   '/learn/$vertical/$slug': typeof LearnVerticalSlugRoute
   '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugRouteWithChildren
@@ -625,6 +702,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/bpc-157': typeof Bpc157Route
+  '/bpc-157-capsules': typeof Bpc157CapsulesRoute
+  '/bpc-157-tb-500-ghk-cu': typeof Bpc157Tb500GhkCuRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
   '/creators': typeof CreatorsRoute
@@ -633,6 +713,7 @@ export interface FileRoutesByTo {
   '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
+  '/ghk-cu': typeof GhkCuRoute
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
   '/hair-loss': typeof HairLossRoute
@@ -641,6 +722,7 @@ export interface FileRoutesByTo {
   '/how-it-works': typeof HowItWorksRoute
   '/intake': typeof IntakeRoute
   '/login': typeof LoginRoute
+  '/mots-c': typeof MotsCRoute
   '/nad-plus': typeof NadPlusRoute
   '/oral-finasteride': typeof OralFinasterideRoute
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
@@ -660,8 +742,8 @@ export interface FileRoutesByTo {
   '/tadalafil-boston': typeof TadalafilBostonRoute
   '/tirzepatide': typeof TirzepatideRoute
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
-  '/waitlist': typeof WaitlistRoute
   '/weight-loss': typeof WeightLossRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
   '/dashboard/intake': typeof DashboardIntakeRoute
@@ -691,11 +773,15 @@ export interface FileRoutesByTo {
   '/staff/medications': typeof StaffMedicationsRoute
   '/staff/patients': typeof StaffPatientsRoute
   '/staff/vendors': typeof StaffVendorsRoute
+  '/tools/bmi-calculator': typeof ToolsBmiCalculatorRoute
+  '/tools/peptide-quiz': typeof ToolsPeptideQuizRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/blogs': typeof BlogsIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/learn': typeof LearnIndexRoute
   '/recipes': typeof RecipesIndexRoute
   '/staff': typeof StaffIndexRoute
+  '/tools': typeof ToolsIndexRoute
   '/verify-email': typeof VerifyEmailIndexRoute
   '/learn/$vertical/$slug': typeof LearnVerticalSlugRoute
   '/learn/$vertical': typeof LearnVerticalIndexRoute
@@ -707,6 +793,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/blogs': typeof BlogsRouteWithChildren
+  '/bpc-157': typeof Bpc157Route
+  '/bpc-157-capsules': typeof Bpc157CapsulesRoute
+  '/bpc-157-tb-500-ghk-cu': typeof Bpc157Tb500GhkCuRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
   '/creators': typeof CreatorsRoute
@@ -716,6 +806,7 @@ export interface FileRoutesById {
   '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
+  '/ghk-cu': typeof GhkCuRoute
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
   '/hair-loss': typeof HairLossRoute
@@ -725,6 +816,7 @@ export interface FileRoutesById {
   '/intake': typeof IntakeRoute
   '/learn': typeof LearnRouteWithChildren
   '/login': typeof LoginRoute
+  '/mots-c': typeof MotsCRoute
   '/nad-plus': typeof NadPlusRoute
   '/oral-finasteride': typeof OralFinasterideRoute
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
@@ -745,9 +837,10 @@ export interface FileRoutesById {
   '/tadalafil-boston': typeof TadalafilBostonRoute
   '/tirzepatide': typeof TirzepatideRoute
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
+  '/tools': typeof ToolsRouteWithChildren
   '/verify-email': typeof VerifyEmailRouteWithChildren
-  '/waitlist': typeof WaitlistRoute
   '/weight-loss': typeof WeightLossRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
   '/dashboard/intake': typeof DashboardIntakeRoute
@@ -779,11 +872,15 @@ export interface FileRoutesById {
   '/staff/patients': typeof StaffPatientsRoute
   '/staff/questionnaires': typeof StaffQuestionnairesRouteWithChildren
   '/staff/vendors': typeof StaffVendorsRoute
+  '/tools/bmi-calculator': typeof ToolsBmiCalculatorRoute
+  '/tools/peptide-quiz': typeof ToolsPeptideQuizRoute
   '/verify-email/pending': typeof VerifyEmailPendingRoute
+  '/blogs/': typeof BlogsIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/recipes/': typeof RecipesIndexRoute
   '/staff/': typeof StaffIndexRoute
+  '/tools/': typeof ToolsIndexRoute
   '/verify-email/': typeof VerifyEmailIndexRoute
   '/learn/$vertical/$slug': typeof LearnVerticalSlugRoute
   '/staff/questionnaires/$slug': typeof StaffQuestionnairesSlugRouteWithChildren
@@ -797,6 +894,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/blogs'
+    | '/bpc-157'
+    | '/bpc-157-capsules'
+    | '/bpc-157-tb-500-ghk-cu'
     | '/consent'
     | '/contact'
     | '/creators'
@@ -806,6 +907,7 @@ export interface FileRouteTypes {
     | '/ed-mints-boston'
     | '/eligibility'
     | '/faq'
+    | '/ghk-cu'
     | '/glp-1'
     | '/glp-1-houston'
     | '/hair-loss'
@@ -815,6 +917,7 @@ export interface FileRouteTypes {
     | '/intake'
     | '/learn'
     | '/login'
+    | '/mots-c'
     | '/nad-plus'
     | '/oral-finasteride'
     | '/oral-minoxidil-men'
@@ -835,9 +938,10 @@ export interface FileRouteTypes {
     | '/tadalafil-boston'
     | '/tirzepatide'
     | '/tirzepatide-houston'
+    | '/tools'
     | '/verify-email'
-    | '/waitlist'
     | '/weight-loss'
+    | '/blogs/$slug'
     | '/dashboard/account'
     | '/dashboard/documents'
     | '/dashboard/intake'
@@ -869,11 +973,15 @@ export interface FileRouteTypes {
     | '/staff/patients'
     | '/staff/questionnaires'
     | '/staff/vendors'
+    | '/tools/bmi-calculator'
+    | '/tools/peptide-quiz'
     | '/verify-email/pending'
+    | '/blogs/'
     | '/dashboard/'
     | '/learn/'
     | '/recipes/'
     | '/staff/'
+    | '/tools/'
     | '/verify-email/'
     | '/learn/$vertical/$slug'
     | '/staff/questionnaires/$slug'
@@ -885,6 +993,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/bpc-157'
+    | '/bpc-157-capsules'
+    | '/bpc-157-tb-500-ghk-cu'
     | '/consent'
     | '/contact'
     | '/creators'
@@ -893,6 +1004,7 @@ export interface FileRouteTypes {
     | '/ed-mints-boston'
     | '/eligibility'
     | '/faq'
+    | '/ghk-cu'
     | '/glp-1'
     | '/glp-1-houston'
     | '/hair-loss'
@@ -901,6 +1013,7 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/intake'
     | '/login'
+    | '/mots-c'
     | '/nad-plus'
     | '/oral-finasteride'
     | '/oral-minoxidil-men'
@@ -920,8 +1033,8 @@ export interface FileRouteTypes {
     | '/tadalafil-boston'
     | '/tirzepatide'
     | '/tirzepatide-houston'
-    | '/waitlist'
     | '/weight-loss'
+    | '/blogs/$slug'
     | '/dashboard/account'
     | '/dashboard/documents'
     | '/dashboard/intake'
@@ -951,11 +1064,15 @@ export interface FileRouteTypes {
     | '/staff/medications'
     | '/staff/patients'
     | '/staff/vendors'
+    | '/tools/bmi-calculator'
+    | '/tools/peptide-quiz'
     | '/verify-email/pending'
+    | '/blogs'
     | '/dashboard'
     | '/learn'
     | '/recipes'
     | '/staff'
+    | '/tools'
     | '/verify-email'
     | '/learn/$vertical/$slug'
     | '/learn/$vertical'
@@ -966,6 +1083,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/blogs'
+    | '/bpc-157'
+    | '/bpc-157-capsules'
+    | '/bpc-157-tb-500-ghk-cu'
     | '/consent'
     | '/contact'
     | '/creators'
@@ -975,6 +1096,7 @@ export interface FileRouteTypes {
     | '/ed-mints-boston'
     | '/eligibility'
     | '/faq'
+    | '/ghk-cu'
     | '/glp-1'
     | '/glp-1-houston'
     | '/hair-loss'
@@ -984,6 +1106,7 @@ export interface FileRouteTypes {
     | '/intake'
     | '/learn'
     | '/login'
+    | '/mots-c'
     | '/nad-plus'
     | '/oral-finasteride'
     | '/oral-minoxidil-men'
@@ -1004,9 +1127,10 @@ export interface FileRouteTypes {
     | '/tadalafil-boston'
     | '/tirzepatide'
     | '/tirzepatide-houston'
+    | '/tools'
     | '/verify-email'
-    | '/waitlist'
     | '/weight-loss'
+    | '/blogs/$slug'
     | '/dashboard/account'
     | '/dashboard/documents'
     | '/dashboard/intake'
@@ -1038,11 +1162,15 @@ export interface FileRouteTypes {
     | '/staff/patients'
     | '/staff/questionnaires'
     | '/staff/vendors'
+    | '/tools/bmi-calculator'
+    | '/tools/peptide-quiz'
     | '/verify-email/pending'
+    | '/blogs/'
     | '/dashboard/'
     | '/learn/'
     | '/recipes/'
     | '/staff/'
+    | '/tools/'
     | '/verify-email/'
     | '/learn/$vertical/$slug'
     | '/staff/questionnaires/$slug'
@@ -1055,6 +1183,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BlogsRoute: typeof BlogsRouteWithChildren
+  Bpc157Route: typeof Bpc157Route
+  Bpc157CapsulesRoute: typeof Bpc157CapsulesRoute
+  Bpc157Tb500GhkCuRoute: typeof Bpc157Tb500GhkCuRoute
   ConsentRoute: typeof ConsentRoute
   ContactRoute: typeof ContactRoute
   CreatorsRoute: typeof CreatorsRoute
@@ -1064,6 +1196,7 @@ export interface RootRouteChildren {
   EdMintsBostonRoute: typeof EdMintsBostonRoute
   EligibilityRoute: typeof EligibilityRoute
   FaqRoute: typeof FaqRoute
+  GhkCuRoute: typeof GhkCuRoute
   Glp1Route: typeof Glp1Route
   Glp1HoustonRoute: typeof Glp1HoustonRoute
   HairLossRoute: typeof HairLossRoute
@@ -1073,6 +1206,7 @@ export interface RootRouteChildren {
   IntakeRoute: typeof IntakeRoute
   LearnRoute: typeof LearnRouteWithChildren
   LoginRoute: typeof LoginRoute
+  MotsCRoute: typeof MotsCRoute
   NadPlusRoute: typeof NadPlusRoute
   OralFinasterideRoute: typeof OralFinasterideRoute
   OralMinoxidilMenRoute: typeof OralMinoxidilMenRoute
@@ -1093,8 +1227,8 @@ export interface RootRouteChildren {
   TadalafilBostonRoute: typeof TadalafilBostonRoute
   TirzepatideRoute: typeof TirzepatideRoute
   TirzepatideHoustonRoute: typeof TirzepatideHoustonRoute
+  ToolsRoute: typeof ToolsRouteWithChildren
   VerifyEmailRoute: typeof VerifyEmailRouteWithChildren
-  WaitlistRoute: typeof WaitlistRoute
   WeightLossRoute: typeof WeightLossRoute
   LegalCreatorProgramTermsRoute: typeof LegalCreatorProgramTermsRoute
   LegalHipaaRoute: typeof LegalHipaaRoute
@@ -1121,18 +1255,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WeightLossRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/waitlist': {
-      id: '/waitlist'
-      path: '/waitlist'
-      fullPath: '/waitlist'
-      preLoaderRoute: typeof WaitlistRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/verify-email': {
       id: '/verify-email'
       path: '/verify-email'
       fullPath: '/verify-email'
       preLoaderRoute: typeof VerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools': {
+      id: '/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof ToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tirzepatide-houston': {
@@ -1275,6 +1409,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NadPlusRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mots-c': {
+      id: '/mots-c'
+      path: '/mots-c'
+      fullPath: '/mots-c'
+      preLoaderRoute: typeof MotsCRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -1336,6 +1477,13 @@ declare module '@tanstack/react-router' {
       path: '/glp-1'
       fullPath: '/glp-1'
       preLoaderRoute: typeof Glp1RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ghk-cu': {
+      id: '/ghk-cu'
+      path: '/ghk-cu'
+      fullPath: '/ghk-cu'
+      preLoaderRoute: typeof GhkCuRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -1401,6 +1549,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bpc-157-tb-500-ghk-cu': {
+      id: '/bpc-157-tb-500-ghk-cu'
+      path: '/bpc-157-tb-500-ghk-cu'
+      fullPath: '/bpc-157-tb-500-ghk-cu'
+      preLoaderRoute: typeof Bpc157Tb500GhkCuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bpc-157-capsules': {
+      id: '/bpc-157-capsules'
+      path: '/bpc-157-capsules'
+      fullPath: '/bpc-157-capsules'
+      preLoaderRoute: typeof Bpc157CapsulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bpc-157': {
+      id: '/bpc-157'
+      path: '/bpc-157'
+      fullPath: '/bpc-157'
+      preLoaderRoute: typeof Bpc157RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blogs': {
+      id: '/blogs'
+      path: '/blogs'
+      fullPath: '/blogs'
+      preLoaderRoute: typeof BlogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -1421,6 +1597,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/verify-email/'
       preLoaderRoute: typeof VerifyEmailIndexRouteImport
       parentRoute: typeof VerifyEmailRoute
+    }
+    '/tools/': {
+      id: '/tools/'
+      path: '/'
+      fullPath: '/tools/'
+      preLoaderRoute: typeof ToolsIndexRouteImport
+      parentRoute: typeof ToolsRoute
     }
     '/staff/': {
       id: '/staff/'
@@ -1450,12 +1633,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/blogs/': {
+      id: '/blogs/'
+      path: '/'
+      fullPath: '/blogs/'
+      preLoaderRoute: typeof BlogsIndexRouteImport
+      parentRoute: typeof BlogsRoute
+    }
     '/verify-email/pending': {
       id: '/verify-email/pending'
       path: '/pending'
       fullPath: '/verify-email/pending'
       preLoaderRoute: typeof VerifyEmailPendingRouteImport
       parentRoute: typeof VerifyEmailRoute
+    }
+    '/tools/peptide-quiz': {
+      id: '/tools/peptide-quiz'
+      path: '/peptide-quiz'
+      fullPath: '/tools/peptide-quiz'
+      preLoaderRoute: typeof ToolsPeptideQuizRouteImport
+      parentRoute: typeof ToolsRoute
+    }
+    '/tools/bmi-calculator': {
+      id: '/tools/bmi-calculator'
+      path: '/bmi-calculator'
+      fullPath: '/tools/bmi-calculator'
+      preLoaderRoute: typeof ToolsBmiCalculatorRouteImport
+      parentRoute: typeof ToolsRoute
     }
     '/staff/vendors': {
       id: '/staff/vendors'
@@ -1674,6 +1878,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAccountRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/blogs/$slug': {
+      id: '/blogs/$slug'
+      path: '/$slug'
+      fullPath: '/blogs/$slug'
+      preLoaderRoute: typeof BlogsSlugRouteImport
+      parentRoute: typeof BlogsRoute
+    }
     '/staff/questionnaires/': {
       id: '/staff/questionnaires/'
       path: '/'
@@ -1718,6 +1929,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface BlogsRouteChildren {
+  BlogsSlugRoute: typeof BlogsSlugRoute
+  BlogsIndexRoute: typeof BlogsIndexRoute
+}
+
+const BlogsRouteChildren: BlogsRouteChildren = {
+  BlogsSlugRoute: BlogsSlugRoute,
+  BlogsIndexRoute: BlogsIndexRoute,
+}
+
+const BlogsRouteWithChildren = BlogsRoute._addFileChildren(BlogsRouteChildren)
 
 interface DashboardRouteChildren {
   DashboardAccountRoute: typeof DashboardAccountRoute
@@ -1831,6 +2054,20 @@ const StaffRouteChildren: StaffRouteChildren = {
 
 const StaffRouteWithChildren = StaffRoute._addFileChildren(StaffRouteChildren)
 
+interface ToolsRouteChildren {
+  ToolsBmiCalculatorRoute: typeof ToolsBmiCalculatorRoute
+  ToolsPeptideQuizRoute: typeof ToolsPeptideQuizRoute
+  ToolsIndexRoute: typeof ToolsIndexRoute
+}
+
+const ToolsRouteChildren: ToolsRouteChildren = {
+  ToolsBmiCalculatorRoute: ToolsBmiCalculatorRoute,
+  ToolsPeptideQuizRoute: ToolsPeptideQuizRoute,
+  ToolsIndexRoute: ToolsIndexRoute,
+}
+
+const ToolsRouteWithChildren = ToolsRoute._addFileChildren(ToolsRouteChildren)
+
 interface VerifyEmailRouteChildren {
   VerifyEmailPendingRoute: typeof VerifyEmailPendingRoute
   VerifyEmailIndexRoute: typeof VerifyEmailIndexRoute
@@ -1848,6 +2085,10 @@ const VerifyEmailRouteWithChildren = VerifyEmailRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BlogsRoute: BlogsRouteWithChildren,
+  Bpc157Route: Bpc157Route,
+  Bpc157CapsulesRoute: Bpc157CapsulesRoute,
+  Bpc157Tb500GhkCuRoute: Bpc157Tb500GhkCuRoute,
   ConsentRoute: ConsentRoute,
   ContactRoute: ContactRoute,
   CreatorsRoute: CreatorsRoute,
@@ -1857,6 +2098,7 @@ const rootRouteChildren: RootRouteChildren = {
   EdMintsBostonRoute: EdMintsBostonRoute,
   EligibilityRoute: EligibilityRoute,
   FaqRoute: FaqRoute,
+  GhkCuRoute: GhkCuRoute,
   Glp1Route: Glp1Route,
   Glp1HoustonRoute: Glp1HoustonRoute,
   HairLossRoute: HairLossRoute,
@@ -1866,6 +2108,7 @@ const rootRouteChildren: RootRouteChildren = {
   IntakeRoute: IntakeRoute,
   LearnRoute: LearnRouteWithChildren,
   LoginRoute: LoginRoute,
+  MotsCRoute: MotsCRoute,
   NadPlusRoute: NadPlusRoute,
   OralFinasterideRoute: OralFinasterideRoute,
   OralMinoxidilMenRoute: OralMinoxidilMenRoute,
@@ -1886,8 +2129,8 @@ const rootRouteChildren: RootRouteChildren = {
   TadalafilBostonRoute: TadalafilBostonRoute,
   TirzepatideRoute: TirzepatideRoute,
   TirzepatideHoustonRoute: TirzepatideHoustonRoute,
+  ToolsRoute: ToolsRouteWithChildren,
   VerifyEmailRoute: VerifyEmailRouteWithChildren,
-  WaitlistRoute: WaitlistRoute,
   WeightLossRoute: WeightLossRoute,
   LegalCreatorProgramTermsRoute: LegalCreatorProgramTermsRoute,
   LegalHipaaRoute: LegalHipaaRoute,

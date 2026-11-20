@@ -5,7 +5,7 @@ import {
   canonicalUrl,
   medicalWebPageJsonLd,
 } from "@/lib/seo";
-import { SEAN_ARORA_PROVIDER } from "@/lib/provider-info";
+import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 import {
   PARTNER_PHARMACY_ADDRESS_LINE1,
   PARTNER_PHARMACY_ADDRESS_LINE2,
@@ -25,7 +25,6 @@ import {
   RefreshCcw,
   ShieldCheck,
   Sparkles,
-  Stethoscope,
   Target,
   Users,
 } from "lucide-react";
@@ -185,12 +184,10 @@ function AboutPage() {
 
       {/* Mission - black band, honey accents */}
       <Section className="pt-0">
-        <motion.div
-          initial={reduceMotion ? undefined : { opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: reduceMotion ? 0 : 0.7, ease: EASE_OUT }}
-        >
+        {/* CSS-only slide-up (not whileInView): this band sits inside the first
+            mobile screen, so a JS reveal kept it at opacity 0 until hydration
+            and made it a late LCP element. */}
+        <div className="fade-up-on-load">
           <div className="bg-grad-ink relative overflow-hidden rounded-4xl px-6 py-14 text-ink-foreground md:px-16 md:py-20">
             <div
               aria-hidden
@@ -230,7 +227,7 @@ function AboutPage() {
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
       </Section>
 
       {/* Five pillars */}
@@ -296,7 +293,7 @@ function AboutPage() {
           <SectionHeading
             eyebrow="Where we serve"
             title="Available in all 50 states"
-            description="Beema Health is available to patients nationwide. Medication availability, prescribing, and pharmacy fulfillment still depend on your state's individual requirements and your provider's independent clinical decision."
+            description="Beema Health is available to patients nationwide. Prescribing is always your provider's independent clinical decision."
           />
         </motion.div>
         <motion.div
@@ -407,47 +404,8 @@ function AboutPage() {
         </div>
       </Section>
 
-      {/* Clinical leadership */}
-      <Section className="pt-0">
-        <motion.div
-          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: reduceMotion ? 0 : 0.6, ease: EASE_OUT }}
-        >
-          <SectionHeading
-            eyebrow="Clinical leadership"
-            title="Physician-led, from day one"
-          />
-        </motion.div>
-        <motion.div
-          className="mt-10"
-          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{
-            duration: reduceMotion ? 0 : 0.6,
-            delay: reduceMotion ? 0 : 0.1,
-            ease: EASE_OUT,
-          }}
-        >
-          <SurfaceCard className="mx-auto max-w-2xl text-center">
-            <HexBadge className="mx-auto size-14">
-              <Stethoscope className="size-6" />
-            </HexBadge>
-            <h3 className="mt-4 text-lg font-semibold text-foreground">
-              {SEAN_ARORA_PROVIDER.displayName},{" "}
-              {SEAN_ARORA_PROVIDER.credentials}
-            </h3>
-            <p className="text-sm font-medium text-accent-foreground">
-              {SEAN_ARORA_PROVIDER.role}
-            </p>
-            <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground">
-              {SEAN_ARORA_PROVIDER.bio}
-            </p>
-          </SurfaceCard>
-        </motion.div>
-      </Section>
+      {/* Clinical collaboration - Arora Health team media (see lib/medical-team.ts) */}
+      <MedicalTeamSection variant="full" className="pt-0" />
 
       {/* Pharmacy partner */}
       <Section className="pt-0">
@@ -514,8 +472,9 @@ function AboutPage() {
                 Ready to start your journey?
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-primary-foreground/80">
-                Complete your medical intake online. No payment required, and no
-                prescription is guaranteed.
+                Complete your medical intake online. You won&apos;t be charged
+                anything if you&apos;re not prescribed, and no prescription is
+                guaranteed.
               </p>
               <HoverLiftButton className="mt-8">
                 <Button
