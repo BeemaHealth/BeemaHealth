@@ -25,6 +25,7 @@ import {
   BlackFridayPriceLine,
   usePromoEvent,
   blackFridayTile,
+  edBfPerPill,
   type BlackFridayOffer,
 } from "./BlackFriday";
 import { GOOGLE_RATING_VALUE } from "@/lib/google-business";
@@ -335,7 +336,19 @@ export function GenericEdBostonPage({
                     {c.blurb}
                   </p>
                   <p className="mt-4 text-3xl font-bold tracking-tight text-foreground">
-                    {c.perPill}
+                    {bf && bf.plans?.[0] ? (
+                      <>
+                        <s className="mr-2 text-lg font-normal text-muted-foreground">
+                          <span className="sr-only">Regular price </span>
+                          {edBfPerPill(product).regular}
+                        </s>
+                        <span className="sr-only">With code </span>
+                        {edBfPerPill(product).dealUnderDollar ? "" : "from "}
+                        {edBfPerPill(product).deal}
+                      </>
+                    ) : (
+                      c.perPill
+                    )}
                   </p>
                   <p className="mt-1 text-sm leading-snug text-muted-foreground">
                     {c.headSub}

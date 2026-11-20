@@ -12,6 +12,7 @@ import type { LandingVariant } from "@/landing-variants/types";
 import {
   BLACK_FRIDAY_OFFERS,
   BLACK_FRIDAY_PRODUCT_OFFERS as P,
+  edBfPerPill,
 } from "@/landing-variants/template/BlackFriday";
 
 /** Black Friday 2026 drafts render, show the right code, and stay compliant. */
@@ -169,6 +170,24 @@ describe("Black Friday variants", () => {
       expect(o.appliesTo).toBe("the 3-month plan");
       expect(o.plans![0]!.dealUsd).toBe(
         o.plans![0]!.regularUsd - o.discountUsd,
+      );
+    }
+  });
+
+  it("sildenafil and tadalafil show the per-pill cost after the code", async () => {
+    // $149 / 90 = $1.66 regular, ($149 - $30) / 90 = $1.32 with code.
+    expect(edBfPerPill("tadalafil")).toMatchObject({
+      regular: "$1.66/pill",
+      deal: "$1.32/pill",
+    });
+    expect(edBfPerPill("sildenafil").deal).toBe("$2.06/pill");
+    for (const page of ["tadalafil", "sildenafil", "sexual-health"]) {
+      const entry = Object.entries(modules).find(([p]) =>
+        p.includes(`/${page}/`),
+      )!;
+      const text = (await render(entry[1].variant)).replace(/<[^>]+>/g, " ");
+      expect(text).toContain(
+        page === "sildenafil" ? "$2.06/pill" : "$1.32/pill",
       );
     }
   });

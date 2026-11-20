@@ -7,7 +7,9 @@ import {
   BPC_157_PRICING,
   BPC_TB500_GHK_CU_PRICING,
   ED_MINTS_RDT_PRICING,
+  ED_SILDENAFIL_DOSE_PLANS,
   ED_SILDENAFIL_PRICING,
+  ED_TADALAFIL_DOSE_PLANS,
   ED_TADALAFIL_PRICING,
   GHK_CU_PRICING,
   HAIRLOSS_FINASTERIDE_PRICING,
@@ -232,6 +234,31 @@ export const BLACK_FRIDAY_OFFERS = {
     ED_TADALAFIL_PRICING,
   ),
 } as const satisfies Record<string, BlackFridayOffer>;
+
+/**
+ * Per-pill price on the lowest-dose 3-month plan, before and after the
+ * sildenafil/tadalafil code. Pills are priced as one a day, so a deal under
+ * $1 reads "Less than $1 a day" (same bar as simplePerDaySentence).
+ */
+export function edBfPerPill(product: "sildenafil" | "tadalafil"): {
+  regular: string;
+  deal: string;
+  dealUnderDollar: boolean;
+} {
+  const q = (
+    product === "tadalafil" ? ED_TADALAFIL_DOSE_PLANS : ED_SILDENAFIL_DOSE_PLANS
+  )[0]!.quarterly;
+  const regular = roundUsd(q.usd / q.tablets);
+  const deal = roundUsd(
+    (q.usd - BLACK_FRIDAY_OFFERS[product].discountUsd) / q.tablets,
+  );
+  const under = deal < 1;
+  return {
+    regular: `${formatUsd(regular)}/pill`,
+    deal: under ? "Less than $1 a day" : `${formatUsd(deal)}/pill`,
+    dealUnderDollar: under,
+  };
+}
 
 function roundUsd(n: number) {
   return Math.round(n * 100) / 100;

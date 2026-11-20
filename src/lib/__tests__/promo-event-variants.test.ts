@@ -51,6 +51,19 @@ describe.each([
 ] as const)("%s variants", (eventId, mods) => {
   const ev = PROMO_EVENTS[eventId];
 
+  it("shows the per-pill price after the code on tadalafil, sildenafil and the hub", async () => {
+    for (const [page, expected] of [
+      ["tadalafil", "$1.32/pill"],
+      ["sildenafil", "$2.06/pill"],
+      ["sexual-health", "$1.32/pill"],
+      ["tadalafil-boston", "$1.32/pill"],
+      ["sildenafil-boston", "$2.06/pill"],
+    ] as const) {
+      const entry = Object.entries(mods).find(([p]) => pageOf(p) === page)!;
+      expect(textOf(await render(entry[1].variant))).toContain(expected);
+    }
+  });
+
   it("exists for every page that has a Black Friday variant", () => {
     expect(Object.keys(mods).map(pageOf).sort()).toEqual(
       Object.keys(bf).map(pageOf).sort(),

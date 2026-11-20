@@ -20,6 +20,7 @@ import {
   BlackFridayHubOffers,
   BlackFridayPriceLine,
   BlackFridayText,
+  edBfPerPill,
 } from "../template/BlackFriday";
 
 import { MarketingLayout } from "@/components/site/MarketingLayout";
@@ -486,7 +487,20 @@ function SexualHealthGetStartedModal() {
                 </p>
                 <div className="mt-4 md:mt-5 md:min-h-[5.25rem]">
                   <p className="text-3xl font-bold tracking-tight text-foreground">
-                    {product.headline.price}
+                    {product.id === "tadalafil" ||
+                    product.id === "sildenafil" ? (
+                      <>
+                        <s className="mr-2 text-lg font-normal text-muted-foreground">
+                          <span className="sr-only">Regular price </span>
+                          {edBfPerPill(product.id).regular}
+                        </s>
+                        <span className="sr-only">With code </span>
+                        {edBfPerPill(product.id).dealUnderDollar ? "" : "from "}
+                        {edBfPerPill(product.id).deal}
+                      </>
+                    ) : (
+                      product.headline.price
+                    )}
                     {product.headline.unit ? (
                       <span className="ml-1.5 text-base font-normal text-muted-foreground">
                         {product.headline.unit}
