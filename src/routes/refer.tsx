@@ -62,7 +62,7 @@ const STEPS = [
 ] as const;
 
 const RULES = [
-  "For current patients in good standing, 18 or older. Licensed clinicians and Beema Health, Bask, and Care Partner staff are not eligible.",
+  "For current patients in good standing, 18 or older. Licensed clinicians and Beema Health and Care Partner staff are not eligible.",
   "Referred friends must be new patients. Self-referrals and household referrals do not qualify.",
   "Credits have no cash value, cannot be transferred, and may expire.",
   "The credit is the same for everyone and never depends on the medication, dose, or plan.",
@@ -73,7 +73,7 @@ const RULES = [
 const FAQ = [
   {
     q: "How do I get my link?",
-    a: "Referral links are being added to the patient portal. Email us and we will let you know the moment yours is available.",
+    a: "Email us and we will send your personal referral link. We give the link to you.",
   },
   {
     q: "Can I see who signed up?",

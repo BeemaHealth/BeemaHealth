@@ -63,11 +63,12 @@ const STEPS = [
 ] as const;
 
 const WHO = [
+  "Current Beema Health patients. We only commission videos from people who have used our care.",
   `At least ${CREATOR_MIN_FOLLOWERS.toLocaleString("en-US")} followers on TikTok or Instagram.`,
   "18 or older, US-based, and located in a state where the program is available.",
   "Active, original content about fitness, wellness, weight loss, or lifestyle.",
   "Authentic, engaged audiences. We value engagement over raw follower count.",
-  "Licensed healthcare professionals and Beema Health, Bask, and Care Partner staff are not eligible.",
+  "Licensed healthcare professionals and Beema Health and Care Partner staff are not eligible.",
 ] as const;
 
 const RULES = [
@@ -97,7 +98,7 @@ const FAQ = [
   },
   {
     q: "I am a current patient. Can I join?",
-    a: "Current patients can use the Refer a Friend program instead. The creator program is for audience-based promotion.",
+    a: "Yes. The creator program is for current patients. A video about Beema Health has to come from someone who has used the care.",
   },
 ] as const;
 

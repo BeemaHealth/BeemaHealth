@@ -1,6 +1,12 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, type LucideIcon } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   Eyebrow,
@@ -171,18 +177,22 @@ export function ProgramFaq({
   return (
     <Section className="pt-0">
       <SectionHeading title="Frequently asked questions" />
-      <div className="mx-auto mt-8 max-w-3xl divide-y divide-border rounded-3xl border border-border bg-card">
-        {items.map((item) => (
-          <details key={item.q} className="group px-6 py-4">
-            <summary className="cursor-pointer list-none text-base font-semibold text-foreground">
+      <Accordion
+        type="single"
+        collapsible
+        className="mx-auto mt-8 max-w-3xl rounded-3xl border border-border bg-card px-6"
+      >
+        {items.map((item, index) => (
+          <AccordionItem key={item.q} value={`faq-${index}`}>
+            <AccordionTrigger className="text-left text-base font-semibold text-foreground hover:no-underline">
               {item.q}
-            </summary>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            </AccordionTrigger>
+            <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
               {item.a}
-            </p>
-          </details>
+            </AccordionContent>
+          </AccordionItem>
         ))}
-      </div>
+      </Accordion>
     </Section>
   );
 }

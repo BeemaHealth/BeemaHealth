@@ -51,10 +51,10 @@ const SECTIONS: LegalSection[] = [
       <>
         <LegalP>
           You must be 18 or older and a current or former Beema Health patient
-          with at least one completed paid order. Beema Health, Bask, and Care
-          Partner staff, licensed clinicians, and creators in the Creator
-          Program are not eligible. One rewarded submission is allowed per
-          patient every 12 months.
+          with at least one completed paid order. Beema Health and Care Partner
+          staff, licensed clinicians, and creators in the Creator Program are
+          not eligible. One rewarded submission is allowed per patient every 12
+          months.
         </LegalP>
       </>
     ),

@@ -49,10 +49,10 @@ const SECTIONS: LegalSection[] = [
       <>
         <LegalP>
           Current patients in good standing who are 18 or older may refer.
-          Licensed clinicians and Beema Health, Bask, and Care Partner staff may
-          not. Referred friends must be new patients. Self-referrals and
-          household referrals, including matching name, address, payment method,
-          or device, do not qualify.
+          Licensed clinicians and Beema Health and Care Partner staff may not.
+          Referred friends must be new patients. Self-referrals and household
+          referrals, including matching name, address, payment method, or
+          device, do not qualify.
         </LegalP>
       </>
     ),
@@ -78,10 +78,10 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          Share your link yourself, with people you know. Beema Health does not
-          send messages to your friends and does not import contacts. Posting
-          your link publicly, on coupon sites, or in paid advertising is not
-          allowed.
+          Beema Health sends you your referral link. Share it yourself, with
+          people you know. Beema Health does not send messages to your friends
+          and does not import contacts. Posting your link publicly, on coupon
+          sites, or in paid advertising is not allowed.
         </LegalP>
       </>
     ),

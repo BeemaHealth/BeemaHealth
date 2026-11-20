@@ -4,8 +4,8 @@
  *
  * Design and open legal questions: docs/features/growth-programs-legal.md.
  * Everything here is copy/config only. The marketing site never stores videos,
- * signed authorizations, or patient data: submission and application flows
- * link OUT to Bask or a BAA-covered vendor via the URLs below.
+ * signed authorizations, or patient data. Submission and application flows
+ * link out through the URLs below when a destination is configured.
  */
 
 export type GrowthProgramId = "story" | "referral" | "creator";
@@ -20,8 +20,8 @@ export const GROWTH_PROGRAMS_INDEXABLE = false;
 
 /**
  * Where each program's action button goes. `null` means the destination is not
- * live yet (Bask / vendor answers pending), and the page falls back to a
- * support email instead of pretending a flow exists.
+ * live yet, and the page falls back to a support email instead of pretending
+ * a flow exists.
  */
 export const GROWTH_PROGRAM_ACTION_URLS: Record<
   GrowthProgramId,
@@ -43,6 +43,12 @@ export const PROGRAM_RESTRICTED_STATES: Record<GrowthProgramId, string[]> = {
 };
 
 export const STORY_CREDIT_USD = 100;
+/**
+ * Length patients are asked to film. Stays inside the UGC project-order
+ * range (default 20-60 seconds, signed creator cuts 15-60). Trava's public
+ * testimony page does not publish a duration.
+ */
+export const STORY_VIDEO_LENGTH = "15 to 45 seconds";
 /** Unconfirmed: the legal doc suggests $50 each side. Matt to confirm. */
 export const REFERRAL_CREDIT_USD = 50;
 export const CREATOR_MIN_FOLLOWERS = 5000;

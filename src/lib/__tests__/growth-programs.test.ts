@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   CREATOR_EARNINGS_DISCLAIMER,
@@ -6,6 +8,7 @@ import {
   REFERRAL_SHARE_NOTICE,
   STORY_COMPENSATION_DISCLOSURE,
   STORY_PAGE_FOOTER_DISCLOSURE,
+  STORY_VIDEO_LENGTH,
   isProgramRestrictedInState,
 } from "../growth-programs";
 
@@ -34,10 +37,27 @@ describe("growth programs config", () => {
       STORY_PAGE_FOOTER_DISCLOSURE,
     ];
     expect(STORY_COMPENSATION_DISCLOSURE).toMatch(/Compensated/);
+    expect(STORY_VIDEO_LENGTH).toBe("15 to 45 seconds");
     expect(STORY_PAGE_FOOTER_DISCLOSURE).toMatch(/\$100 credit/);
     for (const s of strings) {
       expect(s).not.toContain("—");
       expect(s).not.toMatch(/\bBeema\b(?! Health)/);
+    }
+  });
+
+  it("does not name the intake vendor on program pages", () => {
+    const files = [
+      "../../lib/growth-programs.ts",
+      "../../routes/creators.tsx",
+      "../../routes/refer.tsx",
+      "../../routes/share-your-story.tsx",
+      "../../routes/legal.creator-program-terms.tsx",
+      "../../routes/legal.referral-terms.tsx",
+      "../../routes/legal.story-program-terms.tsx",
+    ];
+    for (const file of files) {
+      const source = readFileSync(resolve(__dirname, file), "utf8");
+      expect(source, file).not.toMatch(/Bask/);
     }
   });
 });

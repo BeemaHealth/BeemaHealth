@@ -14,8 +14,19 @@ import { SOCIAL_LINKS } from "@/lib/social-links";
 import { cn } from "@/lib/utils";
 
 type NavItem = { label: string; to: string; description?: string };
+/** A parent row inside a dropdown that opens its own list of links. */
+type NavGroup = {
+  label: string;
+  description?: string;
+  items: readonly NavItem[];
+};
+type NavEntry = NavItem | NavGroup;
 /** Two-column grouping for a dropdown (e.g. Hair's For Men / For Women). */
 type NavSection = { heading: string; items: readonly NavItem[] };
+
+function isNavGroup(entry: NavEntry): entry is NavGroup {
+  return "items" in entry;
+}
 
 /**
  * Trailing-slash paths - match sitemap.xml / canonicalUrl / GitHub Pages 200
@@ -139,7 +150,7 @@ const WELLNESS_ITEMS: NavItem[] = [
  * not compete with Hive (the patient portal at hive.beemahealth.com). Add
  * new no-account resource hubs here and in SiteFooter COLUMNS.
  */
-const MORE_ITEMS: NavItem[] = [
+const MORE_ITEMS: NavEntry[] = [
   {
     label: "How it works",
     to: "/how-it-works/",
@@ -156,19 +167,25 @@ const MORE_ITEMS: NavItem[] = [
     description: "GLP-1 and hormone education",
   },
   {
-    label: "Share your story",
-    to: "/share-your-story/",
-    description: "Video testimonials with a patient credit",
-  },
-  {
-    label: "Refer a friend",
-    to: "/refer/",
-    description: "Give a credit, get a credit",
-  },
-  {
-    label: "Creator program",
-    to: "/creators/",
-    description: "Partner with Beema Health",
+    label: "Rewards",
+    description: "Credits and creator partnerships",
+    items: [
+      {
+        label: "Share your story",
+        to: "/share-your-story/",
+        description: "15 to 45 second video, $100 credit",
+      },
+      {
+        label: "Refer a friend",
+        to: "/refer/",
+        description: "Give $50, get $50",
+      },
+      {
+        label: "Creator program",
+        to: "/creators/",
+        description: "Partner with Beema Health",
+      },
+    ],
   },
   { label: "About us", to: "/about/" },
   { label: "FAQ", to: "/faq/" },
@@ -304,6 +321,84 @@ function DesktopNav() {
   );
 }
 
+function NavGroupLinks({
+  group,
+  onNavigate,
+  variant,
+}: {
+  group: NavGroup;
+  onNavigate: () => void;
+  variant: "desktop" | "mobile";
+}) {
+  const desktop = variant === "desktop";
+  return (
+    <details className="accordion-item group border-b-0">
+      <summary
+        className={cn(
+          "flex cursor-pointer list-none items-center justify-between gap-3 marker:content-none [&::-webkit-details-marker]:hidden",
+          desktop
+            ? "rounded-lg px-3 py-2 text-sm text-foreground hover:bg-accent"
+            : "rounded-xl px-1 py-2 text-base font-medium text-ink-foreground/75",
+        )}
+      >
+        <span>
+          {group.label}
+          {group.description ? (
+            <span
+              className={cn(
+                "mt-0.5 block font-normal",
+                desktop
+                  ? "text-xs text-muted-foreground"
+                  : "text-sm text-ink-foreground/55",
+              )}
+            >
+              {group.description}
+            </span>
+          ) : null}
+        </span>
+        <ChevronDown
+          className={cn(
+            "shrink-0 transition-transform duration-200 group-open:rotate-180",
+            desktop
+              ? "size-3.5 text-muted-foreground"
+              : "size-4 text-ink-foreground/70",
+          )}
+          aria-hidden
+        />
+      </summary>
+      <div className={cn("flex flex-col", desktop ? "pb-1 pl-2" : "pb-1 pl-3")}>
+        {group.items.map((item) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            role={desktop ? "menuitem" : undefined}
+            onClick={onNavigate}
+            className={cn(
+              desktop
+                ? "block rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent"
+                : "rounded-xl px-1 py-2 text-base font-medium text-ink-foreground/75 transition-colors hover:text-primary",
+            )}
+          >
+            {item.label}
+            {item.description ? (
+              <span
+                className={cn(
+                  "mt-0.5 block font-normal",
+                  desktop
+                    ? "text-xs text-muted-foreground"
+                    : "text-sm text-ink-foreground/55",
+                )}
+              >
+                {item.description}
+              </span>
+            ) : null}
+          </Link>
+        ))}
+      </div>
+    </details>
+  );
+}
+
 function DesktopNavDropdown({
   id,
   label,
@@ -319,7 +414,7 @@ function DesktopNavDropdown({
   id: string;
   label: string;
   /** Flat item list. Ignored when `sections` is set. */
-  items?: readonly NavItem[];
+  items?: readonly NavEntry[];
   /** Two-column For Men / For Women style grouping - see HAIR_SECTIONS. */
   sections?: readonly NavSection[];
   footerItems?: readonly NavItem[];
@@ -410,25 +505,34 @@ function DesktopNavDropdown({
                   ))}
                 </div>
               ) : (
-                flatItems.map((item) => (
-                  <Link
-                    key={item.label}
-                    to={item.to}
-                    role="menuitem"
-                    className={cn(
-                      "block rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent",
-                      !hasDescriptions && "whitespace-nowrap",
-                    )}
-                    onClick={onToggle}
-                  >
-                    {item.label}
-                    {item.description ? (
-                      <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
-                        {item.description}
-                      </span>
-                    ) : null}
-                  </Link>
-                ))
+                flatItems.map((item) =>
+                  isNavGroup(item) ? (
+                    <NavGroupLinks
+                      key={item.label}
+                      group={item}
+                      onNavigate={onToggle}
+                      variant="desktop"
+                    />
+                  ) : (
+                    <Link
+                      key={item.label}
+                      to={item.to}
+                      role="menuitem"
+                      className={cn(
+                        "block rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent",
+                        !hasDescriptions && "whitespace-nowrap",
+                      )}
+                      onClick={onToggle}
+                    >
+                      {item.label}
+                      {item.description ? (
+                        <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+                          {item.description}
+                        </span>
+                      ) : null}
+                    </Link>
+                  ),
+                )
               )}
               {footerItems && footerItems.length > 0 ? (
                 <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border px-3 py-2">
@@ -467,7 +571,7 @@ function MobileNavDropdown({
   onNavigate,
 }: {
   label: string;
-  items?: readonly NavItem[];
+  items?: readonly NavEntry[];
   sections?: readonly NavSection[];
   footerItems?: readonly NavItem[];
   onNavigate: () => void;
@@ -522,21 +626,30 @@ function MobileNavDropdown({
                       ))}
                     </div>
                   ))
-                : (items ?? []).map((item) => (
-                    <Link
-                      key={item.label}
-                      to={item.to}
-                      onClick={onNavigate}
-                      className="rounded-xl px-1 py-2 text-base font-medium text-ink-foreground/75 transition-colors hover:text-primary"
-                    >
-                      {item.label}
-                      {item.description ? (
-                        <span className="mt-0.5 block text-sm font-normal text-ink-foreground/55">
-                          {item.description}
-                        </span>
-                      ) : null}
-                    </Link>
-                  ))}
+                : (items ?? []).map((item) =>
+                    isNavGroup(item) ? (
+                      <NavGroupLinks
+                        key={item.label}
+                        group={item}
+                        onNavigate={onNavigate}
+                        variant="mobile"
+                      />
+                    ) : (
+                      <Link
+                        key={item.label}
+                        to={item.to}
+                        onClick={onNavigate}
+                        className="rounded-xl px-1 py-2 text-base font-medium text-ink-foreground/75 transition-colors hover:text-primary"
+                      >
+                        {item.label}
+                        {item.description ? (
+                          <span className="mt-0.5 block text-sm font-normal text-ink-foreground/55">
+                            {item.description}
+                          </span>
+                        ) : null}
+                      </Link>
+                    ),
+                  )}
               {footerItems && footerItems.length > 0 ? (
                 <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-ink-foreground/15 pt-2">
                   {footerItems.map((item) => (

@@ -53,11 +53,12 @@ const SECTIONS: LegalSection[] = [
     content: (
       <>
         <LegalP>
-          Creators must be 18 or older, US-based, and have at least 5,000
-          followers on TikTok or Instagram, with public, original content about
-          fitness, wellness, weight loss, or lifestyle. Licensed healthcare
-          professionals and Beema Health, Bask, and Care Partner staff are not
-          eligible. Beema Health may limit or exclude certain states.
+          Creators must be current Beema Health patients, 18 or older, and
+          US-based, with at least 5,000 followers on TikTok or Instagram and
+          public, original content about fitness, wellness, weight loss, or
+          lifestyle. Videos are from people who have used our care. Licensed
+          healthcare professionals and Beema Health and Care Partner staff are
+          not eligible. Beema Health may limit or exclude certain states.
         </LegalP>
       </>
     ),

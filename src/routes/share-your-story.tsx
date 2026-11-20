@@ -17,9 +17,10 @@ import {
   STORY_LANDING_PATH,
   STORY_PAGE_FOOTER_DISCLOSURE,
   STORY_TERMS_PATH,
+  STORY_VIDEO_LENGTH,
 } from "@/lib/growth-programs";
 import { Section, SurfaceCard } from "@/components/site/primitives";
-import { resolveVialImagery } from "@/lib/treatment-imagery";
+import { StoryProductRotator } from "@/components/site/StoryProductRotator";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/share-your-story")({
@@ -48,7 +49,7 @@ const STEPS = [
   {
     icon: Video,
     title: "Record or Upload",
-    text: "Film a short video about your experience with Beema Health, or send us one you already have.",
+    text: `Film a vertical video, ${STORY_VIDEO_LENGTH}, about your experience with Beema Health, or send us one you already have.`,
   },
   {
     icon: MessageSquareText,
@@ -68,6 +69,7 @@ const STEPS = [
 ] as const;
 
 const GUIDELINES = [
+  `Keep it vertical and ${STORY_VIDEO_LENGTH}. Phone video is enough.`,
   "Use your first name only. Please do not show your last name, address, or date of birth.",
   "Speak in your own words. Positive, mixed, and negative experiences are all welcome.",
   "Please mention Beema Health by name.",
@@ -107,7 +109,6 @@ function ShareYourStoryPage() {
   useEffect(() => {
     trackPageViewed("share_your_story");
   }, []);
-  const vial = resolveVialImagery("tirzepatide");
 
   return (
     <MarketingLayout>
@@ -135,14 +136,8 @@ function ShareYourStoryPage() {
               />
             </div>
           </div>
-          <div className="relative flex justify-center md:justify-end">
-            <img
-              src={vial.src}
-              width={vial.width}
-              height={vial.height}
-              alt={vial.alt}
-              className="w-56 rotate-[28deg] drop-shadow-[0_28px_28px_rgba(20,20,40,0.28)] md:w-80 lg:w-96"
-            />
+          <div className="relative mx-auto w-full max-w-sm md:mx-0 md:justify-self-end">
+            <StoryProductRotator />
           </div>
         </div>
       </section>
