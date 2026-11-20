@@ -48,9 +48,10 @@ import {
 } from "@/lib/medication-pricing";
 import { GOOGLE_RATING_VALUE } from "@/lib/google-business";
 import {
-  BLACK_FRIDAY_ENDS_LABEL,
+  usePromoEvent,
   BLACK_FRIDAY_OFFERS,
   BlackFridayText,
+  useBlackFridayFaq,
   BlackFridayDealCard,
   blackFridayTile,
 } from "../template/BlackFriday";
@@ -201,6 +202,7 @@ function IncludedCallout({
 }
 
 function Glp1HoustonBlackFriday() {
+  const ev = usePromoEvent();
   const market: Glp1Market = "houston";
   const copy = getGlp1Copy(market);
   const heroCta = resolveCta(CTA_IDS.glp1_hero);
@@ -326,11 +328,10 @@ function Glp1HoustonBlackFriday() {
                 ))}
               </div>
               <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted-foreground">
-                Black Friday codes apply to the 3-month plan through{" "}
-                {BLACK_FRIDAY_ENDS_LABEL}; enter the code at checkout. One
-                redemption per patient, no stacking. Cash-pay when prescribed.
-                Prescribing is up to your provider and is never guaranteed.
-                Product images are illustrative. See our{" "}
+                {ev.name} codes are one-time codes for the 3-month plan, through{" "}
+                {ev.endsLabel}. Cash-pay when prescribed. Prescribing is up to
+                your provider and is never guaranteed. Product images are
+                illustrative. See our{" "}
                 <Link
                   to="/legal/refund/"
                   className="underline underline-offset-2 hover:text-foreground"
@@ -514,7 +515,7 @@ function Glp1HoustonBlackFriday() {
       <Section className="bg-muted/40 py-14 md:py-20">
         <motion.div {...reveal} className="mx-auto max-w-3xl text-center">
           <h2 className="text-balance text-3xl font-bold text-foreground md:text-4xl">
-            Your Black Friday savings start with a free intake
+            {ev.name} savings start with a free intake
           </h2>
           <p className="mt-4 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
             Starting your intake is free, and you won&apos;t be charged anything
@@ -541,7 +542,7 @@ function Glp1HoustonBlackFriday() {
       <Section id="cash-pricing" className="scroll-mt-20">
         <motion.div {...reveal}>
           <SectionHeading
-            title="Black Friday GLP-1 pricing in Houston"
+            title={`${ev.name} GLP-1 pricing in Houston`}
             description="Clear cash-pay rates for compounded options. No membership fee. Your licensed provider decides what medication and dose is appropriate for you - pricing below is cash-pay when prescribed."
           />
         </motion.div>
@@ -587,6 +588,7 @@ function Glp1HoustonBlackFriday() {
             pricing={MEDICATION_PICKER[selectedMedication].pricing}
             imagery={vialImagery[selectedMedication]}
             cta={midCta.withPosition("pricing")}
+            blackFriday={BLACK_FRIDAY_OFFERS[selectedMedication]}
           />
         </motion.div>
         <ul className="mx-auto mt-8 max-w-2xl space-y-2">
@@ -661,7 +663,7 @@ function Glp1HoustonBlackFriday() {
           description={copy.faqDescription}
         />
         <div className="mt-10">
-          <TreatmentFaqSection items={copy.faqItems} />
+          <TreatmentFaqSection items={useBlackFridayFaq(copy.faqItems)} />
         </div>
       </Section>
 
@@ -671,7 +673,7 @@ function Glp1HoustonBlackFriday() {
             Ready to see if GLP-1 care is right for you?
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-primary-foreground/85">
-            Use your code at checkout through {BLACK_FRIDAY_ENDS_LABEL}.{" "}
+            Use your code at checkout through {ev.endsLabel}.{" "}
             {copy.footerCtaBody}
           </p>
           <Button

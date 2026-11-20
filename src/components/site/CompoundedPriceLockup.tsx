@@ -7,6 +7,10 @@ import type {
 } from "react";
 import { cn } from "@/lib/utils";
 import {
+  BLACK_FRIDAY_TERMS,
+  type BlackFridayOffer,
+} from "@/landing-variants/template/BlackFriday";
+import {
   COMPOUNDED_TIRZEPATIDE_PRICING,
   formatUsd,
   getPlan,
@@ -57,6 +61,12 @@ type CompoundedPriceLockupProps = {
    * teaser that still links out for full pricing.
    */
   interactive?: boolean;
+  /**
+   * Opt-in Black Friday pricing: the offer's plan shows its coupon price with
+   * the regular price crossed out, and the standing promo code is not
+   * mentioned. Omit for the standard lockup (default output unchanged).
+   */
+  blackFriday?: BlackFridayOffer;
 };
 
 /**
@@ -70,6 +80,7 @@ export function CompoundedPriceLockup({
   className,
   size = "default",
   interactive = true,
+  blackFriday,
 }: CompoundedPriceLockupProps) {
   if (!interactive) {
     return (
@@ -82,7 +93,12 @@ export function CompoundedPriceLockup({
   }
 
   return (
-    <PlanSelectorLockup pricing={pricing} className={className} size={size} />
+    <PlanSelectorLockup
+      pricing={pricing}
+      className={className}
+      size={size}
+      blackFriday={blackFriday}
+    />
   );
 }
 
@@ -220,10 +236,15 @@ function PlanSelectorLockup({
   pricing,
   className,
   size = "default",
+  blackFriday,
 }: CompoundedPriceLockupProps) {
   const hasStarter = hasStarterPack(pricing);
   const [selection, setSelection] = useState<Selection>(
-    hasStarter ? { kind: "starter" } : { kind: "plan", months: 3 },
+    // With a Black Friday offer the 3-month deal is selected first; the
+    // starter pack tab stays available but is not highlighted.
+    hasStarter && !blackFriday
+      ? { kind: "starter" }
+      : { kind: "plan", months: 3 },
   );
   const large = size === "lg";
 
@@ -266,10 +287,15 @@ function PlanSelectorLockup({
       {selection.kind === "starter" && hasStarter ? (
         <StarterPackPanel pricing={pricing} large={large} />
       ) : selectedPlan ? (
-        <PlanPanel pricing={pricing} plan={selectedPlan} large={large} />
+        <PlanPanel
+          pricing={pricing}
+          plan={selectedPlan}
+          large={large}
+          blackFriday={blackFriday}
+        />
       ) : null}
 
-      <AllPlansDialog pricing={pricing} />
+      <AllPlansDialog pricing={pricing} blackFriday={blackFriday} />
     </div>
   );
 }
@@ -320,11 +346,13 @@ function PriceFigure({
   amount,
   suffix,
   strike,
+  strikeSuffix = "",
   large,
 }: {
   amount: number;
   suffix: string;
   strike?: number;
+  strikeSuffix?: string;
   large: boolean;
 }) {
   return (
@@ -341,6 +369,7 @@ function PriceFigure({
       {strike != null ? (
         <span className="text-base font-medium text-muted-foreground line-through decoration-muted-foreground/70">
           {formatUsd(strike)}
+          {strikeSuffix}
         </span>
       ) : null}
     </div>
@@ -382,12 +411,42 @@ function PlanPanel({
   pricing,
   plan,
   large,
+  blackFriday,
 }: {
   pricing: CompoundedMedicationPricing;
   plan: ReturnType<typeof getPlan>;
   large: boolean;
+  blackFriday?: BlackFridayOffer;
 }) {
   const baseline = pricing.monthlyUsd;
+  const bfPlan = blackFriday?.plans?.find(
+    (p) => p.label === `${plan.months}-month plan`,
+  );
+
+  if (blackFriday && bfPlan) {
+    const m = plan.months;
+    return (
+      <div className="rounded-xl bg-background/80 px-3.5 py-3 ring-1 ring-border/70">
+        <PriceFigure
+          amount={bfPlan.dealUsd / m}
+          suffix={`/mo for ${m} months`}
+          strike={bfPlan.regularUsd / m}
+          strikeSuffix="/mo"
+          large={large}
+        />
+        <p className="mt-2 text-sm text-foreground">
+          <s className="text-muted-foreground">
+            <span className="sr-only">Regular total </span>
+            {formatUsd(bfPlan.regularUsd)}
+          </s>{" "}
+          <strong>{formatUsd(bfPlan.dealUsd)}</strong> for {m} months
+        </p>
+        <p className="mt-1.5 text-sm font-bold text-foreground">
+          Use code {blackFriday.code} at checkout
+        </p>
+      </div>
+    );
+  }
 
   if (isSemaThreeMonthPromoPlan(pricing, plan)) {
     return (
@@ -436,7 +495,13 @@ function PlanPanel({
 }
 
 /** "See all plans" button and the modal with every plan in detail. */
-function AllPlansDialog({ pricing }: { pricing: CompoundedMedicationPricing }) {
+function AllPlansDialog({
+  pricing,
+  blackFriday,
+}: {
+  pricing: CompoundedMedicationPricing;
+  blackFriday?: BlackFridayOffer;
+}) {
   const isTirz = hasStarterPack(pricing);
   const medName = isTirz ? "tirzepatide" : "semaglutide";
   const tirzDetails = tirzepatidePricingDetailsCopy();
@@ -490,7 +555,11 @@ function AllPlansDialog({ pricing }: { pricing: CompoundedMedicationPricing }) {
           ) : null}
           {months.map((m) => {
             const plan = getPlan(pricing, m);
-            const promoPlan = isSemaThreeMonthPromoPlan(pricing, plan);
+            const bfPlan = blackFriday?.plans?.find(
+              (p) => p.label === `${m}-month plan`,
+            );
+            const promoPlan =
+              !blackFriday && isSemaThreeMonthPromoPlan(pricing, plan);
             return (
               <li
                 key={m}
@@ -501,24 +570,28 @@ function AllPlansDialog({ pricing }: { pricing: CompoundedMedicationPricing }) {
                     {plan.label}
                   </p>
                   <p className="text-sm font-bold text-foreground">
-                    {promoPlan
-                      ? `${formatUsd(promoFirstMonthUsd(pricing))} first month`
-                      : `${formatUsd(plan.monthlyUsd)}/mo`}
+                    {bfPlan
+                      ? `${formatUsd(bfPlan.dealUsd)} for ${m} months`
+                      : promoPlan
+                        ? `${formatUsd(promoFirstMonthUsd(pricing))} first month`
+                        : `${formatUsd(plan.monthlyUsd)}/mo`}
                   </p>
                 </div>
                 <p className="mt-1 text-sm text-foreground">
-                  {promoPlan
-                    ? `Then ${formatUsd(pricing.monthlyUsd)}/mo for months 2 and 3 · ${formatUsd(semaThreeMonthPromoTotalUsd(pricing))} total`
-                    : m === 1
-                      ? "Billed monthly"
-                      : `${formatUsd(plan.totalUsd)} prepaid for ${m} months`}
+                  {bfPlan
+                    ? `Regularly ${formatUsd(bfPlan.regularUsd)}. That's ${formatUsd(bfPlan.dealUsd / m)}/mo with code ${blackFriday?.code}.`
+                    : promoPlan
+                      ? `Then ${formatUsd(pricing.monthlyUsd)}/mo for months 2 and 3 · ${formatUsd(semaThreeMonthPromoTotalUsd(pricing))} total`
+                      : m === 1
+                        ? "Billed monthly"
+                        : `${formatUsd(plan.totalUsd)} prepaid for ${m} months`}
                 </p>
-                {plan.savingsUsd > 0 ? (
+                {plan.savingsUsd > 0 && !bfPlan ? (
                   <p className="mt-1 text-sm font-bold text-foreground">
                     Save {formatUsd(plan.savingsUsd)}
                   </p>
                 ) : null}
-                {isPromoEligibleMonths(m) && !promoPlan ? (
+                {isPromoEligibleMonths(m) && !promoPlan && !blackFriday ? (
                   <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                     Code {pricing.promoCode} takes an additional $
                     {PROMO_CODE_DISCOUNT_USD} off at checkout (
@@ -531,9 +604,13 @@ function AllPlansDialog({ pricing }: { pricing: CompoundedMedicationPricing }) {
         </ul>
 
         <p className="text-xs leading-relaxed text-muted-foreground">
-          {isTirz ? tirzDetails.coupon : semaDetails.coupon} Your licensed
-          provider decides which option, if any, is appropriate. Prescribing is
-          never guaranteed.
+          {blackFriday
+            ? BLACK_FRIDAY_TERMS
+            : isTirz
+              ? tirzDetails.coupon
+              : semaDetails.coupon}{" "}
+          Your licensed provider decides which option, if any, is appropriate.
+          Prescribing is never guaranteed.
         </p>
       </DialogContent>
     </Dialog>

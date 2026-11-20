@@ -59,6 +59,13 @@ const SECTIONS: LegalSection[] = [
           .
         </LegalP>
         <LegalP>
+          Promotional codes, including Black Friday, Cyber Monday and Christmas
+          codes, are one-time codes. By using one, you understand that the
+          discount applies to that purchase only and that your next payment,
+          including your next month&apos;s payment, will be higher than the
+          discounted amount you paid.
+        </LegalP>
+        <LegalP>
           Prepaid plans are final. If you prepay for a multi-month plan (for
           example, 6 months upfront) and decide not to continue after part of it
           has shipped, we cannot refund the months that have not yet shipped.
@@ -121,7 +128,7 @@ function RefundPage() {
       <Section>
         <LegalDocument
           title="Refund and Cancellation Policy"
-          lastUpdated="November 3, 2026"
+          lastUpdated="November 20, 2026"
           description="How Beema Health handles returns and refunds for prescription products."
           sections={SECTIONS}
           showToc={false}

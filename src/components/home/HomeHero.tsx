@@ -119,7 +119,7 @@ function useHeroColumnStagger(reduceMotion: boolean) {
  * on lg only. Below lg the bar is an in-flow 1x2 row (the first two items) under the content, so
  * it never covers the hexagon photo or the CTA row.
  */
-export function HomeHero() {
+export function HomeHero({ promoLine }: { promoLine?: string } = {}) {
   const reduceMotion = useReducedMotion();
   const { container, item } = useHeroColumnStagger(Boolean(reduceMotion));
   const [getStartedOpen, setGetStartedOpen] = useState(false);
@@ -365,18 +365,26 @@ export function HomeHero() {
 
       <div className="bg-grad-ink relative z-30 text-ink-foreground lg:absolute lg:inset-x-0 lg:bottom-0">
         <ul className="veya-container grid grid-cols-2 lg:grid-cols-4">
-          {HERO_BAR_ITEMS.map(({ icon: Icon, label, desktopOnly }) => (
-            <li
-              key={label}
-              className={`flex-col items-center justify-center gap-2 border-ink-foreground/15 px-3 py-5 text-center text-[11px] font-semibold uppercase leading-snug tracking-wide max-lg:odd:border-r sm:text-xs lg:flex lg:flex-row lg:gap-3 lg:border-r lg:py-5 lg:last:border-r-0 ${desktopOnly ? "hidden" : "flex"}`}
-            >
-              <Icon
-                className="size-6 shrink-0 text-primary lg:size-5"
-                aria-hidden
-              />
-              <span className="text-balance">{label}</span>
-            </li>
-          ))}
+          {HERO_BAR_ITEMS.map(
+            ({ icon: Icon, label: defaultLabel, desktopOnly }) => {
+              const label =
+                promoLine && Icon === BadgeDollarSign
+                  ? promoLine
+                  : defaultLabel;
+              return (
+                <li
+                  key={label}
+                  className={`flex-col items-center justify-center gap-2 border-ink-foreground/15 px-3 py-5 text-center text-[11px] font-semibold uppercase leading-snug tracking-wide max-lg:odd:border-r sm:text-xs lg:flex lg:flex-row lg:gap-3 lg:border-r lg:py-5 lg:last:border-r-0 ${desktopOnly ? "hidden" : "flex"}`}
+                >
+                  <Icon
+                    className="size-6 shrink-0 text-primary lg:size-5"
+                    aria-hidden
+                  />
+                  <span className="text-balance">{label}</span>
+                </li>
+              );
+            },
+          )}
         </ul>
       </div>
     </section>

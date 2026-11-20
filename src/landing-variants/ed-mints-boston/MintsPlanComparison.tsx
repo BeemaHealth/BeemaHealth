@@ -46,11 +46,11 @@ export function MintsPlanComparison({
           const cta = resolveCta(ctaIds[p.id], "plan_comparison");
           const rows: { label: string; one: ReactNode; three: ReactNode }[] = [
             {
-              label: "Billed",
+              label: blackFriday ? "With code" : "Billed",
               one: bfOne ? (
                 <>
                   {was(bfOne.regularUsd)}
-                  {formatUsd(bfOne.dealUsd)} monthly
+                  {formatUsd(bfOne.dealUsd)} for 1 month
                 </>
               ) : (
                 `${formatUsd(p.monthly.priceUsd)} monthly`
@@ -58,7 +58,7 @@ export function MintsPlanComparison({
               three: bfThree ? (
                 <>
                   {was(bfThree.regularUsd)}
-                  {formatUsd(bfThree.dealUsd)} every 3 months
+                  {formatUsd(bfThree.dealUsd)} for 3 months
                 </>
               ) : (
                 `${formatUsd(p.quarterly.totalUsd)} every 3 months`

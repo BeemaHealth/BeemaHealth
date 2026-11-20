@@ -1,6 +1,9 @@
 import type { LandingVariant } from "../types";
 import { GlpTreatmentPage } from "../template/GlpTreatmentPage";
-import { BLACK_FRIDAY_OFFERS } from "../template/BlackFriday";
+import {
+  BLACK_FRIDAY_OFFERS,
+  useBlackFridayFaq,
+} from "../template/BlackFriday";
 import { FAQ_ITEMS } from "./shared";
 
 /**
@@ -12,7 +15,7 @@ function TirzepatideHoustonBlackFriday() {
   return (
     <GlpTreatmentPage
       med="tirzepatide"
-      faqItems={FAQ_ITEMS}
+      faqItems={useBlackFridayFaq(FAQ_ITEMS)}
       blackFriday={BLACK_FRIDAY_OFFERS.tirzepatide}
     />
   );

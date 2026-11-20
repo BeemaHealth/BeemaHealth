@@ -2,9 +2,19 @@ import type { ReactNode } from "react";
 import { Pill, Stethoscope, Truck, Wallet } from "lucide-react";
 import type { TreatmentFaqItem } from "@/components/site/TreatmentPageBlocks";
 import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
+import { formatUsd } from "@/lib/medication-pricing";
 import { GOOGLE_RATING_VALUE } from "@/lib/google-business";
+import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
+import {
+  usePromoEvent,
+  BlackFridayDealCard,
+  BlackFridayText,
+  blackFridayTile,
+  type BlackFridayOffer,
+} from "./BlackFriday";
 import {
   CancellationLink,
+  LAZY_SECTION,
   LandingTemplate,
   type Callout,
   type HeroImage,
@@ -80,14 +90,30 @@ export type ProductPageConfig = {
 export type ProductPageProps = {
   config: ProductPageConfig;
   faqItems: TreatmentFaqItem[];
+  /**
+   * Opt-in Black Friday treatment: one offer, or several (headline offer
+   * first). Omit for the standard page; default output is unchanged.
+   */
+  blackFriday?: BlackFridayOffer | readonly BlackFridayOffer[];
 } & Pick<LandingTemplateProps, "overrides" | "insertAfter">;
 
 export function ProductPage({
   config: c,
   faqItems,
+  blackFriday,
   overrides,
   insertAfter,
 }: ProductPageProps) {
+  const ev = usePromoEvent();
+  const bfOffers: readonly BlackFridayOffer[] = !blackFriday
+    ? []
+    : "code" in blackFriday
+      ? [blackFriday]
+      : blackFriday;
+  const bf = bfOffers[0];
+  const bfTileOffer =
+    bfOffers.find((o) => o.plans?.some((p) => p.label === "3-month plan")) ??
+    bf;
   const heroCta = resolveCta(CTA_IDS[c.heroCtaId]);
   const footerCta = resolveCta(CTA_IDS[c.footerCtaId]);
 
@@ -95,13 +121,27 @@ export function ProductPage({
     <LandingTemplate
       pagePath={c.pagePath}
       hero={{
-        h1: c.h1,
+        h1: bf ? (
+          <>
+            <BlackFridayText />: {formatUsd(bf.discountUsd)} off {c.name}
+          </>
+        ) : (
+          c.h1
+        ),
         lead: c.lead,
         cta: heroCta,
         images: [c.image],
-        tiles: [c.tile],
+        tiles: [
+          bfTileOffer
+            ? {
+                name: c.tile.name,
+                ...blackFridayTile(bfTileOffer, ev.endsLabel),
+              }
+            : c.tile,
+        ],
         priceNote: (
           <>
+            {bf ? `${ev.name} code valid through ${ev.endsLabel}. ` : null}
             Medication eligibility and availability are determined by a licensed
             provider and applicable law. Cash-pay when prescribed. Product
             images are illustrative. See our <CancellationLink />.
@@ -123,13 +163,18 @@ export function ProductPage({
         title: c.pricingTitle ?? "Transparent pricing",
         description: c.pricingDescription,
         children: (
-          <div className="grid gap-8 lg:grid-cols-2">
-            <div className="h-full">{c.pricingCard}</div>
-            <EligibilityCard
-              intro={c.eligibility.intro}
-              points={c.eligibility.points}
-            />
-          </div>
+          <>
+            {bfOffers.map((o) => (
+              <BlackFridayDealCard key={o.code} offer={o} />
+            ))}
+            <div className="grid gap-8 lg:grid-cols-2">
+              <div className="h-full">{c.pricingCard}</div>
+              <EligibilityCard
+                intro={c.eligibility.intro}
+                points={c.eligibility.points}
+              />
+            </div>
+          </>
         ),
         footnote: (
           <>
@@ -150,7 +195,9 @@ export function ProductPage({
         callouts: PRODUCT_CALLOUTS,
       }}
       midCta={{
-        heading: "Your care starts with a free intake",
+        heading: bf
+          ? `${formatUsd(bf.discountUsd)} off starts with a free intake`
+          : "Your care starts with a free intake",
         body: "Starting your intake is free. A licensed provider reviews your health history and decides whether treatment is right for you, and you won't be charged anything if you're not prescribed. If you are, one cash-pay price covers your care and medication.",
       }}
       where={{
@@ -172,13 +219,18 @@ export function ProductPage({
       }}
       finalCta={{
         heading: "Ready to see if this is right for you?",
-        body: "Complete intake from home. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.",
+        body: bf
+          ? `Use code ${bf.code} at checkout through ${ev.endsLabel}. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.`
+          : "Complete intake from home. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.",
         cta: footerCta,
       }}
-      overrides={overrides}
+      overrides={bf ? { team: null, ...overrides } : overrides}
       insertAfter={{
         howItWorks: (
-          <ProseSection title={c.whatIs.title}>{c.whatIs.body}</ProseSection>
+          <>
+            {bf ? <MedicalTeamSection className={LAZY_SECTION} /> : null}
+            <ProseSection title={c.whatIs.title}>{c.whatIs.body}</ProseSection>
+          </>
         ),
         included: <SafetySection cards={c.safetyCards} />,
         ...insertAfter,

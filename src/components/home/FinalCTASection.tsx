@@ -14,7 +14,7 @@ import {
  * Closing homepage CTA - a solid-honey band with a vignette mesh and two
  * floating hexagon outlines behind an oversized "Ready to start?" reveal.
  */
-export function FinalCTASection() {
+export function FinalCTASection({ promoLine }: { promoLine?: string } = {}) {
   const cta = resolveCta(CTA_IDS.home_mid);
   const [getStartedOpen, setGetStartedOpen] = useState(false);
   return (
@@ -39,9 +39,10 @@ export function FinalCTASection() {
             </h2>
 
             <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-primary-foreground/80 md:text-lg">
-              Start your online visit in about a minute. {promoIncentiveLine()}.
-              You won&apos;t be charged anything if you&apos;re not prescribed,
-              and no prescription is guaranteed.
+              Start your online visit in about a minute.{" "}
+              {promoLine ? `Save with ${promoLine}` : promoIncentiveLine()}. You
+              won&apos;t be charged anything if you&apos;re not prescribed, and
+              no prescription is guaranteed.
             </p>
 
             <HoverLiftButton className="mt-8">
@@ -56,7 +57,7 @@ export function FinalCTASection() {
               </Button>
             </HoverLiftButton>
             <p className="mt-4 text-sm font-semibold text-primary-foreground">
-              Offer: {FIRST_MONTH_PROMO_LINE}
+              Offer: {promoLine ?? FIRST_MONTH_PROMO_LINE}
             </p>
           </div>
         </div>

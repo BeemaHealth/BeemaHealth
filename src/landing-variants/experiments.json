@@ -11,6 +11,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -28,12 +32,16 @@
         "weight": 0
       },
       "v3-testing-new-principles": {
-        "status": "live",
-        "weight": 100
+        "status": "draft",
+        "weight": 0
       },
       "v4-editing-the-pricing-large-info-text-at-b": {
         "status": "draft",
         "weight": 0
+      },
+      "v5-black-friday": {
+        "status": "live",
+        "weight": 100
       }
     }
   },
@@ -49,6 +57,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -66,6 +78,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -83,6 +99,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -100,6 +120,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -113,6 +137,10 @@
         "weight": 0
       },
       "v2-get-started-modal": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v3-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -126,6 +154,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -139,6 +171,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -152,6 +188,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -165,6 +205,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -178,6 +222,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -191,6 +239,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -204,6 +256,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -217,6 +273,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -230,6 +290,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -243,6 +307,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -256,6 +324,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -269,6 +341,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -278,6 +354,10 @@
     "experimentId": "home-e1",
     "variants": {
       "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v2-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -291,6 +371,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -304,6 +388,10 @@
         "weight": 0
       },
       "v3-new-layout": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v4-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -313,6 +401,10 @@
     "experimentId": "ed-e1",
     "variants": {
       "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v2-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -322,6 +414,10 @@
     "experimentId": "hair-loss-e1",
     "variants": {
       "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v2-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -331,6 +427,10 @@
     "experimentId": "mots-c-e1",
     "variants": {
       "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v2-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -340,6 +440,10 @@
     "experimentId": "bpc-157-e1",
     "variants": {
       "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v2-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -349,6 +453,10 @@
     "experimentId": "bpc-157-capsules-e1",
     "variants": {
       "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v2-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -358,6 +466,10 @@
     "experimentId": "bpc-157-tb-500-ghk-cu-e1",
     "variants": {
       "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v2-black-friday": {
         "status": "live",
         "weight": 100
       }
@@ -367,6 +479,10 @@
     "experimentId": "ghk-cu-e1",
     "variants": {
       "v1-control": {
+        "status": "draft",
+        "weight": 0
+      },
+      "v2-black-friday": {
         "status": "live",
         "weight": 100
       }

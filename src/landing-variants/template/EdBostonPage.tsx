@@ -22,7 +22,8 @@ import { formatUsd } from "@/lib/medication-pricing";
 import {
   BlackFridayText,
   BlackFridayDealCard,
-  BLACK_FRIDAY_ENDS_LABEL,
+  BlackFridayPriceLine,
+  usePromoEvent,
   blackFridayTile,
   type BlackFridayOffer,
 } from "./BlackFriday";
@@ -242,6 +243,7 @@ export function GenericEdBostonPage({
   overrides,
   insertAfter,
 }: GenericEdBostonPageProps) {
+  const ev = usePromoEvent();
   const c = GENERIC[product];
   const lower = c.name.toLowerCase();
   const nationwide = market === "nationwide";
@@ -274,7 +276,7 @@ export function GenericEdBostonPage({
     cta: heroCta,
     images: [c.image],
     tiles: bf
-      ? [{ name: c.name, ...blackFridayTile(bf) }]
+      ? [{ name: c.name, ...blackFridayTile(bf, ev.endsLabel) }]
       : [
           {
             name: c.name,
@@ -284,9 +286,7 @@ export function GenericEdBostonPage({
         ],
     priceNote: (
       <>
-        {bf
-          ? `Black Friday code valid through ${BLACK_FRIDAY_ENDS_LABEL}. `
-          : null}
+        {bf ? `${ev.name} code valid through ${ev.endsLabel}. ` : null}
         Medication eligibility and availability are determined by a licensed
         provider and applicable law. Cash-pay when prescribed. Product images
         are illustrative. See our <CancellationLink />.
@@ -340,8 +340,16 @@ export function GenericEdBostonPage({
                   <p className="mt-1 text-sm leading-snug text-muted-foreground">
                     {c.headSub}
                   </p>
+                  {bf && bf.plans?.[0] ? (
+                    <BlackFridayPriceLine
+                      offer={bf}
+                      plan={bf.plans[0]}
+                      className="mt-3"
+                    />
+                  ) : null}
                   <ProductPlansDialog
                     name={c.name}
+                    blackFriday={bf}
                     pricing={PRODUCT_PRICING[product]}
                     cta={heroCta.withPosition("pricing")}
                   />
@@ -384,7 +392,7 @@ export function GenericEdBostonPage({
       }}
       midCta={{
         heading: bf
-          ? `Black Friday: ${formatUsd(bf.discountUsd)} off starts with a free intake`
+          ? `${ev.name}: ${formatUsd(bf.discountUsd)} off starts with a free intake`
           : "Skip the waiting room. Start from your phone.",
         body: "Starting your intake is free. A licensed provider reviews your health history and decides whether treatment is right for you, and you won't be charged anything if you're not prescribed. If you are, one cash-pay price covers your care and medication.",
       }}
@@ -416,7 +424,7 @@ export function GenericEdBostonPage({
       finalCta={{
         heading: "Ready to see if ED treatment is right for you?",
         body: bf
-          ? `Use code ${bf.code} at checkout for ${formatUsd(bf.discountUsd)} off through ${BLACK_FRIDAY_ENDS_LABEL}. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.`
+          ? `Use code ${bf.code} at checkout for ${formatUsd(bf.discountUsd)} off through ${ev.endsLabel}. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.`
           : nationwide
             ? NATIONWIDE_FINAL_BODY
             : BOSTON_FINAL_BODY,
@@ -534,7 +542,7 @@ function FormulationChooser({
         {bfQuarter && blackFriday ? (
           <p className="mt-1 text-xs text-muted-foreground">
             With code {blackFriday.code} on the 3-month plan (
-            {formatUsd(bfQuarter.dealUsd)} total)
+            {formatUsd(bfQuarter.dealUsd)} for 3 months)
           </p>
         ) : null}
       </div>
@@ -623,6 +631,7 @@ export function EdMintsBostonNewPage({
   overrides,
   insertAfter,
 }: EdMintsBostonPageProps) {
+  const ev = usePromoEvent();
   const bf = blackFriday;
   const nationwide = market === "nationwide";
   // Every Get Started jumps to the formulation cards on this page; each card
@@ -653,7 +662,13 @@ export function EdMintsBostonNewPage({
     cta: startCta,
     images: [image],
     tiles: bf
-      ? [{ name: "ED Mints", ...blackFridayTile(bf), href: heroTileHref }]
+      ? [
+          {
+            name: "ED Mints",
+            ...blackFridayTile(bf, ev.endsLabel),
+            href: heroTileHref,
+          },
+        ]
       : [
           {
             name: "ED Mints",
@@ -665,9 +680,7 @@ export function EdMintsBostonNewPage({
         ],
     priceNote: (
       <>
-        {bf
-          ? `Black Friday code valid through ${BLACK_FRIDAY_ENDS_LABEL}. `
-          : null}
+        {bf ? `${ev.name} code valid through ${ev.endsLabel}. ` : null}
         Medication eligibility, formulation, and availability are determined by
         a licensed provider and applicable law. Cash-pay when prescribed.
         Product images are illustrative. See our <CancellationLink />.
@@ -735,7 +748,7 @@ export function EdMintsBostonNewPage({
       finalCta={{
         heading: "Ready to see if ED treatment is right for you?",
         body: bf
-          ? `Use code ${bf.code} at checkout for ${formatUsd(bf.discountUsd)} off through ${BLACK_FRIDAY_ENDS_LABEL}. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.`
+          ? `Use code ${bf.code} at checkout for ${formatUsd(bf.discountUsd)} off through ${ev.endsLabel}. You won't be charged anything if you're not prescribed, and a prescription is never guaranteed.`
           : nationwide
             ? NATIONWIDE_FINAL_BODY
             : BOSTON_FINAL_BODY,

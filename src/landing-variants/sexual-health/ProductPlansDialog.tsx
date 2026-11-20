@@ -12,6 +12,7 @@ import { FullScreenMobileDialogContent } from "@/components/site/FullScreenMobil
 import type { resolveCta } from "@/lib/cta-ids";
 import { formatUsd } from "@/lib/medication-pricing";
 import type { ProductPricing } from "./pricing";
+import type { BlackFridayOffer } from "../template/BlackFriday";
 
 /**
  * "All doses and plans" button for a product card. Opens a popup with the
@@ -24,10 +25,13 @@ export function ProductPlansDialog({
   name,
   pricing,
   cta,
+  blackFriday,
 }: {
   name: string;
   pricing: ProductPricing;
   cta: ReturnType<typeof resolveCta>;
+  /** Opt-in: show every plan with the coupon taken off. */
+  blackFriday?: BlackFridayOffer;
 }) {
   const [open, setOpen] = useState(false);
   const groups = [
@@ -53,6 +57,9 @@ export function ProductPlansDialog({
             </DialogTitle>
             <DialogDescription className="text-center">
               Cash-pay when prescribed. Your provider decides the dose.
+              {blackFriday
+                ? ` Prices shown with code ${blackFriday.code} applied at checkout.`
+                : ""}
             </DialogDescription>
           </DialogHeader>
 
@@ -78,7 +85,26 @@ export function ProductPlansDialog({
                         ) : null}
                       </span>
                       <span className="text-base font-bold text-foreground">
-                        {formatUsd(line.usd)}
+                        {blackFriday ? (
+                          <>
+                            <s className="mr-1.5 text-sm font-normal text-muted-foreground">
+                              <span className="sr-only">Regular price </span>
+                              {formatUsd(line.usd)}
+                            </s>
+                            <span className="sr-only">Now </span>
+                            {formatUsd(line.usd - blackFriday.discountUsd)}
+                            {group.label === "3-month plan" ? (
+                              <span className="block text-xs font-medium text-muted-foreground">
+                                {formatUsd(
+                                  (line.usd - blackFriday.discountUsd) / 3,
+                                )}
+                                /mo for 3 months
+                              </span>
+                            ) : null}
+                          </>
+                        ) : (
+                          formatUsd(line.usd)
+                        )}
                       </span>
                     </li>
                   ))}

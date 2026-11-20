@@ -28,8 +28,9 @@ import { learnPath } from "@/content/learn/types";
 import type { TreatmentFaqItem } from "@/components/site/TreatmentPageBlocks";
 import {
   BlackFridayText,
+  BLACK_FRIDAY_OFFERS,
   BlackFridayDealCard,
-  BLACK_FRIDAY_ENDS_LABEL,
+  usePromoEvent,
   blackFridayTile,
   type BlackFridayOffer,
 } from "./BlackFriday";
@@ -211,6 +212,7 @@ export function GlpTreatmentPage({
   overrides,
   insertAfter,
 }: GlpTreatmentPageProps) {
+  const ev = usePromoEvent();
   const c = MED_CONFIG[med];
   const lower = c.name.toLowerCase();
   const pricing =
@@ -234,10 +236,10 @@ export function GlpTreatmentPage({
   const bf = blackFriday;
   const bfPriceNote = (
     <>
-      The Black Friday code applies to the 3-month plan, through{" "}
-      {BLACK_FRIDAY_ENDS_LABEL}. Medication eligibility and availability are
-      determined by a licensed provider and applicable law. Cash-pay when
-      prescribed. Product images are illustrative. See our <CancellationLink />.
+      The {ev.name} code is a one-time code for the 3-month plan, through{" "}
+      {ev.endsLabel}. Medication eligibility and availability are determined by
+      a licensed provider and applicable law. Cash-pay when prescribed. Product
+      images are illustrative. See our <CancellationLink />.
     </>
   );
   const heroProps = {
@@ -254,7 +256,10 @@ export function GlpTreatmentPage({
     images: [imagery],
     tiles: [
       bf
-        ? { name: `${c.name}, 3-month plan`, ...blackFridayTile(bf) }
+        ? {
+            name: `${c.name}, 3-month plan`,
+            ...blackFridayTile(bf, ev.endsLabel),
+          }
         : heroTile(med),
     ],
     priceNote: bf ? (
@@ -311,6 +316,7 @@ export function GlpTreatmentPage({
                 pricing={pricing}
                 imagery={imagery}
                 cta={heroCta.withPosition("pricing")}
+                blackFriday={bf}
                 className="h-full"
               />
             </div>
@@ -355,7 +361,7 @@ export function GlpTreatmentPage({
       }}
       midCta={{
         heading: bf
-          ? `Black Friday: ${formatUsd(bf.discountUsd)} off starts with a free intake`
+          ? `${ev.name}: ${formatUsd(bf.discountUsd)} off starts with a free intake`
           : "Your plan starts with a free intake",
         body: "Starting your intake is free, and you won't be charged anything if you're not prescribed. A licensed provider reviews your health history and decides what is right for you. If treatment is appropriate, one monthly price covers your care, medication, supplies, and shipping.",
       }}
@@ -419,7 +425,7 @@ export function GlpTreatmentPage({
       finalCta={{
         heading: "Ready to see if GLP-1 care is right for you?",
         body: bf
-          ? `Use code ${bf.code} at checkout for ${formatUsd(bf.discountUsd)} off the 3-month plan through ${BLACK_FRIDAY_ENDS_LABEL}. You won't be charged anything if you're not prescribed. A prescription is never guaranteed.`
+          ? `Use code ${bf.code} at checkout for ${formatUsd(bf.discountUsd)} off the 3-month plan through ${ev.endsLabel}. You won't be charged anything if you're not prescribed. A prescription is never guaranteed.`
           : houston
             ? "Houston patients can complete medical intake from home. You won't be charged anything if you're not prescribed. A prescription is never guaranteed."
             : "Complete medical intake from home. You won't be charged anything if you're not prescribed. A prescription is never guaranteed.",
@@ -491,7 +497,17 @@ export function GlpTreatmentPage({
                 className="mx-0 max-w-2xl"
               />
               <div className="mt-8">
-                <TreatmentComparisonTable highlight={c.compareHighlight} />
+                <TreatmentComparisonTable
+                  highlight={c.compareHighlight}
+                  blackFriday={
+                    bf
+                      ? {
+                          semaglutide: BLACK_FRIDAY_OFFERS.semaglutide,
+                          tirzepatide: BLACK_FRIDAY_OFFERS.tirzepatide,
+                        }
+                      : undefined
+                  }
+                />
               </div>
               <p className="mt-4 text-sm text-muted-foreground">
                 Curious about the alternative?{" "}

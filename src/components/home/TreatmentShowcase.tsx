@@ -16,6 +16,7 @@ import {
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
 import { CompoundedPriceLockup } from "@/components/site/CompoundedPriceLockup";
+import type { BlackFridayOffer } from "@/landing-variants/template/BlackFriday";
 import { HexMotif } from "@/components/site/primitives";
 import { Button } from "@/components/ui/button";
 import { LineReveal, EASE_OUT } from "@/components/home/home-motion";
@@ -74,7 +75,14 @@ const TREATMENTS: Treatment[] = [
  * selector (the same `CompoundedPriceLockup` used on the medication's own
  * page) on the other.
  */
-export function TreatmentShowcase() {
+export function TreatmentShowcase({
+  blackFriday,
+}: {
+  /** Opt-in Black Friday offers by treatment id ("tirzepatide", "semaglutide"). */
+  blackFriday?: Partial<
+    Record<"tirzepatide" | "semaglutide", BlackFridayOffer>
+  >;
+} = {}) {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
   const [activeId, setActiveId] = useState(TREATMENTS[0]!.id);
@@ -107,10 +115,9 @@ export function TreatmentShowcase() {
           <LineReveal>GLP-1 weight-loss options</LineReveal>
         </h2>
         <p className="mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-          Transparent cash pricing on every plan. Semaglutide starts with a
-          first-month promo. Tirzepatide: {TIRZ_STARTER.months}-month starter
-          pack ${TIRZ_STARTER.totalUsd} for {TIRZ_STARTER.dosePathLabel}, or $
-          {COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo for maintenance.
+          {blackFriday
+            ? "Transparent cash pricing on every plan, with limited-time savings on the 3-month plan of each medication."
+            : `Transparent cash pricing on every plan. Semaglutide starts with a first-month promo. Tirzepatide: ${TIRZ_STARTER.months}-month starter pack $${TIRZ_STARTER.totalUsd} for ${TIRZ_STARTER.dosePathLabel}, or $${COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd}/mo for maintenance.`}
         </p>
         <p className="mt-4">
           <Link
@@ -191,7 +198,17 @@ export function TreatmentShowcase() {
                   {active.form}
                 </p>
                 <div className="mt-6">
-                  <CompoundedPriceLockup pricing={active.pricing} size="lg" />
+                  <CompoundedPriceLockup
+                    pricing={active.pricing}
+                    size="lg"
+                    blackFriday={
+                      blackFriday?.[
+                        active.tabLabel.toLowerCase() as
+                          | "tirzepatide"
+                          | "semaglutide"
+                      ]
+                    }
+                  />
                 </div>
                 <Button asChild size="lg" className="mt-6 w-full sm:w-auto">
                   <Link to={active.to}>

@@ -1,3 +1,9 @@
+import {
+  BlackFridayPriceLine,
+  bfPlanFor,
+  type BlackFridayOffer,
+  type BlackFridayOffers,
+} from "@/landing-variants/template/BlackFriday";
 import { Link } from "@tanstack/react-router";
 import { ImageDisclaimer } from "@/components/site/ImageDisclaimer";
 import { useEffect, useState, type ReactNode } from "react";
@@ -100,9 +106,12 @@ export function TreatmentPricingCard({
   className,
   imagery,
   cta,
+  blackFriday,
 }: {
   pricing: CompoundedMedicationPricing;
   className?: string;
+  /** Opt-in Black Friday pricing (see CompoundedPriceLockup). */
+  blackFriday?: BlackFridayOffer;
   /** Optional photo - used where a page shows more than one medication's
    * card and needs the photo to switch with it (e.g. Glp1LandingPage's
    * product picker). Stacks above the pricing content on mobile, becomes a
@@ -116,7 +125,12 @@ export function TreatmentPricingCard({
       <p className="text-xs font-semibold uppercase tracking-wide text-accent-foreground">
         Transparent pricing
       </p>
-      <CompoundedPriceLockup className="mt-5" pricing={pricing} size="lg" />
+      <CompoundedPriceLockup
+        className="mt-5"
+        pricing={pricing}
+        size="lg"
+        blackFriday={blackFriday}
+      />
       <ul className="mt-5 grid gap-x-4 gap-y-1.5 text-sm text-foreground sm:grid-cols-2">
         {PRICING_INCLUDED.map((item) => (
           <li key={item} className="flex items-center gap-2">
@@ -306,9 +320,29 @@ const COMPARISON_ROWS: ComparisonRow[] = [
  */
 export function TreatmentComparisonTable({
   highlight,
+  blackFriday,
 }: {
   highlight?: ComparisonId;
+  /** Opt-in: the starting-price row shows the Black Friday monthly price. */
+  blackFriday?: Partial<Record<ComparisonId, BlackFridayOffer>>;
 }) {
+  const rows = blackFriday
+    ? COMPARISON_ROWS.map((row) => {
+        if (!row.emphasis) return row;
+        const text = (id: ComparisonId, fallback: ReactNode) => {
+          const o = blackFriday[id];
+          const plan = o?.plans?.[0];
+          return o && plan
+            ? `${formatUsd(plan.dealUsd / 3)}/mo for 3 months with code ${o.code}`
+            : fallback;
+        };
+        return {
+          ...row,
+          tirzepatide: text("tirzepatide", row.tirzepatide),
+          semaglutide: text("semaglutide", row.semaglutide),
+        };
+      })
+    : COMPARISON_ROWS;
   const headCls = (id: ComparisonId) =>
     cn(
       "py-4 text-sm font-bold md:text-base",
@@ -331,7 +365,7 @@ export function TreatmentComparisonTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {COMPARISON_ROWS.map((row) => (
+            {rows.map((row) => (
               <TableRow
                 key={row.label}
                 className={cn(
@@ -387,7 +421,7 @@ export function TreatmentComparisonTable({
               {COMPARISON_NAMES[id]}
             </h3>
             <dl className="mt-3 space-y-3 text-sm">
-              {COMPARISON_ROWS.map((row) => (
+              {rows.map((row) => (
                 <div
                   key={row.label}
                   className={cn(
@@ -516,6 +550,12 @@ type SimpleTreatmentPricingCardProps = {
    * plain-price card unchanged.
    */
   interactive?: boolean;
+  /**
+   * Opt-in Black Friday pricing: each plan the offer(s) cover shows its
+   * coupon price with the regular price crossed out. Omit for the standard
+   * card (default output unchanged).
+   */
+  blackFriday?: BlackFridayOffers;
 };
 
 /**
@@ -533,7 +573,11 @@ export function SimpleTreatmentPricingCard({
   perDayNote,
   className,
   interactive = false,
+  blackFriday,
 }: SimpleTreatmentPricingCardProps) {
+  const bfOne = bfPlanFor(blackFriday, "1-month plan");
+  const bfThree = bfPlanFor(blackFriday, "3-month plan");
+  const bfThreeOnly = bfThree && !pricing.quarterly ? bfThree : undefined;
   if (interactive && pricing.quarterly) {
     return (
       <InteractiveSimplePricingCard
@@ -543,6 +587,7 @@ export function SimpleTreatmentPricingCard({
         pricing={pricing}
         cta={cta}
         className={className}
+        blackFriday={blackFriday}
       />
     );
   }
@@ -568,28 +613,75 @@ export function SimpleTreatmentPricingCard({
         Transparent pricing
       </p>
       <div className="mt-5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+        {bfOne || bfThreeOnly ? (
+          <s className="text-lg font-semibold text-muted-foreground">
+            <span className="sr-only">Regular price </span>
+            {formatUsd(pricing.monthlyUsd)}
+            {bfThreeOnly ? "/mo" : ""}
+          </s>
+        ) : null}
         <span className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-          {formatUsd(pricing.monthlyUsd)}
+          {bfOne || bfThreeOnly ? <span className="sr-only">Now </span> : null}
+          {formatUsd(
+            bfThreeOnly
+              ? bfThreeOnly.plan.dealUsd / 3
+              : bfOne
+                ? bfOne.plan.dealUsd
+                : pricing.monthlyUsd,
+          )}
         </span>
-        <span className="text-sm text-muted-foreground">/mo</span>
-        {perDayNote ? (
+        <span className="text-sm text-muted-foreground">
+          {bfThreeOnly ? "/mo for 3 months" : "/mo"}
+        </span>
+        {perDayNote && !bfOne && !bfThreeOnly ? (
           <span className="rounded-full bg-accent px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-accent-foreground">
             {perDayNote}
           </span>
         ) : null}
       </div>
+      {bfThreeOnly ? (
+        <p className="mt-2 text-sm text-foreground">
+          <s className="text-muted-foreground">
+            <span className="sr-only">Regular total </span>
+            {formatUsd(bfThreeOnly.plan.regularUsd)}
+          </s>{" "}
+          <strong>{formatUsd(bfThreeOnly.plan.dealUsd)}</strong> for 3 months
+        </p>
+      ) : null}
       {pricing.quarterly ? (
         <p className="mt-2 text-sm text-muted-foreground">
           or{" "}
+          {bfThree ? (
+            <s className="text-muted-foreground">
+              <span className="sr-only">Regular price </span>
+              {formatUsd(pricing.quarterly.totalUsd)}
+            </s>
+          ) : null}{" "}
           <span className="font-bold text-foreground">
-            {formatUsd(pricing.quarterly.totalUsd)}
+            {formatUsd(
+              bfThree ? bfThree.plan.dealUsd : pricing.quarterly.totalUsd,
+            )}
           </span>{" "}
-          billed quarterly (about{" "}
-          {formatUsd(pricing.quarterly.monthlyEquivalentUsd)}/mo) -{" "}
+          {bfThree ? "for 3 months" : "billed quarterly"} (about{" "}
+          {formatUsd(
+            bfThree
+              ? bfThree.plan.dealUsd / 3
+              : pricing.quarterly.monthlyEquivalentUsd,
+          )}
+          /mo) -{" "}
           <span className="font-semibold text-foreground">
-            Save {formatUsd(pricing.quarterly.savingsUsd)}
+            Save{" "}
+            {formatUsd(
+              pricing.quarterly.savingsUsd +
+                (bfThree ? bfThree.plan.regularUsd - bfThree.plan.dealUsd : 0),
+            )}
           </span>{" "}
           vs. paying monthly
+        </p>
+      ) : null}
+      {bfOne || bfThree ? (
+        <p className="mt-3 text-sm font-semibold text-foreground">
+          Use code {(bfThree ?? bfOne)!.offer.code} at checkout
         </p>
       ) : null}
       <p className="mt-6 max-w-md text-xs leading-relaxed text-muted-foreground">
@@ -665,10 +757,14 @@ function InteractiveSimplePricingCard({
   pricing,
   cta,
   className,
+  blackFriday,
 }: Omit<SimpleTreatmentPricingCardProps, "perDayNote" | "interactive">) {
   const [months, setMonths] = useState<1 | 3>(3);
   const q = pricing.quarterly;
   const isThreeMonth = months === 3;
+  const bfOne = bfPlanFor(blackFriday, "1-month plan");
+  const bfThree = bfPlanFor(blackFriday, "3-month plan");
+  const bf = isThreeMonth ? bfThree : bfOne;
 
   if (!q) return null;
 
@@ -704,7 +800,15 @@ function InteractiveSimplePricingCard({
           label="3 months"
           hint={
             <>
-              Save <span className="font-bold">{formatUsd(q.savingsUsd)}</span>
+              Save{" "}
+              <span className="font-bold">
+                {formatUsd(
+                  q.savingsUsd +
+                    (bfThree
+                      ? bfThree.plan.regularUsd - bfThree.plan.dealUsd
+                      : 0),
+                )}
+              </span>
             </>
           }
         />
@@ -717,14 +821,40 @@ function InteractiveSimplePricingCard({
 
       <div className="mt-4 rounded-xl bg-background/80 px-3.5 py-3 ring-1 ring-border/70">
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+          {bf ? (
+            <s className="text-lg font-semibold text-muted-foreground">
+              <span className="sr-only">Regular price </span>
+              {formatUsd(
+                isThreeMonth ? q.monthlyEquivalentUsd : pricing.monthlyUsd,
+              )}
+            </s>
+          ) : null}
           <span className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            {bf ? <span className="sr-only">Now </span> : null}
             {formatUsd(
-              isThreeMonth ? q.monthlyEquivalentUsd : pricing.monthlyUsd,
+              bf
+                ? isThreeMonth
+                  ? bf.plan.dealUsd / 3
+                  : bf.plan.dealUsd
+                : isThreeMonth
+                  ? q.monthlyEquivalentUsd
+                  : pricing.monthlyUsd,
             )}
           </span>
           <span className="text-sm text-muted-foreground">/mo</span>
         </div>
-        {isThreeMonth ? (
+        {bf ? (
+          <>
+            <p className="mt-1.5 text-xs text-muted-foreground">
+              {isThreeMonth
+                ? `${formatUsd(bf.plan.dealUsd)} for 3 months (regularly ${formatUsd(bf.plan.regularUsd)})`
+                : `1-month plan (regularly ${formatUsd(bf.plan.regularUsd)})`}
+            </p>
+            <p className="mt-1.5 text-sm font-bold text-foreground">
+              Use code {bf.offer.code} at checkout
+            </p>
+          </>
+        ) : isThreeMonth ? (
           <p className="mt-1.5 text-xs text-muted-foreground">
             {formatUsd(q.totalUsd)} for 3 months · Save{" "}
             <span className="font-bold text-foreground">
@@ -774,6 +904,8 @@ export type CategoryLineupItem = {
   to: string;
   /** Optional highlighted tag next to the price, e.g. `simplePerDaySentence(pricing)` - only pass a truthy value when the claim is actually true. */
   perDayNote?: string;
+  /** Opt-in Black Friday offer: adds the coupon price line to the card. */
+  blackFriday?: BlackFridayOffer;
 };
 
 /**
@@ -836,6 +968,12 @@ export function SimpleCategoryLineup({
                 </span>
               ) : null}
             </p>
+            {item.blackFriday && item.blackFriday.plans?.[0] ? (
+              <BlackFridayPriceLine
+                offer={item.blackFriday}
+                plan={item.blackFriday.plans[0]}
+              />
+            ) : null}
             <p className="text-sm font-medium text-foreground/80">
               {item.form}
             </p>

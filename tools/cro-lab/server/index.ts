@@ -93,6 +93,15 @@ const modeOf = (url: URL): Mode =>
 
 async function buildState(mode: Mode): Promise<LabState> {
   const store = stores[mode];
+  // Pick up variant files created while the lab is running (no restart needed).
+  if (
+    mode === "live" &&
+    syncWithDisk(structuredClone(store.data), repoRoot, PAGE_IDS)
+  ) {
+    store.update((d) => {
+      syncWithDisk(d, repoRoot, PAGE_IDS);
+    });
+  }
   const base = {
     mode,
     pages: TRACKED_PAGES,
