@@ -2,7 +2,6 @@ import type { LandingVariant } from "../types";
 import { BLACK_FRIDAY_OFFERS } from "../template/BlackFriday";
 import { EdMintsBostonNewPage } from "../template/EdBostonPage";
 import { CTA_IDS } from "@/lib/cta-ids";
-import { MintsPlanComparison } from "../ed-mints-boston/MintsPlanComparison";
 import { FAQ_ITEMS } from "./shared";
 
 /**
@@ -17,21 +16,10 @@ function NewLayout() {
       market="nationwide"
       blackFriday={BLACK_FRIDAY_OFFERS.edMints}
       faqItems={FAQ_ITEMS}
-      heroTileHref="#plan-comparison"
+      heroTileHref="#formulations"
       formulationCtaIds={{
         rdt: CTA_IDS.ed_mints_rdt_picker,
         odt: CTA_IDS.ed_mints_odt_picker,
-      }}
-      insertAfter={{
-        pricing: (
-          <MintsPlanComparison
-            blackFriday={BLACK_FRIDAY_OFFERS.edMints}
-            ctaIds={{
-              rdt: CTA_IDS.ed_mints_rdt_plans,
-              odt: CTA_IDS.ed_mints_odt_plans,
-            }}
-          />
-        ),
       }}
     />
   );

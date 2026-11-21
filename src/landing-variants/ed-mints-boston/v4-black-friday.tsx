@@ -3,7 +3,6 @@ import { EdMintsBostonNewPage } from "../template/EdBostonPage";
 import { CTA_IDS } from "@/lib/cta-ids";
 import { BLACK_FRIDAY_OFFERS } from "../template/BlackFriday";
 import { FAQ_ITEMS } from "./shared";
-import { MintsPlanComparison } from "./MintsPlanComparison";
 
 /**
  * New shared landing layout (same design as GLP-1 Houston and sexual health).
@@ -16,21 +15,10 @@ function EdMintsBostonBlackFriday() {
     <EdMintsBostonNewPage
       faqItems={FAQ_ITEMS}
       blackFriday={BLACK_FRIDAY_OFFERS.edMints}
-      heroTileHref="#plan-comparison"
+      heroTileHref="#formulations"
       formulationCtaIds={{
         rdt: CTA_IDS.ed_mints_boston_rdt_picker,
         odt: CTA_IDS.ed_mints_boston_odt_picker,
-      }}
-      insertAfter={{
-        pricing: (
-          <MintsPlanComparison
-            blackFriday={BLACK_FRIDAY_OFFERS.edMints}
-            ctaIds={{
-              rdt: CTA_IDS.ed_mints_boston_rdt_plans,
-              odt: CTA_IDS.ed_mints_boston_odt_plans,
-            }}
-          />
-        ),
       }}
     />
   );

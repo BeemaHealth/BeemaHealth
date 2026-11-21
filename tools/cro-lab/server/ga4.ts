@@ -285,6 +285,18 @@ const BASK_HOST = "q.beemahealth.com";
 /** Traffic from GTM Preview (our own testing) is not a real signup. */
 const PREVIEW_SOURCE = "tagassistant.google.com";
 
+/**
+ * Bask draft/preview pages (e.g. /start-online-visit/draft-29f3f318e596) are
+ * our own questionnaire previews, not real visitors.
+ */
+const DRAFT_URL_PATTERN = "/draft-[A-Za-z0-9]+";
+const DRAFT_URL_RE = new RegExp(DRAFT_URL_PATTERN);
+
+/** True when a raw page URL is a Bask draft/preview page. */
+export function isDraftUrl(location: string): boolean {
+  return DRAFT_URL_RE.test(location);
+}
+
 /** cta_id from a Bask page URL, or null if absent or unparseable. */
 export function ctaIdFromLocation(location: string): string | null {
   try {
@@ -308,8 +320,8 @@ export function srcPageFromLocation(location: string): string | null {
  * the visitor clicked from: src_page on the Bask URL, else the page that owns
  * the cta_id (older links, before src_page existed). pageId is null when
  * neither is present.
- * Excludes GTM Preview sessions (our own testing) so QA runs do not inflate
- * the funnel. Counts are summed over distinct URLs, so a user who fires the
+ * Excludes GTM Preview sessions and Bask draft pages (our own testing) so QA
+ * runs do not inflate the funnel. Counts are summed over distinct URLs, so a user who fires the
  * event from two different URLs on one day counts twice.
  */
 export async function fetchDownstream(
@@ -357,6 +369,18 @@ export async function fetchDownstream(
               },
             },
           },
+          {
+            // Bask draft pages (/draft-<hash>) are our own previews.
+            notExpression: {
+              filter: {
+                fieldName: "pageLocation",
+                stringFilter: {
+                  matchType: "PARTIAL_REGEXP",
+                  value: DRAFT_URL_PATTERN,
+                },
+              },
+            },
+          },
         ],
       },
     },
@@ -367,6 +391,7 @@ export async function fetchDownstream(
     if (!event) continue;
     const date = isoDate(dv(r, 0));
     const location = dv(r, 2);
+    if (isDraftUrl(location)) continue;
     const pageId =
       pageIdFromSrcPage(srcPageFromLocation(location)) ??
       pageIdFromCtaId(ctaIdFromLocation(location));

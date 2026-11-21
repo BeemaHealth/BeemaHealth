@@ -17,6 +17,8 @@ export type MintPlanComparison = {
   /** Matches MINT_OPTIONS ids so the CTA can reuse each intake link. */
   name: string;
   dose: string;
+  /** Active ingredients with strengths, shown as a row in the plan table. */
+  ingredients: string[];
   monthly: {
     priceUsd: number;
     tablets: number;
@@ -37,6 +39,7 @@ function build(
   id: "rdt" | "odt",
   name: string,
   dose: string,
+  ingredients: string[],
   pricing: SimpleCompoundedPricing,
   monthlyTablets: number,
   quarterlyTablets: number,
@@ -47,6 +50,7 @@ function build(
     id,
     name,
     dose,
+    ingredients,
     monthly: {
       priceUsd: pricing.monthlyUsd,
       tablets: monthlyTablets,
@@ -67,6 +71,7 @@ export const MINT_PLAN_COMPARISONS: readonly MintPlanComparison[] = [
     "rdt",
     "Tadalafil + Sildenafil",
     "12mg / 60mg RDT",
+    ["Tadalafil 12mg", "Sildenafil 60mg"],
     ED_MINTS_RDT_PRICING,
     10,
     32,
@@ -75,6 +80,7 @@ export const MINT_PLAN_COMPARISONS: readonly MintPlanComparison[] = [
     "odt",
     "Sildenafil + Tadalafil + Oxytocin",
     "50mg / 20mg / 125 IU ODT",
+    ["Sildenafil 50mg", "Tadalafil 20mg", "Oxytocin 125 IU"],
     ED_MINTS_ODT_PRICING,
     6,
     18,

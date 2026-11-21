@@ -6,6 +6,7 @@ import assert from "node:assert/strict";
 import {
   classifyError,
   ctaIdFromLocation,
+  isDraftUrl,
   fetchDownstream,
   fetchPaths,
   fetchRows,
@@ -178,7 +179,6 @@ test("fetchDownstream ties Bask events to a page by cta_id and excludes GTM Prev
     out.map((r) => [r.date, r.event, r.pageId, r.users, r.events]),
     [
       ["2026-10-20", "purchase", "tirzepatide-houston", 1, 1],
-      ["2026-10-20", "signup", null, 1, 1],
       ["2026-10-21", "signup", null, 1, 1],
       ["2026-10-21", "signup", "glp-1-houston", 3, 4],
     ],
@@ -203,9 +203,26 @@ test("fetchDownstream requests and attributes begin_checkout like the other Bask
         [2, 3],
       ),
       row(["20261119", "begin_checkout", `${q}?cta_id=footer`], [1, 1]),
+      row(
+        [
+          "20261119",
+          "begin_checkout",
+          "https://q.beemahealth.com/start-online-visit/draft-29f3f318e596",
+        ],
+        [1, 1],
+      ),
+      row(
+        [
+          "20261119",
+          "signup",
+          "https://q.beemahealth.com/start-online-visit/draft-1?cta_id=glp1_hero",
+        ],
+        [1, 1],
+      ),
     ];
   });
   assert.match(request, /begin_checkout/);
+  assert.match(request, /PARTIAL_REGEXP/);
   assert.match(request, /tagassistant\.google\.com/);
   assert.match(request, /gtm_debug/);
   assert.deepEqual(
@@ -215,6 +232,16 @@ test("fetchDownstream requests and attributes begin_checkout like the other Bask
       ["2026-11-19", "begin_checkout", 2, 3],
     ].sort(),
   );
+});
+
+test("isDraftUrl matches Bask /draft-<hash> pages and nothing else", () => {
+  const q = "https://q.beemahealth.com/start-online-visit";
+  assert.equal(isDraftUrl(`${q}/draft-29f3f318e596`), true);
+  assert.equal(isDraftUrl(`${q}/draft-1?cta_id=glp1_hero`), true);
+  assert.equal(isDraftUrl(`${q}/weightloss`), false);
+  assert.equal(isDraftUrl(`${q}/weightloss?utm_source=draft-1`), false);
+  assert.equal(isDraftUrl(`${q}/redrafted`), false);
+  assert.equal(isDraftUrl("not a url"), false);
 });
 
 test("ctaIdFromLocation reads cta_id and tolerates bad URLs", () => {

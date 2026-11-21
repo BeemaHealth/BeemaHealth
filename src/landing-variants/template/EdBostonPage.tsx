@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MINT_OPTIONS } from "@/components/site/EdMintsPicker";
+import { MintsPlanTable } from "../ed-mints-boston/MintsPlanComparison";
 import type { TreatmentFaqItem } from "@/components/site/TreatmentPageBlocks";
 import { CTA_IDS, resolveCta, type CtaId } from "@/lib/cta-ids";
 import {
@@ -565,12 +566,9 @@ function FormulationChooser({
             ? resolveCta(ctaIds[opt.id], "formulation_picker")
             : resolveCta(opt.ctaId, "pricing");
           return (
-            <Link
+            <article
               key={opt.id}
-              to={cta.to}
-              search={cta.search}
-              onClick={cta.onClick}
-              className="group flex flex-col justify-between gap-4 rounded-2xl border border-border bg-card p-5 shadow-soft outline-none transition-colors hover:border-primary hover:bg-primary-soft/40 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+              className="flex flex-col justify-between gap-4 rounded-2xl border border-border bg-card p-5 shadow-soft"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -589,24 +587,31 @@ function FormulationChooser({
                   className="w-20 shrink-0 sm:w-24"
                 />
               </div>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {opt.description}
-              </p>
-              <ul className="space-y-1.5">
-                {opt.bullets.map((b) => (
-                  <li
-                    key={b}
-                    className="flex items-start gap-2 text-sm text-foreground"
-                  >
-                    <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-foreground" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-              <span className="flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-base font-semibold text-primary-foreground transition-colors group-hover:bg-primary/90">
+              <MintsPlanTable id={opt.id} blackFriday={blackFriday}>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {opt.description}
+                </p>
+                <ul className="space-y-1.5">
+                  {opt.bullets.map((b) => (
+                    <li
+                      key={b}
+                      className="flex items-start gap-2 text-sm text-foreground"
+                    >
+                      <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-foreground" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </MintsPlanTable>
+              <Link
+                to={cta.to}
+                search={cta.search}
+                onClick={cta.onClick}
+                className="flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-base font-semibold text-primary-foreground outline-none transition-colors hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              >
                 Continue <ArrowRight className="size-4" />
-              </span>
-            </Link>
+              </Link>
+            </article>
           );
         })}
       </div>
