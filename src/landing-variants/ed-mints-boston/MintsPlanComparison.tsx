@@ -39,8 +39,8 @@ export function MintsPlanTable({
     ? Math.round((bfThree.dealUsd / 3) * 100) / 100
     : p.quarterly.perMonthUsd;
 
-  const was = (n: number) => (
-    <s className="mr-1.5 text-base font-normal text-muted-foreground">
+  const was = (n: number, size = "text-base") => (
+    <s className={`mr-1.5 ${size} font-normal text-muted-foreground`}>
       <span className="sr-only">Regular price </span>
       {formatUsd(n)}
     </s>
@@ -76,16 +76,17 @@ export function MintsPlanTable({
     <div className="space-y-3">
       <div>
         <p className="text-3xl font-semibold tracking-tight text-foreground">
-          {bfOne ? was(bfOne.regularUsd) : null}
-          {formatUsd(oneUsd)}
+          {money(perMonthThree)}
           <span className="ml-1 text-base font-medium text-muted-foreground">
             /month
           </span>
         </p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          or {bfThree ? was(bfThree.regularUsd) : null}
-          {formatUsd(threeUsd)} billed every 3 months (save {formatUsd(saveUsd)}
-          )
+        <p className="mt-1 text-sm text-muted-foreground">
+          {bfThree ? was(bfThree.regularUsd, "text-xs") : null}
+          <span className="font-semibold text-foreground">
+            {formatUsd(threeUsd)}
+          </span>{" "}
+          billed every 3 months (save {formatUsd(saveUsd)})
           {blackFriday ? (
             <>
               {" "}
@@ -95,6 +96,10 @@ export function MintsPlanTable({
               </strong>
             </>
           ) : null}
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          or {bfOne ? was(bfOne.regularUsd, "text-xs") : null}
+          {formatUsd(oneUsd)} for 1 month
         </p>
       </div>
       <details className="group rounded-xl border border-border">
