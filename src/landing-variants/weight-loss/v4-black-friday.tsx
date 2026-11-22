@@ -82,10 +82,14 @@ function heroTiles(): PriceTile[] {
   return [
     {
       name: "Semaglutide, 3-month plan",
+      medication: "semaglutide",
+      tabLabel: "Semaglutide",
       ...blackFridayTile(BLACK_FRIDAY_OFFERS.semaglutide),
     },
     {
       name: "Tirzepatide, 3-month plan",
+      medication: "tirzepatide",
+      tabLabel: "Tirzepatide",
       ...blackFridayTile(BLACK_FRIDAY_OFFERS.tirzepatide),
     },
   ];
@@ -215,7 +219,7 @@ function WeightLossNewLayout() {
       hero={{
         h1: (
           <>
-            <BlackFridayText /> weight-loss savings
+            <BlackFridayText /> Weight-Loss Savings
           </>
         ),
         lead: "Get a plan built around your health history. A licensed provider reviews it and, if appropriate, prescribes compounded semaglutide or tirzepatide and ships it to your door. Your plan price covers it. Starting your intake is free.",

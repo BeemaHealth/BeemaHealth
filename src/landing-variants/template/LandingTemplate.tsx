@@ -25,6 +25,8 @@ import { Button } from "@/components/ui/button";
 import type { CtaPosition, resolveCta } from "@/lib/cta-ids";
 import { GOOGLE_RATING_VALUE } from "@/lib/google-business";
 import { cn } from "@/lib/utils";
+import { useMedicationFromUrl } from "@/lib/medication-param";
+import type { MedicationId } from "@/lib/treatment-imagery";
 import { PatientStoryVideo } from "./PatientStoryVideo";
 import {
   PATIENT_STORY_YOUTUBE_ID,
@@ -247,6 +249,10 @@ export type PriceTile = {
   detail?: ReactNode;
   /** Anchor the tile links to. Opt-in; defaults to "#pricing". */
   href?: string;
+  /** Opt-in: when every tile has one, the hero shows tabs (selected via `?med=`). */
+  medication?: MedicationId;
+  /** Short tab label, e.g. "Semaglutide". */
+  tabLabel?: string;
 };
 
 export type ProofStat = { value: string; label: string; stars?: boolean };
@@ -309,6 +315,112 @@ export function GoogleRatingLine() {
   );
 }
 
+function TileCard({ tile, wide }: { tile: PriceTile; wide?: boolean }) {
+  return (
+    <a
+      href={tile.href ?? "#pricing"}
+      aria-label={`${tile.name}, ${tile.strike ? `regularly ${tile.strike}, now ` : ""}${tile.price} ${tile.unit}. See pricing and get started`}
+      className="block min-w-0 rounded-2xl border border-border bg-card p-3 shadow-soft transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-4"
+    >
+      <p className="text-xs font-semibold text-muted-foreground md:text-sm">
+        {tile.name}
+      </p>
+      <p className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+        {tile.strike ? (
+          <>
+            <s
+              className={cn(
+                "text-base font-semibold text-muted-foreground sm:text-lg md:text-xl",
+                wide ? "mr-2 inline" : "block sm:mr-2 sm:inline",
+              )}
+            >
+              <span className="sr-only">Regular price </span>
+              {tile.strike}
+            </s>
+            <span className="sr-only">Now </span>
+          </>
+        ) : null}
+        {tile.price}
+      </p>
+      <p className="text-xs text-muted-foreground md:text-sm">{tile.unit}</p>
+      {tile.detail ? (
+        <p className="mt-1 text-[0.7rem] leading-snug text-muted-foreground md:text-xs">
+          {tile.detail}
+        </p>
+      ) : null}
+      {tile.note ? (
+        <p className="mt-1 break-words text-[0.7rem] font-medium leading-snug text-foreground/80 md:text-xs">
+          {tile.note}
+        </p>
+      ) : null}
+    </a>
+  );
+}
+
+function TabbedHeroTiles({ tiles }: { tiles: readonly PriceTile[] }) {
+  const [selected, setSelected] = useMedicationFromUrl();
+  const active = tiles.find((t) => t.medication === selected) ?? tiles[0];
+  return (
+    <div className="mt-5">
+      <div
+        role="tablist"
+        aria-label="Choose a medication"
+        className="inline-flex gap-1 rounded-full bg-muted p-1"
+      >
+        {tiles.map((t) => (
+          <button
+            key={t.medication}
+            type="button"
+            role="tab"
+            id={`hero-tab-${t.medication}`}
+            aria-selected={active === t}
+            aria-controls="hero-tile-panel"
+            onClick={() => t.medication && setSelected(t.medication)}
+            className={cn(
+              "min-h-10 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              active === t
+                ? "bg-primary text-primary-foreground shadow-soft"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {t.tabLabel ?? t.name}
+          </button>
+        ))}
+      </div>
+      <div
+        role="tabpanel"
+        id="hero-tile-panel"
+        aria-labelledby={`hero-tab-${active.medication}`}
+        className="mt-3 sm:max-w-md"
+      >
+        <TileCard tile={active} wide />
+      </div>
+    </div>
+  );
+}
+
+function HeroTiles({ tiles }: { tiles: readonly PriceTile[] }) {
+  if (tiles.length > 1 && tiles.every((t) => t.medication)) {
+    return <TabbedHeroTiles tiles={tiles} />;
+  }
+  return (
+    <div
+      className={cn(
+        "mt-5 grid gap-3",
+        tiles.length === 1
+          ? "grid-cols-1 sm:max-w-xs"
+          : tiles.length === 2
+            ? "grid-cols-2"
+            : "sm:grid-cols-3",
+      )}
+    >
+      {tiles.map((tile) => (
+        <TileCard key={tile.name} tile={tile} />
+      ))}
+    </div>
+  );
+}
+
 export function HeroSection({
   h1,
   lead,
@@ -355,58 +467,7 @@ export function HeroSection({
               <StartButton cta={cta} className="w-full sm:w-auto" />
             </div>
 
-            {tiles && tiles.length > 0 ? (
-              <>
-                <div
-                  className={cn(
-                    "mt-5 grid gap-3",
-                    tiles.length === 1
-                      ? "grid-cols-1 sm:max-w-xs"
-                      : tiles.length === 2
-                        ? "grid-cols-2"
-                        : "sm:grid-cols-3",
-                  )}
-                >
-                  {tiles.map((tile) => (
-                    <a
-                      key={tile.name}
-                      href={tile.href ?? "#pricing"}
-                      aria-label={`${tile.name}, ${tile.strike ? `regularly ${tile.strike}, now ` : ""}${tile.price} ${tile.unit}. See pricing and get started`}
-                      className="block rounded-2xl border border-border bg-card p-4 shadow-soft transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                      <p className="text-xs font-semibold text-muted-foreground md:text-sm">
-                        {tile.name}
-                      </p>
-                      <p className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-                        {tile.strike ? (
-                          <>
-                            <s className="mr-2 text-lg font-semibold text-muted-foreground md:text-xl">
-                              <span className="sr-only">Regular price </span>
-                              {tile.strike}
-                            </s>
-                            <span className="sr-only">Now </span>
-                          </>
-                        ) : null}
-                        {tile.price}
-                      </p>
-                      <p className="text-xs text-muted-foreground md:text-sm">
-                        {tile.unit}
-                      </p>
-                      {tile.detail ? (
-                        <p className="mt-1 text-[0.7rem] leading-snug text-muted-foreground md:text-xs">
-                          {tile.detail}
-                        </p>
-                      ) : null}
-                      {tile.note ? (
-                        <p className="mt-1 text-[0.7rem] font-medium leading-snug text-foreground/80 md:text-xs">
-                          {tile.note}
-                        </p>
-                      ) : null}
-                    </a>
-                  ))}
-                </div>
-              </>
-            ) : null}
+            {tiles && tiles.length > 0 ? <HeroTiles tiles={tiles} /> : null}
 
             <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted-foreground">
               {priceNote}
