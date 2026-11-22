@@ -88,7 +88,7 @@ export const article: LearnArticle = {
     {
       question: "Do I pay before a clinician says yes?",
       answer:
-        "You can start intake without paying. Payment, when it happens in checkout, is not a peptide pre-order and is not a guaranteed prescription. A licensed clinician still reviews your case and may decline to prescribe. Completing intake never guarantees a prescription. Beema Health serves adults in all 50 US states and only the United States.",
+        "Starting intake is free. The plan price, including the full price of a multi-month plan, is charged only if a licensed provider prescribes treatment. If you are not prescribed, you are not charged. Payment is not a peptide pre-order and is not a guaranteed prescription. A licensed clinician still reviews your case and may decline to prescribe. Completing intake never guarantees a prescription. Beema Health serves adults in all 50 US states and only the United States.",
     },
   ],
   sections: [

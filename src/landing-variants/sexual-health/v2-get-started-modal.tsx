@@ -1,3 +1,4 @@
+import { ChargedOnlyIfPrescribed } from "@/components/site/ChargedOnlyIfPrescribed";
 import { useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
@@ -101,7 +102,7 @@ type Product = {
   image: { src: string; alt: string; width: number; height: number };
   pricing: ProductPricing;
   /** Main price shown on the card; the dose-level detail sits in a dropdown. */
-  headline: { price: string; unit: string; sub: string };
+  headline: { price: string; unit: string; sub: ReactNode };
   learnMore: string;
 };
 
@@ -161,7 +162,16 @@ const PRODUCTS: readonly Product[] = [
     headline: {
       price: formatSimpleQuarterlyStartingAt(ED_MINTS_RDT_PRICING),
       unit: "",
-      sub: `${formatUsd(ED_MINTS_RDT_PRICING.quarterly?.totalUsd ?? 0)} billed every 3 months. Or ${formatUsd(ED_MINTS_RDT_PRICING.monthlyUsd)} for 1 month.`,
+      sub: (
+        <>
+          <ChargedOnlyIfPrescribed
+            totalUsd={ED_MINTS_RDT_PRICING.quarterly?.totalUsd ?? 0}
+            regularUsd={ED_MINTS_RDT_PRICING.monthlyUsd * 3}
+            months={3}
+          />{" "}
+          Or {formatUsd(ED_MINTS_RDT_PRICING.monthlyUsd)} for 1 month.
+        </>
+      ),
     },
     learnMore: "/ed-mints/",
   },

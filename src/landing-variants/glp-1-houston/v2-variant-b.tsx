@@ -1,3 +1,4 @@
+import { ChargedOnlyIfPrescribed } from "@/components/site/ChargedOnlyIfPrescribed";
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
@@ -35,6 +36,7 @@ import {
   formatUsd,
   getPlan,
   promoFirstMonthUsd,
+  semaThreeMonthPromoTotalUsd,
   type CompoundedMedicationPricing,
 } from "@/lib/medication-pricing";
 import { GOOGLE_RATING_VALUE } from "@/lib/google-business";
@@ -179,6 +181,16 @@ function Glp1HoustonVariantB() {
       name: "Semaglutide",
       price: formatUsd(promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING)),
       unit: "first month",
+      detail: (
+        <>
+          Then {formatUsd(COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd)}/mo ·{" "}
+          <ChargedOnlyIfPrescribed
+            totalUsd={semaThreeMonthPromoTotalUsd()}
+            regularUsd={COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd * 3}
+            months={3}
+          />
+        </>
+      ),
     },
     {
       name: "Tirzepatide",
@@ -188,6 +200,18 @@ function Glp1HoustonVariantB() {
           : getPlan(COMPOUNDED_TIRZEPATIDE_PRICING, 12).monthlyUsd,
       )}`,
       unit: "per month",
+      detail: tirzStarter ? (
+        <>
+          Starter pack:{" "}
+          <ChargedOnlyIfPrescribed
+            totalUsd={tirzStarter.totalUsd}
+            regularUsd={
+              COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd * tirzStarter.months
+            }
+            months={tirzStarter.months}
+          />
+        </>
+      ) : null,
     },
   ];
 
@@ -237,6 +261,11 @@ function Glp1HoustonVariantB() {
                     <p className="text-xs text-muted-foreground md:text-sm">
                       {tile.unit}
                     </p>
+                    {tile.detail ? (
+                      <p className="mt-1 text-[0.7rem] leading-snug text-muted-foreground md:text-xs">
+                        {tile.detail}
+                      </p>
+                    ) : null}
                   </a>
                 ))}
               </div>

@@ -244,7 +244,7 @@ export type PriceTile = {
   /** Small emphasized line, e.g. the promo code. */
   note?: string | null;
   /** Small muted line, e.g. the multi-month total. */
-  detail?: string | null;
+  detail?: ReactNode;
   /** Anchor the tile links to. Opt-in; defaults to "#pricing". */
   href?: string;
 };

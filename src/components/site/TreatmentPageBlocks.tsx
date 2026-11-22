@@ -1,3 +1,4 @@
+import { ChargedOnlyIfPrescribed } from "@/components/site/ChargedOnlyIfPrescribed";
 import {
   BlackFridayPriceLine,
   bfPlanFor,
@@ -641,28 +642,26 @@ export function SimpleTreatmentPricingCard({
       </div>
       {bfThreeOnly ? (
         <p className="mt-2 text-sm text-foreground">
-          <s className="text-muted-foreground">
-            <span className="sr-only">Regular total </span>
-            {formatUsd(bfThreeOnly.plan.regularUsd)}
-          </s>{" "}
-          <strong>{formatUsd(bfThreeOnly.plan.dealUsd)}</strong> for 3 months
+          <ChargedOnlyIfPrescribed
+            totalUsd={bfThreeOnly.plan.dealUsd}
+            regularUsd={bfThreeOnly.plan.regularUsd}
+            months={3}
+          />
         </p>
       ) : null}
       {pricing.quarterly ? (
         <p className="mt-2 text-sm text-muted-foreground">
           or{" "}
-          {bfThree ? (
-            <s className="text-muted-foreground">
-              <span className="sr-only">Regular price </span>
-              {formatUsd(pricing.quarterly.totalUsd)}
-            </s>
-          ) : null}{" "}
-          <span className="font-bold text-foreground">
-            {formatUsd(
-              bfThree ? bfThree.plan.dealUsd : pricing.quarterly.totalUsd,
-            )}
-          </span>{" "}
-          {bfThree ? "for 3 months" : "billed quarterly"} (about{" "}
+          <ChargedOnlyIfPrescribed
+            totalUsd={
+              bfThree ? bfThree.plan.dealUsd : pricing.quarterly.totalUsd
+            }
+            regularUsd={
+              bfThree ? pricing.quarterly.totalUsd : pricing.monthlyUsd * 3
+            }
+            months={3}
+          />{" "}
+          (about{" "}
           {formatUsd(
             bfThree
               ? bfThree.plan.dealUsd / 3
@@ -846,9 +845,15 @@ function InteractiveSimplePricingCard({
         {bf ? (
           <>
             <p className="mt-1.5 text-xs text-muted-foreground">
-              {isThreeMonth
-                ? `${formatUsd(bf.plan.dealUsd)} for 3 months (regularly ${formatUsd(bf.plan.regularUsd)})`
-                : `1-month plan (regularly ${formatUsd(bf.plan.regularUsd)})`}
+              {isThreeMonth ? (
+                <ChargedOnlyIfPrescribed
+                  totalUsd={bf.plan.dealUsd}
+                  regularUsd={bf.plan.regularUsd}
+                  months={3}
+                />
+              ) : (
+                `1-month plan (regularly ${formatUsd(bf.plan.regularUsd)})`
+              )}
             </p>
             <p className="mt-1.5 text-sm font-bold text-foreground">
               Use code {bf.offer.code} at checkout
@@ -856,7 +861,12 @@ function InteractiveSimplePricingCard({
           </>
         ) : isThreeMonth ? (
           <p className="mt-1.5 text-xs text-muted-foreground">
-            {formatUsd(q.totalUsd)} for 3 months · Save{" "}
+            <ChargedOnlyIfPrescribed
+              totalUsd={q.totalUsd}
+              regularUsd={pricing.monthlyUsd * 3}
+              months={3}
+            />{" "}
+            Save{" "}
             <span className="font-bold text-foreground">
               {formatUsd(q.savingsUsd)}
             </span>{" "}

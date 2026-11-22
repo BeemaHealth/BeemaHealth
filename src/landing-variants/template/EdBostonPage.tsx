@@ -1,3 +1,4 @@
+import { ChargedOnlyIfPrescribed } from "@/components/site/ChargedOnlyIfPrescribed";
 import { Link } from "@tanstack/react-router";
 import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 import {
@@ -692,7 +693,16 @@ export function EdMintsBostonNewPage({
             name: "ED Mints",
             price,
             unit: "Same price for either formulation",
-            detail: `${formatUsd(ED_MINTS_RDT_PRICING.quarterly?.totalUsd ?? 0)} billed every 3 months. Or ${formatUsd(ED_MINTS_RDT_PRICING.monthlyUsd)} for 1 month.`,
+            detail: (
+              <>
+                <ChargedOnlyIfPrescribed
+                  totalUsd={ED_MINTS_RDT_PRICING.quarterly?.totalUsd ?? 0}
+                  regularUsd={ED_MINTS_RDT_PRICING.monthlyUsd * 3}
+                  months={3}
+                />{" "}
+                Or {formatUsd(ED_MINTS_RDT_PRICING.monthlyUsd)} for 1 month.
+              </>
+            ),
             href: heroTileHref,
           },
         ],

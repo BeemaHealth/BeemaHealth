@@ -1,3 +1,4 @@
+import { ChargedOnlyIfPrescribed } from "@/components/site/ChargedOnlyIfPrescribed";
 import { useState, type ReactNode } from "react";
 import { CircleHelp } from "lucide-react";
 import type {
@@ -394,7 +395,11 @@ function StarterPackPanel({
         large={large}
       />
       <p className="mt-1.5 text-sm text-foreground">
-        {formatUsd(pack.totalUsd)} total for {pack.months} months
+        <ChargedOnlyIfPrescribed
+          totalUsd={pack.totalUsd}
+          regularUsd={pricing.monthlyUsd * pack.months}
+          months={pack.months}
+        />
       </p>
       <p className="mt-1.5 text-sm text-foreground">
         {pack.dosePathLabel.charAt(0).toUpperCase() +
@@ -435,11 +440,21 @@ function PlanPanel({
           large={large}
         />
         <p className="mt-2 text-sm text-foreground">
-          <s className="text-muted-foreground">
-            <span className="sr-only">Regular total </span>
-            {formatUsd(bfPlan.regularUsd)}
-          </s>{" "}
-          <strong>{formatUsd(bfPlan.dealUsd)}</strong> for {m} months
+          {m > 1 ? (
+            <ChargedOnlyIfPrescribed
+              totalUsd={bfPlan.dealUsd}
+              regularUsd={bfPlan.regularUsd}
+              months={m}
+            />
+          ) : (
+            <>
+              <s className="text-muted-foreground">
+                <span className="sr-only">Regular total </span>
+                {formatUsd(bfPlan.regularUsd)}
+              </s>{" "}
+              <strong>{formatUsd(bfPlan.dealUsd)}</strong> for {m} month
+            </>
+          )}
         </p>
         <p className="mt-1.5 text-sm font-bold text-foreground">
           Use code {blackFriday.code} at checkout
@@ -459,7 +474,11 @@ function PlanPanel({
         />
         <p className="mt-1.5 text-sm text-foreground">
           Then {formatUsd(baseline)}/mo for months 2 and 3 ·{" "}
-          {formatUsd(semaThreeMonthPromoTotalUsd(pricing))} total for 3 months
+          <ChargedOnlyIfPrescribed
+            totalUsd={semaThreeMonthPromoTotalUsd(pricing)}
+            regularUsd={baseline * 3}
+            months={3}
+          />
         </p>
         <p className="mt-1.5 text-sm font-bold text-foreground">
           Use code {pricing.promoCode} at checkout
@@ -480,7 +499,11 @@ function PlanPanel({
       />
       {plan.months > 1 ? (
         <p className="mt-1.5 text-sm text-foreground">
-          {formatUsd(plan.totalUsd)} total for {plan.months} months
+          <ChargedOnlyIfPrescribed
+            totalUsd={plan.totalUsd}
+            regularUsd={baseline * plan.months}
+            months={plan.months}
+          />
         </p>
       ) : (
         <p className="mt-1.5 text-sm text-foreground">Billed monthly</p>

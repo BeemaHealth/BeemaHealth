@@ -1,3 +1,4 @@
+import { ChargedOnlyIfPrescribed } from "@/components/site/ChargedOnlyIfPrescribed";
 import { Link } from "@tanstack/react-router";
 import { MedicalTeamSection } from "@/components/site/MedicalTeamSection";
 import {
@@ -171,7 +172,16 @@ function heroTile(med: Med): PriceTile {
       name: "Semaglutide",
       price: formatUsd(promoFirstMonthUsd(p)),
       unit: "first month",
-      detail: `Then ${formatUsd(p.monthlyUsd)}/mo · ${formatUsd(semaThreeMonthPromoTotalUsd())} for 3 months`,
+      detail: (
+        <>
+          Then {formatUsd(p.monthlyUsd)}/mo ·{" "}
+          <ChargedOnlyIfPrescribed
+            totalUsd={semaThreeMonthPromoTotalUsd()}
+            regularUsd={p.monthlyUsd * 3}
+            months={3}
+          />
+        </>
+      ),
       note: `With code ${p.promoCode} on a 3-month plan`,
     };
   }
@@ -180,9 +190,17 @@ function heroTile(med: Med): PriceTile {
     name: starter ? `Tirzepatide ${starterPackTitle(starter)}` : "Tirzepatide",
     price: starter ? formatUsd(starter.monthlyEquivalentUsd) : "",
     unit: "per month for new patients",
-    detail: starter
-      ? `${formatUsd(starter.totalUsd)} for ${starter.months} months`
-      : null,
+    detail: starter ? (
+      <>
+        <ChargedOnlyIfPrescribed
+          totalUsd={starter.totalUsd}
+          regularUsd={
+            COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd * starter.months
+          }
+          months={starter.months}
+        />
+      </>
+    ) : null,
   };
 }
 

@@ -1,3 +1,4 @@
+import { ChargedOnlyIfPrescribed } from "@/components/site/ChargedOnlyIfPrescribed";
 import { useEffect, useState } from "react";
 import { Surmount1Sources } from "@/components/site/Surmount1Sources";
 import { ImageDisclaimer } from "@/components/site/ImageDisclaimer";
@@ -222,9 +223,16 @@ function Glp1HoustonVariantB() {
       price: formatUsd(promoFirstMonthUsd(COMPOUNDED_SEMAGLUTIDE_PRICING)),
       unit: "first month",
       note: `With code ${COMPOUNDED_SEMAGLUTIDE_PRICING.promoCode} on a 3-month plan`,
-      detail: `Then ${formatUsd(COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd)}/mo · ${formatUsd(
-        semaThreeMonthPromoTotalUsd(),
-      )} for 3 months`,
+      detail: (
+        <>
+          Then {formatUsd(COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd)}/mo ·{" "}
+          <ChargedOnlyIfPrescribed
+            totalUsd={semaThreeMonthPromoTotalUsd()}
+            regularUsd={COMPOUNDED_SEMAGLUTIDE_PRICING.monthlyUsd * 3}
+            months={3}
+          />
+        </>
+      ),
     },
     {
       name: "Tirzepatide",
@@ -235,9 +243,18 @@ function Glp1HoustonVariantB() {
       )}`,
       unit: "per month",
       note: null,
-      detail: tirzStarter
-        ? `${formatUsd(tirzStarter.totalUsd)} starter pack for ${tirzStarter.months} months`
-        : null,
+      detail: tirzStarter ? (
+        <>
+          Starter pack:{" "}
+          <ChargedOnlyIfPrescribed
+            totalUsd={tirzStarter.totalUsd}
+            regularUsd={
+              COMPOUNDED_TIRZEPATIDE_PRICING.monthlyUsd * tirzStarter.months
+            }
+            months={tirzStarter.months}
+          />
+        </>
+      ) : null,
     },
   ];
 

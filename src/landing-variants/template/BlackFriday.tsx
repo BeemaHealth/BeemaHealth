@@ -1,3 +1,4 @@
+import { ChargedOnlyIfPrescribed } from "@/components/site/ChargedOnlyIfPrescribed";
 import { createContext, useContext, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Check, Copy, Tag } from "lucide-react";
@@ -486,8 +487,18 @@ export function BlackFridayDealCard({
                         : "with code"}
                     </span>
                     <span className="mt-1 block text-sm text-muted-foreground">
-                      {formatUsd(plan.dealUsd)} total for the {plan.label}{" "}
-                      (regularly {formatUsd(plan.regularUsd)})
+                      {planMonths(plan) > 1 ? (
+                        <ChargedOnlyIfPrescribed
+                          totalUsd={plan.dealUsd}
+                          regularUsd={plan.regularUsd}
+                          months={planMonths(plan)}
+                        />
+                      ) : (
+                        <>
+                          {formatUsd(plan.dealUsd)} total for the {plan.label}{" "}
+                          (regularly {formatUsd(plan.regularUsd)})
+                        </>
+                      )}
                     </span>
                   </li>
                 ) : (
@@ -557,18 +568,44 @@ export function blackFridayTile(
       strike: `${formatUsd(first.regularUsd / m)}/mo`,
       price: `${formatUsd(first.dealUsd / m)}/mo`,
       unit: m > 1 ? `for ${m} months with code` : "with code",
-      detail: `${formatUsd(first.dealUsd)} total (regularly ${formatUsd(first.regularUsd)}) · save ${formatUsd(offer.discountUsd)}`,
+      detail:
+        m > 1 ? (
+          <>
+            Save {formatUsd(offer.discountUsd)}.{" "}
+            <ChargedOnlyIfPrescribed
+              totalUsd={first.dealUsd}
+              regularUsd={first.regularUsd}
+              months={m}
+            />
+          </>
+        ) : (
+          `${formatUsd(first.dealUsd)} total (regularly ${formatUsd(first.regularUsd)}) · save ${formatUsd(offer.discountUsd)}`
+        ),
       note: `Code ${offer.code}`,
     };
   }
+  const firstMonths = planMonths(first);
   return {
     strike: formatUsd(first.regularUsd),
     price: formatUsd(first.dealUsd),
     unit: `for the ${first.label} with code`,
-    detail:
-      rest.length > 0
-        ? `Save ${formatUsd(offer.discountUsd)}. Or ${formatUsd(rest[0]!.dealUsd)} for the ${rest[0]!.label} (regularly ${formatUsd(rest[0]!.regularUsd)})`
-        : `Save ${formatUsd(offer.discountUsd)} through ${endsLabel}`,
+    detail: (
+      <>
+        {rest.length > 0
+          ? `Save ${formatUsd(offer.discountUsd)}. Or ${formatUsd(rest[0]!.dealUsd)} for the ${rest[0]!.label} (regularly ${formatUsd(rest[0]!.regularUsd)})`
+          : `Save ${formatUsd(offer.discountUsd)} through ${endsLabel}`}
+        {firstMonths > 1 ? (
+          <>
+            {" "}
+            <ChargedOnlyIfPrescribed
+              totalUsd={first.dealUsd}
+              regularUsd={first.regularUsd}
+              months={firstMonths}
+            />
+          </>
+        ) : null}
+      </>
+    ),
     note: `Code ${offer.code}`,
   };
 }
@@ -672,8 +709,18 @@ export function BlackFridayPriceLine({
           {offer.code}
         </span>
         <span className="mt-0.5 block text-xs text-muted-foreground">
-          {formatUsd(plan.dealUsd)} total for the {plan.label} (regularly{" "}
-          {formatUsd(plan.regularUsd)})
+          {m > 1 ? (
+            <ChargedOnlyIfPrescribed
+              totalUsd={plan.dealUsd}
+              regularUsd={plan.regularUsd}
+              months={m}
+            />
+          ) : (
+            <>
+              {formatUsd(plan.dealUsd)} total for the {plan.label} (regularly{" "}
+              {formatUsd(plan.regularUsd)})
+            </>
+          )}
         </span>
       </p>
     );
