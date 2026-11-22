@@ -192,6 +192,18 @@ Every published `/learn/` article, including the ones above. Trailing slashes ma
 
 The full library is also indexed at https://beemahealth.com/learn/weight-loss/ and every published page is listed in https://beemahealth.com/sitemap.xml.
 
+## Creator program
+
+Beema Health runs a paid creator (influencer) partnership for current patients. Apply at [Creator program](https://beemahealth.com/creators/); the public rules are in [Creator Program Terms](https://beemahealth.com/legal/creator-program-terms/). Facts a creator can rely on:
+
+- Who can join: current Beema Health patients (videos must come from people who have used the care), 18 or older, US-based, in a state where the program is available, with at least 5,000 followers on TikTok or Instagram and active, original content about fitness, wellness, weight loss, or lifestyle. Engagement matters more than raw follower count. Licensed healthcare professionals and Beema Health and Care Partner staff are not eligible, and Beema Health may limit or exclude certain states.
+- How it works: apply (free, no fee, no minimum spend), get reviewed (about five business days, based on public profile and recent content), then approved creators receive the creator agreement and claim guidelines and a unique tracking link to share.
+- Pay: compensation is for advertising services only and is set in the signed creator agreement. It depends on actual, eligible new patients and is paid on a regular schedule after eligibility checks. Payments may be reversed for refunds, chargebacks, or fraud. No earnings figures are published, earnings are not guaranteed, and many creators earn nothing.
+- Required disclosure: every post must clearly disclose the paid partnership, spoken and on screen for video, at the start of captions, and with the platform's paid partnership tools. Profile-level disclosure alone is not enough.
+- Claim rules: no promised results, no weight-loss numbers, no health or dosing advice, no comparing to or naming brand-name medications as equivalent, no calling compounded medications FDA-approved, no requests for followers' health information, and no use of the LegitScript seal.
+- Privacy and clinical independence: creators never receive patient information, including whether anyone became a patient, and have no role in clinical decisions. Taking part is optional and never affects care, prices, or eligibility. Providers and pharmacies are not compensated for any program.
+- Oversight: Beema Health reviews creator content; violations may require removal within 24 hours, hold payments, or end the partnership.
+
 ## Policies
 
 - [Privacy policy](https://beemahealth.com/legal/privacy/)
@@ -201,3 +213,4 @@ The full library is also indexed at https://beemahealth.com/learn/weight-loss/ a
 - [Physician code of conduct](https://beemahealth.com/legal/physician-code-of-conduct/)
 - [HIPAA privacy policy](https://beemahealth.com/legal/hipaa/)
 - [Telehealth consent](https://beemahealth.com/legal/telehealth-consent/)
+- [Creator Program Terms](https://beemahealth.com/legal/creator-program-terms/)
