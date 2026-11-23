@@ -22,6 +22,7 @@ import {
 } from "./demo.ts";
 import { seedLive } from "./seed-live.ts";
 import { RANGE_START, getLive } from "./ga4.ts";
+import { switchDays } from "../shared/metrics.ts";
 import { denverDayStartMs } from "../shared/time.ts";
 import {
   mainVariantId,
@@ -123,6 +124,7 @@ async function buildState(mode: Mode): Promise<LabState> {
     };
   const live = await getLive(TRACKED_IDS, LIVE_TRACKING_START, {
     persistFile: GA4_CACHE_FILE,
+    switchDays: switchDays(stores.live.data.deployments),
   });
   return {
     ...base,
@@ -448,6 +450,7 @@ async function api(req: http.IncomingMessage, url: URL): Promise<unknown> {
     const live = await getLive(TRACKED_IDS, LIVE_TRACKING_START, {
       force,
       persistFile: GA4_CACHE_FILE,
+      switchDays: switchDays(stores.live.data.deployments),
     });
     return {
       mode,

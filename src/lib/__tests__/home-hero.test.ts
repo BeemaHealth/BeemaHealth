@@ -24,6 +24,7 @@ describe("home hero offerings", () => {
     expect(HOME_HERO_INTRO).toMatch(/never guaranteed/);
     expect(HOME_HERO_ALSO.map((item) => item.label)).toEqual([
       "Hair loss",
+      "Peptides",
       "NAD+",
       "Sermorelin",
     ]);

@@ -5,14 +5,18 @@
 // dimension: variants are attributed by confirmed deployment windows, so the
 // numbers do not depend on custom dimensions being registered in GA4.
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
-import { denverDate, fmtDateTime } from "../shared/time.ts";
+import { denverDate, denverLocalToIso, fmtDateTime } from "../shared/time.ts";
 import {
   applyFetch,
+  applySlices,
   datesToFetch,
   emptyStore,
   lastPulled,
   loadStore,
   saveStore,
+  servedPaths,
+  servedRows,
+  slicesToFetch,
   storeKey,
   type DayStore,
 } from "./ga4-cache.ts";
@@ -193,6 +197,94 @@ export async function fetchRows(
   );
 }
 
+/** GA4 dateHourMinute ("202611212042", Denver time) -> UTC ISO minute, or null. */
+function minuteIso(v: string): string | null {
+  const m = v.match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})$/);
+  return m ? denverLocalToIso(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}`) : null;
+}
+
+/**
+ * Minute-level rows for variant switch days, same shape as `fetchRows` plus
+ * `at`, so a day split between two variants can be divided at the exact
+ * switch time. One pull per day. Users are unique per minute and summed, so a
+ * visitor active in two minutes counts twice, the same way daily users are
+ * summed across days.
+ */
+export async function fetchSlices(
+  pageIds: readonly string[],
+  trackingStart: string,
+  dates: readonly string[],
+  run: Runner = defaultRunner,
+): Promise<DailyRow[]> {
+  const out: DailyRow[] = [];
+  for (const day of dates) {
+    const base = (events: string[]) => ({
+      ...reportBase(pageIds, events, day),
+      dateRanges: [{ startDate: day, endDate: day }],
+      dimensions: [
+        { name: "dateHourMinute" },
+        { name: "pagePath" },
+        { name: "sessionSourceMedium" },
+        { name: "sessionCampaignName" },
+      ],
+    });
+    const [views, handoffs] = await Promise.all([
+      run({
+        ...base(["page_view"]),
+        metrics: [{ name: "totalUsers" }, { name: "sessions" }],
+      }),
+      run({
+        ...base(["intake_handoff"]),
+        metrics: [{ name: "totalUsers" }, { name: "eventCount" }],
+      }),
+    ]);
+    const byKey = new Map<string, DailyRow>();
+    const rowFor = (r: GaRow): DailyRow | null => {
+      const pageId = pageIdFromPath(dv(r, 1), pageIds);
+      const at = minuteIso(dv(r, 0));
+      if (!pageId || !at) return null;
+      const sourceMedium = dv(r, 2) || "(not set)";
+      const campaign = dv(r, 3) || "(not set)";
+      const key = [at, pageId, sourceMedium, campaign].join("\u0000");
+      let row = byKey.get(key);
+      if (!row) {
+        row = {
+          date: day,
+          pageId,
+          sourceMedium,
+          campaign,
+          users: 0,
+          sessions: 0,
+          handoffUsers: day >= trackingStart ? 0 : null,
+          handoffEvents: day >= trackingStart ? 0 : null,
+          at,
+        };
+        byKey.set(key, row);
+      }
+      return row;
+    };
+    for (const r of views) {
+      const row = rowFor(r);
+      if (!row) continue;
+      row.users += mv(r, 0);
+      row.sessions += mv(r, 1);
+    }
+    for (const r of handoffs) {
+      const row = rowFor(r);
+      if (!row || row.handoffUsers === null) continue;
+      row.handoffUsers += mv(r, 0);
+      row.handoffEvents = (row.handoffEvents ?? 0) + mv(r, 1);
+    }
+    out.push(...byKey.values());
+  }
+  return out.sort(
+    (a, b) =>
+      a.date.localeCompare(b.date) ||
+      (a.at ?? "").localeCompare(b.at ?? "") ||
+      a.pageId.localeCompare(b.pageId),
+  );
+}
+
 const normalizePage = (p: string) =>
   p === "/" || p === "" ? "/" : `${p.replace(/\/+$/, "")}/`;
 
@@ -207,12 +299,15 @@ export async function fetchPaths(
   trackingStart: string,
   run: Runner = defaultRunner,
   startDate = RANGE_START,
+  /** `byMinute` splits one switch day by minute (rows get `at`). */
+  span: { endDate?: string; byMinute?: boolean } = {},
 ): Promise<PathRow[]> {
+  const byMinute = !!span.byMinute;
   const base = (event: string) => ({
     property: `properties/${GA4_PROPERTY_ID}`,
-    dateRanges: [{ startDate, endDate: "today" }],
+    dateRanges: [{ startDate, endDate: span.endDate ?? "today" }],
     dimensions: [
-      { name: "date" },
+      { name: byMinute ? "dateHourMinute" : "date" },
       { name: "landingPage" },
       { name: "pagePath" },
     ],
@@ -248,9 +343,11 @@ export async function fetchPaths(
   const rowFor = (r: GaRow): PathRow | null => {
     const pageId = pageIdFromPath(dv(r, 1), pageIds);
     if (!pageId) return null;
-    const date = isoDate(dv(r, 0));
+    const at = byMinute ? minuteIso(dv(r, 0)) : undefined;
+    if (byMinute && !at) return null;
+    const date = isoDate(dv(r, 0).slice(0, 8));
     const page = normalizePage(dv(r, 2));
-    const key = [date, pageId, page].join("\u0000");
+    const key = [at ?? date, pageId, page].join("\u0000");
     let row = byKey.get(key);
     if (!row) {
       row = {
@@ -259,6 +356,7 @@ export async function fetchPaths(
         page,
         sessionsViewed: 0,
         handoffSessions: date >= trackingStart ? 0 : null,
+        ...(at ? { at } : {}),
       };
       byKey.set(key, row);
     }
@@ -275,9 +373,28 @@ export async function fetchPaths(
   return [...byKey.values()].sort(
     (a, b) =>
       a.date.localeCompare(b.date) ||
+      (a.at ?? "").localeCompare(b.at ?? "") ||
       a.pageId.localeCompare(b.pageId) ||
       a.page.localeCompare(b.page),
   );
+}
+
+/** `fetchPaths` for each switch day, split by minute. */
+export async function fetchPathSlices(
+  pageIds: readonly string[],
+  trackingStart: string,
+  dates: readonly string[],
+  run: Runner = defaultRunner,
+): Promise<PathRow[]> {
+  const perDay = await Promise.all(
+    dates.map((d) =>
+      fetchPaths(pageIds, trackingStart, run, d, {
+        endDate: d,
+        byMinute: true,
+      }),
+    ),
+  );
+  return perDay.flat();
 }
 
 /** Host Bask serves intake and checkout from; signup and purchase fire here. */
@@ -335,6 +452,8 @@ export async function fetchDownstream(
       { name: "date" },
       { name: "eventName" },
       { name: "pageLocation" },
+      { name: "hour" },
+      { name: "minute" },
     ],
     metrics: [{ name: "totalUsers" }, { name: "eventCount" }],
     dimensionFilter: {
@@ -395,8 +514,22 @@ export async function fetchDownstream(
     const pageId =
       pageIdFromSrcPage(srcPageFromLocation(location)) ??
       pageIdFromCtaId(ctaIdFromLocation(location));
-    const key = [date, event, pageId ?? ""].join("\u0000");
-    const row = byKey.get(key) ?? { date, event, pageId, users: 0, events: 0 };
+    const hourRaw = dv(r, 3);
+    const hour = /^\d{1,2}$/.test(hourRaw) ? Number(hourRaw) : null;
+    const minuteRaw = dv(r, 4);
+    const minute = /^\d{1,2}$/.test(minuteRaw) ? Number(minuteRaw) : null;
+    const key = [date, event, pageId ?? "", hour ?? "", minute ?? ""].join(
+      "\u0000",
+    );
+    const row = byKey.get(key) ?? {
+      date,
+      event,
+      pageId,
+      hour,
+      minute,
+      users: 0,
+      events: 0,
+    };
     row.users += mv(r, 0);
     row.events += mv(r, 1);
     byKey.set(key, row);
@@ -405,7 +538,9 @@ export async function fetchDownstream(
     (a, b) =>
       a.date.localeCompare(b.date) ||
       a.event.localeCompare(b.event) ||
-      (a.pageId ?? "").localeCompare(b.pageId ?? ""),
+      (a.pageId ?? "").localeCompare(b.pageId ?? "") ||
+      (a.hour ?? -1) - (b.hour ?? -1) ||
+      (a.minute ?? -1) - (b.minute ?? -1),
   );
 }
 
@@ -460,8 +595,8 @@ const toResult = (
   status: AnalyticsStatus,
   message: string,
 ): LiveResult => ({
-  rows: store.rows,
-  paths: store.paths,
+  rows: servedRows(store),
+  paths: servedPaths(store),
   downstream: store.downstream,
   status: status === "connected" && !store.rows.length ? "no-data" : status,
   message:
@@ -488,6 +623,11 @@ export function getLive(
     persistFile?: string;
     /** Current time as an ISO string (tests). */
     now?: string;
+    /**
+     * Days a variant changed mid-day. Each is also pulled by minute so its
+     * traffic can be split between the variants live at different times.
+     */
+    switchDays?: readonly string[];
   } = {},
 ): Promise<LiveResult> {
   inflight ??= (async (): Promise<LiveResult> => {
@@ -502,28 +642,42 @@ export function getLive(
       const nowIso = opts.now ?? new Date().toISOString();
       const today = denverDate(nowIso);
       const need = datesToFetch(store, RANGE_START, today, !!opts.force);
-      if (!need.length && lastFailure)
+      const needSlices = slicesToFetch(
+        store,
+        (opts.switchDays ?? []).filter((d) => d <= today),
+        !!opts.force,
+      );
+      if (!need.length && !needSlices.length && lastFailure)
         return toResult(store, lastFailure.status, lastFailure.message);
-      if (!need.length)
+      if (!need.length && !needSlices.length)
         return toResult(
           store,
           "connected",
           `Showing cached GA4 data last pulled ${fmtDateTime(lastPulled(store) ?? nowIso)}. Refresh pulls the most recent days again.`,
         );
-      const from = need[0];
-      const [rows, paths, downstream] = await Promise.all([
-        fetchRows(pageIds, trackingStart, opts.run, from),
-        fetchPaths(pageIds, trackingStart, opts.run, from),
-        fetchDownstream(opts.run, from),
-      ]);
-      store = applyFetch(store, need, { rows, paths, downstream }, nowIso);
+      if (need.length) {
+        const from = need[0];
+        const [rows, paths, downstream] = await Promise.all([
+          fetchRows(pageIds, trackingStart, opts.run, from),
+          fetchPaths(pageIds, trackingStart, opts.run, from),
+          fetchDownstream(opts.run, from),
+        ]);
+        store = applyFetch(store, need, { rows, paths, downstream }, nowIso);
+      }
+      if (needSlices.length) {
+        const [slices, pathSlices] = await Promise.all([
+          fetchSlices(pageIds, trackingStart, needSlices, opts.run),
+          fetchPathSlices(pageIds, trackingStart, needSlices, opts.run),
+        ]);
+        store = applySlices(store, needSlices, { slices, pathSlices }, nowIso);
+      }
       memStore = store;
       if (opts.persistFile) saveStore(opts.persistFile, store);
       lastFailure = null;
       return toResult(
         store,
         "connected",
-        `Live GA4 data (property ${GA4_PROPERTY_ID}), ${need.length} ${need.length === 1 ? "day" : "days"} pulled. Recent days are preliminary.`,
+        `Live GA4 data (property ${GA4_PROPERTY_ID}), ${need.length} ${need.length === 1 ? "day" : "days"} pulled${needSlices.length ? `, ${needSlices.length} switch ${needSlices.length === 1 ? "day" : "days"} by minute` : ""}. Recent days are preliminary.`,
       );
     } catch (e) {
       // Keep serving the cache, flagged, rather than blanking the UI.

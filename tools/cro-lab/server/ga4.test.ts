@@ -10,6 +10,8 @@ import {
   fetchDownstream,
   fetchPaths,
   fetchRows,
+  fetchSlices,
+  fetchPathSlices,
   getLive,
   resetLiveCache,
   pageIdFromPath,
@@ -451,4 +453,58 @@ test("page and handoff reports only count production beemahealth.com", async () 
     );
     assert.doesNotMatch(json, /notExpression/);
   }
+});
+
+test("fetchSlices converts Denver minutes to UTC instants and keeps minutes apart", async () => {
+  const out = await fetchSlices(
+    IDS,
+    "2026-10-19",
+    ["2026-11-21"],
+    async (req) => {
+      const events = JSON.stringify(req);
+      if (events.includes("intake_handoff"))
+        return [
+          row(
+            ["202611212042", "/glp-1-houston/", "google / cpc", "c1"],
+            [1, 1],
+          ),
+        ];
+      return [
+        row(["202611212041", "/glp-1-houston/", "google / cpc", "c1"], [3, 3]),
+        row(["202611212042", "/glp-1-houston/", "google / cpc", "c1"], [2, 2]),
+        row(["202611212042", "/other/", "google / cpc", "c1"], [9, 9]),
+      ];
+    },
+  );
+  assert.deepEqual(
+    out.map((r) => [r.at, r.date, r.users, r.handoffUsers]),
+    [
+      ["2026-11-22T03:41:00.000Z", "2026-11-21", 3, 0],
+      ["2026-11-22T03:42:00.000Z", "2026-11-21", 2, 1],
+    ],
+  );
+});
+
+test("fetchPathSlices returns minute-level path rows with a UTC instant", async () => {
+  const out = await fetchPathSlices(
+    IDS,
+    "2026-10-19",
+    ["2026-11-21"],
+    async (req) => {
+      const events = JSON.stringify(req);
+      assert.match(events, /dateHourMinute/);
+      if (events.includes("intake_handoff")) return [];
+      return [
+        row(["202611212041", "/glp-1-houston/", "/glp-1-houston/"], [4]),
+        row(["202611212043", "/glp-1-houston/", "/"], [1]),
+      ];
+    },
+  );
+  assert.deepEqual(
+    out.map((r) => [r.at, r.date, r.page, r.sessionsViewed]),
+    [
+      ["2026-11-22T03:41:00.000Z", "2026-11-21", "/glp-1-houston/", 4],
+      ["2026-11-22T03:43:00.000Z", "2026-11-21", "/", 1],
+    ],
+  );
 });

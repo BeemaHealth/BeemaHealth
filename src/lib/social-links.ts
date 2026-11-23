@@ -1,15 +1,12 @@
 import type { ComponentType, SVGProps } from "react";
-import { Facebook, Instagram } from "lucide-react";
-import { RedditGlyph, XGlyph } from "@/components/site/primitives";
+import { Facebook, Instagram, Linkedin } from "lucide-react";
+import { XGlyph } from "@/components/site/primitives";
 
 /**
  * Real, active Beema Health accounts shown as header/footer icons.
  * Schema `ORGANIZATION_JSONLD.sameAs` in `src/lib/seo.ts` is a superset:
  * it also includes TikTok (no lucide brand glyph, so omitted here) and the
  * Google Business Profile listing URL (identity profile, not a social icon).
- * LinkedIn is intentionally absent: the current account may be a private
- * personal profile rather than a public company page - re-add once a proper
- * company page exists.
  */
 export type SocialLink = {
   label: string;
@@ -44,9 +41,9 @@ export const SOCIAL_LINKS: SocialLink[] = [
     Icon: XGlyph,
   },
   {
-    label: "Reddit",
-    href: "https://www.reddit.com/r/beemahealth/",
-    Icon: RedditGlyph,
-    colorClassName: "text-[#FF4500]",
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/beemahealth/",
+    Icon: Linkedin,
+    colorClassName: "text-[#0A66C2]",
   },
 ];

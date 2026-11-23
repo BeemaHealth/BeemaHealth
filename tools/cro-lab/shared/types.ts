@@ -96,6 +96,12 @@ export type DailyRow = {
   /** null = tracking did not exist or was unverified for that day. */
   handoffUsers: number | null;
   handoffEvents: number | null;
+  /**
+   * Set only on a variant switch day, where the day is pulled by minute so
+   * each slice can go to the variant live at that moment. UTC ISO instant of
+   * the minute. Absent = a whole-day row.
+   */
+  at?: string;
 };
 
 /**
@@ -113,6 +119,8 @@ export type PathRow = {
   sessionsViewed: number;
   /** null = handoff tracking did not exist for that day. */
   handoffSessions: number | null;
+  /** Switch-day minute slice, same meaning as DailyRow.at. */
+  at?: string;
 };
 
 /**
@@ -139,6 +147,14 @@ export type DownstreamRow = {
    * cta_id from a page the lab does not track (home, learn, ...).
    */
   pageId: string | null;
+  /**
+   * Hour of day (0-23, Denver) the event fired. Lets a switch day be split
+   * between the variants that were live at different hours. Absent or null
+   * on older cached rows and demo data, which are day-level only.
+   */
+  hour?: number | null;
+  /** Minute (0-59) within `hour`. Absent or null on older cached rows. */
+  minute?: number | null;
   users: number;
   events: number;
 };

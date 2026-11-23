@@ -29,6 +29,7 @@ export type HomeHeroOfferingId = (typeof HOME_HERO_OFFERINGS)[number]["id"];
  */
 export const HOME_HERO_ALSO = [
   { label: "Hair loss", to: "/hair-loss/" },
+  { label: "Peptides", to: "/bpc-157/" },
   { label: "NAD+", to: "/nad-plus/" },
   { label: "Sermorelin", to: "/sermorelin/" },
 ] as const;

@@ -9,6 +9,7 @@ import type {
 } from "@shared/types.ts";
 import {
   attributeDays,
+  rowOwner,
   compareToBaseline,
   observedLift,
   sumRows,
@@ -263,7 +264,7 @@ export function summarize(
     const attr = attributeDays(deps, from, to);
     const groups = new Map<string, DailyRow[]>();
     for (const r of pageRows) {
-      const a = attr.byDate.get(r.date);
+      const a = rowOwner(deps, attr, r);
       const key = a ? a.variantId : "switch";
       (groups.get(key) ?? groups.set(key, []).get(key)!).push(r);
     }

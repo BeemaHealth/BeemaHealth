@@ -31,7 +31,9 @@ export function StagingDeploy() {
     try {
       setState(await api.deployStaging());
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not start the deploy");
+      setError(
+        e instanceof ApiError ? e.message : "Could not start the deploy",
+      );
     } finally {
       setStarting(false);
     }

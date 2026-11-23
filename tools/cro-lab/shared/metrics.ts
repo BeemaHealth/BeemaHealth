@@ -66,6 +66,50 @@ export function validateWindows(deps: Deployment[]): string[] {
   return problems;
 }
 
+/**
+ * Denver days on which a confirmed window starts or ends mid-day. Those days
+ * are pulled by minute so they can be split between variants.
+ */
+export function switchDays(deps: Deployment[]): string[] {
+  const days = new Set<string>();
+  const add = (iso: string | null) => {
+    if (!iso) return;
+    const ms = Date.parse(iso);
+    if (Number.isNaN(ms)) return;
+    const date = denverDate(new Date(ms));
+    if (ms !== denverDayStartMs(date)) days.add(date);
+  };
+  for (const d of deps) {
+    if (!d.confirmed) continue;
+    add(d.startUtc);
+    add(d.endUtc);
+  }
+  return [...days].sort();
+}
+
+/**
+ * The window a row belongs to. A minute-level row (`at`) goes to the window
+ * live at that instant, wherever its day falls; a whole-day row goes to the
+ * window that fully covers its day. null = not owned by any one window.
+ */
+export function rowOwner(
+  deps: Deployment[],
+  attr: DayAttribution,
+  r: Pick<DailyRow, "date" | "at">,
+): { variantId: string; deploymentId: string } | null {
+  if (r.at) {
+    const t = Date.parse(r.at);
+    const d = deps.find(
+      (x) =>
+        x.confirmed &&
+        Date.parse(x.startUtc) <= t &&
+        t < (x.endUtc ? Date.parse(x.endUtc) : Infinity),
+    );
+    return d ? { variantId: d.variantId, deploymentId: d.id } : null;
+  }
+  return attr.byDate.get(r.date) ?? null;
+}
+
 export type DayAttribution = {
   /** date -> variantId, only for days fully served by exactly one variant. */
   byDate: Map<string, { variantId: string; deploymentId: string }>;
@@ -189,20 +233,39 @@ export function variantReport(opts: {
 }): VariantReport {
   const pageDeps = opts.deployments.filter((d) => d.pageId === opts.pageId);
   const attr = attributeDays(pageDeps, opts.from, opts.to, opts.nowMs);
-  const rows = opts.rows.filter((r) => {
-    if (r.pageId !== opts.pageId) return false;
-    const a = attr.byDate.get(r.date);
-    if (!a || a.variantId !== opts.variantId) return false;
-    return !opts.windowIds || opts.windowIds.includes(a.deploymentId);
-  });
-  const windows = [
-    ...new Set(
-      [...attr.byDate.values()]
-        .filter((a) => a.variantId === opts.variantId)
-        .map((a) => a.deploymentId),
-    ),
-  ];
-  const ambiguousDays = [...attr.ambiguous];
+  const owned = (r: DailyRow) => {
+    if (r.pageId !== opts.pageId || r.date < opts.from || r.date > opts.to)
+      return null;
+    const a = rowOwner(pageDeps, attr, r);
+    if (!a || a.variantId !== opts.variantId) return null;
+    return !opts.windowIds || opts.windowIds.includes(a.deploymentId)
+      ? a
+      : null;
+  };
+  const rows: DailyRow[] = [];
+  const windowSet = new Set(
+    [...attr.byDate.values()]
+      .filter(
+        (a) =>
+          a.variantId === opts.variantId &&
+          (!opts.windowIds || opts.windowIds.includes(a.deploymentId)),
+      )
+      .map((a) => a.deploymentId),
+  );
+  for (const r of opts.rows) {
+    const a = owned(r);
+    if (!a) continue;
+    rows.push(r);
+    windowSet.add(a.deploymentId);
+  }
+  const windows = [...windowSet];
+  // A switch day is only "excluded" when it was not pulled by minute.
+  const sliced = new Set(
+    opts.rows
+      .filter((r) => r.at && r.pageId === opts.pageId)
+      .map((r) => r.date),
+  );
+  const ambiguousDays = [...attr.ambiguous].filter((d) => !sliced.has(d));
   return {
     variantId: opts.variantId,
     totals: sumRows(rows),
@@ -384,6 +447,8 @@ export function pathSummary(paths: PathRow[], maxShown = 6): PathSummary {
   let landed = 0;
   let direct: number | null = null;
   const groups = new Map<string, PathDestination>();
+  // Minute slices repeat a page, so count each distinct page once per group.
+  const seen = new Map<string, Set<string>>();
   for (const r of paths) {
     if (r.page === pagePathFor(r.pageId)) {
       landed += r.sessionsViewed;
@@ -399,7 +464,10 @@ export function pathSummary(paths: PathRow[], maxShown = 6): PathSummary {
     };
     g.sessions += r.sessionsViewed;
     g.handoffs = addNullable(g.handoffs, r.handoffSessions);
-    g.pages += 1;
+    const pagesSeen = seen.get(label) ?? new Set<string>();
+    pagesSeen.add(r.page);
+    seen.set(label, pagesSeen);
+    g.pages = pagesSeen.size;
     groups.set(label, g);
   }
   const ranked = [...groups.values()]
@@ -434,8 +502,9 @@ export function variantPaths(opts: {
   const pageDeps = opts.deployments.filter((d) => d.pageId === opts.pageId);
   const attr = attributeDays(pageDeps, opts.from, opts.to, opts.nowMs);
   return opts.paths.filter((r) => {
-    if (r.pageId !== opts.pageId) return false;
-    const a = attr.byDate.get(r.date);
+    if (r.pageId !== opts.pageId || r.date < opts.from || r.date > opts.to)
+      return false;
+    const a = rowOwner(pageDeps, attr, r);
     if (!a || a.variantId !== opts.variantId) return false;
     return !opts.windowIds || opts.windowIds.includes(a.deploymentId);
   });
@@ -521,6 +590,62 @@ export function pageDownstream(
   for (const r of rows) if (r.handoffUsers !== null) dates.add(r.date);
   return downstreamTotals(
     down.filter((r) => r.pageId === pageId && dates.has(r.date)),
+  );
+}
+
+/**
+ * Bask signups, checkouts and purchases credited to one variant. An event with
+ * a time goes to the variant whose window covers that minute, so a switch day
+ * is split at the switch instant. An event without a time (older cache, demo
+ * data) is only credited on a day the variant fully owned. Only days with
+ * handoff tracking count, so the ratios compare like with like. `pageRows`
+ * are all rows for the page, used to know which days had tracking.
+ */
+export function variantDownstream(opts: {
+  down: DownstreamRow[];
+  pageId: string;
+  report: VariantReport;
+  pageRows: DailyRow[];
+  deployments: Deployment[];
+  variantId: string;
+  from: string;
+  to: string;
+  windowIds?: string[];
+}): DownstreamTotals {
+  const { down, pageId, report, pageRows, deployments, variantId } = opts;
+  const wholeDays = new Set<string>();
+  for (const r of report.rows)
+    if (!r.at && r.handoffUsers !== null) wholeDays.add(r.date);
+  const tracked = new Set<string>();
+  for (const r of pageRows)
+    if (r.pageId === pageId && r.handoffUsers !== null) tracked.add(r.date);
+  const windows = deployments.filter(
+    (d) =>
+      d.pageId === pageId &&
+      d.variantId === variantId &&
+      d.confirmed &&
+      (!opts.windowIds || opts.windowIds.includes(d.id)),
+  );
+  const inWindow = (date: string, hour: number, minute: number) => {
+    const t = denverDayStartMs(date) + (hour * 60 + minute) * 60_000;
+    return windows.some(
+      (d) =>
+        Date.parse(d.startUtc) <= t &&
+        t < (d.endUtc ? Date.parse(d.endUtc) : Infinity),
+    );
+  };
+  return downstreamTotals(
+    down.filter((r) => {
+      if (r.pageId !== pageId) return false;
+      if (wholeDays.has(r.date)) return true;
+      return (
+        r.date >= opts.from &&
+        r.date <= opts.to &&
+        tracked.has(r.date) &&
+        typeof r.hour === "number" &&
+        inWindow(r.date, r.hour, r.minute ?? 0)
+      );
+    }),
   );
 }
 

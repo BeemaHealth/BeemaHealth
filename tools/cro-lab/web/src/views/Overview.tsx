@@ -51,7 +51,7 @@ function Stat({
   sub?: string;
 }) {
   return (
-    <div>
+    <div className="min-w-0">
       <p className="text-[11px] font-medium uppercase tracking-wide text-faint">
         {label}
       </p>
@@ -309,8 +309,8 @@ function Totals({ period, group }: { period: Period; group: PageGroup }) {
   };
   return (
     <Card className="p-5">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap gap-x-10 gap-y-3">
+      <div className="flex items-start justify-between gap-4">
+        <div className="grid min-w-0 flex-1 grid-cols-9 gap-x-4">
           <Stat
             label={`All ${label.toLowerCase()}: visitors`}
             value={fmtInt(t.visitors)}
@@ -354,7 +354,7 @@ function Totals({ period, group }: { period: Period; group: PageGroup }) {
         <button
           onClick={toggle}
           aria-expanded={!hidden}
-          className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-line-strong px-2.5 text-xs font-medium hover:bg-raised"
+          className="inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-line-strong px-2.5 text-xs font-medium hover:bg-raised"
         >
           {hidden ? (
             <ChevronDown className="size-3.5" />

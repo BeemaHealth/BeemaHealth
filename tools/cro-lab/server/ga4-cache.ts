@@ -6,7 +6,7 @@ import path from "node:path";
 import type { DailyRow, DownstreamRow, PathRow } from "../shared/types.ts";
 import { denverDayEndMs, eachDate } from "../shared/time.ts";
 
-const VERSION = 2;
+const VERSION = 5;
 /** GA4 can still change a day's numbers for about 48 hours after it ends. */
 export const FINAL_AFTER_MS = 48 * 3600_000;
 
@@ -19,6 +19,15 @@ export type DayStore = {
   rows: DailyRow[];
   paths: PathRow[];
   downstream: DownstreamRow[];
+  /**
+   * Minute-level rows for variant switch days (DailyRow.at set). The served
+   * rows swap a sliced day's whole-day rows for these.
+   */
+  slices: DailyRow[];
+  /** Same minute-level split for the "where visitors go" rows (PathRow.at). */
+  pathSlices: PathRow[];
+  /** date -> ISO time that switch day was last pulled by minute. */
+  sliceDays: Record<string, string>;
 };
 
 export type Fetched = {
@@ -37,6 +46,9 @@ export const emptyStore = (key: string): DayStore => ({
   rows: [],
   paths: [],
   downstream: [],
+  slices: [],
+  pathSlices: [],
+  sliceDays: {},
 });
 
 /** True once a day was pulled late enough that GA4 will not revise it again. */
@@ -110,7 +122,10 @@ export function loadStore(file: string, key: string): DayStore | null {
       typeof s.days !== "object" ||
       !Array.isArray(s.rows) ||
       !Array.isArray(s.paths) ||
-      !Array.isArray(s.downstream)
+      !Array.isArray(s.downstream) ||
+      !Array.isArray(s.slices) ||
+      !Array.isArray(s.pathSlices) ||
+      typeof s.sliceDays !== "object"
     )
       return null;
     return s;
@@ -118,3 +133,67 @@ export function loadStore(file: string, key: string): DayStore | null {
     return null;
   }
 }
+
+/**
+ * Switch days that need a minute-level pull: never pulled, or (when `force`)
+ * pulled while GA4 could still revise them.
+ */
+export function slicesToFetch(
+  store: DayStore,
+  switchDays: readonly string[],
+  force: boolean,
+): string[] {
+  return switchDays.filter((d) => {
+    const at = store.sliceDays[d];
+    return !at || (force && !isFinal(d, at));
+  });
+}
+
+/** Folds minute-level rows for `dates` into the store, replacing those days. */
+export function applySlices(
+  store: DayStore,
+  dates: readonly string[],
+  fetched: { slices: DailyRow[]; pathSlices: PathRow[] },
+  nowIso: string,
+): DayStore {
+  const set = new Set(dates);
+  const sliceDays = { ...store.sliceDays };
+  for (const d of dates) sliceDays[d] = nowIso;
+  return {
+    ...store,
+    sliceDays,
+    slices: replaceDays(store.slices, fetched.slices, set),
+    pathSlices: replaceDays(store.pathSlices, fetched.pathSlices, set),
+  };
+}
+
+function replaceDays<T extends { date: string }>(
+  old: T[],
+  add: T[],
+  days: Set<string>,
+): T[] {
+  return [
+    ...old.filter((r) => !days.has(r.date)),
+    ...add.filter((r) => days.has(r.date)),
+  ].sort((a, b) => a.date.localeCompare(b.date));
+}
+
+/** Whole-day rows for sliced days are replaced by their minute-level rows. */
+function served<T extends { date: string }>(
+  store: DayStore,
+  whole: T[],
+  slices: T[],
+): T[] {
+  const sliced = new Set(Object.keys(store.sliceDays));
+  if (!sliced.size) return whole;
+  return [
+    ...whole.filter((r) => !sliced.has(r.date)),
+    ...slices.filter((r) => sliced.has(r.date)),
+  ].sort((a, b) => a.date.localeCompare(b.date));
+}
+
+export const servedRows = (store: DayStore): DailyRow[] =>
+  served(store, store.rows, store.slices);
+
+export const servedPaths = (store: DayStore): PathRow[] =>
+  served(store, store.paths, store.pathSlices);

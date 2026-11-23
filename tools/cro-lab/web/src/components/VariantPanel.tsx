@@ -22,7 +22,7 @@ import {
   byDay,
   compareToBaseline,
   observedLift,
-  pageDownstream,
+  variantDownstream,
   sumRows,
   variantReport,
 } from "@shared/metrics.ts";
@@ -274,8 +274,28 @@ export function VariantPanel({
     () =>
       picked.size || totals.clickers === null
         ? undefined
-        : pageDownstream(downstream, pageId, report.rows),
-    [picked, totals.clickers, downstream, pageId, report],
+        : variantDownstream({
+            down: downstream,
+            pageId,
+            report,
+            pageRows: rows,
+            deployments: deps,
+            variantId,
+            from: period === "all" ? from : wantedRange.from,
+            to,
+            windowIds: windowSel === "all" ? undefined : [windowSel],
+          }),
+    [
+      picked,
+      totals.clickers,
+      downstream,
+      pageId,
+      report,
+      rows,
+      deps,
+      variantId,
+      windowSel,
+    ],
   );
   const sources = useMemo(() => bySource(report.rows), [report]);
   const campaigns = useMemo(() => bySource(filtered, true), [filtered]);

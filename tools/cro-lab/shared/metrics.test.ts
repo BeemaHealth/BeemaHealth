@@ -7,6 +7,9 @@ import {
   downstreamRates,
   downstreamTotals,
   pageDownstream,
+  variantDownstream,
+  switchDays,
+  variantPaths,
   trackingWarningText,
   pathGroup,
   pathSummary,
@@ -414,4 +417,161 @@ test("downstreamRates is null when a denominator is missing or zero", () => {
     purchaseOfSignup: null,
     purchaseOfVisitors: null,
   });
+});
+
+test("a switch day pulled by minute is split between the variants at the switch instant", () => {
+  const day = "2026-11-21";
+  const startMs = denverDayStartMs(day);
+  const at = (h: number, m = 0) =>
+    new Date(startMs + (h * 60 + m) * 60_000).toISOString();
+  const deps = [
+    dep(
+      "d1",
+      "old",
+      new Date(denverDayStartMs("2026-11-01")).toISOString(),
+      at(20, 42),
+    ),
+    dep("d2", "new", at(20, 42), null),
+  ];
+  const mk = (date: string, users: number, when?: string): DailyRow => ({
+    date,
+    pageId: "p",
+    sourceMedium: "a",
+    campaign: "c",
+    users,
+    sessions: users,
+    handoffUsers: 1,
+    handoffEvents: 1,
+    ...(when ? { at: when } : {}),
+  });
+  const rows = [
+    mk("2026-11-20", 5),
+    mk(day, 4, at(14)),
+    mk(day, 3, at(20, 41)),
+    mk(day, 2, at(20, 42)),
+    mk(day, 1, at(22)),
+  ];
+  const report = (variantId: string) =>
+    variantReport({
+      rows,
+      deployments: deps,
+      pageId: "p",
+      variantId,
+      from: "2026-11-20",
+      to: "2026-11-22",
+      nowMs: startMs + 36 * 3_600_000,
+    });
+  assert.equal(report("old").totals.visitors, 5 + 4 + 3);
+  assert.equal(report("new").totals.visitors, 2 + 1);
+  assert.deepEqual(report("old").ambiguousDays, []);
+  assert.deepEqual(switchDays(deps), [day]);
+  // Variant visitors add up to the whole page: nothing is dropped.
+  assert.equal(
+    report("old").totals.visitors + report("new").totals.visitors,
+    rows.reduce((n, r) => n + r.users, 0),
+  );
+
+  const down: DownstreamRow[] = [
+    {
+      date: day,
+      event: "begin_checkout",
+      pageId: "p",
+      hour: 14,
+      minute: 5,
+      users: 1,
+      events: 1,
+    },
+    {
+      date: day,
+      event: "signup",
+      pageId: "p",
+      hour: 20,
+      minute: 41,
+      users: 1,
+      events: 1,
+    },
+    {
+      date: day,
+      event: "signup",
+      pageId: "p",
+      hour: 20,
+      minute: 42,
+      users: 1,
+      events: 1,
+    },
+    {
+      date: day,
+      event: "signup",
+      pageId: "p",
+      hour: 22,
+      minute: 0,
+      users: 1,
+      events: 1,
+    },
+    { date: day, event: "signup", pageId: "p", users: 4, events: 4 },
+  ];
+  const dn = (variantId: string) =>
+    variantDownstream({
+      down,
+      pageId: "p",
+      pageRows: rows,
+      deployments: deps,
+      variantId,
+      report: report(variantId),
+      from: "2026-11-20",
+      to: "2026-11-22",
+    });
+  assert.deepEqual(dn("old"), { signups: 1, checkouts: 1, purchases: 0 });
+  assert.deepEqual(dn("new"), { signups: 2, checkouts: 0, purchases: 0 });
+});
+
+test("variantPaths splits a switch day by minute and pathSummary counts distinct pages", () => {
+  const day = "2026-11-21";
+  const startMs = denverDayStartMs(day);
+  const at = (h: number, m = 0) =>
+    new Date(startMs + (h * 60 + m) * 60_000).toISOString();
+  const deps = [
+    dep(
+      "d1",
+      "old",
+      new Date(denverDayStartMs("2026-11-01")).toISOString(),
+      at(20, 42),
+    ),
+    dep("d2", "new", at(20, 42), null),
+  ];
+  const pr = (when: string, page: string, n: number): PathRow => ({
+    date: day,
+    pageId: "p",
+    page,
+    sessionsViewed: n,
+    handoffSessions: 0,
+    at: when,
+  });
+  const paths = [
+    pr(at(14), "/p/", 6),
+    pr(at(20, 41), "/p/", 3),
+    pr(at(20, 41), "/", 1),
+    pr(at(20, 50), "/", 1),
+    pr(at(21), "/p/", 2),
+  ];
+  const run = (variantId: string) =>
+    variantPaths({
+      paths,
+      deployments: deps,
+      pageId: "p",
+      variantId,
+      from: "2026-11-20",
+      to: "2026-11-22",
+    });
+  assert.equal(run("old").length, 3);
+  assert.equal(run("new").length, 2);
+  const real = paths.map((r) => ({
+    ...r,
+    pageId: "glp-1-houston",
+    page: r.page === "/p/" ? "/glp-1-houston/" : r.page,
+  }));
+  const sum = pathSummary(real);
+  assert.equal(sum.landed, 11);
+  assert.equal(sum.destinations[0].sessions, 2);
+  assert.equal(sum.destinations[0].pages, 1);
 });
