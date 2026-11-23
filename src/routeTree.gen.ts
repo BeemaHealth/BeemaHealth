@@ -36,6 +36,7 @@ import { Route as MotsCRouteImport } from './routes/mots-c'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as IntakeRouteImport } from './routes/intake'
+import { Route as InstagramRouteImport } from './routes/instagram'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as HairLossSprayWomenRouteImport } from './routes/hair-loss-spray-women'
 import { Route as HairLossSprayMenRouteImport } from './routes/hair-loss-spray-men'
@@ -43,7 +44,9 @@ import { Route as HairLossRouteImport } from './routes/hair-loss'
 import { Route as Glp1HoustonRouteImport } from './routes/glp-1-houston'
 import { Route as Glp1RouteImport } from './routes/glp-1'
 import { Route as GhkCuRouteImport } from './routes/ghk-cu'
+import { Route as FbRouteImport } from './routes/fb'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as FacebookRouteImport } from './routes/facebook'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
 import { Route as EdMintsBostonRouteImport } from './routes/ed-mints-boston'
 import { Route as EdMintsRouteImport } from './routes/ed-mints'
@@ -242,6 +245,11 @@ const IntakeRoute = IntakeRouteImport.update({
   path: '/intake',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InstagramRoute = InstagramRouteImport.update({
+  id: '/instagram',
+  path: '/instagram',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
@@ -277,9 +285,19 @@ const GhkCuRoute = GhkCuRouteImport.update({
   path: '/ghk-cu',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FbRoute = FbRouteImport.update({
+  id: '/fb',
+  path: '/fb',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FacebookRoute = FacebookRouteImport.update({
+  id: '/facebook',
+  path: '/facebook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EligibilityRoute = EligibilityRouteImport.update({
@@ -615,7 +633,9 @@ export interface FileRoutesByFullPath {
   '/ed-mints': typeof EdMintsRoute
   '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
+  '/facebook': typeof FacebookRoute
   '/faq': typeof FaqRoute
+  '/fb': typeof FbRoute
   '/ghk-cu': typeof GhkCuRoute
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
@@ -623,6 +643,7 @@ export interface FileRoutesByFullPath {
   '/hair-loss-spray-men': typeof HairLossSprayMenRoute
   '/hair-loss-spray-women': typeof HairLossSprayWomenRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/instagram': typeof InstagramRoute
   '/intake': typeof IntakeRoute
   '/learn': typeof LearnRouteWithChildren
   '/login': typeof LoginRoute
@@ -712,7 +733,9 @@ export interface FileRoutesByTo {
   '/ed-mints': typeof EdMintsRoute
   '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
+  '/facebook': typeof FacebookRoute
   '/faq': typeof FaqRoute
+  '/fb': typeof FbRoute
   '/ghk-cu': typeof GhkCuRoute
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
@@ -720,6 +743,7 @@ export interface FileRoutesByTo {
   '/hair-loss-spray-men': typeof HairLossSprayMenRoute
   '/hair-loss-spray-women': typeof HairLossSprayWomenRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/instagram': typeof InstagramRoute
   '/intake': typeof IntakeRoute
   '/login': typeof LoginRoute
   '/mots-c': typeof MotsCRoute
@@ -805,7 +829,9 @@ export interface FileRoutesById {
   '/ed-mints': typeof EdMintsRoute
   '/ed-mints-boston': typeof EdMintsBostonRoute
   '/eligibility': typeof EligibilityRoute
+  '/facebook': typeof FacebookRoute
   '/faq': typeof FaqRoute
+  '/fb': typeof FbRoute
   '/ghk-cu': typeof GhkCuRoute
   '/glp-1': typeof Glp1Route
   '/glp-1-houston': typeof Glp1HoustonRoute
@@ -813,6 +839,7 @@ export interface FileRoutesById {
   '/hair-loss-spray-men': typeof HairLossSprayMenRoute
   '/hair-loss-spray-women': typeof HairLossSprayWomenRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/instagram': typeof InstagramRoute
   '/intake': typeof IntakeRoute
   '/learn': typeof LearnRouteWithChildren
   '/login': typeof LoginRoute
@@ -906,7 +933,9 @@ export interface FileRouteTypes {
     | '/ed-mints'
     | '/ed-mints-boston'
     | '/eligibility'
+    | '/facebook'
     | '/faq'
+    | '/fb'
     | '/ghk-cu'
     | '/glp-1'
     | '/glp-1-houston'
@@ -914,6 +943,7 @@ export interface FileRouteTypes {
     | '/hair-loss-spray-men'
     | '/hair-loss-spray-women'
     | '/how-it-works'
+    | '/instagram'
     | '/intake'
     | '/learn'
     | '/login'
@@ -1003,7 +1033,9 @@ export interface FileRouteTypes {
     | '/ed-mints'
     | '/ed-mints-boston'
     | '/eligibility'
+    | '/facebook'
     | '/faq'
+    | '/fb'
     | '/ghk-cu'
     | '/glp-1'
     | '/glp-1-houston'
@@ -1011,6 +1043,7 @@ export interface FileRouteTypes {
     | '/hair-loss-spray-men'
     | '/hair-loss-spray-women'
     | '/how-it-works'
+    | '/instagram'
     | '/intake'
     | '/login'
     | '/mots-c'
@@ -1095,7 +1128,9 @@ export interface FileRouteTypes {
     | '/ed-mints'
     | '/ed-mints-boston'
     | '/eligibility'
+    | '/facebook'
     | '/faq'
+    | '/fb'
     | '/ghk-cu'
     | '/glp-1'
     | '/glp-1-houston'
@@ -1103,6 +1138,7 @@ export interface FileRouteTypes {
     | '/hair-loss-spray-men'
     | '/hair-loss-spray-women'
     | '/how-it-works'
+    | '/instagram'
     | '/intake'
     | '/learn'
     | '/login'
@@ -1195,7 +1231,9 @@ export interface RootRouteChildren {
   EdMintsRoute: typeof EdMintsRoute
   EdMintsBostonRoute: typeof EdMintsBostonRoute
   EligibilityRoute: typeof EligibilityRoute
+  FacebookRoute: typeof FacebookRoute
   FaqRoute: typeof FaqRoute
+  FbRoute: typeof FbRoute
   GhkCuRoute: typeof GhkCuRoute
   Glp1Route: typeof Glp1Route
   Glp1HoustonRoute: typeof Glp1HoustonRoute
@@ -1203,6 +1241,7 @@ export interface RootRouteChildren {
   HairLossSprayMenRoute: typeof HairLossSprayMenRoute
   HairLossSprayWomenRoute: typeof HairLossSprayWomenRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  InstagramRoute: typeof InstagramRoute
   IntakeRoute: typeof IntakeRoute
   LearnRoute: typeof LearnRouteWithChildren
   LoginRoute: typeof LoginRoute
@@ -1437,6 +1476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IntakeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/instagram': {
+      id: '/instagram'
+      path: '/instagram'
+      fullPath: '/instagram'
+      preLoaderRoute: typeof InstagramRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
@@ -1486,11 +1532,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GhkCuRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fb': {
+      id: '/fb'
+      path: '/fb'
+      fullPath: '/fb'
+      preLoaderRoute: typeof FbRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/faq': {
       id: '/faq'
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/facebook': {
+      id: '/facebook'
+      path: '/facebook'
+      fullPath: '/facebook'
+      preLoaderRoute: typeof FacebookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/eligibility': {
@@ -2097,7 +2157,9 @@ const rootRouteChildren: RootRouteChildren = {
   EdMintsRoute: EdMintsRoute,
   EdMintsBostonRoute: EdMintsBostonRoute,
   EligibilityRoute: EligibilityRoute,
+  FacebookRoute: FacebookRoute,
   FaqRoute: FaqRoute,
+  FbRoute: FbRoute,
   GhkCuRoute: GhkCuRoute,
   Glp1Route: Glp1Route,
   Glp1HoustonRoute: Glp1HoustonRoute,
@@ -2105,6 +2167,7 @@ const rootRouteChildren: RootRouteChildren = {
   HairLossSprayMenRoute: HairLossSprayMenRoute,
   HairLossSprayWomenRoute: HairLossSprayWomenRoute,
   HowItWorksRoute: HowItWorksRoute,
+  InstagramRoute: InstagramRoute,
   IntakeRoute: IntakeRoute,
   LearnRoute: LearnRouteWithChildren,
   LoginRoute: LoginRoute,
