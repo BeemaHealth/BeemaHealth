@@ -1,6 +1,12 @@
 import type { ComponentType, SVGProps } from "react";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
 import { XGlyph } from "@/components/site/primitives";
+import {
+  FACEBOOK_URL,
+  INSTAGRAM_URL,
+  LINKEDIN_URL,
+  X_URL,
+} from "@/lib/social-profiles";
 
 /**
  * Real, active Beema Health accounts shown as header/footer icons.
@@ -25,24 +31,24 @@ export type SocialLink = {
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     label: "Facebook",
-    href: "https://www.facebook.com/profile.php?id=61591847661626",
+    href: FACEBOOK_URL,
     Icon: Facebook,
     colorClassName: "text-[#1877F2]",
   },
   {
     label: "Instagram",
-    href: "https://www.instagram.com/beemahealth",
+    href: INSTAGRAM_URL,
     Icon: Instagram,
     colorClassName: "text-[#E4405F]",
   },
   {
     label: "X",
-    href: "https://x.com/beemahealth",
+    href: X_URL,
     Icon: XGlyph,
   },
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/company/beemahealth/",
+    href: LINKEDIN_URL,
     Icon: Linkedin,
     colorClassName: "text-[#0A66C2]",
   },

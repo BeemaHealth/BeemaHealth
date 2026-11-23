@@ -23,7 +23,7 @@ Two JSON-LD blocks, both syntactically valid (parser reports `valid: true` for b
   "areaServed": { "@type": "Country", "name": "United States" },
   "sameAs": [
     "https://g.page/r/CUEUJWP1F6UjEBI",
-    "https://www.facebook.com/profile.php?id=61591847661626",
+    "https://www.facebook.com/beemahealthofficial",
     "https://www.instagram.com/beemahealth",
     "https://www.tiktok.com/@beema.health",
     "https://www.reddit.com/r/beemahealth/",

@@ -136,6 +136,7 @@ Usage: **`src/lib/design-tokens.ts`** - import from here, never hardcode ad hoc 
 
 ## Code conventions
 
+- **DRY / single source of truth (non-negotiable):** Any value used in more than one place (URLs, social profiles, prices, phone/email, legal names, IDs, route paths, copy strings, test expectations) is defined once in a named constant in `src/lib/` and imported everywhere, including JSON-LD, tests, and docs examples. Never paste the same literal into a second file. Before changing such a value, grep the whole repo for it (not just `src/`) and, if it is duplicated, consolidate into one constant as part of the change. Existing examples: `src/lib/social-profiles.ts`, `contact-info.ts`, `google-business.ts`, `legitscript.ts`, `SITE_URL` in `seo.ts`. Tests import the constant rather than re-typing the literal.
 - **No em dashes:** Never use the Unicode em dash (U+2014) in source, comments, UI copy, meta, JSON-LD, or tests. Use a spaced hyphen ` - `, a plain `-`, or rephrase. See `.cursor/rules/no-em-dashes.mdc` and `AGENTS.md`.
 - Frontend routes: file-based in `src/routes/` - see `src/routes/README.md`. Do not create `src/pages/`.
 - Commits: only when the user asks. No `--no-verify`, no force-push to main.

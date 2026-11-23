@@ -1,6 +1,7 @@
 import { SUPPORT_EMAIL, SUPPORT_PHONE_E164 } from "@/lib/contact-info";
 import { GOOGLE_BUSINESS_LISTING_URL } from "@/lib/google-business";
 import { LEGITSCRIPT_VERIFY_URL } from "@/lib/legitscript";
+import { SOCIAL_PROFILE_URLS } from "@/lib/social-profiles";
 import {
   CLINICAL_PROVIDER_LEGAL_NAME,
   SEAN_ARORA_PROVIDER,
@@ -58,15 +59,7 @@ export const ORGANIZATION_JSONLD = {
   sameAs: [
     GOOGLE_BUSINESS_LISTING_URL,
     LEGITSCRIPT_VERIFY_URL,
-    "https://www.facebook.com/profile.php?id=61591847661626",
-    "https://www.instagram.com/beemahealth",
-    "https://www.tiktok.com/@beema.health",
-    "https://www.linkedin.com/company/beemahealth/",
-    "https://x.com/beemahealth",
-    "https://www.youtube.com/@Beema.Health",
-    "https://www.threads.com/@beemahealth",
-    "https://www.reddit.com/r/beemahealth/",
-    "https://www.trustpilot.com/review/beemahealth.com",
+    ...SOCIAL_PROFILE_URLS,
   ],
   contactPoint: {
     "@type": "ContactPoint",

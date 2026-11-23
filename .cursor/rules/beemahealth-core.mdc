@@ -28,6 +28,8 @@ alwaysApply: true
 
 **Colors:** raw palette in `src/styles.css`; usage in **`src/lib/design-tokens.ts`**. See **`AGENTS.md` § Design system**. Never ad hoc colors.
 
+**DRY (non-negotiable):** A value used in more than one place (URLs, social profiles, prices, contact info, IDs, copy) lives in ONE named constant in `src/lib/` and is imported everywhere, including JSON-LD and tests. Never paste a literal into a second file. Before changing such a value, grep the whole repo; if duplicated, consolidate into a constant as part of the change. See `src/lib/social-profiles.ts`.
+
 **Copy:** Never use the Unicode em dash (U+2014). Prefer spaced hyphen ` - ` or rephrase. See `.cursor/rules/no-em-dashes.mdc`.
 
 **Agent docs:** read `AGENTS.md` first. If agent docs disagree with the codebase, propose the fix to the user - do not edit `AGENTS.md` or rules without approval.
