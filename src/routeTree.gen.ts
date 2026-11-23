@@ -9,11 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as YoutubeRouteImport } from './routes/youtube'
+import { Route as XRouteImport } from './routes/x'
 import { Route as WeightLossRouteImport } from './routes/weight-loss'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as TirzepatideHoustonRouteImport } from './routes/tirzepatide-houston'
 import { Route as TirzepatideRouteImport } from './routes/tirzepatide'
+import { Route as TiktokRouteImport } from './routes/tiktok'
+import { Route as ThreadsRouteImport } from './routes/threads'
 import { Route as TadalafilBostonRouteImport } from './routes/tadalafil-boston'
 import { Route as TadalafilRouteImport } from './routes/tadalafil'
 import { Route as SubmittedRouteImport } from './routes/submitted'
@@ -27,6 +31,7 @@ import { Route as SemaglutideHoustonRouteImport } from './routes/semaglutide-hou
 import { Route as SemaglutideRouteImport } from './routes/semaglutide'
 import { Route as SafetyRouteImport } from './routes/safety'
 import { Route as ReferRouteImport } from './routes/refer'
+import { Route as RedditRouteImport } from './routes/reddit'
 import { Route as QualifyRouteImport } from './routes/qualify'
 import { Route as OralMinoxidilWomenRouteImport } from './routes/oral-minoxidil-women'
 import { Route as OralMinoxidilMenRouteImport } from './routes/oral-minoxidil-men'
@@ -34,6 +39,7 @@ import { Route as OralFinasterideRouteImport } from './routes/oral-finasteride'
 import { Route as NadPlusRouteImport } from './routes/nad-plus'
 import { Route as MotsCRouteImport } from './routes/mots-c'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LinkedinRouteImport } from './routes/linkedin'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as IntakeRouteImport } from './routes/intake'
 import { Route as InstagramRouteImport } from './routes/instagram'
@@ -110,6 +116,16 @@ import { Route as LearnVerticalSlugRouteImport } from './routes/learn/$vertical.
 import { Route as StaffQuestionnairesSlugIndexRouteImport } from './routes/staff.questionnaires.$slug.index'
 import { Route as StaffQuestionnairesSlugVersionsVersionIdRouteImport } from './routes/staff.questionnaires.$slug.versions.$versionId'
 
+const YoutubeRoute = YoutubeRouteImport.update({
+  id: '/youtube',
+  path: '/youtube',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const XRoute = XRouteImport.update({
+  id: '/x',
+  path: '/x',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WeightLossRoute = WeightLossRouteImport.update({
   id: '/weight-loss',
   path: '/weight-loss',
@@ -133,6 +149,16 @@ const TirzepatideHoustonRoute = TirzepatideHoustonRouteImport.update({
 const TirzepatideRoute = TirzepatideRouteImport.update({
   id: '/tirzepatide',
   path: '/tirzepatide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TiktokRoute = TiktokRouteImport.update({
+  id: '/tiktok',
+  path: '/tiktok',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ThreadsRoute = ThreadsRouteImport.update({
+  id: '/threads',
+  path: '/threads',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TadalafilBostonRoute = TadalafilBostonRouteImport.update({
@@ -200,6 +226,11 @@ const ReferRoute = ReferRouteImport.update({
   path: '/refer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RedditRoute = RedditRouteImport.update({
+  id: '/reddit',
+  path: '/reddit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QualifyRoute = QualifyRouteImport.update({
   id: '/qualify',
   path: '/qualify',
@@ -233,6 +264,11 @@ const MotsCRoute = MotsCRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LinkedinRoute = LinkedinRouteImport.update({
+  id: '/linkedin',
+  path: '/linkedin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnRoute = LearnRouteImport.update({
@@ -646,6 +682,7 @@ export interface FileRoutesByFullPath {
   '/instagram': typeof InstagramRoute
   '/intake': typeof IntakeRoute
   '/learn': typeof LearnRouteWithChildren
+  '/linkedin': typeof LinkedinRoute
   '/login': typeof LoginRoute
   '/mots-c': typeof MotsCRoute
   '/nad-plus': typeof NadPlusRoute
@@ -653,6 +690,7 @@ export interface FileRoutesByFullPath {
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
   '/oral-minoxidil-women': typeof OralMinoxidilWomenRoute
   '/qualify': typeof QualifyRoute
+  '/reddit': typeof RedditRoute
   '/refer': typeof ReferRoute
   '/safety': typeof SafetyRoute
   '/semaglutide': typeof SemaglutideRoute
@@ -666,11 +704,15 @@ export interface FileRoutesByFullPath {
   '/submitted': typeof SubmittedRoute
   '/tadalafil': typeof TadalafilRoute
   '/tadalafil-boston': typeof TadalafilBostonRoute
+  '/threads': typeof ThreadsRoute
+  '/tiktok': typeof TiktokRoute
   '/tirzepatide': typeof TirzepatideRoute
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
   '/tools': typeof ToolsRouteWithChildren
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
+  '/x': typeof XRoute
+  '/youtube': typeof YoutubeRoute
   '/blogs/$slug': typeof BlogsSlugRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
@@ -745,6 +787,7 @@ export interface FileRoutesByTo {
   '/how-it-works': typeof HowItWorksRoute
   '/instagram': typeof InstagramRoute
   '/intake': typeof IntakeRoute
+  '/linkedin': typeof LinkedinRoute
   '/login': typeof LoginRoute
   '/mots-c': typeof MotsCRoute
   '/nad-plus': typeof NadPlusRoute
@@ -752,6 +795,7 @@ export interface FileRoutesByTo {
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
   '/oral-minoxidil-women': typeof OralMinoxidilWomenRoute
   '/qualify': typeof QualifyRoute
+  '/reddit': typeof RedditRoute
   '/refer': typeof ReferRoute
   '/safety': typeof SafetyRoute
   '/semaglutide': typeof SemaglutideRoute
@@ -764,9 +808,13 @@ export interface FileRoutesByTo {
   '/submitted': typeof SubmittedRoute
   '/tadalafil': typeof TadalafilRoute
   '/tadalafil-boston': typeof TadalafilBostonRoute
+  '/threads': typeof ThreadsRoute
+  '/tiktok': typeof TiktokRoute
   '/tirzepatide': typeof TirzepatideRoute
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
   '/weight-loss': typeof WeightLossRoute
+  '/x': typeof XRoute
+  '/youtube': typeof YoutubeRoute
   '/blogs/$slug': typeof BlogsSlugRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
@@ -842,6 +890,7 @@ export interface FileRoutesById {
   '/instagram': typeof InstagramRoute
   '/intake': typeof IntakeRoute
   '/learn': typeof LearnRouteWithChildren
+  '/linkedin': typeof LinkedinRoute
   '/login': typeof LoginRoute
   '/mots-c': typeof MotsCRoute
   '/nad-plus': typeof NadPlusRoute
@@ -849,6 +898,7 @@ export interface FileRoutesById {
   '/oral-minoxidil-men': typeof OralMinoxidilMenRoute
   '/oral-minoxidil-women': typeof OralMinoxidilWomenRoute
   '/qualify': typeof QualifyRoute
+  '/reddit': typeof RedditRoute
   '/refer': typeof ReferRoute
   '/safety': typeof SafetyRoute
   '/semaglutide': typeof SemaglutideRoute
@@ -862,11 +912,15 @@ export interface FileRoutesById {
   '/submitted': typeof SubmittedRoute
   '/tadalafil': typeof TadalafilRoute
   '/tadalafil-boston': typeof TadalafilBostonRoute
+  '/threads': typeof ThreadsRoute
+  '/tiktok': typeof TiktokRoute
   '/tirzepatide': typeof TirzepatideRoute
   '/tirzepatide-houston': typeof TirzepatideHoustonRoute
   '/tools': typeof ToolsRouteWithChildren
   '/verify-email': typeof VerifyEmailRouteWithChildren
   '/weight-loss': typeof WeightLossRoute
+  '/x': typeof XRoute
+  '/youtube': typeof YoutubeRoute
   '/blogs/$slug': typeof BlogsSlugRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/documents': typeof DashboardDocumentsRoute
@@ -946,6 +1000,7 @@ export interface FileRouteTypes {
     | '/instagram'
     | '/intake'
     | '/learn'
+    | '/linkedin'
     | '/login'
     | '/mots-c'
     | '/nad-plus'
@@ -953,6 +1008,7 @@ export interface FileRouteTypes {
     | '/oral-minoxidil-men'
     | '/oral-minoxidil-women'
     | '/qualify'
+    | '/reddit'
     | '/refer'
     | '/safety'
     | '/semaglutide'
@@ -966,11 +1022,15 @@ export interface FileRouteTypes {
     | '/submitted'
     | '/tadalafil'
     | '/tadalafil-boston'
+    | '/threads'
+    | '/tiktok'
     | '/tirzepatide'
     | '/tirzepatide-houston'
     | '/tools'
     | '/verify-email'
     | '/weight-loss'
+    | '/x'
+    | '/youtube'
     | '/blogs/$slug'
     | '/dashboard/account'
     | '/dashboard/documents'
@@ -1045,6 +1105,7 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/instagram'
     | '/intake'
+    | '/linkedin'
     | '/login'
     | '/mots-c'
     | '/nad-plus'
@@ -1052,6 +1113,7 @@ export interface FileRouteTypes {
     | '/oral-minoxidil-men'
     | '/oral-minoxidil-women'
     | '/qualify'
+    | '/reddit'
     | '/refer'
     | '/safety'
     | '/semaglutide'
@@ -1064,9 +1126,13 @@ export interface FileRouteTypes {
     | '/submitted'
     | '/tadalafil'
     | '/tadalafil-boston'
+    | '/threads'
+    | '/tiktok'
     | '/tirzepatide'
     | '/tirzepatide-houston'
     | '/weight-loss'
+    | '/x'
+    | '/youtube'
     | '/blogs/$slug'
     | '/dashboard/account'
     | '/dashboard/documents'
@@ -1141,6 +1207,7 @@ export interface FileRouteTypes {
     | '/instagram'
     | '/intake'
     | '/learn'
+    | '/linkedin'
     | '/login'
     | '/mots-c'
     | '/nad-plus'
@@ -1148,6 +1215,7 @@ export interface FileRouteTypes {
     | '/oral-minoxidil-men'
     | '/oral-minoxidil-women'
     | '/qualify'
+    | '/reddit'
     | '/refer'
     | '/safety'
     | '/semaglutide'
@@ -1161,11 +1229,15 @@ export interface FileRouteTypes {
     | '/submitted'
     | '/tadalafil'
     | '/tadalafil-boston'
+    | '/threads'
+    | '/tiktok'
     | '/tirzepatide'
     | '/tirzepatide-houston'
     | '/tools'
     | '/verify-email'
     | '/weight-loss'
+    | '/x'
+    | '/youtube'
     | '/blogs/$slug'
     | '/dashboard/account'
     | '/dashboard/documents'
@@ -1244,6 +1316,7 @@ export interface RootRouteChildren {
   InstagramRoute: typeof InstagramRoute
   IntakeRoute: typeof IntakeRoute
   LearnRoute: typeof LearnRouteWithChildren
+  LinkedinRoute: typeof LinkedinRoute
   LoginRoute: typeof LoginRoute
   MotsCRoute: typeof MotsCRoute
   NadPlusRoute: typeof NadPlusRoute
@@ -1251,6 +1324,7 @@ export interface RootRouteChildren {
   OralMinoxidilMenRoute: typeof OralMinoxidilMenRoute
   OralMinoxidilWomenRoute: typeof OralMinoxidilWomenRoute
   QualifyRoute: typeof QualifyRoute
+  RedditRoute: typeof RedditRoute
   ReferRoute: typeof ReferRoute
   SafetyRoute: typeof SafetyRoute
   SemaglutideRoute: typeof SemaglutideRoute
@@ -1264,11 +1338,15 @@ export interface RootRouteChildren {
   SubmittedRoute: typeof SubmittedRoute
   TadalafilRoute: typeof TadalafilRoute
   TadalafilBostonRoute: typeof TadalafilBostonRoute
+  ThreadsRoute: typeof ThreadsRoute
+  TiktokRoute: typeof TiktokRoute
   TirzepatideRoute: typeof TirzepatideRoute
   TirzepatideHoustonRoute: typeof TirzepatideHoustonRoute
   ToolsRoute: typeof ToolsRouteWithChildren
   VerifyEmailRoute: typeof VerifyEmailRouteWithChildren
   WeightLossRoute: typeof WeightLossRoute
+  XRoute: typeof XRoute
+  YoutubeRoute: typeof YoutubeRoute
   LegalCreatorProgramTermsRoute: typeof LegalCreatorProgramTermsRoute
   LegalHipaaRoute: typeof LegalHipaaRoute
   LegalIntakeAcknowledgmentsRoute: typeof LegalIntakeAcknowledgmentsRoute
@@ -1287,6 +1365,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/youtube': {
+      id: '/youtube'
+      path: '/youtube'
+      fullPath: '/youtube'
+      preLoaderRoute: typeof YoutubeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/x': {
+      id: '/x'
+      path: '/x'
+      fullPath: '/x'
+      preLoaderRoute: typeof XRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/weight-loss': {
       id: '/weight-loss'
       path: '/weight-loss'
@@ -1320,6 +1412,20 @@ declare module '@tanstack/react-router' {
       path: '/tirzepatide'
       fullPath: '/tirzepatide'
       preLoaderRoute: typeof TirzepatideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tiktok': {
+      id: '/tiktok'
+      path: '/tiktok'
+      fullPath: '/tiktok'
+      preLoaderRoute: typeof TiktokRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/threads': {
+      id: '/threads'
+      path: '/threads'
+      fullPath: '/threads'
+      preLoaderRoute: typeof ThreadsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tadalafil-boston': {
@@ -1413,6 +1519,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReferRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reddit': {
+      id: '/reddit'
+      path: '/reddit'
+      fullPath: '/reddit'
+      preLoaderRoute: typeof RedditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/qualify': {
       id: '/qualify'
       path: '/qualify'
@@ -1460,6 +1573,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/linkedin': {
+      id: '/linkedin'
+      path: '/linkedin'
+      fullPath: '/linkedin'
+      preLoaderRoute: typeof LinkedinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn': {
@@ -2170,6 +2290,7 @@ const rootRouteChildren: RootRouteChildren = {
   InstagramRoute: InstagramRoute,
   IntakeRoute: IntakeRoute,
   LearnRoute: LearnRouteWithChildren,
+  LinkedinRoute: LinkedinRoute,
   LoginRoute: LoginRoute,
   MotsCRoute: MotsCRoute,
   NadPlusRoute: NadPlusRoute,
@@ -2177,6 +2298,7 @@ const rootRouteChildren: RootRouteChildren = {
   OralMinoxidilMenRoute: OralMinoxidilMenRoute,
   OralMinoxidilWomenRoute: OralMinoxidilWomenRoute,
   QualifyRoute: QualifyRoute,
+  RedditRoute: RedditRoute,
   ReferRoute: ReferRoute,
   SafetyRoute: SafetyRoute,
   SemaglutideRoute: SemaglutideRoute,
@@ -2190,11 +2312,15 @@ const rootRouteChildren: RootRouteChildren = {
   SubmittedRoute: SubmittedRoute,
   TadalafilRoute: TadalafilRoute,
   TadalafilBostonRoute: TadalafilBostonRoute,
+  ThreadsRoute: ThreadsRoute,
+  TiktokRoute: TiktokRoute,
   TirzepatideRoute: TirzepatideRoute,
   TirzepatideHoustonRoute: TirzepatideHoustonRoute,
   ToolsRoute: ToolsRouteWithChildren,
   VerifyEmailRoute: VerifyEmailRouteWithChildren,
   WeightLossRoute: WeightLossRoute,
+  XRoute: XRoute,
+  YoutubeRoute: YoutubeRoute,
   LegalCreatorProgramTermsRoute: LegalCreatorProgramTermsRoute,
   LegalHipaaRoute: LegalHipaaRoute,
   LegalIntakeAcknowledgmentsRoute: LegalIntakeAcknowledgmentsRoute,

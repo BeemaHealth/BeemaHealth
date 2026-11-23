@@ -135,6 +135,34 @@ export function buildBioLinks() {
       campaign: "x_bio",
       content: "x_link_in_bio",
     }),
+    reddit: buildTrackableUrl({
+      dest: "home",
+      source: "reddit",
+      medium: "social",
+      campaign: "reddit_bio",
+      content: "reddit_link_in_bio",
+    }),
+    linkedin: buildTrackableUrl({
+      dest: "home",
+      source: "linkedin",
+      medium: "social",
+      campaign: "linkedin_bio",
+      content: "linkedin_link_in_bio",
+    }),
+    tiktok: buildTrackableUrl({
+      dest: "home",
+      source: "tiktok",
+      medium: "social",
+      campaign: "tiktok_bio",
+      content: "tiktok_link_in_bio",
+    }),
+    youtube: buildTrackableUrl({
+      dest: "home",
+      source: "youtube",
+      medium: "social",
+      campaign: "youtube_bio",
+      content: "youtube_link_in_bio",
+    }),
   };
 }
 
@@ -243,6 +271,14 @@ function printBioLinks(bio, asJson) {
   console.log(`  ${bio.threads.url}`);
   console.log("X website / bio:");
   console.log(`  ${bio.x.url}`);
+  console.log("Reddit bio:");
+  console.log(`  ${bio.reddit.url}`);
+  console.log("LinkedIn bio:");
+  console.log(`  ${bio.linkedin.url}`);
+  console.log("TikTok bio:");
+  console.log(`  ${bio.tiktok.url}`);
+  console.log("YouTube bio:");
+  console.log(`  ${bio.youtube.url}`);
 }
 
 function printDailyPack(pack, asJson) {

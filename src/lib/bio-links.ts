@@ -15,7 +15,15 @@ import { redirect } from "@tanstack/react-router";
  * test in `src/lib/__tests__/bio-links.test.ts` fails if they drift.
  * No PHI - public attribution keys only.
  */
-export type BioLinkKey = "instagram" | "facebook";
+export type BioLinkKey =
+  | "instagram"
+  | "facebook"
+  | "threads"
+  | "x"
+  | "reddit"
+  | "linkedin"
+  | "tiktok"
+  | "youtube";
 
 export type BioLinkUtms = {
   utm_source: string;
@@ -24,25 +32,51 @@ export type BioLinkUtms = {
   utm_content: string;
 };
 
+function bioUtms(source: BioLinkKey): BioLinkUtms {
+  return {
+    utm_source: source,
+    utm_medium: "social",
+    utm_campaign: `${source}_bio`,
+    utm_content: `${source}_link_in_bio`,
+  };
+}
+
+/**
+ * One entry per social profile in the Organization `sameAs` that can carry a
+ * website link (Trustpilot is a review listing, so it has no bio link).
+ */
+export const BIO_LINK_KEYS: readonly BioLinkKey[] = [
+  "instagram",
+  "facebook",
+  "threads",
+  "x",
+  "reddit",
+  "linkedin",
+  "tiktok",
+  "youtube",
+];
+
 export const BIO_LINK_UTMS: Record<BioLinkKey, BioLinkUtms> = {
-  instagram: {
-    utm_source: "instagram",
-    utm_medium: "social",
-    utm_campaign: "instagram_bio",
-    utm_content: "instagram_link_in_bio",
-  },
-  facebook: {
-    utm_source: "facebook",
-    utm_medium: "social",
-    utm_campaign: "facebook_bio",
-    utm_content: "facebook_link_in_bio",
-  },
+  instagram: bioUtms("instagram"),
+  facebook: bioUtms("facebook"),
+  threads: bioUtms("threads"),
+  x: bioUtms("x"),
+  reddit: bioUtms("reddit"),
+  linkedin: bioUtms("linkedin"),
+  tiktok: bioUtms("tiktok"),
+  youtube: bioUtms("youtube"),
 };
 
 /** Short paths to put in profile bios. `/fb` is an alias for `/facebook`. */
 export const BIO_LINK_PATHS: Record<BioLinkKey, readonly string[]> = {
   instagram: ["/instagram"],
   facebook: ["/facebook", "/fb"],
+  threads: ["/threads"],
+  x: ["/x"],
+  reddit: ["/reddit"],
+  linkedin: ["/linkedin"],
+  tiktok: ["/tiktok"],
+  youtube: ["/youtube"],
 };
 
 /** Homepage destination (path + query) for a bio link. */

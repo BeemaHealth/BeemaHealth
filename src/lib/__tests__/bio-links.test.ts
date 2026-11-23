@@ -1,5 +1,9 @@
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { SOCIAL_PROFILE_URLS } from "../social-profiles";
 import {
+  BIO_LINK_KEYS,
   BIO_LINK_PATHS,
   BIO_LINK_UTMS,
   bioLinkDestination,
@@ -9,7 +13,7 @@ import {
 // @ts-expect-error - plain .mjs CLI, no type declarations
 import { buildBioLinks } from "../../../scripts/generate-utm-url.mjs";
 
-const KEYS: BioLinkKey[] = ["instagram", "facebook"];
+const KEYS: readonly BioLinkKey[] = BIO_LINK_KEYS;
 
 describe("bio link constants", () => {
   it.each(KEYS)("%s matches the generate-utm-url script", (key) => {
@@ -30,6 +34,34 @@ describe("bio link constants", () => {
   it("exposes the short paths", () => {
     expect(BIO_LINK_PATHS.instagram).toEqual(["/instagram"]);
     expect(BIO_LINK_PATHS.facebook).toEqual(["/facebook", "/fb"]);
+    expect(BIO_LINK_PATHS.x).toEqual(["/x"]);
+  });
+
+  it("has a route file for every short path", () => {
+    for (const path of Object.values(BIO_LINK_PATHS).flat()) {
+      const file = resolve(__dirname, `../../routes${path}.tsx`);
+      expect(existsSync(file), `${file} missing`).toBe(true);
+    }
+  });
+
+  it("covers every Organization sameAs profile except Trustpilot", () => {
+    const hosts = SOCIAL_PROFILE_URLS.map((u) => new URL(u).hostname);
+    for (const needle of [
+      "facebook",
+      "instagram",
+      "tiktok",
+      "linkedin",
+      "x.com",
+      "youtube",
+      "threads",
+      "reddit",
+    ]) {
+      expect(
+        hosts.some((h) => h.includes(needle)),
+        needle,
+      ).toBe(true);
+    }
+    expect(BIO_LINK_KEYS).toHaveLength(hosts.length - 1);
   });
 });
 
