@@ -877,6 +877,8 @@ export type LandingTemplateProps = {
     disclaimer?: StoryDisclaimer;
   } | null;
   howItWorksTitle: string;
+  /** `generic` for FDA-approved generics (no 503A wording). Defaults to compounded. */
+  howItWorksPharmacy?: "compounded" | "generic";
   /** Page-specific pricing / product section. */
   pricing: {
     id?: string;
@@ -920,6 +922,7 @@ export function LandingTemplate(props: LandingTemplateProps) {
       <HowItWorksSteps
         eyebrow={null}
         title={props.howItWorksTitle}
+        pharmacy={props.howItWorksPharmacy}
         showCareFollowUpNote
       />
     ),

@@ -307,6 +307,7 @@ export function GenericEdBostonPage({
         stars: false,
       })}
       howItWorksTitle={`How Beema Health's ${lower} care works`}
+      howItWorksPharmacy="generic"
       pricing={{
         title: `${c.name} pricing`,
         description:

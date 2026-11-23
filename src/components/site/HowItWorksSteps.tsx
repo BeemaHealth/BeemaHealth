@@ -31,26 +31,40 @@ type Step = {
  * the home page, /how-it-works, and the tirzepatide/semaglutide treatment
  * pages via <HowItWorksSteps /> so those surfaces never drift out of sync.
  */
-const STEPS: Step[] = [
-  {
-    icon: ClipboardCheck,
-    title: "Complete your medical intake online",
-    blurb:
-      "Create a secure account and complete a full medical intake covering your health history, medications, and goals, at your own pace.",
-  },
-  {
-    icon: Stethoscope,
-    title: "Licensed provider review",
-    blurb:
-      "An independently licensed provider evaluates your case and decides whether treatment may be appropriate. It's never guaranteed.",
-  },
-  {
-    icon: Truck,
-    title: "Prescription approved, filled, and shipped",
-    blurb:
-      "If approved, your prescription moves to a 503A-licensed pharmacy and ships to your door, with status updates the whole way.",
-  },
-];
+
+/**
+ * `compounded` (default) keeps the 503A wording used by the compounded GLP-1
+ * and peptide pages. `generic` is for FDA-approved generics (sildenafil,
+ * tadalafil), which are not compounded and must not claim 503A.
+ */
+export type PharmacyKind = "compounded" | "generic";
+
+const STEPS_BY_PHARMACY: Record<PharmacyKind, Step[]> = {
+  compounded: buildSteps("compounded"),
+  generic: buildSteps("generic"),
+};
+
+function buildSteps(pharmacy: PharmacyKind): Step[] {
+  return [
+    {
+      icon: ClipboardCheck,
+      title: "Complete your medical intake online",
+      blurb:
+        "Create a secure account and complete a full medical intake covering your health history, medications, and goals, at your own pace.",
+    },
+    {
+      icon: Stethoscope,
+      title: "Licensed provider review",
+      blurb:
+        "An independently licensed provider evaluates your case and decides whether treatment may be appropriate. It's never guaranteed.",
+    },
+    {
+      icon: Truck,
+      title: "Prescription approved, filled, and shipped",
+      blurb: `If approved, your prescription moves to a ${pharmacy === "generic" ? "licensed" : "503A-licensed"} pharmacy and ships to your door, with status updates the whole way.`,
+    },
+  ];
+}
 
 /**
  * One step in the diagram: giant outlined watermark number bleeding from the
@@ -270,6 +284,7 @@ export function HowItWorksSteps({
   eyebrow = "How it works",
   title,
   showCareFollowUpNote = false,
+  pharmacy = "compounded",
   className,
   id = "how-it-works",
 }: {
@@ -278,10 +293,13 @@ export function HowItWorksSteps({
   title?: ReactNode;
   /** Support / doctor follow-up note under the steps (treatment pages). */
   showCareFollowUpNote?: boolean;
+  /** `generic` drops the 503A wording (FDA-approved generics, not compounded). */
+  pharmacy?: PharmacyKind;
   className?: string;
   id?: string;
 } = {}) {
   const reduceMotion = useReducedMotion();
+  const steps = STEPS_BY_PHARMACY[pharmacy];
 
   return (
     <section
@@ -312,7 +330,7 @@ export function HowItWorksSteps({
         </div>
 
         <ol className="relative z-10 mt-10 flex flex-col items-stretch md:mt-14 md:flex-row md:items-stretch">
-          {STEPS.map((step, i) => (
+          {steps.map((step, i) => (
             <li
               key={step.title}
               className="flex flex-1 flex-col items-stretch md:flex-row"
@@ -324,7 +342,7 @@ export function HowItWorksSteps({
                   reduceMotion={reduceMotion}
                 />
               </div>
-              {i < STEPS.length - 1 && (
+              {i < steps.length - 1 && (
                 <StepConnector index={i} reduceMotion={reduceMotion} />
               )}
             </li>
