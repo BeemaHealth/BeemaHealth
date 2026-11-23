@@ -33,6 +33,7 @@ import { CTA_IDS, resolveCta } from "@/lib/cta-ids";
 import {
   STICKY_HERO_ATTR,
   StickyGetStarted,
+  HeroTiles,
 } from "../template/LandingTemplate";
 import { MoneyPageGuides } from "@/components/learn/MoneyPageGuides";
 import { cn } from "@/lib/utils";
@@ -227,10 +228,16 @@ function Glp1NationalNewLayout() {
   const priceTiles = [
     {
       name: "Semaglutide, 3-month plan",
+      medication: "semaglutide" as const,
+      tabLabel: "Semaglutide",
+      href: "#cash-pricing",
       ...blackFridayTile(BLACK_FRIDAY_OFFERS.semaglutide),
     },
     {
       name: "Tirzepatide, 3-month plan",
+      medication: "tirzepatide" as const,
+      tabLabel: "Tirzepatide",
+      href: "#cash-pricing",
       ...blackFridayTile(BLACK_FRIDAY_OFFERS.tirzepatide),
     },
   ];
@@ -287,42 +294,7 @@ function Glp1NationalNewLayout() {
                 </Button>
               </div>
 
-              <div className="mt-5 grid grid-cols-2 gap-3">
-                {priceTiles.map((tile) => (
-                  <a
-                    key={tile.name}
-                    href="#cash-pricing"
-                    aria-label={`${tile.name}, ${tile.price} ${tile.unit}. See pricing and get started`}
-                    className="block rounded-2xl border border-border bg-card p-4 shadow-soft transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <p className="text-xs font-semibold text-muted-foreground md:text-sm">
-                      {tile.name}
-                    </p>
-                    <p className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-                      {tile.strike ? (
-                        <s className="mr-2 text-lg font-semibold text-muted-foreground md:text-xl">
-                          <span className="sr-only">Regular price </span>
-                          {tile.strike}
-                        </s>
-                      ) : null}
-                      {tile.price}
-                    </p>
-                    <p className="text-xs text-muted-foreground md:text-sm">
-                      {tile.unit}
-                    </p>
-                    {tile.detail ? (
-                      <p className="mt-1 text-[0.7rem] leading-snug text-muted-foreground md:text-xs">
-                        {tile.detail}
-                      </p>
-                    ) : null}
-                    {tile.note ? (
-                      <p className="mt-1 text-[0.7rem] font-medium leading-snug text-foreground/80 md:text-xs">
-                        {tile.note}
-                      </p>
-                    ) : null}
-                  </a>
-                ))}
-              </div>
+              <HeroTiles tiles={priceTiles} />
               <p className="mt-3 max-w-xl text-xs leading-relaxed text-muted-foreground">
                 {ev.name} codes are one-time codes for the 3-month plan, through{" "}
                 {ev.endsLabel}. Cash-pay when prescribed. Prescribing is up to

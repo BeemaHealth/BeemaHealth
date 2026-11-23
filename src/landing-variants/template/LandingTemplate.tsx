@@ -399,7 +399,7 @@ function TabbedHeroTiles({ tiles }: { tiles: readonly PriceTile[] }) {
   );
 }
 
-function HeroTiles({ tiles }: { tiles: readonly PriceTile[] }) {
+export function HeroTiles({ tiles }: { tiles: readonly PriceTile[] }) {
   if (tiles.length > 1 && tiles.every((t) => t.medication)) {
     return <TabbedHeroTiles tiles={tiles} />;
   }
