@@ -2,7 +2,7 @@ import { defineArticle, h2, h3, p, ul } from "@/content/blog/build";
 
 /**
  * Educational article. Product links: /bpc-157/ (injection),
- * /bpc-157-capsules/ (oral), /ghk-cu/, /mots-c/, /sermorelin/. There is no
+ * /ghk-cu/, /mots-c/, /sermorelin/. There is no
  * /tb-500/ page; TB-500 links to the combination page
  * (/bpc-157-tb-500-ghk-cu/). The October 2026 HHS interim policy covers
  * single-API products only, so counsel must confirm the combination before
@@ -48,7 +48,7 @@ export const article = defineArticle(
     ),
     h2("BPC-157 side effects: what do human studies show?"),
     p(
-      "BPC-157 is a synthetic peptide studied mainly in laboratory and animal models, often in connection with tissue repair and inflammatory processes. That research helps explain the interest in BPC-157, but it cannot establish that the peptide heals human injuries or is safe for routine human use. Beema Health offers [compounded BPC-157 injections](/bpc-157/) and [BPC-157 capsules](/bpc-157-capsules/). Route matters: the research below does not tell you how an oral capsule compares with an injection, so treat the two as separate questions for your clinician.",
+      "BPC-157 is a synthetic peptide studied mainly in laboratory and animal models, often in connection with tissue repair and inflammatory processes. That research helps explain the interest in BPC-157, but it cannot establish that the peptide heals human injuries or is safe for routine human use. Beema Health offers [compounded BPC-157 injections](/bpc-157/). Route matters: the research below does not tell you how different routes of administration compare, so treat that as a separate question for your clinician.",
     ),
     p(
       "A [2026 systematic review of human BPC-157 evidence](https://pubmed.ncbi.nlm.nih.gov/42885452/) identified only **three studies involving 30 people in total**. Those studies reported no treatment-related adverse events, but researchers judged their methods poor and the certainty of the evidence **very low**. With so few people studied, rare adverse events and longer-term consequences could easily go undetected.",

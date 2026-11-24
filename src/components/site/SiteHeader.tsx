@@ -156,7 +156,6 @@ const WELLNESS_ITEMS: NavItem[] = [
  */
 const PEPTIDES_ITEMS: NavItem[] = [
   { label: "BPC-157 Injections", to: "/bpc-157/" },
-  { label: "BPC-157 Capsules", to: "/bpc-157-capsules/" },
   { label: "BPC-157 / TB-500 / GHK-Cu", to: "/bpc-157-tb-500-ghk-cu/" },
   { label: "GHK-Cu", to: "/ghk-cu/" },
   { label: "MOTS-C", to: "/mots-c/" },

@@ -109,7 +109,6 @@ describe("peptide side effects article", () => {
       expect.arrayContaining([
         "/",
         "/bpc-157/",
-        "/bpc-157-capsules/",
         "/bpc-157-tb-500-ghk-cu/",
         "/ghk-cu/",
         "/mots-c/",

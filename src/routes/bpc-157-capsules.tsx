@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import {
   canonicalUrl,
   breadcrumbJsonLd,
@@ -8,6 +8,10 @@ import {
 } from "@/lib/seo";
 import { trackPageViewed } from "@/lib/analytics";
 import { BPC_157_CAPSULES_PRICING } from "@/lib/simple-treatment-pricing";
+import {
+  BPC_157_CAPSULES_AVAILABLE,
+  BPC_157_CAPSULES_FALLBACK_PATH,
+} from "@/lib/product-availability";
 import { LandingExperiment } from "@/landing-variants/runtime";
 import {
   TITLE,
@@ -17,6 +21,12 @@ import {
 } from "@/landing-variants/bpc-157-capsules/shared";
 
 export const Route = createFileRoute("/bpc-157-capsules")({
+  // Paused product (no supplier): page code is kept, but nobody can reach it.
+  beforeLoad: () => {
+    if (!BPC_157_CAPSULES_AVAILABLE) {
+      throw redirect({ to: BPC_157_CAPSULES_FALLBACK_PATH, replace: true });
+    }
+  },
   head: () => ({
     meta: [
       { title: TITLE },
