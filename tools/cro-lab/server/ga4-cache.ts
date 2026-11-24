@@ -6,7 +6,7 @@ import path from "node:path";
 import type { DailyRow, DownstreamRow, PathRow } from "../shared/types.ts";
 import { denverDayEndMs, eachDate } from "../shared/time.ts";
 
-const VERSION = 5;
+const VERSION = 6;
 /** GA4 can still change a day's numbers for about 48 hours after it ends. */
 export const FINAL_AFTER_MS = 48 * 3600_000;
 

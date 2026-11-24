@@ -401,6 +401,8 @@ export async function fetchPathSlices(
 const BASK_HOST = "q.beemahealth.com";
 /** Traffic from GTM Preview (our own testing) is not a real signup. */
 const PREVIEW_SOURCE = "tagassistant.google.com";
+/** Sessions from the local dev site (localhost:8080) are our own testing too. */
+const LOCAL_SOURCE = "localhost";
 
 /**
  * Bask draft/preview pages (e.g. /start-online-visit/draft-29f3f318e596) are
@@ -476,6 +478,14 @@ export async function fetchDownstream(
               filter: {
                 fieldName: "sessionSource",
                 stringFilter: { matchType: "EXACT", value: PREVIEW_SOURCE },
+              },
+            },
+          },
+          {
+            notExpression: {
+              filter: {
+                fieldName: "sessionSource",
+                stringFilter: { matchType: "CONTAINS", value: LOCAL_SOURCE },
               },
             },
           },

@@ -187,6 +187,7 @@ test("fetchDownstream ties Bask events to a page by cta_id and excludes GTM Prev
   );
   assert.match(request, /q\.beemahealth\.com/);
   assert.match(request, /tagassistant\.google\.com/);
+  assert.match(request, /"sessionSource"[^}]*"CONTAINS"[^}]*"localhost"/);
   assert.match(request, /gtm_debug/);
 });
 
