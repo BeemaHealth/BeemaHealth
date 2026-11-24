@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { bootImagePreloadLinks } from "@/lib/boot-assets";
-import { canonicalUrl, WEBSITE_JSONLD } from "@/lib/seo";
+import { canonicalUrl, HOME_TITLE, WEBSITE_JSONLD } from "@/lib/seo";
 import { trackPageViewed } from "@/lib/analytics";
 import { LandingExperiment } from "@/landing-variants/runtime";
 import { createFunnelSession } from "@/lib/api/client";
@@ -10,7 +10,10 @@ import { getPendingUtms, clearPendingUtms } from "@/lib/utm";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Beema Health | Online medical care" },
+      { title: HOME_TITLE },
+      { property: "og:title", content: HOME_TITLE },
+      { name: "twitter:title", content: HOME_TITLE },
+      { property: "og:url", content: canonicalUrl("/") },
       {
         name: "description",
         content:

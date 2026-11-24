@@ -21,6 +21,14 @@ import {
  */
 export const SITE_URL = "https://beemahealth.com";
 
+/**
+ * Homepage <title> and social title. Leads with the two highest-intent
+ * services (GLP-1 weight loss, ED) so the SERP snippet says what we sell.
+ * Keep under ~60 characters so Google does not truncate it.
+ */
+export const HOME_TITLE =
+  "GLP-1 Weight Loss & ED Treatment Online | Beema Health";
+
 /** Absolute URL for a site asset or file, e.g. absoluteUrl("/beema-mark.png"). */
 export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path}`;

@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LearnHubView } from "@/components/learn/LearnHubView";
-import { LEARN_HUBS, LEARN_HUB_DATES } from "@/content/learn/hubs";
 import { learnPath, type LearnVertical } from "@/content/learn/types";
 import {
   learnDocumentMeta,
@@ -10,10 +9,18 @@ import {
 import { medicalWebPageJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/learn/$vertical/")({
-  head: ({ params }) => {
+  loader: async ({ params }) => {
+    // Dynamic import keeps the 40KB hub dataset out of the shared entry chunk.
+    const { LEARN_HUBS, LEARN_HUB_DATES } =
+      await import("@/content/learn/hubs");
     const vertical = params.vertical as LearnVertical;
     const hub = LEARN_HUBS[vertical];
-    if (!hub) return {};
+    return hub ? { hub, dateModified: LEARN_HUB_DATES[vertical] } : null;
+  },
+  head: ({ params, loaderData }) => {
+    const vertical = params.vertical as LearnVertical;
+    if (!loaderData) return {};
+    const { hub, dateModified } = loaderData;
     const path = learnPath(vertical);
     const { meta, links } = learnDocumentMeta({
       title: hub.meta.title,
@@ -31,7 +38,7 @@ export const Route = createFileRoute("/learn/$vertical/")({
           name: hub.meta.h1,
           description: hub.meta.description,
           path,
-          dateModified: LEARN_HUB_DATES[vertical],
+          dateModified,
         }),
         faqs: hub.faqs,
       }),

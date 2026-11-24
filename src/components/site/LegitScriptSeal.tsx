@@ -34,6 +34,10 @@ export function LegitScriptSeal({ className }: LegitScriptSealProps) {
         alt={LEGITSCRIPT_SEAL_ALT}
         width={LEGITSCRIPT_SEAL_WIDTH}
         height={LEGITSCRIPT_SEAL_HEIGHT}
+        // Third-party PNG that is never the LCP element. "low" also stops
+        // React's SSR from emitting an automatic <link rel=preload> for it,
+        // which competed with the hero for early bandwidth.
+        fetchPriority="low"
       />
     </a>
   );

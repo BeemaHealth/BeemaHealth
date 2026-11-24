@@ -1,6 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { BlogArticleView } from "@/components/blog/BlogArticleView";
-import { getArticle } from "@/content/blog/articles";
 import { blogArticlePath } from "@/content/blog/paths";
 import {
   blogArticleJsonLd,
@@ -10,7 +9,9 @@ import {
 import type { BlogArticle } from "@/content/blog/types";
 
 export const Route = createFileRoute("/blogs/$slug")({
-  loader: ({ params }): BlogArticle => {
+  loader: async ({ params }): Promise<BlogArticle> => {
+    // Dynamic import keeps blog content out of the shared entry chunk.
+    const { getArticle } = await import("@/content/blog/articles");
     const article = getArticle(params.slug);
     if (!article) throw notFound();
     return article;

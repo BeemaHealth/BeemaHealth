@@ -1,6 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { LearnArticleView } from "@/components/learn/LearnArticleView";
-import { getArticle } from "@/content/learn/registry";
 import { learnPath } from "@/content/learn/types";
 import {
   learnArticleBreadcrumbs,
@@ -10,7 +9,10 @@ import {
 } from "@/lib/learn-seo";
 
 export const Route = createFileRoute("/learn/$vertical/$slug")({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
+    // Dynamic import keeps the ~100-article registry out of the shared entry
+    // chunk (route loaders/heads are not code-split, only components are).
+    const { getArticle } = await import("@/content/learn/registry");
     const article = getArticle(params.vertical, params.slug);
     if (!article) throw notFound();
     return article;
