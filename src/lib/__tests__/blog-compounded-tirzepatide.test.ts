@@ -137,7 +137,15 @@ describe("compounded vs brand-name tirzepatide article", () => {
       expect(href).not.toMatch(/utm_|chatgpt/);
     }
     expect(links.some((h) => h.startsWith("https://www.fda.gov/"))).toBe(true);
-    expect(links.some((h) => h.includes("dailymed.nlm.nih.gov"))).toBe(true);
+  });
+
+  it("never sends readers to Lilly, its brand drugs, or brand pricing", () => {
+    for (const href of hrefs()) {
+      expect(href).not.toMatch(/lilly|zepbound\.|mounjaro\.|dailymed/i);
+    }
+    expect(source).not.toMatch(/https?:\/\/\S*(lilly|dailymed)/i);
+    expect(text).not.toMatch(/Lilly(?!Direct)?.*(price|pricing|self-pay)/i);
+    expect(text).not.toMatch(/LillyDirect|manufacturer savings/i);
   });
 
   it("is in the sitemap and llms.txt", () => {

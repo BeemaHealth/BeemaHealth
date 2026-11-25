@@ -184,5 +184,20 @@
     "text": "Bottles and vials are 3D models wearing cropped areas of the live-site product labels; the room, tray, tape measure, tablet, stethoscope and box are illustrations.",
     "source": "Creative device. Label crops leave out 'Longevity Medication', '1000 mg/mL' and 'Supports Healthier Hair'.",
     "status": "metaphor_needs_human_review"
+  },
+  "compounded_not_fda_reviewed": {
+    "text": "Compounded drugs are not reviewed by the FDA for safety, effectiveness or quality before they are marketed, and they are not generic versions of FDA-approved drugs. Generic drugs are approved by the FDA before marketing.",
+    "source": "FDA, 'FDA: What Telehealth Companies Should Know When Promoting Compounded Drugs' (https://www.fda.gov/drugs/human-drug-compounding/fda-telehealth-companies-what-know-when-promoting-compounded-drugs), page content current as of 06/15/2026, read 2026-11-24.",
+    "status": "verified"
+  },
+  "blog_ask_pharmacy": {
+    "text": "Patients can ask which pharmacy fills a compounded prescription, and can check a pharmacy's license with their state board of pharmacy.",
+    "source": "Beema blog article compounded-tirzepatide-vs-brand-name (written 2026-11-24); state boards of pharmacy publish license lookups. General consumer education.",
+    "status": "general_education"
+  },
+  "blog_ready_to_use_vial": {
+    "text": "Beema Health's partner pharmacies ship compounded tirzepatide ready to use in the vial, so patients do not mix a powder at home; mixing a powder yourself leaves more room for dosing mistakes.",
+    "source": "Matt Aertker, 2026-11-24 (blog-autopilot interview answer 2). Needs confirmation that this applies to every current pharmacy partner.",
+    "status": "verified_by_matt"
   }
 }

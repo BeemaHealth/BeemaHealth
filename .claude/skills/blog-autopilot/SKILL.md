@@ -36,6 +36,15 @@ distribution in Step 1.
 - Never fabricate patient experiences, outcomes, testimonials, company
   statistics, or founder personal experiences. Beema Health is new and has
   little proprietary data; do not ask ChatGPT to require any.
+- Never send readers to a competitor or a brand manufacturer (Matt,
+  2026-11-25). No links to Eli Lilly, LillyDirect, Novo Nordisk or any other
+  drug maker, no links to brand drug pages or brand prescribing information
+  (including on DailyMed), no competitor telehealth links, and no brand or
+  competitor pricing, savings programs or "buy direct" mentions. It gives
+  them a backlink and asks readers to buy there. Cite neutral sources (FDA
+  policy pages, peer-reviewed studies, professional organizations). Tell
+  ChatGPT this in the Step 6 prompt, and strip any that come back anyway.
+  The same applies to the social posts and videos.
 - Claude does no independent medical research; ChatGPT does it. Claude does
   not add medical claims during implementation.
 - Business facts: all 50 states, cash-pay only (no insurance, Medicare or
@@ -137,6 +146,9 @@ Submit the five approved answers in the same ChatGPT conversation, followed by:
 > - Use natural paragraphs and bullet points where appropriate.
 > - Optimize for SEO without keyword stuffing.
 > - Include authoritative external citations.
+> - Do not link to or quote pricing from any drug manufacturer (including Eli
+>   Lilly or LillyDirect), brand drug page, brand prescribing information, or
+>   competing telehealth company.
 > - Include relevant internal links to Beema Health's homepage, product pages, and related blog posts where appropriate.
 > - Include a natural call to action.
 > - Distinguish compounded medications from FDA-approved medications where applicable.
@@ -184,4 +196,64 @@ Title, category, primary keyword, slug, files created/modified, test/tsc/ESLint
 results, updated distribution percentages, outstanding medical or compliance
 concerns (including ChatGPT's flags and any copy you changed), and that the
 changes are unstaged, uncommitted and need clinical/compliance review before
-deploy. Stop there. No social content, no commit, no push.
+deploy. Then do Steps 10 and 11 below. No commit, no push, and never post to
+any social platform yourself.
+
+## Step 10: Social posts to Slack (added 2026-11-24, Matt's request)
+
+When the article is written locally and verified (Step 8 passed), send Matt ONE
+Slack DM (his own user, never a channel, never anyone else) containing ready
+to paste posts for every platform he shares on, so he can share the article.
+
+- Platforms: Instagram, Facebook, X, Threads, TikTok, YouTube (Shorts
+  description), LinkedIn. One block per platform, each labelled, in a
+  copyable form. Respect limits: X under 280 characters (a URL counts 23),
+  Instagram/Facebook/Threads under 500 with hashtags, LinkedIn can be longer.
+- Link: the production URL `https://beemahealth.com/blogs/<slug>/` (note in
+  the message that the page is not live until Matt deploys, so he should not
+  post before it is).
+- Copy rules: the article's own compliance rules apply. Always "Beema Health",
+  no em or en dashes, no outcome or weight-loss-amount claims, no "cheaper",
+  "affordable alternative", price-as-reason or comparison language, never
+  call compounded drugs generic or "the same as" an approved drug, no
+  guarantees, no testimonials. Say "compounded" and "not FDA-approved" where a
+  compounded drug is mentioned. No Rx brand names in a post unless the
+  article is explicitly a comparison and the post says so plainly. Hook with a
+  question or a fact the article actually supports. Add a short disclosure
+  line ("Prescription required. Prescribing is never guaranteed.") where a
+  product is mentioned.
+- Include at the top of the Slack message: the article title, the slug, and a
+  one line reminder that the article still needs clinical and compliance
+  review before posting.
+- Sending to Matt's own DM is delivery, not publishing. Never post to a
+  social platform, and never message anyone but Matt.
+
+## Step 11: Video from the article (added 2026-11-24, Matt's request)
+
+Use the `beema-organic-video` skill (read it first, all its hard rules apply)
+to make one short video based on the article, where the spoken words match the
+animations on screen (cues on the spoken word, `world3d` or `stage3d`, frame 0
+never empty, voice proven with `check_voice.py`), then DM it to Matt in
+Slack with the posts.
+
+- Education only. Base it on one idea from the article (for example "what is
+  different about a compounded medication" or "what to ask a telehealth
+  provider before you start"). Facts must come from the article's cited
+  sources or verified claims in `claims.json`. Nothing new, no outcome claims.
+- Do NOT use price, savings, "cheaper" or comparison language even when the
+  article is about cost. Prices come only from `products.json` (Matt's
+  numbers); if the article's price and `products.json` disagree, say so.
+- Run the compliance gate. The status is never "approved": send the video
+  with its status and every human-review item listed in the Slack message.
+- Matt asked for the render without a separate script approval step, so render
+  the full video in the same run, but still show him the script, gate
+  findings, voice check result and any pronunciation doubts (the brand name
+  and URL cannot be proven by the recognizer) in the message.
+- Upload the .mp4 with `slack_get_file_upload_url`, a POST of the bytes, then
+  `slack_complete_file_upload` to Matt's DM channel, together with the social
+  posts or as a thread reply to them. Say plainly if the upload failed and
+  where the file lives on disk. Never run `beema.py daily`, `deliver` or
+  `nightly` for this; they post to the engine's own Slack destination.
+- Final chat report adds: video path, gate status, Slack message link.
+- If video generation fails, still send the social posts, and report the
+  specific failure. Do not post a half-built or blank-frame video.

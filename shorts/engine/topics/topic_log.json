@@ -4180,6 +4180,22 @@
         "price": false
       },
       "added": "2026-11-19T09:46:28"
+    },
+    {
+      "date": "2026-11-24",
+      "product": "tirzepatide",
+      "category": "glp1",
+      "facet": "blog",
+      "question": "How can you tell a legitimate compounding pharmacy from a risky online seller?",
+      "summary": "Why compounded tirzepatide is not FDA-approved or generic, and three pharmacy checks: licensed, US-based, ready to use.",
+      "hook": "Compounded tirzepatide is not FDA-approved. So what should you ask?",
+      "narration": "The FDA reviews approved drugs before they're sold. Compounded medication doesn't get that review, so it's not FDA-approved, and it's not a generic. So ask three things. Is a licensed pharmacy filling it? Is it based in the United States? Can you check its license with your state? Last, ask if it arrives ready to use. Mixing powder yourself leaves more room for mistakes.",
+      "package_id": "2026-11-24_tirzepatide_TRZ-G20261124blogH_TRZ-G20261124blogM_TRZ-G20261124blogC_organic_v1",
+      "source": "blog-autopilot",
+      "status": "covered",
+      "slack": null,
+      "style": null,
+      "added": "2026-11-24T17:44:18"
     }
   ]
 }

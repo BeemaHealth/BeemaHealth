@@ -799,6 +799,52 @@
       "posts": [],
       "ads": [],
       "label": null
+    },
+    "2026-11-24_tirzepatide_TRZ-G20261124blogH_TRZ-G20261124blogM_TRZ-G20261124blogC_organic_v1": {
+      "id": "2026-11-24_tirzepatide_TRZ-G20261124blogH_TRZ-G20261124blogM_TRZ-G20261124blogC_organic_v1",
+      "product": "tirzepatide",
+      "format": "organic",
+      "aspect": "9x16",
+      "version": 1,
+      "date": "2026-11-24",
+      "hook_id": "TRZ-G20261124blogH",
+      "meat_id": "TRZ-G20261124blogM",
+      "cta_id": "TRZ-G20261124blogC",
+      "creative_style": "generated",
+      "hook_angle": "generated",
+      "extra_ed_mints_mention": false,
+      "compliance": {
+        "status": "NEEDS_HUMAN_REVIEW",
+        "counts": {
+          "BLOCK": 0,
+          "REVIEW": 3
+        },
+        "human_signoff": null
+      },
+      "files": {
+        "video": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-24_tirzepatide_TRZ-G20261124blogH_TRZ-G20261124blogM_TRZ-G20261124blogC_organic_v1/2026-11-24_tirzepatide_how-can-you-tell-a-legitimate-compounding-pharmacy-from-a-risky-online.mp4",
+        "package": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-24_tirzepatide_TRZ-G20261124blogH_TRZ-G20261124blogM_TRZ-G20261124blogC_organic_v1/package.json",
+        "voice": "/Users/mattaertker/Documents/Github/BeemaHealth/shorts/engine/out/2026-11-24_tirzepatide_TRZ-G20261124blogH_TRZ-G20261124blogM_TRZ-G20261124blogC_organic_v1/voice.wav"
+      },
+      "sources": {
+        "voice": "kokoro",
+        "assets": [
+          "engine/products/compounded-tirzepatide-vial.webp",
+          "engine/brand/stacked.png"
+        ],
+        "licensing": "Brand assets and product photos are Beema Health owned. Voice: Kokoro-82M (Apache-2.0) local TTS. No stock footage or music used."
+      },
+      "cost": {
+        "tts_seconds": 0.46,
+        "tts_chars": 681,
+        "tts_sentences": 8,
+        "tts_cache_hits": 8,
+        "tts_usd": 0.0
+      },
+      "status": "ready",
+      "posts": [],
+      "ads": [],
+      "label": null
     }
   },
   "notes": []

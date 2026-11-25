@@ -10,7 +10,8 @@ import {
  * Prices come from medication-pricing.ts so this article never drifts from the
  * /tirzepatide/ page. Compliance pass changes are listed in the autopilot
  * report: promo code, per-dose brand price table, and the SURMOUNT-1 chart
- * were left out on purpose.
+ * were left out on purpose. No links to Lilly, its brand drug pages or brand
+ * pricing (Matt, 2026-11-25); the test enforces this.
  */
 const pricing = COMPOUNDED_TIRZEPATIDE_PRICING;
 const starter = pricing.starterPack;
@@ -54,7 +55,7 @@ export const article = defineArticle(
     ),
     h3("What are the brand-name medications?"),
     p(
-      "Zepbound and Mounjaro are FDA-approved prescription medications made by Eli Lilly. Zepbound is approved for chronic weight management in eligible adults and for certain adults with obesity and obstructive sleep apnea. Mounjaro is approved for adults with type 2 diabetes. Both went through FDA review and follow approved manufacturing specifications. You can read the official labeling in the [Zepbound prescribing information](https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=487cd7e7-434c-4925-99fa-aa80b1cc776b) and the [Mounjaro prescribing information](https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d2d7da5d-ad07-4228-955f-cf7e355c8cc0).",
+      "Zepbound and Mounjaro are FDA-approved prescription medications made by Eli Lilly. Zepbound is approved for chronic weight management in eligible adults and for certain adults with obesity and obstructive sleep apnea. Mounjaro is approved for adults with type 2 diabetes. Both went through FDA review and follow approved manufacturing specifications.",
     ),
     h3("What is compounded tirzepatide?"),
     p(
@@ -85,7 +86,7 @@ export const article = defineArticle(
     ),
     h2("How much does tirzepatide cost without insurance?"),
     p(
-      "Cost matters, especially when treatment may last a long time. The comparison is also more complicated than it used to be, because Eli Lilly now sells brand-name Zepbound directly to self-pay patients, with starting prices that depend on the dose and on conditions such as refill timing. Insurance coverage or manufacturer savings may lower your cost further. Check [Lilly's current self-pay pricing](https://www.lilly.com/lillydirect/zepbound) and your own insurance benefits before you assume any option is the least expensive.",
+      "Cost matters, especially when treatment may last a long time. What you pay depends on the provider, the plan, the dose, and your own insurance benefits, so check those before you assume any option is the least expensive.",
     ),
     h3("What does compounded tirzepatide cost at Beema Health?"),
     p(
@@ -242,7 +243,7 @@ export const article = defineArticle(
     ),
     h3("Is compounded tirzepatide cheaper than brand name?"),
     p(
-      "It may have a lower cash price depending on the provider, plan, and dose. Insurance coverage and manufacturer savings programs can lower the cost of approved medication for some people. Lower cost alone does not make a compounded medication appropriate.",
+      "It may have a lower cash price depending on the provider, plan, and dose. Insurance coverage can lower the cost of approved medication for some people. Lower cost alone does not make a compounded medication appropriate.",
     ),
     h3("Does compounded tirzepatide work as well as brand-name tirzepatide?"),
     p(

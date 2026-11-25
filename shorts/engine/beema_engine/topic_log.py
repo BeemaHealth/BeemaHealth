@@ -87,6 +87,7 @@ def seed():
     for prod in P:
         try: lib = library.load(prod)
         except Exception: continue
+        if not lib: continue                                        # products without a library (e.g. wellness)
         for h in lib["hooks"]:
             key = ("library_hook", h["text"])
             if key in have: continue
@@ -105,6 +106,7 @@ def corpus(product=None):
     for prod in products():
         try: lib = library.load(prod)
         except Exception: continue
+        if not lib: continue                                        # products without a library (e.g. wellness) have nothing to compare against
         out += [h["text"] for h in lib["hooks"]] + [c["text"] for c in lib["ctas"]]
         for m in lib["meats"]:
             out += [b["text"] for b in m["beats"]]
